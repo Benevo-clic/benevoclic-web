@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import LoginForm from '~/components/auth/LoginForm.vue';
 
 definePageMeta({
-  middleware: 'guest' as any  // Solution temporaire pour le typage
+  middleware: ['guest'] // Solution temporaire pour le typage
 })
 </script>
 

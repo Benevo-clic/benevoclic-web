@@ -1,5 +1,5 @@
 import { defineEventHandler, getCookie, createError } from 'h3'
-import {User} from "~/types/auth";
+import {User} from "~/common/interface/auth.interface";
 
 const API_BASE = process.env.API_BASE_URL
 
@@ -7,9 +7,8 @@ const API_BASE = process.env.API_BASE_URL
 
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'auth_token')
-  const userEmail = getCookie(event, 'user_email')
-  
-  if (!token || !userEmail) {
+
+  if (!token ) {
     throw createError({
       statusCode: 401,
       message: 'Non authentifié'
@@ -17,21 +16,20 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response = await $fetch<User>(`${API_BASE}/user/email/${userEmail}`, {
+    const currentUser = await $fetch<User>(`${API_BASE}/user/current-user`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
 
-
-    if (!response) {
+    if (!currentUser) {
       throw createError({
         statusCode: 404,
         message: 'Utilisateur non trouvé'
       })
     }
 
-    return response
+    return currentUser
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 401,

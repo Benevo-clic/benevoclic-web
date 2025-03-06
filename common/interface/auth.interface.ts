@@ -1,3 +1,5 @@
+import {RoleUser} from "~/common/enums/role.enum";
+
 export interface User {
     _id: string
     userId: string
@@ -5,7 +7,7 @@ export interface User {
     firstName: string
     lastName: string
     phoneNumber: string
-    role: 'VOLUNTEER' | 'ADMIN' | 'USER'
+    role: RoleUser
     isOnline: boolean
     disabled: boolean
     isVerified: boolean

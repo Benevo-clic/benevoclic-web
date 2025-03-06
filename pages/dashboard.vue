@@ -13,9 +13,7 @@
         </div>
 
         <div v-if="auth.user" class="space-y-4">
-          <p><strong>Nom complet:</strong> {{ auth.user.value?.firstName }}</p>
           <p><strong>Email:</strong> {{ auth.user.value?.email }}</p>
-          <p><strong>Téléphone:</strong> {{ auth.user.value?.phoneNumber }}</p>
           <p><strong>Rôle:</strong> {{ auth.user.value?.role }}</p>
           <p><strong>Statut:</strong> {{ auth.user.value?.isOnline ? 'En ligne' : 'Hors ligne' }}</p>
           <p><strong>Dernière connexion:</strong> {{ new Date(auth.user.value?.lastConnection).toLocaleString() }}</p>
@@ -28,6 +26,7 @@
 <script setup lang="ts">
 
 import { useAuth } from '../composables/useAuth'
+import {definePageMeta} from "#imports";
 definePageMeta({
   middleware: ['auth']
 })
