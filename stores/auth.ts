@@ -2,6 +2,7 @@ import {defineStore} from 'pinia'
 import {$fetch} from 'ofetch'
 import type {User} from "~/common/interface/auth.interface";
 import type {LoginPayload, LoginResponse} from "~/common/types/auth.type";
+import {useCookie} from "#app/composables/cookie";
 
 
 export const useAuthStore = defineStore('auth', {
@@ -13,7 +14,7 @@ export const useAuthStore = defineStore('auth', {
 
   getters: {
     isAuthenticated: (state) => {
-      return state.user?.email !== null
+      return !!state.user
     },
     getUser: (state) => state.user,
     fullName: (state) => state.user ? `${state.user.firstName} ${state.user.lastName}` : '',
@@ -30,9 +31,10 @@ export const useAuthStore = defineStore('auth', {
           body: payload,
         })
 
-        await this.fetchUser()
-        navigateTo('/dashboard')
-
+        if(response.idToken) {
+          await this.fetchUser()
+            navigateTo('/dashboard')
+        }
       } catch (err) {
         this.error = "Erreur d'authentification"
         console.error(err)
@@ -44,15 +46,18 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true
       this.error = null
       try {
-        await $fetch('/api/auth/logout',{
-            method: 'POST',
-        }) ;
-        this.user = null
-        navigateTo('/login')
-      }catch (err) {
+        const response = await $fetch('/api/auth/logout', {
+          method: 'POST'
+        })
+
+        if(response.success) {
+            this.user = null
+            navigateTo('/login')
+        }
+      } catch (err) {
         this.error = "Erreur de déconnexion"
         console.error(err)
-      }finally {
+      } finally {
         this.loading = false
       }
     },

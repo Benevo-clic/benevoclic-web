@@ -35,6 +35,8 @@ export default defineEventHandler(async (event) => {
         sameSite: 'strict',
         maxAge: 60 * 60 * 24 * 30
       })
+      setCookie(event,'isConnected','true')
+
     }else{
       throw createError({
         statusCode: 401,

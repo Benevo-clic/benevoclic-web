@@ -50,6 +50,9 @@ const form = reactive({
   email: '',
   password: ''
 })
+definePageMeta({
+  middleware: ['guest'] // Solution temporaire pour le typage
+})
 
 async function handleLogin() {
   loading.value = true

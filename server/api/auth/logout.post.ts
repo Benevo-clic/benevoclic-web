@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody, createError } from 'h3'
+import { defineEventHandler, readBody, createError,deleteCookie, setCookie } from 'h3'
 
 const API_BASE = process.env.API_BASE_URL
 
@@ -11,7 +11,28 @@ export default defineEventHandler(async (event) => {
       headers: {
             'Authorization': `Bearer ${token}`
       }
-    })
+    });
+
+    deleteCookie(event, 'auth_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/'
+    });
+    
+    deleteCookie(event, 'refresh_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/'
+    });
+
+    setCookie(event,'isConnected','false');
+
+    return {
+      success: true,
+      message: 'Déconnexion réussie'
+    }
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 401,
