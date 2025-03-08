@@ -1,6 +1,6 @@
 import { useAuthStore } from '~/stores/auth'
 import { onMounted, computed } from 'vue'
-import {useCookie} from "#app/composables/cookie";
+import Login from '~/pages/login.vue'
 
 export const useAuth = () => {
     const authStore = useAuthStore()
@@ -15,6 +15,7 @@ export const useAuth = () => {
         user: computed(() => authStore.getUser),
         isAuthenticated: computed(() => authStore.isAuthenticated),
         login: authStore.login,
-        logout: authStore.logout
+        logout: authStore.logout,
+        loginWithGoogle: authStore.loginWithGoogle
     }
 }

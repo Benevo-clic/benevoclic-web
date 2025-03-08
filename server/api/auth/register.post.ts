@@ -39,7 +39,22 @@ export default defineEventHandler(async (event) => {
             }
         })
 
-        if(loginResponse.idToken){
+        if(!!loginResponse.idToken){
+            setCookie(event, 'auth_token', loginResponse.idToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict',
+                maxAge: 60 * 60 * 24 * 7
+            })
+
+            setCookie(event, 'refresh_token', loginResponse.refreshToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict',
+                maxAge: 60 * 60 * 24 * 30
+            })
+            setCookie(event,'isConnected','true')
+        }else {
             throw createError({
                 statusCode: 401,
                 message: 'Token manquant dans la réponse'

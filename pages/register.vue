@@ -1,14 +1,26 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import {userRegister} from "~/composables/userRegister";
+import { ref, reactive, onUnmounted } from 'vue'
 import {RoleUser} from "~/common/enums/role.enum";
-const register = userRegister()
+import {userRegisterEmailPassword} from "~/composables/useRegistrerEmailPassword";
+import { useRegisterStore } from '~/stores/register';
+
+const register = userRegisterEmailPassword()
 const loading = ref(false)
 const form = reactive({
   email: '',
   password: '',
   role: '' as RoleUser
 })
+definePageMeta({
+  middleware: ['guest'] // Solution temporaire pour le typage
+})
+
+const registerStore = useRegisterStore();
+
+// Nettoyer l'observateur lors de la destruction du composant
+onUnmounted(() => {
+  registerStore.cleanup();
+});
 
 async function handleRegister() {
   loading.value = true
@@ -23,7 +35,6 @@ async function handleRegister() {
 </script>
 
 <template>
-  >
   <div class="min-h-screen flex items-center justify-center bg-gray-50">
     <div class="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
       <h2 class="text-center text-3xl font-bold">Create account</h2>

@@ -3,10 +3,8 @@ import {useAuthStore} from "~/stores/auth";
 import {useCookie} from "#app/composables/cookie";
 
 export default defineNuxtRouteMiddleware((to, from) => {
-  const authStore = useAuthStore()
-  const  token = useCookie('auth_token')
-
-  if (!useCookie('auth_token') || !useCookie('isConnected').value) {
+   const  authStore= useAuthStore()
+  if (authStore.isAuthenticated) {
     return navigateTo('/login')
   }
 })

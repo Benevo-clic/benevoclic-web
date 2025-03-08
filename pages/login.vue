@@ -37,6 +37,24 @@
           </button>
         </div>
       </form>
+
+      <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-300"></div>
+        </div>
+        <div class="relative flex justify-center text-sm">
+          <span class="px-2 bg-white text-gray-500">Ou</span>
+        </div>
+      </div>
+
+      <button
+        @click="handleGoogleLogin"
+        type="button"
+        class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+      >
+        <img src="/google-icon.svg" alt="Google" class="w-5 h-5 mr-2" />
+        Se connecter avec Google
+      </button>
     </div>
   </div>
 </template>
@@ -62,6 +80,14 @@ async function handleLogin() {
     console.error('Erreur de connexion:', error)
   } finally {
     loading.value = false
+  }
+}
+
+async function handleGoogleLogin() {
+  try {
+    await auth.loginWithGoogle()
+  } catch (error) {
+    console.error('Erreur de connexion Google:', error)
   }
 }
 </script> 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 definePageMeta({
-  middleware: ['guest'] // Solution temporaire pour le typage
+  middleware: ['guest']
 })
 </script>
 
