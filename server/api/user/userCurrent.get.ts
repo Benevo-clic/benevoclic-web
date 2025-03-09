@@ -1,12 +1,11 @@
 import { defineEventHandler, getCookie, createError } from 'h3'
-import {User} from "~/common/interface/auth.interface";
-
-const API_BASE = process.env.API_BASE_URL
+import { UserInfo } from '~/common/types/auth.type'
 
 // Types pour la réponse de l'API
 
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'auth_token')
+  const config = useRuntimeConfig();
 
   if (!token ) {
     throw createError({
@@ -16,7 +15,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const currentUser = await $fetch<User>(`${API_BASE}/user/current-user`, {
+    const currentUser = await $fetch<UserInfo>(`${config.private.api_base_url}/user/current-user`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

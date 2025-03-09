@@ -1,7 +1,5 @@
 import type {RegisterEmailVerifiedResponse, RegisterPayload} from "~/common/types/register.type";
 
-import type { RegisterDone } from "~/common/interface/register.interface";
-import {useAuthStore} from "~/stores/auth";
 import {useCookie} from "#app/composables/cookie";
 import {
     createUserWithEmailAndPassword,
@@ -38,8 +36,6 @@ export const useRegisterStore = defineStore('register', {
         // Nouvelle méthode pour observer les changements de token
         async startEmailVerificationListener(payload: RegisterPayload) {
             const auth = getAuth();
-
-
             
             this.unsubscribe = onIdTokenChanged(auth, async (user) => {
                 if (user) {
@@ -48,14 +44,20 @@ export const useRegisterStore = defineStore('register', {
                     if (user.emailVerified) {
                         this.$patch({ isVerified: true });
 
-                        console.log('Email vérifié:', user.refreshToken);
+                        switch (payload.role) {
+                            case RoleUser.VOLUNTEER:
+                                navigateTo('/registerVolunteer');
+                                break;
+                            case RoleUser.ASSOCIATION:
+                                navigateTo('/registerAssociation');
+                                break;
+                            default:
+                                break;
 
-                        // Rediriger vers la page d'inscription volontaire
-                        navigateTo('/registerVolunteer');
-                        
+                        }
                         // Arrêter l'écoute une fois vérifié
                         if (this.unsubscribe) {
-                            this.callRegisterEmailVerified({ email: payload.email, password: payload.password });
+                            this.callRegisterEmailVerified({ email: payload.email, password: payload.password, role: RoleUser.VOLUNTEER });
                             this.unsubscribe();
                             this.unsubscribe = null;
                         }
@@ -65,19 +67,17 @@ export const useRegisterStore = defineStore('register', {
         },
         async callRegisterEmailVerified(payload: any) {
             try {
-                const response: RegisterEmailVerifiedResponse = await $fetch<RegisterEmailVerifiedResponse>(`/api/auth/registerEmailVerified`, {
+                await $fetch<RegisterEmailVerifiedResponse>(`/api/auth/registerEmailVerified`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
-
                     },
                     body: {
                         email: payload.email,
-                        role: RoleUser.VOLUNTEER,
+                        role: payload.role,
                         password: payload.password
                     }
                 })
-                console.log('Réponse de l\'inscription:', response);
             } catch (error) {
                 this.error = "Une erreur est survenue lors de l'inscription"
                 throw error;
@@ -90,36 +90,15 @@ export const useRegisterStore = defineStore('register', {
                 await sendEmailVerification(userCredential.user);
                 
                 // Démarrer l'écoute des changements de vérification
-                await this.startEmailVerificationListener(payload);
+                await this.startEmailVerificationListener({
+                    email: payload.email,
+                    password: payload.password,
+                    role: RoleUser.VOLUNTEER
+                });
                 
             } catch (error: any) {
                 this.error = error.message;
                 throw error;
-            }
-        },
-
-        async register() {
-            this.error = null
-            this.loading = true
-
-            try {
-                const response: RegisterDone = await $fetch<RegisterDone>(`api/auth/register`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        isVerified: this.isVerified
-                    })
-                })
-
-                this.idUser = response.registerResponse.uid
-                navigateTo('/registerVolunteer')
-            } catch (error) {
-                this.error = "Une erreur est survenue lors de l'inscription"
-                throw error;
-            } finally {
-                this.loading = false
             }
         },
 

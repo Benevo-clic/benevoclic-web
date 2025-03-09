@@ -6,14 +6,13 @@ import {LoginResponse} from "~/common/types/auth.type";
 
 import {login} from "~/server/api/auth/login.post";
 
-const API_BASE = process.env.API_BASE_URL
 
 interface RegisterResponse {
     uid: string
 }
 
 
-const setAuthCookies = (event:any, tokens:LoginResponse) => {
+export const setAuthCookies = (event:any, tokens:LoginResponse) => {
 
     setCookie(event, 'auth_token', tokens.idToken, {
         httpOnly: true,
@@ -33,10 +32,10 @@ const setAuthCookies = (event:any, tokens:LoginResponse) => {
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
-    console.log('Inscription de l\'utilisateur vérifié:', body);
+    const config = useRuntimeConfig();
 
     try {
-        const registerEmailVerifiedResponse:RegisterResponse =  await $fetch<RegisterResponse>(`${API_BASE}/user/register-user-verified`, {
+        const registerEmailVerifiedResponse:RegisterResponse =  await $fetch<RegisterResponse>(`${config.private.api_base_url}/user/register-user-verified`, {
             method: 'POST',
             body: {
                 email: body.email,
@@ -51,7 +50,7 @@ export default defineEventHandler(async (event) => {
             })
         }
 
-        const response = await login({ email: body.email, password: body.password }, API_BASE);
+        const response = await login({ email: body.email, password: body.password }, config.private.api_base_url);
 
         if (!response.idToken) {
             throw createError({ statusCode: 401, message: 'Token manquant dans la réponse' });

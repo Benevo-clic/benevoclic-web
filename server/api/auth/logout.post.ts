@@ -1,12 +1,12 @@
-import { defineEventHandler, readBody, createError,deleteCookie, setCookie } from 'h3'
+import { defineEventHandler, createError,deleteCookie, setCookie } from 'h3'
 
-const API_BASE = process.env.API_BASE_URL
 
 export default defineEventHandler(async (event) => {
     const token = getCookie(event, 'auth_token')
+    const config = useRuntimeConfig();
 
   try {
-    await $fetch(`${API_BASE}/user/logout`, {
+    await $fetch(`${config.private.api_base_url}/user/logout`, {
       method: 'POST',
       headers: {
             'Authorization': `Bearer ${token}`

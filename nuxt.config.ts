@@ -8,7 +8,7 @@ export default defineNuxtConfig({
         lang: 'fr'
       }
     },
-    // Activation de l'hydratation progressive
+    // Configuration de l'hydration
     pageTransition: { name: 'page', mode: 'out-in' }
   },
   experimental: {
@@ -32,7 +32,11 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-02-23',
 
   runtimeConfig: {
+    private: {
+      api_base_url: process.env.API_BASE_URL
+    },
     public: {
+      ssr: true,
       firebaseConfig: {
         apiKey: process.env.FIREBASE_API_KEY,
         authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -42,6 +46,13 @@ export default defineNuxtConfig({
         appId: process.env.FIREBASE_APP_ID,
         measurementId: process.env.FIREBASE_MEASUREMENT_ID
       }
+    }
+  },
+
+  // Optimisations pour l'hydratation
+  nitro: {
+    prerender: {
+      crawlLinks: true,
     }
   }
 })

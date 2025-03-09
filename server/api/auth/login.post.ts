@@ -21,12 +21,14 @@ export async function login(payload: { email: string, password: string },apiBase
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  
+  const config = useRuntimeConfig();
+
+
   try {
     const response = await login({
         email: body.email,
         password: body.password
-    },API_BASE)
+    },config.private.api_base_url)
 
     if (response.idToken) {
       setCookie(event, 'auth_token', response.idToken, {

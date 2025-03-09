@@ -1,15 +1,24 @@
 import {defineStore} from 'pinia'
 import {$fetch} from 'ofetch'
-import type {User} from "~/common/interface/auth.interface";
-import type {LoginPayload, LoginResponse} from "~/common/types/auth.type";
+import type {LoginPayload, LoginResponse, UserInfo} from "~/common/types/auth.type";
 import {useCookie} from "#app/composables/cookie";
-import { signInWithPopup ,sendEmailVerification} from "firebase/auth";
+import {signInWithPopup} from "firebase/auth";
+import type {User} from "firebase/auth";
+import {RoleUser} from "~/common/enums/role.enum";
 
 
+export async function loginWithGoogle(): Promise<User> {
+  const {$firebase} = useNuxtApp();
+  if (!$firebase.auth) throw new Error('Firebase non initialisé');
+
+  const result = await signInWithPopup($firebase.auth, $firebase.provider!);
+
+  return result.user;
+}
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null as User | null,
+    user: null as UserInfo | null,
     loading: false,
     error: null as string | null,
   }),
@@ -64,52 +73,78 @@ export const useAuthStore = defineStore('auth', {
 
     async fetchUser() {
       try {
-        this.user = await $fetch<User>('/api/user/userCurrent')
+        this.user = await $fetch<UserInfo>('/api/user/userCurrent')
       } catch (err) {
         await this.logout()
       }
     },
 
-    async fetchUserGoogle(){
-      const response = await fetch("/api/google/userCurrent");
-      const data = await response.json();
-      this.user = data.error ? null : data;
+    async fetchUserGoogle(body: { idToken: string, refreshToken: string, uid: string }) {
+      try {
+        const response = await $fetch('/api/auth/google/loginGoogle', {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+
+        const data = await response;
+
+        if (response.message) {
+          console.log('Cookies définis avec succès');
+        } else {
+          console.error('Erreur lors de la définition des cookies:', data.error);
+        }
+      } catch (error) {
+        console.error('Erreur de réseau:', error);
+      }
     },
 
     async loginWithGoogle() {
       this.loading = true
       this.error = null
       try {
-        const { $firebase } = useNuxtApp();
-        const result = await signInWithPopup($firebase.auth, $firebase.provider);
-        const user = result.user;
 
-        // Vérifie si l'utilisateur a déjà confirmé son email
-        if (!user.emailVerified) {
-          await sendEmailVerification(user); // Envoie l'e-mail de vérification
-          alert("Un e-mail de vérification a été envoyé. Veuillez confirmer avant de continuer.");
-          return;
+        const user = await loginWithGoogle(); // Connexion avec Google
+        const idToken = await user.getIdToken();
+
+        const payload = idToken.split('.')[1];
+        const decodedPayload = JSON.parse(atob(payload));
+
+        if(decodedPayload.role){
+            await this.fetchUserGoogle({idToken, refreshToken: user.refreshToken, uid: user.uid});
+            navigateTo('/dashboard')
+        }else{
+          await this.callRegisterGoogle(idToken);
+          console.log('decodedPayload 2', decodedPayload)
+
+          navigateTo('/registerVolunteer');
         }
 
-        console.log(user);
-
-        // Récupère le token uniquement si l'e-mail est vérifié
-        const idToken = await user.getIdToken();
-        console.log(idToken);
-  
-        // await fetch("/api/auth/login", {
-        //   method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify({ idToken }),
-        // });
-        //
-        // await this.fetchUserGoogle();
       } catch (err) {
         this.error = "Erreur d'authentification Google"
         console.error(err)
       } finally {
         this.loading = false
       }
+    },
+
+    async callRegisterGoogle(idToken: string) {
+      const response = await $fetch("/api/auth/google/registerGoogle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          idToken,
+          role: RoleUser.VOLUNTEER,
+        }),
+      });
+      if (!response) {
+        throw new Error('Réponse serveur vide');
+      }
+      return response;
     }
 
   },

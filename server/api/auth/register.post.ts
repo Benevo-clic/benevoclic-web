@@ -3,16 +3,16 @@ import type {RegisterPayload, RegisterResponse} from "~/common/types/register.ty
 import {LoginResponse} from "~/common/types/auth.type";
 import {RegisterDone} from "~/common/interface/register.interface";
 
-const API_BASE = process.env.API_BASE_URL
 
 
 
 export default defineEventHandler(async (event) => {
     const token = getCookie(event, 'auth_token')
     const body = await readBody(event)
+    const config = useRuntimeConfig();
 
     try {
-        const registerResponse =  await $fetch<RegisterResponse>(`${API_BASE}/user/register`, {
+        const registerResponse =  await $fetch<RegisterResponse>(`${config.private.api_base_url}/user/register`, {
             method: 'POST',
             body: {
                 email: body.email,
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
             })
         }
 
-        const loginResponse = await $fetch<LoginResponse>(`${API_BASE}/user/login`, {
+        const loginResponse = await $fetch<LoginResponse>(`${config.private.api_base_url}/user/login`, {
             method: 'POST',
             body: {
                 email: body.email,
