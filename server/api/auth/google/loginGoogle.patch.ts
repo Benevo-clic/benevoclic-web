@@ -1,14 +1,10 @@
 import { defineEventHandler, readBody, setCookie } from "h3";
-import { RoleUser } from "~/common/enums/role.enum";
-import type { RegisterGooglePayload, RegisterUserGoogleResponse } from "~/common/types/auth.type";
-import { getAuth, signInWithCustomToken } from "@firebase/auth";
+import type { RegisterUserGoogleResponse } from "~/common/types/auth.type";
 
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     const config = useRuntimeConfig();
-
-    // Vérification que le body contient l'idToken
     if (!body || !body.idToken) {
         return { error: "Token manquant" };
     }

@@ -46,7 +46,7 @@ export const useAuthStore = defineStore('auth', {
         }
       } catch (err) {
         this.error = "Erreur d'authentification"
-        console.error(err)
+        throw new Error('Erreur d\'authentification'+err);
       } finally {
         this.loading = false
       }
@@ -65,7 +65,7 @@ export const useAuthStore = defineStore('auth', {
         }
       } catch (err) {
         this.error = "Erreur de déconnexion"
-        console.error(err)
+        throw new Error('Erreur de déconnexion'+err);
       } finally {
         this.loading = false
       }
@@ -89,15 +89,12 @@ export const useAuthStore = defineStore('auth', {
           body: JSON.stringify(body)
         });
 
-        const data = await response;
-
-        if (response.message) {
-          console.log('Cookies définis avec succès');
-        } else {
-          console.error('Erreur lors de la définition des cookies:', data.error);
+        if(!response) {
+          this.error = "Erreur lors de la connexion"
+          throw new Error('Réponse serveur vide');
         }
       } catch (error) {
-        console.error('Erreur de réseau:', error);
+        throw new Error('Erreur lors de la connexion'+error);
       }
     },
 
@@ -117,14 +114,12 @@ export const useAuthStore = defineStore('auth', {
             navigateTo('/dashboard')
         }else{
           await this.callRegisterGoogle(idToken);
-          console.log('decodedPayload 2', decodedPayload)
-
           navigateTo('/registerVolunteer');
         }
 
       } catch (err) {
         this.error = "Erreur d'authentification Google"
-        console.error(err)
+        throw new Error('Erreur d\'authentification Google'+err);
       } finally {
         this.loading = false
       }
@@ -142,6 +137,7 @@ export const useAuthStore = defineStore('auth', {
         }),
       });
       if (!response) {
+        this.error = "Erreur lors de l'inscription";
         throw new Error('Réponse serveur vide');
       }
       return response;

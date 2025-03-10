@@ -15,10 +15,8 @@ export default defineNuxtPlugin(() => {
     const app = initializeApp(config.public.firebaseConfig);
     const auth = getAuth(app);
     
-    // Configuration spécifique pour le provider Google
     const provider = new GoogleAuthProvider();
-    
-    
+
     return {
       provide: {
         firebase: { 
@@ -29,7 +27,7 @@ export default defineNuxtPlugin(() => {
       }
     };
   } catch (error) {
-    console.error("Erreur d'initialisation Firebase:", error);
+    console.error("Erreur d'initialisation de Firebase", error);
     return {
       provide: {
         firebase: { auth: null, provider: null } as FirebasePlugin

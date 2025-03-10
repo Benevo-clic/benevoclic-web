@@ -5,7 +5,6 @@ import {
     createUserWithEmailAndPassword,
     getAuth,
     sendEmailVerification,
-    onAuthStateChanged,
     onIdTokenChanged,
 } from "firebase/auth";
 import {RoleUser} from "~/common/enums/role.enum";
@@ -80,7 +79,7 @@ export const useRegisterStore = defineStore('register', {
                 })
             } catch (error) {
                 this.error = "Une erreur est survenue lors de l'inscription"
-                throw error;
+                throw new Error('Erreur lors de l\'inscription'+error);
             }
         },
         async registerWithEmailPassword(payload: RegisterPayload) {
@@ -98,7 +97,7 @@ export const useRegisterStore = defineStore('register', {
                 
             } catch (error: any) {
                 this.error = error.message;
-                throw error;
+                throw new Error('Erreur lors de l\'inscription'+error);
             }
         },
 

@@ -1,7 +1,6 @@
 import {defineEventHandler, getCookie, createError, readBody} from 'h3'
-import {UserInfo} from "~/common/interface/auth.interface";
+import {UserInfo} from '~/common/types/auth.type'
 
-const API_BASE = process.env.API_BASE_URL
 
 // Types pour la réponse de l'API
 
