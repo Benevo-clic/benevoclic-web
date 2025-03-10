@@ -1,5 +1,6 @@
 import { defineEventHandler, readBody, setCookie } from "h3";
 import type { RegisterUserGoogleResponse } from "~/common/types/auth.type";
+import {setCookies} from "~/server/api/auth/login.post";
 
 
 export default defineEventHandler(async (event) => {
@@ -17,18 +18,7 @@ export default defineEventHandler(async (event) => {
         }
     });
 
-    setCookie(event, 'isConnected', 'true');
-    setCookie(event, 'auth_token', body.idToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 7 // 7 jours
-    });
-    setCookie(event, 'refresh_token', body.refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 30 // 30 jours
-    });
+    setCookies(event,body);
+
     return response;
 });

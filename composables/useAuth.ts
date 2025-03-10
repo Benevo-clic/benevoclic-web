@@ -16,6 +16,7 @@ export const useAuth = () => {
         isAuthenticated: computed(() => authStore.isAuthenticated),
         login: authStore.login,
         logout: authStore.logout,
-        loginWithGoogle: authStore.loginWithGoogle
+        loginWithGoogle: authStore.loginWithGoogle,
+        removeUser: authStore.removeUserAccount
     }
 }

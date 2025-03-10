@@ -81,7 +81,7 @@ export const useAuthStore = defineStore('auth', {
 
     async fetchUserGoogle(body: { idToken: string, refreshToken: string, uid: string }) {
       try {
-        const response = await $fetch('/api/auth/google/loginGoogle', {
+        const response = await $fetch('/api/auth/google/updateStatusUser', {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json'
@@ -141,6 +141,20 @@ export const useAuthStore = defineStore('auth', {
         throw new Error('Réponse serveur vide');
       }
       return response;
+    },
+
+    async removeUserAccount(){
+      await $fetch("/api/auth/remove",{
+        method:'DELETE',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: {
+          uid:this.user?.userId
+        }
+      })
+
+      navigateTo('/')
     }
 
   },

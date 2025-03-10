@@ -1,5 +1,24 @@
-import { defineEventHandler, createError,deleteCookie, setCookie } from 'h3'
+import {defineEventHandler, createError, deleteCookie, setCookie, H3Event, EventHandlerRequest} from 'h3'
+import {EventHandlerList} from "mitt";
 
+
+export function deleteCookies(event:H3Event<EventHandlerRequest>){
+  deleteCookie(event, 'auth_token', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
+    path: '/'
+  });
+
+  deleteCookie(event, 'refresh_token', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
+    path: '/'
+  });
+
+  deleteCookie(event,'isConnected');
+}
 
 export default defineEventHandler(async (event) => {
     const token = getCookie(event, 'auth_token')
@@ -13,21 +32,7 @@ export default defineEventHandler(async (event) => {
       }
     });
 
-    deleteCookie(event, 'auth_token', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      path: '/'
-    });
-    
-    deleteCookie(event, 'refresh_token', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      path: '/'
-    });
-
-    setCookie(event,'isConnected','false');
+    deleteCookies(event);
 
     return {
       success: true,

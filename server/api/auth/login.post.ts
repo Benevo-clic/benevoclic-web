@@ -1,12 +1,36 @@
-import { defineEventHandler, readBody, createError } from 'h3'
+import {defineEventHandler, readBody, createError, H3Event, EventHandlerRequest} from 'h3'
 
-const API_BASE = process.env.API_BASE_URL
 
-interface LoginResponse {
+export interface LoginResponse {
     idToken: string
     refreshToken: string
     expiresIn: string
+}
+
+export function setCookies(event:H3Event<EventHandlerRequest>,loginResponse: LoginResponse){
+
+  if(loginResponse.idToken){
+    setCookie(event, 'auth_token', loginResponse.idToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24 * 7
+    })
+
+    setCookie(event, 'refresh_token', loginResponse.refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24 * 30
+    })
+    setCookie(event,'isConnected','true')
+  }else{
+    throw createError({
+      statusCode: 401,
+      message: 'Token manquant dans la réponse'
+    })
   }
+}
 
 export async function login(payload: { email: string, password: string },apiBase:string | undefined): Promise<LoginResponse> {
   return await $fetch<LoginResponse>(`${apiBase}/user/login`, {
@@ -25,35 +49,14 @@ export default defineEventHandler(async (event) => {
 
 
   try {
-    const response = await login({
+    const loginResponse = await login({
         email: body.email,
         password: body.password
     },config.private.api_base_url)
 
-    if (response.idToken) {
-      setCookie(event, 'auth_token', response.idToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 7
-      })
+    setCookies(event,loginResponse)
 
-      setCookie(event, 'refresh_token', response.refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 30
-      })
-      setCookie(event,'isConnected','true')
-
-    }else{
-      throw createError({
-        statusCode: 401,
-        message: 'Token manquant dans la réponse'
-      })
-    }
-    
-    return response
+    return loginResponse
   } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 401,

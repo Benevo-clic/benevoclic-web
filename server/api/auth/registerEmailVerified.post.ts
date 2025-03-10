@@ -2,33 +2,11 @@ import {createError, defineEventHandler, readBody} from 'h3'
 import type {
     RegisterEmailVerifiedPayload,
 } from "~/common/types/register.type";
-import {LoginResponse} from "~/common/types/auth.type";
-
-import {login} from "~/server/api/auth/login.post";
-
+import {login, setCookies} from "~/server/api/auth/login.post";
 
 interface RegisterResponse {
     uid: string
 }
-
-
-export const setAuthCookies = (event:any, tokens:LoginResponse) => {
-
-    setCookie(event, 'auth_token', tokens.idToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 7
-    })
-
-    setCookie(event, 'refresh_token', tokens.refreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 30
-    })
-    setCookie(event,'isConnected','true')
-};
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
@@ -50,21 +28,14 @@ export default defineEventHandler(async (event) => {
             })
         }
 
-        const response = await login({ email: body.email, password: body.password }, config.private.api_base_url);
+        const loginResponse = await login({ email: body.email, password: body.password }, config.private.api_base_url);
 
-        if (!response.idToken) {
-            throw createError({ statusCode: 401, message: 'Token manquant dans la réponse' });
-        }
-        setAuthCookies(event, response);
+        setCookies(event, loginResponse);
 
-        return {
-            registerEmailVerifiedResponse: registerEmailVerifiedResponse
-        };
     }catch (error: any) {
         throw createError({
             statusCode: error.statusCode || 401,
             message: error.message || "Échec de création de compte"
         })
     }
-
 })
