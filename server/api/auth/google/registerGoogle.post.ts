@@ -2,6 +2,7 @@ import { defineEventHandler, readBody, setCookie } from "h3";
 import { RoleUser } from "~/common/enums/role.enum";
 import type { RegisterGooglePayload, RegisterUserGoogleResponse } from "~/common/types/auth.type";
 import { getAuth, signInWithCustomToken } from "@firebase/auth";
+import {setCookies} from "~/server/api/auth/login.post";
 
 const API_BASE = process.env.API_BASE_URL;
 
@@ -14,7 +15,6 @@ export default defineEventHandler(async (event) => {
         return { error: "Token manquant" };
     }
 
-    // Appel à l'API pour enregistrer l'utilisateur
     const response: RegisterUserGoogleResponse = await $fetch<RegisterUserGoogleResponse>(`${config.private.api_base_url}/user/register-google`, {
         method: "POST",
         headers: {
@@ -26,7 +26,6 @@ export default defineEventHandler(async (event) => {
         } as RegisterGooglePayload,
     });
 
-    // Vérification de la réponse de l'API
     if (!response.token) {
         return { error: "Invalid token" };
     }
@@ -39,23 +38,11 @@ export default defineEventHandler(async (event) => {
         const idToken = await userCredential.user.getIdToken();
         const refreshToken = userCredential.user.refreshToken;
 
-        if (idToken !== null) {
-            setCookie(event, 'isConnected', 'true');
-            setCookie(event, 'auth_token', idToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'strict',
-                maxAge: 60 * 60 * 24 * 7 // 7 jours
-            });
-            setCookie(event, 'refresh_token', refreshToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'strict',
-                maxAge: 60 * 60 * 24 * 30 // 30 jours
-            });
-        }
+        setCookies(event,{
+            idToken,
+            refreshToken
+        })
 
-        // Retourner les tokens
         return {
             idToken,
             refreshToken

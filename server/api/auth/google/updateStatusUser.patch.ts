@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${body.idToken}`
-        }
+        },
     });
 
     setCookies(event,body);

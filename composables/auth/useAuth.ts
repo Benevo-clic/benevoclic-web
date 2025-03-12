@@ -1,6 +1,6 @@
-import { useAuthStore } from '~/stores/auth'
+import { useAuthStore } from '~/stores/auth/auth'
 import { onMounted, computed } from 'vue'
-import Login from '~/pages/login.vue'
+import Login from '~/pages/auth/login.vue'
 
 export const useAuth = () => {
     const authStore = useAuthStore()

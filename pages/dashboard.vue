@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 
-import { useAuth } from '../composables/useAuth'
+import { useAuth } from '~/composables/auth/useAuth'
 import {definePageMeta} from "#imports";
 definePageMeta({
   middleware: ['auth']

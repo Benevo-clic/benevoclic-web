@@ -61,7 +61,7 @@ export const useAuthStore = defineStore('auth', {
 
         if(response.success) {
             this.user = null
-            navigateTo('/login')
+            navigateTo('/auth/login')
         }
       } catch (err) {
         this.error = "Erreur de déconnexion"
@@ -71,8 +71,21 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    async refreshTokens() {
+      try {
+        await $fetch('/api/auth/refresh', {
+          method: 'POST',
+        })
+      } catch (error) {
+        await this.logout()
+      }
+    },
+
     async fetchUser() {
       try {
+
+          await this.refreshTokens()
+
         this.user = await $fetch<UserInfo>('/api/user/userCurrent')
       } catch (err) {
         await this.logout()

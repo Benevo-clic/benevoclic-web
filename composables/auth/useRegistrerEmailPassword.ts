@@ -1,4 +1,4 @@
-import {useRegisterStore} from "~/stores/register";
+import {useRegisterStore} from "~/stores/auth/register";
 import {onMounted} from "vue";
 
 

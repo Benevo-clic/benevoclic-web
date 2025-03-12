@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { useAuth } from '~/composables/useAuth'
+import { useAuth } from '~/composables/auth/useAuth'
 const auth = useAuth()
 const loading = ref(false)
 const form = reactive({

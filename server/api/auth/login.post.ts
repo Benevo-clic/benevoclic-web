@@ -4,7 +4,7 @@ import {defineEventHandler, readBody, createError, H3Event, EventHandlerRequest}
 export interface LoginResponse {
     idToken: string
     refreshToken: string
-    expiresIn: string
+    expiresIn?: string
 }
 
 export function setCookies(event:H3Event<EventHandlerRequest>,loginResponse: LoginResponse){
@@ -14,16 +14,21 @@ export function setCookies(event:H3Event<EventHandlerRequest>,loginResponse: Log
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 7
+      maxAge: 60 * 60 * 24 // 24 heures
     })
 
     setCookie(event, 'refresh_token', loginResponse.refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 30
+      maxAge: 60 * 60 * 24 * 30 // 30 jours
     })
-    setCookie(event,'isConnected','true')
+    setCookie(event,'isConnected','true',{
+        httpOnly: false,
+        secure: false,
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 * 30 // 30 jours
+    })
   }else{
     throw createError({
       statusCode: 401,
@@ -53,7 +58,6 @@ export default defineEventHandler(async (event) => {
         email: body.email,
         password: body.password
     },config.private.api_base_url)
-
     setCookies(event,loginResponse)
 
     return loginResponse
