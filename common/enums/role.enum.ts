@@ -1,0 +1,5 @@
+export enum RoleUser {
+    VOLUNTEER= "VOLUNTEER",
+    ADMIN= "ADMIN",
+    ASSOCIATION = "ASSOCIATION"
+}
