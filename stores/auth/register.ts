@@ -7,7 +7,6 @@ import {
     sendEmailVerification,
     onIdTokenChanged,
 } from "firebase/auth";
-import {RoleUser} from "~/common/enums/role.enum";
 
 interface RegisterState {
     loading: boolean;
@@ -28,7 +27,7 @@ export const useRegisterStore = defineStore('register', {
     }),
     getters:{
         getIdUser: (state)  => state.idUser,
-        isRegisted: (state) => !!useCookie('auth_token').value,
+        isRegisted: () => !!useCookie('auth_token').value,
         getVerificationStatus: (state) => state.isVerified
     },
     actions: {
@@ -43,20 +42,8 @@ export const useRegisterStore = defineStore('register', {
                     if (user.emailVerified) {
                         this.$patch({ isVerified: true });
 
-                        switch (payload.role) {
-                            case RoleUser.VOLUNTEER:
-                                navigateTo('/registerVolunteer');
-                                break;
-                            case RoleUser.ASSOCIATION:
-                                navigateTo('/registerAssociation');
-                                break;
-                            default:
-                                break;
-
-                        }
-                        // Arrêter l'écoute une fois vérifié
                         if (this.unsubscribe) {
-                            this.callRegisterEmailVerified({ email: payload.email, password: payload.password, role: RoleUser.VOLUNTEER });
+                            this.callRegisterEmailVerified({ email: payload.email, password: payload.password, role: payload.role });
                             this.unsubscribe();
                             this.unsubscribe = null;
                         }
@@ -64,7 +51,7 @@ export const useRegisterStore = defineStore('register', {
                 }
             });
         },
-        async callRegisterEmailVerified(payload: any) {
+        async callRegisterEmailVerified(payload: RegisterPayload) {
             try {
                 await $fetch<RegisterEmailVerifiedResponse>(`/api/auth/registerEmailVerified`, {
                     method: 'POST',
@@ -88,13 +75,11 @@ export const useRegisterStore = defineStore('register', {
                 const userCredential = await createUserWithEmailAndPassword(auth, payload.email, payload.password);
                 await sendEmailVerification(userCredential.user);
                 
-                // Démarrer l'écoute des changements de vérification
                 await this.startEmailVerificationListener({
                     email: payload.email,
                     password: payload.password,
-                    role: RoleUser.VOLUNTEER
+                    role: payload.role,
                 });
-                
             } catch (error: any) {
                 this.error = error.message;
                 throw new Error('Erreur lors de l\'inscription'+error);

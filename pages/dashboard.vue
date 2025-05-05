@@ -5,19 +5,12 @@
         <div class="flex justify-between items-center mb-6">
           <h1 class="text-2xl font-bold">Dashboard</h1>
           <button
-            @click="auth.logout"
-            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-          >
-            Se déconnecter
-          </button>
-          <button
               @click="auth.removeUser"
               class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
           >
             supprimer mon compte
           </button>
         </div>
-
         <div v-if="auth.user" class="space-y-4">
           <p><strong>Email:</strong> {{ auth.user.value?.email }}</p>
           <p><strong>Rôle:</strong> {{ auth.user.value?.role }}</p>
@@ -34,8 +27,10 @@
 import { useAuth } from '~/composables/auth/useAuth'
 import {definePageMeta} from "#imports";
 definePageMeta({
-  middleware: ['auth']
+  middleware: ['auth'],
+  layout:'header'
 })
 
 const auth = useAuth()
+console.log(auth)
 </script>
