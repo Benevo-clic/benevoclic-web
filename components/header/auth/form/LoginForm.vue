@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import VolunteerLoginForm from "~/components/header/auth/form/login/VolunteerLoginForm.vue"
-import AssociationLoginForm from "~/components/header/auth/form/login/AssociationLoginForm.vue"
+import UsersLoginForm from "~/components/header/auth/form/login/UsersLoginForm.vue"
 import VolunteerRegisterForm from "~/components/header/auth/form/register/VolunteerRegisterForm.vue"
 import AssociationRegisterForm from "~/components/header/auth/form/register/AssociationRegisterForm.vue"
+import {ShieldX} from "lucide-vue-next";
+
 
 const { form, loading, checked, handleLogin, handleGoogleLogin } = defineProps<{
   form: Record<string, any>
@@ -50,16 +51,28 @@ function toggleUserType() {
       <span class="text-primary">vous revoir 👋</span>
     </h1>
 
-    <p class="text-base text-gray-600 mb-6">
-      Aujourd’hui est un nouveau jour. C’est vous qui lui donnez sa forme.
-      Connectez-vous pour gérer vos projets.
+    <p class="text-base text-gray-600 mb-6" v-if="!isRegisterMode">
+      Aujourd’hui est un nouveau jour. C’est vous qui lui donnez sa forme. Connectez-vous pour gérer vos projets.
+    </p>
+    <p class="text-base text-gray-600 mb-6" v-else>
+      Inscrivez-vous gratuitement pour rejoindre la communauté et agir pour des causes qui vous tiennent à cœur.
     </p>
 
+    <div class="alert alert-error flex items-center gap-4 mb-4 shadow-md border border-red-200 rounded-lg px-4 py-3 w-full">
+      <ShieldX class="w-6 h-6 text-red-600" />
+      <p class="text-sm text-red-800">
+        Vous n'êtes pas autorisé à vous connecter :
+        vous <span v-if="isAssociation">n'</span>êtes <span v-if="isAssociation">pas</span> une association.
+      </p>
+    </div>
+
+
     <!-- Texte + switch utilisateur -->
-    <h4 class="text-primary font-bold">
-      Je <span v-if="isAssociation">suis</span><span v-else>ne suis pas</span> une association
+    <h4 class="text-primary font-bold" v-if="isRegisterMode">
+      Je <span v-if="!isAssociation">suis</span><span v-else>ne suis pas</span> une association
     </h4>
     <input
+        v-if="isRegisterMode"
         type="checkbox"
         v-model="isAssociation"
         @change="handleCheckboxChange"
@@ -67,8 +80,8 @@ function toggleUserType() {
     />
 
     <!-- Forms dynamiques -->
-    <VolunteerLoginForm
-        v-if="!isAssociation && !isRegisterMode"
+    <UsersLoginForm
+        v-if="!isRegisterMode"
         :form="form"
         :handle-login="handleLogin"
         :loading="loading"
@@ -79,12 +92,6 @@ function toggleUserType() {
         :form="form"
     />
 
-    <AssociationLoginForm
-        v-if="isAssociation && !isRegisterMode"
-        :form="form"
-        :handle-login="handleLogin"
-        :loading="loading"
-    />
 
     <AssociationRegisterForm
         v-if="isAssociation && isRegisterMode"
@@ -106,23 +113,34 @@ function toggleUserType() {
 
     <!-- Switch vers inscription / connexion -->
     <p class="text-center text-sm text-gray-600 mt-4">
-      <span v-if="isRegisterMode">Déjà inscrit ?</span>
-      <span v-else>Vous n’avez pas de compte ?</span>
+      <span v-if="isRegisterMode">Déjà inscrit ? </span>
+      <span v-else>Vous n’avez pas de compte ? </span>
       <button class="text-primary hover:underline" @click="toggleRegisterMode">
         {{ isRegisterMode ? 'Se connecter' : 'Inscrivez-vous' }}
       </button>
     </p>
 
     <!-- Version mobile -->
-    <div class="text-center mt-8 md:hidden">
+    <div class="text-center mt-8 md:hidden" v-if="isRegisterMode">
       <h1 class="text-xl sm:text-2xl font-bold mb-2">
         Vous <span v-if="!isAssociation">n'</span>êtes <span v-if="!isAssociation">pas</span> une association ?
       </h1>
+
       <button
           @click="toggleUserType"
           class="text-base sm:text-lg text-primary hover:underline mt-1"
+          v-if="isAssociation"
       >
-        {{ isRegisterMode ? 'Passer au compte volontaire' : 'Se connecter en tant qu\'association' }}
+        {{ !isRegisterMode ? 'Se connecter' : 'Inscrivez-vous' }}
+        en tant qu'association
+      </button>
+      <button
+          @click="toggleUserType"
+          class="text-base sm:text-lg  mt-1"
+          v-if="!isAssociation"
+      >
+        Cliquer <span class="text-primary hover:underline">ici pour vous {{ !isRegisterMode ? 'connecter' : 'inscrire' }}
+      </span>
       </button>
     </div>
 

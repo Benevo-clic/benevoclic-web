@@ -24,7 +24,7 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   getters: {
-    isAuthenticated: (state) => !useCookie('isConnected').value,
+    isAuthenticated: () => !useCookie('isConnected').value,
     getUser: (state) => state.user,
     fullName: (state) => state.user ? `${state.user.firstName} ${state.user.lastName}` : '',
   },
@@ -44,6 +44,7 @@ export const useAuthStore = defineStore('auth', {
           await this.fetchUser()
             navigateTo('/dashboard')
         }
+        return response
       } catch (err) {
         this.error = "Erreur d'authentification"
         throw new Error('Erreur d\'authentification'+err);

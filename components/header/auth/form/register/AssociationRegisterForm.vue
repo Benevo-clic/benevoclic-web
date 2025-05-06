@@ -11,7 +11,6 @@ const form = reactive({
   email: '',
   password: '',
   confirmPassword: '',
-  role: '' as RoleUser
 })
 
 const errorMessage = ref('')
@@ -37,7 +36,11 @@ async function handleRegister() {
 
   loading.value = true
   try {
-    await register.register(form)
+    await register.register({
+      email: form.email,
+      password: form.password,
+      role: RoleUser.ASSOCIATION
+    })
   } catch (error) {
     console.error('Erreur de connexion:', error)
     errorMessage.value = 'Une erreur est survenue lors de l’inscription.'

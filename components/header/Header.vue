@@ -5,7 +5,7 @@ import NavigationActions from "~/components/header/NavigationActions.vue";
 import NavigationActionsOptions from "~/components/header/NavigationActionsOptions.vue";
 import {AlignJustify} from "lucide-vue-next";
 import DrawerContent from "~/components/header/drawer/DrawerContent.vue";
-const { isAuthenticated, logout, login } = useAuth()
+const { isAuthenticated, logout } = useAuth()
 
 const menuOpen = ref(false)
 const showLoginModal = ref(false)

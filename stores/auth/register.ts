@@ -31,8 +31,8 @@ export const useRegisterStore = defineStore('register', {
         getVerificationStatus: (state) => state.isVerified
     },
     actions: {
-        // Nouvelle méthode pour observer les changements de token
         async startEmailVerificationListener(payload: RegisterPayload) {
+            console.log("startEmailVerificationListener", payload);
             const auth = getAuth();
             
             this.unsubscribe = onIdTokenChanged(auth, async (user) => {
@@ -52,6 +52,7 @@ export const useRegisterStore = defineStore('register', {
             });
         },
         async callRegisterEmailVerified(payload: RegisterPayload) {
+            console.log("callRegisterEmailVerified", payload);
             try {
                 await $fetch<RegisterEmailVerifiedResponse>(`/api/auth/registerEmailVerified`, {
                     method: 'POST',

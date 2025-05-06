@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onUnmounted, reactive, ref } from 'vue'
-import { useRegisterStore } from '~/stores/auth/register'
-import { userRegisterEmailPassword } from '~/composables/auth/useRegistrerEmailPassword'
-import { RoleUser } from '~/common/enums/role.enum'
+import {onUnmounted, reactive, ref} from 'vue'
+import {useRegisterStore} from '~/stores/auth/register'
+import {userRegisterEmailPassword} from '~/composables/auth/useRegistrerEmailPassword'
+import {RoleUser} from '~/common/enums/role.enum'
 
 const register = userRegisterEmailPassword()
 const loading = ref(false)
@@ -11,7 +11,6 @@ const form = reactive({
   email: '',
   password: '',
   confirmPassword: '',
-  role: '' as RoleUser
 })
 
 const errorMessage = ref('')
@@ -37,7 +36,11 @@ async function handleRegister() {
 
   loading.value = true
   try {
-    await register.register(form)
+    await register.register({
+      email: form.email,
+      password: form.password,
+      role: RoleUser.VOLUNTEER
+    })
   } catch (error) {
     console.error('Erreur de connexion:', error)
     errorMessage.value = 'Une erreur est survenue lors de l’inscription.'

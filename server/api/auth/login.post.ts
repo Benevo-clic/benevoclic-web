@@ -54,12 +54,12 @@ export default defineEventHandler(async (event) => {
 
 
   try {
+
     const loginResponse = await login({
         email: body.email,
-        password: body.password
+        password: body.password,
     },config.private.api_base_url)
     setCookies(event,loginResponse)
-
     return loginResponse
   } catch (error: any) {
     throw createError({

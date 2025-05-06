@@ -15,7 +15,7 @@ function toggleCheck() {
 }
 
 definePageMeta({
-  middleware: ['guest'], //,
+  middleware: ['guest'],
 })
 
 async function handleLogin() {
@@ -41,6 +41,7 @@ async function handleGoogleLogin() {
 function handleCheckboxChange(value: boolean) {
   isAssociation.value = value
 }
+
 function handleRegisterChange(value: boolean) {
   isRegister.value = value
 }
@@ -66,24 +67,30 @@ function handleRegisterChange(value: boolean) {
     <!-- Image + lien association (desktop uniquement) -->
     <div class="hidden md:flex flex-col justify-center items-center w-1/2">
       <img
+          src="/images/login-user.png"
+          alt="Illustration"
+          class="w-full max-w-xl mx-auto"
+          v-if="!isRegister"
+      />
+      <img
           src="/images/illustration-login-association.png"
           alt="Illustration"
           class="w-full max-w-xl mx-auto"
-          v-if="!isAssociation"
+          v-if="!isAssociation && isRegister"
       />
       <img
           src="/images/illustration-login-volunteer.png"
           alt="Illustration"
           class="w-full max-w-xl mx-auto"
-          v-if="isAssociation"
+          v-if="isAssociation && isRegister"
       />
-      <h1 class="text-xl sm:text-2xl font-bold mb-2">
+      <h1 class="text-xl sm:text-2xl font-bold mb-2" v-if="isRegister">
         Vous <span v-if="!isAssociation">n'</span> êtes <span v-if="!isAssociation">pas</span> une association ?
       </h1>
       <button
           @click="toggleCheck"
           class="text-base sm:text-lg text-primary hover:underline mt-1"
-          v-if="isAssociation"
+          v-if="isAssociation && isRegister"
       >
         {{ !isRegister ? 'Se connecter' : 'Inscrivez-vous' }}
         en tant qu'association
@@ -91,7 +98,7 @@ function handleRegisterChange(value: boolean) {
       <button
           @click="toggleCheck"
           class="text-base sm:text-lg font-bold  mt-1"
-          v-if="!isAssociation"
+          v-if="!isAssociation && isRegister"
       >
         Cliquer <span class="text-primary hover:underline">ici pour vous {{ !isRegister ? 'connecter' : 'inscrire' }}
       </span>
