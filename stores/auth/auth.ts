@@ -24,7 +24,7 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   getters: {
-    isAuthenticated: (state) => !useCookie('isConnected').value,
+    isAuthenticated: () => !useCookie('isConnected').value,
     getUser: (state) => state.user,
     fullName: (state) => state.user ? `${state.user.firstName} ${state.user.lastName}` : '',
   },
@@ -40,13 +40,15 @@ export const useAuthStore = defineStore('auth', {
           body: payload,
         })
 
+
         if(response.idToken) {
           await this.fetchUser()
             navigateTo('/dashboard')
         }
-      } catch (err) {
-        this.error = "Erreur d'authentification"
-        throw new Error('Erreur d\'authentification'+err);
+        return response
+      } catch (err: any) {
+        this.error = err?.message || 'Erreur d\'authentification'
+        throw err
       } finally {
         this.loading = false
       }
@@ -63,9 +65,9 @@ export const useAuthStore = defineStore('auth', {
             this.user = null
             navigateTo('/auth/login')
         }
-      } catch (err) {
-        this.error = "Erreur de déconnexion"
-        throw new Error('Erreur de déconnexion'+err);
+      } catch (err: any) {
+        this.error = err?.message || 'Erreur de déconnexion'
+        throw err
       } finally {
         this.loading = false
       }
@@ -73,27 +75,33 @@ export const useAuthStore = defineStore('auth', {
 
     async refreshTokens() {
       try {
+        this.error = null
         await $fetch('/api/auth/refresh', {
           method: 'POST',
         })
-      } catch (error) {
+      } catch (error: any) {
+        this.error = error?.message || 'Erreur de rafraîchissement du token'
         await this.logout()
       }
     },
 
     async fetchUser() {
       try {
+        this.error = null
 
           await this.refreshTokens()
 
         this.user = await $fetch<UserInfo>('/api/user/userCurrent')
-      } catch (err) {
+      } catch (err: any) {
+        this.error = err?.message || 'Erreur de récupération utilisateur'
         await this.logout()
       }
     },
 
     async fetchUserGoogle(body: { idToken: string, refreshToken: string, uid: string }) {
       try {
+        this.error = null
+
         const response = await $fetch('/api/auth/google/updateStatusUser', {
           method: 'PATCH',
           headers: {
@@ -102,19 +110,20 @@ export const useAuthStore = defineStore('auth', {
           body: JSON.stringify(body)
         });
 
-        if(!response) {
-          this.error = "Erreur lors de la connexion"
-          throw new Error('Réponse serveur vide');
+        if (!response) {
+          this.error = 'Erreur lors de la connexion'
+          throw new Error(this.error)
         }
-      } catch (error) {
-        throw new Error('Erreur lors de la connexion'+error);
+      } catch (error: any) {
+        this.error = error?.message || 'Erreur lors de la connexion'
+        throw error
       }
     },
 
     async loginWithGoogle() {
       this.loading = true
-      this.error = null
       try {
+        this.error = null
 
         const user = await loginWithGoogle(); // Connexion avec Google
         const idToken = await user.getIdToken();
@@ -130,44 +139,59 @@ export const useAuthStore = defineStore('auth', {
           navigateTo('/registerVolunteer');
         }
 
-      } catch (err) {
-        this.error = "Erreur d'authentification Google"
-        throw new Error('Erreur d\'authentification Google'+err);
+      } catch (err: any) {
+        this.error = err?.message || 'Erreur d\'authentification Google'
+        throw err
       } finally {
         this.loading = false
       }
     },
 
     async callRegisterGoogle(idToken: string) {
-      const response = await $fetch("/api/auth/google/registerGoogle", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          idToken,
-          role: RoleUser.VOLUNTEER,
-        }),
-      });
-      if (!response) {
-        this.error = "Erreur lors de l'inscription";
-        throw new Error('Réponse serveur vide');
+      try {
+        this.error = null
+        const response = await $fetch("/api/auth/google/registerGoogle", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            idToken,
+            role: RoleUser.VOLUNTEER,
+          }),
+        });
+        if (!response) {
+          this.error = 'Réponse serveur vide'
+          throw new Error(this.error)
+        }
+        return response;
+      } catch (error: any) {
+        this.error = error?.message || 'Erreur lors de l\'inscription Google'
+        throw error
       }
-      return response;
+
     },
 
     async removeUserAccount(){
-      await $fetch("/api/auth/remove",{
-        method:'DELETE',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: {
-          uid:this.user?.userId
-        }
-      })
 
-      navigateTo('/')
+      try {
+        this.error = null
+        await $fetch("/api/auth/remove",{
+          method:'DELETE',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: {
+            uid:this.user?.userId
+          }
+        })
+
+        navigateTo('/')
+      } catch (error: any) {
+        this.error = error?.message || 'Erreur lors de la suppression du compte'
+        throw error
+      }
+
     }
 
   },

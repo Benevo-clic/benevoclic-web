@@ -12,7 +12,8 @@ const form = reactive({
   role: '' as RoleUser
 })
 definePageMeta({
-  middleware: ['guest'] // Solution temporaire pour le typage
+  middleware: ['guest'], // Solution temporaire pour le typage
+  layout:'header'
 })
 
 const registerStore = useRegisterStore();

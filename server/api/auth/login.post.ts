@@ -1,4 +1,5 @@
 import {defineEventHandler, readBody, createError, H3Event, EventHandlerRequest} from 'h3'
+import {RoleUser} from "~/common/enums/role.enum";
 
 
 export interface LoginResponse {
@@ -38,6 +39,7 @@ export function setCookies(event:H3Event<EventHandlerRequest>,loginResponse: Log
 }
 
 export async function login(payload: { email: string, password: string },apiBase:string | undefined): Promise<LoginResponse> {
+
   return await $fetch<LoginResponse>(`${apiBase}/user/login`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -54,12 +56,12 @@ export default defineEventHandler(async (event) => {
 
 
   try {
+
     const loginResponse = await login({
         email: body.email,
-        password: body.password
+        password: body.password,
     },config.private.api_base_url)
     setCookies(event,loginResponse)
-
     return loginResponse
   } catch (error: any) {
     throw createError({
