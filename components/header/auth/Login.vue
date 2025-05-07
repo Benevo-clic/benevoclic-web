@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { useAuth } from '~/composables/auth/useAuth'
-const auth = useAuth()
-const loading = ref(false)
-const form = reactive({
-  email: '',
-  password: ''
-})
+import { ref } from 'vue'
+
+
 const isAssociation = ref(false)
 const isRegister = ref(false)
 
@@ -18,25 +13,6 @@ definePageMeta({
   middleware: ['guest'],
 })
 
-async function handleLogin() {
-  loading.value = true
-  try {
-    await auth.login(form)
-  } catch (error) {
-    console.error('Erreur de connexion:', error)
-  } finally {
-    loading.value = false
-  }
-}
-
-async function handleGoogleLogin() {
-  console.log('handleGoogleLogin')
-  try {
-    await auth.loginWithGoogle()
-  } catch (error) {
-    console.error('Erreur de connexion Google:', error)
-  }
-}
 
 function handleCheckboxChange(value: boolean) {
   isAssociation.value = value
@@ -55,10 +31,6 @@ function handleRegisterChange(value: boolean) {
     <!-- Formulaire en premier sur mobile -->
 
     <HeaderAuthFormLoginForm
-        :form="form"
-        :loading="loading"
-        :handle-login="handleLogin"
-        :handle-google-login="handleGoogleLogin"
         @toggle-check="handleCheckboxChange"
         :checked="isAssociation"
         @toggle-register="handleRegisterChange"

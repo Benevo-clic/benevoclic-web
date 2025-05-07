@@ -1,18 +1,37 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import {reactive, ref, watch} from 'vue'
 import UsersLoginForm from "~/components/header/auth/form/login/UsersLoginForm.vue"
 import VolunteerRegisterForm from "~/components/header/auth/form/register/VolunteerRegisterForm.vue"
 import AssociationRegisterForm from "~/components/header/auth/form/register/AssociationRegisterForm.vue"
 import {ShieldX} from "lucide-vue-next";
+import {useAuth} from "~/composables/auth/useAuth";
+const auth = useAuth()
 
 
-const { form, loading, checked, handleLogin, handleGoogleLogin } = defineProps<{
-  form: Record<string, any>
-  loading: boolean
+const loading = ref(false)
+let isError = ref(false)
+
+const form = reactive({
+  email: '',
+  password: ''
+})
+
+const { checked } = defineProps<{
   checked: boolean
-  handleLogin: () => Promise<void>
-  handleGoogleLogin: () => Promise<void>
 }>()
+
+async function handleLogin() {
+  loading.value = true
+  try {
+    const res = await auth.login(form)
+    isError.value = false
+  } catch (error) {
+    isError.value = true
+    console.error('Erreur de connexion:', error)
+  } finally {
+    loading.value = false
+  }
+}
 
 const emit = defineEmits<{
   (e: 'toggle-check', isChecked: boolean): void;
@@ -41,6 +60,13 @@ function toggleUserType() {
   isAssociation.value = !isAssociation.value
 }
 
+async function handleGoogleLogin() {
+  try {
+    await auth.loginWithGoogle()
+  } catch (error) {
+    console.error('Erreur de connexion Google:', error)
+  }
+}
 
 </script>
 
@@ -58,13 +84,13 @@ function toggleUserType() {
       Inscrivez-vous gratuitement pour rejoindre la communauté et agir pour des causes qui vous tiennent à cœur.
     </p>
 
-    <div class="alert alert-error flex items-center gap-4 mb-4 shadow-md border border-red-200 rounded-lg px-4 py-3 w-full">
-      <ShieldX class="w-6 h-6 text-red-600" />
-      <p class="text-sm text-red-800">
-        Vous n'êtes pas autorisé à vous connecter :
-        vous <span v-if="isAssociation">n'</span>êtes <span v-if="isAssociation">pas</span> une association.
+    <div class="alert alert-error flex items-center gap-4 mb-4 shadow-md border border-red-200 rounded-lg px-4 py-3 w-full" v-if="isError">
+      <ShieldX class="w-6 h-6 sm:w-8 sm:h-8 md:w-8 md:h-8 text-red-600" />
+      <p class="text-sm text-red-900 font-semibold">
+        Votre adresse e-mail ou votre mot de passe est incorrect.
       </p>
     </div>
+
 
 
     <!-- Texte + switch utilisateur -->
