@@ -1,0 +1,75 @@
+{
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "description": "Hoy es un nuevo día. Tú le das forma. Inicia sesión para gestionar tus proyectos.",
+      "forgot_password": "¿Olvidaste tu contraseña?",
+      "no_account": "¿No tienes una cuenta?",
+      "create_account": "Crear una cuenta",
+      "register": "Registrarse",
+      "login_with_google": "Iniciar sesión con Google",
+      "error": {
+        "invalid_credentials": "Tu correo electrónico o contraseña son incorrectos.",
+        "account_locked": "Tu cuenta está bloqueada. Por favor, contacta con el soporte."
+      }
+    },
+    "logout": "Cerrar sesión",
+    "register": {
+      "title": "Registrarse",
+      "association_status_true": "Soy una asociación",
+      "association_status_false": "No soy una asociación",
+      "description": "Regístrate gratis para unirte a la comunidad y actuar por las causas que te importan.",
+      "already_have_account": "¿Ya tienes una cuenta?",
+      "login": "Iniciar sesión",
+      "association_true": "¿Eres una asociación?",
+      "association_false": "¿No eres una asociación?",
+      "click_here": "Haz clic aquí",
+      "info_click_here": "para registrarte",
+      "association_register": "Registrarse como asociación",
+      "register_with_google": "Registrarse con Google",
+      "terms": "Al registrarte, aceptas nuestros",
+      "error": {
+        "invalid_email": "La dirección de correo electrónico no es válida.",
+        "password_mismatch": "Las contraseñas no coinciden.",
+        "weak_password": "La contraseña debe tener al menos 8 caracteres."
+      }
+    },
+    "volunteer": {
+      "name": "Nombre",
+      "first_name": "Primer nombre",
+      "phone": "Teléfono",
+      "birthdate": "Fecha de nacimiento",
+      "city": "Ciudad",
+      "postal_code": "Código postal",
+      "bio": "Sobre ti"
+    },
+    "association": {
+      "name": "Nombre de la asociación",
+      "association_type": "Tipo de asociación",
+      "siret": "Número SIRET",
+      "phone": "Teléfono",
+      "website": "Sitio web",
+      "city": "Ciudad",
+      "postal_code": "Código postal",
+      "country": "País",
+      "bio": "Sobre la asociación"
+    },
+    "uploadImageForm": {
+      "instruction": "Por favor, sube una imagen de perfil",
+      "message": "Agrega tu foto de perfil 🖼️",
+      "clickToUpload": "Haz clic aquí para subir una imagen",
+      "changeImage": "Cambiar imagen",
+      "finish": "Terminar",
+      "skip": "Saltar"
+    },
+    "title": "Contento de",
+    "title_2": "verte de nuevo!",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirm_password": "Confirmar contraseña",
+    "continue": "Continuar",
+    "or": "o",
+    "placeholder_email": "Introduce tu correo electrónico",
+    "placeholder_password": "Al menos 8 caracteres"
+  }
+}

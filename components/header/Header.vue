@@ -1,35 +1,52 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import {useAuth} from "~/composables/auth/useAuth";
+import {useUser} from "~/composables/auth/useUser";
 import NavigationActions from "~/components/header/NavigationActions.vue";
 import NavigationActionsOptions from "~/components/header/NavigationActionsOptions.vue";
 import {AlignJustify} from "lucide-vue-next";
 import DrawerContent from "~/components/header/drawer/DrawerContent.vue";
-const { isAuthenticated, logout } = useAuth()
+const { isAuthenticated, logout } = useUser()
 
 const menuOpen = ref(false)
 const showLoginModal = ref(false)
-const email = ref('')
-const password = ref('')
 
-const handleSubmit = async () => {
-  showLoginModal.value = false
-  email.value = ''
-  password.value = ''
-  await navigateTo('/dashboard')
-}
+const auth = useUser()
+
+// URL de l'image de profil, ou une image par défaut
+const profileImageUrl = computed(() => {
+  const img = auth.user.value?.imageProfile
+  if (img?.data && img.contentType) {
+    return `data:${img.contentType};base64,${img.data}`
+  }
+  // fallback vers une image par défaut
+  return '/images/default-avatar.png'
+})
+
 const handleDrawerClose = () => {
   menuOpen.value = !menuOpen.value
   console.log('handleDrawerClose', menuOpen.value)
 }
 
-watch(menuOpen, (open) => {
-  if (open) {
-    document.body.style.overflow = 'hidden'
-  } else {
-    document.body.style.overflow = ''
-  }
-})
+watch(
+    () => isAuthenticated,
+    (isAuth) => {
+      console.log('isAuthenticated changed:', isAuth)
+      if (isAuth) {
+        showLoginModal.value = false
+        console.log('Closing login modal')
+      }
+    }
+)
+
+
+watch(
+    () => isAuthenticated,
+    (isAuth) => {
+      if (isAuth) {
+        showLoginModal.value = false
+      }
+    }
+)
 
 onMounted(() => {
   const mediaQuery = window.matchMedia('(min-width: 1253px)')
@@ -124,11 +141,24 @@ onMounted(() => {
       <div class="right-actions">
 
         <div v-if="isAuthenticated" class="auth-buttons">
-          <HeaderAuthModalAuth />
+          <HeaderAuthModalAuth/>
         </div>
 
         <div v-else class="btn btn-primary">
           <button @click="logout" class="text-neutral">Déconnexion</button>
+        </div>
+        <div class="profile-wrapper">
+          <!-- Affiche la photo de profil -->
+          <img
+              :src="profileImageUrl"
+              alt="Photo de profil"
+              class="w-12 h-12 rounded-full object-cover"
+          />
+
+          <!-- Exemple : afficher le nom de l’utilisateur -->
+          <h2 class="mt-2 text-lg font-medium">
+            {{ auth.user.value?.firstName }} {{ auth.user.value?.lastName }}
+          </h2>
         </div>
       </div>
     </div>

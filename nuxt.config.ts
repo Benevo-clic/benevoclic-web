@@ -21,12 +21,23 @@ export default defineNuxtConfig({
     assets: '/<rootDir>/assets',
   },
   css: [
-    '~/assets/css/main.scss'
+    '~/assets/css/main.scss',
   ],
-
+  i18n: {
+    locales: [
+      { code: 'es', name: 'Espanish', file: 'es.json' },
+      { code: 'fr', name: 'Français', file: 'fr.json' },
+      { code: 'en', name: 'English', file: 'en.json' },
+    ],
+    lazy: true,
+    langDir: 'locales',
+    defaultLocale: 'fr',
+    vueI18n: './i18n.config.ts'
+  },
   modules: [
     '@nuxtjs/tailwindcss',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@nuxtjs/i18n'
   ],
 
   compatibilityDate: '2025-02-23',

@@ -16,7 +16,7 @@ export async function loginWithGoogle(): Promise<User> {
   return result.user;
 }
 
-export const useAuthStore = defineStore('auth', {
+export const useUserStore = defineStore('auth', {
   state: () => ({
     user: null as UserInfo | null,
     loading: false,
@@ -120,12 +120,41 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async loginWithGoogle() {
+    async uploadProfilePicture(imageBase64: string) {
+      this.loading = true
+      this.error = null
+
+        try {
+            const response = await $fetch('/api/user/updateProfileUser', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                imageBase64,
+                id: this.user?.userId
+              })
+            })
+
+            if (!response) {
+              this.error = 'Erreur lors de l\'upload de l\'image'
+              throw new Error(this.error)
+            }
+            return response
+        } catch (error: any) {
+            this.error = error?.message || 'Erreur lors de l\'upload de l\'image'
+            throw error
+        } finally {
+            this.loading = false
+        }
+    },
+
+    async loginWithGoogle(role: RoleUser) {
       this.loading = true
       try {
         this.error = null
 
-        const user = await loginWithGoogle(); // Connexion avec Google
+        const user = await loginWithGoogle();
         const idToken = await user.getIdToken();
 
         const payload = idToken.split('.')[1];
@@ -135,8 +164,15 @@ export const useAuthStore = defineStore('auth', {
             await this.fetchUserGoogle({idToken, refreshToken: user.refreshToken, uid: user.uid});
             navigateTo('/dashboard')
         }else{
-          await this.callRegisterGoogle(idToken);
-          navigateTo('/registerVolunteer');
+          await this.callRegisterGoogle(idToken,role)
+          await navigateTo({
+            path: '/dashboard',
+            query: {
+              from: 'google',
+              message: 'success',
+              association: role === RoleUser.ASSOCIATION ? 'true' : 'false'
+            }
+          })
         }
 
       } catch (err: any) {
@@ -147,7 +183,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async callRegisterGoogle(idToken: string) {
+    async callRegisterGoogle(idToken: string, role: RoleUser) {
       try {
         this.error = null
         const response = await $fetch("/api/auth/google/registerGoogle", {
@@ -157,7 +193,7 @@ export const useAuthStore = defineStore('auth', {
           },
           body: JSON.stringify({
             idToken,
-            role: RoleUser.VOLUNTEER,
+            role: role,
           }),
         });
         if (!response) {

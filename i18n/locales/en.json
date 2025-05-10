@@ -1,0 +1,75 @@
+{
+  "auth": {
+    "login": {
+      "title": "Log In",
+      "description": "Today is a new day. You shape it. Log in to manage your projects.",
+      "forgot_password": "Forgot your password?",
+      "no_account": "Don't have an account?",
+      "create_account": "Create an account",
+      "register": "Sign up",
+      "login_with_google": "Log in with Google",
+      "error": {
+        "invalid_credentials": "Your email address or password is incorrect.",
+        "account_locked": "Your account is locked. Please contact support."
+      }
+    },
+    "logout": "Log out",
+    "register": {
+      "title": "Sign Up",
+      "association_status_true": "I am an association",
+      "association_status_false": "I am not an association",
+      "description": "Sign up for free to join the community and take action for causes that matter to you.",
+      "already_have_account": "Already have an account?",
+      "login": "Log In",
+      "association_true": "Are you an association?",
+      "association_false": "Are you not an association?",
+      "click_here": "Click here",
+      "info_click_here": "to sign up",
+      "association_register": "Register as an association",
+      "register_with_google": "Sign Up with Google",
+      "terms": "By signing up, you accept our",
+      "error": {
+        "invalid_email": "The email address is invalid.",
+        "password_mismatch": "Passwords do not match.",
+        "weak_password": "The password must be at least 8 characters long."
+      }
+    },
+    "volunteer": {
+      "name": "Name",
+      "first_name": "First Name",
+      "phone": "Phone",
+      "birthdate": "Birthdate",
+      "city": "City",
+      "postal_code": "Postal Code",
+      "bio": "About you"
+    },
+    "association": {
+      "name": "Association Name",
+      "association_type": "Type of Association",
+      "siret": "SIRET Number",
+      "phone": "Phone",
+      "website": "Website",
+      "city": "City",
+      "postal_code": "Postal Code",
+      "country": "Country",
+      "bio": "About the association"
+    },
+    "uploadImageForm": {
+      "instruction": "Please upload a profile image",
+      "message": "Add your profile picture 🖼️",
+      "clickToUpload": "Click here to upload an image",
+      "changeImage": "Change Image",
+      "finish": "Finish",
+      "skip": "Skip"
+    },
+    "title": "Glad to",
+    "title_2": "see you again!",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm password",
+    "continue": "Continue",
+    "or": "or",
+    "placeholder_email": "Enter your email",
+    "placeholder_password": "At least 8 characters"
+  }
+}

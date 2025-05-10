@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {X, Search, Heart, Bell,ChevronLeft} from "lucide-vue-next";
-import {useAuth} from "~/composables/auth/useAuth";
-const { isAuthenticated, logout: authLogout } = useAuth()
+import {useUser} from "~/composables/auth/useUser";
+const { isAuthenticated, logout: authLogout } = useUser()
 
 
 const props = defineProps<{

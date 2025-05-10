@@ -1,5 +1,4 @@
-import {useRegisterStore} from "~/stores/auth/register";
-import {onMounted} from "vue";
+import {useRegisterStore} from "~/stores/user/register";
 
 
 export const userRegisterEmailPassword = ()=>{

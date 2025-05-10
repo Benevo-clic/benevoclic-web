@@ -6,6 +6,18 @@ export type RegisterPayload =  {
     role: RoleUser
 }
 
+export type RegisterVolunteerPayload = {
+    email: string,
+    firstName: string,
+    lastName: string,
+    phone: string,
+    bio: string,
+    city: string,
+    postalCode: string,
+    country: string,
+    birthDate: string
+}
+
 export type RegisterEmailVerifiedPayload = {
     email: string,
     role: RoleUser,

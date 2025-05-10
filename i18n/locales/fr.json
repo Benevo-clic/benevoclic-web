@@ -1,0 +1,75 @@
+{
+  "auth": {
+    "login": {
+      "title": "Se connecter",
+      "description": "Aujourd’hui est un nouveau jour. C’est vous qui lui donnez sa forme. Connectez-vous pour gérer vos projets.",
+      "forgot_password": "Mot de passe oublié ?",
+      "no_account": "Vous n'avez pas de compte ?",
+      "create_account": "Créer un compte",
+      "register": "Inscrivez-vous",
+      "login_with_google": "Se connecter avec Google",
+      "error": {
+        "invalid_credentials": "Votre adresse e-mail ou votre mot de passe est incorrect.",
+        "account_locked": "Votre compte est verrouillé. Veuillez contacter le support."
+      }
+    },
+    "logout": "Déconnexion",
+    "register": {
+      "title": "S'inscrire",
+      "association_status_true": "Je suis une association",
+      "association_status_false": "Je ne suis pas une association",
+      "description": "Inscrivez-vous gratuitement pour rejoindre la communauté et agir pour des causes qui vous tiennent à cœur.",
+      "already_have_account": "Vous avez déjà un compte ?",
+      "login": "Se connecter",
+      "association_true": "Vous êtes une association ?",
+      "association_false": "Vous n'êtes pas une association ?",
+      "click_here": "Cliquez ici",
+      "info_click_here": "pour s'inscrire",
+      "association_register": "S'inscrire en tant qu'association",
+      "register_with_google": "S'inscrire avec Google",
+      "terms": "En vous inscrivant, vous acceptez nos",
+      "error": {
+        "invalid_email": "L'adresse e-mail est invalide.",
+        "password_mismatch": "Les mots de passe ne correspondent pas.",
+        "weak_password": "Le mot de passe doit contenir au moins 8 caractères."
+      }
+    },
+    "volunteer": {
+      "name": "Nom",
+      "first_name": "Prénom",
+      "phone": "Téléphone",
+      "birthdate": "Date de naissance",
+      "city": "Ville",
+      "postal_code": "Code postal",
+      "bio": "À propos de vous"
+    },
+    "association": {
+      "name": "Nom de l'association",
+      "association_type": "Type d'association",
+      "siret": "Numéro SIRET",
+      "phone": "Téléphone",
+      "website": "Site web",
+      "city": "Ville",
+      "postal_code": "Code postal",
+      "country": "Pays",
+      "bio": "À propos de l'association"
+    },
+    "uploadImageForm": {
+      "instruction": "Veuillez télécharger une image de profil",
+      "message": "Ajoutez votre photo de profil 🖼️",
+      "clickToUpload": "Cliquez ici pour importer une image",
+      "changeImage": "Modifier l'image",
+      "finish": "Terminer",
+      "skip": "Ignorer"
+    },
+    "title": "Content de ",
+    "title_2": "vous revoir !",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "confirm_password": "Confirmer le mot de passe",
+    "continue": "Continuer",
+    "or": "ou",
+    "placeholder_email": "Entrez votre e-mail",
+    "placeholder_password": "Au moins 8 caractères"
+  }
+}

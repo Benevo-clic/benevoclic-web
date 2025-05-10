@@ -1,9 +1,8 @@
-import { useAuthStore } from '~/stores/auth/auth'
+import { useUserStore } from '~/stores/user/user.store'
 import { onMounted, computed } from 'vue'
-import Login from '~/pages/auth/login.vue'
 
-export const useAuth = () => {
-    const authStore = useAuthStore()
+export const useUser = () => {
+    const authStore = useUserStore()
     
     onMounted(async () => {
         if (!authStore.isAuthenticated) {
@@ -18,6 +17,7 @@ export const useAuth = () => {
         logout: authStore.logout,
         error: computed(() => authStore.error),
         loginWithGoogle: authStore.loginWithGoogle,
-        removeUser: authStore.removeUserAccount
+        removeUser: authStore.removeUserAccount,
+        updateProfile: authStore.uploadProfilePicture,
     }
 }

@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { onUnmounted, reactive, ref } from 'vue'
-import { useRegisterStore } from '~/stores/auth/register'
-import { userRegisterEmailPassword } from '~/composables/auth/useRegistrerEmailPassword'
-import { RoleUser } from '~/common/enums/role.enum'
+import {onUnmounted, reactive, ref} from 'vue'
+import {useRegisterStore} from '~/stores/user/register'
+import {userRegisterEmailPassword} from '~/composables/auth/useRegistrerEmailPassword'
+import {RoleUser} from '~/common/enums/role.enum'
+const {t} = useI18n()
 
 const register = userRegisterEmailPassword()
 const loading = ref(false)
+
+const {isAssociation} = defineProps<{
+  isAssociation: boolean
+}>()
 
 const form = reactive({
   email: '',
@@ -25,12 +30,12 @@ async function handleRegister() {
   errorMessage.value = ''
 
   if (form.password !== form.confirmPassword) {
-    errorMessage.value = 'Les mots de passe ne correspondent pas.'
+    errorMessage.value = t('auth.register.error.password_mismatch')
     return
   }
 
   if (form.password.length < 8) {
-    errorMessage.value = 'Le mot de passe doit contenir au moins 8 caractères.'
+    errorMessage.value = t('auth.register.error.weak_password')
     return
   }
 
@@ -39,7 +44,7 @@ async function handleRegister() {
     await register.register({
       email: form.email,
       password: form.password,
-      role: RoleUser.ASSOCIATION
+      role: isAssociation ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER
     })
   } catch (error) {
     console.error('Erreur de connexion:', error)
@@ -54,12 +59,12 @@ async function handleRegister() {
   <form class="space-y-4" @submit.prevent="handleRegister">
     <div class="form-control">
       <label class="label">
-        <span class="label-text">E-mail</span>
+        <span class="label-text">{{t('auth.email')}}</span>
       </label>
       <input
           v-model="form.email"
           type="email"
-          placeholder="email@example.com"
+          :placeholder="t('auth.email')"
           class="input input-bordered w-full"
           required
       />
@@ -67,12 +72,12 @@ async function handleRegister() {
 
     <div class="form-control">
       <label class="label">
-        <span class="label-text">Mot de passe</span>
+        <span class="label-text">{{t('auth.password')}}</span>
       </label>
       <input
           v-model="form.password"
           type="password"
-          placeholder="Au moins 8 caractères"
+          :placeholder="t('auth.placeholder_password')"
           class="input input-bordered w-full"
           required
       />
@@ -80,12 +85,12 @@ async function handleRegister() {
 
     <div class="form-control">
       <label class="label">
-        <span class="label-text">Confirmer votre mot de passe</span>
+        <span class="label-text">{{t('auth.confirm_password')}}</span>
       </label>
       <input
           v-model="form.confirmPassword"
           type="password"
-          placeholder="Confirmez votre mot de passe"
+          :placeholder="t('auth.confirm_password')"
           class="input input-bordered w-full"
           required
       />
@@ -96,7 +101,7 @@ async function handleRegister() {
 
     <button type="submit" class="btn btn-primary w-full" :disabled="loading">
       <span v-if="loading" class="loading loading-spinner loading-sm"></span>
-      <span v-else>Continuer</span>
+      <span v-else>{{t('auth.continue')}}</span>
     </button>
   </form>
 </template>

@@ -2,7 +2,7 @@
 import { ref, reactive, onUnmounted } from 'vue'
 import {RoleUser} from "~/common/enums/role.enum";
 import {userRegisterEmailPassword} from "~/composables/auth/useRegistrerEmailPassword";
-import { useRegisterStore } from '~/stores/auth/register';
+import { useRegisterStore } from '~/stores/user/register';
 
 const register = userRegisterEmailPassword()
 const loading = ref(false)

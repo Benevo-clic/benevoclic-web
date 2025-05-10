@@ -1,10 +1,8 @@
-import { defineEventHandler, readBody, setCookie } from "h3";
-import { RoleUser } from "~/common/enums/role.enum";
+import { defineEventHandler, readBody } from "h3";
 import type { RegisterGooglePayload, RegisterUserGoogleResponse } from "~/common/types/auth.type";
 import { getAuth, signInWithCustomToken } from "@firebase/auth";
 import {setCookies} from "~/server/api/auth/login.post";
 
-const API_BASE = process.env.API_BASE_URL;
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
@@ -25,6 +23,7 @@ export default defineEventHandler(async (event) => {
             role: body.role,
         } as RegisterGooglePayload,
     });
+
 
     if (!response.token) {
         return { error: "Invalid token" };

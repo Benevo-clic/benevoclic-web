@@ -2,6 +2,10 @@
 import {ChevronDown,Earth,MapPin} from "lucide-vue-next";
 import { ref } from 'vue'
 
+const {locale,setLocale} = useI18n()
+
+
+
 const currentCity = ref('Rio, Brazil')
 const showCityMenu = ref(false)
 const showLanguageMenu = ref(false)
@@ -13,9 +17,10 @@ function selectCity(city:string) {
   showCityMenu.value = false
 }
 
-function changeLanguage(locale: string) {
-  console.log("Langue choisie :", locale)
+async function changeLanguage(lo: 'fr' | 'en' | 'es') {
+  await setLocale(lo)
   showLanguageMenu.value = false
+  console.log('Langue actuelle :', locale.value)
 }
 
 </script>

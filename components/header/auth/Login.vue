@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+const { t } = useI18n()
 
 const isAssociation = ref(false)
 const isRegister = ref(false)
@@ -57,22 +58,21 @@ function handleRegisterChange(value: boolean) {
           v-if="isAssociation && isRegister"
       />
       <h1 class="text-xl sm:text-2xl font-bold mb-2" v-if="isRegister">
-        Vous <span v-if="!isAssociation">n'</span> êtes <span v-if="!isAssociation">pas</span> une association ?
+        {{ t(isAssociation ? 'auth.register.association_true' : 'auth.register.association_false') }}
       </h1>
       <button
           @click="toggleCheck"
           class="text-base sm:text-lg text-primary hover:underline mt-1"
           v-if="isAssociation && isRegister"
       >
-        {{ !isRegister ? 'Se connecter' : 'Inscrivez-vous' }}
-        en tant qu'association
+        {{t('auth.register.association_register')}}
       </button>
       <button
           @click="toggleCheck"
           class="text-base sm:text-lg font-bold  mt-1"
           v-if="!isAssociation && isRegister"
       >
-        Cliquer <span class="text-primary hover:underline">ici pour vous {{ !isRegister ? 'connecter' : 'inscrire' }}
+        {{t('auth.register.click_here')}} <span class="text-primary hover:underline"> {{t('auth.register.info_click_here')}}
       </span>
       </button>
 
