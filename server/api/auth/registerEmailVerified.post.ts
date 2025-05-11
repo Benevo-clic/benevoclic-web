@@ -32,6 +32,11 @@ export default defineEventHandler(async (event) => {
 
         setCookies(event, loginResponse);
 
+        return {
+            message: "Inscription réussie",
+            userId: registerEmailVerifiedResponse.uid
+        }
+
     }catch (error: any) {
         throw createError({
             statusCode: error.statusCode || 401,

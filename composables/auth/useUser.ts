@@ -1,8 +1,10 @@
 import { useUserStore } from '~/stores/user/user.store'
 import { onMounted, computed } from 'vue'
+import {useRegisterStore} from "~/stores/user/register";
 
 export const useUser = () => {
     const authStore = useUserStore()
+    const registerStore = useRegisterStore()
     
     onMounted(async () => {
         if (!authStore.isAuthenticated) {
@@ -19,5 +21,6 @@ export const useUser = () => {
         loginWithGoogle: authStore.loginWithGoogle,
         removeUser: authStore.removeUserAccount,
         updateProfile: authStore.uploadProfilePicture,
+        register: registerStore.registerWithEmailPassword
     }
 }

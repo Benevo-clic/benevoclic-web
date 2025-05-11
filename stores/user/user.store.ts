@@ -2,9 +2,12 @@ import {defineStore} from 'pinia'
 import {$fetch} from 'ofetch'
 import type {LoginPayload, LoginResponse, UserInfo} from "~/common/types/auth.type";
 import {useCookie} from "#app/composables/cookie";
-import {signInWithPopup} from "firebase/auth";
 import type {User} from "firebase/auth";
+import {
+  signInWithPopup
+} from "firebase/auth";
 import {RoleUser} from "~/common/enums/role.enum";
+
 
 
 export async function loginWithGoogle(): Promise<User> {
@@ -16,17 +19,27 @@ export async function loginWithGoogle(): Promise<User> {
   return result.user;
 }
 
+interface UserState {
+  user: UserInfo | null;
+  loading: boolean;
+  isVerified: boolean;
+  error: string | null;
+}
+
 export const useUserStore = defineStore('auth', {
-  state: () => ({
-    user: null as UserInfo | null,
+  state: (): UserState => ({
+    user: null,
     loading: false,
-    error: null as string | null,
+    error: null,
+    isVerified: false
   }),
 
   getters: {
     isAuthenticated: () => !useCookie('isConnected').value,
     getUser: (state) => state.user,
     fullName: (state) => state.user ? `${state.user.firstName} ${state.user.lastName}` : '',
+    getVerificationStatus: (state) => state.isVerified
+
   },
 
   actions: {
@@ -140,7 +153,7 @@ export const useUserStore = defineStore('auth', {
               this.error = 'Erreur lors de l\'upload de l\'image'
               throw new Error(this.error)
             }
-            return response
+            navigateTo("/dashboard")
         } catch (error: any) {
             this.error = error?.message || 'Erreur lors de l\'upload de l\'image'
             throw error
@@ -227,8 +240,6 @@ export const useUserStore = defineStore('auth', {
         this.error = error?.message || 'Erreur lors de la suppression du compte'
         throw error
       }
-
     }
-
   },
 })

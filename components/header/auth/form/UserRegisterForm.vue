@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import {onUnmounted, reactive, ref} from 'vue'
-import {useRegisterStore} from '~/stores/user/register'
-import {userRegisterEmailPassword} from '~/composables/auth/useRegistrerEmailPassword'
+import { reactive, ref} from 'vue'
 import {RoleUser} from '~/common/enums/role.enum'
+import {useUser} from "~/composables/auth/useUser";
+
 const {t} = useI18n()
 
-const register = userRegisterEmailPassword()
 const loading = ref(false)
+
+const user = useUser()
 
 const {isAssociation} = defineProps<{
   isAssociation: boolean
 }>()
+
 
 const form = reactive({
   email: '',
@@ -20,11 +22,12 @@ const form = reactive({
 
 const errorMessage = ref('')
 
-const registerStore = useRegisterStore()
+const emit = defineEmits<{
+  (e: 'emailVerified', isVerified: boolean): void;
+}>()
+const isEmailVerified = ref(false)
 
-onUnmounted(() => {
-  registerStore.cleanup()
-})
+
 
 async function handleRegister() {
   errorMessage.value = ''
@@ -38,17 +41,21 @@ async function handleRegister() {
     errorMessage.value = t('auth.register.error.weak_password')
     return
   }
-
   loading.value = true
+
   try {
-    await register.register({
+    await user.register({
       email: form.email,
       password: form.password,
       role: isAssociation ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER
     })
+    isEmailVerified.value = true
+    emit('emailVerified', isEmailVerified.value)
   } catch (error) {
     console.error('Erreur de connexion:', error)
     errorMessage.value = 'Une erreur est survenue lors de l’inscription.'
+    isEmailVerified.value = false
+    emit('emailVerified', isEmailVerified.value)
   } finally {
     loading.value = false
   }
@@ -56,7 +63,7 @@ async function handleRegister() {
 </script>
 
 <template>
-  <form class="space-y-4" @submit.prevent="handleRegister">
+  <form class="space-y-4" @submit.prevent="handleRegister" >
     <div class="form-control">
       <label class="label">
         <span class="label-text">{{t('auth.email')}}</span>

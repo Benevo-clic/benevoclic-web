@@ -108,6 +108,10 @@ const steps: Step[] = [
 
 const loading = ref(false)
 const isError = ref(false)
+const emit = defineEmits<{
+  (e: 'submit', isSend: boolean): void
+}>()
+
 
 function validateCurrentStep(): boolean {
   const step = steps[currentStep.value]
@@ -150,8 +154,9 @@ async function submitForm() {
       city: formData.city,
       postalCode: formData.postalCode,
       bio: formData.bio
-
     } as CreateVolunteerDto)
+    emit('submit', true)
+
   } catch (error) {
     console.error('Error submitting form:', error)
     isError.value = true

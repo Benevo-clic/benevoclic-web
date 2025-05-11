@@ -5,6 +5,7 @@ import UserRegisterForm from "~/components/header/auth/form/UserRegisterForm.vue
 import {ShieldX} from "lucide-vue-next";
 import {useUser} from "~/composables/auth/useUser";
 import {RoleUser} from "~/common/enums/role.enum";
+import VerifEmailForm from "~/components/header/auth/form/VerifEmailForm.vue";
 
 const auth = useUser()
 const {t} = useI18n()
@@ -12,6 +13,7 @@ const {t} = useI18n()
 
 const loading = ref(false)
 let isError = ref(false)
+const verifyEmail = ref(false)
 
 const form = reactive({
   email: '',
@@ -25,7 +27,7 @@ const { checked } = defineProps<{
 async function handleLogin() {
   loading.value = true
   try {
-    const res = await auth.login(form)
+    await auth.login(form)
     isError.value = false
   } catch (error) {
     isError.value = true
@@ -70,10 +72,14 @@ async function handleGoogleLogin() {
   }
 }
 
+function toggleVerifyEmail(value: boolean) {
+  verifyEmail.value = value
+}
+
 </script>
 
 <template>
-  <div class="w-full max-w-md">
+  <div class="w-full max-w-md" v-if="!verifyEmail">
     <h1 class="text-3xl font-bold mb-2">
       {{t('auth.title')}} <br />
       <span class="text-primary">{{t('auth.title_2')}} 👋</span>
@@ -116,6 +122,7 @@ async function handleGoogleLogin() {
         v-if="isRegisterMode"
         :form="form"
         :is-association="isAssociation"
+        @email-verified="toggleVerifyEmail"
     />
 
     <!-- Divider -->
@@ -167,6 +174,8 @@ async function handleGoogleLogin() {
       © 2024 TOUS DROITS RÉSERVÉS
     </p>
   </div>
+  <VerifEmailForm v-if="verifyEmail" />
+
 </template>
 
 <style scoped>

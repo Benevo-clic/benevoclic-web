@@ -3,8 +3,7 @@ const { t } = useI18n()
 
 
 const props = defineProps<{
-  isAssociation: boolean,
-  isRegister: boolean
+  isAssociation: boolean
 }>()
 
 const registerModal = ref<HTMLDialogElement | null>(null)
@@ -20,7 +19,6 @@ function handleRegister() {
   }
 }
 
-// Exposer les méthodes directement
 defineExpose({
   openRegisterModal: handleRegister
 })
@@ -35,7 +33,7 @@ defineExpose({
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="registerModal?.close()">✕</button>
       <RegisterAssociation v-if="props.isAssociation" />
 
-      <RegisterVolunteer v-else :is-register="props.isRegister"/>
+      <RegisterVolunteer v-else />
     </div>
   </dialog>
 </template>

@@ -20,14 +20,14 @@
       </div>
     </div>
   </div>
-  <RegisterModal ref="authModal"  v-if="displayModal" :is-association="isAssociation" :is-register="isRegister"/>
+  <RegisterModal ref="authModal"  v-if="displayModal" :is-association="isAssociation" />
 </template>
 
 <script setup lang="ts">
-
 import { useUser } from '~/composables/auth/useUser'
 import {definePageMeta} from "#imports";
 import RegisterModal from "~/components/register/RegisterModal.vue";
+
 definePageMeta({
   middleware: ['auth'],
   layout:'header'
@@ -35,44 +35,35 @@ definePageMeta({
 
 const auth = useUser()
 
-console.log('User:', auth.user.value?.imageProfile)
 const route = useRoute()
 const authModal = ref<InstanceType<typeof RegisterModal> | null>(null)
 const displayModal = ref(false)
 const isAssociation = ref(false)
-const isRegister = ref(false)
 
 watch(
     () => route.query,
     (query)=> {
-  const from = query.from
-  const message = query.message
-  const role = query.role
-  const status = route.query.status
+    const from = query.from
+    const message = query.message
+    const role = query.role
+    const status = route.query.status
 
-  if (from === 'google' && message === 'success') {
-    nextTick(() => {
-      authModal.value?.openRegisterModal()
-    })
-    displayModal.value = true
-    isAssociation.value = role === 'true'
-  }else if(status === 'created' && message === 'success') {
-    nextTick(() => {
-      authModal.value?.openRegisterModal()
-    })
-    isRegister.value = true
-    displayModal.value = true
-    isAssociation.value = role === 'true'
-  }else {
-    displayModal.value = false
-    isAssociation.value = false
-    isRegister.value = false
-  }
+    if ((from === 'google' || from === 'email') && message === 'success') {
+      nextTick(() => {
+        authModal.value?.openRegisterModal()
+      })
+      displayModal.value = true
+      isAssociation.value = role === 'true'
+    }else if(status === 'created' && message === 'success') {
+      nextTick(() => {
+        authModal.value?.openRegisterModal()
+      })
+    }else {
+      displayModal.value = false
+      isAssociation.value = false
+    }
 },
   { immediate: true }
 )
-
-
-
 
 </script>

@@ -63,6 +63,16 @@ export const useRegisterStore = defineStore('register', {
                         password: payload.password
                     }
                 })
+                navigateTo(
+                    {
+                        path: '/dashboard',
+                        query: {
+                            from: 'email',
+                            message: 'success',
+                            role: payload.role
+                        }
+                    }
+                )
             } catch (error) {
                 this.error = "Une erreur est survenue lors de l'inscription"
                 throw new Error('Erreur lors de l\'inscription'+error);
