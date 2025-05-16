@@ -1,13 +1,18 @@
 <script setup lang="ts">
+import RegisterVolunteer from "~/components/register/volunteer/RegisterVolunteer.vue";
+import {definePageMeta} from "#imports";
 
-// definePageMeta({
-//   middleware: ['guest'] // Solution temporaire pour le typage
-// })
+definePageMeta({
+  middleware: ['auth'],
+  layout:'header-auth',
+})
 
 </script>
 
 <template>
-Hello World
+
+  <RegisterVolunteer />
+
 </template>
 
 <style scoped>

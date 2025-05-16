@@ -26,14 +26,18 @@ defineExpose({
 </script>
 
 <template>
-
-  <!-- Modal REGISTER -->
-  <dialog ref="registerModal" class="modal">
-    <div class="modal-box w-11/12 max-w-7xl" @click.stop>
-      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="registerModal?.close()">✕</button>
+  <div class="flex items-center justify-center min-h-screen bg-gray-50 p-4">
+    <div class="w-full max-w-xl">
       <RegisterAssociation v-if="props.isAssociation" />
-
       <RegisterVolunteer v-else />
     </div>
-  </dialog>
+  </div>
 </template>
+
+<style scoped>
+/* Centrage vertical et horizontal, fond léger */
+.bg-gray-50 {
+  background-color: #f9fafb;
+}
+</style>
+

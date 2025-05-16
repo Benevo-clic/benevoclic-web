@@ -38,10 +38,9 @@ export const useUserStore = defineStore('auth', {
     isAuthenticated: () => !useCookie('isConnected').value,
     getUser: (state) => state.user,
     fullName: (state) => state.user ? `${state.user.firstName} ${state.user.lastName}` : '',
-    getVerificationStatus: (state) => state.isVerified
-
+    getVerificationStatus: (state) => state.isVerified,
+    getUserRule: (state) => state.user?.role,
   },
-
   actions: {
 
     async login(payload: LoginPayload) {
@@ -76,7 +75,7 @@ export const useUserStore = defineStore('auth', {
 
         if(response.success) {
             this.user = null
-            navigateTo('/auth/login')
+            navigateTo('/')
         }
       } catch (err: any) {
         this.error = err?.message || 'Erreur de déconnexion'
@@ -178,14 +177,18 @@ export const useUserStore = defineStore('auth', {
             navigateTo('/dashboard')
         }else{
           await this.callRegisterGoogle(idToken,role)
-          await navigateTo({
-            path: '/dashboard',
-            query: {
-              from: 'google',
-              message: 'success',
-              association: role === RoleUser.ASSOCIATION ? 'true' : 'false'
-            }
-          })
+          if(role === 'VOLUNTEER'){
+            navigateTo(
+                {
+                  path: '/auth/registerVolunteer',
+                }
+            )
+          }else {
+            navigateTo(
+                {
+                  path: '/auth/registerAssociation',
+                })
+          }
         }
 
       } catch (err: any) {

@@ -20,7 +20,7 @@
     padding: 0.5rem 1rem;
     border: 1px solid #d1d5db;
     outline: none;
-    width: 30rem;
+    width: 40rem;
     border-radius: 0.375rem;
 
 

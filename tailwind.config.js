@@ -8,7 +8,11 @@ export default {
     "./app.vue",
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        'custom774': '774px',
+      },
+    },
   },
   plugins: [require('daisyui')],
   daisyui: {

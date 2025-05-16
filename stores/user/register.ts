@@ -1,4 +1,5 @@
 import type {RegisterEmailVerifiedResponse, RegisterPayload} from "~/common/types/register.type";
+import { defineStore } from 'pinia'
 
 import {useCookie} from "#app/composables/cookie";
 import {
@@ -63,16 +64,20 @@ export const useRegisterStore = defineStore('register', {
                         password: payload.password
                     }
                 })
-                navigateTo(
-                    {
-                        path: '/dashboard',
-                        query: {
-                            from: 'email',
-                            message: 'success',
-                            role: payload.role
+
+                if(payload.role === 'VOLUNTEER'){
+                    navigateTo(
+                        {
+                            path: '/auth/registerVolunteer',
                         }
-                    }
-                )
+                    )
+                }else {
+                    navigateTo(
+                        {
+                            path: '/auth/registerAssociation',
+                        })
+                }
+
             } catch (error) {
                 this.error = "Une erreur est survenue lors de l'inscription"
                 throw new Error('Erreur lors de l\'inscription'+error);

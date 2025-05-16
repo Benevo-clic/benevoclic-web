@@ -8,6 +8,7 @@ const { t } = useI18n()
 
 const isSubmittedForm = ref(false)
 const imageBase64 = ref<string | null>(null)
+const currentStep = ref(1)
 
 function saveBase64(base64: string) {
   imageBase64.value = base64
@@ -23,24 +24,36 @@ function submitForm(value: boolean) {
   isSubmittedForm.value = value
 }
 
+function handleStep(step: number) {
+  currentStep.value = step
+}
+
 </script>
 
 <template>
-  <div class="min-h-[85vh] flex flex-col md:flex-row items-center justify-center gap-8 px-4">
-
-    <RegisterVolunteerFormRegisterInfoVolunteerForm v-if="!isSubmittedForm"  @submit="submitForm" />
-    <UploadImageForm
-        v-else
-        @uploaded="saveBase64"
-        @skipped="skipBase64"
+  <div class="flex flex-col items-center justify-center bg-gray-100">
+    <progress
+        class="progress progress-primary w-full mb-6"
+        :value="currentStep"
+        max="100"
     />
 
-    <div class="hidden md:flex flex-col justify-center items-center w-1/2">
-      <img
-          src="/images/volunteer-info.png"
-          alt="Illustration"
-          class="w-full max-w-xl mx-auto"
+    <div class="min-h-[85vh] flex flex-col md:flex-row items-center justify-center gap-8 px-4">
+
+      <RegisterVolunteerFormRegisterInfoVolunteerForm v-if="!isSubmittedForm"  @submit="submitForm" @current-step="handleStep" />
+      <UploadImageForm
+          v-else
+          @uploaded="saveBase64"
+          @skipped="skipBase64"
       />
+
+      <div class="hidden md:flex flex-col justify-center items-center w-1/2">
+        <img
+            src="/images/volunteer-info.png"
+            alt="Illustration"
+            class="w-full max-w-xl mx-auto"
+        />
+      </div>
     </div>
   </div>
 </template>

@@ -16,9 +16,14 @@ const { registerVolunteer } = useVolunteerAuth()
 
 interface Step {
   component: Component
-  field: keyof FormFields        // ← important !
+  field: keyof FormFields
   validate: (value: string) => string
 }
+
+const emit = defineEmits<{
+  (e: 'submit', isSend: boolean): void,
+  (e: 'currentStep', step: number): void
+}>()
 
 
 const formData = reactive<FormFields>({
@@ -108,9 +113,7 @@ const steps: Step[] = [
 
 const loading = ref(false)
 const isError = ref(false)
-const emit = defineEmits<{
-  (e: 'submit', isSend: boolean): void
-}>()
+
 
 
 function validateCurrentStep(): boolean {
@@ -130,6 +133,7 @@ function next() {
 
   if (currentStep.value < steps.length - 1) {
     currentStep.value++
+    emit('currentStep', ((currentStep.value) / steps.length) * 100)
   } else {
     submitForm()
   }
@@ -138,6 +142,7 @@ function next() {
 function prev() {
   if (currentStep.value > 0) {
     currentStep.value--
+    emit('currentStep', ((currentStep.value) / steps.length) * 100)
   }
 }
 
@@ -156,7 +161,6 @@ async function submitForm() {
       bio: formData.bio
     } as CreateVolunteerDto)
     emit('submit', true)
-
   } catch (error) {
     console.error('Error submitting form:', error)
     isError.value = true
@@ -171,12 +175,6 @@ async function submitForm() {
   <div class="w-full max-w-md mx-auto p-4">
     <h1 class="text-3xl font-bold mb-2">🚀 On démarre l'aventure</h1>
     <p class="text-base text-gray-600 mb-4">Dis-nous un peu sur toi étape par étape 😊</p>
-    
-    <progress
-      class="progress progress-primary w-full mb-6"
-      :value="((currentStep + 1) / steps.length) * 100"
-      max="100"
-    />
 
     <keep-alive>
       <component

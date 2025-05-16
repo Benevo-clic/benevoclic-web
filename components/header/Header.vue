@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { Globe as GlobeIcon, MapPin as MapPinIcon, Sun as SunIcon, Moon as MoonIcon, Bell as BellIcon, Heart as HeartIcon, Clock as ClockIcon, HelpCircle as HelpIcon, AlignJustify as AlignJustifyIcon } from 'lucide-vue-next'
+
 import {useUser} from "~/composables/auth/useUser";
 import NavigationActions from "~/components/header/NavigationActions.vue";
 import NavigationActionsOptions from "~/components/header/NavigationActionsOptions.vue";
@@ -12,28 +14,23 @@ const showLoginModal = ref(false)
 
 const auth = useUser()
 
-// URL de l'image de profil, ou une image par défaut
 const profileImageUrl = computed(() => {
   const img = auth.user.value?.imageProfile
   if (img?.data && img.contentType) {
     return `data:${img.contentType};base64,${img.data}`
   }
-  // fallback vers une image par défaut
-  return '/images/default-avatar.png'
+  return ''
 })
 
 const handleDrawerClose = () => {
   menuOpen.value = !menuOpen.value
-  console.log('handleDrawerClose', menuOpen.value)
 }
 
 watch(
     () => isAuthenticated,
     (isAuth) => {
-      console.log('isAuthenticated changed:', isAuth)
       if (isAuth) {
         showLoginModal.value = false
-        console.log('Closing login modal')
       }
     }
 )
@@ -68,254 +65,114 @@ onMounted(() => {
   })
 })
 
-
 </script>
 
 <template>
-  <header class="app-header">
-    <div class="header-container">
+  <header>
+    <!-- Top bar -->
+    <div class="bg-white shadow-sm px-4 py-2 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <NuxtLink to="/" class="w-14 rounded-full overflow-hidden">
+          <img src="/logo_benevoclic.png" alt="Logo" class="w-full h-auto" />
+        </NuxtLink>
+      </div>
 
-      <div class="header-top-row">
-
-        <div class="w-24 rounded-full">
-          <NuxtLink to="/" >
-            <img src="/.idea/shelf/Changes31/logo.png" alt="Logo" />
-          </NuxtLink>
+      <div class="flex items-center gap-3">
+        <!-- Location -->
+        <div class="flex items-center gap-1 text-gray-600">
+          <NavigationActions />
         </div>
-        <div class="burger-button">
-          <NavigationActions class="nav-actions-burger-button" />
-          <button  @click.prevent="handleDrawerClose">
-            <AlignJustify class="icon-burger-button" />
+        <!-- Theme toggle -->
+        <label class="swap swap-rotate cursor-pointer">
+          <input type="checkbox" aria-label="Toggle theme" />
+          <SunIcon class="swap-on w-6 h-6 text-yellow-500"/>
+          <MoonIcon class="swap-off w-6 h-6 text-gray-600"/>
+        </label>
+
+        <!-- Notifications -->
+        <div class="indicator hidden sm:flex">
+          <button class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1">
+            <span class="indicator-item badge badge-primary" >12</span>
+            <BellIcon class="w-6 h-6" />
           </button>
         </div>
-
-      </div>
-
-      <div class="header-search-bar">
-        <HeaderSearchBar />
-      </div>
-
-      <div class="header-center">
-        <NavigationActionsOptions :is-authenticated="isAuthenticated" />
-      </div>
-
-      <div class="header-nav-actions">
-        <NavigationActions />
-      </div>
-
-
-      <DrawerContent :is-authenticated="isAuthenticated" :menu-open="menuOpen"  @close-drawer="menuOpen = false" />
-
-      <div class="header-nav-theme">
-        <label class="flex cursor-pointer gap-2">
-          <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5" />
-            <path
-                d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
-          </svg>
-          <input type="checkbox" value="synthwave" class="toggle theme-controller" />
-          <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </label>
-      </div>
-
-      <div class="right-actions">
-
-        <div v-if="isAuthenticated" class="auth-buttons">
-          <HeaderAuthModalAuth/>
+        <div class="hidden sm:flex items-center gap-6">
+          <div v-if="isAuthenticated" class="flex items-center gap-2">
+            <HeaderAuthModalAuth />
+          </div>
+          <div
+              v-else
+          >
+            <!-- Avatar -->
+            <div class="dropdown dropdown-end">
+              <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                <div class="w-11/12 rounded-full overflow-hidden">
+                  <img
+                      :src="profileImageUrl"
+                      alt="Photo de profil"
+                      class="w-12 h-12 rounded-full object-cover"
+                  />
+                  <h2 class="text-lg font-medium">
+                    {{ auth.user.value?.firstName }}
+                    {{ auth.user.value?.lastName }}
+                  </h2>
+                </div>
+              </label>
+              <ul tabindex="0" class="menu menu-sm dropdown-content mt-2 p-2 shadow bg-white rounded-box w-40">
+                <li><NuxtLink to="/profile">Profile</NuxtLink></li>
+                <li><button @click="logout">Logout</button></li>
+              </ul>
+            </div>
+          </div>
         </div>
 
-        <div v-else class="btn btn-primary">
-          <button @click="logout" class="text-neutral">Déconnexion</button>
-        </div>
-        <div class="profile-wrapper">
-          <!-- Affiche la photo de profil -->
-          <img
-              :src="profileImageUrl"
-              alt="Photo de profil"
-              class="w-12 h-12 rounded-full object-cover"
-          />
+        <!-- Notifications -->
+        <DrawerContent :is-authenticated="isAuthenticated" :menu-open="menuOpen"  @close-drawer="menuOpen = false" />
 
-          <!-- Exemple : afficher le nom de l’utilisateur -->
-          <h2 class="mt-2 text-lg font-medium">
-            {{ auth.user.value?.firstName }} {{ auth.user.value?.lastName }}
-          </h2>
-        </div>
+
+        <!-- Mobile burger -->
+        <button class="sm:hidden btn btn-ghost btn-square" @click.prevent="handleDrawerClose">
+          <AlignJustify class="icon-burger-button w-8 h-8" />
+        </button>
+
       </div>
     </div>
+
+    <!-- Bottom bar -->
+    <div class="bg-gray-100 border-t-2  border-gray-300 px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
+      <!-- Search bar à gauche -->
+      <div class="w-full md:max-w-2xl lg:max-w-3xl flex-1">
+        <input
+            type="text"
+            placeholder="Search for missions or associations"
+            class="input input-bordered w-full h-12 text-base"
+        />
+      </div>
+
+      <!-- Navigation links à droite -->
+      <div class="w-full md:w-auto flex justify-center md:justify-end flex-wrap  text-gray-700">
+        <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1">
+          <HeartIcon class="w-6 h-6" /> Favorites
+        </button>
+        <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1">
+          <ClockIcon class="w-6 h-6" /> Recent Searches
+        </button>
+        <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1">
+          <HelpIcon class="w-6 h-6" /> Help
+        </button>
+      </div>
+    </div>
+
+
+    <!-- Mobile drawer content -->
+<!--    <DrawerContent v-if="menuOpen" @close-drawer="menuOpen = false" />-->
   </header>
 </template>
 
-<style scoped lang="scss">
-
-@use '@/assets/css/variables' as vars;
-
-.app-header {
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  padding: 0;
-
-  .header-container {
-    max-width: 1500px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .burger-button {
-    display: none;
-    background: transparent;
-    border: none;
-    padding: 0.5rem;
-    cursor: pointer;
-
-    svg {
-      stroke: #000;
-    }
-  }
-
-
-  .header-search-bar {
-    flex: 1;
-    display: block;
-  }
-
-  .header-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .right-actions {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  .auth-buttons {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-
-    .icon {
-      height: 1.25rem;
-      width: 1.25rem;
-    }
-  }
-
+<style scoped>
+header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
-
-@media (max-width: 1399px) {
-  .app-header {
-    .header-container {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0;
-      padding: 1rem 0;
-
-      .header-top-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.5rem 1rem;
-        gap: 1rem;
-      }
-
-      .burger-button {
-        display: flex;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-        margin: 0;
-
-        svg {
-          stroke: #000;
-        }
-      }
-
-      .header-search-bar {
-        width: 100%;
-        padding: 0 3rem;
-
-        :deep(input) {
-          width: 100%;
-          padding: 0.75rem 1rem;
-          border: 1px solid #d1d5db;
-          border-radius: 0.5rem;
-          font-size: 1rem;
-          box-sizing: border-box;
-        }
-      }
-
-      .header-center,
-      .header-nav-actions,
-      .right-actions,
-      .auth-buttons,
-      .header-nav-theme
-      {
-        display: none !important;
-      }
-    }
-
-    .icon-burger-button{
-      margin-left: 1rem;
-
-      width: 3rem;
-      height: 3rem;
-    }
-    .nav-actions-burger-button{
-      margin-top: 0.2rem;
-    }
-
-    .nav-actions-theme-button{
-      margin-top: 0.2rem;
-      margin-left: 0.5rem;
-    }
-
-    .mobile-auth {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-
-      a,
-      button {
-        text-align: left;
-        font-size: 1rem;
-        padding: 0.5rem 0;
-        background: none;
-        border: none;
-        cursor: pointer;
-      }
-
-      button {
-        color: #dc2626;
-      }
-    }
-
-  }
-}
-
 </style>

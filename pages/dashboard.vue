@@ -20,13 +20,13 @@
       </div>
     </div>
   </div>
-  <RegisterModal ref="authModal"  v-if="displayModal" :is-association="isAssociation" />
 </template>
 
 <script setup lang="ts">
 import { useUser } from '~/composables/auth/useUser'
 import {definePageMeta} from "#imports";
-import RegisterModal from "~/components/register/RegisterModal.vue";
+import {onMounted} from "vue";
+import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
 
 definePageMeta({
   middleware: ['auth'],
@@ -34,36 +34,30 @@ definePageMeta({
 })
 
 const auth = useUser()
+const volunteer = useVolunteerAuth()
 
-const route = useRoute()
-const authModal = ref<InstanceType<typeof RegisterModal> | null>(null)
-const displayModal = ref(false)
-const isAssociation = ref(false)
+onMounted(async () => {
+  await auth.fetchUser()
+  const userRole = auth.userRole
+  const isVolunteer = await volunteer.getVolunteerInfo()
+  const isAuthenticated = auth.isAuthenticated.value
 
-watch(
-    () => route.query,
-    (query)=> {
-    const from = query.from
-    const message = query.message
-    const role = query.role
-    const status = route.query.status
+  if((!isAuthenticated && !isVolunteer) && userRole.value === 'VOLUNTEER') {
+    return navigateTo(
+        {
+          path: '/auth/registerVolunteer',
+        }
+    )
+  }
 
-    if ((from === 'google' || from === 'email') && message === 'success') {
-      nextTick(() => {
-        authModal.value?.openRegisterModal()
-      })
-      displayModal.value = true
-      isAssociation.value = role === 'true'
-    }else if(status === 'created' && message === 'success') {
-      nextTick(() => {
-        authModal.value?.openRegisterModal()
-      })
-    }else {
-      displayModal.value = false
-      isAssociation.value = false
-    }
-},
-  { immediate: true }
-)
+  if((!isAuthenticated && !isVolunteer) && userRole.value === 'ASSOCIATION'){
+    return navigateTo(
+        {
+          path: '/auth/registerAssociation',
+        }
+    )
+  }
+
+})
 
 </script>

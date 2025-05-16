@@ -14,9 +14,11 @@ export const useUser = () => {
 
     return {
         user: computed(() => authStore.getUser),
+        fetchUser:  authStore.fetchUser,
         isAuthenticated: computed(() => authStore.isAuthenticated),
         login: authStore.login,
         logout: authStore.logout,
+        userRole: computed(() => authStore.getUserRule),
         error: computed(() => authStore.error),
         loginWithGoogle: authStore.loginWithGoogle,
         removeUser: authStore.removeUserAccount,

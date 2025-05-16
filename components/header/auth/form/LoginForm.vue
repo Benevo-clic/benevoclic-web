@@ -6,8 +6,12 @@ import {ShieldX} from "lucide-vue-next";
 import {useUser} from "~/composables/auth/useUser";
 import {RoleUser} from "~/common/enums/role.enum";
 import VerifEmailForm from "~/components/header/auth/form/VerifEmailForm.vue";
+import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
+import type {VolunteerInfo} from "~/common/interface/volunteer.interface";
 
 const auth = useUser()
+const volunteer = useVolunteerAuth()
+
 const {t} = useI18n()
 
 
@@ -27,7 +31,25 @@ const { checked } = defineProps<{
 async function handleLogin() {
   loading.value = true
   try {
-    await auth.login(form)
+    const response = await auth.login(form)
+    if(response.idToken){
+      switch(isAssociation.value){
+        case true:
+          break
+        case false:
+          const volunteerInfo = await volunteer.getVolunteerInfo()
+          if (!volunteerInfo.volunteerId) {
+            navigateTo(
+                {
+                  path: '/auth/registerVolunteer',
+                }
+            )
+          }
+          break
+
+      }
+    }
+
     isError.value = false
   } catch (error) {
     isError.value = true

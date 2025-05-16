@@ -16,7 +16,6 @@ const props = defineProps<
     <NuxtLink to="#" class="nav-link">
       <span class="nav-icon-label">
         Mes recherches
-        <ChevronDown />
       </span>
     </NuxtLink>
 

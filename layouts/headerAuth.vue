@@ -1,12 +1,12 @@
 <template>
-  <div class="bg-white min-h-screen">
-    <Header />
-    <main class="p-6">
+  <div >
+    <HeaderAuth/>
+    <main class="bg-gray-50 min-h-screen">
       <slot />
     </main>
   </div>
 </template>
 
 <script setup>
-import Header from '~/components/header/Header.vue'
+import HeaderAuth from '~/components/header/HeaderAuth.vue'
 </script>
