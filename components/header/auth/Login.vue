@@ -1,10 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import {  watch } from 'vue'
 
 const { t } = useI18n()
-
 const isAssociation = ref(false)
-const isRegister = ref(false)
+const props = defineProps<{ isRegisterLocal: boolean }>()
+const isRegister = ref(props.isRegisterLocal)
+
+watch(
+    () => props.isRegisterLocal,
+    (newVal) => {
+      isRegister.value = newVal
+    },
+    { immediate: true }
+)
 
 function toggleCheck() {
   isAssociation.value = !isAssociation.value
@@ -13,7 +22,6 @@ function toggleCheck() {
 definePageMeta({
   middleware: ['guest'],
 })
-
 
 function handleCheckboxChange(value: boolean) {
   isAssociation.value = value
@@ -29,15 +37,14 @@ function handleRegisterChange(value: boolean) {
 
 <template>
   <div class="min-h-[85vh] flex flex-col md:flex-row items-center justify-center gap-8 px-4">
-    <!-- Formulaire en premier sur mobile -->
 
     <HeaderAuthFormLoginForm
         @toggle-check="handleCheckboxChange"
         :checked="isAssociation"
         @toggle-register="handleRegisterChange"
+        :is-register="isRegister"
     />
 
-    <!-- Image + lien association (desktop uniquement) -->
     <div class="hidden md:flex flex-col justify-center items-center w-1/2">
       <img
           src="/images/login-user.png"
@@ -79,9 +86,3 @@ function handleRegisterChange(value: boolean) {
     </div>
   </div>
 </template>
-
-
-
-<style scoped lang="scss">
-
-</style>

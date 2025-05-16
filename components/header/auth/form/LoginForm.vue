@@ -7,7 +7,6 @@ import {useUser} from "~/composables/auth/useUser";
 import {RoleUser} from "~/common/enums/role.enum";
 import VerifEmailForm from "~/components/header/auth/form/VerifEmailForm.vue";
 import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
-import type {VolunteerInfo} from "~/common/interface/volunteer.interface";
 
 const auth = useUser()
 const volunteer = useVolunteerAuth()
@@ -24,8 +23,9 @@ const form = reactive({
   password: ''
 })
 
-const { checked } = defineProps<{
-  checked: boolean
+const { checked,isRegister } = defineProps<{
+  checked: boolean,
+  isRegister: boolean
 }>()
 
 async function handleLogin() {
@@ -65,11 +65,21 @@ const emit = defineEmits<{
 }>()
 
 const isAssociation = ref(false)
-const isRegisterMode = ref(false)
+const isRegisterMode = ref(isRegister)
 
 watch(() => checked, (value) => {
   isAssociation.value = value
 })
+
+watch(
+    () => isRegister,
+    (newVal) => {
+      isRegisterMode.value = newVal
+      console.log('watch triggered:', isRegisterMode.value)
+    },
+    { immediate: true }
+)
+
 
 function handleCheckboxChange() {
   emit('toggle-check', isAssociation.value)
