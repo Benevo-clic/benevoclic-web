@@ -148,7 +148,7 @@ onMounted(() => {
     </div>
 
     <!-- Bottom bar -->
-    <div class="bg-base-200 border-t-2 border-base-300 px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="bg-base-200 border-t-2 border-b-2 border-base-300 px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
       <!-- Search bar à gauche -->
       <div class="w-full md:max-w-2xl lg:max-w-3xl flex-1">
         <input
