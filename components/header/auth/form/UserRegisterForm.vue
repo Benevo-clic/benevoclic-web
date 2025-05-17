@@ -104,7 +104,7 @@ async function handleRegister() {
     </div>
 
     <!-- Message d’erreur -->
-    <p v-if="errorMessage" class="text-red-600 text-sm">{{ errorMessage }}</p>
+    <p v-if="errorMessage" class="text-error text-sm">{{ errorMessage }}</p>
 
     <button type="submit" class="btn btn-primary w-full" :disabled="loading">
       <span v-if="loading" class="loading loading-spinner loading-sm"></span>

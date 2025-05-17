@@ -191,7 +191,7 @@ async function submitForm() {
         :disabled="currentStep === 0 || loading"
         class="btn btn-secondary disabled:cursor-not-allowed"
       >
-        <span class="text-base-content font-bold">Précédent</span>
+        <span class="text-secondary-content font-bold">Précédent</span>
       </button>
 
       <button

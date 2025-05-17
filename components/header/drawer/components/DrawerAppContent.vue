@@ -15,9 +15,11 @@ import {
 import { useUser } from '~/composables/auth/useUser'
 import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
 import LanguageComponent from "~/components/header/utils/components/LanguageComponent.vue";
+import { useTheme } from "~/composables/useTheme";
 const { logout: signOut, user } = useUser()
 const {volunteer} =useVolunteerAuth()
 const { setLocale,t } = useI18n()
+const { theme, toggleTheme, isDarkTheme } = useTheme()
 
 const showLanguageMenu = ref(false)
 
@@ -97,7 +99,7 @@ function toggleLanguageMenu() {
     <div class="flex gap-4 justify-end w-full pb-4" v-if="!props.isAuthenticated" >
       <div>
         <h3 class="font-semibold text-lg">{{ volunteer?.firstName }} {{ volunteer?.lastName }}</h3>
-        <p class="text-sm text-gray-500">{{ user?.email }}</p>
+        <p class="text-sm text-base-content opacity-70">{{ user?.email }}</p>
       </div>
       <label for="avatar-upload" class="cursor-pointer" v-if="props.displayProfile">
         <img :src="profileImageUrl" alt="avatar" class="w-12 h-12 rounded-full border-2 border-primary object-cover mb-2" />
@@ -110,38 +112,38 @@ function toggleLanguageMenu() {
   <nav class="flex-1 min-h-0 overflow-y-auto px-4 py-2 space-y-4">
     <!-- Account -->
     <div class="space-y-2">
-      <h4 class="font-medium text-gray-600 text-xs uppercase">{{t('drawer-content.account.title')}}</h4>
+      <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.account.title')}}</h4>
       <ul class="space-y-1">
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-gray-100 w-full"><UserRound class="w-5 h-5"/>{{t('drawer-content.account.view_profile')}}</button></li>
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-gray-100 w-full"><Pencil class="w-5 h-5"/>{{t('drawer-content.account.edit_profile')}}</button></li>
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-gray-100 w-full"><Settings class="w-5 h-5"/>{{t('drawer-content.account.settings')}}</button></li>
+        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><UserRound class="w-5 h-5"/>{{t('drawer-content.account.view_profile')}}</button></li>
+        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Pencil class="w-5 h-5"/>{{t('drawer-content.account.edit_profile')}}</button></li>
+        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Settings class="w-5 h-5"/>{{t('drawer-content.account.settings')}}</button></li>
       </ul>
     </div>
     <!-- Activity -->
     <div class="space-y-2">
-      <h4 class="font-medium text-gray-600 text-xs uppercase">{{t('drawer-content.activity.title')}}</h4>
+      <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.activity.title')}}</h4>
       <ul class="space-y-1">
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-gray-100 w-full"><Box class="w-5 h-5"/>{{t('drawer-content.activity.my_missions')}}</button></li>
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-gray-100 w-full"><ClipboardList class="w-5 h-5"/>{{t('drawer-content.activity.my_participations')}}</button></li>
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-gray-100 w-full"><Clock class="w-5 h-5"/>{{t('drawer-content.activity.history')}}</button></li>
+        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Box class="w-5 h-5"/>{{t('drawer-content.activity.my_missions')}}</button></li>
+        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><ClipboardList class="w-5 h-5"/>{{t('drawer-content.activity.my_participations')}}</button></li>
+        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Clock class="w-5 h-5"/>{{t('drawer-content.activity.history')}}</button></li>
       </ul>
     </div>
     <!-- Notifications & Support -->
     <div class="space-y-2">
-      <h4 class="font-medium text-gray-600 text-xs uppercase">{{t('drawer-content.notifications_support.title')}}</h4>
+      <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.notifications_support.title')}}</h4>
       <ul class="space-y-1">
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-gray-100 w-full"><Bell class="w-5 h-5"/>{{t('drawer-content.notifications_support.notifications')}}</button></li>
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-gray-100 w-full"><CircleHelp class="w-5 h-5"/>{{t('drawer-content.notifications_support.help')}}</button></li>
+        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Bell class="w-5 h-5"/>{{t('drawer-content.notifications_support.notifications')}}</button></li>
+        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><CircleHelp class="w-5 h-5"/>{{t('drawer-content.notifications_support.help')}}</button></li>
       </ul>
     </div>
     <!-- App -->
     <div class="space-y-2">
-      <h4 class="font-medium text-gray-600 text-xs uppercase">{{t('drawer-content.app.title')}}</h4>
+      <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.app.title')}}</h4>
       <ul class="space-y-1">
         <li class="relative">
           <!-- Bouton qui ouvre/ferme le menu -->
           <button
-              class="flex items-center gap-2 p-2 rounded hover:bg-gray-100 w-full"
+              class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"
               @click="toggleLanguageMenu"
           >
             <Globe class="w-5 h-5"/> {{t('drawer-content.app.language')}}
@@ -153,11 +155,16 @@ function toggleLanguageMenu() {
           />
         </li>
 
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-gray-100 w-full">
+        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full">
           <label class="swap swap-rotate cursor-pointer">
-            <input type="checkbox" aria-label="Toggle theme" />
-            <SunIcon class="swap-on w-5 h-5 text-yellow-500"></SunIcon>
-            <MoonIcon class="swap-off w-5 h-5 text-gray-600"/>
+            <input 
+              type="checkbox" 
+              aria-label="Toggle theme" 
+              :checked="isDarkTheme()" 
+              @change="toggleTheme" 
+            />
+            <SunIcon class="swap-on w-5 h-5 text-warning"></SunIcon>
+            <MoonIcon class="swap-off w-5 h-5 text-base-content"/>
           </label>
           <span>{{t('drawer-content.app.theme')}}</span>
         </button>

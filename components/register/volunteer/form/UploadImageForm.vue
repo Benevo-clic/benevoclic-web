@@ -31,15 +31,15 @@ function skipUpload() {
 <template>
   <div class="upload-image-form flex flex-col items-center">
     <!-- Instruction message -->
-    <p class="mb-2 text-center text-indigo-600 font-medium">
+    <p class="mb-2 text-center text-primary font-medium">
       {{ t('auth.uploadImageForm.instruction') }}
     </p>
-    <p class="mb-4 text-center text-gray-600">
+    <p class="mb-4 text-center text-base-content">
       {{ t('auth.uploadImageForm.message') }}
     </p>
 
     <label
-        class="upload-box flex flex-col items-center justify-center border-dashed border-2 border-gray-300 rounded-lg p-6 cursor-pointer hover:border-gray-400 transition-colors"
+        class="upload-box flex flex-col items-center justify-center border-dashed border-2 border-base-300 rounded-lg p-6 cursor-pointer hover:border-primary transition-colors"
     >
       <input
           type="file"
@@ -53,7 +53,7 @@ function skipUpload() {
             alt="Preview"
             class="mb-2 max-h-48 rounded-full object-cover"
         />
-        <p class="text-sm text-gray-500">
+        <p class="text-sm text-base-content opacity-70">
           {{ t('auth.uploadImageForm.changeImage') }}
         </p>
       </div>

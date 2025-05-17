@@ -1,7 +1,7 @@
 <template>
   <div >
     <HeaderAuth/>
-    <main class="bg-gray-50 min-h-screen">
+    <main class="bg-base-200 min-h-screen">
       <slot />
     </main>
   </div>

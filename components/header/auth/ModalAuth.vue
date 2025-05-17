@@ -21,8 +21,8 @@ function handleRegister() {
 
 <template>
   <button class="btn btn-secondary px-2 py-0" @click.prevent="handleLogin">
-    <KeyRound class="text-neutral" />
-    <span class="text-neutral">{{ t("auth.register.login")}}</span>
+    <KeyRound class="text-secondary-content" />
+    <span class="text-secondary-content">{{ t("auth.register.login")}}</span>
   </button>
 
   <dialog ref="my_modal_3" class="modal">
@@ -33,7 +33,7 @@ function handleRegister() {
       <HeaderAuthLogin :is-register-local="isRegister"/>
     </div>
   </dialog>
-  <button class="btn btn-primary px-2 py-0" @click.prevent="handleRegister">
+  <button class="btn btn-neutral-content px-2 py-0" @click.prevent="handleRegister">
     <LogIn class="icon" />
     {{ t("auth.register.title")}}
   </button>

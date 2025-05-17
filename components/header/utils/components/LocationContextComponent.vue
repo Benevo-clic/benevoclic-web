@@ -31,10 +31,10 @@ function toggleLanguageMenu() {
 
     <!-- Bouton de sélection de ville -->
     <button @click="showCityMenu = (!showCityMenu && !showLanguageMenu)"
-            class="btn btn-secondary btn-md  px-0 py-0 flex items-center gap-1">
-      <MapPin class="text-gray-700 w-6 h-6" />
-      <span class="text-sm text-gray-700">{{ currentCity }}</span>
-      <ChevronDown :class="showCityMenu ? 'rotate-180 transition-transform' : 'transition-transform'" class="w-4 h-4 text-gray-700" />
+            class="btn btn-btn-neutral-content btn-md  px-0 py-0 flex items-center gap-1">
+      <MapPin class="text-base-content w-6 h-6" />
+      <span class="text-sm text-base-content">{{ currentCity }}</span>
+      <ChevronDown :class="showCityMenu ? 'rotate-180 transition-transform' : 'transition-transform'" class="w-4 h-4 text-base-content" />
     </button>
 
     <div v-if="showCityMenu && !showLanguageMenu" class="dropdown-content menu p-2   shadow bg-base-100 rounded-box w-52 absolute top-full left-12 z-50">
@@ -46,8 +46,8 @@ function toggleLanguageMenu() {
     </div>
 
     <button @click="toggleLanguageMenu"
-            class="btn btn-secondary  btn-md ml-1 px-2 py-0 flex items-center gap-1" :class="{ 'bg-blue-100': showLanguageMenu }">
-      <Earth class="text-gray-700  w-6 h-6" />
+            class="btn btn-neutral-content  btn-md ml-1 px-2 py-0 flex items-center gap-1" :class="{ 'bg-blue-100': showLanguageMenu }">
+      <Earth class="text-base-content  w-6 h-6" />
     </button>
   </div>
 

@@ -31,7 +31,7 @@ function handleStep(step: number) {
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center bg-gray-100">
+  <div class="flex flex-col items-center justify-center bg-base-200 text-base-content">
     <progress
         class="progress progress-primary w-full mb-6"
         :value="currentStep"

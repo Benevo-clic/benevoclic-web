@@ -54,7 +54,7 @@ onUnmounted(() => {
   <transition name="slide">
     <aside
         v-if="props.menuOpen"
-        class="fixed top-0 right-0 h-screen w-3/4 max-w-sm bg-white shadow-lg flex flex-col z-50"
+        class="fixed top-0 right-0 h-screen w-3/4 max-w-sm bg-base-100 shadow-lg flex flex-col z-50 text-base-content"
     >
       <div class="flex items-center justify-between pt-2 pl-2" :class="props.isAuthenticated ? 'pb-2' : ''">
         <button @click="emit('closeDrawer')" class="btn btn-ghost btn-square">

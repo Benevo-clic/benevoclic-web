@@ -7,8 +7,10 @@ import NavigationActions from "~/components/header/utils/NavigationActions.vue";
 import {AlignJustify} from "lucide-vue-next";
 import DrawerContent from "~/components/header/drawer/DrawerContent.vue";
 import DrawerAppContent from "~/components/header/drawer/components/DrawerAppContent.vue";
+import { useTheme } from "~/composables/useTheme";
 const { isAuthenticated } = useUser()
 const { t } = useI18n()
+const { theme, toggleTheme, isDarkTheme } = useTheme()
 
 const menuOpen = ref(false)
 const showLoginModal = ref(false)
@@ -71,7 +73,7 @@ onMounted(() => {
 <template>
   <header>
     <!-- Top bar -->
-    <div class="bg-white shadow-sm px-4 py-2 flex items-center justify-between">
+    <div class="bg-base-100 shadow-sm px-4 py-2 flex items-center justify-between">
       <div class="flex items-center gap-2">
         <NuxtLink to="/" class="w-14 rounded-full overflow-hidden">
           <img src="/logo_benevoclic.png" alt="Logo" class="w-full h-auto" />
@@ -80,20 +82,27 @@ onMounted(() => {
 
       <div class="flex items-center gap-3">
         <!-- Location -->
-        <div class="flex items-center gap-1 text-gray-600">
+        <div class="flex items-center gap-1 text-base-content">
           <NavigationActions />
         </div>
         <!-- Theme toggle -->
         <label class="swap swap-rotate cursor-pointer">
-          <input type="checkbox" aria-label="Toggle theme" />
-          <SunIcon class="swap-on w-7 h-7 text-yellow-500"/>
-          <MoonIcon class="swap-off w-7 h-7 text-gray-600"/>
+          <input 
+            type="checkbox" 
+            aria-label="Toggle theme" 
+            :checked="isDarkTheme()" 
+            @change="toggleTheme" 
+          />
+          <SunIcon class="swap-on w-7 h-7 text-warning"/>
+          <MoonIcon class="swap-off w-7 h-7 text-base-content"/>
         </label>
 
         <!-- Notifications -->
         <div class="indicator hidden sm:flex">
           <button class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1">
-            <span class="indicator-item badge badge-primary" >12</span>
+            <span class="indicator-item badge badge-primary text-base-content" >
+              12
+            </span>
             <BellIcon class="w-6 h-6" />
           </button>
         </div>
@@ -116,7 +125,7 @@ onMounted(() => {
 
                 </div>
               </label>
-              <ul tabindex="0" class="menu menu-sm dropdown-content mt-2 p-2 shadow bg-white rounded-box w-70">
+              <ul tabindex="0" class="menu menu-sm dropdown-content mt-2 p-2 shadow bg-base-100 text-base-content rounded-box w-70">
 
                 <DrawerAppContent
                     :is-authenticated="isAuthenticated"
@@ -131,15 +140,15 @@ onMounted(() => {
         <!-- Notifications -->
         <DrawerContent :is-authenticated="isAuthenticated" :menu-open="menuOpen"  @close-drawer="menuOpen = false" />
 
-        <button class="sm:hidden btn btn-secondary btn-square" @click.prevent="handleDrawerClose">
-          <AlignJustify class="icon-burger-button text-black w-8 h-8" />
+        <button class="sm:hidden btn btn-neutral-content btn-square" @click.prevent="handleDrawerClose">
+          <AlignJustify class="icon-burger-button text-base-content w-8 h-8" />
         </button>
 
       </div>
     </div>
 
     <!-- Bottom bar -->
-    <div class="bg-gray-100 border-t-2  border-gray-300 px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="bg-base-200 border-t-2 border-base-300 px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
       <!-- Search bar à gauche -->
       <div class="w-full md:max-w-2xl lg:max-w-3xl flex-1">
         <input
@@ -149,7 +158,7 @@ onMounted(() => {
         />
       </div>
 
-      <div class="w-full md:w-auto flex justify-center md:justify-end flex-wrap  text-gray-700">
+      <div class="w-full md:w-auto flex justify-center md:justify-end flex-wrap text-base-content">
         <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1">
           <HeartIcon class="w-6 h-6" /> {{t('header.volunteer.favorites')}}
         </button>

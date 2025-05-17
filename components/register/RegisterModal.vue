@@ -26,7 +26,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-50 p-4">
+  <div class="flex items-center justify-center min-h-screen bg-base-200 p-4">
     <div class="w-full max-w-xl">
       <RegisterAssociation v-if="props.isAssociation" />
       <RegisterVolunteer v-else />
@@ -35,9 +35,5 @@ defineExpose({
 </template>
 
 <style scoped>
-/* Centrage vertical et horizontal, fond léger */
-.bg-gray-50 {
-  background-color: #f9fafb;
-}
+/* Centrage vertical et horizontal */
 </style>
-

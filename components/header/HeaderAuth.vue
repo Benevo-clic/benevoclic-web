@@ -1,5 +1,5 @@
 <template>
-  <header class="relative flex items-center h-16 bg-white shadow-sm">
+  <header class="relative flex items-center h-16 bg-base-100 shadow-sm">
     <!-- Bouton retour à gauche -->
     <button
         @click="handleLogoutUser"
@@ -9,8 +9,8 @@
       <ArrowLeft class="w-6 h-6" />
     </button>
 
-    <NuxtLink to="/" class="mx-auto w-24">
-      <img src="/logo.png" alt="Logo" class="w-full h-auto" />
+    <NuxtLink to="/" class="mx-auto w-14">
+      <img src="/logo_benevoclic.png" alt="Logo" class="w-full h-auto" />
     </NuxtLink>
   </header>
 </template>
