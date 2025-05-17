@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { Globe as GlobeIcon, MapPin as MapPinIcon, Sun as SunIcon, Moon as MoonIcon, Bell as BellIcon, Heart as HeartIcon, Clock as ClockIcon, HelpCircle as HelpIcon, AlignJustify as AlignJustifyIcon } from 'lucide-vue-next'
+import { Sun as SunIcon, Moon as MoonIcon, Bell as BellIcon, Heart as HeartIcon, Clock as ClockIcon, HelpCircle as HelpIcon } from 'lucide-vue-next'
 
 import {useUser} from "~/composables/auth/useUser";
-import NavigationActions from "~/components/header/NavigationActions.vue";
-import NavigationActionsOptions from "~/components/header/NavigationActionsOptions.vue";
+import NavigationActions from "~/components/header/utils/NavigationActions.vue";
 import {AlignJustify} from "lucide-vue-next";
 import DrawerContent from "~/components/header/drawer/DrawerContent.vue";
+import DrawerAppContent from "~/components/header/drawer/components/DrawerAppContent.vue";
 const { isAuthenticated, logout } = useUser()
 
 const menuOpen = ref(false)
@@ -85,8 +85,8 @@ onMounted(() => {
         <!-- Theme toggle -->
         <label class="swap swap-rotate cursor-pointer">
           <input type="checkbox" aria-label="Toggle theme" />
-          <SunIcon class="swap-on w-6 h-6 text-yellow-500"/>
-          <MoonIcon class="swap-off w-6 h-6 text-gray-600"/>
+          <SunIcon class="swap-on w-7 h-7 text-yellow-500"/>
+          <MoonIcon class="swap-off w-7 h-7 text-gray-600"/>
         </label>
 
         <!-- Notifications -->
@@ -112,15 +112,16 @@ onMounted(() => {
                       alt="Photo de profil"
                       class="w-12 h-12 rounded-full object-cover"
                   />
-                  <h2 class="text-lg font-medium">
-                    {{ auth.user.value?.firstName }}
-                    {{ auth.user.value?.lastName }}
-                  </h2>
+
                 </div>
               </label>
-              <ul tabindex="0" class="menu menu-sm dropdown-content mt-2 p-2 shadow bg-white rounded-box w-40">
-                <li><NuxtLink to="/profile">Profile</NuxtLink></li>
-                <li><button @click="logout">Logout</button></li>
+              <ul tabindex="0" class="menu menu-sm dropdown-content mt-2 p-2 shadow bg-white rounded-box w-70">
+
+                <DrawerAppContent
+                    :is-authenticated="isAuthenticated"
+                    :menu-open="menuOpen"
+                    :display-profile="false"
+                />
               </ul>
             </div>
           </div>
@@ -129,10 +130,8 @@ onMounted(() => {
         <!-- Notifications -->
         <DrawerContent :is-authenticated="isAuthenticated" :menu-open="menuOpen"  @close-drawer="menuOpen = false" />
 
-
-        <!-- Mobile burger -->
-        <button class="sm:hidden btn btn-ghost btn-square" @click.prevent="handleDrawerClose">
-          <AlignJustify class="icon-burger-button w-8 h-8" />
+        <button class="sm:hidden btn btn-secondary btn-square" @click.prevent="handleDrawerClose">
+          <AlignJustify class="icon-burger-button text-black w-8 h-8" />
         </button>
 
       </div>
@@ -149,7 +148,6 @@ onMounted(() => {
         />
       </div>
 
-      <!-- Navigation links à droite -->
       <div class="w-full md:w-auto flex justify-center md:justify-end flex-wrap  text-gray-700">
         <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1">
           <HeartIcon class="w-6 h-6" /> Favorites

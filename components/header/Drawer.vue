@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import NavigationActions from "~/components/header/NavigationActions.vue";
-import NavigationActionsOptions from "~/components/header/NavigationActionsOptions.vue";
+import NavigationActions from "~/components/header/utils/NavigationActions.vue";
+import NavigationActionsOptions from "~/components/header/utils/NavigationActionsOptions.vue";
 
 const props = defineProps<{
   isAuthenticated: boolean
@@ -16,10 +16,8 @@ const props = defineProps<{
   </transition>
   <transition name="slide">
     <div v-if="props.menuOpen" class="mobile-drawer">
-
       <NavigationActions />
       <NavigationActionsOptions :is-authenticated="props.isAuthenticated" />
-
     </div>
   </transition>
 </template>

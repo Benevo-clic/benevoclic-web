@@ -71,5 +71,31 @@
     "or": "or",
     "placeholder_email": "Enter your email",
     "placeholder_password": "At least 8 characters"
+  },
+  "drawer-content": {
+    "account": {
+        "title": "Account",
+        "view_profile": "View Profile",
+        "edit_profile": "Edit Profile",
+        "settings": "Settings"
+    },
+    "activity": {
+        "title": "Activities",
+        "my_missions": "My Missions",
+        "my_participations": "My Participations",
+        "my_favorites": "My Favorites",
+        "history": "History"
+    },
+    "notifications_support": {
+      "title": "Notifications & Support",
+      "notifications": "Notifications",
+      "help": "Help/FAQ"
+    },
+    "app": {
+      "title": "App",
+      "language": "Language",
+      "theme": "Theme"
+    },
+    "logout": "Log Out"
   }
 }
