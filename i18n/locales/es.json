@@ -97,5 +97,12 @@
       "theme": "Tema"
     },
     "logout": "Cerrar sesión"
+  },
+  "header": {
+    "volunteer": {
+      "favorites": "Favoritos",
+      "recent-search": "Búsquedas recientes",
+      "help": "Ayuda"
+    }
   }
 }

@@ -29,12 +29,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['closeDrawer'])
 
-const placeholderUrl = computed(() => {
-  const initial = volunteer?.firstName?.charAt(0).toUpperCase() || 'U'
-  return `https://ui-avatars.com/api/?name=${initial}&background=0D8ABC&color=fff&size=128`
-})
+
 const profileImage = ref<string | null>(null)
-const imageSrc = computed(() => profileImage.value || placeholderUrl.value)
 
 function handleLogout() {
   signOut()
@@ -54,6 +50,14 @@ async function changeLanguage(lo: 'fr' | 'en' | 'es') {
   await setLocale(lo)
   showLanguageMenu.value = false
 }
+
+const profileImageUrl = computed(() => {
+  const img = user.value?.imageProfile
+  if (img?.data && img.contentType) {
+    return `data:${img.contentType};base64,${img.data}`
+  }
+  return ''
+})
 
 // Function to toggle body scroll
 const toggleBodyScroll = (disable: boolean) => {
@@ -96,7 +100,7 @@ function toggleLanguageMenu() {
         <p class="text-sm text-gray-500">{{ user?.email }}</p>
       </div>
       <label for="avatar-upload" class="cursor-pointer" v-if="props.displayProfile">
-        <img :src="imageSrc" alt="avatar" class="w-12 h-12 rounded-full border-2 border-primary object-cover mb-2" />
+        <img :src="profileImageUrl" alt="avatar" class="w-12 h-12 rounded-full border-2 border-primary object-cover mb-2" />
         <input id="avatar-upload" type="file" accept="image/*" class="hidden" @change="handleFileChange" />
       </label>
     </div>

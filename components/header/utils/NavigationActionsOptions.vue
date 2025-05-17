@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { Bell, Heart, HelpCircle,ChevronDown } from 'lucide-vue-next'
+import { Bell, Heart, HelpCircle } from 'lucide-vue-next'
 
 
 const props = defineProps<

@@ -97,5 +97,12 @@
       "theme": "Theme"
     },
     "logout": "Log Out"
+  },
+  "header": {
+    "volunteer": {
+      "favorites": "Favorites",
+      "recent-search": "Recent search",
+      "help": "Help"
+    }
   }
 }

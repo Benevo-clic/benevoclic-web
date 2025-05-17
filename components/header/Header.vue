@@ -7,7 +7,8 @@ import NavigationActions from "~/components/header/utils/NavigationActions.vue";
 import {AlignJustify} from "lucide-vue-next";
 import DrawerContent from "~/components/header/drawer/DrawerContent.vue";
 import DrawerAppContent from "~/components/header/drawer/components/DrawerAppContent.vue";
-const { isAuthenticated, logout } = useUser()
+const { isAuthenticated } = useUser()
+const { t } = useI18n()
 
 const menuOpen = ref(false)
 const showLoginModal = ref(false)
@@ -150,13 +151,13 @@ onMounted(() => {
 
       <div class="w-full md:w-auto flex justify-center md:justify-end flex-wrap  text-gray-700">
         <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1">
-          <HeartIcon class="w-6 h-6" /> Favorites
+          <HeartIcon class="w-6 h-6" /> {{t('header.volunteer.favorites')}}
         </button>
         <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1">
-          <ClockIcon class="w-6 h-6" /> Recent Searches
+          <ClockIcon class="w-6 h-6" /> {{t('header.volunteer.recent-search')}}
         </button>
         <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1">
-          <HelpIcon class="w-6 h-6" /> Help
+          <HelpIcon class="w-6 h-6" /> {{t('header.volunteer.help')}}
         </button>
       </div>
     </div>
