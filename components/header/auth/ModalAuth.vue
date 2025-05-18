@@ -20,7 +20,7 @@ function handleRegister() {
 </script>
 
 <template>
-  <button class="btn btn-secondary px-2 py-0" @click.prevent="handleLogin">
+  <button class="btn btn-primary px-2 py-0" @click.prevent="handleLogin">
     <KeyRound class="text-secondary-content" />
     <span class="text-secondary-content">{{ t("auth.register.login")}}</span>
   </button>

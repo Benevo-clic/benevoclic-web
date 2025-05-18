@@ -10,6 +10,11 @@ const showLanguageMenu = ref(false)
 const cities = ['Rio, Brazil', 'Paris, France', 'London, UK', 'New York, USA']
 
 
+const props = defineProps<{
+  flag: string
+}>()
+
+
 const emit = defineEmits<{
   (e: 'toggle-language-menu', show: boolean): void
 }>()
@@ -45,10 +50,16 @@ function toggleLanguageMenu() {
       </ul>
     </div>
 
+    <div class="indicator hidden sm:flex">
+
     <button @click="toggleLanguageMenu"
             class="btn btn-neutral-content  btn-md ml-1 px-2 py-0 flex items-center gap-1" :class="{ 'bg-blue-100': showLanguageMenu }">
+      <span class="indicator-item text-base-content mt-2 mr-2" >
+              {{props.flag}}
+      </span>
       <Earth class="text-base-content  w-6 h-6" />
     </button>
+    </div>
   </div>
 
 </template>
