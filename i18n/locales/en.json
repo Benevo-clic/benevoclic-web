@@ -104,5 +104,83 @@
       "recent-search": "Recent search",
       "help": "Help"
     }
+  },
+  "notifications": {
+    "settings": {
+      "title": "Notification Settings",
+      "email": "Email Notifications",
+      "email_description": "Receive notifications via email",
+      "push": "Push Notifications",
+      "push_description": "Receive push notifications on your device",
+      "mission_updates": "Mission Updates",
+      "mission_updates_description": "Get notified about changes to missions",
+      "messages": "Messages",
+      "messages_description": "Get notified about new messages",
+      "save": "Save Settings"
+    },
+    "list": {
+      "title": "Notifications",
+      "mark_all_read": "Mark all as read",
+      "clear_all": "Clear all",
+      "all": "All",
+      "unread": "Unread",
+      "new": "New",
+      "view": "View",
+      "no_notifications": "No notifications",
+      "no_notifications_all": "You have no notifications",
+      "no_notifications_unread": "You have no unread notifications"
+    }
+  },
+  "search": {
+    "menu": {
+      "title": "Search",
+      "search": "Search",
+      "history": "Search History"
+    },
+    "history": {
+      "title": "Search History",
+      "recent_searches": "Recent Searches",
+      "clear_all": "Clear All",
+      "repeat_search": "Repeat search",
+      "remove_from_history": "Remove from history",
+      "no_history": "No search history",
+      "no_history_description": "Your recent searches will appear here"
+    },
+    "results": {
+      "title": "Search Results",
+      "results_found": "results found for",
+      "use_panel": "Use the search panel to find missions and organizations",
+      "all": "All",
+      "missions": "Missions",
+      "organizations": "Organizations",
+      "mission": "Mission",
+      "organization": "Organization",
+      "view_details": "View Details",
+      "view_profile": "View Profile",
+      "apply": "Apply",
+      "no_results": "No results found",
+      "adjust_criteria": "Try adjusting your search criteria",
+      "start_searching": "Start searching",
+      "start_searching_description": "Use the search panel to find missions and organizations"
+    },
+    "panel": {
+      "placeholder": "Search favorites..."
+    }
+  },
+  "favorites": {
+    "list": {
+      "search_placeholder": "Search favorites...",
+      "all_favorites": "All Favorites",
+      "missions": "Missions",
+      "organizations": "Organizations",
+      "mission": "Mission",
+      "organization": "Organization",
+      "view_details": "View Details",
+      "view_profile": "View Profile",
+      "apply": "Apply",
+      "no_favorites": "No favorites found",
+      "no_match": "No favorites match your search criteria.",
+      "add_items": "Add items to your favorites to see them here."
+    }
   }
 }

@@ -10,12 +10,18 @@ import DrawerAppContent from "~/components/header/drawer/components/DrawerAppCon
 import { useTheme } from "~/composables/useTheme";
 const { isAuthenticated } = useUser()
 const { t } = useI18n()
-const { theme, toggleTheme, isDarkTheme } = useTheme()
+const {  toggleTheme, isDarkTheme } = useTheme()
 
 const menuOpen = ref(false)
 const showLoginModal = ref(false)
 
 const auth = useUser()
+
+const props = defineProps<
+    {
+      optionsOpen?: boolean
+    }
+>()
 
 const profileImageUrl = computed(() => {
   const img = auth.user.value?.imageProfile
@@ -148,7 +154,7 @@ onMounted(() => {
     </div>
 
     <!-- Bottom bar -->
-    <div class="bg-base-200 border-t-2 border-b-2 border-base-300 px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="bg-base-200 border-t-2 border-b-2 border-base-300 px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4" v-if="!props.optionsOpen">
       <!-- Search bar à gauche -->
       <div class="w-full md:max-w-2xl lg:max-w-3xl flex-1">
         <input

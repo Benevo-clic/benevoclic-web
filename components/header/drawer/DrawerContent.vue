@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import {watch, onMounted, onUnmounted } from 'vue'
 import {   X} from 'lucide-vue-next'
-import { useUser } from '~/composables/auth/useUser'
-import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
 import DrawerAppContent from "~/components/header/drawer/components/DrawerAppContent.vue";
-const { user } = useUser()
-const {volunteer} =useVolunteerAuth()
-const { t } = useI18n()
+
 
 
 const props = defineProps({
@@ -39,6 +35,10 @@ onUnmounted(() => {
   toggleBodyScroll(false)
 })
 
+function handleCloseDrawer() {
+  emit('closeDrawer')
+}
+
 </script>
 
 <template>
@@ -66,6 +66,7 @@ onUnmounted(() => {
         :is-authenticated="props.isAuthenticated"
         :menu-open="menuOpen"
         :display-profile="true"
+        @close-drawer="handleCloseDrawer"
         />
     </aside>
   </transition>

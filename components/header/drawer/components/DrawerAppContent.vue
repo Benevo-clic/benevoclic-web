@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { navigateTo } from '#app'
 import {
   Pencil,
   Bell,
@@ -11,6 +12,7 @@ import {
   Globe,
   Settings,
   SunIcon,
+  HeartIcon,
   MoonIcon} from 'lucide-vue-next'
 import { useUser } from '~/composables/auth/useUser'
 import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
@@ -82,7 +84,6 @@ onMounted(() => {
   }
 })
 
-// Clean up when component is unmounted
 onUnmounted(() => {
   toggleBodyScroll(false)
 })
@@ -91,6 +92,8 @@ function toggleLanguageMenu() {
   showLanguageMenu.value = !showLanguageMenu.value
   console.log('showLanguageMenu', showLanguageMenu.value)
 }
+
+
 
 </script>
 
@@ -109,31 +112,32 @@ function toggleLanguageMenu() {
   </nav>
   <hr class="pb-2"/>
   <!-- Sections -->
-  <nav class="flex-1 min-h-0 overflow-y-auto px-4 py-2 space-y-4">
+  <nav class="flex-1 min-h-0 overflow-y-auto px-4 py-2 space-y-4" >
     <!-- Account -->
-    <div class="space-y-2">
+    <div class="space-y-2" v-if="!props.isAuthenticated">
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.account.title')}}</h4>
       <ul class="space-y-1">
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><UserRound class="w-5 h-5"/>{{t('drawer-content.account.view_profile')}}</button></li>
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Pencil class="w-5 h-5"/>{{t('drawer-content.account.edit_profile')}}</button></li>
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Settings class="w-5 h-5"/>{{t('drawer-content.account.settings')}}</button></li>
+        <li><button @click="navigateTo('/account/profile'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><UserRound class="w-5 h-5"/>{{t('drawer-content.account.view_profile')}}</button></li>
+        <li><button @click="navigateTo('/account/edit'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Pencil class="w-5 h-5"/>{{t('drawer-content.account.edit_profile')}}</button></li>
+        <li><button @click="navigateTo('/account/settings'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Settings class="w-5 h-5"/>{{t('drawer-content.account.settings')}}</button></li>
       </ul>
     </div>
     <!-- Activity -->
-    <div class="space-y-2">
+    <div class="space-y-2" v-if="!props.isAuthenticated">
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.activity.title')}}</h4>
       <ul class="space-y-1">
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Box class="w-5 h-5"/>{{t('drawer-content.activity.my_missions')}}</button></li>
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><ClipboardList class="w-5 h-5"/>{{t('drawer-content.activity.my_participations')}}</button></li>
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Clock class="w-5 h-5"/>{{t('drawer-content.activity.history')}}</button></li>
+        <li><button @click="navigateTo('/activity/missions'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Box class="w-5 h-5"/>{{t('drawer-content.activity.my_missions')}}</button></li>
+        <li><button @click="navigateTo('/activity/participations'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><ClipboardList class="w-5 h-5"/>{{t('drawer-content.activity.my_participations')}}</button></li>
+        <li><button @click="navigateTo('/activity/favorites'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><HeartIcon class="w-5 h-5"/>{{t('drawer-content.activity.my_favorites')}}</button></li>
+        <li><button @click="navigateTo('/activity/history'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Clock class="w-5 h-5"/>{{t('drawer-content.activity.history')}}</button></li>
       </ul>
     </div>
     <!-- Notifications & Support -->
-    <div class="space-y-2">
+    <div class="space-y-2" v-if="!props.isAuthenticated">
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.notifications_support.title')}}</h4>
       <ul class="space-y-1">
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Bell class="w-5 h-5"/>{{t('drawer-content.notifications_support.notifications')}}</button></li>
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><CircleHelp class="w-5 h-5"/>{{t('drawer-content.notifications_support.help')}}</button></li>
+        <li><button @click="navigateTo('/notifications'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Bell class="w-5 h-5"/>{{t('drawer-content.notifications_support.notifications')}}</button></li>
+        <li><button @click="navigateTo('/help'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><CircleHelp class="w-5 h-5"/>{{t('drawer-content.notifications_support.help')}}</button></li>
       </ul>
     </div>
     <!-- App -->
