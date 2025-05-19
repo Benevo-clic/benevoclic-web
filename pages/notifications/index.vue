@@ -8,7 +8,7 @@
     <!-- Main content -->
     <div class="md:col-span-3">
       <div class="bg-base-100 rounded-lg shadow-md p-6">
-        <h1 class="text-2xl font-bold mb-6 text-base-content">{{ $t('drawer-content.notifications_support.notifications') }}</h1>
+        <h1 class="text-2xl font-bold mb-6 text-base-content">{{ t('drawer-content.notifications_support.notifications') }}</h1>
 
         <!-- Notifications settings -->
         <div class="mb-8">
@@ -68,6 +68,7 @@ definePageMeta({
   middleware: ['auth'],
   layout: 'app'
 })
+const { t } = useI18n()
 
 // Notification settings
 const settings = ref({

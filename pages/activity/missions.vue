@@ -8,7 +8,7 @@
     <!-- Main content -->
     <div class="md:col-span-3">
       <div class="bg-base-100 rounded-lg shadow-md p-6">
-        <h1 class="text-2xl font-bold mb-6 text-base-content">{{ $t('drawer-content.activity.my_missions') }}</h1>
+        <h1 class="text-2xl font-bold mb-6 text-base-content">{{ t('drawer-content.activity.my_missions') }}</h1>
         
         <!-- Missions list -->
         <div class="space-y-4">
@@ -87,6 +87,8 @@ definePageMeta({
   middleware: ['auth'],
   layout: 'app'
 })
+
+const { t } = useI18n()
 
 // Mock missions data - would be fetched from API in a real app
 const missions = ref([

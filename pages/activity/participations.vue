@@ -8,7 +8,7 @@
     <!-- Main content -->
     <div class="md:col-span-3">
       <div class="bg-base-100 rounded-lg shadow-md p-6">
-        <h1 class="text-2xl font-bold mb-6 text-base-content">{{ $t('drawer-content.activity.my_participations') }}</h1>
+        <h1 class="text-2xl font-bold mb-6 text-base-content">{{ t('drawer-content.activity.my_participations') }}</h1>
         
         <!-- Participations list -->
         <div class="space-y-4">
@@ -93,6 +93,7 @@ definePageMeta({
   middleware: ['auth'],
   layout: 'app'
 })
+const { t } = useI18n()
 
 // Mock participations data - would be fetched from API in a real app
 const participations = ref([
