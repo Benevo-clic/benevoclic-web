@@ -18,6 +18,7 @@ const menuOpen = ref(false)
 const showLoginModal = ref(false)
 const showRecentSearches = ref(false)
 const searchQuery = ref('')
+const loginModal = ref<HTMLDialogElement | null>(null)
 
 const auth = useUser()
 const { recentSearches, addRecentSearch, clearRecentSearches } = useRecentSearches()
@@ -114,10 +115,43 @@ onMounted(() => {
   })
 })
 
+
+function handleFavorites() {
+  if(isAuthenticated.value) {
+    loginModal.value?.showModal()
+  } else {
+    navigateTo('/activity/favorites')
+  }
+}
+
+function handleNotifications() {
+  if(isAuthenticated.value) {
+    loginModal.value?.showModal()
+  } else {
+    navigateTo('/notifications')
+  }
+}
+
+
+
 </script>
 
 <template>
   <header>
+    <!-- Login Modal -->
+    <dialog ref="loginModal" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">{{t('auth.login_required')}}</h3>
+        <p class="py-4">{{t('auth.login_to_access')}}</p>
+        <div class="modal-action">
+          <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
+          <HeaderAuthModalAuth />
+        </div>
+      </div>
+    </dialog>
+
     <!-- Top bar -->
     <div class="bg-base-100 shadow-sm px-4 py-2 flex items-center justify-between">
       <div class="flex items-center gap-2">
@@ -144,8 +178,8 @@ onMounted(() => {
         </label>
 
         <!-- Notifications -->
-        <div class="indicator hidden sm:flex">
-          <button class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1" @click="navigateTo('/notifications')">
+        <div class="indicator hidden sm:flex mr-2">
+          <button class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1" @click="handleNotifications">
             <span class="indicator-item badge badge-primary text-base-content" >
               12
             </span>
@@ -154,7 +188,7 @@ onMounted(() => {
         </div>
         <div class="hidden sm:flex items-center gap-6">
           <div v-if="isAuthenticated" class="flex items-center gap-2">
-            <HeaderAuthModalAuth />
+            <HeaderAuthModalAuth  />
           </div>
           <div
               v-else
@@ -171,7 +205,7 @@ onMounted(() => {
 
                 </div>
               </label>
-              <ul tabindex="0" class="menu menu-sm dropdown-content mt-2 p-2 shadow bg-base-100 text-base-content rounded-box w-70">
+              <ul tabindex="0" class="menu menu-sm dropdown-content mt-2 p-2 shadow bg-base-100 text-base-content rounded-box w-70 absolute right-0 z-50">
 
                 <DrawerAppContent
                     :is-authenticated="isAuthenticated"
@@ -217,7 +251,7 @@ onMounted(() => {
       </div>
 
       <div class="w-full md:w-auto flex justify-center md:justify-end flex-wrap text-base-content">
-        <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="navigateTo('/activity/favorites')">
+        <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="handleFavorites">
           <HeartIcon class="w-6 h-6"  /> {{t('header.volunteer.favorites')}}
         </button>
         <div class="relative recent-searches-container">
@@ -231,7 +265,7 @@ onMounted(() => {
           <!-- Recent searches dropdown -->
           <div 
             v-if="showRecentSearches" 
-            class="absolute right-0 mt-2 w-64 bg-base-100 shadow-lg rounded-lg z-50 p-2"
+            class="absolute right-0 mt-2 w-64 bg-base-100 shadow-lg rounded-lg z-10 p-2"
           >
             <div class="flex justify-between items-center mb-2 pb-2 border-b border-base-300">
               <h3 class="font-medium text-base-content">{{t('header.volunteer.recent-search')}}</h3>

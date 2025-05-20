@@ -13,8 +13,8 @@
         <!-- Search bar -->
         <div class="mb-8">
           <div class="form-control">
-            <div class="input-group">
-              <input type="text" v-model="searchQuery" placeholder="Search for help..." class="input input-bordered w-full" />
+            <div class="input-group flex flex-row">
+              <input type="text" v-model="searchQuery" placeholder="Search for help..." class="input input-bordered w-full mr-1" />
               <button class="btn btn-square">
                 <Search class="w-5 h-5" />
               </button>

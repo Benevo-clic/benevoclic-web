@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
-import { navigateTo } from '#app'
+import { navigateTo, useRoute } from '#app'
 import {
   Pencil,
   Bell,
@@ -22,8 +22,14 @@ const { logout: signOut, user } = useUser()
 const {volunteer} =useVolunteerAuth()
 const { setLocale,t } = useI18n()
 const { theme, toggleTheme, isDarkTheme } = useTheme()
+const route = useRoute()
 
 const showLanguageMenu = ref(false)
+
+// Function to check if a route is active
+const isActive = (path: string) => {
+  return route.path === path || route.path.startsWith(`${path}/`)
+}
 
 
 const props = defineProps({
@@ -90,7 +96,6 @@ onUnmounted(() => {
 
 function toggleLanguageMenu() {
   showLanguageMenu.value = !showLanguageMenu.value
-  console.log('showLanguageMenu', showLanguageMenu.value)
 }
 
 
@@ -117,27 +122,27 @@ function toggleLanguageMenu() {
     <div class="space-y-2" v-if="!props.isAuthenticated">
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.account.title')}}</h4>
       <ul class="space-y-1">
-        <li><button @click="navigateTo('/account/profile'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><UserRound class="w-5 h-5"/>{{t('drawer-content.account.view_profile')}}</button></li>
-        <li><button @click="navigateTo('/account/edit'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Pencil class="w-5 h-5"/>{{t('drawer-content.account.edit_profile')}}</button></li>
-        <li><button @click="navigateTo('/account/settings'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Settings class="w-5 h-5"/>{{t('drawer-content.account.settings')}}</button></li>
+        <li><button @click="navigateTo('/account/profile'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/account/profile') ? 'bg-base-200 border-l-4 border-primary' : '']"><UserRound class="w-5 h-5"/>{{t('drawer-content.account.view_profile')}}</button></li>
+        <li><button @click="navigateTo('/account/edit'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/account/edit') ? 'bg-base-200 border-l-4 border-primary' : '']"><Pencil class="w-5 h-5"/>{{t('drawer-content.account.edit_profile')}}</button></li>
+        <li><button @click="navigateTo('/account/settings'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/account/settings') ? 'bg-base-200 border-l-4 border-primary' : '']"><Settings class="w-5 h-5"/>{{t('drawer-content.account.settings')}}</button></li>
       </ul>
     </div>
     <!-- Activity -->
     <div class="space-y-2" v-if="!props.isAuthenticated">
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.activity.title')}}</h4>
       <ul class="space-y-1">
-        <li><button @click="navigateTo('/activity/missions'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Box class="w-5 h-5"/>{{t('drawer-content.activity.my_missions')}}</button></li>
-        <li><button @click="navigateTo('/activity/participations'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><ClipboardList class="w-5 h-5"/>{{t('drawer-content.activity.my_participations')}}</button></li>
-        <li><button @click="navigateTo('/activity/favorites'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><HeartIcon class="w-5 h-5"/>{{t('drawer-content.activity.my_favorites')}}</button></li>
-        <li><button @click="navigateTo('/activity/history'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Clock class="w-5 h-5"/>{{t('drawer-content.activity.history')}}</button></li>
+        <li><button @click="navigateTo('/activity/missions'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/activity/missions') ? 'bg-base-200 border-l-4 border-primary' : '']"><Box class="w-5 h-5"/>{{t('drawer-content.activity.my_missions')}}</button></li>
+        <li><button @click="navigateTo('/activity/participations'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/activity/participations') ? 'bg-base-200 border-l-4 border-primary' : '']"><ClipboardList class="w-5 h-5"/>{{t('drawer-content.activity.my_participations')}}</button></li>
+        <li><button @click="navigateTo('/activity/favorites'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/activity/favorites') ? 'bg-base-200 border-l-4 border-primary' : '']"><HeartIcon class="w-5 h-5"/>{{t('drawer-content.activity.my_favorites')}}</button></li>
+        <li><button @click="navigateTo('/activity/history'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/activity/history') ? 'bg-base-200 border-l-4 border-primary' : '']"><Clock class="w-5 h-5"/>{{t('drawer-content.activity.history')}}</button></li>
       </ul>
     </div>
     <!-- Notifications & Support -->
     <div class="space-y-2" v-if="!props.isAuthenticated">
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.notifications_support.title')}}</h4>
       <ul class="space-y-1">
-        <li><button @click="navigateTo('/notifications'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><Bell class="w-5 h-5"/>{{t('drawer-content.notifications_support.notifications')}}</button></li>
-        <li><button @click="navigateTo('/help'); emit('closeDrawer')" class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"><CircleHelp class="w-5 h-5"/>{{t('drawer-content.notifications_support.help')}}</button></li>
+        <li><button @click="navigateTo('/notifications'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/notifications') ? 'bg-base-200 border-l-4 border-primary' : '']"><Bell class="w-5 h-5"/>{{t('drawer-content.notifications_support.notifications')}}</button></li>
+        <li><button @click="navigateTo('/help'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/help') ? 'bg-base-200 border-l-4 border-primary' : '']"><CircleHelp class="w-5 h-5"/>{{t('drawer-content.notifications_support.help')}}</button></li>
       </ul>
     </div>
     <!-- App -->
@@ -147,7 +152,7 @@ function toggleLanguageMenu() {
         <li class="relative">
           <!-- Bouton qui ouvre/ferme le menu -->
           <button
-              class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full"
+              :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', showLanguageMenu ? 'bg-base-200 border-l-4 border-primary' : '']"
               @click="toggleLanguageMenu"
           >
             <Globe class="w-5 h-5"/> {{t('drawer-content.app.language')}}
@@ -159,7 +164,7 @@ function toggleLanguageMenu() {
           />
         </li>
 
-        <li><button class="flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full">
+        <li><button :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isDarkTheme() ? 'bg-base-200 border-l-4 border-primary' : '']">
           <label class="swap swap-rotate cursor-pointer">
             <input 
               type="checkbox" 
@@ -193,5 +198,9 @@ function toggleLanguageMenu() {
 </template>
 
 <style scoped>
-
+/* Active menu item styles */
+.border-l-4.border-primary {
+  padding-left: 6px; /* Adjust padding to account for the border */
+  transition: all 0.2s ease-in-out;
+}
 </style>

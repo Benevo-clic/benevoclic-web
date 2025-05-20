@@ -15,8 +15,8 @@
           <!-- Filter and search -->
           <div class="flex flex-col md:flex-row gap-4 mb-6">
             <div class="form-control flex-1">
-              <div class="input-group">
-                <input type="text" placeholder="Search missions..." class="input input-bordered w-full" />
+              <div class="input-group flex flex-row">
+                <input type="text" placeholder="Search missions..." class="input input-bordered w-full mr-2" />
                 <button class="btn btn-square">
                   <Search class="w-5 h-5" />
                 </button>

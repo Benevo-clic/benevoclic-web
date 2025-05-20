@@ -1,5 +1,7 @@
 {
   "auth": {
+    "login_required": "Login Required",
+    "login_to_access": "Please log in to access this page.",
     "login": {
       "title": "Log In",
       "description": "Today is a new day. You shape it. Log in to manage your projects.",

@@ -1,5 +1,7 @@
 {
   "auth": {
+    "login_required": "Inicio de sesión requerido",
+    "login_to_access": "Por favor inicia sesión para acceder a esta página.",
     "login": {
       "title": "Iniciar sesión",
       "description": "Hoy es un nuevo día. Tú le das forma. Inicia sesión para gestionar tus proyectos.",

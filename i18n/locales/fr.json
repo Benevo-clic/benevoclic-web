@@ -1,5 +1,7 @@
 {
   "auth": {
+    "login_required": "Connexion requise",
+    "login_to_access": "Veuillez vous connecter pour accéder à cette page.",
     "login": {
       "title": "Se connecter",
       "description": "Aujourd’hui est un nouveau jour. C’est vous qui lui donnez sa forme. Connectez-vous pour gérer vos projets.",

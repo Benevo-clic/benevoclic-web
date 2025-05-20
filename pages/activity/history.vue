@@ -8,15 +8,15 @@
     <!-- Main content -->
     <div class="md:col-span-3">
       <div class="bg-base-100 rounded-lg shadow-md p-6">
-        <h1 class="text-2xl font-bold mb-6 text-base-content">{{ $t('drawer-content.activity.history') }}</h1>
+        <h1 class="text-2xl font-bold mb-6 text-base-content">{{ t('drawer-content.activity.history') }}</h1>
         
         <!-- History list -->
         <div class="space-y-4">
           <!-- Filter and search -->
           <div class="flex flex-col md:flex-row gap-4 mb-6">
             <div class="form-control flex-1">
-              <div class="input-group">
-                <input type="text" placeholder="Search history..." class="input input-bordered w-full" />
+              <div class="input-group flex flex-row">
+                <input type="text" placeholder="Search history..." class="input input-bordered w-full mr-2" />
                 <button class="btn btn-square">
                   <Search class="w-5 h-5" />
                 </button>
@@ -92,6 +92,8 @@ definePageMeta({
   middleware: ['auth'],
   layout: 'app'
 })
+
+const { t } = useI18n()
 
 // Mock history data - would be fetched from API in a real app
 const historyItems = ref([
