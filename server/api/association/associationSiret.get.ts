@@ -1,4 +1,4 @@
-import {defineEventHandler, getCookie} from "h3";
+import {defineEventHandler} from "h3";
 import axios from 'axios';
 
 
@@ -6,13 +6,18 @@ import axios from 'axios';
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
-    const token = getCookie(event, 'auth_token')
-    const { userId } = getQuery(event) as { userId?: string }
+    const { siretNum } = getQuery(event) as { siretNum?: string }
 
     try {
+
         const { data } = await axios.get(
-            `${config.private.api_base_url}/volunteer/${userId}`,
-            { headers: { Authorization: `Bearer ${token}` } }
+            `${config.private.api_sirene_url}/${siretNum}`,
+            {
+                headers: {
+                    'accept': 'application/json',
+                    'X-INSEE-Api-Key-Integration': `${config.private.api_sirene_key}`,
+                }
+            }
         )
         return data
     } catch (error: any) {

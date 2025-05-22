@@ -2,10 +2,13 @@
 import { reactive, ref} from 'vue'
 import {RoleUser} from '~/common/enums/role.enum'
 import {useUser} from "~/composables/auth/useUser";
+import VerifSiretAssociation from "~/components/header/auth/form/VerifSiretAssociation.vue";
 
 const {t} = useI18n()
 
 const loading = ref(false)
+const associationExists = ref(false)
+
 
 const user = useUser()
 
@@ -24,6 +27,8 @@ const errorMessage = ref('')
 
 const emit = defineEmits<{
   (e: 'emailVerified', isVerified: boolean): void;
+  (e: 'associationExists', isVerified: boolean): void;
+
 }>()
 const isEmailVerified = ref(false)
 
@@ -60,10 +65,21 @@ async function handleRegister() {
     loading.value = false
   }
 }
+
+
+function verifyAssociation(value:boolean) {
+  associationExists.value = value
+  emit('associationExists', associationExists.value)
+}
 </script>
 
 <template>
-  <form class="space-y-4" @submit.prevent="handleRegister" >
+    <VerifSiretAssociation
+        @association-exists="verifyAssociation"
+        v-if="!associationExists && isAssociation"
+    />
+
+  <form class="space-y-4" @submit.prevent="handleRegister" v-if="!isAssociation || associationExists">
     <div class="form-control">
       <label class="label">
         <span class="label-text">{{t('auth.email')}}</span>

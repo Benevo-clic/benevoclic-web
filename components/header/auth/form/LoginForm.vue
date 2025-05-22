@@ -2,14 +2,15 @@
 import {reactive, ref, watch} from 'vue'
 import UsersLoginForm from "~/components/header/auth/form/UsersLoginForm.vue"
 import UserRegisterForm from "~/components/header/auth/form/UserRegisterForm.vue"
-import {ShieldX} from "lucide-vue-next";
 import {useUser} from "~/composables/auth/useUser";
 import {RoleUser} from "~/common/enums/role.enum";
 import VerifEmailForm from "~/components/header/auth/form/VerifEmailForm.vue";
 import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
+import {useAssociationAuth} from "~/composables/auth/associationAuth";
 
 const auth = useUser()
 const volunteer = useVolunteerAuth()
+const association = useAssociationAuth()
 
 const {t} = useI18n()
 
@@ -17,6 +18,8 @@ const {t} = useI18n()
 const loading = ref(false)
 let isError = ref(false)
 const verifyEmail = ref(false)
+const associationExists = ref(false)
+const messageError = ref('')
 
 const form = reactive({
   email: '',
@@ -53,6 +56,7 @@ async function handleLogin() {
     isError.value = false
   } catch (error) {
     isError.value = true
+    messageError.value = t('auth.login.error.invalid_credentials')
     console.error('Erreur de connexion:', error)
   } finally {
     loading.value = false
@@ -97,15 +101,29 @@ function toggleUserType() {
 
 async function handleGoogleLogin() {
   try {
+    if(isAssociation.value && !associationExists.value){
+      isError.value = true
+      messageError.value = t('auth.register.association_siret_status')
+    }else{
+      await auth.loginWithGoogle(isAssociation.value ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER)
+      isError.value = false
+    }
 
-    await auth.loginWithGoogle(isAssociation.value ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER)
   } catch (error) {
     console.error('Erreur de connexion Google:', error)
+    isError.value = true
+
   }
 }
 
 function toggleVerifyEmail(value: boolean) {
   verifyEmail.value = value
+  isError.value = false
+}
+
+function verifyAssociation(value:boolean) {
+  associationExists.value = value
+  isError.value = false
 }
 
 </script>
@@ -124,11 +142,19 @@ function toggleVerifyEmail(value: boolean) {
       {{t('auth.register.description')}}
     </p>
 
-    <div class="alert alert-error flex items-center gap-4 mb-4 shadow-md border border-red-200 rounded-lg px-4 py-3 w-full" v-if="isError">
-      <ShieldX class="w-6 h-6 sm:w-8 sm:h-8 md:w-8 md:h-8 text-red-600" />
-      <p class="text-sm text-red-900 font-semibold">
-        {{t('auth.login.error.invalid_credentials')}}
-      </p>
+
+    <div role="alert" class="alert alert-error mb-4" v-if="isError">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      {{messageError}}
+    </div>
+
+    <div role="alert" class="alert alert-success mb-4" v-if="associationExists">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>{{t('auth.register.association_siret_status_good')}}</span>
     </div>
 
     <!-- Texte + switch utilisateur -->
@@ -155,6 +181,7 @@ function toggleVerifyEmail(value: boolean) {
         :form="form"
         :is-association="isAssociation"
         @email-verified="toggleVerifyEmail"
+        @association-exists="verifyAssociation"
     />
 
     <!-- Divider -->

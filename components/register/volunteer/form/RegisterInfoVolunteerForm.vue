@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import NameForm from './NameForm.vue'
-import FirstNameForm from './FirstNameForm.vue'
+import NameFirstNameForm from './NameFirstNameForm.vue'
 import PhoneForm from './PhoneForm.vue'
 import BirthDateForm from './BirthDateForm.vue'
 import CityForm from './CityForm.vue'
 import PostalCodeForm from './PostalCodeForm.vue'
 import BioForm from './BioForm.vue'
-import type {CreateVolunteerDto, FormFields} from "~/common/interface/register.interface";
+import type {CreateVolunteerDto, FormFieldsVolunteer} from "~/common/interface/register.interface";
 import {useUser} from "~/composables/auth/useUser";
 import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
 
@@ -16,7 +15,7 @@ const { registerVolunteer } = useVolunteerAuth()
 
 interface Step {
   component: Component
-  field: keyof FormFields
+  field: keyof (FormFieldsVolunteer & { nameFirstName: string })
   validate: (value: string) => string
 }
 
@@ -26,9 +25,10 @@ const emit = defineEmits<{
 }>()
 
 
-const formData = reactive<FormFields>({
+const formData = reactive<FormFieldsVolunteer & { nameFirstName: string }>({
   name: '',
   firstName: '',
+  nameFirstName: '|', // Format: "name|firstName"
   phone: '',
   birthDate: '',
   city: '',
@@ -36,9 +36,10 @@ const formData = reactive<FormFields>({
   bio: ''
 })
 
-const errors = reactive<Record<keyof FormFields, string>>({
+const errors = reactive<Record<keyof (FormFieldsVolunteer & { nameFirstName: string }), string>>({
   name: '',
   firstName: '',
+  nameFirstName: '',
   phone: '',
   birthDate: '',
   city: '',
@@ -50,20 +51,19 @@ const currentStep = ref(0)
 
 const steps: Step[] = [
   {
-    component: NameForm,
-    field: 'name',
+    component: NameFirstNameForm,
+    field: 'nameFirstName',
     validate: (value: string) => {
-      if (!value) return 'Le nom est requis'
-      if (value.length < 2) return 'Le nom doit contenir au moins 2 caractères'
-      return ''
-    }
-  },
-  {
-    component: FirstNameForm,
-    field: 'firstName',
-    validate: (value: string) => {
-      if (!value) return 'Le prénom est requis'
-      if (value.length < 2) return 'Le prénom doit contenir au moins 2 caractères'
+      const parts = value.split('|')
+      const name = parts[0] || ''
+      const firstName = parts[1] || ''
+
+      if (!name) return 'Le nom est requis'
+      if (name.length < 2) return 'Le nom doit contenir au moins 2 caractères'
+
+      if (!firstName) return 'Le prénom est requis'
+      if (firstName.length < 2) return 'Le prénom doit contenir au moins 2 caractères'
+
       return ''
     }
   },
@@ -118,14 +118,20 @@ const isError = ref(false)
 
 function validateCurrentStep(): boolean {
   const step = steps[currentStep.value]
-  const error = step.validate(formData[step.field as keyof FormFields])
-  errors[step.field as keyof FormFields] = error
+  const error = step.validate(formData[step.field as keyof (FormFieldsVolunteer & { nameFirstName: string })])
+  errors[step.field as keyof (FormFieldsVolunteer & { nameFirstName: string })] = error
   return !error
 }
 
-function handleInput(field: keyof FormFields, value: string) {
+function handleInput(field: keyof (FormFieldsVolunteer & { nameFirstName: string }), value: string) {
   formData[field] = value
   errors[field] = ''
+
+  if (field === 'nameFirstName') {
+    const parts = value.split('|')
+    formData.name = parts[0] || ''
+    formData.firstName = parts[1] || ''
+  }
 }
 
 function next() {

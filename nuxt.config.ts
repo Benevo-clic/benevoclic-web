@@ -44,7 +44,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     private: {
-      api_base_url: process.env.API_BASE_URL
+      api_base_url: process.env.API_BASE_URL,
+      api_sirene_url: process.env.API_SIRENE_URL,
+      api_sirene_key: process.env.API_SIRENE_KEY,
     },
     public: {
       ssr: true,

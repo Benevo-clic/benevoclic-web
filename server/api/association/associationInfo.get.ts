@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 
     try {
         const { data } = await axios.get(
-            `${config.private.api_base_url}/volunteer/${userId}`,
+            `${config.private.api_base_url}/association/${userId}`,
             { headers: { Authorization: `Bearer ${token}` } }
         )
         return data

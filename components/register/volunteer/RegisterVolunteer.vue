@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
 import UploadImageForm from "~/components/register/volunteer/form/UploadImageForm.vue"
 import {useUser} from "~/composables/auth/useUser";
 
 const user = useUser()
-const { t } = useI18n()
 
 const isSubmittedForm = ref(false)
 const imageBase64 = ref<string | null>(null)
