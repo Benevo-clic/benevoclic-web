@@ -24,6 +24,7 @@
         "association_siret_status_description": "El número SIRET es un identificador único para empresas en Francia.",
         "association_siret_status_placeholder": "Introduce tu SIRET",
         "association_siret_status_error": "El número SIRET debe contener 14 dígitos.",
+        "association_siret_status_error_description": "Por favor, verifica que el número SIRET sea correcto.",
         "association_siret_status_good": "Número SIRET válido",
       "description": "Regístrate gratis para unirte a la comunidad y actuar por las causas que te importan.",
       "already_have_account": "¿Ya tienes una cuenta?",

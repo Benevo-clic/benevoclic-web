@@ -12,24 +12,49 @@ const form = reactive({
 })
 const associationExists = ref(false)
 const loading = ref(false)
+const errorMessage = ref('')
+const isValid = ref(true)
 
 const emit = defineEmits<{
   (e: 'associationExists', isVerified: boolean): void;
 }>()
 
+function validateSiret() {
+  // Reset validation state
+  errorMessage.value = ''
+  isValid.value = true
+
+  // Check if SIRET is 14 digits
+  if (!/^\d{14}$/.test(form.siret)) {
+    errorMessage.value = t('auth.register.association_siret_status_error')
+    isValid.value = false
+    return false
+  }
+
+  return true
+}
 
 async function verifyAssociation() {
+  if (!validateSiret()) {
+    return
+  }
+
   loading.value = true
+  errorMessage.value = ''
+
   try {
     await association.getAssociationInfoBySiret(form.siret)
     associationExists.value = true
+    isValid.value = true
     emit('associationExists', associationExists.value)
-  }catch (error) {
+  } catch (error) {
     console.error('Erreur de connexion:', error)
+    errorMessage.value = t('auth.register.association_siret_status_error_description')
+    isValid.value = false
+    associationExists.value = false
   } finally {
     loading.value = false
   }
-
 }
 </script>
 
@@ -46,8 +71,14 @@ async function verifyAssociation() {
           v-model="form.siret"
           type="text"
           :placeholder="t('auth.register.association_siret_status_placeholder')"
-          class="input input-bordered w-full"
+          :class="['input input-bordered w-full', { 'input-error': !isValid }]"
       />
+      <div v-if="!isValid" class="text-error text-sm mt-1">
+        {{ errorMessage }}
+      </div>
+      <div v-if="isValid && associationExists" class="text-success text-sm mt-1">
+        {{ t('auth.register.association_siret_status_good') }}
+      </div>
     </div>
 
     <button type="submit" class="btn btn-primary w-full" :disabled="loading">

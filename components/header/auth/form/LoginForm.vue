@@ -6,11 +6,9 @@ import {useUser} from "~/composables/auth/useUser";
 import {RoleUser} from "~/common/enums/role.enum";
 import VerifEmailForm from "~/components/header/auth/form/VerifEmailForm.vue";
 import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
-import {useAssociationAuth} from "~/composables/auth/associationAuth";
 
 const auth = useUser()
 const volunteer = useVolunteerAuth()
-const association = useAssociationAuth()
 
 const {t} = useI18n()
 

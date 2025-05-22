@@ -24,6 +24,7 @@
       "association_siret_status_description": "Le numéro SIRET est un identifiant unique pour les entreprises en France.",
       "association_siret_status_placeholder": "Entrez votre numéro SIRET",
       "association_siret_status_error": "Le numéro SIRET doit contenir 14 chiffres.",
+      "association_siret_status_error_description": "Veuillez vérifier que le numéro SIRET est correct.",
       "association_siret_status_good": "Numéro SIRET valide",
       "description": "Inscrivez-vous gratuitement pour rejoindre la communauté et agir pour des causes qui vous tiennent à cœur.",
       "already_have_account": "Vous avez déjà un compte ?",
