@@ -15,6 +15,14 @@
         "account_locked": "Votre compte est verrouillé. Veuillez contacter le support."
       }
     },
+    "verification": {
+      "title": "Confirmation requise",
+      "sent": "Un email de confirmation a été envoyé à votre adresse email. Veuillez vérifier votre boîte de réception et cliquer sur le lien pour activer votre compte.",
+      "wait": "Veuillez patienter avant de demander un nouvel email",
+      "resend": "Renvoyer l'email de confirmation",
+      "resend_link": "Cliquez ici pour renvoyer l'email de confirmation",
+      "time_remaining": "Temps restant avant de pouvoir renvoyer l'email:"
+    },
     "logout": "Déconnexion",
     "register": {
       "title": "S'inscrire",

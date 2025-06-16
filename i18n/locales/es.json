@@ -15,6 +15,14 @@
         "account_locked": "Tu cuenta está bloqueada. Por favor, contacta con el soporte."
       }
     },
+    "verification": {
+      "title": "Confirmación requerida",
+      "sent": "Se ha enviado un correo electrónico de confirmación a tu dirección de correo electrónico. Por favor, revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.",
+      "wait": "Por favor, espera antes de solicitar un nuevo correo electrónico",
+      "resend": "Reenviar correo electrónico de confirmación",
+      "resend_link": "Haz clic aquí para reenviar el correo electrónico de confirmación",
+      "time_remaining": "Tiempo restante antes de que puedas reenviar el correo electrónico:"
+    },
     "logout": "Cerrar sesión",
     "register": {
       "title": "Registrarse",

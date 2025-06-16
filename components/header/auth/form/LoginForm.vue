@@ -4,7 +4,6 @@ import UsersLoginForm from "~/components/header/auth/form/UsersLoginForm.vue"
 import UserRegisterForm from "~/components/header/auth/form/UserRegisterForm.vue"
 import {useUser} from "~/composables/auth/useUser";
 import {RoleUser} from "~/common/enums/role.enum";
-import VerifEmailForm from "~/components/header/auth/form/VerifEmailForm.vue";
 import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
 
 const auth = useUser()
@@ -15,7 +14,6 @@ const {t} = useI18n()
 
 const loading = ref(false)
 let isError = ref(false)
-const verifyEmail = ref(false)
 const associationExists = ref(false)
 const messageError = ref('')
 
@@ -115,7 +113,14 @@ async function handleGoogleLogin() {
 }
 
 function toggleVerifyEmail(value: boolean) {
-  verifyEmail.value = value
+
+  if(value){
+    navigateTo(
+        {
+          path: '/auth/VerifyEmailPage',
+        }
+    )
+  }
   isError.value = false
 }
 
@@ -127,7 +132,7 @@ function verifyAssociation(value:boolean) {
 </script>
 
 <template>
-  <div class="w-full max-w-md" v-if="!verifyEmail">
+  <div class="w-full max-w-md" >
     <h1 class="text-3xl font-bold mb-2">
       {{t('auth.title')}} <br />
       <span class="text-primary">{{t('auth.title_2')}} 👋</span>
@@ -231,7 +236,6 @@ function verifyAssociation(value:boolean) {
       © 2024 TOUS DROITS RÉSERVÉS
     </p>
   </div>
-  <VerifEmailForm v-if="verifyEmail" />
 
 </template>
 
