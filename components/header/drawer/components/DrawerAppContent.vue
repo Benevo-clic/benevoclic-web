@@ -20,11 +20,12 @@ import LanguageComponent from "~/components/header/utils/components/LanguageComp
 import { useTheme } from "~/composables/useTheme";
 const { logout: signOut, user } = useUser()
 const {volunteer} =useVolunteerAuth()
-const { setLocale,t } = useI18n()
+const { setLocale,t, locale } = useI18n()
 const { theme, toggleTheme, isDarkTheme } = useTheme()
 const route = useRoute()
 
 const showLanguageMenu = ref(false)
+const flag = ref('🇫🇷')
 
 // Function to check if a route is active
 const isActive = (path: string) => {
@@ -56,9 +57,14 @@ function handleFileChange(e: Event) {
   }
 }
 
-async function changeLanguage(lo: 'fr' | 'en' | 'es') {
+async function changeLanguage(lo: 'fr' | 'en' | 'es', flagEmoji: string) {
   await setLocale(lo)
   showLanguageMenu.value = false
+  flag.value = flagEmoji
+
+  // Save to localStorage to persist across sessions
+  localStorage.setItem('locale', lo)
+  localStorage.setItem('flag', flagEmoji)
 }
 
 const profileImageUrl = computed(() => {
@@ -83,10 +89,27 @@ watch(() => props.menuOpen, (isOpen) => {
   toggleBodyScroll(isOpen)
 })
 
+// Watch for route changes to ensure locale persists across navigation
+watch(() => route.path, () => {
+  const savedLocale = localStorage.getItem('locale')
+  if (savedLocale && locale.value !== savedLocale) {
+    setLocale(savedLocale as 'fr' | 'en' | 'es')
+  }
+})
+
 // Set initial state when component is mounted
 onMounted(() => {
   if (props.menuOpen) {
     toggleBodyScroll(true)
+  }
+
+  // Initialize locale from localStorage
+  const savedLocale = localStorage.getItem('locale')
+  const savedFlag = localStorage.getItem('flag')
+
+  if (savedLocale) {
+    setLocale(savedLocale as 'fr' | 'en' | 'es')
+    flag.value = savedFlag || '🇫🇷'
   }
 })
 
@@ -155,6 +178,7 @@ function toggleLanguageMenu() {
               :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', showLanguageMenu ? 'bg-base-200 border-l-4 border-primary' : '']"
               @click="toggleLanguageMenu"
           >
+            <span>{{ flag }}</span>
             <Globe class="w-5 h-5"/> {{t('drawer-content.app.language')}}
           </button>
           <LanguageComponent
