@@ -73,7 +73,7 @@
             <div class="space-y-4">
               <div>
                 <h3 class="font-medium text-base-content mb-2">Change Password</h3>
-                <button class="btn btn-outline btn-primary btn-sm">Change Password</button>
+                <button @click="showPasswordChangeModal" class="btn btn-outline btn-primary btn-sm">Change Password</button>
               </div>
 
               <div>
@@ -103,10 +103,70 @@
       </div>
     </div>
   </dialog>
+
+  <!-- Change Password Modal -->
+  <dialog ref="passwordChangeModal" class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">{{ $t('drawer-content.account.password_change.title') }}</h3>
+      <p class="py-2">{{ $t('drawer-content.account.password_change.message') }}</p>
+
+      <form @submit.prevent="changePassword" class="space-y-4 py-4">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">{{ $t('drawer-content.account.password_change.old_password') }}</span>
+          </label>
+          <input
+            type="password"
+            v-model="passwordForm.oldPassword"
+            class="input input-bordered"
+            required
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">{{ $t('drawer-content.account.password_change.new_password') }}</span>
+          </label>
+          <input
+            type="password"
+            v-model="passwordForm.newPassword"
+            class="input input-bordered"
+            required
+            minlength="8"
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">{{ $t('drawer-content.account.password_change.confirm_password') }}</span>
+          </label>
+          <input
+            type="password"
+            v-model="passwordForm.confirmPassword"
+            class="input input-bordered"
+            required
+          />
+        </div>
+
+        <div v-if="passwordError" class="text-error text-sm mt-2">
+          {{ passwordError }}
+        </div>
+
+        <div class="modal-action">
+          <button type="button" @click="cancelPasswordChange" class="btn">
+            {{ $t('drawer-content.account.password_change.cancel') }}
+          </button>
+          <button type="submit" class="btn btn-primary" :disabled="isPasswordFormInvalid">
+            {{ $t('drawer-content.account.password_change.confirm') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </dialog>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import AccountMenu from '~/components/account/AccountMenu.vue'
 import {useUser} from "~/composables/auth/useUser";
 import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
@@ -121,6 +181,73 @@ const { t } = useI18n()
 const auth = useUser()
 const volunteer = useVolunteerAuth()
 const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
+const passwordChangeModal = ref<HTMLDialogElement | null>(null)
+
+// Password change form data
+const passwordForm = reactive({
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+})
+
+// Password error message
+const passwordError = ref<string | null>(null)
+
+// Computed property to check if the password form is valid
+const isPasswordFormInvalid = computed(() => {
+  return !passwordForm.oldPassword ||
+         !passwordForm.newPassword ||
+         !passwordForm.confirmPassword ||
+         passwordForm.newPassword !== passwordForm.confirmPassword ||
+         passwordForm.newPassword.length < 8
+})
+
+// Function to show the password change modal
+function showPasswordChangeModal() {
+  // Reset form and errors
+  passwordForm.oldPassword = ''
+  passwordForm.newPassword = ''
+  passwordForm.confirmPassword = ''
+  passwordError.value = null
+
+  // Show modal
+  passwordChangeModal.value?.showModal()
+}
+
+// Function to cancel password change
+function cancelPasswordChange() {
+  passwordChangeModal.value?.close()
+}
+
+// Function to handle password change form submission
+async function changePassword() {
+  if (isPasswordFormInvalid.value) {
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      passwordError.value = t('drawer-content.account.password_change.error.password_mismatch')
+    } else if (passwordForm.newPassword.length < 8) {
+      passwordError.value = t('drawer-content.account.password_change.error.weak_password')
+    }
+    return
+  }
+
+  passwordError.value = null
+
+  try {
+    await auth.updatePassword({
+      oldPassword: passwordForm.oldPassword,
+      newPassword: passwordForm.newPassword
+    })
+
+    // Close modal on success
+    passwordChangeModal.value?.close()
+
+    // Show success message (could use a toast or alert)
+    alert(t('drawer-content.account.password_change.success'))
+  } catch (error: any) {
+    // Display error message
+    passwordError.value = error.message || t('drawer-content.account.password_change.error.general')
+  }
+}
 
 // Function to show the delete confirmation dialog
 function showDeleteConfirmation() {

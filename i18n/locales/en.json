@@ -101,6 +101,21 @@
             "message": "Are you sure you want to delete your account? This action cannot be undone.",
             "confirm": "Yes, delete my account",
             "cancel": "Cancel"
+        },
+        "password_change": {
+            "title": "Change Password",
+            "message": "Please enter your current password and your new password.",
+            "old_password": "Current Password",
+            "new_password": "New Password",
+            "confirm_password": "Confirm New Password",
+            "confirm": "Change Password",
+            "cancel": "Cancel",
+            "success": "Your password has been successfully updated.",
+            "error": {
+                "password_mismatch": "Passwords do not match.",
+                "weak_password": "Password must be at least 8 characters long.",
+                "general": "An error occurred while updating the password."
+            }
         }
     },
     "activity": {

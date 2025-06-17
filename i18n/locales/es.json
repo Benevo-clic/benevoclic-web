@@ -101,6 +101,21 @@
         "message": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.",
         "confirm": "Sí, eliminar mi cuenta",
         "cancel": "Cancelar"
+      },
+      "password_change": {
+        "title": "Cambiar contraseña",
+        "message": "Por favor, introduce tu contraseña actual y tu nueva contraseña.",
+        "old_password": "Contraseña actual",
+        "new_password": "Nueva contraseña",
+        "confirm_password": "Confirmar nueva contraseña",
+        "confirm": "Cambiar contraseña",
+        "cancel": "Cancelar",
+        "success": "Tu contraseña ha sido actualizada con éxito.",
+        "error": {
+          "password_mismatch": "Las contraseñas no coinciden.",
+          "weak_password": "La contraseña debe tener al menos 8 caracteres.",
+          "general": "Se produjo un error al actualizar la contraseña."
+        }
       }
     },
     "activity": {

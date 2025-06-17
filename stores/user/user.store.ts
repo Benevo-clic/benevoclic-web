@@ -4,7 +4,10 @@ import type {LoginPayload, LoginResponse, UserInfo} from "~/common/types/auth.ty
 import {useCookie} from "#app/composables/cookie";
 import type {User} from "firebase/auth";
 import {
-  signInWithPopup
+  signInWithPopup,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword
 } from "firebase/auth";
 import {RoleUser} from "~/common/enums/role.enum";
 
@@ -242,6 +245,34 @@ export const useUserStore = defineStore('auth', {
         this.error = error?.message || 'Erreur lors de la suppression du compte'
         throw error
       }
+    },
+    async updatePassword(payload: { oldPassword: string, newPassword: string }) {
+        this.loading = true
+        this.error = null
+        try {
+            const { $firebase } = useNuxtApp();
+            if (!$firebase.auth) throw new Error('Firebase non initialisé');
+
+            const user = $firebase.auth.currentUser;
+            if (!user) throw new Error('Utilisateur non connecté');
+            if (!user.email) throw new Error('Email de l\'utilisateur non disponible');
+
+            // Create credential with the user's email and old password
+            const credential = EmailAuthProvider.credential(user.email, payload.oldPassword);
+
+            // Re-authenticate the user
+            await reauthenticateWithCredential(user, credential);
+
+            // Update the password
+            await updatePassword(user, payload.newPassword);
+
+            return { success: true };
+        } catch (err: any) {
+            this.error = err?.message || 'Erreur de mise à jour du mot de passe'
+            throw err
+        } finally {
+            this.loading = false
+        }
     }
   },
 })

@@ -27,6 +27,7 @@ export const useUser = () => {
         loginWithGoogle: authStore.loginWithGoogle,
         removeUser: authStore.removeUserAccount,
         updateProfile: authStore.uploadProfilePicture,
-        register: registerStore.registerWithEmailPassword
+        register: registerStore.registerWithEmailPassword,
+        updatePassword: authStore.updatePassword,
     }
 }
