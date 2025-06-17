@@ -23,7 +23,9 @@
             
             <div class="flex-1 text-center md:text-left">
               <h2 class="text-xl font-semibold text-base-content">{{ user?.firstName }} {{ user?.lastName }}</h2>
-              <p class="text-base-content opacity-70">{{ auth.user.value?.email }}</p>
+              <p class="text-base-content text-sm">
+                {{ user?.birthDate ? calculateAge(user.birthDate) + ' ans' : 'Date de naissance non fournie' }}
+              </p>
               <p class="text-base-content mt-2">{{ user?.bio || 'No bio provided' }}</p>
             </div>
           </div>
@@ -70,4 +72,16 @@ const profileImageUrl = computed(() => {
   }
   return ''
 })
+
+function calculateAge(birthdate: string): number {
+  const birth = new Date(birthdate);
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+  return age;
+}
+
 </script>

@@ -93,7 +93,9 @@
       "title": "Compte",
       "view_profile": "Voir le profil",
       "edit_profile": "Modifier le profil",
-      "settings": "Paramètres"
+      "settings": "Paramètres",
+        "profile_updated_success": "Profil mis à jour avec succès",
+        "profile_update_error": "Erreur lors de la mise à jour du profil. Veuillez réessayer."
     },
     "activity": {
         "title": "Activités",

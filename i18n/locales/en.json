@@ -93,7 +93,9 @@
         "title": "Account",
         "view_profile": "View Profile",
         "edit_profile": "Edit Profile",
-        "settings": "Settings"
+        "settings": "Settings",
+        "profile_updated_success": "Profile updated successfully",
+        "profile_update_error": "Error updating profile. Please try again."
     },
     "activity": {
         "title": "Activities",

@@ -19,7 +19,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
         const isAuthenticated = auth.isAuthenticated.value
 
         const response2 = !isAuthenticated && !isVolunteer
-        console.log('response2', response2)
 
         if (authStore.isAuthenticated) {
             return navigateTo('/auth/login')
