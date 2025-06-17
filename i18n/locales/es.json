@@ -94,8 +94,14 @@
       "view_profile": "Ver perfil",
       "edit_profile": "Editar perfil",
       "settings": "Configuraciones",
-        "profile_updated_success": "Perfil actualizado con éxito",
-        "profile_update_error": "Error al actualizar el perfil. Por favor, inténtalo de nuevo."
+      "profile_updated_success": "Perfil actualizado con éxito",
+      "profile_update_error": "Error al actualizar el perfil. Por favor, inténtalo de nuevo.",
+      "delete_confirmation": {
+        "title": "Confirmar eliminación",
+        "message": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.",
+        "confirm": "Sí, eliminar mi cuenta",
+        "cancel": "Cancelar"
+      }
     },
     "activity": {
       "title": "Actividades",

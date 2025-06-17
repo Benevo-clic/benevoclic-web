@@ -94,8 +94,14 @@
       "view_profile": "Voir le profil",
       "edit_profile": "Modifier le profil",
       "settings": "Paramètres",
-        "profile_updated_success": "Profil mis à jour avec succès",
-        "profile_update_error": "Erreur lors de la mise à jour du profil. Veuillez réessayer."
+      "profile_updated_success": "Profil mis à jour avec succès",
+      "profile_update_error": "Erreur lors de la mise à jour du profil. Veuillez réessayer.",
+      "delete_confirmation": {
+        "title": "Confirmer la suppression",
+        "message": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+        "confirm": "Oui, supprimer mon compte",
+        "cancel": "Annuler"
+      }
     },
     "activity": {
         "title": "Activités",

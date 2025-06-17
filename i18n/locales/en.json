@@ -95,7 +95,13 @@
         "edit_profile": "Edit Profile",
         "settings": "Settings",
         "profile_updated_success": "Profile updated successfully",
-        "profile_update_error": "Error updating profile. Please try again."
+        "profile_update_error": "Error updating profile. Please try again.",
+        "delete_confirmation": {
+            "title": "Confirm Deletion",
+            "message": "Are you sure you want to delete your account? This action cannot be undone.",
+            "confirm": "Yes, delete my account",
+            "cancel": "Cancel"
+        }
     },
     "activity": {
         "title": "Activities",

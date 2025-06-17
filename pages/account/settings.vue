@@ -4,18 +4,18 @@
     <div class="hidden md:block">
       <AccountMenu />
     </div>
-    
+
     <!-- Main content -->
     <div class="md:col-span-3">
       <div class="bg-base-100 rounded-lg shadow-md p-6">
         <h1 class="text-2xl font-bold mb-6 text-base-content">{{ $t('drawer-content.account.settings') }}</h1>
-        
+
         <!-- Settings sections -->
         <div class="space-y-8">
           <!-- Notifications settings -->
           <div class="bg-base-200 p-4 rounded-lg">
             <h2 class="text-lg font-semibold mb-4 text-base-content">Notifications</h2>
-            
+
             <div class="space-y-4">
               <div class="flex items-center justify-between">
                 <div>
@@ -24,7 +24,7 @@
                 </div>
                 <input type="checkbox" v-model="settings.emailNotifications" class="toggle toggle-primary" />
               </div>
-              
+
               <div class="flex items-center justify-between">
                 <div>
                   <h3 class="font-medium text-base-content">Push Notifications</h3>
@@ -32,7 +32,7 @@
                 </div>
                 <input type="checkbox" v-model="settings.pushNotifications" class="toggle toggle-primary" />
               </div>
-              
+
               <div class="flex items-center justify-between">
                 <div>
                   <h3 class="font-medium text-base-content">Mission Updates</h3>
@@ -42,11 +42,11 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Privacy settings -->
           <div class="bg-base-200 p-4 rounded-lg">
             <h2 class="text-lg font-semibold mb-4 text-base-content">Privacy</h2>
-            
+
             <div class="space-y-4">
               <div class="flex items-center justify-between">
                 <div>
@@ -55,7 +55,7 @@
                 </div>
                 <input type="checkbox" v-model="settings.profileVisibility" class="toggle toggle-primary" />
               </div>
-              
+
               <div class="flex items-center justify-between">
                 <div>
                   <h3 class="font-medium text-base-content">Location Sharing</h3>
@@ -65,25 +65,25 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Account settings -->
           <div class="bg-base-200 p-4 rounded-lg">
             <h2 class="text-lg font-semibold mb-4 text-base-content">Account</h2>
-            
+
             <div class="space-y-4">
               <div>
                 <h3 class="font-medium text-base-content mb-2">Change Password</h3>
                 <button class="btn btn-outline btn-primary btn-sm">Change Password</button>
               </div>
-              
+
               <div>
                 <h3 class="font-medium text-base-content mb-2">Delete Account</h3>
-                <button @click="removeUser" class="btn btn-outline btn-error btn-sm">Delete Account</button>
+                <button @click="showDeleteConfirmation" class="btn btn-outline btn-error btn-sm">Delete Account</button>
               </div>
             </div>
           </div>
         </div>
-        
+
         <!-- Save button -->
         <div class="flex justify-end mt-6">
           <button @click="saveSettings" class="btn btn-primary">Save Settings</button>
@@ -91,6 +91,18 @@
       </div>
     </div>
   </div>
+
+  <!-- Delete Account Confirmation Modal -->
+  <dialog ref="deleteConfirmationModal" class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">{{ $t('drawer-content.account.delete_confirmation.title') }}</h3>
+      <p class="py-4">{{ $t('drawer-content.account.delete_confirmation.message') }}</p>
+      <div class="modal-action">
+        <button @click="cancelDelete" class="btn">{{ $t('drawer-content.account.delete_confirmation.cancel') }}</button>
+        <button @click="confirmDelete" class="btn btn-error">{{ $t('drawer-content.account.delete_confirmation.confirm') }}</button>
+      </div>
+    </div>
+  </dialog>
 </template>
 
 <script setup lang="ts">
@@ -108,7 +120,28 @@ const { t } = useI18n()
 
 const auth = useUser()
 const volunteer = useVolunteerAuth()
+const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
 
+// Function to show the delete confirmation dialog
+function showDeleteConfirmation() {
+  deleteConfirmationModal.value?.showModal()
+}
+
+// Function to cancel the deletion
+function cancelDelete() {
+  deleteConfirmationModal.value?.close()
+}
+
+// Function to confirm and proceed with deletion
+function confirmDelete() {
+  // Close the modal
+  deleteConfirmationModal.value?.close()
+
+  // Proceed with account deletion
+  removeUser()
+}
+
+// Function to remove the user account
 function removeUser() {
   auth.removeUser()
   volunteer.removeVolunteer()
