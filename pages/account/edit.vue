@@ -131,7 +131,7 @@ onMounted(() => {
     form.value.firstName = user.value.firstName || ''
     form.value.lastName = user.value.lastName || ''
     form.value.phone = user.value.phone || ''
-    form.value.birthdate = user.value.birthdate || ''
+    form.value.birthdate = user.value.birthDate || ''
     form.value.city = user.value.city || ''
     form.value.postalCode = user.value.postalCode || ''
     form.value.bio = user.value.bio || ''
@@ -148,9 +148,8 @@ function handleImageChange(event: Event) {
 
 async function saveProfile() {
   try {
-    // Call API to update profile
-    await updateVolunteer(form.value)
-    // Show success message
+    console.log('Saving profile with data:', form.value)
+    await updateVolunteer(form.value, auth.user.value?.userId)
   } catch (error) {
     // Handle error
     console.error('Error updating profile:', error)

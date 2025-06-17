@@ -61,6 +61,29 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                 this.loading = false
             }
 
+        },
+
+        async updateVolunteer(payload: Partial<VolunteerInfo>, id: string | null = null) {
+            this.loading = true
+            this.error = null
+            try {
+                const response = await $fetch<VolunteerInfo>('/api/volunteer/update', {
+                    method: 'PATCH',
+                    query: { id},
+                    body: payload,
+                })
+
+                if(response) {
+                    this.volunteer = response
+                }
+
+                return response as VolunteerInfo
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de mise à jour des informations'
+                throw err
+            } finally {
+                this.loading = false
+            }
         }
 
     }

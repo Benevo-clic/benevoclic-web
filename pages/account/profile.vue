@@ -23,7 +23,7 @@
             
             <div class="flex-1 text-center md:text-left">
               <h2 class="text-xl font-semibold text-base-content">{{ user?.firstName }} {{ user?.lastName }}</h2>
-              <p class="text-base-content opacity-70">{{ user?.email }}</p>
+              <p class="text-base-content opacity-70">{{ auth.user.value?.email }}</p>
               <p class="text-base-content mt-2">{{ user?.bio || 'No bio provided' }}</p>
             </div>
           </div>
@@ -32,7 +32,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="bg-base-200 p-4 rounded-lg">
               <h3 class="font-medium mb-2 text-base-content">Contact Information</h3>
-              <p class="text-base-content"><strong>Email:</strong> {{ user?.email }}</p>
+              <p class="text-base-content"><strong>Email:</strong> {{ auth.user.value?.email }}</p>
               <p class="text-base-content"><strong>Phone:</strong> {{ user?.phone || 'Not provided' }}</p>
             </div>
             
