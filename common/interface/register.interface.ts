@@ -1,7 +1,7 @@
 
 
 export type FormFieldsVolunteer = {
-    name: string
+    lastName: string
     firstName: string
     phone: string
     birthDate: string

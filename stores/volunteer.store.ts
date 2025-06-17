@@ -84,7 +84,26 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             } finally {
                 this.loading = false
             }
-        }
+        },
+        async removeVolunteer() {
+            this.loading = true
+            this.error = null
+            try {
+                 await $fetch<{ message: string }>('/api/volunteer/remove', {
+                    method: 'DELETE',
+                    query: { id: this.volunteer?.volunteerId },
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                })
+
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de suppression du bénévole'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
 
     }
 })

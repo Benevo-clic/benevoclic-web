@@ -158,7 +158,7 @@ async function submitForm() {
   try {
     await registerVolunteer({
       email: user.value?.email ,
-      name: formData.name,
+      lastName: formData.name,
       firstName: formData.firstName,
       phone: formData.phone,
       birthDate: formData.birthDate,

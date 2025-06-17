@@ -78,7 +78,7 @@
               
               <div>
                 <h3 class="font-medium text-base-content mb-2">Delete Account</h3>
-                <button @click="auth.removeUser" class="btn btn-outline btn-error btn-sm">Delete Account</button>
+                <button @click="removeUser" class="btn btn-outline btn-error btn-sm">Delete Account</button>
               </div>
             </div>
           </div>
@@ -97,6 +97,7 @@
 import { ref } from 'vue'
 import AccountMenu from '~/components/account/AccountMenu.vue'
 import {useUser} from "~/composables/auth/useUser";
+import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
 
 definePageMeta({
   middleware: ['auth'],
@@ -106,6 +107,12 @@ definePageMeta({
 const { t } = useI18n()
 
 const auth = useUser()
+const volunteer = useVolunteerAuth()
+
+function removeUser() {
+  auth.removeUser()
+  volunteer.removeVolunteer()
+}
 
 // Mock settings data - would be fetched from API in a real app
 const settings = ref({
