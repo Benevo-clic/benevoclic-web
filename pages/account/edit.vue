@@ -27,11 +27,18 @@
           <!-- Profile image -->
           <div class="flex flex-col items-center md:items-start gap-4">
             <div class="w-32 h-32 rounded-full overflow-hidden bg-base-300 relative group">
+              <!-- Loading spinner -->
+              <div v-if="isImageUploading" class="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center z-10">
+                <div class="loading loading-spinner loading-lg text-primary"></div>
+              </div>
+
+              <!-- Profile image -->
               <img v-if="profileImageUrl" :src="profileImageUrl" alt="Profile" class="w-full h-full object-cover" />
               <div v-else class="w-full h-full flex items-center justify-center">
                 <UserRound class="w-16 h-16 text-base-content opacity-50" />
               </div>
 
+              <!-- Upload overlay -->
               <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <label for="profile-image" class="cursor-pointer text-white text-sm font-medium">
                   <Upload class="w-6 h-6 mx-auto mb-1" />
@@ -146,8 +153,9 @@ const initialForm = ref({
 
 const alertStatus = ref<'success' | 'error' | null>(null)
 const alertMessage = ref('')
+const isImageUploading = ref(false)
 
-const profileImageUrl = computed(() => {
+let profileImageUrl = computed(() => {
   const img = auth.user.value?.imageProfile
   if (img?.data && img.contentType) {
     return `data:${img.contentType};base64,${img.data}`
@@ -199,8 +207,41 @@ onMounted(async () => {
 function handleImageChange(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (file) {
-    // Handle image upload logic here
-    console.log('Image selected:', file)
+    // Set loading state
+    isImageUploading.value = true
+
+    // Convert image to base64
+    const reader = new FileReader()
+    reader.onload = async () => {
+      try {
+        const base64 = reader.result as string
+        // Save the profile image
+        await auth.updateProfile(base64)
+        // Show success alert
+        alertStatus.value = 'success'
+        alertMessage.value = t('drawer-content.account.profile_updated_success') || 'Profile image updated successfully'
+        setTimeout(() => {
+          alertStatus.value = null
+        }, 10000)
+        // Update profile image URL
+        profileImageUrl = computed(() => {
+          return base64
+        })
+      } catch (error) {
+        // Show error alert
+        alertStatus.value = 'error'
+        alertMessage.value = t('drawer-content.account.profile_update_error') || 'Error updating profile image. Please try again.'
+        console.error('Error updating profile image:', error)
+        // Auto-hide alert after 10 seconds
+        setTimeout(() => {
+          alertStatus.value = null
+        }, 10000)
+      } finally {
+        // Reset loading state
+        isImageUploading.value = false
+      }
+    }
+    reader.readAsDataURL(file)
   }
 }
 

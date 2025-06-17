@@ -152,7 +152,6 @@ export const useUserStore = defineStore('auth', {
               this.error = 'Erreur lors de l\'upload de l\'image'
               throw new Error(this.error)
             }
-            navigateTo("/dashboard")
         } catch (error: any) {
             this.error = error?.message || 'Erreur lors de l\'upload de l\'image'
             throw error
