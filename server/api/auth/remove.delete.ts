@@ -1,4 +1,4 @@
-import {createError, defineEventHandler, readBody} from 'h3'
+import {defineEventHandler, readBody} from 'h3'
 import {deleteCookies} from "~/server/api/auth/logout.post";
 
 

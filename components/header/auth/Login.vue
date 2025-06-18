@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import {  watch } from 'vue'
 
-
+const { t } = useI18n()
 const isAssociation = ref(false)
-const isRegister = ref(false)
+const props = defineProps<{ isRegisterLocal: boolean }>()
+const isRegister = ref(props.isRegisterLocal)
+
+watch(
+    () => props.isRegisterLocal,
+    (newVal) => {
+      isRegister.value = newVal
+    },
+    { immediate: true }
+)
 
 function toggleCheck() {
   isAssociation.value = !isAssociation.value
@@ -12,7 +22,6 @@ function toggleCheck() {
 definePageMeta({
   middleware: ['guest'],
 })
-
 
 function handleCheckboxChange(value: boolean) {
   isAssociation.value = value
@@ -28,15 +37,14 @@ function handleRegisterChange(value: boolean) {
 
 <template>
   <div class="min-h-[85vh] flex flex-col md:flex-row items-center justify-center gap-8 px-4">
-    <!-- Formulaire en premier sur mobile -->
 
     <HeaderAuthFormLoginForm
         @toggle-check="handleCheckboxChange"
         :checked="isAssociation"
         @toggle-register="handleRegisterChange"
+        :is-register="isRegister"
     />
 
-    <!-- Image + lien association (desktop uniquement) -->
     <div class="hidden md:flex flex-col justify-center items-center w-1/2">
       <img
           src="/images/login-user.png"
@@ -57,31 +65,24 @@ function handleRegisterChange(value: boolean) {
           v-if="isAssociation && isRegister"
       />
       <h1 class="text-xl sm:text-2xl font-bold mb-2" v-if="isRegister">
-        Vous <span v-if="!isAssociation">n'</span> êtes <span v-if="!isAssociation">pas</span> une association ?
+        {{ t(isAssociation ? 'auth.register.association_true' : 'auth.register.association_false') }}
       </h1>
       <button
           @click="toggleCheck"
           class="text-base sm:text-lg text-primary hover:underline mt-1"
           v-if="isAssociation && isRegister"
       >
-        {{ !isRegister ? 'Se connecter' : 'Inscrivez-vous' }}
-        en tant qu'association
+        {{t('auth.register.association_register')}}
       </button>
       <button
           @click="toggleCheck"
           class="text-base sm:text-lg font-bold  mt-1"
           v-if="!isAssociation && isRegister"
       >
-        Cliquer <span class="text-primary hover:underline">ici pour vous {{ !isRegister ? 'connecter' : 'inscrire' }}
+        {{t('auth.register.click_here')}} <span class="text-primary hover:underline"> {{t('auth.register.info_click_here')}}
       </span>
       </button>
 
     </div>
   </div>
 </template>
-
-
-
-<style scoped lang="scss">
-
-</style>

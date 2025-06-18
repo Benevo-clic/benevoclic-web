@@ -3,7 +3,7 @@
 <template>
   <div>
     <Header />
-    <main class="p-4 bg-gray-50 min-h-screen">
+    <main class="p-4 bg-base-200 min-h-screen">
       <slot />
     </main>
   </div>

@@ -1,0 +1,225 @@
+{
+  "auth": {
+    "login_required": "Inicio de sesión requerido",
+    "login_to_access": "Por favor inicia sesión para acceder a esta página.",
+    "login": {
+      "title": "Iniciar sesión",
+      "description": "Hoy es un nuevo día. Tú le das forma. Inicia sesión para gestionar tus proyectos.",
+      "forgot_password": "¿Olvidaste tu contraseña?",
+      "no_account": "¿No tienes una cuenta?",
+      "create_account": "Crear una cuenta",
+      "register": "Registrarse",
+      "login_with_google": "Iniciar sesión con Google",
+      "error": {
+        "invalid_credentials": "Tu correo electrónico o contraseña son incorrectos.",
+        "account_locked": "Tu cuenta está bloqueada. Por favor, contacta con el soporte."
+      }
+    },
+    "verification": {
+      "title": "Confirmación requerida",
+      "sent": "Se ha enviado un correo electrónico de confirmación a tu dirección de correo electrónico. Por favor, revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.",
+      "wait": "Por favor, espera antes de solicitar un nuevo correo electrónico",
+      "resend": "Reenviar correo electrónico de confirmación",
+      "resend_link": "Haz clic aquí para reenviar el correo electrónico de confirmación",
+      "time_remaining": "Tiempo restante antes de que puedas reenviar el correo electrónico:"
+    },
+    "logout": "Cerrar sesión",
+    "register": {
+      "title": "Registrarse",
+      "association_status_true": "Soy una asociación",
+      "association_status_false": "No soy una asociación",
+        "association_siret_status": "Por favor, introduce tu número SIRET",
+        "association_siret_status_description": "El número SIRET es un identificador único para empresas en Francia.",
+        "association_siret_status_placeholder": "Introduce tu SIRET",
+        "association_siret_status_error": "El número SIRET debe contener 14 dígitos.",
+        "association_siret_status_error_description": "Por favor, verifica que el número SIRET sea correcto.",
+        "association_siret_status_good": "Número SIRET válido",
+      "description": "Regístrate gratis para unirte a la comunidad y actuar por las causas que te importan.",
+      "already_have_account": "¿Ya tienes una cuenta?",
+      "login": "Iniciar sesión",
+      "association_true": "¿Eres una asociación?",
+      "association_false": "¿No eres una asociación?",
+      "click_here": "Haz clic aquí",
+      "info_click_here": "para registrarte",
+      "association_register": "Registrarse como asociación",
+      "register_with_google": "Registrarse con Google",
+      "terms": "Al registrarte, aceptas nuestros",
+      "error": {
+        "invalid_email": "La dirección de correo electrónico no es válida.",
+        "password_mismatch": "Las contraseñas no coinciden.",
+        "weak_password": "La contraseña debe tener al menos 8 caracteres."
+      }
+    },
+    "volunteer": {
+      "name": "Nombre",
+      "first_name": "Primer nombre",
+      "phone": "Teléfono",
+      "birthdate": "Fecha de nacimiento",
+      "city": "Ciudad",
+      "postal_code": "Código postal",
+      "bio": "Sobre ti"
+    },
+    "association": {
+      "name": "Nombre de la asociación",
+      "association_type": "Tipo de asociación",
+      "siret": "Número SIRET",
+      "phone": "Teléfono",
+      "website": "Sitio web",
+      "city": "Ciudad",
+      "postal_code": "Código postal",
+      "country": "País",
+      "bio": "Sobre la asociación"
+    },
+    "uploadImageForm": {
+      "instruction": "Por favor, sube una imagen de perfil",
+      "message": "Agrega tu foto de perfil 🖼️",
+      "clickToUpload": "Haz clic aquí para subir una imagen",
+      "changeImage": "Cambiar imagen",
+      "finish": "Terminar",
+      "skip": "Saltar"
+    },
+    "title": "Contento de",
+    "title_2": "verte de nuevo!",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirm_password": "Confirmar contraseña",
+    "continue": "Continuar",
+    "or": "o",
+    "placeholder_email": "Introduce tu correo electrónico",
+    "placeholder_password": "Al menos 8 caracteres"
+  },
+  "drawer-content": {
+    "account": {
+      "title": "Mi cuenta",
+      "view_profile": "Ver perfil",
+      "edit_profile": "Editar perfil",
+      "settings": "Configuraciones",
+      "profile_updated_success": "Perfil actualizado con éxito",
+      "profile_update_error": "Error al actualizar el perfil. Por favor, inténtalo de nuevo.",
+      "delete_confirmation": {
+        "title": "Confirmar eliminación",
+        "message": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.",
+        "confirm": "Sí, eliminar mi cuenta",
+        "cancel": "Cancelar"
+      },
+      "password_change": {
+        "title": "Cambiar contraseña",
+        "message": "Por favor, introduce tu contraseña actual y tu nueva contraseña.",
+        "old_password": "Contraseña actual",
+        "new_password": "Nueva contraseña",
+        "confirm_password": "Confirmar nueva contraseña",
+        "confirm": "Cambiar contraseña",
+        "cancel": "Cancelar",
+        "success": "Tu contraseña ha sido actualizada con éxito.",
+        "error": {
+          "password_mismatch": "Las contraseñas no coinciden.",
+          "weak_password": "La contraseña debe tener al menos 8 caracteres.",
+          "general": "Se produjo un error al actualizar la contraseña."
+        }
+      }
+    },
+    "activity": {
+      "title": "Actividades",
+      "my_missions": "Mis misiones",
+      "my_participations": "Mis participaciones",
+      "my_favorites": "Mis favoritos",
+      "history": "Historial"
+    },
+    "notifications_support": {
+      "title": "Notificaciones y soporte",
+      "notifications": "Notificaciones",
+      "help": "Ayuda/FAQ"
+    },
+    "app": {
+      "title": "Aplicación",
+      "language": "Idioma",
+      "theme": "Tema"
+    },
+    "logout": "Cerrar sesión"
+  },
+  "header": {
+    "volunteer": {
+      "favorites": "Favoritos",
+      "recent-search": "Búsquedas recientes",
+      "help": "Ayuda"
+    }
+  },
+  "notifications": {
+    "settings": {
+      "title": "Configuración de notificaciones",
+      "email": "Notificaciones por correo electrónico",
+      "email_description": "Recibir notificaciones por correo electrónico",
+      "push": "Notificaciones push",
+      "push_description": "Recibir notificaciones push en tu dispositivo",
+      "mission_updates": "Actualizaciones de misiones",
+      "mission_updates_description": "Recibir notificaciones sobre cambios en las misiones",
+      "messages": "Mensajes",
+      "messages_description": "Recibir notificaciones sobre nuevos mensajes",
+      "save": "Guardar configuración"
+    },
+    "list": {
+      "title": "Notificaciones",
+      "mark_all_read": "Marcar todo como leído",
+      "clear_all": "Borrar todo",
+      "all": "Todas",
+      "unread": "No leídas",
+      "new": "Nuevo",
+      "view": "Ver",
+      "no_notifications": "No hay notificaciones",
+      "no_notifications_all": "No tienes notificaciones",
+      "no_notifications_unread": "No tienes notificaciones sin leer"
+    }
+  },
+  "search": {
+    "menu": {
+      "title": "Búsqueda",
+      "search": "Buscar",
+      "history": "Historial de búsqueda"
+    },
+    "history": {
+      "title": "Historial de búsqueda",
+      "recent_searches": "Búsquedas recientes",
+      "clear_all": "Borrar todo",
+      "repeat_search": "Repetir búsqueda",
+      "remove_from_history": "Eliminar del historial",
+      "no_history": "No hay historial de búsqueda",
+      "no_history_description": "Tus búsquedas recientes aparecerán aquí"
+    },
+    "results": {
+      "title": "Resultados de búsqueda",
+      "results_found": "resultados encontrados para",
+      "use_panel": "Utiliza el panel de búsqueda para encontrar misiones y organizaciones",
+      "all": "Todos",
+      "missions": "Misiones",
+      "organizations": "Organizaciones",
+      "mission": "Misión",
+      "organization": "Organización",
+      "view_details": "Ver detalles",
+      "view_profile": "Ver perfil",
+      "apply": "Aplicar",
+      "no_results": "No se encontraron resultados",
+      "adjust_criteria": "Intenta ajustar tus criterios de búsqueda",
+      "start_searching": "Comienza a buscar",
+      "start_searching_description": "Utiliza el panel de búsqueda para encontrar misiones y organizaciones"
+    },
+    "panel": {
+      "placeholder": "Buscar favoritos..."
+    }
+  },
+  "favorites": {
+    "list": {
+      "search_placeholder": "Buscar favoritos...",
+      "all_favorites": "Todos los favoritos",
+      "missions": "Misiones",
+      "organizations": "Organizaciones",
+      "mission": "Misión",
+      "organization": "Organización",
+      "view_details": "Ver detalles",
+      "view_profile": "Ver perfil",
+      "apply": "Aplicar",
+      "no_favorites": "No se encontraron favoritos",
+      "no_match": "Ningún favorito coincide con tus criterios de búsqueda.",
+      "add_items": "Agrega elementos a tus favoritos para verlos aquí."
+    }
+  }
+}

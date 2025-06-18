@@ -23,14 +23,41 @@
 </template>
 
 <script setup lang="ts">
-
-import { useAuth } from '~/composables/auth/useAuth'
+import { useUser } from '~/composables/auth/useUser'
 import {definePageMeta} from "#imports";
+import {onMounted} from "vue";
+import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
+
 definePageMeta({
   middleware: ['auth'],
   layout:'header'
 })
 
-const auth = useAuth()
-console.log(auth)
+const auth = useUser()
+const volunteer = useVolunteerAuth()
+
+onMounted(async () => {
+  await auth.fetchUser()
+  const userRole = auth.userRole
+  const isVolunteer = await volunteer.getVolunteerInfo()
+  const isAuthenticated = auth.isAuthenticated.value
+
+  if((!isAuthenticated && !isVolunteer) && userRole.value === 'VOLUNTEER') {
+    return navigateTo(
+        {
+          path: '/auth/registerVolunteer',
+        }
+    )
+  }
+
+  if((!isAuthenticated && !isVolunteer) && userRole.value === 'ASSOCIATION'){
+    return navigateTo(
+        {
+          path: '/auth/registerAssociation',
+        }
+    )
+  }
+
+})
+
 </script>

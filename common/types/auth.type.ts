@@ -21,6 +21,12 @@ export type RegisterUserGoogleResponse = {
     expiresIn: number;
 }
 
+export interface imageProfile {
+    data: string
+    contentType: string
+    uploadedAt: string
+}
+
 
 export interface UserInfo {
     _id: string
@@ -36,4 +42,5 @@ export interface UserInfo {
     lastConnection: string
     createdAt: string
     updatedAt: string
+    imageProfile?: imageProfile
 }

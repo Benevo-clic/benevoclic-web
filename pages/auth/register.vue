@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { ref, reactive, onUnmounted } from 'vue'
 import {RoleUser} from "~/common/enums/role.enum";
-import {userRegisterEmailPassword} from "~/composables/auth/useRegistrerEmailPassword";
-import { useRegisterStore } from '~/stores/auth/register';
+import { useRegisterStore } from '~/stores/user/register';
 
-const register = userRegisterEmailPassword()
 const loading = ref(false)
 const form = reactive({
   email: '',
@@ -23,16 +21,7 @@ onUnmounted(() => {
   registerStore.cleanup();
 });
 
-async function handleRegister() {
-  loading.value = true
-  try {
-    await register.register(form)
-  } catch (error) {
-    console.error('Erreur de connexion:', error)
-  } finally {
-    loading.value = false
-  }
-}
+
 </script>
 
 <template>
@@ -40,7 +29,7 @@ async function handleRegister() {
     <div class="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
       <h2 class="text-center text-3xl font-bold">Create account</h2>
 
-      <form @submit.prevent="handleRegister" class="mt-8 space-y-6">
+      <form @submit.prevent="" class="mt-8 space-y-6">
         <div class="space-y-4">
           <div>
             <label for="email" class="sr-only">Email</label>

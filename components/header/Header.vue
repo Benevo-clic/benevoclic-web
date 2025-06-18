@@ -1,35 +1,95 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import {useAuth} from "~/composables/auth/useAuth";
-import NavigationActions from "~/components/header/NavigationActions.vue";
-import NavigationActionsOptions from "~/components/header/NavigationActionsOptions.vue";
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { Sun as SunIcon, Moon as MoonIcon, Bell as BellIcon, Heart as HeartIcon, Clock as ClockIcon, HelpCircle as HelpIcon, X as XIcon, Search as SearchIcon } from 'lucide-vue-next'
+
+import {useUser} from "~/composables/auth/useUser";
+import NavigationActions from "~/components/header/utils/NavigationActions.vue";
 import {AlignJustify} from "lucide-vue-next";
 import DrawerContent from "~/components/header/drawer/DrawerContent.vue";
-const { isAuthenticated, logout } = useAuth()
+import DrawerAppContent from "~/components/header/drawer/components/DrawerAppContent.vue";
+import { useTheme } from "~/composables/useTheme";
+import {navigateTo} from "#app";
+import { useRecentSearches } from "~/composables/useRecentSearches";
+const { isAuthenticated } = useUser()
+const { t } = useI18n()
+const {  toggleTheme, isDarkTheme } = useTheme()
 
 const menuOpen = ref(false)
 const showLoginModal = ref(false)
-const email = ref('')
-const password = ref('')
+const showRecentSearches = ref(false)
+const searchQuery = ref('')
+const loginModal = ref<HTMLDialogElement | null>(null)
 
-const handleSubmit = async () => {
-  showLoginModal.value = false
-  email.value = ''
-  password.value = ''
-  await navigateTo('/dashboard')
-}
+const auth = useUser()
+const { recentSearches, addRecentSearch, clearRecentSearches } = useRecentSearches()
+
+const props = defineProps<
+    {
+      optionsOpen?: boolean
+    }
+>()
+
+const profileImageUrl = computed(() => {
+  const img = auth.user.value?.imageProfile
+  if (img?.data && img.contentType) {
+    return `data:${img.contentType};base64,${img.data}`
+  }
+  return ''
+})
+
 const handleDrawerClose = () => {
   menuOpen.value = !menuOpen.value
-  console.log('handleDrawerClose', menuOpen.value)
 }
 
-watch(menuOpen, (open) => {
-  if (open) {
-    document.body.style.overflow = 'hidden'
-  } else {
-    document.body.style.overflow = ''
+watch(
+    () => isAuthenticated,
+    (isAuth) => {
+      if (isAuth) {
+        showLoginModal.value = false
+      }
+    }
+)
+
+
+watch(
+    () => isAuthenticated,
+    (isAuth) => {
+      if (isAuth) {
+        showLoginModal.value = false
+      }
+    }
+)
+
+// Function to handle search submission
+const handleSearch = () => {
+  if (searchQuery.value.trim()) {
+    addRecentSearch(searchQuery.value.trim())
+    // Here you would typically perform the actual search
+    // For now, we're just saving the search query
+    console.log('Searching for:', searchQuery.value)
   }
-})
+}
+
+// Function to handle clicking on a recent search
+const selectRecentSearch = (search: string) => {
+  searchQuery.value = search
+  showRecentSearches.value = false
+  // Optionally perform the search immediately
+  handleSearch()
+}
+
+// Toggle recent searches dropdown
+const toggleRecentSearches = () => {
+  showRecentSearches.value = !showRecentSearches.value
+}
+
+// Close recent searches dropdown when clicking outside
+const closeRecentSearches = (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+  if (!target.closest('.recent-searches-container') && !target.closest('.recent-searches-button')) {
+    showRecentSearches.value = false
+  }
+}
 
 onMounted(() => {
   const mediaQuery = window.matchMedia('(min-width: 1253px)')
@@ -46,246 +106,211 @@ onMounted(() => {
     menuOpen.value = false
   }
 
+  // Add event listener to close dropdown when clicking outside
+  document.addEventListener('click', closeRecentSearches)
+
   onUnmounted(() => {
     mediaQuery.removeEventListener('change', handler)
+    document.removeEventListener('click', closeRecentSearches)
   })
 })
+
+
+function handleFavorites() {
+  if(isAuthenticated.value) {
+    loginModal.value?.showModal()
+  } else {
+    navigateTo('/activity/favorites')
+  }
+}
+
+function handleNotifications() {
+  if(isAuthenticated.value) {
+    loginModal.value?.showModal()
+  } else {
+    navigateTo('/notifications')
+  }
+}
+
 
 
 </script>
 
 <template>
-  <header class="app-header">
-    <div class="header-container">
-
-      <div class="header-top-row">
-
-        <div class="w-24 rounded-full">
-          <NuxtLink to="/" >
-            <img src="/.idea/shelf/Changes31/logo.png" alt="Logo" />
-          </NuxtLink>
-        </div>
-        <div class="burger-button">
-          <NavigationActions class="nav-actions-burger-button" />
-          <button  @click.prevent="handleDrawerClose">
-            <AlignJustify class="icon-burger-button" />
-          </button>
-        </div>
-
-      </div>
-
-      <div class="header-search-bar">
-        <HeaderSearchBar />
-      </div>
-
-      <div class="header-center">
-        <NavigationActionsOptions :is-authenticated="isAuthenticated" />
-      </div>
-
-      <div class="header-nav-actions">
-        <NavigationActions />
-      </div>
-
-
-      <DrawerContent :is-authenticated="isAuthenticated" :menu-open="menuOpen"  @close-drawer="menuOpen = false" />
-
-      <div class="header-nav-theme">
-        <label class="flex cursor-pointer gap-2">
-          <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5" />
-            <path
-                d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
-          </svg>
-          <input type="checkbox" value="synthwave" class="toggle theme-controller" />
-          <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </label>
-      </div>
-
-      <div class="right-actions">
-
-        <div v-if="isAuthenticated" class="auth-buttons">
+  <header>
+    <!-- Login Modal -->
+    <dialog ref="loginModal" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">{{t('auth.login_required')}}</h3>
+        <p class="py-4">{{t('auth.login_to_access')}}</p>
+        <div class="modal-action">
+          <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
           <HeaderAuthModalAuth />
         </div>
+      </div>
+    </dialog>
 
-        <div v-else class="btn btn-primary">
-          <button @click="logout" class="text-neutral">Déconnexion</button>
+    <!-- Top bar -->
+    <div class="bg-base-100 shadow-sm px-4 py-2 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <NuxtLink to="/" class="w-14 rounded-full overflow-hidden">
+          <img src="/logo_benevoclic.png" alt="Logo" class="w-full h-auto" />
+        </NuxtLink>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Location -->
+        <div class="flex items-center gap-1 text-base-content">
+          <NavigationActions />
         </div>
+        <!-- Theme toggle -->
+        <label class="swap swap-rotate cursor-pointer">
+          <input 
+            type="checkbox" 
+            aria-label="Toggle theme" 
+            :checked="isDarkTheme()" 
+            @change="toggleTheme" 
+          />
+          <SunIcon class="swap-on w-7 h-7 text-warning"/>
+          <MoonIcon class="swap-off w-7 h-7 text-base-content"/>
+        </label>
+
+        <!-- Notifications -->
+        <div class="indicator hidden sm:flex mr-2">
+          <button class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1" @click="handleNotifications">
+            <span class="indicator-item badge badge-primary text-base-content" >
+              12
+            </span>
+            <BellIcon class="w-6 h-6" />
+          </button>
+        </div>
+        <div class="hidden sm:flex items-center gap-6">
+          <div v-if="isAuthenticated" class="flex items-center gap-2">
+            <HeaderAuthModalAuth  />
+          </div>
+          <div
+              v-else
+          >
+            <!-- Avatar -->
+            <div class="dropdown dropdown-end">
+              <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                <div class="w-11/12 rounded-full overflow-hidden">
+                  <img
+                      :src="profileImageUrl"
+                      alt="Photo de profil"
+                      class="w-12 h-12 rounded-full object-cover"
+                  />
+
+                </div>
+              </label>
+              <ul tabindex="0" class="menu menu-sm dropdown-content mt-2 p-2 shadow bg-base-100 text-base-content rounded-box w-70 absolute right-0 z-50">
+
+                <DrawerAppContent
+                    :is-authenticated="isAuthenticated"
+                    :menu-open="menuOpen"
+                    :display-profile="false"
+                />
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <DrawerContent :is-authenticated="isAuthenticated" :menu-open="menuOpen"  @close-drawer="menuOpen = false" />
+
+        <button class="sm:hidden btn btn-neutral-content btn-square" @click.prevent="handleDrawerClose">
+          <AlignJustify class="icon-burger-button text-base-content w-8 h-8" />
+        </button>
+
       </div>
     </div>
+
+    <!-- Bottom bar -->
+    <div class="bg-base-200 border-t-2 border-b-2 border-base-300 px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4" v-if="!props.optionsOpen">
+      <!-- Search bar à gauche -->
+      <div class="w-full md:max-w-2xl lg:max-w-3xl flex-1">
+        <div class="relative">
+          <div class="flex">
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Search for missions or associations"
+              class="input input-bordered w-full h-12 text-base"
+              @keyup.enter="handleSearch"
+            />
+            <button 
+              class="btn btn-primary h-12 ml-2" 
+              @click="handleSearch"
+            >
+              <SearchIcon class="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full md:w-auto flex justify-center md:justify-end flex-wrap text-base-content">
+        <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="handleFavorites">
+          <HeartIcon class="w-6 h-6"  /> {{t('header.volunteer.favorites')}}
+        </button>
+        <div class="relative recent-searches-container">
+          <button 
+            class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1 recent-searches-button" 
+            @click.stop="toggleRecentSearches"
+          >
+            <ClockIcon class="w-6 h-6" /> {{t('header.volunteer.recent-search')}}
+          </button>
+
+          <!-- Recent searches dropdown -->
+          <div 
+            v-if="showRecentSearches" 
+            class="absolute right-0 mt-2 w-64 bg-base-100 shadow-lg rounded-lg z-10 p-2"
+          >
+            <div class="flex justify-between items-center mb-2 pb-2 border-b border-base-300">
+              <h3 class="font-medium text-base-content">{{t('header.volunteer.recent-search')}}</h3>
+              <button 
+                v-if="recentSearches.length > 0"
+                class="btn btn-ghost btn-xs" 
+                @click.stop="clearRecentSearches"
+              >
+                {{t('search.history.clear_all')}}
+              </button>
+            </div>
+
+            <div v-if="recentSearches.length > 0" class="max-h-60 overflow-y-auto">
+              <button 
+                v-for="(search, index) in recentSearches" 
+                :key="index"
+                class="flex items-center justify-between w-full p-2 hover:bg-base-200 rounded-md mb-1 text-left"
+                @click.stop="selectRecentSearch(search)"
+              >
+                <span class="truncate">{{ search }}</span>
+                <SearchIcon class="w-4 h-4 text-base-content opacity-50" />
+              </button>
+            </div>
+
+            <div v-else class="py-4 text-center text-base-content opacity-70">
+              {{t('search.history.no_history_description')}}
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="navigateTo('/help')">
+          <HelpIcon class="w-6 h-6"  /> {{t('header.volunteer.help')}}
+        </button>
+      </div>
+    </div>
+
+
+    <!-- Mobile drawer content -->
+<!--    <DrawerContent v-if="menuOpen" @close-drawer="menuOpen = false" />-->
   </header>
 </template>
 
-<style scoped lang="scss">
-
-@use '@/assets/css/variables' as vars;
-
-.app-header {
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  padding: 0;
-
-  .header-container {
-    max-width: 1500px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .burger-button {
-    display: none;
-    background: transparent;
-    border: none;
-    padding: 0.5rem;
-    cursor: pointer;
-
-    svg {
-      stroke: #000;
-    }
-  }
-
-
-  .header-search-bar {
-    flex: 1;
-    display: block;
-  }
-
-  .header-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .right-actions {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  .auth-buttons {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-
-    .icon {
-      height: 1.25rem;
-      width: 1.25rem;
-    }
-  }
-
+<style scoped>
+header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
-
-@media (max-width: 1399px) {
-  .app-header {
-    .header-container {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0;
-      padding: 1rem 0;
-
-      .header-top-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.5rem 1rem;
-        gap: 1rem;
-      }
-
-      .burger-button {
-        display: flex;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-        margin: 0;
-
-        svg {
-          stroke: #000;
-        }
-      }
-
-      .header-search-bar {
-        width: 100%;
-        padding: 0 3rem;
-
-        :deep(input) {
-          width: 100%;
-          padding: 0.75rem 1rem;
-          border: 1px solid #d1d5db;
-          border-radius: 0.5rem;
-          font-size: 1rem;
-          box-sizing: border-box;
-        }
-      }
-
-      .header-center,
-      .header-nav-actions,
-      .right-actions,
-      .auth-buttons,
-      .header-nav-theme
-      {
-        display: none !important;
-      }
-    }
-
-    .icon-burger-button{
-      margin-left: 1rem;
-
-      width: 3rem;
-      height: 3rem;
-    }
-    .nav-actions-burger-button{
-      margin-top: 0.2rem;
-    }
-
-    .nav-actions-theme-button{
-      margin-top: 0.2rem;
-      margin-left: 0.5rem;
-    }
-
-    .mobile-auth {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-
-      a,
-      button {
-        text-align: left;
-        font-size: 1rem;
-        padding: 0.5rem 0;
-        background: none;
-        border: none;
-        cursor: pointer;
-      }
-
-      button {
-        color: #dc2626;
-      }
-    }
-
-  }
-}
-
 </style>

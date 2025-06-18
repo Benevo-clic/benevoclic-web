@@ -16,8 +16,3 @@ export type RegisterEmailVerifiedResponse = {
     refreshToken: string
     expiresIn: string
 }
-
-export type RegisterResponse = {
-    uid: string,
-    email?: string,
-}

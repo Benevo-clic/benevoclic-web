@@ -21,19 +21,32 @@ export default defineNuxtConfig({
     assets: '/<rootDir>/assets',
   },
   css: [
-    '~/assets/css/main.scss'
+    '~/assets/css/main.scss',
   ],
-
+  i18n: {
+    locales: [
+      { code: 'es', name: 'Espanish', file: 'es.json' },
+      { code: 'fr', name: 'Français', file: 'fr.json' },
+      { code: 'en', name: 'English', file: 'en.json' },
+    ],
+    lazy: true,
+    langDir: 'locales',
+    defaultLocale: 'fr',
+    vueI18n: './i18n.config.ts'
+  },
   modules: [
     '@nuxtjs/tailwindcss',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@nuxtjs/i18n'
   ],
 
   compatibilityDate: '2025-02-23',
 
   runtimeConfig: {
     private: {
-      api_base_url: process.env.API_BASE_URL
+      api_base_url: process.env.API_BASE_URL,
+      api_sirene_url: process.env.API_SIRENE_URL,
+      api_sirene_key: process.env.API_SIRENE_KEY,
     },
     public: {
       ssr: true,

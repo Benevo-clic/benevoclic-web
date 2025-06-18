@@ -28,6 +28,7 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+
     return currentUser
   } catch (error: any) {
     throw createError({
