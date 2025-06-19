@@ -6,11 +6,13 @@ import {useUser} from "~/composables/auth/useUser";
 import NavigationActions from "~/components/header/utils/NavigationActions.vue";
 import {AlignJustify} from "lucide-vue-next";
 import DrawerContent from "~/components/header/drawer/DrawerContent.vue";
-import DrawerAppContent from "~/components/header/drawer/components/DrawerAppContent.vue";
+import DrawerAppContentVolunteer from "~/components/header/drawer/components/volunteer/DrawerAppContentVolunteer.vue";
 import { useTheme } from "~/composables/useTheme";
 import {navigateTo} from "#app";
 import { useRecentSearches } from "~/composables/useRecentSearches";
-const { isAuthenticated } = useUser()
+import DrawerAppContentAssociation
+  from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
+const { isAuthenticated,userRole } = useUser()
 const { t } = useI18n()
 const {  toggleTheme, isDarkTheme } = useTheme()
 
@@ -207,10 +209,17 @@ function handleNotifications() {
               </label>
               <ul tabindex="0" class="menu menu-sm dropdown-content mt-2 p-2 shadow bg-base-100 text-base-content rounded-box w-70 absolute right-0 z-50">
 
-                <DrawerAppContent
+                <DrawerAppContentVolunteer
                     :is-authenticated="isAuthenticated"
                     :menu-open="menuOpen"
                     :display-profile="false"
+                    v-if="userRole === 'VOLUNTEER'"
+                />
+                <DrawerAppContentAssociation
+                    :is-authenticated="isAuthenticated"
+                    :menu-open="menuOpen"
+                    :display-profile="false"
+                    v-if="userRole === 'ASSOCIATION'"
                 />
               </ul>
             </div>
@@ -218,7 +227,7 @@ function handleNotifications() {
         </div>
 
         <!-- Notifications -->
-        <DrawerContent :is-authenticated="isAuthenticated" :menu-open="menuOpen"  @close-drawer="menuOpen = false" />
+        <DrawerContent :is-authenticated="isAuthenticated" :menu-open="menuOpen"  @close-drawer="menuOpen = false" :role="userRole" />
 
         <button class="sm:hidden btn btn-neutral-content btn-square" @click.prevent="handleDrawerClose">
           <AlignJustify class="icon-burger-button text-base-content w-8 h-8" />

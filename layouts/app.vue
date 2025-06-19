@@ -4,11 +4,19 @@
     <div class="flex flex-1">
       <!-- Drawer for desktop (hidden on mobile) -->
       <div class="hidden md:block w-64 bg-base-100 shadow-lg pt-4">
-        <DrawerAppContent
+        <DrawerAppContentVolunteer
           :is-authenticated="isAuthenticated"
           :menu-open="true"
           :display-profile="false"
           class="h-full"
+          v-if="userRole === 'VOLUNTEER'"
+        />
+        <DrawerAppContentAssociation
+          :is-authenticated="isAuthenticated"
+          :menu-open="true"
+          :display-profile="false"
+          class="h-full"
+          v-else-if="userRole === 'ASSOCIATION'"
         />
       </div>
 
@@ -23,7 +31,9 @@
 <script setup>
 import { useUser } from '~/composables/auth/useUser'
 import Header from '~/components/header/Header.vue'
-import DrawerAppContent from '~/components/header/drawer/components/DrawerAppContent.vue'
+import DrawerAppContentVolunteer from '~/components/header/drawer/components/volunteer/DrawerAppContentVolunteer.vue'
+import DrawerAppContentAssociation
+  from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
 
-const { isAuthenticated } = useUser()
+const { isAuthenticated, userRole } = useUser()
 </script>

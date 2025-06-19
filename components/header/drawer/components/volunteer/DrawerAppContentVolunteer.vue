@@ -121,8 +121,6 @@ function toggleLanguageMenu() {
   showLanguageMenu.value = !showLanguageMenu.value
 }
 
-
-
 </script>
 
 <template>
@@ -145,19 +143,19 @@ function toggleLanguageMenu() {
     <div class="space-y-2" v-if="!props.isAuthenticated">
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.account.title')}}</h4>
       <ul class="space-y-1">
-        <li><button @click="navigateTo('/account/profile'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/account/profile') ? 'bg-base-200 border-l-4 border-primary' : '']"><UserRound class="w-5 h-5"/>{{t('drawer-content.account.view_profile')}}</button></li>
-        <li><button @click="navigateTo('/account/edit'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/account/edit') ? 'bg-base-200 border-l-4 border-primary' : '']"><Pencil class="w-5 h-5"/>{{t('drawer-content.account.edit_profile')}}</button></li>
-        <li><button @click="navigateTo('/account/settings'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/account/settings') ? 'bg-base-200 border-l-4 border-primary' : '']"><Settings class="w-5 h-5"/>{{t('drawer-content.account.settings')}}</button></li>
+        <li><button @click="navigateTo('/volunteer/account/profile'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/account/profile') ? 'bg-base-200 border-l-4 border-primary' : '']"><UserRound class="w-5 h-5"/>{{t('drawer-content.account.view_profile')}}</button></li>
+        <li><button @click="navigateTo('/volunteer/account/edit'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/account/edit') ? 'bg-base-200 border-l-4 border-primary' : '']"><Pencil class="w-5 h-5"/>{{t('drawer-content.account.edit_profile')}}</button></li>
+        <li><button @click="navigateTo('/volunteer/account/settings'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/account/settings') ? 'bg-base-200 border-l-4 border-primary' : '']"><Settings class="w-5 h-5"/>{{t('drawer-content.account.settings')}}</button></li>
       </ul>
     </div>
     <!-- Activity -->
     <div class="space-y-2" v-if="!props.isAuthenticated">
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.activity.title')}}</h4>
       <ul class="space-y-1">
-        <li><button @click="navigateTo('/activity/missions'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/activity/missions') ? 'bg-base-200 border-l-4 border-primary' : '']"><Box class="w-5 h-5"/>{{t('drawer-content.activity.my_missions')}}</button></li>
-        <li><button @click="navigateTo('/activity/participations'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/activity/participations') ? 'bg-base-200 border-l-4 border-primary' : '']"><ClipboardList class="w-5 h-5"/>{{t('drawer-content.activity.my_participations')}}</button></li>
-        <li><button @click="navigateTo('/activity/favorites'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/activity/favorites') ? 'bg-base-200 border-l-4 border-primary' : '']"><HeartIcon class="w-5 h-5"/>{{t('drawer-content.activity.my_favorites')}}</button></li>
-        <li><button @click="navigateTo('/activity/history'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/activity/history') ? 'bg-base-200 border-l-4 border-primary' : '']"><Clock class="w-5 h-5"/>{{t('drawer-content.activity.history')}}</button></li>
+        <li><button @click="navigateTo('/volunteer/activity/missions'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/activity/missions') ? 'bg-base-200 border-l-4 border-primary' : '']"><Box class="w-5 h-5"/>{{t('drawer-content.activity.my_missions')}}</button></li>
+        <li><button @click="navigateTo('/volunteer/activity/participations'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/activity/participations') ? 'bg-base-200 border-l-4 border-primary' : '']"><ClipboardList class="w-5 h-5"/>{{t('drawer-content.activity.my_participations')}}</button></li>
+        <li><button @click="navigateTo('/volunteer/activity/favorites'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/activity/favorites') ? 'bg-base-200 border-l-4 border-primary' : '']"><HeartIcon class="w-5 h-5"/>{{t('drawer-content.activity.my_favorites')}}</button></li>
+        <li><button @click="navigateTo('/volunteer/activity/history'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/activity/history') ? 'bg-base-200 border-l-4 border-primary' : '']"><Clock class="w-5 h-5"/>{{t('drawer-content.activity.history')}}</button></li>
       </ul>
     </div>
     <!-- Notifications & Support -->
