@@ -2,7 +2,6 @@ import {defineNuxtRouteMiddleware} from "#app";
 import {useUserStore} from "~/stores/user/user.store";
 import {onMounted} from "vue";
 import {useUser} from "~/composables/auth/useUser";
-import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
 
 export default defineNuxtRouteMiddleware((to, from) => {
    const  authStore= useUserStore()

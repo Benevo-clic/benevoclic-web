@@ -27,6 +27,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                     method: 'GET',
                     query: { userId: user?.userId },
                 })
+                console.log('Fetching volunteer info:', response)
 
                 if(response) {
                     this.volunteer = response
