@@ -177,6 +177,9 @@ function verifyAssociation(value:boolean) {
         :form="form"
         :handle-login="handleLogin"
         :loading="loading"
+        :is-association="isAssociation"
+        @association-exists="verifyAssociation"
+
     />
 
     <UserRegisterForm

@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import NameFirstNameForm from './NameFirstNameForm.vue'
-import PhoneForm from './PhoneForm.vue'
-import BirthDateForm from './BirthDateForm.vue'
-import CityForm from './CityForm.vue'
-import PostalCodeForm from './PostalCodeForm.vue'
-import BioForm from './BioForm.vue'
-import type {CreateVolunteerDto, FormFieldsVolunteer} from "~/common/interface/register.interface";
-import {useUser} from "~/composables/auth/useUser";
-import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
+import { useUser } from "~/composables/auth/useUser"
+import { useAssociationAuth } from "~/composables/auth/associationAuth"
+import type { CreateAssociationDto, FormFieldsAssociation } from "~/common/interface/register.interface"
+import PhoneForm from '../../volunteer/form/PhoneForm.vue'
+import CityForm from '../../volunteer/form/CityForm.vue'
+import PostalCodeForm from '../../volunteer/form/PostalCodeForm.vue'
+import BioForm from '../../volunteer/form/BioForm.vue'
+import AssociationNameForm from './AssociationNameForm.vue'
+import AssociationTypeForm from './AssociationTypeForm.vue'
 
 const { user } = useUser()
-const { registerVolunteer } = useVolunteerAuth()
+const { registerAssociation } = useAssociationAuth()
 
 interface Step {
   component: Component
-  field: keyof (FormFieldsVolunteer & { nameFirstName: string })
+  field: keyof FormFieldsAssociation
   validate: (value: string) => string
 }
 
@@ -24,46 +24,35 @@ const emit = defineEmits<{
   (e: 'currentStep', step: number): void
 }>()
 
-
-const formData = reactive<FormFieldsVolunteer & { nameFirstName: string }>({
-  lastName: '',
-  firstName: '',
-  nameFirstName: '|', // Format: "name|firstName"
+const formData = reactive<FormFieldsAssociation>({
+  associationName: '',
   phone: '',
-  birthDate: '',
+  bio: '',
   city: '',
   postalCode: '',
-  bio: ''
+  country: 'France',
+  type: ''
 })
 
-const errors = reactive<Record<keyof (FormFieldsVolunteer & { nameFirstName: string }), string>>({
-  lastName: '',
-  firstName: '',
-  nameFirstName: '',
+const errors = reactive<Record<keyof FormFieldsAssociation, string>>({
+  associationName: '',
   phone: '',
-  birthDate: '',
+  bio: '',
   city: '',
   postalCode: '',
-  bio: ''
+  country: '',
+  type: ''
 })
 
 const currentStep = ref(0)
 
 const steps: Step[] = [
   {
-    component: NameFirstNameForm,
-    field: 'nameFirstName',
+    component: AssociationNameForm,
+    field: 'associationName',
     validate: (value: string) => {
-      const parts = value.split('|')
-      const name = parts[0] || ''
-      const firstName = parts[1] || ''
-
-      if (!name) return 'Le nom est requis'
-      if (name.length < 2) return 'Le nom doit contenir au moins 2 caractères'
-
-      if (!firstName) return 'Le prénom est requis'
-      if (firstName.length < 2) return 'Le prénom doit contenir au moins 2 caractères'
-
+      if (!value) return 'Le nom de l\'association est requis'
+      if (value.length < 2) return 'Le nom doit contenir au moins 2 caractères'
       return ''
     }
   },
@@ -79,9 +68,12 @@ const steps: Step[] = [
     }
   },
   {
-    component: BirthDateForm,
-    field: 'birthDate',
-    validate: (value: string) => !value ? 'La date de naissance est requise' : ''
+    component: AssociationTypeForm,
+    field: 'type',
+    validate: (value: string) => {
+      if (!value) return 'Le type d\'association est requis'
+      return ''
+    }
   },
   {
     component: CityForm,
@@ -105,7 +97,7 @@ const steps: Step[] = [
     component: BioForm,
     field: 'bio',
     validate: (value: string) => {
-      if (value.length < 10) return 'La bio doit contenir au moins 10 caractères'
+      if (value.length < 10) return 'La description doit contenir au moins 10 caractères'
       return ''
     }
   }
@@ -114,24 +106,16 @@ const steps: Step[] = [
 const loading = ref(false)
 const isError = ref(false)
 
-
-
 function validateCurrentStep(): boolean {
   const step = steps[currentStep.value]
-  const error = step.validate(formData[step.field as keyof (FormFieldsVolunteer & { nameFirstName: string })])
-  errors[step.field as keyof (FormFieldsVolunteer & { nameFirstName: string })] = error
+  const error = step.validate(formData[step.field])
+  errors[step.field] = error
   return !error
 }
 
-function handleInput(field: keyof (FormFieldsVolunteer & { nameFirstName: string }), value: string) {
+function handleInput(field: keyof FormFieldsAssociation, value: string) {
   formData[field] = value
   errors[field] = ''
-
-  if (field === 'nameFirstName') {
-    const parts = value.split('|')
-    formData.lastName = parts[0] || ''
-    formData.firstName = parts[1] || ''
-  }
 }
 
 function next() {
@@ -156,16 +140,16 @@ async function submitForm() {
   loading.value = true
   isError.value = false
   try {
-    await registerVolunteer({
-      email: user.value?.email ,
-      lastName: formData.lastName,
-      firstName: formData.firstName,
+    await registerAssociation({
+      email: user.value?.email,
+      associationName: formData.associationName,
       phone: formData.phone,
-      birthDate: formData.birthDate,
+      bio: formData.bio,
       city: formData.city,
       postalCode: formData.postalCode,
-      bio: formData.bio
-    } as CreateVolunteerDto)
+      country: formData.country,
+      type: formData.type
+    } as CreateAssociationDto)
     emit('submit', true)
   } catch (error) {
     console.error('Error submitting form:', error)
@@ -174,13 +158,12 @@ async function submitForm() {
     loading.value = false
   }
 }
-
 </script>
 
 <template>
   <div class="w-full max-w-md mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-2">🚀 On démarre l'aventure</h1>
-    <p class="text-base text-gray-600 mb-4">Dis-nous un peu sur toi étape par étape 😊</p>
+    <h1 class="text-3xl font-bold mb-2">🚀 Enregistrement de votre association</h1>
+    <p class="text-base text-gray-600 mb-4">Complétez les informations étape par étape 😊</p>
 
     <keep-alive>
       <component
