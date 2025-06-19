@@ -15,11 +15,11 @@ import {
   HeartIcon,
   MoonIcon} from 'lucide-vue-next'
 import { useUser } from '~/composables/auth/useUser'
-import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
 import LanguageComponent from "~/components/header/utils/components/LanguageComponent.vue";
 import { useTheme } from "~/composables/useTheme";
+import {useAssociationAuth} from "~/composables/auth/associationAuth";
 const { logout: signOut, user } = useUser()
-const {volunteer} =useVolunteerAuth()
+const {association: association} =useAssociationAuth()
 const { setLocale,t, locale } = useI18n()
 const { theme, toggleTheme, isDarkTheme } = useTheme()
 const route = useRoute()
@@ -127,7 +127,7 @@ function toggleLanguageMenu() {
   <nav class=" pl-4 pr-4 pb-4"  >
     <div class="flex gap-4 justify-end w-full pb-4" v-if="!props.isAuthenticated" >
       <div>
-        <h3 class="font-semibold text-lg">{{ volunteer?.firstName }} {{ volunteer?.lastName }}</h3>
+        <h3 class="font-semibold text-lg">{{ association?.associationName }} </h3>
         <p class="text-sm text-base-content opacity-70">{{ user?.email }}</p>
       </div>
       <label for="avatar-upload" class="cursor-pointer" v-if="props.displayProfile">

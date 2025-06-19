@@ -81,6 +81,48 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
                 this.loading = false
             }
 
+        },
+        async updateAssociation(payload: Partial<AssociationInfo>, id: string | null = null) {
+            this.loading = true
+            this.error = null
+            try {
+                const response = await $fetch<AssociationInfo>('/api/association/update', {
+                    method: 'PATCH',
+                    query: { id},
+                    body: payload,
+                })
+
+                if(response) {
+                    this.association = response
+                }
+
+                return response as AssociationInfo
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de mise à jour des informations'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
+
+        async removeAssociation() {
+            this.loading = true
+            this.error = null
+            try {
+                await $fetch<{ message: string }>('/api/association/remove', {
+                    method: 'DELETE',
+                    query: { id: this.association?.associationId },
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                })
+
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de suppression du bénévole'
+                throw err
+            } finally {
+                this.loading = false
+            }
         }
 
     }

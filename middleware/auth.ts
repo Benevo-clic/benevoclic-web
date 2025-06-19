@@ -14,9 +14,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
         await auth.fetchUser()
 
         const userRole = auth.userRole
-        const isAuthenticated = auth.isAuthenticated.value
 
-        console.log('userRole', userRole.value)
 
         if (authStore.isAuthenticated) {
             return navigateTo('/auth/login')

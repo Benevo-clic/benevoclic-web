@@ -2,7 +2,7 @@
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
     <!-- Sidebar menu (visible only on desktop) -->
     <div class="hidden md:block">
-      <AccountMenu />
+      <AccountMenuAssociation />
     </div>
 
     <!-- Main content -->
@@ -49,46 +49,46 @@
             </div>
           </div>
 
-          <!-- Personal information -->
+          <!-- Association information -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="form-control w-full">
               <label class="label">
-                <span class="label-text text-base-content">{{ t('auth.volunteer.first_name') }}</span>
+                <span class="label-text text-base-content">{{ t('auth.association.name') || 'Association Name' }}</span>
               </label>
-              <input type="text" v-model="form.firstName" class="input input-bordered w-full" />
+              <input type="text" v-model="form.associationName" class="input input-bordered w-full" />
             </div>
 
             <div class="form-control w-full">
               <label class="label">
-                <span class="label-text text-base-content">{{ t('auth.volunteer.name') }}</span>
+                <span class="label-text text-base-content">{{ t('auth.association.type') || 'Type' }}</span>
               </label>
-              <input type="text" v-model="form.lastName" class="input input-bordered w-full" />
+              <input type="text" v-model="form.type" class="input input-bordered w-full" />
             </div>
 
             <div class="form-control w-full">
               <label class="label">
-                <span class="label-text text-base-content">{{ t('auth.volunteer.phone') }}</span>
+                <span class="label-text text-base-content">{{ t('auth.association.phone') || 'Phone' }}</span>
               </label>
               <input type="tel" v-model="form.phone" class="input input-bordered w-full" />
             </div>
 
             <div class="form-control w-full">
               <label class="label">
-                <span class="label-text text-base-content">{{ t('auth.volunteer.birthdate') }}</span>
+                <span class="label-text text-base-content">{{ t('auth.association.country') || 'Country' }}</span>
               </label>
-              <input type="date" v-model="form.birthDate" class="input input-bordered w-full" />
+              <input type="text" v-model="form.country" class="input input-bordered w-full" />
             </div>
 
             <div class="form-control w-full">
               <label class="label">
-                <span class="label-text text-base-content">{{ t('auth.volunteer.city') }}</span>
+                <span class="label-text text-base-content">{{ t('auth.association.city') || 'City' }}</span>
               </label>
               <input type="text" v-model="form.city" class="input input-bordered w-full" />
             </div>
 
             <div class="form-control w-full">
               <label class="label">
-                <span class="label-text text-base-content">{{ t('auth.volunteer.postal_code') }}</span>
+                <span class="label-text text-base-content">{{ t('auth.association.postal_code') || 'Postal Code' }}</span>
               </label>
               <input type="text" v-model="form.postalCode" class="input input-bordered w-full" />
             </div>
@@ -97,7 +97,7 @@
           <!-- Bio -->
           <div class="form-control w-full">
             <label class="label">
-              <span class="label-text text-base-content">{{ t('auth.volunteer.bio') }}</span>
+              <span class="label-text text-base-content">{{ t('auth.association.bio') || 'Bio' }}</span>
             </label>
             <textarea v-model="form.bio" class="textarea textarea-bordered h-24 w-full"></textarea>
           </div>
@@ -116,10 +116,10 @@
 import { ref, computed, onMounted } from 'vue'
 import { UserRound, Upload } from 'lucide-vue-next'
 import { useUser } from '~/composables/auth/useUser'
-import { useVolunteerAuth } from '~/composables/auth/volunteerAuth'
-import AccountMenu from '~/components/account/AccountMenu.vue'
+
 import { useI18n } from 'vue-i18n'
 import { isEqual } from 'lodash'
+import {useAssociationAuth} from "~/composables/auth/associationAuth";
 
 const { t } = useI18n()
 
@@ -129,26 +129,26 @@ definePageMeta({
 })
 
 const auth = useUser()
-const volunteerAuth = useVolunteerAuth()
+const associationAuth = useAssociationAuth()
 
 const form = ref({
-  firstName: '',
-  lastName: '',
+  associationName: '',
   phone: '',
-  birthDate: '',
   city: '',
   postalCode: '',
-  bio: ''
+  bio: '',
+  type: '',
+  country: '',
 })
 
 const initialForm = ref({
-  firstName: '',
-  lastName: '',
+  associationName: '',
   phone: '',
-  birthDate: '',
   city: '',
   postalCode: '',
-  bio: ''
+  bio: '',
+  type: '',
+  country: '',
 })
 
 const alertStatus = ref<'success' | 'error' | null>(null)
@@ -168,39 +168,41 @@ const isFormChanged = computed(() => {
 })
 
 onMounted(async () => {
+  // Fetch user data without redirecting
+  await auth.fetchUser(true)
 
-  // Ensure volunteer data is loaded
-  if (!volunteerAuth.volunteer.value) {
-    await volunteerAuth.getVolunteerInfo()
+  // Ensure association data is loaded
+  if (!associationAuth.association.value) {
+    await associationAuth.getAssociationInfo()
   }
 
-  if (volunteerAuth.volunteer.value) {
+  if (associationAuth.association.value) {
 
-    const firstName = volunteerAuth.volunteer.value.firstName || ''
-    const lastName = volunteerAuth.volunteer.value.lastName || ''
-    const phone = volunteerAuth.volunteer.value.phone || ''
-    const birthDate = volunteerAuth.volunteer.value.birthDate || ''
-    const city = volunteerAuth.volunteer.value.city || ''
-    const postalCode = volunteerAuth.volunteer.value.postalCode || ''
-    const bio = volunteerAuth.volunteer.value.bio || ''
+    const associationName = associationAuth.association.value.associationName || ''
+    const phone = associationAuth.association.value.phone || ''
+    const city = associationAuth.association.value.city || ''
+    const postalCode = associationAuth.association.value.postalCode || ''
+    const bio = associationAuth.association.value.bio || ''
+    const type = associationAuth.association.value.type || ''
+    const country = associationAuth.association.value.country || ''
 
     // Update form
-    form.value.firstName = firstName
-    form.value.lastName = lastName
+    form.value.associationName = associationName
     form.value.phone = phone
-    form.value.birthDate = birthDate
     form.value.city = city
     form.value.postalCode = postalCode
     form.value.bio = bio
+    form.value.type = type
+    form.value.country = country
 
     // Update initialForm
-    initialForm.value.firstName = firstName
-    initialForm.value.lastName = lastName
+    initialForm.value.associationName = associationName
     initialForm.value.phone = phone
-    initialForm.value.birthDate = birthDate
     initialForm.value.city = city
     initialForm.value.postalCode = postalCode
     initialForm.value.bio = bio
+    initialForm.value.type = type
+    initialForm.value.country = country
   }
 })
 
@@ -248,7 +250,7 @@ function handleImageChange(event: Event) {
 async function saveProfile() {
   try {
     console.log('Saving profile with data:', form.value)
-    await volunteerAuth.updateVolunteer(form.value, auth.user.value?.userId)
+    await associationAuth.updateAssociation(form.value, auth.user.value?.userId)
 
     // Update initialForm to match the new form values
     initialForm.value = { ...form.value }

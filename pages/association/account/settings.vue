@@ -2,7 +2,7 @@
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
     <!-- Sidebar menu (visible only on desktop) -->
     <div class="hidden md:block">
-      <AccountMenu />
+      <AccountMenuAssociation />
     </div>
 
     <!-- Main content -->
@@ -167,9 +167,8 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
-import AccountMenu from '~/components/account/AccountMenu.vue'
 import {useUser} from "~/composables/auth/useUser";
-import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
+import { useAssociationAuth } from '~/composables/auth/associationAuth'
 
 definePageMeta({
   middleware: ['auth'],
@@ -179,7 +178,7 @@ definePageMeta({
 const { t } = useI18n()
 
 const auth = useUser()
-const volunteer = useVolunteerAuth()
+const association = useAssociationAuth()
 const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
 const passwordChangeModal = ref<HTMLDialogElement | null>(null)
 
@@ -271,7 +270,7 @@ function confirmDelete() {
 // Function to remove the user account
 function removeUser() {
   auth.removeUser()
-  volunteer.removeVolunteer()
+  association.removeAssociation()
 }
 
 // Mock settings data - would be fetched from API in a real app
