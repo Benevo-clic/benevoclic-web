@@ -8,23 +8,21 @@ export default defineNuxtRouteMiddleware((to, from) => {
    const  authStore= useUserStore()
 
     const auth = useUser()
-    const volunteer = useVolunteerAuth()
 
     onMounted(async () => {
 
         await auth.fetchUser()
 
         const userRole = auth.userRole
-        const isVolunteer = await volunteer.getVolunteerInfo()
         const isAuthenticated = auth.isAuthenticated.value
 
-        const response2 = !isAuthenticated && !isVolunteer
+        console.log('userRole', userRole.value)
 
         if (authStore.isAuthenticated) {
             return navigateTo('/auth/login')
         }
 
-        if(response2 && userRole.value === 'VOLUNTEER') {
+        if(userRole.value === 'VOLUNTEER') {
             return navigateTo(
                 {
                     path: '/auth/registerVolunteer',
@@ -32,7 +30,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
             )
         }
 
-        if(response2 && userRole.value === 'ASSOCIATION'){
+        if(userRole.value === 'ASSOCIATION'){
             return navigateTo(
                 {
                     path: '/auth/registerAssociation',

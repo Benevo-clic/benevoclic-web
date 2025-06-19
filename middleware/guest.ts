@@ -8,6 +8,13 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
 
   if (!authStore.isAuthenticated) {
-    return navigateTo('/dashboard')
+    const userRole = authStore.getUserRule;
+    if(userRole === 'VOLUNTEER') {
+      return navigateTo('/volunteer/dashboard')
+    } else if(userRole === 'ASSOCIATION') {
+      return navigateTo('/association/dashboard')
+    } else {
+      return navigateTo('/dashboard')
+    }
   }
 })

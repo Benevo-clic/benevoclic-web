@@ -6,13 +6,13 @@ import {useVolunteerAuthStore} from "~/stores/volunteer.store";
 export const useUser = () => {
     const authStore = useUserStore()
     const registerStore = useRegisterStore()
-    const volunteerStore = useVolunteerAuthStore();
+    // const volunteerStore = useVolunteerAuthStore();
 
 
     onMounted(async () => {
         if (!authStore.isAuthenticated) {
             await authStore.fetchUser()
-            await volunteerStore.getVolunteerInfo()
+            // await volunteerStore.getVolunteerInfo()
         }
     })
 

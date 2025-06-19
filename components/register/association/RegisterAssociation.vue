@@ -12,12 +12,12 @@ const currentStep = ref(1)
 function saveBase64(base64: string) {
   imageBase64.value = base64
   user.updateProfile(base64);
-  navigateTo("/dashboard")
+  navigateTo("/association/dashboard")
 }
 
 function skipBase64() {
   imageBase64.value = null
-  navigateTo("/dashboard")
+  navigateTo("/association/dashboard")
 }
 
 function submitForm(value: boolean) {

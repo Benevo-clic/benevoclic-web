@@ -58,7 +58,13 @@ export const useUserStore = defineStore('auth', {
 
         if(response.idToken) {
           await this.fetchUser()
+          if(this.user?.role === 'VOLUNTEER') {
+            navigateTo('/volunteer/dashboard')
+          } else if(this.user?.role === 'ASSOCIATION') {
+            navigateTo('/association/dashboard')
+          } else {
             navigateTo('/dashboard')
+          }
         }
         return response
       } catch (err: any) {
@@ -176,7 +182,14 @@ export const useUserStore = defineStore('auth', {
 
         if(decodedPayload.role){
             await this.fetchUserGoogle({idToken, refreshToken: user.refreshToken, uid: user.uid});
-            navigateTo('/dashboard')
+            await this.fetchUser();
+            if(this.user?.role === 'VOLUNTEER') {
+              navigateTo('/volunteer/dashboard')
+            } else if(this.user?.role === 'ASSOCIATION') {
+              navigateTo('/association/dashboard')
+            } else {
+              navigateTo('/dashboard')
+            }
         }else{
           await this.callRegisterGoogle(idToken,role)
           if(role === 'VOLUNTEER'){
