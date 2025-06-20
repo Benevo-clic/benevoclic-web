@@ -228,5 +228,13 @@
       "no_match": "No favorites match your search criteria.",
       "add_items": "Add items to your favorites to see them here."
     }
-  }
+  },
+    "association": {
+      "activity": {
+        "new_event": "New Event",
+        "history_events": "Past Events",
+        "upcoming_events": "Upcoming Events",
+        "manage_events": "Manage Events"
+      }
+    }
 }

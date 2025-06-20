@@ -228,5 +228,13 @@
       "no_match": "Aucun favori ne correspond à vos critères de recherche.",
       "add_items": "Ajoutez des éléments à vos favoris pour les voir ici."
     }
+  },
+  "association": {
+    "activity": {
+      "new_event": "Nouvel événement",
+      "history_events": "Événements passés",
+      "upcoming_events": "Événements à venir",
+      "manage_events": "Gérer les événements"
+    }
   }
 }
