@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { Sun as SunIcon, Moon as MoonIcon, Bell as BellIcon, Heart as HeartIcon, Clock as ClockIcon, HelpCircle as HelpIcon, X as XIcon, Search as SearchIcon } from 'lucide-vue-next'
+import { Sun as SunIcon, Moon as MoonIcon, Bell as BellIcon, X as XIcon } from 'lucide-vue-next'
 
 import {useUser} from "~/composables/auth/useUser";
 import NavigationActions from "~/components/header/utils/NavigationActions.vue";
@@ -9,21 +9,20 @@ import DrawerContent from "~/components/header/drawer/DrawerContent.vue";
 import DrawerAppContentVolunteer from "~/components/header/drawer/components/volunteer/DrawerAppContentVolunteer.vue";
 import { useTheme } from "~/composables/useTheme";
 import {navigateTo} from "#app";
-import { useRecentSearches } from "~/composables/useRecentSearches";
-import DrawerAppContentAssociation
-  from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
-const { isAuthenticated,userRole } = useUser()
+import DrawerAppContentAssociation from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
+import VolunteerBottomBar from "~/components/header/VolunteerBottomBar.vue";
+import AssociationBottomBar from "~/components/header/AssociationBottomBar.vue";
+const auth = useUser()
+const isAuthenticated = auth.isAuthenticated
+const userRole = auth.userRole
 const { t } = useI18n()
 const {  toggleTheme, isDarkTheme } = useTheme()
 
 const menuOpen = ref(false)
 const showLoginModal = ref(false)
-const showRecentSearches = ref(false)
-const searchQuery = ref('')
 const loginModal = ref<HTMLDialogElement | null>(null)
-
-const auth = useUser()
-const { recentSearches, addRecentSearch, clearRecentSearches } = useRecentSearches()
+const isLoading = ref(true)
+const isAssociationComponentAvailable = ref(true) // Flag to track if association component is available
 
 const props = defineProps<
     {
@@ -62,38 +61,29 @@ watch(
     }
 )
 
-// Function to handle search submission
-const handleSearch = () => {
-  if (searchQuery.value.trim()) {
-    addRecentSearch(searchQuery.value.trim())
-    // Here you would typically perform the actual search
-    // For now, we're just saving the search query
-    console.log('Searching for:', searchQuery.value)
+
+onMounted(async () => {
+  try {
+    // Fetch user data as early as possible
+    await auth.fetchUser()
+
+    // Simulate a potential delay or error in loading the association component
+    // In a real scenario, this might be determined by checking if the component loaded successfully
+    if (userRole.value === 'ASSOCIATION') {
+      // For demonstration purposes, we'll set the component as not available to show the placeholder
+      // In a real application, you would have actual logic to determine this
+      isAssociationComponentAvailable.value = false // Set to true to hide the placeholder
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error)
+    if (userRole.value === 'ASSOCIATION') {
+      isAssociationComponentAvailable.value = false
+    }
+  } finally {
+    // Set loading to false regardless of whether the fetch succeeded
+    isLoading.value = false
   }
-}
 
-// Function to handle clicking on a recent search
-const selectRecentSearch = (search: string) => {
-  searchQuery.value = search
-  showRecentSearches.value = false
-  // Optionally perform the search immediately
-  handleSearch()
-}
-
-// Toggle recent searches dropdown
-const toggleRecentSearches = () => {
-  showRecentSearches.value = !showRecentSearches.value
-}
-
-// Close recent searches dropdown when clicking outside
-const closeRecentSearches = (event: MouseEvent) => {
-  const target = event.target as HTMLElement
-  if (!target.closest('.recent-searches-container') && !target.closest('.recent-searches-button')) {
-    showRecentSearches.value = false
-  }
-}
-
-onMounted(() => {
   const mediaQuery = window.matchMedia('(min-width: 1253px)')
 
   const handler = (e: MediaQueryListEvent) => {
@@ -108,12 +98,8 @@ onMounted(() => {
     menuOpen.value = false
   }
 
-  // Add event listener to close dropdown when clicking outside
-  document.addEventListener('click', closeRecentSearches)
-
   onUnmounted(() => {
     mediaQuery.removeEventListener('change', handler)
-    document.removeEventListener('click', closeRecentSearches)
   })
 })
 
@@ -133,6 +119,7 @@ function handleNotifications() {
     navigateTo('/notifications')
   }
 }
+
 
 
 
@@ -237,77 +224,16 @@ function handleNotifications() {
     </div>
 
     <!-- Bottom bar -->
-    <div class="bg-base-200 border-t-2 border-b-2 border-base-300 px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4" v-if="!props.optionsOpen">
-      <!-- Search bar à gauche -->
-      <div class="w-full md:max-w-2xl lg:max-w-3xl flex-1">
-        <div class="relative">
-          <div class="flex">
-            <input
-              v-model="searchQuery"
-              type="text"
-              placeholder="Search for missions or associations"
-              class="input input-bordered w-full h-12 text-base"
-              @keyup.enter="handleSearch"
-            />
-            <button 
-              class="btn btn-primary h-12 ml-2" 
-              @click="handleSearch"
-            >
-              <SearchIcon class="w-5 h-5" />
-            </button>
-          </div>
-        </div>
+    <div class="bg-base-200 border-t-2 border-b-2 border-base-300 px-4 py-3" v-if="!props.optionsOpen">
+      <div v-if="isLoading" class="flex justify-center py-2">
+        <span class="loading loading-dots loading-xl"></span>
       </div>
 
-      <div class="w-full md:w-auto flex justify-center md:justify-end flex-wrap text-base-content">
-        <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="handleFavorites">
-          <HeartIcon class="w-6 h-6"  /> {{t('header.volunteer.favorites')}}
-        </button>
-        <div class="relative recent-searches-container">
-          <button 
-            class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1 recent-searches-button" 
-            @click.stop="toggleRecentSearches"
-          >
-            <ClockIcon class="w-6 h-6" /> {{t('header.volunteer.recent-search')}}
-          </button>
-
-          <!-- Recent searches dropdown -->
-          <div 
-            v-if="showRecentSearches" 
-            class="absolute right-0 mt-2 w-64 bg-base-100 shadow-lg rounded-lg z-10 p-2"
-          >
-            <div class="flex justify-between items-center mb-2 pb-2 border-b border-base-300">
-              <h3 class="font-medium text-base-content">{{t('header.volunteer.recent-search')}}</h3>
-              <button 
-                v-if="recentSearches.length > 0"
-                class="btn btn-ghost btn-xs" 
-                @click.stop="clearRecentSearches"
-              >
-                {{t('search.history.clear_all')}}
-              </button>
-            </div>
-
-            <div v-if="recentSearches.length > 0" class="max-h-60 overflow-y-auto">
-              <button 
-                v-for="(search, index) in recentSearches" 
-                :key="index"
-                class="flex items-center justify-between w-full p-2 hover:bg-base-200 rounded-md mb-1 text-left"
-                @click.stop="selectRecentSearch(search)"
-              >
-                <span class="truncate">{{ search }}</span>
-                <SearchIcon class="w-4 h-4 text-base-content opacity-50" />
-              </button>
-            </div>
-
-            <div v-else class="py-4 text-center text-base-content opacity-70">
-              {{t('search.history.no_history_description')}}
-            </div>
-          </div>
-        </div>
-        <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="navigateTo('/help')">
-          <HelpIcon class="w-6 h-6"  /> {{t('header.volunteer.help')}}
-        </button>
-      </div>
+      <template v-else-if="!isLoading">
+        <AssociationBottomBar v-if="userRole === 'ASSOCIATION'" />
+        <VolunteerBottomBar v-else-if="userRole === 'VOLUNTEER'" />
+        <VolunteerBottomBar v-else/>
+      </template>
     </div>
 
 
