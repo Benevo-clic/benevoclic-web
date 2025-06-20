@@ -126,7 +126,11 @@
       "my_missions": "Mis misiones",
       "my_participations": "Mis participaciones",
       "my_favorites": "Mis favoritos",
-      "history": "Historial"
+      "history": "Historial",
+      "new-event": "Nuevo evento",
+      "history-event": "Eventos pasados",
+      "upcoming-event": "Eventos próximos",
+      "manage-event": "Gestionar eventos"
     },
     "notifications_support": {
       "title": "Notificaciones y soporte",
