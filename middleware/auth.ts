@@ -3,7 +3,7 @@ import {useUserStore} from "~/stores/user/user.store";
 
 
 export default defineNuxtRouteMiddleware((to, from) => {
-   const  authStore= useUserStore()
+   const  authStore = useUserStore()
 
 
     if (authStore.isAuthenticated) {

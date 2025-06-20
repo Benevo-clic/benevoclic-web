@@ -63,6 +63,7 @@
       "name": "Nom de l'association",
       "association_type": "Type d'association",
       "siret": "Numéro SIRET",
+      "type": "Type d'association",
       "phone": "Téléphone",
       "website": "Site web",
       "email": "E-mail",
@@ -130,7 +131,8 @@
       "new-event": "Nouvel événement",
       "history-event": "Événements passés",
       "upcoming-event": "Événements à venir",
-      "manage-event": "Gérer les événements"
+      "manage-event": "Gérer les événements",
+        "dashboard": "Tableau de bord"
     },
     "notifications_support": {
       "title": "Notifications & supports",
@@ -234,7 +236,8 @@
       "new_event": "Nouvel événement",
       "history_events": "Événements passés",
       "upcoming_events": "Événements à venir",
-      "manage_events": "Gérer les événements"
+      "manage_events": "Gérer les événements",
+      "dashboard": "Tableau de bord"
     }
   }
 }

@@ -169,7 +169,7 @@ const isFormChanged = computed(() => {
 
 onMounted(async () => {
   // Fetch user data without redirecting
-  await auth.fetchUser(true)
+  await auth.fetchUser()
 
   // Ensure association data is loaded
   if (!associationAuth.association.value) {
@@ -249,7 +249,6 @@ function handleImageChange(event: Event) {
 
 async function saveProfile() {
   try {
-    console.log('Saving profile with data:', form.value)
     await associationAuth.updateAssociation(form.value, auth.user.value?.userId)
 
     // Update initialForm to match the new form values
