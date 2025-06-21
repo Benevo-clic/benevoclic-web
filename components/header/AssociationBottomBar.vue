@@ -14,8 +14,9 @@ const my_modal_3 = ref<HTMLDialogElement | null>(null)
 
 // Association specific handlers
 function handleAddNewEvent() {
-  my_modal_3.value?.showModal()
-
+  // Reset the current announcement to ensure we're creating a new one
+  announcementStore.setCurrentAnnouncement(null);
+  my_modal_3.value?.showModal();
 }
 
 function handlePastEvents() {
@@ -27,6 +28,9 @@ function handleManageEvents() {
 }
 function handleDashboard() {
   navigateTo('/association/dashboard')
+}
+function closeModal() {
+  my_modal_3.value?.close();
 }
 </script>
 
@@ -55,7 +59,7 @@ function handleDashboard() {
   <dialog ref="my_modal_3" class="modal">
     <div class="modal-box w-11/12 max-w-7xl " @click.stop>
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="my_modal_3?.close()">✕</button>
-      <EventModalForm />
+      <EventModalForm @close-Modal="closeModal"/>
     </div>
   </dialog>
 
