@@ -7,7 +7,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
 
 
-  if (!authStore.isAuthenticated) {
+  // If the user is already authenticated, redirect them away from guest pages
+  if (authStore.isAuthenticated) {
     const userRole = authStore.getUserRule;
     if(userRole === 'VOLUNTEER') {
       return navigateTo('/volunteer/dashboard')

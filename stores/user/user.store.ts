@@ -38,7 +38,10 @@ export const useUserStore = defineStore('auth', {
   }),
 
   getters: {
-    isAuthenticated: () => !useCookie('isConnected').value,
+    // A user is considered authenticated when the "isConnected" cookie is set
+    // to a truthy value. The previous implementation returned the opposite
+    // value which inverted the authentication logic across the application.
+    isAuthenticated: () => !!useCookie('isConnected').value,
     getUser: (state) => state.user,
     fullName: (state) => state.user ? `${state.user.firstName} ${state.user.lastName}` : '',
     getVerificationStatus: (state) => state.isVerified,
