@@ -43,22 +43,12 @@ const handleDrawerClose = () => {
 }
 
 watch(
-    () => isAuthenticated,
-    (isAuth) => {
-      if (isAuth) {
-        showLoginModal.value = false
-      }
+  isAuthenticated,
+  (isAuth) => {
+    if (isAuth) {
+      showLoginModal.value = false
     }
-)
-
-
-watch(
-    () => isAuthenticated,
-    (isAuth) => {
-      if (isAuth) {
-        showLoginModal.value = false
-      }
-    }
+  }
 )
 
 
