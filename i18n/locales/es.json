@@ -63,8 +63,12 @@
       "name": "Nombre de la asociación",
       "association_type": "Tipo de asociación",
       "siret": "Número SIRET",
+      "type": "Tipo de asociación",
       "phone": "Teléfono",
       "website": "Sitio web",
+      "email": "Correo electrónico",
+      "contact_info": "Información de contacto",
+      "location": "Dirección",
       "city": "Ciudad",
       "postal_code": "Código postal",
       "country": "País",
@@ -123,7 +127,12 @@
       "my_missions": "Mis misiones",
       "my_participations": "Mis participaciones",
       "my_favorites": "Mis favoritos",
-      "history": "Historial"
+      "history": "Historial",
+      "new-event": "Nuevo evento",
+      "history-event": "Eventos pasados",
+      "upcoming-event": "Eventos próximos",
+      "manage-event": "Gestionar eventos",
+        "dashboard": "Tablero"
     },
     "notifications_support": {
       "title": "Notificaciones y soporte",
@@ -220,6 +229,15 @@
       "no_favorites": "No se encontraron favoritos",
       "no_match": "Ningún favorito coincide con tus criterios de búsqueda.",
       "add_items": "Agrega elementos a tus favoritos para verlos aquí."
+    }
+  },
+  "association": {
+    "activity": {
+      "new_event": "Nuevo evento",
+      "history_event": "Eventos pasados",
+      "upcoming_event": "Eventos próximos",
+      "manage_event": "Gestionar eventos",
+      "dashboard": "Tablero"
     }
   }
 }

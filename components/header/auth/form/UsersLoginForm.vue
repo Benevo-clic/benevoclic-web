@@ -1,15 +1,38 @@
 <script setup lang="ts">
+import VerifSiretAssociation from "~/components/header/auth/form/VerifSiretAssociation.vue";
+
 const {t} = useI18n()
-const {form,handleLogin,loading} = defineProps<{
+const {form,handleLogin,loading,isAssociation} = defineProps<{
   form: Record<string, any>,
   handleLogin: () => Promise<void>;
   loading: boolean;
+  isAssociation: boolean;
 }>()
+const associationExists = ref(false)
+
+
+const emit = defineEmits<{
+  (e: 'associationExists', isVerified: boolean): void;
+
+}>()
+
+
+
+function verifyAssociation(value:boolean) {
+  associationExists.value = value
+  emit('associationExists', associationExists.value)
+}
+
 
 </script>
 
 <template>
-  <form class="space-y-4" @submit.prevent="handleLogin">
+  <VerifSiretAssociation
+      @association-exists="verifyAssociation"
+      v-if="!associationExists && isAssociation"
+  />
+
+  <form class="space-y-4" @submit.prevent="handleLogin" v-if="!isAssociation || associationExists">
     <div class="form-control">
       <label class="label">
         <span class="label-text">{{t('auth.email')}}</span>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import UploadImageForm from "~/components/register/volunteer/form/UploadImageForm.vue"
+import RegisterInfoAssociationForm from "~/components/register/association/form/RegisterInfoAssociationForm.vue"
 import {useUser} from "~/composables/auth/useUser";
 
 const user = useUser()
@@ -11,12 +12,12 @@ const currentStep = ref(1)
 function saveBase64(base64: string) {
   imageBase64.value = base64
   user.updateProfile(base64);
-  navigateTo("/volunteer/dashboard")
+  navigateTo("/association/dashboard")
 }
 
 function skipBase64() {
   imageBase64.value = null
-  navigateTo("/volunteer/dashboard")
+  navigateTo("/association/dashboard")
 }
 
 function submitForm(value: boolean) {
@@ -39,7 +40,7 @@ function handleStep(step: number) {
 
     <div class="min-h-[85vh] flex flex-col md:flex-row items-center justify-center gap-8 px-4">
 
-      <RegisterVolunteerFormRegisterInfoVolunteerForm v-if="!isSubmittedForm"  @submit="submitForm" @current-step="handleStep" />
+      <RegisterInfoAssociationForm v-if="!isSubmittedForm" @submit="submitForm" @current-step="handleStep" />
       <UploadImageForm
           v-else
           @uploaded="saveBase64"
@@ -51,6 +52,7 @@ function handleStep(step: number) {
             src="/images/volunteer-info.png"
             alt="Illustration"
             class="w-full max-w-xl mx-auto"
+            onerror="this.src='/images/volunteer-info.png'"
         />
       </div>
     </div>

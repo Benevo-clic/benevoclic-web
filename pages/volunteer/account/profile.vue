@@ -2,7 +2,7 @@
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
     <!-- Sidebar menu (visible only on desktop) -->
     <div class="hidden md:block">
-      <AccountMenu />
+      <AccountMenuVolunteer />
     </div>
     
     <!-- Main content -->
@@ -55,7 +55,7 @@ import { computed } from 'vue'
 import { UserRound } from 'lucide-vue-next'
 import { useUser } from '~/composables/auth/useUser'
 import { useVolunteerAuth } from '~/composables/auth/volunteerAuth'
-import AccountMenu from '~/components/account/AccountMenu.vue'
+import AccountMenuVolunteer from '~/components/account/AccountMenuVolunteer.vue'
 
 definePageMeta({
   middleware: ['auth'],

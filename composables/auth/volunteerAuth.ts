@@ -1,15 +1,16 @@
 import {useVolunteerAuthStore} from "~/stores/volunteer.store";
 import {computed, onMounted} from "vue";
-
+import {useUserStore} from "~/stores/user/user.store";
 
 
 export const useVolunteerAuth = () => {
     const volunteerStore = useVolunteerAuthStore();
-
+    const userStore = useUserStore();
 
     onMounted(async () => {
+        if (userStore.getUserRule === 'VOLUNTEER') {
             await volunteerStore.getVolunteerInfo()
-            console.log('Mounted volunteer auth composable, fetching volunteer info');
+        }
     })
 
     return {

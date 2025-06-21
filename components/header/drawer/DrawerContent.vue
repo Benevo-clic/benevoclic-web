@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import {watch, onMounted, onUnmounted } from 'vue'
 import {   X} from 'lucide-vue-next'
-import DrawerAppContent from "~/components/header/drawer/components/DrawerAppContent.vue";
+import DrawerAppContentVolunteer from "~/components/header/drawer/components/volunteer/DrawerAppContentVolunteer.vue";
+import DrawerAppContentAssociation
+  from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
 
 
 
@@ -9,6 +11,7 @@ const props = defineProps({
   isAuthenticated: Boolean,
   menuOpen: Boolean,
   userFirstName: String,
+  role: String,
 })
 const emit = defineEmits(['closeDrawer'])
 
@@ -62,11 +65,19 @@ function handleCloseDrawer() {
         </button>
       </div>
 
-      <DrawerAppContent
+      <DrawerAppContentVolunteer
         :is-authenticated="props.isAuthenticated"
         :menu-open="menuOpen"
         :display-profile="true"
         @close-drawer="handleCloseDrawer"
+        v-if="role === 'VOLUNTEER'"
+        />
+      <DrawerAppContentAssociation
+        :is-authenticated="props.isAuthenticated"
+        :menu-open="menuOpen"
+        :display-profile="true"
+        @close-drawer="handleCloseDrawer"
+        v-else-if="role === 'ASSOCIATION'"
         />
     </aside>
   </transition>

@@ -63,8 +63,12 @@
       "name": "Association Name",
       "association_type": "Type of Association",
       "siret": "SIRET Number",
+      "type": "Type of Association",
       "phone": "Phone",
       "website": "Website",
+        "email": "Email",
+        "contact_info": "Contact Information",
+        "location": "Address",
       "city": "City",
       "postal_code": "Postal Code",
       "country": "Country",
@@ -123,7 +127,12 @@
         "my_missions": "My Missions",
         "my_participations": "My Participations",
         "my_favorites": "My Favorites",
-        "history": "History"
+        "history": "History",
+      "new-event": "New Event",
+      "history-event": "Past Events",
+      "upcoming-event": "Upcoming Events",
+      "manage-event": "Manage Events",
+        "dashboard": "Dashboard"
     },
     "notifications_support": {
       "title": "Notifications & Support",
@@ -221,5 +230,14 @@
       "no_match": "No favorites match your search criteria.",
       "add_items": "Add items to your favorites to see them here."
     }
-  }
+  },
+    "association": {
+      "activity": {
+        "new_event": "New Event",
+        "history_events": "Past Events",
+        "upcoming_events": "Upcoming Events",
+        "manage_events": "Manage Events",
+        "dashboard": "Dashboard"
+      }
+    }
 }

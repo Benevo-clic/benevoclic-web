@@ -2,7 +2,7 @@
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
     <!-- Sidebar menu (visible only on desktop) -->
     <div class="hidden md:block">
-      <AccountMenu />
+      <AccountMenuVolunteer />
     </div>
 
     <!-- Main content -->
@@ -167,7 +167,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
-import AccountMenu from '~/components/account/AccountMenu.vue'
+import AccountMenuVolunteer from '~/components/account/AccountMenuVolunteer.vue'
 import {useUser} from "~/composables/auth/useUser";
 import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
 

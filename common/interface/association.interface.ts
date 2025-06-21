@@ -12,6 +12,7 @@ export interface AssociationInfo {
     type: string;
     postalCode: string;
     country: string;
+    phone: string;
     volunteers?: InfoVolunteer[];
     volunteersWaiting?: InfoVolunteer[];
 }
