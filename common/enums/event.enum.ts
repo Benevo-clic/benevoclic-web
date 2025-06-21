@@ -1,0 +1,6 @@
+export enum EventStatus {
+  DRAFT = 'DRAFT',
+  PUBLISHED = 'PUBLISHED',
+  ARCHIVED = 'ARCHIVED',
+  CANCELLED = 'CANCELLED',
+} 

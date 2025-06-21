@@ -1,12 +1,21 @@
 <script setup lang="ts">
 import { PlusCircle as PlusIcon, Calendar as CalendarIcon, History as HistoryIcon, HelpCircle as HelpIcon,LayoutDashboard as DashboardIcon } from 'lucide-vue-next'
-import { navigateTo } from "#app";
+import { navigateTo, useRoute } from "#app";
+import { useAnnouncementStore } from '~/stores/announcement.store';
 
-const { t } = useI18n()
+
+const {t} = useI18n()
+
+const route = useRoute();
+const announcementStore = useAnnouncementStore();
+
+const my_modal_3 = ref<HTMLDialogElement | null>(null)
+
 
 // Association specific handlers
 function handleAddNewEvent() {
-  navigateTo('/association/events/new')
+  my_modal_3.value?.showModal()
+
 }
 
 function handlePastEvents() {
@@ -14,7 +23,7 @@ function handlePastEvents() {
 }
 
 function handleManageEvents() {
-  navigateTo('/association/events')
+  navigateTo('/association/events/manage')
 }
 function handleDashboard() {
   navigateTo('/association/dashboard')
@@ -25,7 +34,7 @@ function handleDashboard() {
   <!-- ASSOCIATION layout without search bar -->
   <div class="flex items-center justify-center">
     <div class="flex justify-center flex-wrap text-base-content gap-4">
-      <button class="btn btn-primary btn-sm px-3 py-1 flex items-center gap-1" @click="handleAddNewEvent">
+      <button class="btn btn-primary btn-sm px-3 py-1 flex items-center gap-1" @click.prevent="handleAddNewEvent">
         <PlusIcon class="w-5 h-5" /> {{$t('association.activity.new_event')}}
       </button>
       <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="handleDashboard">
@@ -42,5 +51,12 @@ function handleDashboard() {
       </button>
     </div>
   </div>
+
+  <dialog ref="my_modal_3" class="modal">
+    <div class="modal-box w-11/12 max-w-7xl " @click.stop>
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="my_modal_3?.close()">✕</button>
+      <EventModalForm />
+    </div>
+  </dialog>
 
 </template>
