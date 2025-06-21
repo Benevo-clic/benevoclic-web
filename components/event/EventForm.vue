@@ -1,5 +1,23 @@
 <template>
   <form @submit.prevent="submit" class="space-y-6">
+    <!-- Required Fields Note -->
+    <div class="text-sm text-gray-500 mb-2">
+      Les champs marqués d'un <span class="text-error">*</span> sont obligatoires.
+    </div>
+
+    <!-- Validation Errors -->
+    <div v-if="formErrors.length > 0" class="alert alert-error shadow-lg mb-4">
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <div>
+          <h3 class="font-bold">Veuillez remplir tous les champs obligatoires :</h3>
+          <ul class="mt-1 list-disc list-inside">
+            <li v-for="(error, index) in formErrors" :key="index">{{ error }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
     <!-- Cover Photo Upload Section -->
     <div class="w-full mb-6">
       <div 
@@ -46,12 +64,13 @@
     <!-- Event Name -->
     <div class="form-control w-full">
       <label class="label">
-        <span class="label-text">Nom de l'événement</span>
+        <span class="label-text">Nom de l'événement <span class="text-error">*</span></span>
       </label>
       <input 
         type="text" 
         v-model="formState.nameEvent" 
         class="input input-bordered w-full" 
+        :class="{ 'input-error': invalidFields.nameEvent }"
         placeholder="Nom de l'événement"
       />
     </div>
@@ -59,11 +78,12 @@
     <!-- Description -->
     <div class="form-control w-full">
       <label class="label">
-        <span class="label-text">Description</span>
+        <span class="label-text">Description <span class="text-error">*</span></span>
       </label>
       <textarea 
         v-model="formState.description" 
         class="textarea textarea-bordered h-24 w-full" 
+        :class="{ 'textarea-error': invalidFields.description }"
         placeholder="Description de l'événement"
       ></textarea>
     </div>
@@ -72,22 +92,24 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">Date de l'événement</span>
+          <span class="label-text">Date de l'événement <span class="text-error">*</span></span>
         </label>
         <input 
           type="date" 
           v-model="formState.dateEvent" 
           class="input input-bordered w-full" 
+          :class="{ 'input-error': invalidFields.dateEvent }"
         />
       </div>
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">Heure de l'événement</span>
+          <span class="label-text">Heure de l'événement <span class="text-error">*</span></span>
         </label>
         <input 
           type="time" 
           v-model="formState.hoursEvent" 
           class="input input-bordered w-full" 
+          :class="{ 'input-error': invalidFields.hoursEvent }"
         />
       </div>
     </div>
@@ -95,12 +117,13 @@
     <!-- Location -->
     <div class="form-control w-full">
       <label class="label">
-        <span class="label-text">Lieu (Adresse)</span>
+        <span class="label-text">Lieu (Adresse) <span class="text-error">*</span></span>
       </label>
       <input 
         type="text" 
         v-model="formState.locationAnnouncement.address" 
         class="input input-bordered w-full" 
+        :class="{ 'input-error': invalidFields.address }"
         placeholder="123 rue de Paris" 
       />
     </div>
@@ -108,23 +131,25 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">Ville</span>
+          <span class="label-text">Ville <span class="text-error">*</span></span>
         </label>
         <input 
           type="text" 
           v-model="formState.locationAnnouncement.city" 
           class="input input-bordered w-full" 
+          :class="{ 'input-error': invalidFields.city }"
           placeholder="Ville"
         />
       </div>
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">Code Postal</span>
+          <span class="label-text">Code Postal <span class="text-error">*</span></span>
         </label>
         <input 
           type="text" 
           v-model="formState.locationAnnouncement.postalCode" 
           class="input input-bordered w-full" 
+          :class="{ 'input-error': invalidFields.postalCode }"
           placeholder="Code postal"
         />
       </div>
@@ -245,10 +270,16 @@ import { ref, reactive, watch } from 'vue';
 import { useAnnouncementStore } from '~/stores/announcement.store';
 import type { Announcement, Location, Image } from '~/common/interface/event.interface';
 import { EventStatus } from '~/common/enums/event.enum';
+import {useUser} from "~/composables/auth/useUser";
+import {useAssociationAuth} from "~/composables/auth/associationAuth";
 
 const props = defineProps<{
   announcement?: Announcement | null;
 }>();
+
+const {association} = useAssociationAuth()
+const {user} = useUser()
+
 
 const emit = defineEmits(['submit', 'cancel']);
 
@@ -264,7 +295,10 @@ const statusOptions = Object.values(EventStatus).map(status => ({ label: status,
 const createInitialState = () => ({
   nameEvent: '',
   description: '',
+  associationId: association.value?.associationId || '',
+  associationName: association.value?.associationName || '',
   dateEvent: '',
+  datePublication: new Date().toISOString().split('T')[0], // Default to today
   hoursEvent: '',
   locationAnnouncement: {
     address: '',
@@ -277,6 +311,7 @@ const createInitialState = () => ({
   tags: [] as string[],
   status: EventStatus.DRAFT,
   announcementImage: undefined as Image | undefined,
+  associationLogo: user.value?.imageProfile || undefined,
 });
 
 const formState = reactive(createInitialState());
@@ -346,8 +381,69 @@ const removeTag = (index: number) => {
   formState.tags.splice(index, 1);
 };
 
+const formErrors = ref<string[]>([]);
+
+// Track which fields have validation errors
+const invalidFields = ref<Record<string, boolean>>({});
+
+const validateForm = (): boolean => {
+  formErrors.value = [];
+  invalidFields.value = {};
+
+  // Check required fields
+  if (!formState.nameEvent) {
+    formErrors.value.push('Nom de l\'événement');
+    invalidFields.value.nameEvent = true;
+  }
+  if (!formState.description) {
+    formErrors.value.push('Description');
+    invalidFields.value.description = true;
+  }
+  if (!formState.dateEvent) {
+    formErrors.value.push('Date de l\'événement');
+    invalidFields.value.dateEvent = true;
+  }
+  if (!formState.hoursEvent) {
+    formErrors.value.push('Heure de l\'événement');
+    invalidFields.value.hoursEvent = true;
+  }
+  if (!formState.locationAnnouncement.address) {
+    formErrors.value.push('Adresse');
+    invalidFields.value.address = true;
+  }
+  if (!formState.locationAnnouncement.city) {
+    formErrors.value.push('Ville');
+    invalidFields.value.city = true;
+  }
+  if (!formState.locationAnnouncement.postalCode) {
+    formErrors.value.push('Code Postal');
+    invalidFields.value.postalCode = true;
+  }
+
+  return formErrors.value.length === 0;
+};
+
+const scrollToFirstError = () => {
+  // Get all elements with validation errors
+  const errorFields = document.querySelectorAll('.input-error, .textarea-error');
+  if (errorFields.length > 0) {
+    // Scroll to the first error field
+    errorFields[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Focus on the first error field
+    (errorFields[0] as HTMLElement).focus();
+  }
+};
+
 const submit = async () => {
   console.log('Submitting form with state:', formState);
-  emit('submit', formState);
+
+  if (validateForm()) {
+    emit('submit', formState);
+  } else {
+    // Show error message
+    console.error('Veuillez remplir tous les champs obligatoires:', formErrors.value);
+    // Scroll to the first error
+    setTimeout(scrollToFirstError, 100);
+  }
 };
 </script> 
