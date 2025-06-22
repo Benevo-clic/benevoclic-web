@@ -14,6 +14,8 @@ export const useAnnouncementStore = defineStore('announcement', {
   getters: {
     getAnnouncements: (state) => state.announcements,
     getCurrentAnnouncement: (state) => state.currentAnnouncement,
+    getLoading: (state) => state.loading,
+    getError: (state) => state.error,
   },
 
   actions: {
@@ -27,10 +29,14 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.loading = true;
       this.error = null;
       try {
-        this.announcements = await $fetch<Announcement[]>('/api/announcement/list', {
+        this.announcements = await $fetch<Announcement[]>('/api/announcement/announcementAssociation', {
           method: 'GET',
           query: associationId ? {associationId} : {},
         });
+        if (!this.announcements || this.announcements.length === 0) {
+          this.error = 'Aucune annonce trouvée';
+        }
+        return this.announcements;
       } catch (err: any) {
         this.error = err?.message || 'Erreur de récupération des annonces';
         // throw err; // Decide if you want to re-throw

@@ -6,6 +6,11 @@ export interface Image {
   alt?: string;
 }
 
+export type InfoVolunteer = {
+    id: string;
+    name: string;
+};
+
 export interface Location {
   address: string;
   city: string;
@@ -28,9 +33,14 @@ export interface Announcement {
   associationLogo?: imageProfile;
   announcementImage?: imageProfile;
   locationAnnouncement?: Location;
+  participants?: InfoVolunteer[];
+  nbParticipants?: number;
   maxParticipants: number;
   status: EventStatus;
+  nbVolunteers?: number;
   maxVolunteers: number;
+  volunteers?: InfoVolunteer[];
+  volunteersWaiting?: InfoVolunteer[];
 }
 
 export interface CreateAnnouncementDto {

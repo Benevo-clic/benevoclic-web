@@ -22,7 +22,6 @@ export default defineEventHandler(async (event) => {
                 }
             });
 
-        console.log('New announcement created:', newAnnouncement.data);
 
         return newAnnouncement.data
     } catch (error) {

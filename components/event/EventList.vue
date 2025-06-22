@@ -12,7 +12,7 @@
     <div v-else>
       <EventCard
         v-for="announcement in announcements" 
-        :key="announcement.id"
+        :key="announcement._id"
         :announcement="announcement"
         @edit="$emit('edit', $event)"
         @delete="$emit('delete', $event)"
@@ -26,21 +26,20 @@
 import { onMounted, computed } from 'vue';
 import { useAnnouncementStore } from '~/stores/announcement.store';
 import EventCard from './EventCard.vue';
-import type { Announcement } from '~/common/interface/event.interface';
+import {useUser} from "~/composables/auth/useUser";
 
-const props = defineProps<{
-    associationId?: string;
-}>();
 
 const emit = defineEmits(['edit', 'delete']);
 
 const store = useAnnouncementStore();
+const {user} = useUser();
 
 const announcements = computed(() => store.getAnnouncements);
 const loading = computed(() => store.loading);
 const error = computed(() => store.error);
 
 onMounted(() => {
-  store.fetchAnnouncements(props.associationId);
+  console.log('Fetching announcements for association:', user.value?.userId);
+  store.fetchAnnouncements(user.value?.userId);
 });
 </script> 
