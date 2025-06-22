@@ -1,23 +1,20 @@
 <script setup lang="ts">
 import { useAnnouncementStore } from '~/stores/announcement.store';
-import type { Announcement } from '~/common/interface/event.interface';
+import type { CreateAnnouncementDto} from '~/common/interface/event.interface';
+import {useAnnouncement} from "~/composables/useAnnouncement";
+import UploadCoverForm from "~/components/event/UploadCoverForm.vue";
 
 const store = useAnnouncementStore();
-const { loading } = store;
+const announcementAuth = useAnnouncement();
+const isRegistered = ref(false);
+
 
 const emit = defineEmits(['closeModal'])
 
-const handleSubmit = async (formData: Partial<Announcement>) => {
+const handleSubmit = async (formData: CreateAnnouncementDto) => {
   try {
-    if (formData.id) {
-      // Update existing announcement
-      await store.updateAnnouncement(formData.id, formData);
-    } else {
-      // Create new announcement
-      await store.createAnnouncement(formData as Omit<Announcement, 'id'>);
-    }
-    // Close modal after successful submission
-    closeModal();
+    await announcementAuth.createAnnouncement(formData);
+    isRegistered.value = true;
   } catch (error) {
     console.error('Error submitting form:', error);
   }
@@ -27,6 +24,13 @@ const closeModal = () => {
   store.closeCreateModal();
   emit('closeModal');
 };
+
+const submitCover= () => {
+  store.closeCreateModal();
+  emit('closeModal');
+  navigateTo('/association/events/manage');
+};
+
 </script>
 
 <template>
@@ -38,7 +42,13 @@ const closeModal = () => {
     <EventForm 
       :announcement="store.currentAnnouncement" 
       @submit="handleSubmit" 
-      @cancel="closeModal" 
+      @cancel="closeModal"
+      v-if="!isRegistered"
+    />
+    <UploadCoverForm 
+      v-else
+      @ignore="closeModal"
+      @finish="submitCover"
     />
   </div>
 </template>

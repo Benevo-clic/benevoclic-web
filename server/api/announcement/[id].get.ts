@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const response = await axios.get<Announcement>(
-      `${config.private.api_base_url}/api/v1/announcements/${announcementId}`,
+      `${config.private.api_base_url}/announcements/${announcementId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

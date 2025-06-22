@@ -1,5 +1,6 @@
-import { defineStore } from 'pinia';
-import type { Announcement } from '~/common/interface/event.interface';
+import {defineStore} from 'pinia';
+import type {Announcement, CreateAnnouncementDto} from '~/common/interface/event.interface';
+import {$fetch} from "ofetch";
 
 export const useAnnouncementStore = defineStore('announcement', {
   state: () => ({
@@ -26,11 +27,10 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.loading = true;
       this.error = null;
       try {
-        const response = await $fetch<Announcement[]>('/api/announcement/list', {
+        this.announcements = await $fetch<Announcement[]>('/api/announcement/list', {
           method: 'GET',
-          query: associationId ? { associationId } : {},
+          query: associationId ? {associationId} : {},
         });
-        this.announcements = response;
       } catch (err: any) {
         this.error = err?.message || 'Erreur de récupération des annonces';
         // throw err; // Decide if you want to re-throw
@@ -43,8 +43,7 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.loading = true;
       this.error = null;
       try {
-        const response = await $fetch<Announcement>(`/api/announcement/${id}`);
-        this.currentAnnouncement = response;
+        this.currentAnnouncement = await $fetch<Announcement>(`/api/announcement/${id}`);
       } catch (err: any) {
         this.error = err?.message || 'Erreur de récupération de l\'annonce';
         // throw err;
@@ -53,15 +52,21 @@ export const useAnnouncementStore = defineStore('announcement', {
       }
     },
 
-    async createAnnouncement(payload: Omit<Announcement, 'id'>) {
+    async createAnnouncement(payload: CreateAnnouncementDto) {
       this.loading = true;
       this.error = null;
       try {
-        const response = await $fetch<Announcement>('/api/announcement/create', {
+        const response = await $fetch('/api/announcement/create', {
           method: 'POST',
           body: payload,
         });
-        this.announcements.push(response);
+        if(!response) {
+            throw new Error('Erreur lors de la création de l\'annonce');
+        }
+
+        await this.fetchAnnouncementById(response);
+
+        return response;
       } catch (err: any) {
         this.error = err?.message || 'Erreur de création de l\'annonce';
         throw err;
@@ -69,6 +74,35 @@ export const useAnnouncementStore = defineStore('announcement', {
         this.loading = false;
       }
     },
+
+    async uploadImageCover(imageBase64: string) {
+      this.loading = true
+      this.error = null
+
+      try {
+        const response = await $fetch('/api/announcement/updateCoverAnnouncement', {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            imageBase64,
+            id: this.currentAnnouncement?._id
+          })
+        })
+
+        if (!response) {
+          this.error = 'Erreur lors de l\'upload de l\'image'
+          throw new Error(this.error)
+        }
+      } catch (error: any) {
+        this.error = error?.message || 'Erreur lors de l\'upload de l\'image'
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
+
 
     async updateAnnouncement(id: string, payload: Partial<Announcement>) {
       this.loading = true;
@@ -78,11 +112,11 @@ export const useAnnouncementStore = defineStore('announcement', {
           method: 'PATCH',
           body: payload,
         });
-        const index = this.announcements.findIndex((a) => a.id === id);
+        const index = this.announcements.findIndex((a) => a._id === id);
         if (index !== -1) {
           this.announcements[index] = response;
         }
-        if (this.currentAnnouncement?.id === id) {
+        if (this.currentAnnouncement?._id === id) {
           this.currentAnnouncement = response;
         }
       } catch (err: any) {
@@ -100,8 +134,8 @@ export const useAnnouncementStore = defineStore('announcement', {
         await $fetch(`/api/announcement/${id}`, {
           method: 'DELETE',
         });
-        this.announcements = this.announcements.filter((a) => a.id !== id);
-        if (this.currentAnnouncement?.id === id) {
+        this.announcements = this.announcements.filter((a) => a._id !== id);
+        if (this.currentAnnouncement?._id === id) {
           this.currentAnnouncement = null;
         }
       } catch (err: any) {
