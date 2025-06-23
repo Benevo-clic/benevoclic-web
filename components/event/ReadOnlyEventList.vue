@@ -9,12 +9,11 @@
     <div v-else-if="announcements.length === 0" class="text-center text-gray-500">
         <p>Aucune annonce à afficher pour le moment.</p>
     </div>
-    <div v-else>
+    <div v-else class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       <ReadOnlyEventCard
         v-for="announcement in announcements" 
         :key="announcement._id"
         :announcement="announcement"
-        class="mb-4"
       />
     </div>
   </div>
