@@ -76,12 +76,10 @@ const props = defineProps<{
 
 const statusBadgeClass = computed(() => {
   switch (props.announcement.status) {
-    case EventStatus.PUBLISHED:
+    case EventStatus.ACTIVE:
       return 'badge-success';
-    case EventStatus.DRAFT:
+    case EventStatus.INACTIVE:
       return 'badge-warning';
-    case EventStatus.CANCELLED:
-      return 'badge-error';
     case EventStatus.COMPLETED:
       return 'badge-neutral';
     default:

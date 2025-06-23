@@ -1,12 +1,15 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
-    <div class="bg-base-100 rounded-lg shadow-md p-6">
-      <div class="mb-6">
-        <h1 class="text-2xl font-bold text-base-content">Liste des annonces</h1>
+  <div class="container mx-auto px-4 w-full">
+    <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
+      <div class="flex flex-col items-center w-full">
+        <EventFilters class="mb-4 w-full max-w-4xl" />
       </div>
+    </div>
+  </div>
 
-      <ReadOnlyEventList
-      />
+  <div class="container mx-auto px-4 py-4">
+    <div class="bg-base-100 rounded-lg shadow-md p-6">
+      <ReadOnlyEventList />
     </div>
   </div>
 </template>
@@ -15,10 +18,12 @@
 import { definePageMeta } from "#imports";
 
 import ReadOnlyEventList from '~/components/event/ReadOnlyEventList.vue';
+import EventFilters from '~/components/event/EventFilters.vue';
 
 definePageMeta({
   middleware: ['auth'],
-  layout: 'header'
+  layout: 'header',
 })
+
 
 </script>

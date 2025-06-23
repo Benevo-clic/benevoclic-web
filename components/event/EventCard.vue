@@ -56,14 +56,10 @@ defineEmits(['edit', 'delete']);
 
 const statusColor = computed(() => {
   switch (props.announcement.status) {
-    case EventStatus.PUBLISHED:
+    case EventStatus.ACTIVE:
       return 'green';
-    case EventStatus.DRAFT:
-      return 'yellow';
-    case EventStatus.CANCELLED:
+    case EventStatus.INACTIVE:
       return 'red';
-    case EventStatus.ARCHIVED:
-      return 'gray';
     default:
       return 'blue';
   }
