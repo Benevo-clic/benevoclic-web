@@ -32,4 +32,5 @@ const loading = announcement.loading
 const error =  announcement.error
 
 
+
 </script>

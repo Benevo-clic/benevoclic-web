@@ -20,11 +20,11 @@ function handleAddNewEvent() {
 }
 
 function handlePastEvents() {
-  navigateTo('/association/events/past')
+  navigateTo('/association/events/association/past')
 }
 
 function handleManageEvents() {
-  navigateTo('/association/events/manage')
+  navigateTo('/association/events/association/manage')
 }
 function handleDashboard() {
   navigateTo('/association/dashboard')

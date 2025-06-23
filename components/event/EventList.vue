@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { onMounted, computed } from 'vue';
 import { useAnnouncementStore } from '~/stores/announcement.store';
-import EventCard from './EventCard.vue';
+import EventCard from './association/EventCard.vue';
 import {useUser} from "~/composables/auth/useUser";
 
 
