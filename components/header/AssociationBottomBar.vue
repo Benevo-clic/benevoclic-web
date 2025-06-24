@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PlusCircle as PlusIcon, Calendar as CalendarIcon, History as HistoryIcon, HelpCircle as HelpIcon,LayoutDashboard as DashboardIcon } from 'lucide-vue-next'
+import { PlusCircle as PlusIcon, Calendar as CalendarIcon, ClipboardList as ClipboardList, HelpCircle as HelpIcon,LayoutDashboard as DashboardIcon } from 'lucide-vue-next'
 import { navigateTo, useRoute } from "#app";
 import { useAnnouncementStore } from '~/stores/announcement.store';
 
@@ -29,6 +29,11 @@ function handleManageEvents() {
 function handleDashboard() {
   navigateTo('/association/dashboard')
 }
+
+function handleRequests() {
+  navigateTo('/association/requests')
+}
+
 function closeModal() {
   my_modal_3.value?.close();
 }
@@ -44,11 +49,11 @@ function closeModal() {
       <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="handleDashboard">
         <DashboardIcon class="w-5 h-5" /> {{$t('association.activity.dashboard') || 'Dashboard'}}
       </button>
-      <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="handlePastEvents">
-        <HistoryIcon class="w-6 h-6" /> {{$t('association.activity.history_events')}}
-      </button>
       <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="handleManageEvents">
         <CalendarIcon class="w-6 h-6" /> {{$t('association.activity.manage_events')}}
+      </button>
+      <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="handleRequests">
+        <ClipboardList class="w-6 h-6" /> {{$t('association.activity.requests') || 'My Requests'}}
       </button>
       <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="navigateTo('/help')">
         <HelpIcon class="w-6 h-6" /> Aide

@@ -237,6 +237,7 @@
         "history_events": "Past Events",
         "upcoming_events": "Upcoming Events",
         "manage_events": "Manage Events",
+        "requests": "My Requests",
         "dashboard": "Dashboard"
       }
     }

@@ -1,7 +1,5 @@
-import { useUserStore } from '~/stores/user/user.store'
 import { onMounted } from 'vue'
 import { useAnnouncementStore } from "~/stores/announcement.store";
-import {useAssociationAuth} from "~/composables/auth/associationAuth";
 import {useUser} from "~/composables/auth/useUser";
 
 export const useAnnouncement = () => {
@@ -22,6 +20,8 @@ export const useAnnouncement = () => {
         uploadImageCover: announcementStore.uploadImageCover,
         getAnnouncements: computed(() => announcementStore.getAnnouncements),
         fetchAnnouncements: announcementStore.fetchAnnouncements,
+        fetchAnnouncementById: announcementStore.fetchAnnouncementById,
+        getCurrentAnnouncement: announcementStore.getCurrentAnnouncement,
         loading: computed(() => announcementStore.loading),
         error: computed(() => announcementStore.error),
     }

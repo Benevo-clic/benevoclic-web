@@ -1,6 +1,7 @@
 <template>
   <div
-      class="card card-compact bg-base-100 shadow-xl border border-gray-200 dark:border-gray-700 rounded-lg transition-transform transform hover:-translate-y-1 hover:shadow-2xl cursor-grab hover:cursor-pointer"
+      class="card card-compact bg-base-100 shadow-xl border border-gray-200 dark:border-gray-700 rounded-lg transition-transform transform hover:-translate-y-1 hover:shadow-2xl cursor-pointer hover:cursor-pointer"
+      @click="goToDetails"
   >
     <!-- Announcement Image -->
     <figure v-if="announcement.announcementImage?.data">
@@ -69,6 +70,7 @@ import { computed } from 'vue';
 import type { Announcement } from '~/common/interface/event.interface';
 import { EventStatus } from '~/common/enums/event.enum';
 import {HeartHandshake,Users,Calendar,Clock,MapPin} from 'lucide-vue-next'
+import { navigateTo } from '#app';
 
 const props = defineProps<{
   announcement: Announcement;
@@ -117,4 +119,8 @@ const truncatedDescription = computed(() => {
       ? desc.substring(0, MAX_LEN) + '…'
       : desc
 })
+
+function goToDetails() {
+  navigateTo(`/association/events/announcement/${props.announcement._id}`)
+}
 </script>

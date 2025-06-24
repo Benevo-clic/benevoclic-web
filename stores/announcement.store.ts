@@ -50,6 +50,7 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.error = null;
       try {
         this.currentAnnouncement = await $fetch<Announcement>(`/api/announcement/${id}`);
+        return this.currentAnnouncement;
       } catch (err: any) {
         this.error = err?.message || 'Erreur de récupération de l\'annonce';
         // throw err;
