@@ -240,5 +240,19 @@
         "requests": "My Requests",
         "dashboard": "Dashboard"
       }
+    },
+  "announcement": {
+    "title": "Announcement",
+    "no_announcements": "No announcements found",
+    "view_all": "View All Announcements",
+    "view_details": "View Details",
+    "read_more": "Read More",
+    "posted_on": "Posted on",
+    "delete_confirmation": {
+      "title": "Confirm Deletion",
+      "message": "Are you sure you want to delete this announcement? This action cannot be undone.",
+      "confirm": "Yes, delete",
+      "cancel": "Cancel"
     }
+  }
 }

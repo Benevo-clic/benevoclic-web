@@ -240,5 +240,21 @@
       "requests": "Mis solicitudes",
       "dashboard": "Tablero"
     }
+  },
+  "announcement": {
+    "title": "Anuncio",
+    "description": "Mantente informado sobre las últimas noticias y actualizaciones de la comunidad.",
+    "view_all": "Ver todo",
+    "no_announcements": "No hay anuncios disponibles en este momento.",
+    "view_details": "Ver detalles",
+    "read_more": "Leer más",
+    "posted_on": "Publicado el",
+    "delete_confirmation": {
+      "title": "Confirmar eliminación",
+      "message": "¿Estás seguro de que quieres eliminar este anuncio? Esta acción no se puede deshacer.",
+      "confirm": "Sí, eliminar",
+      "cancel": "Cancelar"
+    }
+
   }
 }

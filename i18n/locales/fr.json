@@ -240,5 +240,19 @@
       "requests": "Mes demandes",
       "dashboard": "Tableau de bord"
     }
+  },
+  "announcements": {
+    "title": "Annonces",
+    "no_announcements": "Aucune annonce pour le moment",
+    "view_all": "Voir toutes les annonces",
+    "view_details": "Voir les détails",
+    "read_more": "Lire la suite",
+    "posted_on": "Publié le",
+    "delete_confirmation": {
+      "title": "Confirmer la suppression",
+      "message": "Êtes-vous sûr de vouloir supprimer cette annonce ? Cette action est irréversible.",
+      "confirm": "Oui, supprimer l'annonce",
+      "cancel": "Annuler"
+    }
   }
 }

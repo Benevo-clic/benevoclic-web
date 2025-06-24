@@ -138,13 +138,14 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.loading = true;
       this.error = null;
       try {
-        await $fetch(`/api/announcement/${id}`, {
+        const reponse  = await $fetch(`/api/announcement/${id}`, {
           method: 'DELETE',
         });
         this.announcements = this.announcements.filter((a) => a._id !== id);
         if (this.currentAnnouncement?._id === id) {
           this.currentAnnouncement = null;
         }
+        return reponse;
       } catch (err: any) {
         this.error = err?.message || 'Erreur de suppression de l\'annonce';
         throw err;

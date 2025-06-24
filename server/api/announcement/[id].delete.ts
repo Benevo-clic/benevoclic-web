@@ -1,23 +1,27 @@
+import axios from "axios";
 import { defineEventHandler } from 'h3';
-import { mockAnnouncements } from './_db';
 
 export default defineEventHandler(async (event) => {
   const announcementId = event.context.params?.id;
+  const token = getCookie(event, 'auth_token');
+  const config = useRuntimeConfig();
 
-  if (!announcementId) {
-    throw createError({ statusCode: 400, statusMessage: 'ID manquant' });
+  try {
+    const response = await axios.delete<boolean>(
+        `${config.private.api_base_url}/announcements/${announcementId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+    );
+    return response.data;
+  }catch (error) {
+    console.error(`Error deleting announcement ${announcementId}: ${error.message}`);
+    throw createError({
+      statusCode: error.response?.status || 500,
+      statusMessage: error.response?.statusText || 'Erreur serveur',
+    });
   }
 
-  const index = mockAnnouncements.findIndex((a) => a.id === announcementId);
-
-  if (index === -1) {
-    throw createError({ statusCode: 404, statusMessage: 'Annonce non trouvée' });
-  }
-
-  mockAnnouncements.splice(index, 1);
-  
-  console.log('Annonce supprimée côté serveur:', announcementId);
-
-  setResponseStatus(event, 204); // Set HTTP status to 204 No Content
-  return;
 }); 

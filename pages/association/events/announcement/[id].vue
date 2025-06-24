@@ -8,7 +8,6 @@
       <div class="relative w-full aspect-[3/1] rounded-xl overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
         <img v-if="announcement?.announcementImage?.data" :src="coverImageUrl" alt="Photo de couverture" class="object-cover w-full h-full" />
         <div v-else class="w-full h-full flex items-center justify-center text-gray-400">Aucune image</div>
-        <button class="absolute bottom-2 right-2 btn btn-sm btn-primary" @click="openEditModal">Modifier l'évènement</button>
       </div>
 
       <!-- Infos principales -->
@@ -17,7 +16,6 @@
           <h1 class="text-2xl font-bold mb-2">{{ announcement?.nameEvent }}</h1>
           <div class="badge badge-soft"  :class="statusBadgeClass">{{ announcement?.status }}</div>
         </div>
-
         <div class="flex flex-wrap gap-2 text-sm text-gray-500 mb-2">
           <span>{{ formatDate(announcement?.dateEvent) }}</span>
           <span v-if="announcement?.hoursEvent">• {{ announcement.hoursEvent }}</span>
@@ -26,6 +24,11 @@
         <div class="mb-2">{{ announcement?.description }}</div>
         <div class="flex flex-wrap gap-2 mt-2">
           <span v-for="tag in announcement?.tags" :key="tag" class="badge badge-outline">{{ tag }}</span>
+        </div>
+        <!-- Boutons d'action -->
+        <div class="flex justify-end gap-2 mt-4">
+          <button class="btn btn-primary" @click="openEditModal">Modifier l'évènement</button>
+          <button class="btn btn-error" @click="showDeleteConfirmation">Supprimer</button>
         </div>
       </div>
 
@@ -46,12 +49,22 @@
       <!-- Modal édition annonce -->
       <AnnouncementEditForm v-if="editModalOpen" :announcement="announcement" @close="closeEditModal" @saved="refresh" />
     </div>
+    <dialog ref="deleteConfirmationModal" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">{{ $t('announcements.delete_confirmation.title') }}</h3>
+        <p class="py-4">{{ $t('announcements.delete_confirmation.message') }}</p>
+        <div class="modal-action">
+          <button @click="cancelDelete" class="btn">{{ $t('announcements.delete_confirmation.cancel') }}</button>
+          <button @click="confirmDelete" class="btn btn-error">{{ $t('announcements.delete_confirmation.confirm') }}</button>
+        </div>
+      </div>
+    </dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useAnnouncementStore } from '~/stores/announcement.store';
 import AnnouncementEditForm from '~/components/event/AnnouncementEditForm.vue';
 import VolunteersList from '~/components/event/VolunteersList.vue';
@@ -59,8 +72,11 @@ import ParticipantsList from '~/components/event/ParticipantsList.vue';
 import type { Announcement } from '~/common/interface/event.interface';
 import {definePageMeta} from "#imports";
 import {EventStatus} from "~/common/enums/event.enum";
+const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
+
 
 const route = useRoute();
+const router = useRouter();
 const announcementStore = useAnnouncementStore();
 const announcement = ref<Announcement | null>(null);
 const loading = ref(true);
@@ -83,12 +99,37 @@ async function fetchAnnouncement() {
 function openEditModal() {
   editModalOpen.value = true;
 }
+
+function showDeleteConfirmation() {
+  deleteConfirmationModal.value?.showModal()
+}
+
+
 function closeEditModal() {
   editModalOpen.value = false;
 }
+
 function refresh() {
   fetchAnnouncement();
   closeEditModal();
+}
+
+function cancelDelete() {
+  deleteConfirmationModal.value?.close()
+}
+
+function confirmDelete() {
+  // Close the modal
+  deleteConfirmationModal.value?.close()
+
+  // Proceed with account deletion
+  announcementDelete()
+}
+
+async function announcementDelete() {
+  if (!announcement.value) return;
+    await announcementStore.removeAnnouncement(announcement.value._id);
+    navigateTo('/association/events/association/manage');
 }
 
 const coverImageUrl = computed(() => {
