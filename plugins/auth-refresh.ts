@@ -13,6 +13,7 @@ export default defineNuxtPlugin(() => {
           interval = null
           return false
         }
+        console.log('Tokens are valid:', response.hasTokens)
         return response.hasTokens
       } catch (error) {
         if (interval) {
@@ -40,7 +41,7 @@ export default defineNuxtPlugin(() => {
 
     if (typeof window !== 'undefined') {
       const hasTokens = await checkTokens()
-      if (hasTokens) {
+      if (!hasTokens) {
         await refreshTokens()
         interval = setInterval(async () => {
           const hasValidTokens = await checkTokens()

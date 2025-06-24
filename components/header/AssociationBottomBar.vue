@@ -19,10 +19,6 @@ function handleAddNewEvent() {
   my_modal_3.value?.showModal();
 }
 
-function handlePastEvents() {
-  navigateTo('/association/events/association/past')
-}
-
 function handleManageEvents() {
   navigateTo('/association/events/association/manage')
 }
@@ -31,7 +27,7 @@ function handleDashboard() {
 }
 
 function handleRequests() {
-  navigateTo('/association/requests')
+  navigateTo('/association/events/association/requests')
 }
 
 function closeModal() {
