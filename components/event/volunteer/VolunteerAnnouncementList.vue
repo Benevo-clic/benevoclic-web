@@ -1,6 +1,9 @@
 <template>
   <div class="space-y-4">
-    <div v-if="props.error" class="p-4 text-red-600 bg-red-100 rounded-md">
+    <div v-if="props.loading" class="flex justify-center items-center h-32">
+      <span class="loading loading-bars loading-xl"></span>
+    </div>
+    <div v-else-if="props.error" class="p-4 text-red-600 bg-red-100 rounded-md">
       <p>Une erreur est survenue: {{ props.error }}</p>
     </div>
     <div v-else-if="props.announcements.length === 0" class="text-center text-gray-500">
@@ -30,6 +33,7 @@ const props = defineProps<
     {
       announcements: Announcement[];
       error: string | null;
+      loading: boolean;
     }
 >()
 
