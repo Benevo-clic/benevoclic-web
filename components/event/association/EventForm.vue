@@ -229,6 +229,7 @@ import {useAssociationAuth} from "~/composables/auth/associationAuth";
 
 const props = defineProps<{
   announcement?: Announcement | null;
+  loading?: boolean;
 }>();
 
 const {association} = useAssociationAuth()

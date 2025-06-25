@@ -2,6 +2,7 @@
 import { PlusCircle as PlusIcon, Calendar as CalendarIcon, ClipboardList as ClipboardList, HelpCircle as HelpIcon,LayoutDashboard as DashboardIcon } from 'lucide-vue-next'
 import { navigateTo, useRoute } from "#app";
 import { useAnnouncementStore } from '~/stores/announcement.store';
+import EventModalForm from "~/components/event/association/EventModalForm.vue";
 
 
 const {t} = useI18n()
