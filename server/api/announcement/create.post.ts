@@ -10,10 +10,23 @@ export default defineEventHandler(async (event) => {
 
     try {
         const url = `${config.private.api_base_url}/announcements`;
-
+        const form: CreateAnnouncementDto = {
+            description: body.description,
+            datePublication: body.datePublication,
+            dateEvent: body.dateEvent,
+            hoursEvent: body.hoursEvent,
+            nameEvent: body.nameEvent,
+            tags: body.tags,
+            associationId: body.associationId,
+            associationName: body.associationName,
+            locationAnnouncement: body.locationAnnouncement,
+            maxParticipants: body.maxParticipants,
+            status: body.status,
+            maxVolunteers: body.maxVolunteers
+        }
         const newAnnouncement = await axios.post(url,
             {
-                ...body,
+                ...form as CreateAnnouncementDto,
             },
             {
                 headers: {

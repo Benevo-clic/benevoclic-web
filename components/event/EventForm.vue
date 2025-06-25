@@ -223,7 +223,6 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch } from 'vue';
-import { useAnnouncementStore } from '~/stores/announcement.store';
 import type { Announcement } from '~/common/interface/event.interface';
 import { EventStatus } from '~/common/enums/event.enum';
 import {useAssociationAuth} from "~/composables/auth/associationAuth";
@@ -236,8 +235,7 @@ const {association} = useAssociationAuth()
 
 
 const emit = defineEmits(['submit', 'cancel']);
-const store = useAnnouncementStore();
-const { loading } = store;
+
 
 
 const statusOptions = Object.values(EventStatus).map(status => ({ label: status, value: status }));

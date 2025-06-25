@@ -5,9 +5,18 @@
     </div>
     <div v-else class="container mx-auto px-2 md:px-4 py-6 max-w-3xl">
       <!-- Photo de couverture -->
-      <div class="relative w-full aspect-[3/1] rounded-xl overflow-hidden mb-4 bg-gray-100 flex items-center justify-center">
+      <div class="relative w-full aspect-[3/1] rounded-xl overflow-hidden mb-4 bg-base-200 flex items-center justify-center">
         <img v-if="announcement?.announcementImage?.data" :src="coverImageUrl" alt="Photo de couverture" class="object-cover w-full h-full" />
-        <div v-else class="w-full h-full flex items-center justify-center text-gray-400">Aucune image</div>
+        <div v-else class="w-full h-full flex flex-col items-center justify-center text-base-content/60">
+          <div class="avatar placeholder mb-2">
+            <div class="bg-neutral text-neutral-content rounded-full w-16">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+          </div>
+          <p class="text-sm font-medium">Aucune image</p>
+        </div>
       </div>
 
       <!-- Infos principales -->
@@ -88,6 +97,8 @@ definePageMeta({
   layout: 'header',
 })
 
+onMounted(fetchAnnouncement);
+
 async function fetchAnnouncement() {
   console.log('Fetching announcement with ID:', route.params.id);
   if (route.params.id) {
@@ -147,7 +158,6 @@ function formatDate(dateString?: string) {
   return new Date(dateString).toLocaleDateString('fr-FR', options);
 }
 
-onMounted(fetchAnnouncement);
 
 const statusBadgeClass = computed(() => {
   switch (announcement.value?.status) {
