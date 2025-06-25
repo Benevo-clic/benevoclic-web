@@ -6,7 +6,7 @@
     <div v-else-if="props.announcements.length === 0" class="text-center text-gray-500">
       <p>Aucune annonce à afficher pour le moment.</p>
     </div>
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 xl1285:grid-cols-3 gap-4">
       <div class="col-span-full">
         <h2 class="text-lg font-semibold mb-0">
           {{ props.announcements.length }} annonces

@@ -11,6 +11,7 @@ export default {
     extend: {
       screens: {
         'custom774': '774px',
+        'xl1285': '1285px',
       },
     },
   },
