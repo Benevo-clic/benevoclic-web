@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <div ref="scrollContainer" class="relative">
     <div v-if="loading" class="flex justify-center items-center h-32">
       <span class="loading loading-bars loading-xl"></span>
     </div>
-    <div v-else class="container mx-auto px-2 md:px-4 py-6 max-w-3xl">
-      <!-- Photo de couverture -->
-      <div class="relative w-full aspect-[3/1] rounded-xl overflow-hidden mb-4 bg-base-200 flex items-center justify-center">
-        <img v-if="announcement?.announcementImage?.data" :src="coverImageUrl" alt="Photo de couverture" class="object-cover w-full h-full" />
+    <div v-else class="container mx-auto px-2 md:px-4 py-6 max-w-2xl">
+      <!-- Photo de couverture moderne -->
+      <div class="relative w-full aspect-[3/1] rounded-2xl overflow-hidden mb-6 bg-base-200 flex items-center justify-center shadow-md">
+        <img v-if="announcement?.announcementImage?.data" :src="coverImageUrl" alt="Photo de couverture" class="object-cover w-full h-full transition-transform duration-500" />
         <div v-else class="w-full h-full flex flex-col items-center justify-center text-base-content/60">
-          <div class="avatar placeholder mb-2">
-            <div class="bg-neutral text-neutral-content rounded-full w-16">
+          <div class="avatar placeholder mb-3">
+            <div class="bg-base-300 text-base-content rounded-full w-16">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
@@ -17,32 +17,61 @@
           </div>
           <p class="text-sm font-medium">Aucune image</p>
         </div>
+        <!-- Status badge overlay -->
+        <div class="absolute top-3 right-3">
+          <div class="badge badge-md" :class="statusBadgeClass">{{ announcement?.status }}</div>
+        </div>
       </div>
 
       <!-- Infos principales -->
-      <div class="bg-base-100 rounded-lg shadow-md p-4 mb-4">
-        <div class="flex items-center justify-between mb-2">
-          <h1 class="text-2xl font-bold mb-2">{{ announcement?.nameEvent }}</h1>
-          <div class="badge badge-soft"  :class="statusBadgeClass">{{ announcement?.status }}</div>
+      <div class="bg-base-100 rounded-xl shadow-lg p-6 mb-6 relative">
+        <div class="flex items-center gap-3 mb-2">
+          <div v-if="announcement?.associationLogo?.data" class="avatar">
+            <div class="w-10 h-10 rounded-full ring-2 ring-base-300">
+              <img :src="profileImageUrl" alt="Logo association" />
+            </div>
+          </div>
+          <div v-else class="avatar placeholder">
+            <div class="w-10 h-10 rounded-full bg-base-300 text-base-content">
+              <span class="text-xs font-bold">{{ announcement?.associationName?.charAt(0) || 'A' }}</span>
+            </div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-base font-semibold text-base-content truncate">{{ announcement?.associationName }}</p>
+          </div>
         </div>
-        <div class="flex flex-wrap gap-2 text-sm text-gray-500 mb-2">
-          <span>{{ formatDate(announcement?.dateEvent) }}</span>
-          <span v-if="announcement?.hoursEvent">• {{ announcement.hoursEvent }}</span>
-          <span v-if="announcement?.locationAnnouncement?.city">• {{ announcement.locationAnnouncement.city }}</span>
+        <h1 class="text-2xl font-bold mb-2 line-clamp-2">{{ announcement?.nameEvent }}</h1>
+        <div class="flex flex-wrap gap-2 text-sm text-base-content/70 mb-2">
+          <span class="flex items-center gap-1"><Calendar class="h-4 w-4 text-primary" />{{ formatDate(announcement?.dateEvent) }}</span>
+          <span v-if="announcement?.hoursEvent" class="flex items-center gap-1"><Clock class="h-4 w-4 text-primary" />{{ announcement.hoursEvent }}</span>
+          <span v-if="announcement?.locationAnnouncement?.city" class="flex items-center gap-1"><MapPin class="h-4 w-4 text-secondary" />{{ announcement.locationAnnouncement.city }}</span>
         </div>
-        <div class="mb-2">{{ announcement?.description }}</div>
+        <div class="mb-3 text-base-content/90">{{ announcement?.description }}</div>
         <div class="flex flex-wrap gap-2 mt-2">
-          <span v-for="tag in announcement?.tags" :key="tag" class="badge badge-outline">{{ tag }}</span>
+          <span v-for="tag in announcement?.tags" :key="tag" class="badge badge-outline badge-sm hover:badge-primary transition-colors">{{ tag }}</span>
+        </div>
+        <!-- Statistiques -->
+        <div class="flex gap-4 mt-4 mb-2">
+          <div class="flex items-center gap-1 text-xs">
+            <Users class="h-4 w-4 text-primary" />
+            <span class="font-medium">{{announcement?.nbParticipants}}/{{ announcement?.maxParticipants }}</span>
+            <span class="text-base-content/60">participants</span>
+          </div>
+          <div class="flex items-center gap-1 text-xs">
+            <HeartHandshake class="h-4 w-4 text-secondary" />
+            <span class="font-medium">{{announcement?.nbVolunteers}}/{{ announcement?.maxVolunteers }}</span>
+            <span class="text-base-content/60">bénévoles</span>
+          </div>
         </div>
         <!-- Boutons d'action -->
-        <div class="flex justify-end gap-2 mt-4">
-          <button class="btn btn-primary" @click="openEditModal">Modifier l'évènement</button>
-          <button class="btn btn-error" @click="showDeleteConfirmation">Supprimer</button>
+        <div class="flex justify-end gap-2 mt-4 absolute top-4 right-4">
+          <button class="btn btn-primary btn-sm" @click="openEditModal">Modifier</button>
+          <button class="btn btn-error btn-sm" @click="showDeleteConfirmation">Supprimer</button>
         </div>
       </div>
 
-      <!-- Onglets -->
-      <div role="tablist" class="tabs tabs-bordered mb-4">
+      <!-- Onglets modernes -->
+      <div role="tablist" class="tabs tabs-bordered mb-4 rounded-xl overflow-hidden bg-base-200">
         <a role="tab" :class="['tab', tab === 'participants' ? 'tab-active' : '']" @click="tab = 'participants'">Liste des participants</a>
         <a role="tab" :class="['tab', tab === 'volunteers' ? 'tab-active' : '']" @click="tab = 'volunteers'">Liste des bénévoles</a>
       </div>
@@ -68,21 +97,42 @@
         </div>
       </div>
     </dialog>
+
+    <!-- Indicateur scroll bas -->
+    <transition name="fade">
+      <div v-if="showScrollDown" class="fixed left-1/2 -translate-x-1/2 bottom-4 z-50 flex flex-col items-center pointer-events-none select-none">
+        <div class="bg-base-200/80 rounded-full shadow p-2 animate-bounce">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-label="Faire défiler vers le bas">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+    </transition>
+    <!-- Indicateur scroll haut -->
+    <transition name="fade">
+      <div v-if="showScrollUp" class="fixed left-1/2 -translate-x-1/2 top-4 z-50 flex flex-col items-center pointer-events-none select-none">
+        <div class="bg-base-200/80 rounded-full shadow p-2 animate-bounce rotate-180">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-label="Faire défiler vers le haut">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAnnouncementStore } from '~/stores/announcement.store';
-import AnnouncementEditForm from '~/components/event/AnnouncementEditForm.vue';
-import VolunteersList from '~/components/event/VolunteersList.vue';
-import ParticipantsList from '~/components/event/ParticipantsList.vue';
+import AnnouncementEditForm from '@/components/event/AnnouncementEditForm.vue';
+import VolunteersList from '@/components/event/VolunteersList.vue';
+import ParticipantsList from '@/components/event/ParticipantsList.vue';
 import type { Announcement } from '~/common/interface/event.interface';
 import {definePageMeta} from "#imports";
 import {EventStatus} from "~/common/enums/event.enum";
+import {HeartHandshake,Users,Calendar,Clock,MapPin} from 'lucide-vue-next'
 const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
-
 
 const route = useRoute();
 const router = useRouter();
@@ -92,6 +142,18 @@ const loading = ref(true);
 const editModalOpen = ref(false);
 const tab = ref<'participants' | 'volunteers'>('participants');
 
+const profileImageUrl = computed(() => {
+  const img = announcement.value?.associationLogo;
+  if (img?.data && img.contentType) {
+    return `data:${img.contentType};base64,${img.data}`
+  }
+  return ''
+})
+
+const scrollContainer = ref<HTMLElement | null>(null)
+const showScrollDown = ref(false)
+const showScrollUp = ref(false)
+
 definePageMeta({
   middleware: ['auth'],
   layout: 'header',
@@ -100,7 +162,6 @@ definePageMeta({
 onMounted(fetchAnnouncement);
 
 async function fetchAnnouncement() {
-  console.log('Fetching announcement with ID:', route.params.id);
   if (route.params.id) {
     await announcementStore.fetchAnnouncementById(route.params.id as string);
     announcement.value = announcementStore.currentAnnouncement || null;
@@ -116,7 +177,6 @@ function showDeleteConfirmation() {
   deleteConfirmationModal.value?.showModal()
 }
 
-
 function closeEditModal() {
   editModalOpen.value = false;
 }
@@ -131,10 +191,7 @@ function cancelDelete() {
 }
 
 function confirmDelete() {
-  // Close the modal
   deleteConfirmationModal.value?.close()
-
-  // Proceed with account deletion
   announcementDelete()
 }
 
@@ -158,7 +215,6 @@ function formatDate(dateString?: string) {
   return new Date(dateString).toLocaleDateString('fr-FR', options);
 }
 
-
 const statusBadgeClass = computed(() => {
   switch (announcement.value?.status) {
     case EventStatus.ACTIVE:
@@ -172,4 +228,37 @@ const statusBadgeClass = computed(() => {
   }
 });
 
-</script> 
+function checkScrollIndicators() {
+  const el = document.documentElement;
+  // Si le contenu dépasse la fenêtre
+  if (el.scrollHeight > window.innerHeight + 10) {
+    showScrollDown.value = (window.scrollY + window.innerHeight) < (el.scrollHeight - 10);
+    showScrollUp.value = window.scrollY > 10;
+  } else {
+    showScrollDown.value = false;
+    showScrollUp.value = false;
+  }
+}
+
+onMounted(() => {
+  checkScrollIndicators();
+  window.addEventListener('scroll', checkScrollIndicators, { passive: true });
+  window.addEventListener('resize', checkScrollIndicators);
+});
+
+// Nettoyage
+onUnmounted(() => {
+  window.removeEventListener('scroll', checkScrollIndicators);
+  window.removeEventListener('resize', checkScrollIndicators);
+});
+
+</script>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+</style> 
