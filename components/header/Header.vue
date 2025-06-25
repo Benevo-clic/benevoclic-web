@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { Sun as SunIcon, Moon as MoonIcon, Bell as BellIcon, X as XIcon } from 'lucide-vue-next'
+import { Sun as SunIcon, Moon as MoonIcon, Bell as BellIcon} from 'lucide-vue-next'
 
 import {useUser} from "~/composables/auth/useUser";
 import NavigationActions from "~/components/header/utils/NavigationActions.vue";
@@ -23,6 +23,10 @@ const showLoginModal = ref(false)
 const loginModal = ref<HTMLDialogElement | null>(null)
 const isLoading = ref(true)
 const isAssociationComponentAvailable = ref(true) // Flag to track if association component is available
+
+onUnmounted(() => {
+  mediaQuery.removeEventListener('change', handler)
+})
 
 const props = defineProps<
     {
@@ -84,7 +88,10 @@ onMounted(async () => {
     isLoading.value = false
   }
 
+
   const mediaQuery = window.matchMedia('(min-width: 1253px)')
+
+
 
   const handler = (e: MediaQueryListEvent) => {
     if (e.matches) {
@@ -98,9 +105,7 @@ onMounted(async () => {
     menuOpen.value = false
   }
 
-  onUnmounted(() => {
-    mediaQuery.removeEventListener('change', handler)
-  })
+
 })
 
 

@@ -121,10 +121,10 @@ export const useAnnouncementStore = defineStore('announcement', {
         });
         const index = this.announcements.findIndex((a) => a._id === id);
         if (index !== -1) {
-          this.announcements[index] = response;
+          this.announcements[index] = {...response, _id: id}; // Update the existing announcement
         }
         if (this.currentAnnouncement?._id === id) {
-          this.currentAnnouncement = response;
+          this.currentAnnouncement = {...response, _id: id};
         }
       } catch (err: any) {
         this.error = err?.message || 'Erreur de mise à jour de l\'annonce';

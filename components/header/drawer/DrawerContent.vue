@@ -24,6 +24,11 @@ const toggleBodyScroll = (disable: boolean) => {
   }
 }
 
+onUnmounted(() => {
+  toggleBodyScroll(false)
+})
+
+
 watch(() => props.menuOpen, (isOpen) => {
   toggleBodyScroll(isOpen)
 })
@@ -34,9 +39,7 @@ onMounted(() => {
   }
 })
 
-onUnmounted(() => {
-  toggleBodyScroll(false)
-})
+
 
 function handleCloseDrawer() {
   emit('closeDrawer')

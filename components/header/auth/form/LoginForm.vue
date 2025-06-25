@@ -75,7 +75,6 @@ watch(
     () => isRegister,
     (newVal) => {
       isRegisterMode.value = newVal
-      console.log('watch triggered:', isRegisterMode.value)
     },
     { immediate: true }
 )

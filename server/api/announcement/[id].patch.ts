@@ -1,26 +1,30 @@
-import { defineEventHandler, readBody } from 'h3';
-import { mockAnnouncements } from './_db';
-import type { Announcement } from '~/common/interface/event.interface';
+import { defineEventHandler } from 'h3';
+
 
 export default defineEventHandler(async (event) => {
   const announcementId = event.context.params?.id;
-  const body = await readBody(event) as Partial<Announcement>;
+  const token = getCookie(event, 'auth_token');
+  const config = useRuntimeConfig();
+  const body = await readBody(event);
 
-  if (!announcementId) {
-    throw createError({ statusCode: 400, statusMessage: 'ID manquant' });
+  try {
+    const response = await $fetch<boolean>(
+      `${config.private.api_base_url}/announcements/${announcementId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body,
+      }
+    );
+    return response.data;
+  }catch (error) {
+    console.error(`Error updating announcement ${announcementId}: ${error.message}`);
+    throw createError({
+      statusCode: error.response?.status || 500,
+      statusMessage: error.response?.statusText || 'Erreur serveur',
+    });
   }
-
-  const index = mockAnnouncements.findIndex((a) => a.id === announcementId);
-
-  if (index === -1) {
-    throw createError({ statusCode: 404, statusMessage: 'Annonce non trouvée' });
-  }
-
-  // Update the announcement with the new data
-  const updatedAnnouncement = { ...mockAnnouncements[index], ...body };
-  mockAnnouncements[index] = updatedAnnouncement;
-  
-  console.log('Annonce mise à jour côté serveur:', updatedAnnouncement);
-
-  return updatedAnnouncement;
 }); 

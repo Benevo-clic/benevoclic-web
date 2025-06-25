@@ -269,7 +269,7 @@ watch(() => props.announcement, (newVal) => {
   if (newVal) {
     Object.assign(formState, {
         ...newVal,
-        dateEvent: newVal.dateEvent.split('T')[0], // Format date for input
+        dateEvent: newVal.dateEvent ? newVal.dateEvent.split('T')[0] : '',
         locationAnnouncement: newVal.locationAnnouncement || createInitialState().locationAnnouncement,
         tags: newVal.tags || [],
     });

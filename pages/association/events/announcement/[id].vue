@@ -89,6 +89,7 @@ definePageMeta({
 })
 
 async function fetchAnnouncement() {
+  console.log('Fetching announcement with ID:', route.params.id);
   if (route.params.id) {
     await announcementStore.fetchAnnouncementById(route.params.id as string);
     announcement.value = announcementStore.currentAnnouncement || null;
