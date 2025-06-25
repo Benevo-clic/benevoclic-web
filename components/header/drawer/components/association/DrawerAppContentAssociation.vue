@@ -7,7 +7,7 @@ import {
   CircleHelp,
   UserRound,
   PlusIcon,
-  HistoryIcon,
+  ClipboardList,
   CalendarIcon,
   Globe,
   Settings,
@@ -152,11 +152,11 @@ function toggleLanguageMenu() {
     <div class="space-y-2" v-if="!props.isAuthenticated">
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.activity.title')}}</h4>
       <ul class="space-y-1">
-        <li><button @click="navigateTo('/association/activity/newEvent'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/activity/newEvent') ? 'bg-base-200 border-l-4 border-primary' : '']"><PlusIcon class="w-5 h-5"/>{{t('drawer-content.activity.new-event')}}</button></li>
         <li><button @click="navigateTo('/association/activity/dashboard'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/activity/dashboard') ? 'bg-base-200 border-l-4 border-primary' : '']"><DashboardIcon class="w-5 h-5"/>{{t('drawer-content.activity.dashboard')}}</button></li>
-        <li><button @click="navigateTo('/association/activity/historyEvent'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/activity/historyEvent') ? 'bg-base-200 border-l-4 border-primary' : '']"><HistoryIcon class="w-5 h-5"/>{{t('drawer-content.activity.history-event')}}</button></li>
-        <li><button @click="navigateTo('/association/activity/manageEvent'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/activity/manageEvent') ? 'bg-base-200 border-l-4 border-primary' : '']"><CalendarIcon class="w-5 h-5"/>{{t('drawer-content.activity.manage-event')}}</button></li>
+        <li><button @click="navigateTo('/association/events/association/manage'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/events/association/manage') ? 'bg-base-200 border-l-4 border-primary' : '']"><CalendarIcon class="w-5 h-5"/>{{t('drawer-content.activity.manage-event')}}</button></li>
+        <li><button @click="navigateTo('/association/events/association/requests'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/events/association/requests') ? 'bg-base-200 border-l-4 border-primary' : '']"><ClipboardList class="w-5 h-5"/>{{t('drawer-content.activity.requests')}}</button></li>
       </ul>
+
     </div>
     <!-- Notifications & Support -->
     <div class="space-y-2" v-if="!props.isAuthenticated">

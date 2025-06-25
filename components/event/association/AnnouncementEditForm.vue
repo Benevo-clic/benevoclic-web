@@ -65,6 +65,16 @@
             <input v-model="form.hoursEvent" type="time" class="input input-bordered w-full" required />
           </div>
         </div>
+        <div class="mb-2 flex gap-2">
+          <div class="flex-1">
+            <label class="block mb-1">Nombre max. de participants</label>
+            <input v-model.number="form.maxParticipants" type="number" min="0" class="input input-bordered w-full" />
+          </div>
+          <div class="flex-1">
+            <label class="block mb-1">Nombre max. de bénévoles</label>
+            <input v-model.number="form.maxVolunteers" type="number" min="0" class="input input-bordered w-full" />
+          </div>
+        </div>
         <div class="mb-2">
           <label class="block mb-1">Tags (séparés par des virgules)</label>
           <input v-model="tagsInput" class="input input-bordered w-full" />
@@ -126,8 +136,10 @@ const form = ref<Partial<Announcement>>({
   dateEvent: '',
   hoursEvent: '',
   tags: [],
-  locationAnnouncement: { city: '' , postalCode: '' , address: '',country: ''},
-  status: '',
+  locationAnnouncement: { address: '', city: '', postalCode: '', country: '' },
+  status: EventStatus.INACTIVE,
+  maxParticipants: 0,
+  maxVolunteers: 0,
 });
 const tagsInput = ref('');
 const imageFile = ref<File|null>(null);
@@ -139,7 +151,21 @@ const statusOptions = Object.values(EventStatus).map(status => ({ label: status,
 
 watch(() => props.announcement, (a) => {
   if (a) {
-    form.value = { ...a, tags: a.tags ? [...a.tags] : [], locationAnnouncement: { ...a.locationAnnouncement }, status: a.status };
+    form.value = {
+      ...a,
+      tags: a.tags ? [...a.tags] : [],
+      locationAnnouncement: {
+        address: a.locationAnnouncement?.address || '',
+        city: a.locationAnnouncement?.city || '',
+        postalCode: a.locationAnnouncement?.postalCode || '',
+        country: a.locationAnnouncement?.country || '',
+        lat: a.locationAnnouncement?.lat,
+        lng: a.locationAnnouncement?.lng,
+      },
+      status: a.status || EventStatus.INACTIVE,
+      maxParticipants: a.maxParticipants ?? 0,
+      maxVolunteers: a.maxVolunteers ?? 0,
+    };
     tagsInput.value = a.tags ? a.tags.join(', ') : '';
     if (a.announcementImage?.data && a.announcementImage?.contentType) {
       coverPhotoPreview.value = `data:${a.announcementImage.contentType};base64,${a.announcementImage.data}`;
@@ -147,7 +173,18 @@ watch(() => props.announcement, (a) => {
       coverPhotoPreview.value = null;
     }
   } else {
-    form.value = { _id: '', nameEvent: '', description: '', dateEvent: '', hoursEvent: '', tags: [], locationAnnouncement: { city: '' }, status: 'PENDING' };
+    form.value = {
+      _id: '',
+      nameEvent: '',
+      description: '',
+      dateEvent: '',
+      hoursEvent: '',
+      tags: [],
+      locationAnnouncement: { address: '', city: '', postalCode: '', country: '' },
+      status: EventStatus.INACTIVE,
+      maxParticipants: 0,
+      maxVolunteers: 0,
+    };
     tagsInput.value = '';
     coverPhotoPreview.value = null;
   }
@@ -185,28 +222,22 @@ async function save() {
   if (form.value._id && props.announcement) {
     const updatedFields: any = {};
     const original = props.announcement;
-
-    for (const key of ['nameEvent', 'description', 'dateEvent', 'hoursEvent', 'status']) {
+    const keys: (keyof Announcement)[] = ['nameEvent', 'description', 'dateEvent', 'hoursEvent', 'status', 'maxParticipants', 'maxVolunteers'];
+    for (const key of keys) {
       if (form.value[key] !== original[key]) {
         updatedFields[key] = form.value[key];
       }
     }
-
     if (JSON.stringify(form.value.tags) !== JSON.stringify(original.tags)) {
       updatedFields.tags = form.value.tags;
     }
-
     if (JSON.stringify(form.value.locationAnnouncement) !== JSON.stringify(original.locationAnnouncement)) {
       updatedFields.locationAnnouncement = form.value.locationAnnouncement;
     }
-
     if (Object.keys(updatedFields).length > 0) {
-      console.log('Updating announcement with fields:', updatedFields);
       await store.updateAnnouncement(form.value._id, updatedFields);
     }
-
     if (imageFile.value) {
-      console.log('Uploading new cover image');
       const base64 = await fileToBase64(imageFile.value);
       await store.uploadImageCover(base64);
     }

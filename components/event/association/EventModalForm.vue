@@ -2,7 +2,7 @@
 import { useAnnouncementStore } from '~/stores/announcement.store';
 import type { CreateAnnouncementDto} from '~/common/interface/event.interface';
 import {useAnnouncement} from "~/composables/useAnnouncement";
-import UploadCoverForm from "~/components/event/UploadCoverForm.vue";
+import UploadCoverForm from "~/components/event/association/UploadCoverForm.vue";
 
 const store = useAnnouncementStore();
 const announcementAuth = useAnnouncement();

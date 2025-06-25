@@ -43,8 +43,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import ActivityMenu from '~/components/activity/ActivityMenu.vue'
-import EventList from '~/components/event/EventList.vue'
-import EventForm from '~/components/event/EventForm.vue'
+import EventList from '~/components/event/association/EventList.vue'
+import EventForm from '~/components/event/association/EventForm.vue'
 import { useAnnouncementStore } from '~/stores/announcement.store'
 import { useAssociationAuthStore } from '~/stores/association.store'
 import type { Announcement } from '~/common/interface/event.interface'

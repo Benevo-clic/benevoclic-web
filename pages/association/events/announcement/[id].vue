@@ -125,9 +125,9 @@
 import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAnnouncementStore } from '~/stores/announcement.store';
-import AnnouncementEditForm from '@/components/event/AnnouncementEditForm.vue';
-import VolunteersList from '@/components/event/VolunteersList.vue';
-import ParticipantsList from '@/components/event/ParticipantsList.vue';
+import AnnouncementEditForm from '~/components/event/association/AnnouncementEditForm.vue';
+import VolunteersList from '~/components/event/association/VolunteersList.vue';
+import ParticipantsList from '~/components/event/association/ParticipantsList.vue';
 import type { Announcement } from '~/common/interface/event.interface';
 import {definePageMeta} from "#imports";
 import {EventStatus} from "~/common/enums/event.enum";

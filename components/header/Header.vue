@@ -24,8 +24,13 @@ const loginModal = ref<HTMLDialogElement | null>(null)
 const isLoading = ref(true)
 const isAssociationComponentAvailable = ref(true) // Flag to track if association component is available
 
+let mediaQuery: MediaQueryList | undefined;
+let handler: ((e: MediaQueryListEvent) => void) | undefined;
+
 onUnmounted(() => {
-  mediaQuery.removeEventListener('change', handler)
+  if (mediaQuery && handler) {
+    mediaQuery.removeEventListener('change', handler)
+  }
 })
 
 const props = defineProps<
@@ -88,24 +93,16 @@ onMounted(async () => {
     isLoading.value = false
   }
 
-
-  const mediaQuery = window.matchMedia('(min-width: 1253px)')
-
-
-
-  const handler = (e: MediaQueryListEvent) => {
+  mediaQuery = window.matchMedia('(min-width: 1253px)')
+  handler = (e: MediaQueryListEvent) => {
     if (e.matches) {
       menuOpen.value = false
     }
   }
-
   mediaQuery.addEventListener('change', handler)
-
   if (mediaQuery.matches) {
     menuOpen.value = false
   }
-
-
 })
 
 

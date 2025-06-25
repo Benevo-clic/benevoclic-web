@@ -8,6 +8,7 @@ import {
     sendEmailVerification,
     onIdTokenChanged,
 } from "firebase/auth";
+import { useNuxtApp } from '#app';
 
 interface RegisterState {
     loading: boolean;
@@ -77,6 +78,7 @@ export const useRegisterStore = defineStore('register', {
                             path: '/auth/registerAssociation',
                         })
                 }
+                useNuxtApp().$refreshAuth();
 
             } catch (error) {
                 this.error = "Une erreur est survenue lors de l'inscription"

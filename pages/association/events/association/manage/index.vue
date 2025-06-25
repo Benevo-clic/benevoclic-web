@@ -25,8 +25,8 @@
 
 <script setup lang="ts">
 import {definePageMeta} from "#imports";
-import ReadOnlyEventList from '~/components/event/ReadOnlyEventList.vue';
-import EventFilters from '~/components/event/EventFilters.vue';
+import ReadOnlyEventList from '~/components/event/association/ReadOnlyEventList.vue';
+import EventFilters from '~/components/event/association/EventFilters.vue';
 import { useAnnouncement } from "~/composables/useAnnouncement";
 
 definePageMeta({

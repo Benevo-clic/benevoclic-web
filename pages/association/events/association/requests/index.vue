@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import RequestItem from '~/components/event/RequestItem.vue';
+import RequestItem from '~/components/event/association/RequestItem.vue';
 import {definePageMeta} from "#imports";
 
 definePageMeta({

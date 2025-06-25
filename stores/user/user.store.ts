@@ -10,6 +10,7 @@ import {
   updatePassword
 } from "firebase/auth";
 import {RoleUser} from "~/common/enums/role.enum";
+import { useNuxtApp } from '#app';
 
 
 
@@ -58,6 +59,7 @@ export const useUserStore = defineStore('auth', {
 
         if(response.idToken) {
           await this.fetchUser()
+          useNuxtApp().$refreshAuth();
           if(this.user?.role === 'VOLUNTEER') {
             navigateTo('/volunteer/dashboard')
           } else if(this.user?.role === 'ASSOCIATION') {
@@ -183,6 +185,7 @@ export const useUserStore = defineStore('auth', {
         if(decodedPayload.role){
             await this.fetchUserGoogle({idToken, refreshToken: user.refreshToken, uid: user.uid});
             await this.fetchUser();
+            useNuxtApp().$refreshAuth();
             if(this.user?.role === 'VOLUNTEER') {
               navigateTo('/volunteer/dashboard')
             } else if(this.user?.role === 'ASSOCIATION') {
