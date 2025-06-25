@@ -61,7 +61,7 @@ export const useUserStore = defineStore('auth', {
           await this.fetchUser()
           useNuxtApp().$refreshAuth();
           if(this.user?.role === 'VOLUNTEER') {
-            navigateTo('/volunteer/dashboard')
+            navigateTo('/volunteer')
           } else if(this.user?.role === 'ASSOCIATION') {
             navigateTo('/association/dashboard')
           } else {
@@ -187,7 +187,7 @@ export const useUserStore = defineStore('auth', {
             await this.fetchUser();
             useNuxtApp().$refreshAuth();
             if(this.user?.role === 'VOLUNTEER') {
-              navigateTo('/volunteer/dashboard')
+              navigateTo('/volunteer')
             } else if(this.user?.role === 'ASSOCIATION') {
               navigateTo('/association/dashboard')
             } else {

@@ -39,7 +39,6 @@ const loading = computed(() => store.loading);
 const error = computed(() => store.error);
 
 onMounted(() => {
-  console.log('Fetching announcements for association:', user.value?.userId);
   store.fetchAnnouncements(user.value?.userId);
 });
 </script> 

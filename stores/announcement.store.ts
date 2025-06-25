@@ -44,6 +44,22 @@ export const useAnnouncementStore = defineStore('announcement', {
         this.loading = false;
       }
     },
+    async fetchAllAnnouncements() {
+        this.loading = true;
+        this.error = null;
+        try {
+            this.announcements = await $fetch<Announcement[]>('/api/announcement/getAllAnnouncements');
+            if (!this.announcements || this.announcements.length === 0) {
+            this.error = 'Aucune annonce trouvée';
+            }
+            return this.announcements;
+        } catch (err: any) {
+            this.error = err?.message || 'Erreur de récupération des annonces';
+            // throw err; // Decide if you want to re-throw
+        } finally {
+            this.loading = false;
+        }
+    },
 
     async fetchAnnouncementById(id: string) {
       this.loading = true;

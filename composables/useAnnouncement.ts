@@ -11,14 +11,18 @@ export const useAnnouncement = () => {
     onMounted(async () => {
             if(!user.value){
                 await fetchUser();
-            }
+            }else if(user.value.role === "ASSOCIATION"){
             await announcementStore.fetchAnnouncements(user.value?.userId);
+            }else {
+                await announcementStore.fetchAllAnnouncements();
+            }
     })
 
     return {
         createAnnouncement: announcementStore.createAnnouncement,
         uploadImageCover: announcementStore.uploadImageCover,
         getAnnouncements: computed(() => announcementStore.getAnnouncements),
+        fetchAllAnnouncements: announcementStore.fetchAllAnnouncements,
         fetchAnnouncements: announcementStore.fetchAnnouncements,
         fetchAnnouncementById: announcementStore.fetchAnnouncementById,
         getCurrentAnnouncement: announcementStore.getCurrentAnnouncement,

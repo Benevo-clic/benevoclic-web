@@ -29,7 +29,7 @@ onMounted(async () => {
 
   // Redirect based on role
   if (userRole.value === 'VOLUNTEER') {
-    navigateTo('/volunteer/dashboard');
+    navigateTo('/volunteer');
   } else if (userRole.value === 'ASSOCIATION') {
     navigateTo('/association/dashboard');
   } else {
