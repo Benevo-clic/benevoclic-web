@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto px-4 py-6 max-w-screen-xl w-full">
+  <div class="mx-auto px-4 py-6 max-w-screen-2xl w-full">
       <div class="container mx-auto px-4 w-full">
         <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
           <div class="flex flex-col items-center w-full">
@@ -7,15 +7,16 @@
           </div>
         </div>
       </div>
-      <div class="container mx-auto px-4 py-4">
-        <div class="bg-base-100 rounded-lg shadow-md p-6">
-          <ReadOnlyEventList
-              :announcements="announcements.value"
-              :error="error.value"
-              :loading="loading.value"
-          />
-        </div>
+    <div class="mx-auto px-4 py-5 max-w-10xl">
+      <div class="bg-base-100 rounded-2xl shadow-md p-6">
+        <ReadOnlyEventList
+            :announcements="announcements.value"
+            :error="error.value"
+            :loading="loading.value"
+        />
       </div>
+    </div>
+
   </div>
 </template>
 

@@ -1,27 +1,25 @@
 <template>
-  <div class="mx-auto px-4 py-6 max-w-screen-xl w-full">
-      <div class="container mx-auto px-4 w-full">
-        <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
-          <div class="flex flex-col items-center w-full">
-            <VolunteerEventFilters class="mb-4"
-                                   @map="() => {}"
-                                   @sort="() => {}"
-                                   @location="() => {}"
-                                   @type="() => {}"
-                                   @duration="() => {}"
-                                   @filters="() => {}"
-            />
-          </div>
-        </div>
+  <div class="mx-auto px-4 py-6 max-w-screen-2xl w-full">
+    <!-- Section filtres -->
+    <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
+      <div class="flex flex-col items-center w-full">
+        <VolunteerEventFilters
+            class="mb-4 w-full"
+            @map="() => {}"
+            @sort="() => {}"
+            @location="() => {}"
+            @type="() => {}"
+            @duration="() => {}"
+            @filters="() => {}"
+        />
       </div>
-      <div class="container mx-auto px-4 py-4">
-        <div class="bg-base-100 rounded-lg shadow-md p-6">
+    </div>
+    <div class="bg-base-100 rounded-lg shadow-md p-6 w-full mt-4">
           <VolunteerAnnouncementList
               :announcements="announcements.value"
               :error="error.value"
               :loading="loading.value"
           />
-        </div>
       </div>
   </div>
 </template>

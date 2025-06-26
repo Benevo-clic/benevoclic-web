@@ -1,78 +1,89 @@
 <template>
-  <div class="w-full flex justify-center">
-    <!-- Desktop : tous les filtres visibles -->
-    <div class="hidden md:flex gap-2 items-center">
-      <button class="btn btn-outline rounded-full flex items-center gap-2 min-w-max" @click="$emit('map')">
-        <Map class="w-5 h-5" />
+  <div class="w-full flex flex-wrap justify-center gap-2">
+    <!-- Desktop -->
+    <div class="hidden md:flex flex-wrap gap-2 items-center justify-center w-full max-w-full">
+      <button class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max" @click="$emit('map')">
+        <Map class="w-4 h-4" />
         Carte
       </button>
-      <button class="btn btn-outline rounded-full flex items-center gap-2 min-w-max" @click="$emit('sort')">
-        <SortAsc class="w-5 h-5" />
+      <button class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max" @click="$emit('sort')">
+        <SortAsc class="w-4 h-4" />
         Trier par
       </button>
+
+      <!-- Localisation -->
       <div class="dropdown dropdown-bottom">
-        <button tabindex="0" class="btn btn-outline rounded-full flex items-center gap-2 min-w-max">
-          <MapPin class="w-5 h-5" />
+        <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max">
+          <MapPin class="w-4 h-4" />
           Localisation
-          <ChevronDown class="w-4 h-4" />
+          <ChevronDown class="w-3 h-3" />
         </button>
-        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+        <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
           <li><a @click="$emit('location', 'Paris')">Paris</a></li>
           <li><a @click="$emit('location', 'Lyon')">Lyon</a></li>
           <li><a @click="$emit('location', 'Marseille')">Marseille</a></li>
         </ul>
       </div>
+
+      <!-- Type d'association -->
       <div class="dropdown dropdown-bottom">
-        <button tabindex="0" class="btn btn-outline rounded-full flex items-center gap-2 min-w-max">
+        <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max">
           Type d'association
-          <ChevronRight class="w-4 h-4" />
+          <ChevronRight class="w-3 h-3" />
         </button>
-        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+        <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
           <li><a @click="$emit('type', 'Humanitaire')">Humanitaire</a></li>
           <li><a @click="$emit('type', 'Environnement')">Environnement</a></li>
           <li><a @click="$emit('type', 'Sport')">Sport</a></li>
         </ul>
       </div>
+
+      <!-- Durée -->
       <div class="dropdown dropdown-bottom">
-        <button tabindex="0" class="btn btn-outline rounded-full flex items-center gap-2 min-w-max">
+        <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max">
           Durée de la mission
-          <ChevronRight class="w-4 h-4" />
+          <ChevronRight class="w-3 h-3" />
         </button>
-        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+        <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
           <li><a @click="$emit('duration', '1 jour')">1 jour</a></li>
           <li><a @click="$emit('duration', '1 semaine')">1 semaine</a></li>
           <li><a @click="$emit('duration', '1 mois')">1 mois</a></li>
         </ul>
       </div>
-      <button class="btn btn-outline rounded-full flex items-center gap-2 min-w-max" @click="$emit('filters')">
-        <SlidersHorizontal class="w-5 h-5" />
+
+      <!-- Filtres -->
+      <button class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max" @click="$emit('filters')">
+        <SlidersHorizontal class="w-4 h-4" />
         Filtres
       </button>
     </div>
-    <!-- Mobile : Carte, Trier par visibles, le reste dans Filtres -->
-    <div class="flex md:hidden gap-2 items-center w-full justify-center">
-      <button class="btn btn-outline rounded-full flex items-center gap-2 min-w-max" @click="$emit('map')">
-        <Map class="w-5 h-5" />
+
+    <!-- Mobile -->
+    <div class="flex md:hidden flex-wrap gap-2 items-center justify-center w-full max-w-full">
+      <button class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max" @click="$emit('map')">
+        <Map class="w-4 h-4" />
         Carte
       </button>
-      <button class="btn btn-outline rounded-full flex items-center gap-2 min-w-max" @click="$emit('sort')">
-        <SortAsc class="w-5 h-5" />
+      <button class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max" @click="$emit('sort')">
+        <SortAsc class="w-4 h-4" />
         Trier par
       </button>
+
+      <!-- Dropdown Filtres Mobile -->
       <div class="dropdown dropdown-bottom">
-        <button tabindex="0" class="btn btn-outline rounded-full flex items-center gap-2 min-w-max">
-          <SlidersHorizontal class="w-5 h-5" />
+        <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max">
+          <SlidersHorizontal class="w-4 h-4" />
           Filtres
         </button>
-        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+        <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
           <li>
             <div class="dropdown dropdown-right">
-              <button tabindex="0" class="btn btn-outline rounded-full flex items-center gap-2 min-w-max w-full">
-                <MapPin class="w-5 h-5" />
+              <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
+                <MapPin class="w-4 h-4" />
                 Localisation
-                <ChevronDown class="w-4 h-4" />
+                <ChevronDown class="w-3 h-3" />
               </button>
-              <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+              <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
                 <li><a @click="$emit('location', 'Paris')">Paris</a></li>
                 <li><a @click="$emit('location', 'Lyon')">Lyon</a></li>
                 <li><a @click="$emit('location', 'Marseille')">Marseille</a></li>
@@ -81,11 +92,11 @@
           </li>
           <li>
             <div class="dropdown dropdown-right">
-              <button tabindex="0" class="btn btn-outline rounded-full flex items-center gap-2 min-w-max w-full">
+              <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
                 Type d'association
-                <ChevronRight class="w-4 h-4" />
+                <ChevronRight class="w-3 h-3" />
               </button>
-              <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+              <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
                 <li><a @click="$emit('type', 'Humanitaire')">Humanitaire</a></li>
                 <li><a @click="$emit('type', 'Environnement')">Environnement</a></li>
                 <li><a @click="$emit('type', 'Sport')">Sport</a></li>
@@ -94,11 +105,11 @@
           </li>
           <li>
             <div class="dropdown dropdown-right">
-              <button tabindex="0" class="btn btn-outline rounded-full flex items-center gap-2 min-w-max w-full">
+              <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
                 Durée de la mission
-                <ChevronRight class="w-4 h-4" />
+                <ChevronRight class="w-3 h-3" />
               </button>
-              <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+              <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
                 <li><a @click="$emit('duration', '1 jour')">1 jour</a></li>
                 <li><a @click="$emit('duration', '1 semaine')">1 semaine</a></li>
                 <li><a @click="$emit('duration', '1 mois')">1 mois</a></li>
