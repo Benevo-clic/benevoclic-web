@@ -15,11 +15,12 @@
           {{ props.announcements.length }} annonces
         </h2>
       </div>
-
       <VolunteerAnnouncementCard
           v-for="announcement in props.announcements"
           :key="announcement._id"
           :announcement="announcement"
+          :is-favorite="favoriteIds.includes(announcement._id)"
+          @favorite="toggleFavorite"
       />
     </div>
   </div>
@@ -28,6 +29,9 @@
 <script setup lang="ts">
 import type {Announcement} from "~/common/interface/event.interface";
 import VolunteerAnnouncementCard from "~/components/event/volunteer/VolunteerAnnouncementCard.vue";
+import {useFavoritesAnnouncement} from "~/composables/useFavoritesAnnouncement";
+import {useUser} from "~/composables/auth/useUser";
+import {computed} from 'vue'
 
 const props = defineProps<
     {
@@ -36,7 +40,42 @@ const props = defineProps<
       loading: boolean;
     }
 >()
+const useFavorite = useFavoritesAnnouncement();
+const { user } = useUser()
 
 
+const favoriteIds = computed(() => useFavorite.getFavorites.value.map(fav => fav.announcementId));
+
+async function refreshFavorites() {
+  if (!user.value) return
+  await useFavorite.fetchAllFavoritesOfVolunteer(user.value.userId)
+}
+
+async function addFavorite( announcementId: string , volunteerId: string) {
+  try {
+    await useFavorite.addFavorite(announcementId, volunteerId);
+  } catch (error) {
+    console.error("Error adding favorite:", error);
+  }
+}
+
+async function removeFavorite(announcementId: string , volunteerId: string) {
+  try {
+    await useFavorite.removeByVolunteerIdAndAnnouncementId(announcementId, volunteerId);
+  } catch (error) {
+    console.error("Error removing favorite:", error);
+  }
+}
+
+async function toggleFavorite(announcement: Announcement) {
+  if (!user.value) return
+  const isFav = favoriteIds.value.includes(announcement._id)
+  if (isFav) {
+    await removeFavorite(announcement._id, user.value.userId)
+  } else {
+    await addFavorite(announcement._id, user.value.userId)
+  }
+  await refreshFavorites()
+}
 
 </script>

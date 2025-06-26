@@ -27,10 +27,11 @@
 </template>
 
 <script setup lang="ts">
-import { definePageMeta, useAnnouncement } from "#imports";
+import {definePageMeta, useAnnouncement, useFavoritesAnnouncement} from "#imports";
 import { onMounted, computed } from 'vue';
 import VolunteerEventFilters from '~/components/event/volunteer/VolunteerEventFilters.vue';
 import VolunteerAnnouncementList from "~/components/event/volunteer/VolunteerAnnouncementList.vue";
+import {useUser} from "~/composables/auth/useUser";
 
 definePageMeta({
   middleware: ['auth'],
@@ -38,6 +39,8 @@ definePageMeta({
 })
 
 const announcement = useAnnouncement();
+const useFavorite = useFavoritesAnnouncement();
+const { user } = useUser()
 
 const announcements = computed(() => announcement.getAnnouncements);
 const loading = computed(() => announcement.loading);
@@ -45,5 +48,8 @@ const error = computed(() => announcement.error);
 
 onMounted(async () => {
   await announcement.fetchAllAnnouncements();
+  if (user.value) {
+    await useFavorite.fetchAllFavoritesOfVolunteer(user.value.userId);
+  }
 });
 </script>

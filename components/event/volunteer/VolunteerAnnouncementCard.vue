@@ -16,15 +16,12 @@
         </div>
       </figure>
       <!-- Icône coeur favoris -->
-      <button class="absolute top-2 right-2 z-10 btn btn-circle btn-sm bg-base-100/80 hover:bg-error/20 transition" @click.stop="$emit('favorite', announcement)">
-        <span v-if="isFavorite">
-          <!-- Heart filled SVG -->
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-error" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21C12 21 4 13.5 4 8.5C4 5.42 6.42 3 9.5 3C11.24 3 12.91 3.81 14 5.08C15.09 3.81 16.76 3 18.5 3C21.58 3 24 5.42 24 8.5C24 13.5 16 21 16 21H12Z" />
-          </svg>
+      <button class="absolute top-2 right-2 z-10 btn btn-circle btn-sm bg-base-100/80 hover:bg-error/20 transition" @click.stop="toggleFavorite">
+        <span v-if="favorite">
+          <Heart class="w-6 h-6 text-error fill-error" />
         </span>
         <span v-else>
-          <Heart class="h-6 w-6 text-base-content/60" />
+          <Heart class="h-6 w-6 text-base-content/60"  stoke="stoke"/>
         </span>
       </button>
     </div>
@@ -72,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, watch, ref } from 'vue';
 import type { Announcement } from '~/common/interface/event.interface';
 import { Heart, HeartHandshake, Users, Calendar, MapPin } from 'lucide-vue-next';
 
@@ -81,6 +78,16 @@ const props = defineProps<{
   isFavorite?: boolean
 }>();
 
+const favorite = ref(props.isFavorite);
+
+watch(
+    () => props.isFavorite,
+    (newValue) => {
+      favorite.value = newValue;
+    },
+    { immediate: true }
+)
+
 const coverImageUrl = computed(() => {
   const img = props.announcement.announcementImage;
   if (img?.data && img.contentType) {
@@ -88,4 +95,11 @@ const coverImageUrl = computed(() => {
   }
   return ''
 });
+
+const emit = defineEmits(['favorite']);
+
+function toggleFavorite() {
+  favorite.value = !favorite.value;
+  emit('favorite', props.announcement);
+}
 </script> 

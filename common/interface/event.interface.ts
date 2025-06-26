@@ -39,6 +39,7 @@ export interface Announcement {
   status: EventStatus;
   nbVolunteers?: number;
   maxVolunteers: number;
+  isFavorite?: boolean;
   volunteers?: InfoVolunteer[];
   volunteersWaiting?: InfoVolunteer[];
 }
@@ -56,4 +57,9 @@ export interface CreateAnnouncementDto {
     maxParticipants: number;
     status: EventStatus;
     maxVolunteers: number;
+}
+
+export interface FavoritesAnnouncement{
+    volunteerId: string;
+    announcementId: string;
 }
