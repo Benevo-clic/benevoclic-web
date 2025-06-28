@@ -16,8 +16,8 @@
     </div>
     <div class="container mx-auto px-4 py-4">
       <div class="bg-base-100 rounded-lg shadow-md p-6">
-        <VolunteerAnnouncementList
-            :announcements="announcements.value"
+        <VolunteerAnnouncementFavoritesList
+            :announcementFavorites="announcementFavorites as Announcement[]"
             :error="error.value"
             :loading="loading.value"
         />
@@ -29,9 +29,10 @@
 <script setup lang="ts">
 import {definePageMeta, useAnnouncement, useFavoritesAnnouncement} from "#imports";
 import { onMounted, computed } from 'vue';
-import VolunteerAnnouncementList from "~/components/event/volunteer/VolunteerAnnouncementList.vue";
 import {useUser} from "~/composables/auth/useUser";
 import VolunteerEventFavoritesFilters from "~/components/event/volunteer/VolunteerEventFavoritesFilters.vue";
+import VolunteerAnnouncementFavoritesList from "~/components/event/volunteer/VolunteerAnnouncementFavoritesList.vue";
+import type {Announcement} from "~/common/interface/event.interface";
 
 definePageMeta({
   middleware: ['auth'],
@@ -42,6 +43,7 @@ const announcement = useAnnouncement();
 const useFavorite = useFavoritesAnnouncement();
 const { user } = useUser()
 
+const favorites = computed(() => useFavorite.getFavorites);
 const announcements = computed(() => announcement.getAnnouncements);
 const loading = computed(() => announcement.loading);
 const error = computed(() => announcement.error);
@@ -52,4 +54,12 @@ onMounted(async () => {
     await useFavorite.fetchAllFavoritesOfVolunteer(user.value.userId);
   }
 });
+
+const announcementFavorites = computed(() => {
+  return favorites.value.value.map(fav => {
+    const announcement = announcements.value.value.find(a => a._id === fav.announcementId);
+    return announcement ? { ...announcement, isFavorite: true } : null;
+  }).filter(Boolean);
+});
+
 </script>

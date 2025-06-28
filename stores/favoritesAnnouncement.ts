@@ -1,16 +1,18 @@
 import {defineStore} from "pinia";
-import type {FavoritesAnnouncement} from "~/common/interface/event.interface";
+import type {Announcement, FavoritesAnnouncement} from "~/common/interface/event.interface";
 
 
 export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
     state: () => ({
         favorites: [] as FavoritesAnnouncement[],
+        favoritesAnnouncementsVolunteer: [] as Announcement[],
         loading: false,
         error: null as string | null,
     }),
 
     getters: {
         getFavorites: (state) => state.favorites,
+        getFavoritesAnnouncementsVolunteer: (state) => state.favoritesAnnouncementsVolunteer,
         isLoading: (state) => state.loading,
         getError: (state) => state.error,
     },
@@ -52,6 +54,26 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
             }
         },
 
+        async fetchFavoriteVolunteerByVolunteerId(volunteerId: string) {
+            this.loading = true;
+            this.error = null;
+            try {
+                this.favoritesAnnouncementsVolunteer = await $fetch<Announcement[]>(`/api/announcement/favorites-announcement/FavoritesAnnouncementVolunteer`, {
+                    method: 'GET',
+                    query: {volunteerId},
+                });
+                if (!this.favoritesAnnouncementsVolunteer || this.favoritesAnnouncementsVolunteer.length === 0) {
+                    this.error = 'Aucun favori trouvé';
+                }
+                return this.favoritesAnnouncementsVolunteer;
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de récupération du favori';
+                throw err;
+            } finally {
+                this.loading = false;
+            }
+        },
+
         async addFavorite(announcementId: string, volunteerId: string) {
             this.loading = true;
             this.error = null;
@@ -78,7 +100,6 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
                     body: { volunteerId, announcementId },
                 });
                 this.favorites = this.favorites.filter(fav => fav.volunteerId !== volunteerId || fav.announcementId !== announcementId);
-                console.log("Updated favorites:", this.favorites);
             } catch (err: any) {
                 this.error = err?.message || 'Erreur de suppression du favori';
                 throw err;

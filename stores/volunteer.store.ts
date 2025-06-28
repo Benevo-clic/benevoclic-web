@@ -30,7 +30,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                 if(response) {
                     this.volunteer = response
                 }
-
                 return response as VolunteerInfo
             } catch (err: any) {
                 this.error = err?.message || 'Erreur de récupération des informations'
