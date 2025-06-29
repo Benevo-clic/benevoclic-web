@@ -31,7 +31,6 @@ import type {Announcement} from "~/common/interface/event.interface";
 import VolunteerAnnouncementCard from "~/components/event/volunteer/VolunteerAnnouncementCard.vue";
 import {useFavoritesAnnouncement} from "~/composables/useFavoritesAnnouncement";
 import {useUser} from "~/composables/auth/useUser";
-import {useAnnouncement} from "~/composables/useAnnouncement";
 
 const props = defineProps<
     {
@@ -41,7 +40,6 @@ const props = defineProps<
     }
 >()
 const useFavorite = useFavoritesAnnouncement();
-const announcement = useAnnouncement()
 const { user } = useUser()
 
 watch(

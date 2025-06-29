@@ -16,7 +16,7 @@
     </div>
     <div class="bg-base-100 rounded-lg shadow-md p-6 w-full mt-4">
           <VolunteerAnnouncementList
-              :announcements="announcements.value"
+              :announcements="announcements.value.filter(a => a.status !== 'INACTIVE')"
               :error="error.value"
               :loading="loading.value"
           />

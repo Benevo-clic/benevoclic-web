@@ -59,7 +59,7 @@ const announcementFavorites = computed(() => {
   return favorites.value.value.map(fav => {
     const announcement = announcements.value.value.find(a => a._id === fav.announcementId);
     return announcement ? { ...announcement, isFavorite: true } : null;
-  }).filter(Boolean);
+  }).filter(a => a?.status !== 'INACTIVE');
 });
 
 </script>
