@@ -12,11 +12,14 @@ import {navigateTo} from "#app";
 import DrawerAppContentAssociation from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
 import VolunteerBottomBar from "~/components/header/VolunteerBottomBar.vue";
 import AssociationBottomBar from "~/components/header/AssociationBottomBar.vue";
+import {useI18n} from "vue-i18n";
 const auth = useUser()
 const isAuthenticated = auth.isAuthenticated
-const userRole = auth.userRole
 const { t } = useI18n()
 const {  toggleTheme, isDarkTheme } = useTheme()
+
+const userRole = auth.userRole
+
 
 const menuOpen = ref(false)
 const showLoginModal = ref(false)
@@ -27,6 +30,8 @@ const isAssociationComponentAvailable = ref(true) // Flag to track if associatio
 let mediaQuery: MediaQueryList | undefined;
 let handler: ((e: MediaQueryListEvent) => void) | undefined;
 
+const role = computed(() => userRole.value)
+
 onUnmounted(() => {
   if (mediaQuery && handler) {
     mediaQuery.removeEventListener('change', handler)
@@ -35,7 +40,7 @@ onUnmounted(() => {
 
 const props = defineProps<
     {
-      optionsOpen?: boolean
+      optionsOpen?: boolean,
     }
 >()
 
@@ -76,11 +81,7 @@ onMounted(async () => {
     // Fetch user data as early as possible
     await auth.fetchUser()
 
-    // Simulate a potential delay or error in loading the association component
-    // In a real scenario, this might be determined by checking if the component loaded successfully
     if (userRole.value === 'ASSOCIATION') {
-      // For demonstration purposes, we'll set the component as not available to show the placeholder
-      // In a real application, you would have actual logic to determine this
       isAssociationComponentAvailable.value = false // Set to true to hide the placeholder
     }
   } catch (error) {
@@ -105,15 +106,6 @@ onMounted(async () => {
   }
 })
 
-
-function handleFavorites() {
-  if(isAuthenticated.value) {
-    loginModal.value?.showModal()
-  } else {
-    navigateTo('/activity/favorites')
-  }
-}
-
 function handleNotifications() {
   if(isAuthenticated.value) {
     loginModal.value?.showModal()
@@ -121,9 +113,6 @@ function handleNotifications() {
     navigateTo('/notifications')
   }
 }
-
-
-
 
 </script>
 
@@ -231,11 +220,12 @@ function handleNotifications() {
         <span class="loading loading-dots loading-xl"></span>
       </div>
 
-      <template v-else-if="!isLoading">
-        <AssociationBottomBar v-if="userRole === 'ASSOCIATION'" />
-        <VolunteerBottomBar v-else-if="userRole === 'VOLUNTEER'" />
-        <VolunteerBottomBar v-else/>
+      <template v-else>
+        <AssociationBottomBar v-if="role === 'ASSOCIATION'" />
+        <VolunteerBottomBar v-else-if="role === 'VOLUNTEER'" />
       </template>
+
+      <VolunteerBottomBar v-if="isAuthenticated"/>
     </div>
 
 
@@ -250,4 +240,6 @@ header {
   top: 0;
   z-index: 50;
 }
+
+
 </style>

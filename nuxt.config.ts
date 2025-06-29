@@ -15,7 +15,12 @@ export default defineNuxtConfig({
     // Améliore les performances de l'hydratation
     asyncContext: true,
     // Optimise le chargement des composants
-    componentIslands: true
+    componentIslands: false,
+    // Optimisations de performance
+    payloadExtraction: true,
+    renderJsonPayloads: true,
+    // Optimisation du bundling
+    treeshakeClientOnly: true
   },
   alias: {
     assets: '/<rootDir>/assets',
@@ -67,6 +72,17 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
+    },
+    // Optimisations de performance
+    compressPublicAssets: true,
+    minify: true,
+    // Cache des assets statiques
+    storage: {
+      fs: {
+        driver: 'fs',
+        base: './.nuxt/storage'
+      }
     }
-  }
+  },
+
 })

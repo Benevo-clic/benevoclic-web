@@ -9,11 +9,12 @@
       </div>
     <div class="mx-auto px-4 py-5 max-w-10xl">
       <div class="bg-base-100 rounded-2xl shadow-md p-6">
-        <ReadOnlyEventList
-            :announcements="announcements.value"
-            :error="error.value"
-            :loading="loading.value"
-        />
+          <ReadOnlyEventList
+              :announcements="announcements.value"
+              :error="error.value"
+              :loading="loading.value"
+          />
+
       </div>
     </div>
 
@@ -34,7 +35,7 @@ definePageMeta({
 })
 
 const announcement = useAnnouncement()
-const {user,fetchUser} = useUser()
+const {getUserId} = useUser()
 
 
 const announcements = computed(() => announcement.getAnnouncements)
@@ -42,10 +43,7 @@ const loading = computed(() => announcement.loading)
 const error =  computed(() => announcement.error)
 
 onMounted(async () => {
-  if(!user.value) {
-    await fetchUser();
-  }
-  await announcement.fetchAnnouncements(user?.value?.userId);
+  await announcement.fetchAnnouncements(getUserId);
 });
 
 </script>

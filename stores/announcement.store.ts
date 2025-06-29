@@ -9,23 +9,55 @@ export const useAnnouncementStore = defineStore('announcement', {
     isCreateModalVisible: false,
     loading: false,
     error: null as string | null,
+    // Cache pour éviter les recalculs
+    _announcementsCache: new Map<string, Announcement>(),
+    _lastFetch: 0,
+    _cacheExpiry: 5 * 60 * 1000, // 5 minutes
   }),
 
   getters: {
-    getAnnouncements: (state) => state.announcements,
+    // Optimisation des getters avec cache
+    getAnnouncements: (state) => {
+      // Retourne directement la référence pour éviter les recalculs
+      return state.announcements;
+    },
     getCurrentAnnouncement: (state) => state.currentAnnouncement,
     getLoading: (state) => state.loading,
     getError: (state) => state.error,
+    // Getter optimisé pour chercher une annonce par ID
+    getAnnouncementById: (state) => (id: string) => {
+      return state._announcementsCache.get(id) || 
+             state.announcements.find(a => a._id === id);
+    },
+    // Vérifier si le cache est valide
+    isCacheValid: (state) => {
+      return Date.now() - state._lastFetch < state._cacheExpiry;
+    }
   },
 
   actions: {
-    openCreateModal() {
-      this.isCreateModalVisible = true;
-    },
+
     closeCreateModal() {
       this.isCreateModalVisible = false;
     },
+
+    // Optimisation du cache
+    _updateCache() {
+      this._announcementsCache.clear();
+      this.announcements.forEach(announcement => {
+        if (announcement._id) {
+          this._announcementsCache.set(announcement._id, announcement);
+        }
+      });
+      this._lastFetch = Date.now();
+    },
+
     async fetchAnnouncements(associationId?: string) {
+      // Vérifier le cache d'abord
+      if (this.isCacheValid && this.announcements.length > 0) {
+        return this.announcements;
+      }
+
       this.loading = true;
       this.error = null;
       try {
@@ -33,9 +65,14 @@ export const useAnnouncementStore = defineStore('announcement', {
           method: 'GET',
           query: associationId ? {associationId} : {},
         });
+        
         if (!this.announcements || this.announcements.length === 0) {
           this.error = 'Aucune annonce trouvée';
+          console.log(`Aucune annonce trouvée pour associationId: ${associationId}`);
         }
+        console.log(`Fetched ${this.announcements.length} announcements for associationId: ${associationId} ,${this.loading}`);
+        // Mettre à jour le cache
+        this._updateCache();
         return this.announcements;
       } catch (err: any) {
         this.error = err?.message || 'Erreur de récupération des annonces';
@@ -44,7 +81,13 @@ export const useAnnouncementStore = defineStore('announcement', {
         this.loading = false;
       }
     },
+
     async fetchAllAnnouncements() {
+
+        if (this.isCacheValid && this.announcements.length > 0) {
+          return this.announcements;
+        }
+
         this.loading = true;
         this.error = null;
         try {
@@ -52,6 +95,9 @@ export const useAnnouncementStore = defineStore('announcement', {
             if (!this.announcements || this.announcements.length === 0) {
             this.error = 'Aucune annonce trouvée';
             }
+            
+            // Mettre à jour le cache
+            this._updateCache();
             return this.announcements;
         } catch (err: any) {
             this.error = err?.message || 'Erreur de récupération des annonces';
@@ -62,10 +108,24 @@ export const useAnnouncementStore = defineStore('announcement', {
     },
 
     async fetchAnnouncementById(id: string) {
+      // Vérifier le cache d'abord
+      const cached = this._announcementsCache.get(id);
+
+      if (cached && this.isCacheValid) {
+        this.currentAnnouncement = cached;
+        return cached;
+      }
+
       this.loading = true;
       this.error = null;
       try {
         this.currentAnnouncement = await $fetch<Announcement>(`/api/announcement/${id}`);
+        
+        // Mettre à jour le cache
+        if (this.currentAnnouncement?._id) {
+          this._announcementsCache.set(this.currentAnnouncement._id, this.currentAnnouncement);
+        }
+        
         return this.currentAnnouncement;
       } catch (err: any) {
         this.error = err?.message || 'Erreur de récupération de l\'annonce';
@@ -88,6 +148,9 @@ export const useAnnouncementStore = defineStore('announcement', {
         }
 
         await this.fetchAnnouncementById(response);
+        
+        // Invalider le cache pour forcer un refresh
+        this._lastFetch = 0;
 
         return response;
       } catch (err: any) {
@@ -118,6 +181,9 @@ export const useAnnouncementStore = defineStore('announcement', {
           this.error = 'Erreur lors de l\'upload de l\'image'
           throw new Error(this.error)
         }
+        
+        // Invalider le cache
+        this._lastFetch = 0;
       } catch (error: any) {
         this.error = error?.message || 'Erreur lors de l\'upload de l\'image'
         throw error
@@ -125,7 +191,6 @@ export const useAnnouncementStore = defineStore('announcement', {
         this.loading = false
       }
     },
-
 
     async updateAnnouncement(id: string, payload: Partial<Announcement>) {
       this.loading = true;
@@ -135,13 +200,18 @@ export const useAnnouncementStore = defineStore('announcement', {
           method: 'PATCH',
           body: payload,
         });
+        
+        // Mise à jour optimisée
         const index = this.announcements.findIndex((a) => a._id === id);
         if (index !== -1) {
-          this.announcements[index] = {...response, _id: id}; // Update the existing announcement
+          this.announcements[index] = {...response, _id: id};
         }
         if (this.currentAnnouncement?._id === id) {
           this.currentAnnouncement = {...response, _id: id};
         }
+        
+        // Mettre à jour le cache
+        this._announcementsCache.set(id, {...response, _id: id});
       } catch (err: any) {
         this.error = err?.message || 'Erreur de mise à jour de l\'annonce';
         throw err;
@@ -157,10 +227,16 @@ export const useAnnouncementStore = defineStore('announcement', {
         const reponse  = await $fetch(`/api/announcement/${id}`, {
           method: 'DELETE',
         });
+        
+        // Suppression optimisée
         this.announcements = this.announcements.filter((a) => a._id !== id);
         if (this.currentAnnouncement?._id === id) {
           this.currentAnnouncement = null;
         }
+        
+        // Nettoyer le cache
+        this._announcementsCache.delete(id);
+        
         return reponse;
       } catch (err: any) {
         this.error = err?.message || 'Erreur de suppression de l\'annonce';
@@ -172,6 +248,12 @@ export const useAnnouncementStore = defineStore('announcement', {
     
     setCurrentAnnouncement(announcement: Announcement | null) {
         this.currentAnnouncement = announcement;
+    },
+
+    // Méthode pour nettoyer le cache
+    clearCache() {
+      this._announcementsCache.clear();
+      this._lastFetch = 0;
     }
   },
 }); 

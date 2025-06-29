@@ -37,7 +37,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
                 this.loading = false;
             }
         },
-        async fetchAllFavoritesOfVolunteer(id: string) {
+        async fetchAllFavoritesOfVolunteer(id?: string) {
             this.loading = true;
             this.error = null;
             try {

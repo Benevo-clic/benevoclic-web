@@ -38,6 +38,7 @@ export default defineEventHandler(async (event) => {
         const refreshToken = userCredential.user.refreshToken;
 
         setCookies(event,{
+            idUser: userCredential.user.uid,
             idToken,
             refreshToken
         })

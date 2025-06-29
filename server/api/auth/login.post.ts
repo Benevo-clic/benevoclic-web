@@ -1,8 +1,8 @@
 import {defineEventHandler, readBody, createError, H3Event, EventHandlerRequest} from 'h3'
-import {RoleUser} from "~/common/enums/role.enum";
 
 
 export interface LoginResponse {
+    idUser: string
     idToken: string
     refreshToken: string
     expiresIn?: string
@@ -18,6 +18,13 @@ export function setCookies(event:H3Event<EventHandlerRequest>,loginResponse: Log
       maxAge: 60 * 60 * 24 // 24 heures
     })
 
+    setCookie(event, 'id_user', loginResponse.idUser, {
+      httpOnly: false,
+        secure: false,
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 * 30 // 30 jours
+    })
+
     setCookie(event, 'refresh_token', loginResponse.refreshToken, {
       httpOnly: true,
       secure: true,
@@ -25,6 +32,12 @@ export function setCookies(event:H3Event<EventHandlerRequest>,loginResponse: Log
       maxAge: 60 * 60 * 24 * 30 // 30 jours
     })
     setCookie(event,'isConnected','true',{
+        httpOnly: false,
+        secure: false,
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 * 30 // 30 jours
+    })
+    setCookie(event,'role',loginResponse.idUser,{
         httpOnly: false,
         secure: false,
         sameSite: 'strict',

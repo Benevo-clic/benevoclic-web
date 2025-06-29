@@ -28,6 +28,7 @@
 import ReadOnlyEventCard from './ReadOnlyEventCard.vue';
 import type {Announcement} from "~/common/interface/event.interface";
 
+
 const props = defineProps<
     {
         announcements: Announcement[];
@@ -36,7 +37,15 @@ const props = defineProps<
     }
 >()
 
-
+watch(
+    () => props.announcements,
+    (newAnnouncements) => {
+        if (newAnnouncements.length > 0) {
+            console.log('New announcements received:', newAnnouncements.length);
+        }
+    },
+    { immediate: true }
+)
 
 
 </script>

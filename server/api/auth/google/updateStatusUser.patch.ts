@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody, setCookie } from "h3";
+import { defineEventHandler, readBody } from "h3";
 import type { RegisterUserGoogleResponse } from "~/common/types/auth.type";
 import {setCookies} from "~/server/api/auth/login.post";
 
@@ -18,7 +18,11 @@ export default defineEventHandler(async (event) => {
         },
     });
 
-    setCookies(event,body);
+    setCookies(event,{
+        idUser: body.uid,
+        idToken: body.idToken,
+        refreshToken: body.refreshToken
+    });
 
     return response;
 });
