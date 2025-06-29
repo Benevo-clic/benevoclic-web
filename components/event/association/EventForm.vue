@@ -226,6 +226,7 @@ import { ref, reactive, watch } from 'vue';
 import type { Announcement } from '~/common/interface/event.interface';
 import { EventStatus } from '~/common/enums/event.enum';
 import {useAssociationAuth} from "~/composables/auth/associationAuth";
+import {useUser} from "~/composables/auth/useUser";
 
 const props = defineProps<{
   announcement?: Announcement | null;
@@ -233,6 +234,7 @@ const props = defineProps<{
 }>();
 
 const {association} = useAssociationAuth()
+const user = useUser()
 
 
 const emit = defineEmits(['submit', 'cancel']);
@@ -244,7 +246,7 @@ const statusOptions = Object.values(EventStatus).map(status => ({ label: status,
 const createInitialState = () => ({
   nameEvent: '',
   description: '',
-  associationId: association.value?.associationId || '',
+  associationId: user.getUserId || association.value?.associationId || '',
   associationName: association.value?.associationName || '',
   dateEvent: '',
   datePublication: new Date().toISOString().split('T')[0], // Default to today

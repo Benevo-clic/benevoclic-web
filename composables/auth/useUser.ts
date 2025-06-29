@@ -20,7 +20,6 @@ export const useUser = () => {
         user: computed(() => authStore.getUser),
         fetchUser: authStore.fetchUser,
         getUserId: authStore.getUserId,
-        getRole: authStore.getRole,
         isAuthenticated: computed(() => authStore.isAuthenticated),
         login: authStore.login,
         logout: authStore.logout,

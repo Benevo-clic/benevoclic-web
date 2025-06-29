@@ -46,18 +46,6 @@ export const useUserStore = defineStore('auth', {
   getters: {
     isAuthenticated: () => !useCookie('isConnected').value,
     getUserId: (state) => state.user?.userId || useCookie('id_user').value || undefined,
-    getRole(): RoleUser | null {
-      // d’abord côté store
-      if (this.user?.role) return this.user.role
-      // ensuite côté browser
-      if (typeof window !== 'undefined') {
-        const r = localStorage.getItem('role')
-        return (r === RoleUser.VOLUNTEER || r === RoleUser.ASSOCIATION)
-            ? (r as RoleUser)
-            : null
-      }
-      return null
-    },
     getUser: (state) => state.user,
     fullName: (state) => state.user ? `${state.user.firstName} ${state.user.lastName}` : '',
     getVerificationStatus: (state) => state.isVerified,
@@ -76,11 +64,6 @@ export const useUserStore = defineStore('auth', {
       useNuxtApp().$refreshAuth()
 
       const role = this.user?.role as RoleUser | undefined
-      if (typeof window !== 'undefined' && role) {
-        // on stocke dans le localStorage
-        localStorage.setItem('role', role)
-      }
-
       // puis on redirige
       switch (role) {
         case RoleUser.VOLUNTEER:

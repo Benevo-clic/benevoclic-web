@@ -35,5 +35,5 @@ import DrawerAppContentVolunteer from '~/components/header/drawer/components/vol
 import DrawerAppContentAssociation
   from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
 
-const { isAuthenticated, userRole, getRole } = useUser()
+const { isAuthenticated, userRole } = useUser()
 </script>
