@@ -82,19 +82,19 @@
         <div class="mb-2 grid grid-cols-1 md:grid-cols-2 gap-2">
           <div>
             <label class="block mb-1">Ville</label>
-            <input v-model="form.locationAnnouncement.city" class="input input-bordered w-full" />
+            <input v-model="form.locationAnnouncement!.city" class="input input-bordered w-full" />
           </div>
           <div>
             <label class="block mb-1">Code postal</label>
-            <input v-model="form.locationAnnouncement.postalCode" class="input input-bordered w-full" />
+            <input v-model="form.locationAnnouncement!.postalCode" class="input input-bordered w-full" />
           </div>
           <div>
             <label class="block mb-1">Adresse</label>
-            <input v-model="form.locationAnnouncement.address" class="input input-bordered w-full" />
+            <input v-model="form.locationAnnouncement!.address" class="input input-bordered w-full" />
           </div>
           <div>
             <label class="block mb-1">Pays</label>
-            <input v-model="form.locationAnnouncement.country" class="input input-bordered w-full" />
+            <input v-model="form.locationAnnouncement!.country" class="input input-bordered w-full" />
           </div>
         </div>
 
@@ -217,32 +217,39 @@ const removeCoverPhoto = () => {
 };
 
 async function save() {
-  form.value.tags = tagsInput.value.split(',').map((t: string) => t.trim()).filter(Boolean);
+  try {
+    form.value.tags = tagsInput.value.split(',').map((t: string) => t.trim()).filter(Boolean);
 
-  if (form.value._id && props.announcement) {
-    const updatedFields: any = {};
-    const original = props.announcement;
-    const keys: (keyof Announcement)[] = ['nameEvent', 'description', 'dateEvent', 'hoursEvent', 'status', 'maxParticipants', 'maxVolunteers'];
-    for (const key of keys) {
-      if (form.value[key] !== original[key]) {
-        updatedFields[key] = form.value[key];
+    if (form.value._id && props.announcement) {
+      const updatedFields: any = {};
+      const original = props.announcement;
+      const keys: (keyof Announcement)[] = ['nameEvent', 'description', 'dateEvent', 'hoursEvent', 'status', 'maxParticipants', 'maxVolunteers'];
+      for (const key of keys) {
+        if (form.value[key] !== original[key]) {
+          updatedFields[key] = form.value[key];
+        }
+      }
+      if (JSON.stringify(form.value.tags) !== JSON.stringify(original.tags)) {
+        updatedFields.tags = form.value.tags;
+      }
+      if (JSON.stringify(form.value.locationAnnouncement) !== JSON.stringify(original.locationAnnouncement)) {
+        updatedFields.locationAnnouncement = form.value.locationAnnouncement;
+      }
+      if (Object.keys(updatedFields).length > 0) {
+        await store.updateAnnouncement(form.value._id, updatedFields);
+      }
+      if (imageFile.value) {
+        const base64 = await fileToBase64(imageFile.value);
+        await store.uploadImageCover(base64);
       }
     }
-    if (JSON.stringify(form.value.tags) !== JSON.stringify(original.tags)) {
-      updatedFields.tags = form.value.tags;
-    }
-    if (JSON.stringify(form.value.locationAnnouncement) !== JSON.stringify(original.locationAnnouncement)) {
-      updatedFields.locationAnnouncement = form.value.locationAnnouncement;
-    }
-    if (Object.keys(updatedFields).length > 0) {
-      await store.updateAnnouncement(form.value._id, updatedFields);
-    }
-    if (imageFile.value) {
-      const base64 = await fileToBase64(imageFile.value);
-      await store.uploadImageCover(base64);
-    }
+    
+    // Émettre l'événement saved seulement après que tout soit terminé
+    emit('saved');
+  } catch (error) {
+    console.error('Erreur lors de la sauvegarde:', error);
+    // Vous pouvez ajouter ici une gestion d'erreur pour l'utilisateur
   }
-  emit('saved');
 }
 
 function fileToBase64(file: File): Promise<string> {

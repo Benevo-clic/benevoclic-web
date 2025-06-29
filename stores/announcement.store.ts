@@ -182,6 +182,12 @@ export const useAnnouncementStore = defineStore('announcement', {
           throw new Error(this.error)
         }
         
+        // Mettre à jour currentAnnouncement avec la nouvelle image
+        if (this.currentAnnouncement) {
+          // Récupérer l'annonce mise à jour depuis le serveur
+          await this.fetchAnnouncementById(this.currentAnnouncement._id);
+        }
+        
         // Invalider le cache
         this._lastFetch = 0;
       } catch (error: any) {
@@ -206,12 +212,19 @@ export const useAnnouncementStore = defineStore('announcement', {
         if (index !== -1) {
           this.announcements[index] = {...response, _id: id};
         }
+        
+        // Mettre à jour currentAnnouncement si c'est la même annonce
         if (this.currentAnnouncement?._id === id) {
           this.currentAnnouncement = {...response, _id: id};
         }
         
         // Mettre à jour le cache
         this._announcementsCache.set(id, {...response, _id: id});
+        
+        // Invalider le cache pour forcer un refresh lors de la prochaine récupération
+        this._lastFetch = 0;
+        
+        return response;
       } catch (err: any) {
         this.error = err?.message || 'Erreur de mise à jour de l\'annonce';
         throw err;
@@ -253,6 +266,11 @@ export const useAnnouncementStore = defineStore('announcement', {
     // Méthode pour nettoyer le cache
     clearCache() {
       this._announcementsCache.clear();
+      this._lastFetch = 0;
+    },
+
+    // Méthode pour invalider le cache (utile après des modifications)
+    invalidateCache() {
       this._lastFetch = 0;
     }
   },

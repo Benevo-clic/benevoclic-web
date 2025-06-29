@@ -122,13 +122,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted } from 'vue';
+import { ref, onMounted, computed, onUnmounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAnnouncementStore } from '~/stores/announcement.store';
 import AnnouncementEditForm from '~/components/event/association/AnnouncementEditForm.vue';
 import VolunteersList from '~/components/event/association/VolunteersList.vue';
 import ParticipantsList from '~/components/event/association/ParticipantsList.vue';
-import type { Announcement } from '~/common/interface/event.interface';
 import {definePageMeta} from "#imports";
 import {EventStatus} from "~/common/enums/event.enum";
 import {HeartHandshake,Users,Calendar,Clock,MapPin} from 'lucide-vue-next'
@@ -137,10 +136,11 @@ const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
 const route = useRoute();
 const router = useRouter();
 const announcementStore = useAnnouncementStore();
-const announcement = ref<Announcement | null>(null);
 const loading = ref(true);
 const editModalOpen = ref(false);
 const tab = ref<'participants' | 'volunteers'>('participants');
+
+const announcement = computed(() => announcementStore.currentAnnouncement);
 
 const profileImageUrl = computed(() => {
   const img = announcement.value?.associationLogo;
@@ -163,8 +163,8 @@ onMounted(fetchAnnouncement);
 
 async function fetchAnnouncement() {
   if (route.params.id) {
+    announcementStore.invalidateCache();
     await announcementStore.fetchAnnouncementById(route.params.id as string);
-    announcement.value = announcementStore.currentAnnouncement || null;
     loading.value = announcementStore.loading;
   }
 }
@@ -251,6 +251,13 @@ onUnmounted(() => {
   window.removeEventListener('scroll', checkScrollIndicators);
   window.removeEventListener('resize', checkScrollIndicators);
 });
+
+// Watcher pour s'assurer que les données sont bien mises à jour
+watch(() => announcementStore.currentAnnouncement, (newAnnouncement) => {
+  if (newAnnouncement && newAnnouncement._id === route.params.id) {
+    console.log('Announcement updated in store:', newAnnouncement);
+  }
+}, { deep: true });
 
 </script>
 
