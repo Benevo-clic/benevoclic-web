@@ -21,8 +21,6 @@ export default defineEventHandler(async (event) => {
                 }
             });
 
-        console.log('Participant removed successfully:', participantInfo.data);
-
         return participantInfo.data
     } catch (error) {
         console.error('Error creating announcement:', error);

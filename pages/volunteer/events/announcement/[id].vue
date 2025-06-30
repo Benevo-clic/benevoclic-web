@@ -86,24 +86,46 @@
       <!-- Boutons d'action de participation -->
       <div class="bg-base-100 rounded-xl shadow-lg p-6 mb-6">
         <h2 class="text-xl font-bold mb-4">Participer à cet événement</h2>
-        <div class="flex flex-col sm:flex-row gap-3">
-          <button 
-            class="btn btn-primary flex-1" 
-            :disabled="!canParticipateAsVolunteer"
-            @click="participateAsVolunteer"
+        <div v-if="loadingVolunteer" class="flex justify-center items-center">
+          <span class="loading loading-spinner loading-md"></span>
+        </div>
+        <div v-else class="flex flex-col sm:flex-row gap-3">
+
+          <button
+              class="btn btn-neutral flex-1"
+              :disabled="!canParticipateAsVolunteer"
+              @click="cancelVolunteerParticipation"
+              v-if="isAlreadyVolunteerWaiting"
+          >
+            <HeartHandshake class="w-5 h-5 mr-2" />
+            Bénévole
+            <span  class="badge badge-warning ml-2">En attente</span>
+          </button>
+          <button
+              class="btn btn-neutral flex-1"
+              :disabled="!canParticipateAsVolunteer"
+              @click="cancelVolunteerParticipation"
+              v-else-if="isAlreadyVolunteer"
+          >
+            <HeartHandshake class="w-5 h-5 mr-2" />
+            Bénévole
+            <span  class="badge badge-success ml-2">Annuler</span>
+          </button>
+          <button
+              class="btn btn-primary flex-1"
+              :disabled="!canParticipateAsVolunteer"
+              @click="participateAsVolunteer"
+              v-else
           >
             <HeartHandshake class="w-5 h-5 mr-2" />
             Bénévole
             <span v-if="!canParticipateAsVolunteer" class="badge badge-warning ml-2">Complet</span>
           </button>
-          <div v-if="loadingVolunteer" class="btn btn-secondary flex-1">
-            <span class="loading loading-spinner loading-md"></span>
-          </div>
           <button 
             class="btn btn-secondary flex-1" 
             :disabled="!canParticipateAsParticipant"
             @click="participateAsParticipant"
-            v-else-if="!alreadyParticipating"
+            v-if="!alreadyParticipating"
           >
             <Users class="w-5 h-5 mr-2" />
             Participer
@@ -116,14 +138,6 @@
             <Users class="w-5 h-5 mr-2" />
             Participer
             <span  class="badge badge-secondary ml-2">Annuler</span>
-          </button>
-          <button 
-            class="btn btn-accent flex-1" 
-            :disabled="!canParticipateAsBoth"
-            @click="participateAsBoth"
-          >
-            <Star class="w-5 h-5 mr-2" />
-            Les deux
           </button>
         </div>
       </div>
@@ -232,7 +246,7 @@ import { useRoute } from 'vue-router';
 import {definePageMeta} from "#imports";
 import {EventStatus} from "~/common/enums/event.enum";
 import {
-  HeartHandshake, Users, Calendar, Clock, MapPin, Star, ExternalLink, Info,
+  HeartHandshake, Users, Calendar, Clock, MapPin, ExternalLink, Info,
   Tag, UserPlus, UserCheck
 } from 'lucide-vue-next'
 import {useAnnouncement} from '~/composables/useAnnouncement';
@@ -284,6 +298,14 @@ const alreadyParticipating = computed(() => {
   const volunteerId = volunteerUse.volunteer?.value?.volunteerId;
   return announcement.value?.participants?.some(p => p.id === volunteerId) || false;
 });
+const isAlreadyVolunteerWaiting = computed(() => {
+  const volunteerId = volunteerUse.volunteer?.value?.volunteerId;
+  return announcement.value?.volunteersWaiting?.some(v => v.id === volunteerId) || false;
+});
+const isAlreadyVolunteer = computed(() => {
+  const volunteerId = volunteerUse.volunteer?.value?.volunteerId;
+  return announcement.value?.volunteers?.some(v => v.id === volunteerId) || false;
+});
 
 const profileImageUrl = computed(() => {
   const img = announcement.value?.associationLogo;
@@ -314,8 +336,25 @@ async function fetchAnnouncement() {
 
 // Fonctions pour la participation
 function participateAsVolunteer() {
-  console.log('Participation en tant que bénévole');
-  // TODO: Implémenter la logique de participation
+  if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
+    console.error('Aucun événement sélectionné pour la participation');
+    return;
+  }
+  if(!canParticipateAsVolunteer.value) {
+    console.warn('Aucune place disponible pour participer en tant que bénévole');
+    return;
+  }
+
+  if(isAlreadyVolunteerWaiting.value) {
+    console.warn('Vous êtes déjà inscrit à cet événement en tant que bénévole');
+    return;
+  }
+
+  announcementUse.addVolunteerWaiting(announcement.value?._id, {
+    id: volunteerUse.volunteer?.value?.volunteerId,
+    name: volunteerUse.volunteer?.value?.firstName + ' ' + volunteerUse.volunteer?.value?.lastName,
+  });
+
 }
 
 function participateAsParticipant() {
@@ -337,10 +376,6 @@ function participateAsParticipant() {
 
 }
 
-function participateAsBoth() {
-  console.log('Participation en tant que bénévole et participant');
-  // TODO: Implémenter la logique de participation
-}
 
 function cancelParticipation() {
   if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
@@ -348,6 +383,14 @@ function cancelParticipation() {
     return;
   }
   announcementUse.removeParticipant(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
+}
+
+function cancelVolunteerParticipation() {
+  if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
+    console.error('Aucun événement sélectionné pour l\'annulation de participation en tant que bénévole');
+    return;
+  }
+  announcementUse.removeVolunteerWaiting(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
 }
 
 // Fonction pour gérer l'adhésion à l'association
@@ -429,7 +472,6 @@ onMounted(() => {
   window.addEventListener('resize', checkScrollIndicators);
 });
 
-// Nettoyage
 onUnmounted(() => {
   window.removeEventListener('scroll', checkScrollIndicators);
   window.removeEventListener('resize', checkScrollIndicators);
