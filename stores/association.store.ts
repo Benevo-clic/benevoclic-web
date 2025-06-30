@@ -9,7 +9,6 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
         association: null as AssociationInfo | null,
         loading: false,
         error: null as string | null,
-        // Cache pour éviter les recalculs
         _associationCache: new Map<string, AssociationInfo>(),
         _lastFetch: 0,
         _cacheExpiry: 5 * 60 * 1000, // 5 minutes
@@ -18,7 +17,6 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
     getters: {
         getAssociation: (state) => state.association,
         isExist: (state) => state.association !== null,
-        // Vérifier si le cache est valide
         isCacheValid: (state) => {
             return Date.now() - state._lastFetch < state._cacheExpiry;
         }
@@ -26,7 +24,6 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
 
     actions:{
 
-        // Optimisation du cache
         _updateCache(association: AssociationInfo) {
             if (association?.associationId) {
                 this._associationCache.set(association.associationId, association);
@@ -34,7 +31,6 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             this._lastFetch = Date.now();
         },
 
-        // Méthode pour nettoyer le cache
         clearCache() {
             this._associationCache.clear();
             this._lastFetch = 0;
@@ -63,7 +59,6 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
         async getAssociationInfo() {
             const user = useUserStore().getUser
             
-            // Vérifier le cache d'abord
             if (this.isCacheValid && this.association) {
                 return this.association;
             }
@@ -78,7 +73,6 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
 
                 if(response) {
                     this.association = response
-                    // Mettre à jour le cache
                     this._updateCache(response);
                 }
 
@@ -102,7 +96,6 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
 
                 if(response) {
                     this.association = response
-                    // Mettre à jour le cache
                     this._updateCache(response);
                 }
 
@@ -126,7 +119,6 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
 
                 if(response) {
                     this.association = response
-                    // Mettre à jour le cache
                     this._updateCache(response);
                 }
 
@@ -151,7 +143,6 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
                     },
                 })
 
-                // Nettoyer le cache après suppression
                 if (this.association?.associationId) {
                     this._associationCache.delete(this.association.associationId);
                 }

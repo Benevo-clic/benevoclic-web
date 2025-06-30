@@ -1,8 +1,5 @@
 import axios from 'axios'
-import { defineEventHandler, readBody } from "h3";
-
-
-
+import { defineEventHandler, readBody , getCookie} from "h3";
 
 export default defineEventHandler(async (event) => {
     const token  = getCookie(event, 'auth_token')
@@ -13,7 +10,6 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 400, statusMessage: 'Paramètres manquants' })
     }
 
-    // Convertir Base64 en Blob
     function base64toBlob(base64: string) {
         const [meta, data] = base64.split(',')
         const mime = meta.match(/data:(.*);base64/)![1]

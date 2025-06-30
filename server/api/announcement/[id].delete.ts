@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
         }
     );
     return response.data;
-  }catch (error) {
+  }catch (error: any) {
     console.error(`Error deleting announcement ${announcementId}: ${error.message}`);
     throw createError({
       statusCode: error.response?.status || 500,

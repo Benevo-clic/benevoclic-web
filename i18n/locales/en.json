@@ -148,6 +148,7 @@
   },
   "header": {
     "volunteer": {
+      "home": "Home",
       "favorites": "Favorites",
       "recent-search": "Recent search",
       "help": "Help"

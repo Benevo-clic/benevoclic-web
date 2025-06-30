@@ -134,7 +134,6 @@ import {HeartHandshake,Users,Calendar,Clock,MapPin} from 'lucide-vue-next'
 const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
 
 const route = useRoute();
-const router = useRouter();
 const announcementStore = useAnnouncementStore();
 const loading = ref(true);
 const editModalOpen = ref(false);
@@ -251,13 +250,6 @@ onUnmounted(() => {
   window.removeEventListener('scroll', checkScrollIndicators);
   window.removeEventListener('resize', checkScrollIndicators);
 });
-
-// Watcher pour s'assurer que les données sont bien mises à jour
-watch(() => announcementStore.currentAnnouncement, (newAnnouncement) => {
-  if (newAnnouncement && newAnnouncement._id === route.params.id) {
-    console.log('Announcement updated in store:', newAnnouncement);
-  }
-}, { deep: true });
 
 </script>
 

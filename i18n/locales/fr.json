@@ -4,7 +4,7 @@
     "login_to_access": "Veuillez vous connecter pour accéder à cette page.",
     "login": {
       "title": "Se connecter",
-      "description": "Aujourd’hui est un nouveau jour. C’est vous qui lui donnez sa forme. Connectez-vous pour gérer vos projets.",
+      "description": "Aujourd'hui est un nouveau jour. C'est vous qui lui donnez sa forme. Connectez-vous pour gérer vos projets.",
       "forgot_password": "Mot de passe oublié ?",
       "no_account": "Vous n'avez pas de compte ?",
       "create_account": "Créer un compte",
@@ -148,6 +148,7 @@
   },
   "header": {
     "volunteer": {
+      "home": "Accueil",
       "favorites": "Favoris",
       "recent-search": "Recherches récentes",
       "help": "Aide"

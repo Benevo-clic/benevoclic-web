@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Heart as HeartIcon, Clock as ClockIcon, HelpCircle as HelpIcon, Search as SearchIcon } from 'lucide-vue-next'
+import { Heart as HeartIcon, Clock as ClockIcon, HelpCircle as HelpIcon, Search as SearchIcon, Home as HomeIcon } from 'lucide-vue-next'
 import { useRecentSearches } from "~/composables/useRecentSearches";
 import { navigateTo } from "#app";
 
@@ -52,6 +52,10 @@ onUnmounted(() => {
 function handleFavorites() {
   navigateTo('/volunteer/activity/favorites')
 }
+
+function handleHome() {
+  navigateTo('/volunteer')
+}
 </script>
 
 <template>
@@ -80,6 +84,9 @@ function handleFavorites() {
 
     <!-- Volunteer buttons -->
     <div class="w-full md:w-auto flex justify-center md:justify-end flex-wrap text-base-content">
+      <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="handleHome">
+        <HomeIcon class="w-6 h-6"  /> {{t('header.volunteer.home')}}
+      </button>
       <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="handleFavorites">
         <HeartIcon class="w-6 h-6"  /> {{t('header.volunteer.favorites')}}
       </button>

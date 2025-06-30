@@ -1,5 +1,7 @@
 <template>
-  <div class="group card bg-base-100 shadow-lg border border-base-300 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer overflow-hidden relative text-base">
+  <div class="group card bg-base-100 shadow-lg border border-base-300 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer overflow-hidden relative text-base"
+       @click="goToDetails"
+  >
     <!-- Image de couverture -->
     <div class="relative overflow-hidden">
       <figure class="h-36 bg-gradient-to-br from-base-200 to-base-300">
@@ -132,6 +134,7 @@
 import { computed, watch, ref } from 'vue';
 import type { Announcement } from '~/common/interface/event.interface';
 import { Heart, HeartHandshake, Users, Calendar, MapPin } from 'lucide-vue-next';
+import {navigateTo} from "#app";
 
 const props = defineProps<{
   announcement: Announcement,
@@ -173,5 +176,9 @@ function toggleFavorite() {
 
 function participate() {
   emit('participate', props.announcement);
+}
+
+function goToDetails() {
+  navigateTo(`/volunteer/events/announcement/${props.announcement._id}`)
 }
 </script> 

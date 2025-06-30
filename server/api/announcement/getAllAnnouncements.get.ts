@@ -4,7 +4,6 @@ import {Announcement} from "~/common/interface/event.interface";
 
 
 export default defineEventHandler(async (event) => {
-
     const config = useRuntimeConfig();
 
     try {

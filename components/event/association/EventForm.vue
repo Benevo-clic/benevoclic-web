@@ -222,7 +222,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue';
+import {ref, reactive, watch } from 'vue';
 import type { Announcement } from '~/common/interface/event.interface';
 import { EventStatus } from '~/common/enums/event.enum';
 import {useAssociationAuth} from "~/composables/auth/associationAuth";
@@ -236,9 +236,7 @@ const props = defineProps<{
 const {association} = useAssociationAuth()
 const user = useUser()
 
-
 const emit = defineEmits(['submit', 'cancel']);
-
 
 
 const statusOptions = Object.values(EventStatus).map(status => ({ label: status, value: status }));
@@ -246,10 +244,10 @@ const statusOptions = Object.values(EventStatus).map(status => ({ label: status,
 const createInitialState = () => ({
   nameEvent: '',
   description: '',
-  associationId: user.getUserId || association.value?.associationId || '',
-  associationName: association.value?.associationName || '',
+  associationId: '',
+  associationName: '',
   dateEvent: '',
-  datePublication: new Date().toISOString().split('T')[0], // Default to today
+  datePublication: new Date().toISOString().split('T')[0],
   hoursEvent: '',
   locationAnnouncement: {
     address: '',
@@ -293,14 +291,12 @@ const removeTag = (index: number) => {
 
 const formErrors = ref<string[]>([]);
 
-// Track which fields have validation errors
 const invalidFields = ref<Record<string, boolean>>({});
 
 const validateForm = (): boolean => {
   formErrors.value = [];
   invalidFields.value = {};
 
-  // Check required fields
   if (!formState.nameEvent) {
     formErrors.value.push('Nom de l\'événement');
     invalidFields.value.nameEvent = true;
@@ -313,11 +309,9 @@ const validateForm = (): boolean => {
     formErrors.value.push('Date de l\'événement');
     invalidFields.value.dateEvent = true;
   } else {
-    // Check if dateEvent is not before datePublication
     const eventDate = new Date(formState.dateEvent);
     const publicationDate = new Date(formState.datePublication);
 
-    // Reset time part to compare dates only
     eventDate.setHours(0, 0, 0, 0);
     publicationDate.setHours(0, 0, 0, 0);
 
@@ -347,24 +341,20 @@ const validateForm = (): boolean => {
 };
 
 const scrollToFirstError = () => {
-  // Get all elements with validation errors
   const errorFields = document.querySelectorAll('.input-error, .textarea-error');
   if (errorFields.length > 0) {
-    // Scroll to the first error field
     errorFields[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-    // Focus on the first error field
     (errorFields[0] as HTMLElement).focus();
   }
 };
 
 const submit = async () => {
-
+  formState.associationName = computed(() => association.value?.associationName || '').value;
+  formState.associationId = computed(() => association.value?.associationId).value || user.getUserId || '';
   if (validateForm()) {
     emit('submit', formState);
   } else {
-    // Show error message
     console.error('Veuillez corriger les erreurs suivantes:', formErrors.value);
-    // Scroll to the first error
     setTimeout(scrollToFirstError, 100);
   }
 };

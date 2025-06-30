@@ -66,11 +66,9 @@ definePageMeta({
 const auth = useUser()
 const { association: user } = useAssociationAuth()
 
-// Fetch user data without redirecting
 onMounted(async () => {
-  await auth.fetchUser(true)
+  await auth.fetchUser()
 
-  // Ensure association data is loaded
   if (!user.value) {
     await useAssociationAuth().getAssociationInfo()
   }

@@ -41,7 +41,6 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.isCreateModalVisible = false;
     },
 
-    // Optimisation du cache
     _updateCache() {
       this._announcementsCache.clear();
       this.announcements.forEach(announcement => {
@@ -53,7 +52,6 @@ export const useAnnouncementStore = defineStore('announcement', {
     },
 
     async fetchAnnouncements(associationId?: string) {
-      // Vérifier le cache d'abord
       if (this.isCacheValid && this.announcements.length > 0) {
         return this.announcements;
       }
@@ -70,13 +68,10 @@ export const useAnnouncementStore = defineStore('announcement', {
           this.error = 'Aucune annonce trouvée';
           console.log(`Aucune annonce trouvée pour associationId: ${associationId}`);
         }
-        console.log(`Fetched ${this.announcements.length} announcements for associationId: ${associationId} ,${this.loading}`);
-        // Mettre à jour le cache
         this._updateCache();
         return this.announcements;
       } catch (err: any) {
         this.error = err?.message || 'Erreur de récupération des annonces';
-        // throw err; // Decide if you want to re-throw
       } finally {
         this.loading = false;
       }
@@ -96,19 +91,16 @@ export const useAnnouncementStore = defineStore('announcement', {
             this.error = 'Aucune annonce trouvée';
             }
             
-            // Mettre à jour le cache
             this._updateCache();
             return this.announcements;
         } catch (err: any) {
             this.error = err?.message || 'Erreur de récupération des annonces';
-            // throw err; // Decide if you want to re-throw
         } finally {
             this.loading = false;
         }
     },
 
     async fetchAnnouncementById(id: string) {
-      // Vérifier le cache d'abord
       const cached = this._announcementsCache.get(id);
 
       if (cached && this.isCacheValid) {
@@ -121,7 +113,6 @@ export const useAnnouncementStore = defineStore('announcement', {
       try {
         this.currentAnnouncement = await $fetch<Announcement>(`/api/announcement/${id}`);
         
-        // Mettre à jour le cache
         if (this.currentAnnouncement?._id) {
           this._announcementsCache.set(this.currentAnnouncement._id, this.currentAnnouncement);
         }
@@ -129,7 +120,6 @@ export const useAnnouncementStore = defineStore('announcement', {
         return this.currentAnnouncement;
       } catch (err: any) {
         this.error = err?.message || 'Erreur de récupération de l\'annonce';
-        // throw err;
       } finally {
         this.loading = false;
       }
@@ -149,7 +139,6 @@ export const useAnnouncementStore = defineStore('announcement', {
 
         await this.fetchAnnouncementById(response);
         
-        // Invalider le cache pour forcer un refresh
         this._lastFetch = 0;
 
         return response;
@@ -182,13 +171,10 @@ export const useAnnouncementStore = defineStore('announcement', {
           throw new Error(this.error)
         }
         
-        // Mettre à jour currentAnnouncement avec la nouvelle image
         if (this.currentAnnouncement) {
-          // Récupérer l'annonce mise à jour depuis le serveur
           await this.fetchAnnouncementById(this.currentAnnouncement._id);
         }
         
-        // Invalider le cache
         this._lastFetch = 0;
       } catch (error: any) {
         this.error = error?.message || 'Erreur lors de l\'upload de l\'image'
@@ -207,21 +193,17 @@ export const useAnnouncementStore = defineStore('announcement', {
           body: payload,
         });
         
-        // Mise à jour optimisée
         const index = this.announcements.findIndex((a) => a._id === id);
         if (index !== -1) {
           this.announcements[index] = {...response, _id: id};
         }
         
-        // Mettre à jour currentAnnouncement si c'est la même annonce
         if (this.currentAnnouncement?._id === id) {
           this.currentAnnouncement = {...response, _id: id};
         }
         
-        // Mettre à jour le cache
         this._announcementsCache.set(id, {...response, _id: id});
         
-        // Invalider le cache pour forcer un refresh lors de la prochaine récupération
         this._lastFetch = 0;
         
         return response;
@@ -237,20 +219,18 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.loading = true;
       this.error = null;
       try {
-        const reponse  = await $fetch(`/api/announcement/${id}`, {
+        const response  = await $fetch(`/api/announcement/${id}`, {
           method: 'DELETE',
         });
         
-        // Suppression optimisée
         this.announcements = this.announcements.filter((a) => a._id !== id);
         if (this.currentAnnouncement?._id === id) {
           this.currentAnnouncement = null;
         }
         
-        // Nettoyer le cache
         this._announcementsCache.delete(id);
         
-        return reponse;
+        return response;
       } catch (err: any) {
         this.error = err?.message || 'Erreur de suppression de l\'annonce';
         throw err;
@@ -263,15 +243,196 @@ export const useAnnouncementStore = defineStore('announcement', {
         this.currentAnnouncement = announcement;
     },
 
-    // Méthode pour nettoyer le cache
     clearCache() {
       this._announcementsCache.clear();
       this._lastFetch = 0;
     },
 
-    // Méthode pour invalider le cache (utile après des modifications)
     invalidateCache() {
       this._lastFetch = 0;
+    },
+
+    async addParticipant(announcementId: string, participant: { id: string, name: string }) {
+        this.loading = true;
+        this.error = null;
+        try {
+            const response = await $fetch(`/api/announcement/registerParticipant`, {
+            method: 'PATCH',
+            body: {
+                announcementId,
+                ...participant,
+            },
+            });
+
+
+
+            if (this.currentAnnouncement?._id === announcementId) {
+              await this.fetchAnnouncementById(announcementId)
+            }
+
+            this._lastFetch = 0;
+
+          return response;
+        } catch (err: any) {
+            this.error = err?.message || 'Erreur d\'enregistrement du participant';
+            throw err;
+        } finally {
+            this.loading = false;
+        }
+    },
+    async addVolunteerWaiting(announcementId: string, volunteer: { id: string, name: string }) {
+        this.loading = true;
+        this.error = null;
+        try {
+            const response = await $fetch(`/api/announcement/registerVolunteerWaiting`, {
+            method: 'PATCH',
+            body: {
+                announcementId,
+                ...volunteer,
+            },
+            });
+
+            if (this.currentAnnouncement?._id === announcementId) {
+              await this.fetchAnnouncementById(announcementId)
+            }
+
+            this._lastFetch = 0;
+
+          return response;
+        } catch (err: any) {
+            this.error = err?.message || 'Erreur d\'enregistrement du volontaire en attente';
+            throw err;
+        } finally {
+            this.loading = false;
+        }
+    },
+    async addVolunteer(announcementId: string, volunteer: { id: string, name: string }) {
+        this.loading = true;
+        this.error = null;
+        try {
+            const response = await $fetch(`/api/announcement/registerVolunteer`, {
+            method: 'PATCH',
+            body: {
+                announcementId,
+                ...volunteer,
+            },
+            });
+
+            if (this.currentAnnouncement?._id === announcementId) {
+              await this.fetchAnnouncementById(announcementId)
+            }
+
+            this._lastFetch = 0;
+
+          return response;
+        } catch (err: any) {
+            this.error = err?.message || 'Erreur d\'enregistrement du volontaire';
+            throw err;
+        } finally {
+            this.loading = false;
+        }
+    },
+
+    async removeParticipant(announcementId: string, participantId: string) {
+        this.loading = true;
+        this.error = null;
+        try {
+            const response = await $fetch(`/api/announcement/removeParticipant`, {
+            method: 'PATCH',
+            body:{
+                participantId,
+                announcementId
+            },
+            });
+
+            if (this.currentAnnouncement?._id === announcementId) {
+            await this.fetchAnnouncementById(announcementId);
+            }
+
+            this._lastFetch = 0;
+
+            return response;
+        } catch (err: any) {
+            this.error = err?.message || 'Erreur de suppression du participant';
+            throw err;
+        } finally {
+            this.loading = false;
+        }
+    },
+    async removeVolunteer(announcementId: string, volunteerId: string) {
+        this.loading = true;
+        this.error = null;
+        try {
+            const response = await $fetch(`/api/announcement/removeVolunteer`, {
+            method: 'PATCH',
+              query: {
+                announcementId,
+                volunteerId
+              }
+            });
+
+            if (this.currentAnnouncement?._id === announcementId) {
+              await this.fetchAnnouncementById(announcementId)
+            }
+
+            this._lastFetch = 0;
+
+          return response;
+        } catch (err: any) {
+            this.error = err?.message || 'Erreur de suppression du volontaire';
+            throw err;
+        } finally {
+            this.loading = false;
+        }
+    },
+    async removeVolunteerWaiting(announcementId: string, volunteerId: string) {
+        this.loading = true;
+        this.error = null;
+        try {
+            const response = await $fetch(`/api/announcement/removeVolunteerWaiting`, {
+            method: 'PATCH',
+            query: {
+                announcementId,
+                volunteerId
+            }
+            });
+
+            if (this.currentAnnouncement?._id === announcementId) {
+              await this.fetchAnnouncementById(announcementId)
+            }
+
+            this._lastFetch = 0;
+
+          return response;
+        } catch (err: any) {
+            this.error = err?.message || 'Erreur de suppression du volontaire en attente';
+            throw err;
+        } finally {
+            this.loading = false;
+        }
+    },
+    async updateStatus(announcementId: string, status: string) {
+        this.loading = true;
+        this.error = null;
+        try {
+            const response = await $fetch(`/api/announcement/updateStatus`, {
+                method: 'PATCH',
+                body: { status, announcementId },
+            });
+
+            if (this.currentAnnouncement?._id === announcementId) {
+                await this.fetchAnnouncementById(announcementId);
+            }
+
+            this._lastFetch = 0;
+
+            return response;
+        } catch (err: any) {
+            this.error = err?.message || 'Erreur de mise à jour du statut de l\'annonce';
+            throw err;
+        } finally {
+            this.loading = false;
+        }
     }
   },
 }); 
