@@ -37,15 +37,6 @@ const props = defineProps<
     }
 >()
 
-watch(
-    () => props.announcements,
-    (newAnnouncements) => {
-        if (newAnnouncements.length > 0) {
-            console.log('New announcements received:', newAnnouncements.length);
-        }
-    },
-    { immediate: true }
-)
 
 
 </script>

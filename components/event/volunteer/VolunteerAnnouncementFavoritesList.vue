@@ -42,14 +42,6 @@ const props = defineProps<
 const useFavorite = useFavoritesAnnouncement();
 const { user } = useUser()
 
-watch(
-    () => props.announcementFavorites,
-    (newAnnouncements) => {
-      console.log("New announcements received:", newAnnouncements);
-    },
-    { immediate: true }
-)
-
 async function refreshFavorites() {
   if (!user.value) return
   await useFavorite.fetchAllFavoritesOfVolunteer(user.value.userId)

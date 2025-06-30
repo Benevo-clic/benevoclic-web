@@ -82,7 +82,6 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
                     method: 'POST',
                     body: { announcementId, volunteerId },
                 });
-                console.log('Favorite added:', response);
                 this.favorites.push(response);
             } catch (err: any) {
                 this.error = err?.message || 'Erreur d\'ajout au favoris';
