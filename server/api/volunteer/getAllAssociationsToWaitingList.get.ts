@@ -1,5 +1,6 @@
 import {defineEventHandler, getCookie} from "h3";
 import axios from 'axios';
+import type {AssociationVolunteerFollow} from "~/common/interface/volunteer.interface";
 
 
 
@@ -7,21 +8,23 @@ import axios from 'axios';
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
     const token = getCookie(event, 'auth_token')
-    const { userId } = getQuery(event) as { userId?: string }
+    const { volunteerId } = getQuery(event) as { volunteerId?: string }
 
     try {
-        const { data } = await axios.get(
-            `${config.private.api_base_url}/volunteer/${userId}`,
+        const { data } = await axios.get<AssociationVolunteerFollow[]>(
+            `${config.private.api_base_url}/api/v2/association/${volunteerId}/AllAssociationsVolunteerFromWaitingList`,
             { headers: { Authorization: `Bearer ${token}` } }
         )
+
+        console.log("Data received from API:", data);
         return data
     } catch (error: any) {
-        console.error(`Error fetching volunteer info: ${error.message}`);
+        console.error(`Error fetching associations from waiting list: ${error.message}`);
         throw createError({
             statusCode: error.response?.status || 500,
             statusMessage: error.response?.statusText || 'Erreur serveur',
             data: {
-                message: 'Failed to fetch volunteer info',
+                message: 'Failed to fetch associations from waiting list',
                 error: error.message
             }
         });

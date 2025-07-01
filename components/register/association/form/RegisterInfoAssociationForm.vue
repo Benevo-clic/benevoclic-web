@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useUser } from "~/composables/auth/useUser"
-import { useAssociationAuth } from "~/composables/auth/associationAuth"
+import { useAssociationAuth } from "~/composables/useAssociation"
 import type { CreateAssociationDto, FormFieldsAssociation } from "~/common/interface/register.interface"
 import PhoneForm from '../../volunteer/form/PhoneForm.vue'
 import CityForm from '../../volunteer/form/CityForm.vue'

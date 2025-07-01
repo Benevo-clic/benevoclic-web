@@ -15,7 +15,7 @@ import {
   HeartIcon,
   MoonIcon} from 'lucide-vue-next'
 import { useUser } from '~/composables/auth/useUser'
-import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
+import {useVolunteerAuth} from "~/composables/useVolunteer";
 import LanguageComponent from "~/components/header/utils/components/LanguageComponent.vue";
 import { useTheme } from "~/composables/useTheme";
 const { logout: signOut, user } = useUser()
@@ -75,7 +75,6 @@ const profileImageUrl = computed(() => {
   return ''
 })
 
-// Function to toggle body scroll
 const toggleBodyScroll = (disable: boolean) => {
   if (disable) {
     document.body.style.overflow = 'hidden'
@@ -84,12 +83,10 @@ const toggleBodyScroll = (disable: boolean) => {
   }
 }
 
-// Watch for changes to menuOpen prop
 watch(() => props.menuOpen, (isOpen) => {
   toggleBodyScroll(isOpen)
 })
 
-// Watch for route changes to ensure locale persists across navigation
 watch(() => route.path, () => {
   const savedLocale = localStorage.getItem('locale')
   if (savedLocale && locale.value !== savedLocale) {
@@ -97,13 +94,11 @@ watch(() => route.path, () => {
   }
 })
 
-// Set initial state when component is mounted
 onMounted(() => {
   if (props.menuOpen) {
     toggleBodyScroll(true)
   }
 
-  // Initialize locale from localStorage
   const savedLocale = localStorage.getItem('locale')
   const savedFlag = localStorage.getItem('flag')
 

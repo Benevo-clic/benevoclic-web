@@ -6,7 +6,6 @@ import {
   Bell,
   CircleHelp,
   UserRound,
-  PlusIcon,
   ClipboardList,
   CalendarIcon,
   Globe,
@@ -17,7 +16,7 @@ import {
 import { useUser } from '~/composables/auth/useUser'
 import LanguageComponent from "~/components/header/utils/components/LanguageComponent.vue";
 import { useTheme } from "~/composables/useTheme";
-import {useAssociationAuth} from "~/composables/auth/associationAuth";
+import {useAssociationAuth} from "~/composables/useAssociation";
 const { logout: signOut, user } = useUser()
 const {association: association} =useAssociationAuth()
 const { setLocale,t, locale } = useI18n()
@@ -27,7 +26,6 @@ const route = useRoute()
 const showLanguageMenu = ref(false)
 const flag = ref('🇫🇷')
 
-// Function to check if a route is active
 const isActive = (path: string) => {
   return route.path === path || route.path.startsWith(`${path}/`)
 }
@@ -62,7 +60,6 @@ async function changeLanguage(lo: 'fr' | 'en' | 'es', flagEmoji: string) {
   showLanguageMenu.value = false
   flag.value = flagEmoji
 
-  // Save to localStorage to persist across sessions
   localStorage.setItem('locale', lo)
   localStorage.setItem('flag', flagEmoji)
 }
@@ -75,7 +72,6 @@ const profileImageUrl = computed(() => {
   return ''
 })
 
-// Function to toggle body scroll
 const toggleBodyScroll = (disable: boolean) => {
   if (disable) {
     document.body.style.overflow = 'hidden'
@@ -84,12 +80,10 @@ const toggleBodyScroll = (disable: boolean) => {
   }
 }
 
-// Watch for changes to menuOpen prop
 watch(() => props.menuOpen, (isOpen) => {
   toggleBodyScroll(isOpen)
 })
 
-// Watch for route changes to ensure locale persists across navigation
 watch(() => route.path, () => {
   const savedLocale = localStorage.getItem('locale')
   if (savedLocale && locale.value !== savedLocale) {
@@ -97,13 +91,11 @@ watch(() => route.path, () => {
   }
 })
 
-// Set initial state when component is mounted
 onMounted(() => {
   if (props.menuOpen) {
     toggleBodyScroll(true)
   }
 
-  // Initialize locale from localStorage
   const savedLocale = localStorage.getItem('locale')
   const savedFlag = localStorage.getItem('flag')
 
@@ -171,7 +163,6 @@ function toggleLanguageMenu() {
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.app.title')}}</h4>
       <ul class="space-y-1">
         <li class="relative">
-          <!-- Bouton qui ouvre/ferme le menu -->
           <button
               :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', showLanguageMenu ? 'bg-base-200 border-l-4 border-primary' : '']"
               @click="toggleLanguageMenu"

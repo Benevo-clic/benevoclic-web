@@ -8,7 +8,7 @@ import PostalCodeForm from './PostalCodeForm.vue'
 import BioForm from './BioForm.vue'
 import type {CreateVolunteerDto, FormFieldsVolunteer} from "~/common/interface/register.interface";
 import {useUser} from "~/composables/auth/useUser";
-import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
+import {useVolunteerAuth} from "~/composables/useVolunteer";
 
 const { user } = useUser()
 const { registerVolunteer } = useVolunteerAuth()

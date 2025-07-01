@@ -4,7 +4,7 @@ import UsersLoginForm from "~/components/header/auth/form/UsersLoginForm.vue"
 import UserRegisterForm from "~/components/header/auth/form/UserRegisterForm.vue"
 import {useUser} from "~/composables/auth/useUser";
 import {RoleUser} from "~/common/enums/role.enum";
-import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
+import {useVolunteerAuth} from "~/composables/useVolunteer";
 
 const auth = useUser()
 const volunteer = useVolunteerAuth()

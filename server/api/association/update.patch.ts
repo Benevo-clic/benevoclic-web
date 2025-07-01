@@ -28,7 +28,16 @@ export default defineEventHandler(async (event) => {
         )
         return response.data;
 
-    }catch (error) {
+    }catch (error: any) {
+        console.error(`Error updating association: ${error.message}`);
+        throw createError({
+            statusCode: error.response?.status || 500,
+            statusMessage: error.response?.statusText || 'Erreur serveur',
+            data: {
+                message: 'Failed to update association',
+                error: error.message
+            }
+        });
 
     }
 }

@@ -225,7 +225,7 @@
 import {ref, reactive, watch } from 'vue';
 import type { Announcement } from '~/common/interface/event.interface';
 import { EventStatus } from '~/common/enums/event.enum';
-import {useAssociationAuth} from "~/composables/auth/associationAuth";
+import {useAssociationAuth} from "~/composables/useAssociation";
 import {useUser} from "~/composables/auth/useUser";
 
 const props = defineProps<{

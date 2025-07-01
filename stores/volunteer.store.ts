@@ -1,7 +1,7 @@
-import type {VolunteerInfo} from "~/common/interface/volunteer.interface";
+import type {AssociationVolunteerFollow, VolunteerInfo} from "~/common/interface/volunteer.interface";
 import type {CreateVolunteerDto} from "~/common/interface/register.interface";
 import {useUserStore} from "~/stores/user/user.store";
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 
 
 export const useVolunteerAuthStore = defineStore('volunteerAuth', {
@@ -117,11 +117,128 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                 this.loading = false
             }
         },
+        async getAssociationToWaitingList() {
+            const user = useUserStore().getUser
+
+            this.loading = true
+            this.error = null
+            try {
+                const response = await $fetch('/api/volunteer/getAssociationWaiting', {
+                    method: 'GET',
+                    query: { volunteerId: user?.userId },
+                })
+                // Rafraîchir le cache du bénévole après récupération
+                await this.getVolunteerInfo();
+                return response as VolunteerInfo[]
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de récupération des associations'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
+        async removeVolunteerFromWaitingListAssociation(associationId: string) {
+            const user = useUserStore().getUser
+
+            this.loading = true
+            this.error = null
+            try {
+                const response = await $fetch('/api/association/removeAssociationVolunteerWaiting', {
+                    method: 'PATCH',
+                    body: { associationId, volunteerId: user?.userId },
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                })
+                // Rafraîchir le cache du bénévole après modification
+                await this.getVolunteerInfo();
+                return response as { message: string }
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de suppression de la liste d\'attente'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
+        async  addVolunteerToWaitingListAssociation(associationId: string,volunteer: {id: string, name: string}) {
+            this.loading = true
+            this.error = null
+            try {
+                console.log('Adding volunteer to waiting list for association:', associationId, volunteer);
+                const response = await $fetch('/api/volunteer/addVolunteerWaiting', {
+                    method: 'PATCH',
+                    body: { associationId, volunteerId: volunteer.id, volunteerName: volunteer.name },
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                })
+
+                await this.getVolunteerInfo();
+                return response
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur d\'ajout à la liste d\'attente'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
+        async getAllAssociationsToWaitingList(volunteerId: string) {
+            this.loading = true
+            this.error = null
+            try {
+                return await $fetch<AssociationVolunteerFollow[]>('/api/volunteer/getAllAssociationsToWaitingList', {
+                    method: 'GET',
+                    query: {volunteerId},
+                });
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de récupération des associations en attente'
+                throw err
+            } finally {
+                this.loading = false
+            }
+
+        },
+
+        async getAllAssociationsFollowingList(volunteerId: string) {
+            this.loading = true
+            this.error = null
+            try {
+                return await $fetch<AssociationVolunteerFollow[]>('/api/volunteer/getAllAssociationsFollowingList', {
+                    method: 'GET',
+                    query: {volunteerId},
+                });
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de récupération des associations suivies'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
+        async getAssociations() {
+            const user = useUserStore().getUser
+
+            this.loading = true
+            this.error = null
+            try {
+                const response = await $fetch('/api/volunteer/getAssociations', {
+                    method: 'GET',
+                    query: { volunteerId: user?.userId },
+                })
+                // Rafraîchir le cache du bénévole après récupération
+                await this.getVolunteerInfo();
+                return response as VolunteerInfo[]
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de récupération des bénévoles'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
         async removeVolunteer() {
             this.loading = true
             this.error = null
             try {
-                 await $fetch<{ message: string }>('/api/volunteer/remove', {
+                 await $fetch('/api/volunteer/remove', {
                     method: 'DELETE',
                     query: { id: this.volunteer?.volunteerId },
                     headers: {

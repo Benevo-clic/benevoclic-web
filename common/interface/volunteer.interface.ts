@@ -4,6 +4,11 @@ export interface InfoAssociation{
     name: string;
 }
 
+export interface AssociationVolunteerFollow {
+    associationId: string;
+    associationName: string;
+}
+
 export interface VolunteerInfo{
     volunteerId: string;
     bio?: string;

@@ -116,7 +116,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { UserRound, Upload } from 'lucide-vue-next'
 import { useUser } from '~/composables/auth/useUser'
-import { useVolunteerAuth } from '~/composables/auth/volunteerAuth'
+import { useVolunteerAuth } from '~/composables/useVolunteer'
 import AccountMenuVolunteer from '~/components/account/AccountMenuVolunteer.vue'
 import { useI18n } from 'vue-i18n'
 import { isEqual } from 'lodash'

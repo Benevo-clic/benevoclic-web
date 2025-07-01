@@ -26,7 +26,7 @@
 import { useUser } from '~/composables/auth/useUser'
 import {definePageMeta} from "#imports";
 import {onMounted} from "vue";
-import {useAssociationAuth} from "~/composables/auth/associationAuth";
+import {useAssociationAuth} from "~/composables/useAssociation";
 
 definePageMeta({
   middleware: ['auth'],

@@ -55,7 +55,7 @@
 import { computed, onMounted } from 'vue'
 import { UserRound } from 'lucide-vue-next'
 import { useUser } from '~/composables/auth/useUser'
-import { useAssociationAuth } from '~/composables/auth/associationAuth'
+import { useAssociationAuth } from '~/composables/useAssociation'
 import AccountMenuAssociation from '~/components/account/AccountMenuAssociation.vue'
 
 definePageMeta({

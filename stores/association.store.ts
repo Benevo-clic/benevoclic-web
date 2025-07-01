@@ -56,7 +56,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
                 this.loading = false
             }
         },
-        async getAssociationInfo() {
+        async getAssociationInfo(associationId?: string) {
             const user = useUserStore().getUser
             
             if (this.isCacheValid && this.association) {
@@ -68,7 +68,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             try {
                 const response = await $fetch<AssociationInfo>('/api/association/associationInfo', {
                     method: 'GET',
-                    query: { userId: user?.userId },
+                    query: { userId: user?.userId || associationId },
                 })
 
                 if(response) {

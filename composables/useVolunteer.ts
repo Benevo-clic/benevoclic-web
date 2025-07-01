@@ -21,6 +21,12 @@ export const useVolunteerAuth = () => {
         getVolunteerInfo: volunteerStore.getVolunteerInfo,
         updateVolunteer: volunteerStore.updateVolunteer,
         removeVolunteer: volunteerStore.removeVolunteer,
+        getAssociationToWaitingList: volunteerStore.getAssociationToWaitingList,
+        removeVolunteerFromWaitingListAssociation: volunteerStore.removeVolunteerFromWaitingListAssociation,
+        addVolunteerToWaitingListAssociation: volunteerStore.addVolunteerToWaitingListAssociation,
+        getAllAssociationsToWaitingList: volunteerStore.getAllAssociationsToWaitingList,
+        getAllAssociationsFollowingList: volunteerStore.getAllAssociationsFollowingList,
+        getAssociations: volunteerStore.getAssociations,
     }
 
 }

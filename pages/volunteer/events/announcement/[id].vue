@@ -44,7 +44,6 @@
             <button 
               class="btn btn-sm"
               :class="followButtonClass"
-              :disabled="isFollowingPending"
               @click="toggleFollowAssociation"
             >
               <UserPlus v-if="!isFollowing" class="w-4 h-4 mr-1" />
@@ -241,7 +240,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted } from 'vue';
+import { ref, onMounted, computed, onUnmounted, watch, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import {definePageMeta} from "#imports";
 import {EventStatus} from "~/common/enums/event.enum";
@@ -250,21 +249,30 @@ import {
   Tag, UserPlus, UserCheck
 } from 'lucide-vue-next'
 import {useAnnouncement} from '~/composables/useAnnouncement';
-import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
+import {useVolunteerAuth} from "~/composables/useVolunteer";
+import type { AssociationVolunteerFollow } from '~/common/interface/volunteer.interface';
 
 const route = useRoute();
 const announcementUse = useAnnouncement();
-const volunteerUse = useVolunteerAuth()
+const volunteerUse = useVolunteerAuth();
 const loading = ref(true);
 const loadingVolunteer = computed(() => announcementUse.loading.value)
+const announcement = announcementUse.getCurrentAnnouncement;
 
-const announcement = announcementUse.getCurrentAnnouncement
+const volunteerId = computed(() => volunteerUse.volunteer?.value?.volunteerId);
+const associationId = computed(() => announcement.value?.associationId);
 
-// État pour l'adhésion à l'association
-const isFollowing = ref(false);
-const isFollowingPending = ref(false);
+// Listes réactives pour l'état d'adhésion
+const associationsWaitingList = ref<AssociationVolunteerFollow[]>([]);
+const associationsFollowingList = ref<AssociationVolunteerFollow[]>([]);
 
-// Computed pour le bouton d'adhésion
+const isFollowingPending = computed(() =>
+  associationsWaitingList.value.some(a => a.associationId === associationId.value)
+);
+const isFollowing = computed(() =>
+  associationsFollowingList.value.some(a => a.associationId === associationId.value)
+);
+
 const followButtonText = computed(() => {
   if (isFollowingPending.value) return 'Attente de validation';
   if (isFollowing.value) return 'Adhérent';
@@ -277,7 +285,55 @@ const followButtonClass = computed(() => {
   return 'btn-primary';
 });
 
-// Computed pour les places disponibles
+async function refreshFollowState() {
+  if (!volunteerId.value) return;
+  associationsWaitingList.value = await volunteerUse.getAllAssociationsToWaitingList(volunteerId.value);
+  associationsFollowingList.value = await volunteerUse.getAllAssociationsFollowingList(volunteerId.value);
+}
+
+onMounted(async () => {
+  await fetchAnnouncement();
+  if (volunteerUse.volunteer.value?.volunteerId) {
+    await refreshFollowState();
+  } else {
+    const stop = watch(
+      () => volunteerUse.volunteer.value?.volunteerId,
+      async (id) => {
+        if (id) {
+          await nextTick();
+          await refreshFollowState();
+          stop();
+        }
+      },
+      { immediate: true }
+    );
+    if (!volunteerUse.volunteer.value) {
+      await volunteerUse.getVolunteerInfo();
+    }
+  }
+});
+
+async function fetchAnnouncement() {
+  if (route.params.id) {
+    announcementUse.invalidateCache();
+    await announcementUse.fetchAnnouncementById(route.params.id as string);
+    loading.value = announcementUse.loading.value;
+  }
+}
+
+async function toggleFollowAssociation() {
+  if (!volunteerId.value || !associationId.value) return;
+  if (isFollowingPending.value) {
+    await volunteerUse.removeVolunteerFromWaitingListAssociation(associationId.value);
+  } else {
+    await volunteerUse.addVolunteerToWaitingListAssociation(associationId.value, {
+      id: volunteerId.value,
+      name: volunteerUse.volunteer.value?.firstName + ' ' + volunteerUse.volunteer.value?.lastName
+    });
+  }
+  await refreshFollowState();
+}
+
 const remainingParticipants = computed(() => {
   const max = announcement.value?.maxParticipants || 0;
   const current = announcement.value?.nbParticipants || 0;
@@ -290,10 +346,8 @@ const remainingVolunteers = computed(() => {
   return Math.max(0, max - current);
 });
 
-// Computed pour vérifier si on peut participer
 const canParticipateAsVolunteer = computed(() => remainingVolunteers.value > 0);
 const canParticipateAsParticipant = computed(() => remainingParticipants.value > 0);
-const canParticipateAsBoth = computed(() => canParticipateAsVolunteer.value && canParticipateAsParticipant.value);
 const alreadyParticipating = computed(() => {
   const volunteerId = volunteerUse.volunteer?.value?.volunteerId;
   return announcement.value?.participants?.some(p => p.id === volunteerId) || false;
@@ -302,6 +356,7 @@ const isAlreadyVolunteerWaiting = computed(() => {
   const volunteerId = volunteerUse.volunteer?.value?.volunteerId;
   return announcement.value?.volunteersWaiting?.some(v => v.id === volunteerId) || false;
 });
+
 const isAlreadyVolunteer = computed(() => {
   const volunteerId = volunteerUse.volunteer?.value?.volunteerId;
   return announcement.value?.volunteers?.some(v => v.id === volunteerId) || false;
@@ -324,17 +379,6 @@ definePageMeta({
   layout: 'header',
 })
 
-onMounted(fetchAnnouncement);
-
-async function fetchAnnouncement() {
-  if (route.params.id) {
-    announcementUse.invalidateCache();
-    await announcementUse.fetchAnnouncementById(route.params.id as string);
-    loading.value = announcementUse.loading.value;
-  }
-}
-
-// Fonctions pour la participation
 function participateAsVolunteer() {
   if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
     console.error('Aucun événement sélectionné pour la participation');
@@ -393,27 +437,6 @@ function cancelVolunteerParticipation() {
   announcementUse.removeVolunteerWaiting(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
 }
 
-// Fonction pour gérer l'adhésion à l'association
-function toggleFollowAssociation() {
-  if (isFollowing.value) {
-    // Si déjà adhérent, on peut se désabonner
-    isFollowing.value = false;
-    console.log('Désadhésion de l\'association');
-  } else if (!isFollowingPending.value) {
-    // Si pas encore adhérent et pas en attente, on demande l'adhésion
-    isFollowingPending.value = true;
-    console.log('Demande d\'adhésion à l\'association');
-
-    // Simuler une validation après 3 secondes (pour la démo)
-    setTimeout(() => {
-      isFollowingPending.value = false;
-      isFollowing.value = true;
-      console.log('Adhésion validée');
-    }, 3000);
-  }
-}
-
-// Fonction pour ouvrir dans Google Maps
 function openInGoogleMaps() {
   const address = announcement.value?.locationAnnouncement?.address;
   const city = announcement.value?.locationAnnouncement?.city;
@@ -456,7 +479,6 @@ const statusBadgeClass = computed(() => {
 
 function checkScrollIndicators() {
   const el = document.documentElement;
-  // Si le contenu dépasse la fenêtre
   if (el.scrollHeight > window.innerHeight + 10) {
     showScrollDown.value = (window.scrollY + window.innerHeight) < (el.scrollHeight - 10);
     showScrollUp.value = window.scrollY > 10;
@@ -487,7 +509,6 @@ onUnmounted(() => {
   opacity: 0;
 }
 
-/* Animation pour les cartes */
 .bg-base-100 {
   transition: transform 0.2s ease-in-out;
 }
@@ -496,12 +517,10 @@ onUnmounted(() => {
   transform: translateY(-2px);
 }
 
-/* Style pour les badges de statut */
 .badge {
   transition: all 0.2s ease-in-out;
 }
 
-/* Responsive pour les boutons */
 @media (max-width: 640px) {
   .btn {
     font-size: 0.875rem;

@@ -169,7 +169,7 @@
 import { ref, reactive, computed } from 'vue'
 import AccountMenuVolunteer from '~/components/account/AccountMenuVolunteer.vue'
 import {useUser} from "~/composables/auth/useUser";
-import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
+import {useVolunteerAuth} from "~/composables/useVolunteer";
 
 definePageMeta({
   middleware: ['auth'],

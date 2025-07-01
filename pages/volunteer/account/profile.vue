@@ -54,7 +54,7 @@
 import { computed } from 'vue'
 import { UserRound } from 'lucide-vue-next'
 import { useUser } from '~/composables/auth/useUser'
-import { useVolunteerAuth } from '~/composables/auth/volunteerAuth'
+import { useVolunteerAuth } from '~/composables/useVolunteer'
 import AccountMenuVolunteer from '~/components/account/AccountMenuVolunteer.vue'
 
 definePageMeta({

@@ -119,7 +119,7 @@ import { useUser } from '~/composables/auth/useUser'
 
 import { useI18n } from 'vue-i18n'
 import { isEqual } from 'lodash'
-import {useAssociationAuth} from "~/composables/auth/associationAuth";
+import {useAssociationAuth} from "~/composables/useAssociation";
 
 const { t } = useI18n()
 
@@ -168,10 +168,8 @@ const isFormChanged = computed(() => {
 })
 
 onMounted(async () => {
-  // Fetch user data without redirecting
   await auth.fetchUser()
 
-  // Ensure association data is loaded
   if (!associationAuth.association.value) {
     await associationAuth.getAssociationInfo()
   }
@@ -186,7 +184,6 @@ onMounted(async () => {
     const type = associationAuth.association.value.type || ''
     const country = associationAuth.association.value.country || ''
 
-    // Update form
     form.value.associationName = associationName
     form.value.phone = phone
     form.value.city = city
@@ -195,7 +192,6 @@ onMounted(async () => {
     form.value.type = type
     form.value.country = country
 
-    // Update initialForm
     initialForm.value.associationName = associationName
     initialForm.value.phone = phone
     initialForm.value.city = city
@@ -209,23 +205,18 @@ onMounted(async () => {
 function handleImageChange(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (file) {
-    // Set loading state
     isImageUploading.value = true
 
-    // Convert image to base64
     const reader = new FileReader()
     reader.onload = async () => {
       try {
         const base64 = reader.result as string
-        // Save the profile image
         await auth.updateProfile(base64)
-        // Show success alert
         alertStatus.value = 'success'
         alertMessage.value = t('drawer-content.account.profile_updated_success') || 'Profile image updated successfully'
         setTimeout(() => {
           alertStatus.value = null
         }, 10000)
-        // Update profile image URL
         profileImageUrl = computed(() => {
           return base64
         })

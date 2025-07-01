@@ -168,7 +168,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import {useUser} from "~/composables/auth/useUser";
-import { useAssociationAuth } from '~/composables/auth/associationAuth'
+import { useAssociationAuth } from '~/composables/useAssociation'
 
 definePageMeta({
   middleware: ['auth'],

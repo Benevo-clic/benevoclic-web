@@ -24,7 +24,15 @@ export default defineEventHandler(async (event) => {
         deleteCookies(event);
 
     }catch (error:any){
-        throw new Error("Erreur lors de la suppression de l'utilisateur", error)
+        console.error(`Error removing volunteer: ${error.message}`);
+        throw createError({
+            statusCode: error.response?.status || 500,
+            statusMessage: error.response?.statusText || 'Erreur serveur',
+            data: {
+                message: 'Failed to remove volunteer',
+                error: error.message
+            }
+        });
     }
 
 })

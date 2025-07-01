@@ -28,7 +28,16 @@ export default defineEventHandler(async (event) => {
         )
         return response.data;
 
-    }catch (error) {
+    }catch (error: any) {
+        console.error(`Error updating volunteer: ${error.message}`);
+        throw createError({
+            statusCode: error.response?.status || 500,
+            statusMessage: error.response?.statusText || 'Internal Server Error',
+            data: {
+                message: 'Failed to update volunteer',
+                error: error.message
+            }
+        });
 
     }
 }
