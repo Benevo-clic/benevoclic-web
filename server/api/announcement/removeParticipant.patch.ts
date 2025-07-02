@@ -10,7 +10,6 @@ export default defineEventHandler(async (event) => {
 
     try {
         const url = `${config.private.api_base_url}/announcements/unregister/participant/${body.participantId}/${body.announcementId}`;
-        console.log('URL:', url);
 
         const participantInfo = await axios.patch(url,
             {},

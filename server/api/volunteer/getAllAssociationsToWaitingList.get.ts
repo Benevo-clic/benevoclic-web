@@ -16,7 +16,6 @@ export default defineEventHandler(async (event) => {
             { headers: { Authorization: `Bearer ${token}` } }
         )
 
-        console.log("Data received from API:", data);
         return data
     } catch (error: any) {
         console.error(`Error fetching associations from waiting list: ${error.message}`);

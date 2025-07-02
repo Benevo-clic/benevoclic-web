@@ -26,6 +26,7 @@ export const useUser = () => {
         userRole: computed(() => authStore.getUserRule),
         error: computed(() => authStore.error),
         loginWithGoogle: authStore.loginWithGoogle,
+        getUserById: authStore.getUserById,
         removeUser: authStore.removeUserAccount,
         updateProfile: authStore.uploadProfilePicture,
         register: registerStore.registerWithEmailPassword,

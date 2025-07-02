@@ -10,8 +10,6 @@ export default defineEventHandler(async (event) => {
     try {
         const url = `${config.private.api_base_url}/api/v2/association/${body.associationId}/removeAssociationVolunteersWaiting/${body.volunteerId}`;
 
-        console.log('URL:', url);
-
         const volunteerInfo = await axios.patch(url,
             {},
             {

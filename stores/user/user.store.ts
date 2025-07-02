@@ -240,6 +240,25 @@ export const useUserStore = defineStore('auth', {
       }
     },
 
+    async getUserById(id: string) {
+        this.loading = true
+        this.error = null
+        try {
+            const response = await $fetch<UserInfo>(`/api/user/${id}`)
+
+            if (!response) {
+            this.error = 'Utilisateur non trouvé'
+            }
+
+            return response
+        } catch (err: any) {
+            this.error = err?.message || 'Erreur de récupération de l\'utilisateur'
+            throw err
+        } finally {
+            this.loading = false
+        }
+    },
+
     async callRegisterGoogle(idToken: string, role: RoleUser) {
       try {
         this.error = null
