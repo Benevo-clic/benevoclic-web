@@ -37,7 +37,6 @@
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-base font-semibold text-base-content truncate">{{ announcement?.associationName }}</p>
-            <p class="text-sm text-base-content/80">{{ announcement?.nbVolunteers}} bénévoles</p>
           </div>
           <!-- Bouton Adhérer -->
           <div class="flex-shrink-0">

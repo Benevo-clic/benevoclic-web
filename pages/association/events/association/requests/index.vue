@@ -29,7 +29,7 @@
           :key="req.id"
           :volunteer="req.volunteer"
           type="association"
-          @accept="acceptRequestAssociation(req.id)"
+          @accept="acceptRequestAssociation(req.idAssociation,req.id ,req.volunteer.name)"
           @refuse="refuseRequestAssociation(req.id)"
         />
       </div>
@@ -137,6 +137,7 @@ async function buildAssociationRequests() {
       if (!volunteerInfo) return null;
       return {
         id: `${volunteer.id}`,
+        idAssociation: `${association.associationId}`,
         volunteer: {
           name: volunteer.name,
           email: volunteerInfo.email,
@@ -179,8 +180,14 @@ function refuseRequestAnnouncement(id: string) {
   announcement.removeVolunteerWaiting(announcementId, volunteerId);
 }
 
-function acceptRequestAssociation(id: string) {
-  alert('Accepté: ' + id);
+function acceptRequestAssociation(idAssociation: string,id: string, volunteerName: string) {
+  associationStore.addVolunteerToAssociation(
+    idAssociation,
+    {
+      id: id,
+      name: volunteerName,
+    }
+  )
 }
 function refuseRequestAssociation(id: string) {
   alert('Refusé: ' + id);
