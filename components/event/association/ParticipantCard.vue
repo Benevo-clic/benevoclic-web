@@ -37,6 +37,7 @@
       <!-- Bouton de droite -->
       <button 
         class="btn btn-sm btn-outline btn-error"
+        @click="$emit('rightAction', participant.id)"
       >
         Retirer
       </button>
@@ -68,8 +69,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  leftAction: [participant: Participant];
-  rightAction: [participant: Participant];
+  rightAction: [participant: string];
 }>();
 
 const { getUserById } = useUser();

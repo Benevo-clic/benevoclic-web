@@ -78,7 +78,7 @@
 
       <!-- Contenu des onglets -->
       <div v-if="tab === 'participants'">
-        <ParticipantsList :participants="announcement?.participants" />
+        <ParticipantsList :participants="announcement?.participants" @right-action="handleRightAction" />
       </div>
       <div v-else>
         <VolunteersList :volunteers="announcement?.volunteers" />
@@ -122,8 +122,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
+import { useRoute } from 'vue-router';
 import { useAnnouncementStore } from '~/stores/announcement.store';
 import AnnouncementEditForm from '~/components/event/association/AnnouncementEditForm.vue';
 import VolunteersList from '~/components/event/association/VolunteersList.vue';
@@ -194,6 +194,12 @@ function confirmDelete() {
   announcementDelete()
 }
 
+function handleRightAction(id: string) {
+  console.log(`Retirer le participant avec l'ID: ${id}`);
+  if (!announcement.value) return;
+  announcementStore.removeParticipant(announcement.value?._id, id);
+}
+
 async function announcementDelete() {
   if (!announcement.value) return;
     await announcementStore.removeAnnouncement(announcement.value._id);
@@ -250,6 +256,9 @@ onUnmounted(() => {
   window.removeEventListener('scroll', checkScrollIndicators);
   window.removeEventListener('resize', checkScrollIndicators);
 });
+
+
+
 
 </script>
 

@@ -6,7 +6,6 @@
         v-for="participant in props.participants"
         :key="participant.id"
         :participant="participant"
-        @left-action="handleLeftAction"
         @right-action="handleRightAction"
       />
     </div>
@@ -36,16 +35,13 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  leftAction: [participant: Participant];
-  rightAction: [participant: Participant];
+  rightAction: [participant: string];
 }>();
 
 
-function handleLeftAction(participant: Participant) {
-  emit('leftAction', participant);
-}
 
-function handleRightAction(participant: Participant) {
-  emit('rightAction', participant);
+
+function handleRightAction(id: string) {
+  emit('rightAction', id);
 }
 </script> 
