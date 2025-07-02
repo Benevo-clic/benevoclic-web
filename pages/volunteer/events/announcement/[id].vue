@@ -93,7 +93,7 @@
           <button
               class="btn btn-neutral flex-1"
               :disabled="!canParticipateAsVolunteer"
-              @click="cancelVolunteerParticipation"
+              @click="cancelVolunteerParticipationWaitingList"
               v-if="isAlreadyVolunteerWaiting"
           >
             <HeartHandshake class="w-5 h-5 mr-2" />
@@ -102,7 +102,6 @@
           </button>
           <button
               class="btn btn-neutral flex-1"
-              :disabled="!canParticipateAsVolunteer"
               @click="cancelVolunteerParticipation"
               v-else-if="isAlreadyVolunteer"
           >
@@ -429,12 +428,20 @@ function cancelParticipation() {
   announcementUse.removeParticipant(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
 }
 
-function cancelVolunteerParticipation() {
+function cancelVolunteerParticipationWaitingList() {
   if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
     console.error('Aucun événement sélectionné pour l\'annulation de participation en tant que bénévole');
     return;
   }
   announcementUse.removeVolunteerWaiting(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
+}
+
+function cancelVolunteerParticipation() {
+  if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
+    console.error('Aucun événement sélectionné pour l\'annulation de participation en tant que bénévole');
+    return;
+  }
+  announcementUse.removeVolunteer(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
 }
 
 function openInGoogleMaps() {

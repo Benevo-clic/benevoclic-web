@@ -81,7 +81,7 @@
         <ParticipantsList :participants="announcement?.participants" @right-action="handleRightAction" />
       </div>
       <div v-else>
-        <VolunteersList :volunteers="announcement?.volunteers" />
+        <VolunteersList :volunteers="announcement?.volunteers" @right-action="handleRightActionVolunteer" />
       </div>
 
       <!-- Modal édition annonce -->
@@ -198,6 +198,12 @@ function handleRightAction(id: string) {
   console.log(`Retirer le participant avec l'ID: ${id}`);
   if (!announcement.value) return;
   useAnnouncementAuth.removeParticipant(announcement.value?._id, id);
+}
+
+function handleRightActionVolunteer(id: string) {
+  console.log(`Retirer le participant avec l'ID: ${id}`);
+  if (!announcement.value) return;
+  useAnnouncementAuth.removeVolunteer(announcement.value?._id, id);
 }
 
 async function announcementDelete() {

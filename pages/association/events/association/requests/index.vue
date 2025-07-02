@@ -166,7 +166,6 @@ watch(currentAssociation, async () => {
 });
 
 function acceptRequestAnnouncement(id: string, volunteerName: string) {
-  // announcement.addVolunteer(id)
   const volunteerId = id.split('-')[1];
   const announcementId = id.split('-')[0];
   announcement.addVolunteer(announcementId, {
@@ -175,7 +174,9 @@ function acceptRequestAnnouncement(id: string, volunteerName: string) {
   });
 }
 function refuseRequestAnnouncement(id: string) {
-  alert('Refusé: ' + id);
+  const volunteerId = id.split('-')[1];
+  const announcementId = id.split('-')[0];
+  announcement.removeVolunteerWaiting(announcementId, volunteerId);
 }
 
 function acceptRequestAssociation(id: string) {
