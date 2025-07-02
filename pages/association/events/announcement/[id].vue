@@ -124,7 +124,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { useAnnouncementStore } from '~/stores/announcement.store';
 import AnnouncementEditForm from '~/components/event/association/AnnouncementEditForm.vue';
 import VolunteersList from '~/components/event/association/VolunteersList.vue';
 import ParticipantsList from '~/components/event/association/ParticipantsList.vue';
@@ -132,14 +131,15 @@ import {definePageMeta} from "#imports";
 import {EventStatus} from "~/common/enums/event.enum";
 import {HeartHandshake,Users,Calendar,Clock,MapPin} from 'lucide-vue-next'
 const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
+import { useAnnouncement } from '~/composables/useAnnouncement';
 
 const route = useRoute();
-const announcementStore = useAnnouncementStore();
+const useAnnouncementAuth = useAnnouncement();
 const loading = ref(true);
 const editModalOpen = ref(false);
 const tab = ref<'participants' | 'volunteers'>('participants');
 
-const announcement = computed(() => announcementStore.currentAnnouncement);
+const announcement = computed(() => useAnnouncementAuth.getCurrentAnnouncement.value);
 
 const profileImageUrl = computed(() => {
   const img = announcement.value?.associationLogo;
@@ -162,9 +162,9 @@ onMounted(fetchAnnouncement);
 
 async function fetchAnnouncement() {
   if (route.params.id) {
-    announcementStore.invalidateCache();
-    await announcementStore.fetchAnnouncementById(route.params.id as string);
-    loading.value = announcementStore.loading;
+    useAnnouncementAuth.invalidateCache();
+    await useAnnouncementAuth.fetchAnnouncementById(route.params.id as string);
+    loading.value = useAnnouncementAuth.loading.value;
   }
 }
 
@@ -197,12 +197,12 @@ function confirmDelete() {
 function handleRightAction(id: string) {
   console.log(`Retirer le participant avec l'ID: ${id}`);
   if (!announcement.value) return;
-  announcementStore.removeParticipant(announcement.value?._id, id);
+  useAnnouncementAuth.removeParticipant(announcement.value?._id, id);
 }
 
 async function announcementDelete() {
   if (!announcement.value) return;
-    await announcementStore.removeAnnouncement(announcement.value._id);
+    await useAnnouncementAuth.removeAnnouncement(announcement.value._id);
     navigateTo('/association/events/association/manage');
 }
 
