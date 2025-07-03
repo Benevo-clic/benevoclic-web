@@ -1,9 +1,6 @@
 <template>
-  <div v-if="loadingAnnouncement.value" class="flex justify-center items-center h-32">
-    <span class="loading loading-bars loading-xl"></span>
-  </div>
-  <div v-else class="container mx-auto px-2 md:px-2 py-6 max-w-2xl">
-    <h1 class="text-2xl font-bold mb-6">Demandes</h1>
+  <div  class="container mx-auto px-2 md:px-2 py-6 max-w-2xl">
+    <h1 class="text-2xl font-bold mb-6">Mes demandes</h1>
     <div role="tablist" class="tabs tabs-bordered mb-6">
       <a role="tab" :class="['tab', tab === 'event' ? 'tab-active' : '']" @click="tab = 'event'">Demandes de bénévolat à un événement</a>
       <a role="tab" :class="['tab', tab === 'association' ? 'tab-active' : '']" @click="tab = 'association'">Demandes d'adhésion à l'association</a>
@@ -53,13 +50,11 @@ definePageMeta({
 const announcement = useAnnouncement()
 const { getUserById,getUserId } = useUser();
 const announcements = computed(() => announcement.getAnnouncements)
-const loadingAnnouncement = computed(() => announcement.loading)
 const loading = ref(false);
 
 
 const tab = ref<'event' | 'association'>('event');
 
-// Pour les demandes d'événement
 const eventRequests = ref<any[]>([]);
 const volunteersCache = ref<Record<string, any>>({});
 
@@ -105,7 +100,6 @@ async function buildEventRequests() {
     .filter(Boolean);
 }
 
-// Pour les demandes d'adhésion à l'association
 const associationRequests = ref<any[]>([]);
 const associationVolunteersCache = ref<Record<string, any>>({});
 const associationStore = useAssociationAuth();
@@ -173,11 +167,13 @@ function acceptRequestAnnouncement(id: string, volunteerName: string) {
     id: volunteerId,
     name: volunteerName,
   });
+  eventRequests.value = eventRequests.value.filter(req => req.id !== id);
 }
 function refuseRequestAnnouncement(id: string) {
   const volunteerId = id.split('-')[1];
   const announcementId = id.split('-')[0];
   announcement.removeVolunteerWaiting(announcementId, volunteerId);
+  eventRequests.value = eventRequests.value.filter(req => req.id !== id);
 }
 
 function acceptRequestAssociation(idAssociation: string,id: string, volunteerName: string) {
@@ -188,9 +184,13 @@ function acceptRequestAssociation(idAssociation: string,id: string, volunteerNam
       name: volunteerName,
     }
   )
+  // Retirer la demande de la liste locale
+  associationRequests.value = associationRequests.value.filter(req => req.id !== id);
 }
 function refuseRequestAssociation(id: string) {
   alert('Refusé: ' + id);
+  // Retirer la demande de la liste locale
+  associationRequests.value = associationRequests.value.filter(req => req.id !== id);
 }
 </script>
 
