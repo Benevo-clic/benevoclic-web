@@ -140,7 +140,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             try {
                 const response = await $fetch('/api/association/removeAssociationVolunteerWaiting', {
                     method: 'PATCH',
-                    body: { associationId, volunteerId: user?.userId },
+                    query: { associationId, volunteerId: user?.userId },
                     headers: {
                         "Content-Type": "application/json"
                     },

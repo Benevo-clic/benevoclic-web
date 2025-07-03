@@ -27,7 +27,7 @@
           :volunteer="req.volunteer"
           type="association"
           @accept="acceptRequestAssociation(req.idAssociation,req.id ,req.volunteer.name)"
-          @refuse="refuseRequestAssociation(req.id)"
+          @refuse="refuseRequestAssociation(req.idAssociation,req.id)"
         />
       </div>
       <div v-else class="text-gray-400">Aucune demande d'adhésion.</div>
@@ -184,12 +184,10 @@ function acceptRequestAssociation(idAssociation: string,id: string, volunteerNam
       name: volunteerName,
     }
   )
-  // Retirer la demande de la liste locale
   associationRequests.value = associationRequests.value.filter(req => req.id !== id);
 }
-function refuseRequestAssociation(id: string) {
-  alert('Refusé: ' + id);
-  // Retirer la demande de la liste locale
+function refuseRequestAssociation(associationId: string, id: string) {
+  associationStore.removeAssociationVolunteerWaiting(associationId,id);
   associationRequests.value = associationRequests.value.filter(req => req.id !== id);
 }
 </script>
