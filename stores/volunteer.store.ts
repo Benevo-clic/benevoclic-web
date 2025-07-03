@@ -2,6 +2,7 @@ import type {AssociationVolunteerFollow, VolunteerInfo} from "~/common/interface
 import type {CreateVolunteerDto} from "~/common/interface/register.interface";
 import {useUserStore} from "~/stores/user/user.store";
 import {defineStore} from 'pinia'
+import type {AssociationInfo} from "~/common/interface/association.interface";
 
 
 export const useVolunteerAuthStore = defineStore('volunteerAuth', {
@@ -182,6 +183,29 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                 this.loading = false
             }
         },
+        async removeVolunteerFromAssociation(associationId: string, volunteerId: string) {
+            this.loading = true
+            this.error = null
+            try {
+                const response = await $fetch('/api/association/removeAssociationVolunteer', {
+                    method: 'PATCH',
+                    query: { associationId, volunteerId },
+                })
+
+                if(response) {
+                    this.clearCache()
+                    await this.getVolunteerInfo();
+                }
+
+                return response as AssociationInfo
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de suppression du bénévole de l\'association'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
+
         async getAllAssociationsToWaitingList(volunteerId: string) {
             this.loading = true
             this.error = null

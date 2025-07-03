@@ -154,6 +154,28 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             }
 
         },
+        async removeVolunteerFromAssociation(associationId: string, volunteerId: string) {
+            this.loading = true
+            this.error = null
+            try {
+                const response = await $fetch<AssociationInfo>('/api/association/removeAssociationVolunteer', {
+                    method: 'PATCH',
+                    query: { associationId, volunteerId },
+                })
+
+                if(response) {
+                    this.clearCache()
+                    await this.getAssociationInfo(associationId)
+                }
+
+                return response as AssociationInfo
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de suppression du bénévole de l\'association'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
         async removeAssociation() {
             this.loading = true
             this.error = null

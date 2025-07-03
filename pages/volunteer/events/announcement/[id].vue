@@ -323,7 +323,9 @@ async function toggleFollowAssociation() {
   if (!volunteerId.value || !associationId.value) return;
   if (isFollowingPending.value) {
     await volunteerUse.removeVolunteerFromWaitingListAssociation(associationId.value);
-  } else {
+  } else if (isFollowing.value) {
+    await volunteerUse.removeVolunteerFromAssociation(associationId.value, volunteerId.value);
+  }else {
     await volunteerUse.addVolunteerToWaitingListAssociation(associationId.value, {
       id: volunteerId.value,
       name: volunteerUse.volunteer.value?.firstName + ' ' + volunteerUse.volunteer.value?.lastName
