@@ -218,34 +218,34 @@ const removeCoverPhoto = () => {
 
 async function save() {
   try {
-    form.value.tags = tagsInput.value.split(',').map((t: string) => t.trim()).filter(Boolean);
+  form.value.tags = tagsInput.value.split(',').map((t: string) => t.trim()).filter(Boolean);
 
-    if (form.value._id && props.announcement) {
-      const updatedFields: any = {};
-      const original = props.announcement;
-      const keys: (keyof Announcement)[] = ['nameEvent', 'description', 'dateEvent', 'hoursEvent', 'status', 'maxParticipants', 'maxVolunteers'];
-      for (const key of keys) {
-        if (form.value[key] !== original[key]) {
-          updatedFields[key] = form.value[key];
-        }
-      }
-      if (JSON.stringify(form.value.tags) !== JSON.stringify(original.tags)) {
-        updatedFields.tags = form.value.tags;
-      }
-      if (JSON.stringify(form.value.locationAnnouncement) !== JSON.stringify(original.locationAnnouncement)) {
-        updatedFields.locationAnnouncement = form.value.locationAnnouncement;
-      }
-      if (Object.keys(updatedFields).length > 0) {
-        await store.updateAnnouncement(form.value._id, updatedFields);
-      }
-      if (imageFile.value) {
-        const base64 = await fileToBase64(imageFile.value);
-        await store.uploadImageCover(base64);
+  if (form.value._id && props.announcement) {
+    const updatedFields: any = {};
+    const original = props.announcement;
+    const keys: (keyof Announcement)[] = ['nameEvent', 'description', 'dateEvent', 'hoursEvent', 'status', 'maxParticipants', 'maxVolunteers'];
+    for (const key of keys) {
+      if (form.value[key] !== original[key]) {
+        updatedFields[key] = form.value[key];
       }
     }
+    if (JSON.stringify(form.value.tags) !== JSON.stringify(original.tags)) {
+      updatedFields.tags = form.value.tags;
+    }
+    if (JSON.stringify(form.value.locationAnnouncement) !== JSON.stringify(original.locationAnnouncement)) {
+      updatedFields.locationAnnouncement = form.value.locationAnnouncement;
+    }
+    if (Object.keys(updatedFields).length > 0) {
+      await store.updateAnnouncement(form.value._id, updatedFields);
+    }
+    if (imageFile.value) {
+      const base64 = await fileToBase64(imageFile.value);
+      await store.uploadImageCover(base64);
+    }
+  }
     
     // Émettre l'événement saved seulement après que tout soit terminé
-    emit('saved');
+  emit('saved');
   } catch (error) {
     console.error('Erreur lors de la sauvegarde:', error);
     // Vous pouvez ajouter ici une gestion d'erreur pour l'utilisateur
