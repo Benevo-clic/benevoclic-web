@@ -40,15 +40,17 @@
           </div>
           <!-- Bouton Adhérer -->
           <div class="flex-shrink-0">
-            <button 
+            <button
               class="btn btn-sm"
               :class="followButtonClass"
               @click="toggleFollowAssociation"
+              @mouseenter="hovering = true"
+              @mouseleave="hovering = false"
             >
               <UserPlus v-if="!isFollowing" class="w-4 h-4 mr-1" />
               <Clock v-else-if="isFollowingPending" class="w-4 h-4 mr-1" />
               <UserCheck v-else class="w-4 h-4 mr-1" />
-              {{ followButtonText }}
+              {{ followButtonHoverText }}
             </button>
           </div>
         </div>
@@ -271,9 +273,15 @@ const isFollowing = computed(() =>
   associationsFollowingList.value.some(a => a.associationId === associationId.value)
 );
 
-const followButtonText = computed(() => {
-  if (isFollowingPending.value) return 'Attente de validation';
-  if (isFollowing.value) return 'Adhérent';
+const hovering = ref(false);
+
+const followButtonHoverText = computed(() => {
+  if (isFollowingPending.value) {
+    return hovering.value ? 'Annuler ma demande' : 'Attente de validation';
+  }
+  if (isFollowing.value) {
+    return hovering.value ? 'Se retirer' : 'Adhérent';
+  }
   return 'Adhérer';
 });
 
