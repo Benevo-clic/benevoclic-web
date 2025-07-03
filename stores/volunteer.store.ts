@@ -8,6 +8,7 @@ import type {AssociationInfo} from "~/common/interface/association.interface";
 export const useVolunteerAuthStore = defineStore('volunteerAuth', {
     state: () => ({
         volunteer: null as VolunteerInfo | null,
+        associationsFollowingList: null as AssociationVolunteerFollow[] | null,
         loading: false,
         error: null as string | null,
         // Cache pour éviter les recalculs
@@ -19,7 +20,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
     getters: {
         getVolunteer: (state) => state.volunteer,
         isExist: (state) => state.volunteer !== null,
-        // Vérifier si le cache est valide
+        getAssociationsFollowingList: (state) => state.associationsFollowingList,
         isCacheValid: (state) => {
             return Date.now() - state._lastFetch < state._cacheExpiry;
         }
@@ -27,7 +28,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
 
     actions:{
 
-        // Optimisation du cache
         _updateCache(volunteer: VolunteerInfo) {
             if (volunteer?.volunteerId) {
                 this._volunteerCache.set(volunteer.volunteerId, volunteer);
@@ -35,7 +35,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this._lastFetch = Date.now();
         },
 
-        // Méthode pour nettoyer le cache
         clearCache() {
             this._volunteerCache.clear();
             this._lastFetch = 0;
@@ -43,8 +42,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
 
         async getVolunteerInfo() {
             const user = useUserStore().getUser
-            
-            // Vérifier le cache d'abord
+
             if (this.isCacheValid && this.volunteer) {
                 return this.volunteer;
             }
@@ -58,7 +56,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                 })
                 if(response) {
                     this.volunteer = response
-                    // Mettre à jour le cache
                     this._updateCache(response);
                 }
                 return response as VolunteerInfo
@@ -81,7 +78,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
 
                 if(response) {
                     this.volunteer = response
-                    // Mettre à jour le cache
                     this._updateCache(response);
                 }
 
@@ -106,7 +102,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
 
                 if(response) {
                     this.volunteer = response
-                    // Mettre à jour le cache
                     this._updateCache(response);
                 }
 
@@ -128,7 +123,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                     method: 'GET',
                     query: { volunteerId: user?.userId },
                 })
-                // Rafraîchir le cache du bénévole après récupération
                 await this.getVolunteerInfo();
                 return response as VolunteerInfo[]
             } catch (err: any) {
@@ -151,7 +145,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                         "Content-Type": "application/json"
                     },
                 })
-                // Rafraîchir le cache du bénévole après modification
+
                 await this.getVolunteerInfo();
                 return response as { message: string }
             } catch (err: any) {
@@ -165,7 +159,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                console.log('Adding volunteer to waiting list for association:', associationId, volunteer);
                 const response = await $fetch('/api/volunteer/addVolunteerWaiting', {
                     method: 'PATCH',
                     body: { associationId, volunteerId: volunteer.id, volunteerName: volunteer.name },
@@ -183,6 +176,26 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                 this.loading = false
             }
         },
+        async getAllAssociationsFollowingList(volunteerId: string, forceRefresh = false) {
+            if (!forceRefresh && this.associationsFollowingList !== null) {
+                return this.associationsFollowingList
+            }
+            this.loading = true
+            this.error = null
+            try {
+                const data = await $fetch<AssociationVolunteerFollow[]>('/api/volunteer/getAllAssociationsFollowingList', {
+                    method: 'GET',
+                    query: { volunteerId },
+                });
+                this.associationsFollowingList = data
+                return data
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de récupération des associations du bénévole depuis la liste d\'attente'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
         async removeVolunteerFromAssociation(associationId: string, volunteerId: string) {
             this.loading = true
             this.error = null
@@ -194,7 +207,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
 
                 if(response) {
                     this.clearCache()
-                    await this.getVolunteerInfo();
+                    this.associationsFollowingList = (this.associationsFollowingList ?? []).filter(
+                        (association) => association.associationId !== associationId
+                    );
                 }
 
                 return response as AssociationInfo
@@ -205,7 +220,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                 this.loading = false
             }
         },
-
         async getAllAssociationsToWaitingList(volunteerId: string) {
             this.loading = true
             this.error = null
@@ -222,22 +236,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             }
 
         },
-
-        async getAllAssociationsFollowingList(volunteerId: string) {
-            this.loading = true
-            this.error = null
-            try {
-                return await $fetch<AssociationVolunteerFollow[]>('/api/volunteer/getAllAssociationsFollowingList', {
-                    method: 'GET',
-                    query: {volunteerId},
-                });
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur de récupération des associations suivies'
-                throw err
-            } finally {
-                this.loading = false
-            }
-        },
         async getAssociations() {
             const user = useUserStore().getUser
 
@@ -248,7 +246,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                     method: 'GET',
                     query: { volunteerId: user?.userId },
                 })
-                // Rafraîchir le cache du bénévole après récupération
+
                 await this.getVolunteerInfo();
                 return response as VolunteerInfo[]
             } catch (err: any) {
@@ -270,7 +268,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                     },
                 })
 
-                // Nettoyer le cache après suppression
                 if (this.volunteer?.volunteerId) {
                     this._volunteerCache.delete(this.volunteer.volunteerId);
                 }

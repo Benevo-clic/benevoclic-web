@@ -21,7 +21,7 @@
       </div>
 
       <!-- Main content -->
-      <main class="flex-1 p-6 overflow-auto max-h-[calc(100vh-150px)]">
+      <main class="flex-1 p-1 overflow-auto max-h-[calc(100vh-4rem)]">
         <slot />
       </main>
     </div>

@@ -2,7 +2,7 @@
   <div v-if="loadingAnnouncement.value" class="flex justify-center items-center h-32">
     <span class="loading loading-bars loading-xl"></span>
   </div>
-  <div v-else class="container mx-auto px-2 md:px-4 py-6 max-w-2xl">
+  <div v-else class="container mx-auto px-2 md:px-2 py-6 max-w-2xl">
     <h1 class="text-2xl font-bold mb-6">Demandes</h1>
     <div role="tablist" class="tabs tabs-bordered mb-6">
       <a role="tab" :class="['tab', tab === 'event' ? 'tab-active' : '']" @click="tab = 'event'">Demandes de bénévolat à un événement</a>

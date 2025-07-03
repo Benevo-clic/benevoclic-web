@@ -3,7 +3,7 @@
 <template>
   <div>
     <Header />
-    <main class="p-4 bg-base-200 min-h-screen">
+    <main class="bg-base-200 max-h-[calc(100vh-4rem)]">
       <slot />
     </main>
   </div>

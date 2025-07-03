@@ -23,14 +23,18 @@
 
       <!-- Statistiques -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
-          <span class="text-2xl font-bold text-primary">{{ user?.volunteers?.length ?? 0 }}</span>
-          <span class="text-xs text-base-content/70">Bénévoles</span>
-        </div>
-        <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
-          <span class="text-2xl font-bold text-primary">{{ nbAnnouncements }}</span>
-          <span class="text-xs text-base-content/70">Annonces créées</span>
-        </div>
+        <NuxtLink to="/association/account/volunteers" >
+          <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
+            <span class="text-2xl font-bold text-primary">{{ user?.volunteers?.length ?? 0 }}</span>
+            <span class="text-xs text-base-content/70">Bénévoles</span>
+          </div>
+        </NuxtLink>
+        <NuxtLink to="/association/events/association/manage" >
+          <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
+            <span class="text-2xl font-bold text-primary">{{ nbAnnouncements }}</span>
+            <span class="text-xs text-base-content/70">Annonces créées</span>
+          </div>
+        </NuxtLink>
         <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
           <span class="text-2xl font-bold text-primary">{{ creationDate }}</span>
           <span class="text-xs text-base-content/70">Créée le</span>

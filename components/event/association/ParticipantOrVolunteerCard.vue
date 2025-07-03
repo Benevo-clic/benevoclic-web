@@ -1,46 +1,35 @@
 <template>
-  <div class="bg-base-100 rounded-lg shadow-md p-4 flex items-center gap-4 hover:shadow-lg transition-shadow">
-    <!-- Photo de profil -->
-    <div class="flex-shrink-0">
+  <div class="bg-base-100 rounded-lg shadow-md p-4 flex gap-4 hover:shadow-lg transition-shadow mb-4">
+    <!-- Avatar à gauche -->
+    <div class="flex-shrink-0 flex items-start">
       <div v-if="loading" class="avatar placeholder">
-        <div class="w-12 h-12 rounded-full bg-base-300 text-base-content ring-2 ring-primary ring-offset-2 ring-offset-base-100">
+        <div class="w-16 h-16 rounded-full bg-base-300 text-base-content ring-2 ring-primary ring-offset-2 ring-offset-base-100">
           <span class="loading loading-spinner loading-sm"></span>
         </div>
       </div>
       <div v-else-if="userInfo?.imageProfile?.data" class="avatar">
-        <div class="w-12 h-12 rounded-full ring-2 ring-primary ring-offset-2 ring-offset-base-100">
+        <div class="w-16 h-16 rounded-full ring-2 ring-primary ring-offset-2 ring-offset-base-100">
           <img :src="profileImageUrl" :alt="`Photo de ${participant.name}`" class="w-full h-full object-cover rounded-full" />
         </div>
       </div>
       <div v-else class="avatar placeholder">
-        <div class="w-12 h-12 rounded-full bg-base-300 text-base-content ring-2 ring-primary ring-offset-2 ring-offset-base-100">
-          <span class="text-lg font-bold">{{ participant.name.charAt(0).toUpperCase() }}</span>
+        <div class="w-16 h-16 rounded-full bg-base-300 text-base-content ring-2 ring-primary ring-offset-2 ring-offset-base-100 flex items-center justify-center">
+          <span class="text-xl font-bold">{{ participant.name.charAt(0).toUpperCase() }}</span>
         </div>
       </div>
     </div>
-
-    <!-- Informations du participant -->
-    <div class="flex-1 min-w-0">
-      <h4 class="font-semibold text-base-content truncate">{{ participant.name }}</h4>
-      <p class="text-sm text-base-content/70 truncate">{{ userInfo?.email || 'Email non disponible' }}</p>
-    </div>
-
-    <!-- Boutons d'action -->
-    <div class="flex items-center gap-2 flex-shrink-0">
-      <!-- Bouton de gauche -->
-      <button 
-        class="btn btn-sm btn-outline btn-primary"
-      >
-        Détails
-      </button>
-
-      <!-- Bouton de droite -->
-      <button 
-        class="btn btn-sm btn-outline btn-error"
-        @click="$emit('rightAction', participant.id)"
-      >
-        Retirer
-      </button>
+    <!-- Infos + boutons -->
+    <div class="flex-1 flex flex-col justify-between min-w-0">
+      <!-- Nom et email en haut -->
+      <div class="mb-4">
+        <h4 class="font-semibold text-base-content text-lg truncate">{{ participant.name }}</h4>
+        <p class="text-sm text-base-content/70 truncate">{{ userInfo?.email || 'Email non disponible' }}</p>
+      </div>
+      <!-- Boutons en bas -->
+      <div class="flex gap-2 mt-auto">
+        <button class="btn btn-sm btn-outline btn-primary flex-1">Détails</button>
+        <button class="btn btn-sm btn-outline btn-error flex-1" @click="$emit('rightAction', participant.id)">Retirer</button>
+      </div>
     </div>
   </div>
 </template>

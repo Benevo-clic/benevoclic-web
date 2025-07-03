@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h3 class="text-lg font-bold mb-2">Bénévoles</h3>
     <div v-if="props.volunteers && props.volunteers.length">
       <ParticipantOrVolunteerCard
           v-for="volunteer in props.volunteers"

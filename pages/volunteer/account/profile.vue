@@ -27,11 +27,13 @@
 
       <!-- Statistiques -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <NuxtLink to="/volunteer/account/associations" >
         <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
           <span class="text-2xl font-bold text-primary">{{ nbAssociations }}</span>
           <span class="text-xs text-base-content/70">Associations</span>
         </div>
-        <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
+        </NuxtLink>
+          <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
           <span class="text-2xl font-bold text-primary">{{ nbEvents }}</span>
           <span class="text-xs text-base-content/70">Événements participés</span>
         </div>
