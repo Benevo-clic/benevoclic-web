@@ -1,4 +1,6 @@
 import { defineEventHandler } from 'h3';
+import { getCookie, readBody } from 'h3';
+import axios from 'axios';
 
 
 export default defineEventHandler(async (event) => {
@@ -8,23 +10,25 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
   try {
-    const response = await $fetch<boolean>(
+    const response = await axios.patch(
       `${config.private.api_base_url}/announcements/${announcementId}`,
+        {
+            ...body,
+        },
       {
-        method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body,
       }
     );
     return response.data;
-  }catch (error) {
+  }catch (error : any) {
     console.error(`Error updating announcement ${announcementId}: ${error.message}`);
     throw createError({
       statusCode: error.response?.status || 500,
       statusMessage: error.response?.statusText || 'Erreur serveur',
+      data: error instanceof Error ? error.message : String(error)
     });
   }
 }); 

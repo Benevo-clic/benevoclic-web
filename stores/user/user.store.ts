@@ -51,7 +51,6 @@ export const useUserStore = defineStore('auth', {
     getVerificationStatus: (state) => state.isVerified,
     isFetching: (state) => state._isFetching,
     getUserRule: (state) => state.user?.role,
-    // Vérifier si le cache utilisateur est valide
     isUserCacheValid: (state) => {
       return Date.now() - state._lastUserFetch < state._userCacheExpiry;
     }
@@ -71,7 +70,7 @@ export const useUserStore = defineStore('auth', {
         case RoleUser.ASSOCIATION:
           return navigateTo('/association/dashboard')
         default:
-          return navigateTo('/dashboard')
+          return navigateTo('/auth/login')
       }
     },
     async login(payload: LoginPayload) {
@@ -171,6 +170,8 @@ export const useUserStore = defineStore('auth', {
           this.error = 'Erreur lors de la connexion'
           throw new Error(this.error)
         }
+        await this.getPageRole()
+
       } catch (error: any) {
         this.error = error?.message || 'Erreur lors de la connexion'
         throw error
@@ -221,7 +222,6 @@ export const useUserStore = defineStore('auth', {
 
         if(decodedPayload.role){
             await this.fetchUserGoogle({idToken, refreshToken: user.refreshToken, uid: user.uid});
-            await this.getPageRole();
         }else{
           await this.callRegisterGoogle(idToken,role)
           if(role === 'VOLUNTEER'){
@@ -257,6 +257,29 @@ export const useUserStore = defineStore('auth', {
         } finally {
             this.loading = false
         }
+    },
+    async updateIsCompleted(id:string,isCompleted: boolean) {
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch<UserInfo>('/api/user/updateIsCompleted', {
+          method: 'PATCH',
+          body: {id, isCompleted}
+        })
+
+        if(response) {
+          this._lastUserFetch = 0; // Invalider le cache utilisateur
+          this.user = response
+        }
+
+        return response
+      } catch (err: any) {
+        this.error = err?.message || 'Erreur de mise à jour du profil'
+        throw err
+      } finally {
+        this.loading = false
+      }
+
     },
 
     async callRegisterGoogle(idToken: string, role: RoleUser) {

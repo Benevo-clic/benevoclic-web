@@ -26,7 +26,6 @@ onMounted(async () => {
   const userRole = auth.userRole
 
 
-
   // Redirect based on role
   if (userRole.value === 'VOLUNTEER') {
     navigateTo('/volunteer');

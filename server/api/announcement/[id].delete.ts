@@ -6,6 +6,13 @@ export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'auth_token');
   const config = useRuntimeConfig();
 
+    if (!announcementId) {
+        throw createError({
+        statusCode: 400,
+        statusMessage: 'Announcement ID is required',
+        });
+    }
+
   try {
     const response = await axios.delete<boolean>(
         `${config.private.api_base_url}/announcements/${announcementId}`,

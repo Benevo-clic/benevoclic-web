@@ -7,6 +7,12 @@ import axios from 'axios';
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
     const { siretNum } = getQuery(event) as { siretNum?: string }
+    if (!siretNum) {
+        throw createError({
+            statusCode: 400,
+            message: 'SIRET number is required'
+        });
+    }
 
     try {
 

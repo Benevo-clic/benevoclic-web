@@ -1,6 +1,6 @@
 import { useUserStore } from '~/stores/user/user.store'
 import { onMounted, computed, ref } from 'vue'
-import {useRegisterStore} from "~/stores/user/register";
+import {useRegisterStore} from "~/stores/user/register.store";
 
 export const useUser = () => {
     const authStore = useUserStore()
@@ -26,6 +26,7 @@ export const useUser = () => {
         userRole: computed(() => authStore.getUserRule),
         error: computed(() => authStore.error),
         loginWithGoogle: authStore.loginWithGoogle,
+        updateIsCompleted: authStore.updateIsCompleted,
         getUserById: authStore.getUserById,
         removeUser: authStore.removeUserAccount,
         updateProfile: authStore.uploadProfilePicture,

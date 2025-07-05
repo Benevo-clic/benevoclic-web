@@ -37,12 +37,7 @@ export function setCookies(event:H3Event<EventHandlerRequest>,loginResponse: Log
         sameSite: 'strict',
         maxAge: 60 * 60 * 24 * 30 // 30 jours
     })
-    setCookie(event,'role',loginResponse.idUser,{
-        httpOnly: false,
-        secure: false,
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 30 // 30 jours
-    })
+
   }else{
     throw createError({
       statusCode: 401,

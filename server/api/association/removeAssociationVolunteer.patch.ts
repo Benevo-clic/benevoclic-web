@@ -1,10 +1,19 @@
 import axios from 'axios'
-import { defineEventHandler, readBody, getCookie, createError } from "h3";
+import { defineEventHandler, getCookie, createError } from "h3";
 
 export default defineEventHandler(async (event) => {
     const token = getCookie(event, 'auth_token')
     const config = useRuntimeConfig();
     const query = getQuery(event);
+    if (!query.associationId || !query.volunteerId) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            data: {
+                message: 'Association ID and Volunteer ID are required'
+            }
+        });
+    }
 
 
     try {

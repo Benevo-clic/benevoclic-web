@@ -7,6 +7,13 @@ export default defineEventHandler(async (event) => {
     const token = getCookie(event, 'auth_token')
     const config = useRuntimeConfig();
 
+    if (!volunteerId) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Volunteer ID is required',
+        });
+    }
+
     try {
         const url = `${config.private.api_base_url}/favorites-announcement/${volunteerId}/favoritesVolunteer`;
         const response = await axios.get(url,

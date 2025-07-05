@@ -1,6 +1,3 @@
-
-
-
 import axios from 'axios';
 import { defineEventHandler } from 'h3';
 import { FavoritesAnnouncement} from '~/common/interface/event.interface';

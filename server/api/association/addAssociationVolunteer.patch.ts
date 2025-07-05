@@ -6,6 +6,15 @@ export default defineEventHandler(async (event) => {
     const token = getCookie(event, 'auth_token')
     const config = useRuntimeConfig();
     const query = getQuery(event);
+    if (!query.associationId) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            data: {
+                message: 'Association ID is required'
+            }
+        });
+    }
 
 
     try {

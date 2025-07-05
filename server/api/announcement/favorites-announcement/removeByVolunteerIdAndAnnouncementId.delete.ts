@@ -8,6 +8,13 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
     const token = getCookie(event, 'auth_token')
 
+    if (!volunteerId || !announcementId) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Volunteer ID and Announcement ID are required',
+        });
+    }
+
 
     try {
         const url = `${config.private.api_base_url}/favorites-announcement/${volunteerId}/${announcementId}`;

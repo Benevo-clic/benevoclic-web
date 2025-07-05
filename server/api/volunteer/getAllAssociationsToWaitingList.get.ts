@@ -9,6 +9,12 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
     const token = getCookie(event, 'auth_token')
     const { volunteerId } = getQuery(event) as { volunteerId?: string }
+    if (!volunteerId) {
+        throw createError({
+            statusCode: 400,
+            message: 'Volunteer ID is required'
+        });
+    }
 
     try {
         const { data } = await axios.get<AssociationVolunteerFollow[]>(

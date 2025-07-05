@@ -1,5 +1,6 @@
 import {defineEventHandler, createError, H3Event, EventHandlerRequest} from 'h3'
 import {LoginResponse} from "~/common/types/auth.type";
+import {getCookie, setCookie} from 'h3'
 
 function setAccessTokenOnly(event: H3Event<EventHandlerRequest>, loginResponse: LoginResponse) {
   if(loginResponse.idToken) {

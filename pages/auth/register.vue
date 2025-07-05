@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onUnmounted } from 'vue'
 import {RoleUser} from "~/common/enums/role.enum";
-import { useRegisterStore } from '~/stores/user/register';
+import { useRegisterStore } from '~/stores/user/register.store';
 
 const loading = ref(false)
 const form = reactive({

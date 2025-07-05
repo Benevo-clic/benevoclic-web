@@ -1,7 +1,6 @@
 import type {RegisterEmailVerifiedResponse, RegisterPayload} from "~/common/types/register.type";
 import { defineStore } from 'pinia'
 
-import {useCookie} from "#app/composables/cookie";
 import {
     createUserWithEmailAndPassword,
     getAuth,
@@ -29,7 +28,6 @@ export const useRegisterStore = defineStore('register', {
     }),
     getters:{
         getIdUser: (state)  => state.idUser,
-        isRegisted: () => !!useCookie('auth_token').value,
         getVerificationStatus: (state) => state.isVerified
     },
     actions: {
@@ -44,7 +42,11 @@ export const useRegisterStore = defineStore('register', {
                         this.$patch({ isVerified: true });
 
                         if (this.unsubscribe) {
-                            this.callRegisterEmailVerified({ email: payload.email, password: payload.password, role: payload.role });
+                            await this.callRegisterEmailVerified({
+                                email: payload.email,
+                                password: payload.password,
+                                role: payload.role
+                            });
                             this.unsubscribe();
                             this.unsubscribe = null;
                         }
@@ -76,13 +78,14 @@ export const useRegisterStore = defineStore('register', {
                     navigateTo(
                         {
                             path: '/auth/registerAssociation',
-                        })
+                        }
+                    )
                 }
                 useNuxtApp().$refreshAuth();
 
             } catch (error) {
-                this.error = "Une erreur est survenue lors de l'inscription"
-                throw new Error('Erreur lors de l\'inscription'+error);
+                this.error = error instanceof Error ? error.message : 'Erreur lors de l\'enregistrement';
+                throw new Error('Erreur lors de l\'enregistrement: ' + this.error);
             }
         },
         async registerWithEmailPassword(payload: RegisterPayload) {

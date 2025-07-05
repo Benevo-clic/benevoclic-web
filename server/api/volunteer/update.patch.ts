@@ -9,6 +9,15 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
     const { id } = getQuery(event) as { id?: string }
     const body = await readBody(event);
+    if (!id) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Bad Request',
+            data: {
+                message: 'Volunteer ID is required'
+            }
+        });
+    }
 
 
 

@@ -7,6 +7,9 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event)
     const token = getCookie(event, 'auth_token')
     const config = useRuntimeConfig();
+    if (!body || !body.uid) {
+        throw new Error("UID manquant dans la requête")
+    }
 
 
     try {
