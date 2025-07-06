@@ -40,6 +40,7 @@ export interface UserInfo {
     disabled: boolean
     isVerified: boolean
     lastConnection: string
+    isCompleted?: boolean
     createdAt: string
     updatedAt: string
     imageProfile?: imageProfile

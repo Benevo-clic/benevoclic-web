@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
 
 
-  if (!authStore.isAuthenticated) {
+  if (authStore.isAuthenticated) {
     const userRole = authStore.getUserRule;
     if(userRole === 'VOLUNTEER') {
       return navigateTo('/volunteer')

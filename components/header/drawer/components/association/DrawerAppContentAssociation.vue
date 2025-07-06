@@ -32,7 +32,6 @@ const isActive = (path: string) => {
 
 
 const props = defineProps({
-  isAuthenticated: Boolean,
   menuOpen: Boolean,
   displayProfile: Boolean,
 })
@@ -117,7 +116,7 @@ function toggleLanguageMenu() {
 
 <template>
   <nav class=" pl-4 pr-4 pb-4"  >
-    <div class="flex gap-4 justify-end w-full pb-4" v-if="!props.isAuthenticated" >
+    <div class="flex gap-4 justify-end w-full pb-4" >
       <div>
         <h3 class="font-semibold text-lg">{{ association?.associationName }} </h3>
         <p class="text-sm text-base-content opacity-70">{{ user?.email }}</p>
@@ -132,7 +131,7 @@ function toggleLanguageMenu() {
   <!-- Sections -->
   <nav class="flex-1 min-h-0 overflow-y-auto px-4 py-2 space-y-4" >
     <!-- Account -->
-    <div class="space-y-2" v-if="!props.isAuthenticated">
+    <div class="space-y-2">
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.account.title')}}</h4>
       <ul class="space-y-1">
         <li><button @click="navigateTo('/association/account/profile'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/account/profile') ? 'bg-base-200 border-l-4 border-primary' : '']"><UserRound class="w-5 h-5"/>{{t('drawer-content.account.view_profile')}}</button></li>
@@ -141,7 +140,7 @@ function toggleLanguageMenu() {
       </ul>
     </div>
     <!-- Activity -->
-    <div class="space-y-2" v-if="!props.isAuthenticated">
+    <div class="space-y-2" >
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.activity.title')}}</h4>
       <ul class="space-y-1">
         <li><button @click="navigateTo('/association/activity/dashboard'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/activity/dashboard') ? 'bg-base-200 border-l-4 border-primary' : '']"><DashboardIcon class="w-5 h-5"/>{{t('drawer-content.activity.dashboard')}}</button></li>
@@ -151,7 +150,7 @@ function toggleLanguageMenu() {
 
     </div>
     <!-- Notifications & Support -->
-    <div class="space-y-2" v-if="!props.isAuthenticated">
+    <div class="space-y-2" >
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.notifications_support.title')}}</h4>
       <ul class="space-y-1">
         <li><button @click="navigateTo('/notifications'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/notifications') ? 'bg-base-200 border-l-4 border-primary' : '']"><Bell class="w-5 h-5"/>{{t('drawer-content.notifications_support.notifications')}}</button></li>
@@ -198,15 +197,11 @@ function toggleLanguageMenu() {
   <!-- Footer -->
   <div class="p-4">
     <button
-        v-if="!props.isAuthenticated"
         @click="handleLogout"
         class="btn btn-primary w-full"
     >
       {{t('drawer-content.logout')}}
     </button>
-    <div v-else class="flex flex-col gap-2">
-      <HeaderAuthModalAuth />
-    </div>
   </div>
 </template>
 

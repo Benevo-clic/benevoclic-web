@@ -21,7 +21,7 @@ const auth = useUser()
 
 // Redirect based on user role
 onMounted(async () => {
-  await auth.fetchUser()
+  await auth.initializeUser()
 
   const userRole = auth.userRole
 

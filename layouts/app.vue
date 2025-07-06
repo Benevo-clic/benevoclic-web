@@ -5,14 +5,14 @@
       <!-- Drawer for desktop (hidden on mobile) -->
       <div class="hidden md:block w-64 bg-base-100 shadow-lg pt-4">
         <DrawerAppContentVolunteer
-          :is-authenticated="isAuthenticated"
+          :is-authenticated="!isAuthenticated"
           :menu-open="true"
           :display-profile="false"
           class="h-full"
           v-if="userRole === 'VOLUNTEER'"
         />
         <DrawerAppContentAssociation
-          :is-authenticated="isAuthenticated"
+          :is-authenticated="!isAuthenticated"
           :menu-open="true"
           :display-profile="false"
           class="h-full"
@@ -36,4 +36,5 @@ import DrawerAppContentAssociation
   from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
 
 const { isAuthenticated, userRole } = useUser()
+
 </script>

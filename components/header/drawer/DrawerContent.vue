@@ -4,6 +4,7 @@ import {   X} from 'lucide-vue-next'
 import DrawerAppContentVolunteer from "~/components/header/drawer/components/volunteer/DrawerAppContentVolunteer.vue";
 import DrawerAppContentAssociation
   from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
+import DrawerAppContentNoConnected from "~/components/header/drawer/components/DrawerAppContentNoConnected.vue";
 
 
 
@@ -69,19 +70,23 @@ function handleCloseDrawer() {
       </div>
 
       <DrawerAppContentVolunteer
-        :is-authenticated="props.isAuthenticated"
         :menu-open="menuOpen"
         :display-profile="true"
         @close-drawer="handleCloseDrawer"
         v-if="role === 'VOLUNTEER'"
         />
       <DrawerAppContentAssociation
-        :is-authenticated="props.isAuthenticated"
         :menu-open="menuOpen"
         :display-profile="true"
         @close-drawer="handleCloseDrawer"
         v-else-if="role === 'ASSOCIATION'"
         />
+      <DrawerAppContentNoConnected
+          :menu-open="menuOpen"
+          :display-profile="true"
+          @close-drawer="handleCloseDrawer"
+          v-else
+      />
     </aside>
   </transition>
 </template>

@@ -123,7 +123,7 @@ const creationDate = computed(() => {
 })
 
 onMounted(async () => {
-  await auth.fetchUser()
+  await auth.initializeUser()
   if (!user.value) {
     await useAssociationAuth().getAssociationInfo()
   }

@@ -41,7 +41,7 @@ definePageMeta({
 
 const announcement = useAnnouncement();
 const useFavorite = useFavoritesAnnouncement();
-const { user } = useUser()
+const { user, initializeUser } = useUser()
 
 const favorites = computed(() => useFavorite.getFavorites);
 const announcements = computed(() => announcement.getAnnouncements);
@@ -49,6 +49,7 @@ const loading = computed(() => announcement.loading);
 const error = computed(() => announcement.error);
 
 onMounted(async () => {
+  await initializeUser();
   await announcement.fetchAllAnnouncements();
   if (user.value) {
     await useFavorite.fetchAllFavoritesOfVolunteer(user.value.userId);

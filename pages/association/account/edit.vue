@@ -146,7 +146,7 @@ const isFormChanged = computed(() => {
 })
 
 onMounted(async () => {
-  await auth.fetchUser()
+  await auth.initializeUser()
 
   if (!associationAuth.association.value) {
     await associationAuth.getAssociationInfo()

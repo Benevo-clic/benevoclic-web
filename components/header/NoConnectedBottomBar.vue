@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import { Heart as HeartIcon, Clock as ClockIcon, HelpCircle as HelpIcon, Search as SearchIcon, Home as HomeIcon } from 'lucide-vue-next'
 import { useRecentSearches } from "~/composables/useRecentSearches";
-import { navigateTo } from "#app";
 
 const { t } = useI18n()
 const showRecentSearches = ref(false)
@@ -50,12 +49,10 @@ onUnmounted(() => {
 })
 
 function handleFavorites() {
-  navigateTo('/volunteer/activity/favorites')
 }
 
 function handleHome() {
-  console.log('VolunteerHome')
-  navigateTo('/volunteer')
+  console.log('Navigating to home 2')
 }
 </script>
 
@@ -132,7 +129,7 @@ function handleHome() {
           </div>
         </div>
       </div>
-      <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="navigateTo('/help')">
+      <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="">
         <HelpIcon class="w-6 h-6"  /> {{t('header.volunteer.help')}}
       </button>
     </div>

@@ -37,7 +37,7 @@ const auth = useUser()
 const associationAuth = useAssociationAuth()
 
 onMounted(async () => {
-  await auth.fetchUser()
+  await auth.initializeUser()
   const userRole = auth.userRole
   const isVolunteer = await associationAuth.getAssociationInfo()
   const isAuthenticated = auth.isAuthenticated.value

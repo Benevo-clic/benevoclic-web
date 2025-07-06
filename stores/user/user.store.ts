@@ -30,6 +30,7 @@ interface UserState {
   _lastUserFetch: number;
   _userCacheExpiry: number;
   _isFetching: boolean;
+  _lastUserUpdate: number; // Timestamp de la dernière mise à jour
 }
 
 export const useUserStore = defineStore('auth', {
@@ -41,10 +42,14 @@ export const useUserStore = defineStore('auth', {
     _lastUserFetch: 0,
     _userCacheExpiry: 2 * 60 * 1000, // 2 minutes
     _isFetching: false,
+    _lastUserUpdate: 0,
   }),
 
   getters: {
-    isAuthenticated: () => !useCookie('isConnected').value,
+    isAuthenticated: (state) => {
+      const isConnected = useCookie('isConnected').value;
+      return Boolean(isConnected);
+    },
     getUserId: (state) => state.user?.userId || useCookie('id_user').value || undefined,
     getUser: (state) => state.user,
     fullName: (state) => state.user ? `${state.user.firstName} ${state.user.lastName}` : '',
@@ -53,10 +58,24 @@ export const useUserStore = defineStore('auth', {
     getUserRule: (state) => state.user?.role,
     isUserCacheValid: (state) => {
       return Date.now() - state._lastUserFetch < state._userCacheExpiry;
+    },
+    isUserDataFresh: (state) => {
+      return state._lastUserUpdate > state._lastUserFetch;
     }
   },
   
   actions: {
+
+    invalidateUserCache() {
+      this._lastUserFetch = 0;
+      this._isFetching = false;
+    },
+
+    updateUserData(userData: UserInfo) {
+      this.user = userData;
+      this._lastUserUpdate = Date.now();
+      this.error = null;
+    },
 
     async getPageRole() {
       await this.fetchUser()
@@ -73,6 +92,7 @@ export const useUserStore = defineStore('auth', {
           return navigateTo('/auth/login')
       }
     },
+
     async login(payload: LoginPayload) {
       this.loading = true
       this.error = null
@@ -82,8 +102,8 @@ export const useUserStore = defineStore('auth', {
           body: payload,
         })
 
-
         if(response.idToken) {
+          this.invalidateUserCache();
           await this.getPageRole()
         }
         return response
@@ -105,7 +125,7 @@ export const useUserStore = defineStore('auth', {
 
         if(response.success) {
             this.user = null
-            this._lastUserFetch = 0 // Réinitialiser le cache
+            this.invalidateUserCache()
             navigateTo('/')
         }
       } catch (err: any) {
@@ -129,21 +149,26 @@ export const useUserStore = defineStore('auth', {
     },
 
     async fetchUser() {
-      // Éviter les appels simultanés
       if (this._isFetching) {
         return this.user;
       }
 
-      // Vérifier le cache d'abord
-      if (this.isUserCacheValid && this.user) {
+      if (this.isUserCacheValid && this.user && !this.isUserDataFresh) {
         return this.user;
       }
 
+      this.loading = true
       this._isFetching = true;
       try {
         this.error = null
         await this.refreshTokens()
-        this.user = await $fetch<UserInfo>('/api/user/userCurrent')
+        const userData = await $fetch<UserInfo>('/api/user/userCurrent')
+        
+        if (!userData || !userData.userId) {
+          throw new Error('Données utilisateur invalides');
+        }
+        
+        this.updateUserData(userData);
         this._lastUserFetch = Date.now();
         return this.user;
       } catch (err: any) {
@@ -151,6 +176,7 @@ export const useUserStore = defineStore('auth', {
         await this.logout()
       } finally {
         this._isFetching = false;
+        this.loading = false;
       }
     },
 
@@ -170,6 +196,8 @@ export const useUserStore = defineStore('auth', {
           this.error = 'Erreur lors de la connexion'
           throw new Error(this.error)
         }
+        
+        this.invalidateUserCache();
         await this.getPageRole()
 
       } catch (error: any) {
@@ -199,8 +227,7 @@ export const useUserStore = defineStore('auth', {
           throw new Error(this.error)
         }
 
-        // Invalider le cache utilisateur pour forcer un refresh
-        this._lastUserFetch = 0;
+        this.invalidateUserCache();
       } catch (error: any) {
         this.error = error?.message || 'Erreur lors de l\'upload de l\'image'
         throw error
@@ -258,6 +285,7 @@ export const useUserStore = defineStore('auth', {
             this.loading = false
         }
     },
+
     async updateIsCompleted(id:string,isCompleted: boolean) {
       this.loading = true
       this.error = null
@@ -268,8 +296,7 @@ export const useUserStore = defineStore('auth', {
         })
 
         if(response) {
-          this._lastUserFetch = 0; // Invalider le cache utilisateur
-          this.user = response
+          this.updateUserData(response);
         }
 
         return response
@@ -279,7 +306,6 @@ export const useUserStore = defineStore('auth', {
       } finally {
         this.loading = false
       }
-
     },
 
     async callRegisterGoogle(idToken: string, role: RoleUser) {
@@ -317,7 +343,7 @@ export const useUserStore = defineStore('auth', {
 
         if(response.success) {
             this.user = null
-            this._lastUserFetch = 0 // Réinitialiser le cache
+            this.invalidateUserCache()
             navigateTo('/')
         }
       } catch (err: any) {
@@ -345,8 +371,7 @@ export const useUserStore = defineStore('auth', {
         await reauthenticateWithCredential($firebase.auth.currentUser, credential);
         await updatePassword($firebase.auth.currentUser, payload.newPassword);
 
-        // Invalider le cache utilisateur
-        this._lastUserFetch = 0;
+        this.invalidateUserCache();
       } catch (error: any) {
         this.error = error?.message || 'Erreur lors de la mise à jour du mot de passe'
         throw error
@@ -355,10 +380,8 @@ export const useUserStore = defineStore('auth', {
       }
     },
 
-    // Méthode pour nettoyer le cache
     clearUserCache() {
-      this._lastUserFetch = 0;
-      this._isFetching = false;
+      this.invalidateUserCache();
     }
   },
 });
