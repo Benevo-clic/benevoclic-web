@@ -57,6 +57,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             }
         },
         async getAssociationInfo(associationId?: string) {
+            await useUserStore().fetchUser(); // Ensure user is fetched before proceeding
             const user = useUserStore().getUser
             
             if (this.isCacheValid && this.association) {

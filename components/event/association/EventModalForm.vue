@@ -29,7 +29,7 @@ const closeModal = () => {
 const submitCover= () => {
   store.closeCreateModal();
   emit('closeModal');
-  navigateTo('/association/events/manage');
+  navigateTo('/association/events/association/manage');
 };
 
 </script>

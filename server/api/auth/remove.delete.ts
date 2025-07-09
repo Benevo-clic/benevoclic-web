@@ -1,5 +1,8 @@
 import {defineEventHandler, readBody} from 'h3'
 import {deleteCookies} from "~/server/api/auth/logout.post";
+import {getCookie} from "h3";
+import {useRuntimeConfig} from "#imports";
+import axios from "axios";
 
 
 
@@ -7,14 +10,9 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event)
     const token = getCookie(event, 'auth_token')
     const config = useRuntimeConfig();
-    if (!body || !body.uid) {
-        throw new Error("UID manquant dans la requête")
-    }
-
 
     try {
-        const removeResponse = await $fetch(`${config.private.api_base_url}/user/${body.uid}`, {
-            method: 'DELETE',
+        const removeResponse = await axios.delete(`${config.private.api_base_url}/user/${body.uid}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

@@ -1,11 +1,11 @@
+import { useAuthStore } from '~/stores/auth/auth.store'
 import { useUserStore } from '~/stores/user/user.store'
 import { onMounted, computed, ref, watch } from 'vue'
-import {useRegisterStore} from "~/stores/user/register.store";
-import type {UserInfo} from "~/common/types/auth.type";
+import type { UserInfo } from "~/common/types/auth.type"
 
 export const useUser = () => {
-    const authStore = useUserStore()
-    const registerStore = useRegisterStore()
+    const authStore = useAuthStore()
+    const userStore = useUserStore()
     const hasInitialized = ref(false)
     const initializationError = ref<string | null>(null)
 
@@ -13,20 +13,14 @@ export const useUser = () => {
     const initializeUser = async (): Promise<UserInfo | void> => {
         if (hasInitialized.value) return
 
+        // Protection : n'appelle fetchUser que si authentifié
+        if (!useCookie("isConnected").value) return
+
         try {
-            // Vérifier si l'utilisateur est connecté via le cookie
-            const isConnected = useCookie('isConnected').value
-
-
-            if (isConnected) {
-                await authStore.fetchUser()
-            }
-            
+            await userStore.fetchUser()
             hasInitialized.value = true
             initializationError.value = null
-
-            return authStore.getUser as UserInfo
-
+            return userStore.getUser as UserInfo
         } catch (error: any) {
             initializationError.value = error?.message || 'Erreur lors de l\'initialisation'
             console.error('Erreur d\'initialisation:', error)
@@ -39,7 +33,7 @@ export const useUser = () => {
     })
 
     // Surveiller les changements d'état pour réagir automatiquement
-    watch(() => authStore.error, (newError) => {
+    watch(() => userStore.error, (newError) => {
         if (newError) {
             console.error('Erreur du store utilisateur:', newError)
         }
@@ -48,8 +42,8 @@ export const useUser = () => {
     // Fonction pour forcer un refresh des données utilisateur
     const refreshUserData = async () => {
         try {
-            authStore.clearUserCache()
-            return await authStore.fetchUser()
+            userStore.clearUserCache()
+            return await userStore.fetchUser()
         } catch (error: any) {
             console.error('Erreur lors du refresh:', error)
             throw error
@@ -58,36 +52,35 @@ export const useUser = () => {
 
     return {
         // État réactif
-        user: computed(() => authStore.getUser),
-        isAuthenticated: computed(() => authStore.isAuthenticated),
-        userRole: computed(() => authStore.getUserRule),
-        error: computed(() => authStore.error || initializationError.value),
-        isLoading: computed(() => authStore.loading),
-        isFetching: computed(() => authStore.isFetching),
+        user: computed(() => userStore.getUser),
+        isAuthenticated: computed(() => useCookie("isConnected").value),
+        userRole: computed(() => userStore.getRole),
+        error: computed(() => userStore.error || initializationError.value),
+        isLoading: computed(() => userStore.loading),
+        isFetching: computed(() => userStore.isFetching),
         isInitialized: computed(() => hasInitialized.value),
         
         // Méthodes
-        fetchUser: authStore.fetchUser,
-        getUserId: authStore.getUserId,
+        fetchUser: userStore.fetchUser,
+        getUserId: userStore.userId,
         login: authStore.login,
         logout: authStore.logout,
         loginWithGoogle: authStore.loginWithGoogle,
-        updateIsCompleted: authStore.updateIsCompleted,
-        getUserById: authStore.getUserById,
-        removeUser: authStore.removeUserAccount,
-        updateProfile: authStore.uploadProfilePicture,
-        register: registerStore.registerWithEmailPassword,
-        updatePassword: authStore.updatePassword,
+        updateIsCompleted: userStore.updateIsCompleted,
+        getUserById: userStore.getUserById,
+        removeUser: userStore.removeUserAccount,
+        updateProfile: userStore.uploadProfilePicture,
+        register: authStore.registerWithEmailPassword,
+        updatePassword: userStore.updatePassword,
         
         // Méthodes utilitaires
         refreshUser: refreshUserData,
         initializeUser,
         
         // Getters calculés utiles
-        fullName: computed(() => authStore.fullName),
-        isVerified: computed(() => authStore.getVerificationStatus),
-        hasUserData: computed(() => Boolean(authStore.getUser)),
-        isUserCacheValid: computed(() => authStore.isUserCacheValid),
-        isUserDataFresh: computed(() => authStore.isUserDataFresh)
+        fullName: computed(() => userStore.fullName),
+        hasUserData: computed(() => Boolean(userStore.getUser)),
+        isUserCacheValid: computed(() => userStore.isUserCacheValid),
+        isUserDataFresh: computed(() => userStore.isUserDataFresh)
     }
 }

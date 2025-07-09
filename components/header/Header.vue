@@ -14,6 +14,8 @@ import VolunteerBottomBar from "~/components/header/VolunteerBottomBar.vue";
 import AssociationBottomBar from "~/components/header/AssociationBottomBar.vue";
 import {useI18n} from "vue-i18n";
 import NoConnectedBottomBar from "~/components/header/NoConnectedBottomBar.vue";
+import type {RoleUser} from "~/common/enums/role.enum";
+import type {imageProfile} from "~/common/types/auth.type";
 const auth = useUser()
 const isAuthenticated = computed(() => auth.isAuthenticated.value)
 const { t } = useI18n()
@@ -21,17 +23,38 @@ const {  toggleTheme, isDarkTheme } = useTheme()
 
 const userRole = auth.userRole
 
+onMounted(async () => {
+  try {
+    await auth.initializeUser()
+    if (userRole.value) {
+      role.value = userRole.value
+    }
+    if (auth.user.value?.imageProfile) {
+      img.value = auth.user.value.imageProfile
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error)
+  }
+})
+
 
 const menuOpen = ref(false)
 const showLoginModal = ref(false)
 const loginModal = ref<HTMLDialogElement | null>(null)
 const isLoading = computed(() => auth.isLoading.value)
 const isAssociationComponentAvailable = ref(true) // Flag to track if association component is available
+const role = ref<RoleUser>() // Default to 'VOLUNTEER' if userRole is not set
+const img = ref<imageProfile>()
 
 let mediaQuery: MediaQueryList | undefined;
 let handler: ((e: MediaQueryListEvent) => void) | undefined;
 
-const role = computed(() => userRole.value)
+const profileImageUrl = computed(() => {
+  if (img.value?.data && img.value.contentType) {
+    return `data:${img.value.contentType};base64,${img.value.data}`
+  }
+  return ''
+})
 
 onUnmounted(() => {
   if (mediaQuery && handler) {
@@ -45,13 +68,7 @@ const props = defineProps<
     }
 >()
 
-const profileImageUrl = computed(() => {
-  const img = auth.user.value?.imageProfile
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`
-  }
-  return ''
-})
+
 
 const handleDrawerClose = () => {
   menuOpen.value = !menuOpen.value
@@ -79,11 +96,7 @@ watch(
 watch(
     () => role.value,
     (role) => {
-      if (role === 'ASSOCIATION') {
-        isAssociationComponentAvailable.value = false // Set to true to hide the placeholder
-      } else {
-        isAssociationComponentAvailable.value = true // Set to false to show the placeholder
-      }
+      isAssociationComponentAvailable.value = role !== 'ASSOCIATION';
     }
 )
 
@@ -92,7 +105,6 @@ watch(
 onMounted(async () => {
   try {
      await auth.initializeUser()
-
     if (role.value === 'ASSOCIATION') {
       isAssociationComponentAvailable.value = false // Set to true to hide the placeholder
     }

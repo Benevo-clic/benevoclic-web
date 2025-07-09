@@ -35,7 +35,7 @@ definePageMeta({
 })
 
 const announcement = useAnnouncement()
-const {getUserId} = useUser()
+const {getUserId, initializeUser} = useUser()
 
 
 const announcements = computed(() => announcement.getAnnouncements)
@@ -43,6 +43,9 @@ const loading = computed(() => announcement.loading)
 const error =  computed(() => announcement.error)
 
 onMounted(async () => {
+  if (!getUserId) {
+    await initializeUser();
+  }
   await announcement.fetchAnnouncements(getUserId);
 });
 

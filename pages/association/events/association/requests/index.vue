@@ -48,10 +48,21 @@ definePageMeta({
 })
 
 const announcement = useAnnouncement()
-const { getUserById,getUserId } = useUser();
+const { getUserById,getUserId,initializeUser } = useUser();
 const announcements = computed(() => announcement.getAnnouncements)
 const loading = ref(false);
 
+onMounted(async () => {
+  if (!getUserId) {
+    await initializeUser();
+  }
+
+  loading.value = true;
+  await announcement.fetchAnnouncements(getUserId);
+  await buildEventRequests();
+  await buildAssociationRequests();
+  loading.value = false;
+});
 
 const tab = ref<'event' | 'association'>('event');
 
@@ -145,13 +156,7 @@ async function buildAssociationRequests() {
     .filter(Boolean);
 }
 
-onMounted(async () => {
-  loading.value = true;
-  await announcement.fetchAnnouncements(getUserId);
-  await buildEventRequests();
-  await buildAssociationRequests();
-  loading.value = false;
-});
+
 
 watch(() => announcements.value, async () => {
   await buildEventRequests();

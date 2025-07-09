@@ -3,6 +3,7 @@ import type {CreateVolunteerDto} from "~/common/interface/register.interface";
 import {useUserStore} from "~/stores/user/user.store";
 import {defineStore} from 'pinia'
 import type {AssociationInfo} from "~/common/interface/association.interface";
+import {RoleUser} from "~/common/enums/role.enum";
 
 
 export const useVolunteerAuthStore = defineStore('volunteerAuth', {
@@ -42,6 +43,11 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
 
         async getVolunteerInfo() {
             const user = useUserStore().getUser
+            console.log('🔍 Récupération des informations du bénévole pour l\'utilisateur:', !!(user?.userId && user?.role !== RoleUser.VOLUNTEER) || !Boolean(useCookie("isConnected").value))
+            if (!!(user?.userId && user?.role !== RoleUser.VOLUNTEER) || !Boolean(useCookie("isConnected").value)) {
+                console.log('❌ Utilisateur non connecté, impossible de récupérer les infos volunteer')
+                return null
+            }
 
             if (this.isCacheValid && this.volunteer) {
                 return this.volunteer;

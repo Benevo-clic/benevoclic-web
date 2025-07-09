@@ -17,11 +17,17 @@ import { useUser } from '~/composables/auth/useUser'
 import LanguageComponent from "~/components/header/utils/components/LanguageComponent.vue";
 import { useTheme } from "~/composables/useTheme";
 import {useAssociationAuth} from "~/composables/useAssociation";
-const { logout: signOut, user } = useUser()
-const {association: association} =useAssociationAuth()
+const { logout: signOut, user ,initializeUser} = useUser()
+const {association: association,getAssociationInfo} =useAssociationAuth()
 const { setLocale,t, locale } = useI18n()
 const { theme, toggleTheme, isDarkTheme } = useTheme()
 const route = useRoute()
+
+
+onMounted(async () => {
+  await initializeUser()
+  await getAssociationInfo()
+})
 
 const showLanguageMenu = ref(false)
 const flag = ref('🇫🇷')

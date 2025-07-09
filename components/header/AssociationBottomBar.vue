@@ -1,34 +1,35 @@
 <script setup lang="ts">
 import { PlusCircle as PlusIcon, Calendar as CalendarIcon, ClipboardList as ClipboardList, HelpCircle as HelpIcon,LayoutDashboard as DashboardIcon } from 'lucide-vue-next'
-import { navigateTo, useRoute } from "#app";
 import { useAnnouncementStore } from '~/stores/announcement.store';
 import EventModalForm from "~/components/event/association/EventModalForm.vue";
+import { useNavigation } from '~/composables/useNavigation'
 
-
-const {t} = useI18n()
-
-const route = useRoute();
 const announcementStore = useAnnouncementStore();
+const { navigateToRoute } = useNavigation()
+
 
 const my_modal_3 = ref<HTMLDialogElement | null>(null)
 
 
-// Association specific handlers
 function handleAddNewEvent() {
-  // Reset the current announcement to ensure we're creating a new one
   announcementStore.setCurrentAnnouncement(null);
   my_modal_3.value?.showModal();
 }
 
-function handleManageEvents() {
-  navigateTo('/association/events/association/manage')
-}
-function handleDashboard() {
-  navigateTo('/association/dashboard')
+async function handleManageEvents() {
+  await navigateToRoute('/association/events/association/manage')
 }
 
-function handleRequests() {
-  navigateTo('/association/events/association/requests')
+async function handleDashboard() {
+  await navigateToRoute('/association/dashboard')
+}
+
+async function handleRequests() {
+  await navigateToRoute('/association/events/association/requests')
+}
+
+async function handleHelp() {
+  await navigateToRoute('/help')
 }
 
 function closeModal() {
@@ -52,7 +53,7 @@ function closeModal() {
       <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="handleRequests">
         <ClipboardList class="w-6 h-6" /> {{$t('association.activity.requests') || 'My Requests'}}
       </button>
-      <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="navigateTo('/help')">
+      <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="handleHelp">
         <HelpIcon class="w-6 h-6" /> Aide
       </button>
     </div>

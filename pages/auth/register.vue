@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, onUnmounted } from 'vue'
 import {RoleUser} from "~/common/enums/role.enum";
-import { useRegisterStore } from '~/stores/user/register.store';
+import {useAuthStore} from "~/stores/auth/auth.store";
 
 const loading = ref(false)
 const form = reactive({
@@ -14,7 +14,7 @@ definePageMeta({
   layout:'header'
 })
 
-const registerStore = useRegisterStore();
+const registerStore = useAuthStore();
 
 // Nettoyer l'observateur lors de la destruction du composant
 onUnmounted(() => {

@@ -1,17 +1,9 @@
 import {useAssociationAuthStore} from "~/stores/association.store";
-import {onMounted, computed} from "vue";
-import {useUserStore} from "~/stores/user/user.store";
+import { computed } from "vue";
 
 
 export const useAssociationAuth = () => {
     const associationStore = useAssociationAuthStore();
-    const userStore = useUserStore();
-
-    onMounted(async () => {
-        if (userStore.getUserRule === 'ASSOCIATION') {
-            await associationStore.getAssociationInfo()
-        }
-    })
 
     return {
         association: computed(() => associationStore.getAssociation),

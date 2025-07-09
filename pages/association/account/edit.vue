@@ -109,6 +109,13 @@ definePageMeta({
 const auth = useUser()
 const associationAuth = useAssociationAuth()
 
+onMounted(async () => {
+  await auth.initializeUser()
+  if (!associationAuth.association.value) {
+    await associationAuth.getAssociationInfo()
+  }
+})
+
 const form = ref({
   associationName: '',
   phone: '',

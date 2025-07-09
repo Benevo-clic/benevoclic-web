@@ -40,6 +40,11 @@ interface Volunteer {
 }
 
 const useAssociation = useAssociationAuth()
+
+onMounted(async () => {
+  await useAssociation.getAssociationInfo()
+})
+
 const volunteers = ref<Volunteer[] | null>(null)
 const search = ref('')
 // const associationId = ref<string | null>(null)

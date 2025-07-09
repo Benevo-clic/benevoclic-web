@@ -105,8 +105,18 @@ definePageMeta({
 })
 
 const auth = useUser()
-const { association: user } = useAssociationAuth()
+const { association: user, getAssociationInfo } = useAssociationAuth()
 const announcementStore = useAnnouncement()
+
+
+onMounted(async () => {
+  await auth.initializeUser()
+  if (!user.value) {
+    await getAssociationInfo()
+  }
+  await announcementStore.fetchAnnouncements(user.value?.associationId)
+})
+
 const nbAnnouncements = computed(() =>
   (announcementStore.getAnnouncements.value || []).filter(
     a => a.associationId === user.value?.associationId
@@ -122,13 +132,7 @@ const creationDate = computed(() => {
   return '-'
 })
 
-onMounted(async () => {
-  await auth.initializeUser()
-  if (!user.value) {
-    await useAssociationAuth().getAssociationInfo()
-  }
-  await announcementStore.fetchAnnouncements(user.value?.associationId)
-})
+
 
 const profileImageUrl = computed(() => {
   const img = auth.user.value?.imageProfile

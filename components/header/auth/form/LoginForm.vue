@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {reactive, ref, watch} from 'vue'
+import {reactive, ref, watch, onMounted} from 'vue'
 import UsersLoginForm from "~/components/header/auth/form/UsersLoginForm.vue"
 import UserRegisterForm from "~/components/header/auth/form/UserRegisterForm.vue"
 import {useUser} from "~/composables/auth/useUser";
@@ -10,6 +10,15 @@ const auth = useUser()
 const volunteer = useVolunteerAuth()
 
 const {t} = useI18n()
+
+onMounted(async () => {
+  await auth.initializeUser()
+  if(auth.isAuthenticated && auth.userRole.value === RoleUser.VOLUNTEER) {
+    await volunteer.getVolunteerInfo()
+  }
+})
+
+
 
 
 const loading = ref(false)
@@ -37,7 +46,7 @@ async function handleLogin() {
           break
         case false:
           const volunteerInfo = await volunteer.getVolunteerInfo()
-          if (!volunteerInfo.volunteerId) {
+          if (!volunteerInfo?.volunteerId) {
             navigateTo(
                 {
                   path: '/auth/registerVolunteer',
@@ -45,7 +54,6 @@ async function handleLogin() {
             )
           }
           break
-
       }
     }
 

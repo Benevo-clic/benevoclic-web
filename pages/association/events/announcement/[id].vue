@@ -158,14 +158,20 @@ definePageMeta({
   layout: 'header',
 })
 
-onMounted(fetchAnnouncement);
+onMounted(async () => {
+  // Vérifie si l'ID de l'annonce est présent dans les paramètres de la route
+  if (route.params.id) {
+    await fetchAnnouncement();
+  } else {
+    // Redirige vers la page de gestion des annonces si aucun ID n'est fourni
+    navigateTo('/association/events/association/manage');
+  }
+});
 
 async function fetchAnnouncement() {
-  if (route.params.id) {
     useAnnouncementAuth.invalidateCache();
     await useAnnouncementAuth.fetchAnnouncementById(route.params.id as string);
     loading.value = useAnnouncementAuth.loading.value;
-  }
 }
 
 function openEditModal() {

@@ -42,8 +42,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
-    '@nuxtjs/i18n',
-    '@nuxt/ui'
+    '@nuxtjs/i18n'
   ],
 
   compatibilityDate: '2025-02-23',

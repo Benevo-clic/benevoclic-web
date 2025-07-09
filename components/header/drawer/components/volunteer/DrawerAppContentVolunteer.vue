@@ -18,11 +18,16 @@ import { useUser } from '~/composables/auth/useUser'
 import {useVolunteerAuth} from "~/composables/useVolunteer";
 import LanguageComponent from "~/components/header/utils/components/LanguageComponent.vue";
 import { useTheme } from "~/composables/useTheme";
-const { logout: signOut, user } = useUser()
-const {volunteer} =useVolunteerAuth()
+const { logout: signOut, user, initializeUser } = useUser()
+const {volunteer,getVolunteerInfo} =useVolunteerAuth()
 const { setLocale,t, locale } = useI18n()
 const { toggleTheme, isDarkTheme } = useTheme()
 const route = useRoute()
+
+onMounted(async() => {
+  await initializeUser()
+  await getVolunteerInfo()
+})
 
 const showLanguageMenu = ref(false)
 const flag = ref('🇫🇷')

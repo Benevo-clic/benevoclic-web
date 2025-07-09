@@ -101,8 +101,17 @@ definePageMeta({
 })
 
 const auth = useUser()
-const { volunteer: user } = useVolunteerAuth()
+const { volunteer: user, getVolunteerInfo } = useVolunteerAuth()
 const announcementStore = useAnnouncement()
+
+onMounted(async () => {
+  if (!auth.getUserId) {
+    await auth.initializeUser()
+  }
+  if (auth.getUserId) {
+    await getVolunteerInfo()
+  }
+})
 
 const profileImageUrl = computed(() => {
   const img = auth.user.value?.imageProfile

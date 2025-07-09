@@ -166,7 +166,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed , onMounted } from 'vue'
 import AccountMenuVolunteer from '~/components/account/AccountMenuVolunteer.vue'
 import {useUser} from "~/composables/auth/useUser";
 import {useVolunteerAuth} from "~/composables/useVolunteer";
@@ -180,6 +180,16 @@ const { t } = useI18n()
 
 const auth = useUser()
 const volunteer = useVolunteerAuth()
+
+onMounted(async () => {
+  if (!auth.getUserId) {
+    await auth.initializeUser()
+  }
+  if (auth.getUserId) {
+    await volunteer.getVolunteerInfo(auth.getUserId)
+  }
+})
+
 const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
 const passwordChangeModal = ref<HTMLDialogElement | null>(null)
 

@@ -179,6 +179,17 @@ const { t } = useI18n()
 
 const auth = useUser()
 const association = useAssociationAuth()
+
+onMounted(async () => {
+
+  if(!auth.isInitialized) {
+    await auth.initializeUser()
+  }
+  if (!association.association.value) {
+    await association.getAssociationInfo()
+  }
+})
+
 const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
 const passwordChangeModal = ref<HTMLDialogElement | null>(null)
 

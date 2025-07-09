@@ -41,7 +41,7 @@ definePageMeta({
 
 const useVolunteer = useVolunteerAuth()
 const volunteerStore = useVolunteerAuthStore()
-const { getUserId } = useUser();
+const { getUserId,initializeUser } = useUser();
 
 const search = ref('')
 
@@ -51,6 +51,9 @@ const loading = computed(() => associationsFollowing.value === null || useVolunt
 console.log("Associations Following:", useVolunteer.loading.value)
 
 onMounted(async () => {
+  if (!getUserId) {
+    await initializeUser()
+  }
   if (getUserId) {
     await useVolunteer.getAllAssociationsFollowingList(getUserId)
   }

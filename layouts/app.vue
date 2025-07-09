@@ -31,10 +31,16 @@
 <script setup>
 import { useUser } from '~/composables/auth/useUser'
 import Header from '~/components/header/Header.vue'
+import {onMounted} from 'vue'
 import DrawerAppContentVolunteer from '~/components/header/drawer/components/volunteer/DrawerAppContentVolunteer.vue'
 import DrawerAppContentAssociation
   from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
 
-const { isAuthenticated, userRole } = useUser()
+const { isAuthenticated, userRole , initializeUser } = useUser()
+
+onMounted(async () => {
+  // Initialize user data if needed
+  await initializeUser();
+})
 
 </script>

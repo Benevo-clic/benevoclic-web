@@ -122,6 +122,17 @@ definePageMeta({
 const auth = useUser()
 const volunteerAuth = useVolunteerAuth()
 
+onMounted(async () => {
+  // Ensure user is initialized
+  if (!auth.user.value) {
+    await auth.initializeUser()
+  }
+  // Ensure volunteer data is loaded
+  if (!volunteerAuth.volunteer.value) {
+    await volunteerAuth.getVolunteerInfo()
+  }
+})
+
 const form = ref({
   firstName: '',
   lastName: '',
