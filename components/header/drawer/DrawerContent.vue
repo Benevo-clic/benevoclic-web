@@ -72,12 +72,14 @@ function handleCloseDrawer() {
       <DrawerAppContentVolunteer
         :menu-open="menuOpen"
         :display-profile="true"
+        :is-authenticated="props.isAuthenticated"
         @close-drawer="handleCloseDrawer"
         v-if="role === 'VOLUNTEER'"
         />
       <DrawerAppContentAssociation
         :menu-open="menuOpen"
         :display-profile="true"
+        :is-authenticated="props.isAuthenticated"
         @close-drawer="handleCloseDrawer"
         v-else-if="role === 'ASSOCIATION'"
         />

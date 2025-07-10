@@ -6,6 +6,7 @@ import { useUserStore } from '~/stores/user/user.store'
 import type {RegisterEmailVerifiedResponse, RegisterPayload} from "~/common/types/register.type";
 import {createUserWithEmailAndPassword, getAuth, onIdTokenChanged, sendEmailVerification} from "firebase/auth";
 import {useNavigation} from "~/composables/useNavigation";
+import {$fetch} from "ofetch";
 
 interface AuthState {
   idToken: string | null

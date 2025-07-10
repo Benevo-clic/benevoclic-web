@@ -17,11 +17,13 @@ import { useUser } from '~/composables/auth/useUser'
 import LanguageComponent from "~/components/header/utils/components/LanguageComponent.vue";
 import { useTheme } from "~/composables/useTheme";
 import {useAssociationAuth} from "~/composables/useAssociation";
+import {useNavigation} from "~/composables/useNavigation";
 const { logout: signOut, user ,initializeUser} = useUser()
 const {association: association,getAssociationInfo} =useAssociationAuth()
 const { setLocale,t, locale } = useI18n()
 const { theme, toggleTheme, isDarkTheme } = useTheme()
 const route = useRoute()
+const { navigateToRoute } = useNavigation()
 
 
 onMounted(async () => {
@@ -37,18 +39,21 @@ const isActive = (path: string) => {
 }
 
 
-const props = defineProps({
-  menuOpen: Boolean,
-  displayProfile: Boolean,
-})
+const props = defineProps<{
+  isAuthenticated: boolean
+  menuOpen: boolean
+  displayProfile?: boolean
+}>()
 const emit = defineEmits(['closeDrawer'])
 
 
 const profileImage = ref<string | null>(null)
 
-function handleLogout() {
-  signOut()
+async function handleLogout() {
+  await signOut()
   emit('closeDrawer')
+  await navigateToRoute('/auth/login')
+
 }
 
 function handleFileChange(e: Event) {

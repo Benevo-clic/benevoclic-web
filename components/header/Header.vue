@@ -138,6 +138,8 @@ function handleNotifications() {
 </script>
 
 <template>
+<client-only>
+  <div class="bg-base-200 max-h-[calc(100vh-4rem)]">
   <div v-if="isLoading" class="flex justify-center py-2">
     <span class="loading loading-dots loading-xl"></span>
   </div>
@@ -255,6 +257,8 @@ function handleNotifications() {
     <!-- Mobile drawer content -->
 <!--    <DrawerContent v-if="menuOpen" @close-drawer="menuOpen = false" />-->
   </header>
+</div>
+</client-only>
 </template>
 
 <style scoped>

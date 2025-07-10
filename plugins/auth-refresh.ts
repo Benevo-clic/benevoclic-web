@@ -1,7 +1,7 @@
 import {defineNuxtPlugin} from '#app'
 import {$fetch} from "ofetch";
 
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin(async () => {
   let interval: ReturnType<typeof setInterval> | null = null;
 
   async function checkTokens() {
@@ -16,7 +16,6 @@ export default defineNuxtPlugin(() => {
   async function refreshTokens() {
     try {
       await $fetch('/api/auth/refresh', { method: 'POST' })
-      console.log('Tokens refreshed')
       return true
     } catch (error: any) {
       // Si le refresh échoue, déconnecte l'utilisateur
@@ -57,7 +56,7 @@ export default defineNuxtPlugin(() => {
     }, 55 * 60 * 1000) // 55 minutes
   }
 
-  setupRefreshInterval()
+  await setupRefreshInterval()
 
   return {
     provide: {

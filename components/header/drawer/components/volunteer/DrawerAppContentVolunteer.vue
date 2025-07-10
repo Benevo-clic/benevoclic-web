@@ -18,11 +18,14 @@ import { useUser } from '~/composables/auth/useUser'
 import {useVolunteerAuth} from "~/composables/useVolunteer";
 import LanguageComponent from "~/components/header/utils/components/LanguageComponent.vue";
 import { useTheme } from "~/composables/useTheme";
+import {useNavigation} from "~/composables/useNavigation";
 const { logout: signOut, user, initializeUser } = useUser()
 const {volunteer,getVolunteerInfo} =useVolunteerAuth()
 const { setLocale,t, locale } = useI18n()
 const { toggleTheme, isDarkTheme } = useTheme()
 const route = useRoute()
+const { navigateToRoute } = useNavigation()
+
 
 onMounted(async() => {
   await initializeUser()
@@ -37,19 +40,22 @@ const isActive = (path: string) => {
   return route.path === path || route.path.startsWith(`${path}/`)
 }
 
+const props = defineProps<{
+  isAuthenticated: boolean
+  menuOpen: boolean
+  displayProfile?: boolean
+}>()
 
-const props = defineProps({
-  menuOpen: Boolean,
-  displayProfile: Boolean,
-})
 const emit = defineEmits(['closeDrawer'])
 
 
 const profileImage = ref<string | null>(null)
 
-function handleLogout() {
-  signOut()
+async function handleLogout() {
+  await signOut()
   emit('closeDrawer')
+  await navigateToRoute('/auth/login')
+
 }
 
 function handleFileChange(e: Event) {

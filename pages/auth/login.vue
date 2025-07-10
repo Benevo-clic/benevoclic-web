@@ -1,10 +1,17 @@
 <template>
+  <div class="login-page">
+    <!-- Header -->
+    <Header />
+    
+    <!-- Contenu principal -->
+    <main class="login-content">
 
+    </main>
+
+  </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 
-definePageMeta({
-  layout:'header'
-})
+
 </script> 

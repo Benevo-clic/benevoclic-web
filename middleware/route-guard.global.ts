@@ -127,7 +127,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   // Initialiser l'authentification si pas encore fait
 
   if (!useCookie("isConnected").value) {
-    console.log(`🔍 Vérification de l'authentification pour la route: ${!useCookie("isConnected").value}`)
     await authStore.initAuth()
   }
 

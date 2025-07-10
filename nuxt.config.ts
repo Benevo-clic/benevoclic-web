@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     // Optimise le chargement des composants
     componentIslands: false,
     // Optimisations de performance
-    payloadExtraction: true,
+    payloadExtraction: false,
     renderJsonPayloads: true,
     // Optimisation du bundling
     treeshakeClientOnly: true

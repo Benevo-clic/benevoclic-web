@@ -42,6 +42,7 @@ function verifyAssociation(value:boolean) {
           type="email"
           :placeholder="t('auth.email')"
           class="input input-bordered w-full"
+          autocomplete="email"
       />
     </div>
 
@@ -54,6 +55,7 @@ function verifyAssociation(value:boolean) {
           type="password"
           :placeholder="t('auth.placeholder_password')"
           class="input input-bordered w-full"
+          autocomplete="current-password"
       />
     </div>
 

@@ -19,17 +19,13 @@ export default defineEventHandler(async (event) => {
 
   try {
     if(!refreshToken) {
-      throw createError({
-        statusCode: 401,
-        message: "Refresh token manquant"
-      })
+      return
     }
 
     const loginResponse = await $fetch<LoginResponse>(`${config.private.api_base_url}/user/refresh-auth?refreshToken=${refreshToken}`, {
       method: 'POST',
     })
     
-    // Ne renouvelle que le token d'accès
     setAccessTokenOnly(event, loginResponse);
     
     return loginResponse

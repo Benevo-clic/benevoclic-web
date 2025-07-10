@@ -1,4 +1,5 @@
 <template>
+  <client-only>
   <footer class="bg-base-200 text-base-content py-6 mt-8 border-t">
     <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-2">
@@ -15,6 +16,7 @@
       <div class="text-xs text-gray-400 mt-2 md:mt-0">&copy; {{ new Date().getFullYear() }} Benevoclic. Tous droits réservés.</div>
     </div>
   </footer>
+  </client-only>
 </template>
 
 <script setup lang="ts">

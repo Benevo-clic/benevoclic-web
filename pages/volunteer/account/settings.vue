@@ -170,6 +170,9 @@ import { ref, reactive, computed , onMounted } from 'vue'
 import AccountMenuVolunteer from '~/components/account/AccountMenuVolunteer.vue'
 import {useUser} from "~/composables/auth/useUser";
 import {useVolunteerAuth} from "~/composables/useVolunteer";
+import {useNavigation} from "~/composables/useNavigation";
+const { navigateToRoute } = useNavigation()
+
 
 definePageMeta({
   middleware: ['auth'],
@@ -186,7 +189,7 @@ onMounted(async () => {
     await auth.initializeUser()
   }
   if (auth.getUserId) {
-    await volunteer.getVolunteerInfo(auth.getUserId)
+    await volunteer.getVolunteerInfo()
   }
 })
 
@@ -270,18 +273,18 @@ function cancelDelete() {
 }
 
 // Function to confirm and proceed with deletion
-function confirmDelete() {
+async function confirmDelete() {
   // Close the modal
   deleteConfirmationModal.value?.close()
-
-  // Proceed with account deletion
-  removeUser()
+  await removeUser()
 }
 
 // Function to remove the user account
-function removeUser() {
-  auth.removeUser()
-  volunteer.removeVolunteer()
+async function removeUser() {
+  await auth.removeUser()
+  await volunteer.removeVolunteer()
+  await navigateToRoute("/auth/login")
+
 }
 
 // Mock settings data - would be fetched from API in a real app
