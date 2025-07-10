@@ -1,5 +1,4 @@
 <template>
-  <client-only>
 
   <div class="p-8">
     <div class="max-w-4xl mx-auto">
@@ -22,7 +21,6 @@
       </div>
     </div>
   </div>
-  </client-only>
 </template>
 
 <script setup lang="ts">
