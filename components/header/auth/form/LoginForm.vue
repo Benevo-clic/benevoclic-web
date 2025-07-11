@@ -28,7 +28,8 @@ const messageError = ref('')
 
 const form = reactive({
   email: '',
-  password: ''
+  password: '',
+  role: RoleUser.VOLUNTEER,
 })
 
 const { checked,isRegister } = defineProps<{
@@ -39,7 +40,11 @@ const { checked,isRegister } = defineProps<{
 async function handleLogin() {
   loading.value = true
   try {
-    const response = await auth.login(form)
+    const response = await auth.login({
+      email: form.email,
+      password: form.password,
+      role: isAssociation.value ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER,
+    })
     if(response.idToken){
       switch(isAssociation.value){
         case true:
@@ -120,8 +125,8 @@ async function handleGoogleLogin() {
 }
 
 function toggleVerifyEmail(value: boolean) {
-
   if(value){
+    console.log('Email verified successfully')
     navigateTo(
         {
           path: '/auth/VerifyEmailPage',
@@ -129,6 +134,10 @@ function toggleVerifyEmail(value: boolean) {
     )
   }
   isError.value = false
+}
+
+function handleGoToVerifyEmail(isVerified: boolean) {
+  navigateTo('/auth/VerifyEmailPage')
 }
 
 function verifyAssociation(value:boolean) {
@@ -193,6 +202,7 @@ function verifyAssociation(value:boolean) {
         v-if="isRegisterMode"
         :form="form"
         :is-association="isAssociation"
+        @go-to-verified="handleGoToVerifyEmail"
         @email-verified="toggleVerifyEmail"
         @association-exists="verifyAssociation"
     />

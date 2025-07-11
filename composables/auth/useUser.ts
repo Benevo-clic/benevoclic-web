@@ -64,6 +64,7 @@ export const useUser = () => {
         fetchUser: userStore.fetchUser,
         getUserId: userStore.userId,
         login: authStore.login,
+        sendEmailVerification: authStore.sendEmailVerification,
         logout: authStore.logout,
         loginWithGoogle: authStore.loginWithGoogle,
         updateIsCompleted: userStore.updateIsCompleted,

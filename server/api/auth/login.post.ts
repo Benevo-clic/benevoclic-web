@@ -1,5 +1,7 @@
 import {defineEventHandler, readBody, createError, H3Event, EventHandlerRequest} from 'h3'
-
+import axios from "axios";
+import {setCookie} from 'h3'
+import {decodePasswordBase64} from "~/utils/crypto";
 
 export interface LoginResponse {
     idUser: string
@@ -48,14 +50,17 @@ export function setCookies(event:H3Event<EventHandlerRequest>,loginResponse: Log
 
 export async function login(payload: { email: string, password: string },apiBase:string | undefined): Promise<LoginResponse> {
 
-  return await $fetch<LoginResponse>(`${apiBase}/user/login`, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: {
-      email: payload.email,
-      password: payload.password
+  const decodedPassword = decodePasswordBase64(payload.password)
+  const response  = await axios.post<LoginResponse>(`${apiBase}/user/login`, {
+    email: payload.email,
+    password: decodedPassword
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
     }
   })
+
+  return response.data
 }
 
 export default defineEventHandler(async (event) => {

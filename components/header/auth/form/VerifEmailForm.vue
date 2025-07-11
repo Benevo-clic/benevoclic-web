@@ -1,11 +1,22 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import {useAuthStore} from "~/stores/auth/auth.store";
+import {useUser} from "~/composables/auth/useUser";
+import {RoleUser} from "~/common/enums/role.enum";
 
 // Durée initiale du compte à rebours en secondes (ex. 300s = 5 minutes)
 const initialSeconds = 300
 
+const authStore = useAuthStore()
 const { t } = useI18n()
+const useAuth = useUser()
+
+// 🔧 Récupérer les données depuis le store
+const password = computed(() => authStore.tempPassword)
+const role = computed(() => authStore.role)
+
+
 const remaining = ref<number>(initialSeconds)
 let timerId: ReturnType<typeof setInterval> | null = null
 const isFinished = computed(() => remaining.value <= 0)
@@ -28,8 +39,11 @@ function startTimer() {
   }, 1000)
 }
 
-function resendEmail() {
-  // TODO: Appel API pour renvoyer l'email de vérification
+async function resendEmail() {
+  await useAuth.sendEmailVerification({
+    tempPassword: password.value as string,
+    role: role.value as RoleUser
+  })
   remaining.value = initialSeconds
   startTimer()
 }
@@ -53,10 +67,10 @@ onUnmounted(() => {
     </p>
     <button
         @click="resendEmail"
-        :disabled="!isFinished"
+        :disabled="isFinished"
         class="btn btn-link"
     >
-      <span v-if="!isFinished" class="opacity-50 cursor-not-allowed">
+      <span v-if="isFinished" class="opacity-50 cursor-not-allowed">
         {{ t('auth.verification.wait') }}
       </span>
       <span v-else>

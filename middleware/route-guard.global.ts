@@ -2,6 +2,8 @@ import { defineNuxtRouteMiddleware, navigateTo } from '#app'
 import { useAuthStore } from '~/stores/auth/auth.store'
 import { useUserStore } from '~/stores/user/user.store'
 import { RoleUser } from '~/common/enums/role.enum'
+import { getAuth } from "firebase/auth";
+
 
 // Configuration des routes par rôle
 const ROUTE_CONFIG = {
@@ -15,7 +17,7 @@ const ROUTE_CONFIG = {
     '/search/history',
     '/notifications'
   ],
-  
+
   // Routes pour les volontaires
   volunteer: [
     '/volunteer',
@@ -40,7 +42,7 @@ const ROUTE_CONFIG = {
     '/en/volunteer/events',
     '/en/volunteer/events/announcement'
   ],
-  
+
   // Routes pour les associations
   association: [
     '/association',
@@ -72,7 +74,7 @@ const ROUTE_CONFIG = {
     '/en/association/events/association/requests',
     '/en/association/events/announcement'
   ],
-  
+
   // Routes pour les admins (si nécessaire)
   admin: [
     '/admin',
@@ -86,7 +88,7 @@ function isRouteAccessible(path: string, role: RoleUser | null): boolean {
   if (ROUTE_CONFIG.public.includes(path)) {
     return true
   }
-  
+
   // Vérifier selon le rôle
   switch (role) {
     case RoleUser.VOLUNTEER:
@@ -117,18 +119,35 @@ function getHomePageForRole(role: RoleUser | null): string {
 }
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
+  const auth = getAuth()
+
+  if (import.meta.client) {
+    const currentUser = auth.currentUser
+    if (
+        currentUser &&
+        !currentUser.emailVerified
+    ) {
+      if (to.path !== '/auth/VerifyEmailPage') {
+        return navigateTo('/auth/VerifyEmailPage')
+      }
+      // Ici, tu laisses passer uniquement la page de vérification
+      return
+    }
+  }
+
   if (useNuxtApp().ssrContext) {
     return
   }
-  
+
   const authStore = useAuthStore()
   const userStore = useUserStore()
 
-  // Initialiser l'authentification si pas encore fait
 
   if (!useCookie("isConnected").value) {
     await authStore.initAuth()
   }
+
+  console.log(`🔍 Vérification de la route: ${to.path} depuis ${from.path}`)
 
   if (!useCookie("isConnected").value) {
     // Si c'est une route publique, laisser passer
@@ -139,17 +158,17 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     // Si c'est une route de transition, rediriger vers login
     if ([
       '/auth/registerVolunteer',
-      '/auth/registerAssociation',
-      '/auth/VerifyEmailPage'
+      '/auth/registerAssociation'
     ].includes(to.path)) {
       console.log('🔄 Route de transition, redirection vers login')
       return navigateTo('/auth/login')
     }
     // Sinon, rediriger vers login
-    console.log('🔒 Utilisateur non connecté, redirection vers login')
+
+
     return navigateTo('/auth/login')
   }
-  
+
   // Utilisateur connecté, récupérer ses données si nécessaire
   if (!userStore.user) {
     try {
@@ -160,15 +179,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       return navigateTo('/auth/login')
     }
   }
-  
+
   const userRole = userStore.getRole || null
   console.log(`👤 Utilisateur connecté avec le rôle: ${userRole}`)
-  
+
 
   if (!authStore.isAuthenticated && ['/auth/login', '/auth/register'].includes(to.path)) {
     return navigateTo(getHomePageForRole(userRole))
   }
-  
+
   // Gestion explicite des routes de transition
   if (['/auth/registerVolunteer', '/auth/registerAssociation'].includes(to.path)) {
     if (userStore.user && userStore.user.isCompleted) {
@@ -182,7 +201,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     // Ici, tu peux ajouter une vérification supplémentaire si besoin
     return
   }
-  
+
   // Vérifier si le profil est complété
   if (userStore.user && !userStore.user.isCompleted) {
     console.log('📝 Profil incomplet, redirection vers complétion')
@@ -202,17 +221,17 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
     return
   }
-  
+
   // Vérifier si la route est accessible pour le rôle
   if (!isRouteAccessible(to.path, userRole)) {
     console.log(`🚫 Route ${to.path} non accessible pour le rôle ${userRole}`)
-    
+
     // Rediriger vers la page d'accueil appropriée
     const homePage = getHomePageForRole(userRole)
     console.log(`🏠 Redirection vers la page d'accueil: ${homePage}`)
     return navigateTo(homePage)
   }
-  
+
   // Route accessible, laisser passer
   console.log('✅ Route accessible, accès autorisé')
-}) 
+})

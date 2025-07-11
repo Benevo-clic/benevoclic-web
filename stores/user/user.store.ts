@@ -9,6 +9,7 @@ import {
   updatePassword
 } from "firebase/auth";
 import { useNuxtApp } from '#app';
+import {useAuthStore} from "~/stores/auth/auth.store";
 
 export async function loginWithGoogle(): Promise<User> {
   const {$firebase} = useNuxtApp();
@@ -81,6 +82,9 @@ export const useUserStore = defineStore('user', {
       this._isFetching = true;
       try {
         this.error = null;
+        // Appel API pour récupérer les données utilisateur
+        const authStore = useAuthStore();
+        await authStore.refreshTokens();
         const userData = await $fetch<UserInfo>('/api/user/userCurrent');
         
         if (!userData || !userData.userId) {

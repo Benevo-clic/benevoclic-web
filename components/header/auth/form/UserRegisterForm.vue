@@ -28,6 +28,7 @@ const errorMessage = ref('')
 const emit = defineEmits<{
   (e: 'emailVerified', isVerified: boolean): void;
   (e: 'associationExists', isVerified: boolean): void;
+  (e: 'goToVerified',isVerified:boolean): void;
 
 }>()
 const isEmailVerified = ref(false)
@@ -55,7 +56,7 @@ async function handleRegister() {
       role: isAssociation ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER
     })
     isEmailVerified.value = true
-    emit('emailVerified', isEmailVerified.value)
+    emit('goToVerified', isEmailVerified.value)
   } catch (error) {
     console.error('Erreur de connexion:', error)
     errorMessage.value = 'Une erreur est survenue lors de l’inscription.'

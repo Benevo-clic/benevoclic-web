@@ -24,6 +24,7 @@ export function useAuth() {
     login: authStore.login,
     logout: authStore.logout,
     register: authStore.register,
+    sendEmailVerification: authStore.sendEmailVerification,
     loginWithGoogle: authStore.loginWithGoogle,
     getPageRole: authStore.getPageRole,
     
@@ -33,5 +34,6 @@ export function useAuth() {
     uploadProfilePicture: userStore.uploadProfilePicture,
     removeUserAccount: userStore.removeUserAccount,
     updatePassword: userStore.updatePassword,
+    refreshToken: authStore.refreshTokens,
   }
 } 
