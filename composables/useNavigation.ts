@@ -98,7 +98,6 @@ export function useNavigation() {
 
   // Naviguer vers une route avec vérification d'accès
   const navigateToRoute = async (path: string) => {
-    console.log(`🔍 Navigation vers la route: ${path}`)
     const authStore = useAuthStore()
     // Vérifier si l'utilisateur est connecté
     if (!authStore.isConnected) {

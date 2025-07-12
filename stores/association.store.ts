@@ -2,6 +2,7 @@ import type {ApiResponseSubset, AssociationInfo} from "~/common/interface/associ
 import type {CreateAssociationDto} from "~/common/interface/register.interface";
 import {useUserStore} from "~/stores/user/user.store";
 import { defineStore } from 'pinia'
+import {useAuthStore} from "~/stores/auth/auth.store";
 
 
 export const useAssociationAuthStore = defineStore('associationAuth', {
@@ -99,6 +100,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
                     this.association = response
                     this._updateCache(response);
                 }
+                useAuthStore().resetCookies()
 
             } catch (err: any) {
                 this.error = err?.message || 'Erreur d\'inscription'

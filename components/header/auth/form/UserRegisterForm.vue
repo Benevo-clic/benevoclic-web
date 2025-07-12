@@ -3,6 +3,7 @@ import { reactive, ref} from 'vue'
 import {RoleUser} from '~/common/enums/role.enum'
 import {useUser} from "~/composables/auth/useUser";
 import VerifSiretAssociation from "~/components/header/auth/form/VerifSiretAssociation.vue";
+import {useI18n} from "vue-i18n";
 
 const {t} = useI18n()
 
@@ -28,7 +29,6 @@ const errorMessage = ref('')
 const emit = defineEmits<{
   (e: 'emailVerified', isVerified: boolean): void;
   (e: 'associationExists', isVerified: boolean): void;
-  (e: 'goToVerified',isVerified:boolean): void;
 
 }>()
 const isEmailVerified = ref(false)
@@ -56,7 +56,7 @@ async function handleRegister() {
       role: isAssociation ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER
     })
     isEmailVerified.value = true
-    emit('goToVerified', isEmailVerified.value)
+    emit('emailVerified', isEmailVerified.value)
   } catch (error) {
     console.error('Erreur de connexion:', error)
     errorMessage.value = 'Une erreur est survenue lors de l’inscription.'

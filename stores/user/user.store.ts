@@ -6,7 +6,7 @@ import {
   signInWithPopup,
   EmailAuthProvider,
   reauthenticateWithCredential,
-  updatePassword
+  updatePassword, getAuth
 } from "firebase/auth";
 import { useNuxtApp } from '#app';
 import {useAuthStore} from "~/stores/auth/auth.store";
@@ -70,6 +70,7 @@ export const useUserStore = defineStore('user', {
 
     // Récupère les infos utilisateur
     async fetchUser() {
+      const auth = getAuth();
       if (this._isFetching) {
         return this.user;
       }

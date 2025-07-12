@@ -32,6 +32,11 @@ export default defineEventHandler(async (event) => {
 
         deleteCookies(event);
 
+        return {
+            message: 'Volunteer removed successfully',
+            data: removeResponse
+        }
+
     }catch (error:any){
         console.error(`Error removing volunteer: ${error.message}`);
         throw createError({

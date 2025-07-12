@@ -59,12 +59,18 @@ export const useUser = () => {
         isLoading: computed(() => userStore.loading),
         isFetching: computed(() => userStore.isFetching),
         isInitialized: computed(() => hasInitialized.value),
+        isVerified: computed(() => authStore.getIsVerified),
+        getTempPassword: computed(() => authStore.getTempPassword),
+        getRole: computed(() => userStore.getRole),
+
+
         
         // Méthodes
         fetchUser: userStore.fetchUser,
         getUserId: userStore.userId,
         login: authStore.login,
         sendEmailVerification: authStore.sendEmailVerification,
+        forgotPassword: authStore.forgotPassword,
         logout: authStore.logout,
         loginWithGoogle: authStore.loginWithGoogle,
         updateIsCompleted: userStore.updateIsCompleted,

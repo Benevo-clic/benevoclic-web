@@ -13,7 +13,7 @@ const associationExists = ref(false)
 
 const emit = defineEmits<{
   (e: 'associationExists', isVerified: boolean): void;
-
+  (e: 'forgot-password', email: string): void;
 }>()
 
 
@@ -22,6 +22,9 @@ function verifyAssociation(value:boolean) {
   associationExists.value = value
   emit('associationExists', associationExists.value)
 }
+
+const forgotPasswordSent = ref(false)
+const forgotPasswordError = ref('')
 
 
 </script>
@@ -57,6 +60,15 @@ function verifyAssociation(value:boolean) {
           class="input input-bordered w-full"
           autocomplete="current-password"
       />
+      <div class="text-right mt-1">
+        <button
+          type="button"
+          class="text-primary text-xs hover:underline"
+          @click="$emit('forgot-password', form.email)"
+        >
+          {{ t('auth.forgot_password') }}
+        </button>
+      </div>
     </div>
 
     <button type="submit" class="btn btn-primary w-full" :disabled="loading">
@@ -66,6 +78,13 @@ function verifyAssociation(value:boolean) {
 
   </form>
 
+  <!-- Message de confirmation ou d'erreur -->
+  <div v-if="forgotPasswordSent" class="alert alert-success mt-2">
+    {{ t('auth.forgot_password_sent') }}
+  </div>
+  <div v-if="forgotPasswordError" class="alert alert-error mt-2">
+    {{ forgotPasswordError }}
+  </div>
 </template>
 
 <style scoped>

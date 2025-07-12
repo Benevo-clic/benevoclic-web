@@ -21,7 +21,13 @@
       "wait": "Please wait before requesting a new email",
       "resend": "Resend confirmation email",
       "resend_link": "Click here to resend the confirmation email",
-      "time_remaining": "Time remaining before you can resend the email:"
+      "time_remaining": "Time remaining before you can resend the email:",
+      "check_email": "Check my email",
+      "email_verified": "Email verified successfully!",
+      "continue_registration": "Continue registration",
+      "back_to_login": "Back to login",
+      "instructions": "1. Check your inbox",
+      "click_link": "2. Click the verification link in the email"
     },
     "logout": "Log out",
     "register": {
@@ -90,7 +96,11 @@
     "continue": "Continue",
     "or": "or",
     "placeholder_email": "Enter your email",
-    "placeholder_password": "At least 8 characters"
+    "placeholder_password": "At least 8 characters",
+    "forgot_password": "Forgot your password?",
+    "forgot_password_sent": "A password reset email has been sent to your address.",
+    "forgot_password_error": "Error sending password reset email.",
+    "forgot_password_enter_email": "Please enter your email address to reset your password."
   },
   "drawer-content": {
     "account": {
@@ -255,5 +265,19 @@
       "confirm": "Yes, delete",
       "cancel": "Cancel"
     }
+  },
+  "verification": {
+    "title": "Confirmation required",
+    "sent": "A confirmation email has been sent to your email address. Please check your inbox and click on the link to activate your account.",
+    "wait": "Please wait before requesting a new email",
+    "resend": "Resend confirmation email",
+    "resend_link": "Click here to resend the confirmation email",
+    "time_remaining": "Time remaining before you can resend the email:",
+    "check_email": "Check my email",
+    "email_verified": "Email verified successfully!",
+    "continue_registration": "Continue registration",
+    "back_to_login": "Back to login",
+    "instructions": "1. Check your inbox",
+    "click_link": "2. Click the verification link in the email"
   }
 }

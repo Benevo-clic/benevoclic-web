@@ -5,17 +5,16 @@ import UserRegisterForm from "~/components/header/auth/form/UserRegisterForm.vue
 import {useUser} from "~/composables/auth/useUser";
 import {RoleUser} from "~/common/enums/role.enum";
 import {useVolunteerAuth} from "~/composables/useVolunteer";
+import {useI18n} from 'vue-i18n'
 
 const auth = useUser()
 const volunteer = useVolunteerAuth()
 
-const {t} = useI18n()
+const { t } = useI18n()
 
 onMounted(async () => {
   await auth.initializeUser()
-  if(auth.isAuthenticated && auth.userRole.value === RoleUser.VOLUNTEER) {
-    await volunteer.getVolunteerInfo()
-  }
+  await volunteer.getVolunteerInfo()
 })
 
 
@@ -125,8 +124,8 @@ async function handleGoogleLogin() {
 }
 
 function toggleVerifyEmail(value: boolean) {
+
   if(value){
-    console.log('Email verified successfully')
     navigateTo(
         {
           path: '/auth/VerifyEmailPage',
@@ -136,13 +135,30 @@ function toggleVerifyEmail(value: boolean) {
   isError.value = false
 }
 
-function handleGoToVerifyEmail(isVerified: boolean) {
-  navigateTo('/auth/VerifyEmailPage')
-}
-
 function verifyAssociation(value:boolean) {
   associationExists.value = value
   isError.value = false
+}
+
+
+const forgotPasswordEmail = ref('')
+const forgotPasswordSent = ref(false)
+const forgotPasswordError = ref('')
+
+async function handleForgotPassword(email: string) {
+  forgotPasswordError.value = ''
+  forgotPasswordSent.value = false
+  forgotPasswordEmail.value = email || form.email
+  if (!forgotPasswordEmail.value) {
+    forgotPasswordError.value = t('auth.forgot_password_enter_email')
+    return
+  }
+  try {
+    await auth.forgotPassword(forgotPasswordEmail.value)
+    forgotPasswordSent.value = true
+  } catch (e: any) {
+    forgotPasswordError.value = t('auth.forgot_password_error')
+  }
 }
 
 </script>
@@ -195,14 +211,13 @@ function verifyAssociation(value:boolean) {
         :loading="loading"
         :is-association="isAssociation"
         @association-exists="verifyAssociation"
-
+        @forgot-password="handleForgotPassword"
     />
 
     <UserRegisterForm
         v-if="isRegisterMode"
         :form="form"
         :is-association="isAssociation"
-        @go-to-verified="handleGoToVerifyEmail"
         @email-verified="toggleVerifyEmail"
         @association-exists="verifyAssociation"
     />
@@ -250,6 +265,14 @@ function verifyAssociation(value:boolean) {
         {{t('auth.register.click_here')}} <span class="text-primary hover:underline"> {{t('auth.register.info_click_here')}}
       </span>
       </button>
+    </div>
+
+    <!-- Message de confirmation ou d'erreur -->
+    <div v-if="forgotPasswordSent" class="alert alert-success mt-2">
+      {{ t('auth.forgot_password_sent') }}
+    </div>
+    <div v-if="forgotPasswordError" class="alert alert-error mt-2">
+      {{ forgotPasswordError }}
     </div>
 
     <p class="text-center text-xs text-gray-400 mt-6">

@@ -4,6 +4,8 @@ import {useUserStore} from "~/stores/user/user.store";
 import {defineStore} from 'pinia'
 import type {AssociationInfo} from "~/common/interface/association.interface";
 import {RoleUser} from "~/common/enums/role.enum";
+import {useCookie} from "#app";
+import {useAuthStore} from "~/stores/auth/auth.store";
 
 
 export const useVolunteerAuthStore = defineStore('volunteerAuth', {
@@ -12,7 +14,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
         associationsFollowingList: null as AssociationVolunteerFollow[] | null,
         loading: false,
         error: null as string | null,
-        // Cache pour éviter les recalculs
         _volunteerCache: new Map<string, VolunteerInfo>(),
         _lastFetch: 0,
         _cacheExpiry: 5 * 60 * 1000, // 5 minutes
@@ -43,9 +44,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
 
         async getVolunteerInfo() {
             const user = useUserStore().getUser
-            console.log('🔍 Récupération des informations du bénévole pour l\'utilisateur:', !!(user?.userId && user?.role !== RoleUser.VOLUNTEER) || !Boolean(useCookie("isConnected").value))
             if (!!(user?.userId && user?.role !== RoleUser.VOLUNTEER) || !Boolean(useCookie("isConnected").value)) {
-                console.log('❌ Utilisateur non connecté, impossible de récupérer les infos volunteer')
                 return null
             }
 
@@ -86,6 +85,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                     this.volunteer = response
                     this._updateCache(response);
                 }
+                useAuthStore().resetCookies()
 
             } catch (err: any) {
                 this.error = err?.message || 'Erreur d\'inscription'
@@ -266,7 +266,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                 await $fetch('/api/volunteer/remove', {
+                const data =  await $fetch('/api/volunteer/remove', {
                     method: 'DELETE',
                     query: { id: this.volunteer?.volunteerId },
                     headers: {
@@ -278,6 +278,8 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                     this._volunteerCache.delete(this.volunteer.volunteerId);
                 }
                 this.volunteer = null;
+
+                return data as { message: string }
 
             } catch (err: any) {
                 this.error = err?.message || 'Erreur de suppression du bénévole'
