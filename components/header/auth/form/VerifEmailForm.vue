@@ -159,7 +159,7 @@ async function continueRegistration() {
 // 🔧 AJOUT : Fonction pour retourner à la page de connexion
 async function goBackToLogin() {
   await authStore.deleteCookies()
-  navigateTo('/auth/login')
+  navigateTo('/')
 }
 
 onMounted(() => {

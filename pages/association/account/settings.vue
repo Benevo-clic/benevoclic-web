@@ -283,7 +283,7 @@ async function confirmDelete() {
 async function removeUser() {
   await auth.removeUser()
   await association.removeAssociation()
-  await navigateToRoute('/auth/login')
+  await navigateToRoute('/')
 }
 
 // Mock settings data - would be fetched from API in a real app

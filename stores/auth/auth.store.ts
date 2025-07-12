@@ -123,7 +123,7 @@ export const useAuthStore = defineStore('auth', {
           case RoleUser.ASSOCIATION:
               return navigateTo('/auth/registerAssociation')
           default:
-              return navigateTo('/auth/login')
+              return navigateTo('/')
           }
       } else {
           switch (role) {
@@ -154,7 +154,7 @@ export const useAuthStore = defineStore('auth', {
           case RoleUser.ASSOCIATION:
               return navigateTo('/auth/registerAssociation')
           default:
-              return navigateTo('/auth/login')
+              return navigateTo('/')
           }
       } else {
         switch (role) {
@@ -393,7 +393,7 @@ export const useAuthStore = defineStore('auth', {
         this.error = null
         this.cleanup() // Nettoyer l'écouteur de token
         navigateTo(
-            '/auth/login',
+            '/',
         )
       }catch (error) {
 
@@ -426,7 +426,7 @@ export const useAuthStore = defineStore('auth', {
       this.loading = false
 
       navigateTo(
-            '/auth/login',
+            '/',
       )
     },
 

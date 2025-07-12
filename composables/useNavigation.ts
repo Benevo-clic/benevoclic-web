@@ -102,11 +102,11 @@ export function useNavigation() {
     // Vérifier si l'utilisateur est connecté
     if (!authStore.isConnected) {
       console.log(`🔍 Utilisateur non connecté, redirection vers la page de connexion`)
-      return navigateTo('/auth/login')
+      return navigateTo('/')
     }
     if (!useCookie("isConnected").value) {
       if (!ROUTE_CONFIG.public.includes(path)) {
-        return navigateTo('/auth/login')
+        return navigateTo('/')
       }
     } else {
       if (userStore.user && !userStore.user.isCompleted) {
@@ -140,7 +140,7 @@ export function useNavigation() {
   // Naviguer vers le dashboard selon le rôle
   const navigateToDashboard = () => {
     if (!useCookie("isConnected").value) {
-      return navigateTo('/auth/login')
+      return navigateTo('/')
     }
 
     const userRole = userStore.getRole

@@ -52,7 +52,7 @@ const profileImage = ref<string | null>(null)
 async function handleLogout() {
   await signOut()
   emit('closeDrawer')
-  await navigateToRoute('/auth/login')
+  await navigateToRoute('/')
 
 }
 

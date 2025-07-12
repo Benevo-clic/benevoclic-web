@@ -18,7 +18,6 @@ export const useAnnouncementStore = defineStore('announcement', {
   getters: {
     // Optimisation des getters avec cache
     getAnnouncements: (state) => {
-      // Retourne directement la référence pour éviter les recalculs
       return state.announcements;
     },
     getCurrentAnnouncement: (state) => state.currentAnnouncement,

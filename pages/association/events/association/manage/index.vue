@@ -46,7 +46,11 @@ onMounted(async () => {
   if (!getUserId) {
     await initializeUser();
   }
-  await announcement.fetchAnnouncements(getUserId);
+  if(getUserId) {
+    await announcement.fetchAnnouncements(getUserId);
+  } else {
+    console.warn("User ID is not available, announcements cannot be fetched.");
+  }
 });
 
 </script>

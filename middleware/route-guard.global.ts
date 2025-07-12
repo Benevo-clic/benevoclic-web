@@ -161,12 +161,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       '/auth/registerAssociation'
     ].includes(to.path)) {
       console.log('🔄 Route de transition, redirection vers login')
-      return navigateTo('/auth/login')
+      return navigateTo('/')
     }
     // Sinon, rediriger vers login
 
 
-    return navigateTo('/auth/login')
+    return navigateTo('/')
   }
 
   // Utilisateur connecté, récupérer ses données si nécessaire
@@ -176,7 +176,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     } catch (error) {
       console.error('❌ Erreur lors de la récupération des données utilisateur:', error)
       await authStore.logout()
-      return navigateTo('/auth/login')
+      return navigateTo('/')
     }
   }
 
@@ -184,7 +184,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   console.log(`👤 Utilisateur connecté avec le rôle: ${userRole}`)
 
 
-  if (!authStore.isAuthenticated && ['/auth/login', '/auth/register'].includes(to.path)) {
+  if (!authStore.isAuthenticated && ['/'].includes(to.path)) {
     return navigateTo(getHomePageForRole(userRole))
   }
 
