@@ -28,15 +28,9 @@
 import ReadOnlyEventCard from './ReadOnlyEventCard.vue';
 import type {Announcement} from "~/common/interface/event.interface";
 
-
-const props = defineProps<
-    {
-        announcements: Announcement[];
-        error: string | null;
-        loading: boolean;
-    }
->()
-
-
-
+const props = defineProps<{
+    announcements: Announcement[];
+    error: string | null;
+    loading: boolean;
+}>()
 </script>

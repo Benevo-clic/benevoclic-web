@@ -25,7 +25,9 @@ export default defineEventHandler(async (event) => {
         setCookies(event, loginResponse);
 
     }catch (error: any) {
-        console.log("Erreur lors de l'inscription de l'utilisateur vérifié++++++++++++", error);
+        if( error.statusCode === 400 || error.statusCode === 401) {
+            return
+        }
         throw createError({
             statusCode: error.statusCode || 401,
             message: error.message || "Échec de création de compte"

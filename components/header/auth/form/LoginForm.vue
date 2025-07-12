@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {reactive, ref, watch, onMounted} from 'vue'
+import {reactive, ref, watch} from 'vue'
 import UsersLoginForm from "~/components/header/auth/form/UsersLoginForm.vue"
 import UserRegisterForm from "~/components/header/auth/form/UserRegisterForm.vue"
 import {useUser} from "~/composables/auth/useUser";
@@ -11,13 +11,6 @@ const auth = useUser()
 const volunteer = useVolunteerAuth()
 
 const { t } = useI18n()
-
-onMounted(async () => {
-  await auth.initializeUser()
-  await volunteer.getVolunteerInfo()
-})
-
-
 
 
 const loading = ref(false)

@@ -21,7 +21,7 @@ import {useNavigation} from "~/composables/useNavigation";
 const { logout: signOut, user ,initializeUser} = useUser()
 const {association: association,getAssociationInfo} =useAssociationAuth()
 const { setLocale,t, locale } = useI18n()
-const { theme, toggleTheme, isDarkTheme } = useTheme()
+const { toggleTheme, isDarkTheme } = useTheme()
 const route = useRoute()
 const { navigateToRoute } = useNavigation()
 

@@ -15,12 +15,16 @@
           {{ props.announcementFavorites?.length }} annonces
         </h2>
       </div>
+      <!-- Optimisation avec v-memo basé sur les propriétés importantes -->
       <VolunteerAnnouncementCard
-          v-for="announcement in props.announcementFavorites"
-          :key="announcement._id"
-          :announcement="announcement"
-          :is-favorite="true"
-          @favorite="toggleFavorite"
+        v-for="announcement in props.announcementFavorites"
+        :key="announcement._id"
+        v-memo="[
+          announcement
+        ]"
+        :announcement="announcement"
+        :is-favorite="true"
+        @favorite="toggleFavorite"
       />
     </div>
   </div>
@@ -32,23 +36,22 @@ import VolunteerAnnouncementCard from "~/components/event/volunteer/VolunteerAnn
 import {useFavoritesAnnouncement} from "~/composables/useFavoritesAnnouncement";
 import {useUser} from "~/composables/auth/useUser";
 
-const props = defineProps<
-    {
-      announcementFavorites: Announcement[];
-      error: string | null;
-      loading: boolean;
-    }
->()
+const props = defineProps<{
+  announcementFavorites: Announcement[];
+  error: string | null;
+  loading: boolean;
+}>()
+
 const useFavorite = useFavoritesAnnouncement();
 const { user } = useUser()
 
+// Optimisation : Éviter les appels inutiles
 async function refreshFavorites() {
   if (!user.value) return
   await useFavorite.fetchAllFavoritesOfVolunteer(user.value.userId)
 }
 
-
-async function removeFavorite(announcementId: string , volunteerId: string) {
+async function removeFavorite(announcementId: string, volunteerId: string) {
   try {
     await useFavorite.removeByVolunteerIdAndAnnouncementId(announcementId, volunteerId);
   } catch (error) {
@@ -62,5 +65,4 @@ async function toggleFavorite(announcement: Announcement) {
   await removeFavorite(announcement._id, user.value.userId)
   await refreshFavorites()
 }
-
 </script>

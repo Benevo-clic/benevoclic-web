@@ -83,15 +83,11 @@ async function resendEmail() {
       role:         roleCookie.value as RoleUser,
       email:        emailCookie.value
     })
-
     await useAuth.sendEmailVerification({
       tempPassword: authStore.tempPassword as string,
       role: authStore.role as RoleUser
     })
-    
-    console.log('✅ Email de vérification renvoyé avec succès')
-    startTimer() // 🔧 Redémarrer le minuteur
-    
+    startTimer()
   } catch (err: any) {
     error.value = 'Erreur lors de l\'envoi: ' + err.message
   } finally {

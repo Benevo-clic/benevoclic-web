@@ -38,9 +38,6 @@ const emit = defineEmits<{
   rightAction: [participant: string];
 }>();
 
-
-
-
 function handleRightAction(id: string) {
   emit('rightAction', id);
 }

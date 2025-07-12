@@ -4,6 +4,7 @@
       <ParticipantOrVolunteerCard
           v-for="volunteer in props.volunteers"
           :key="volunteer.id"
+          v-memo="[volunteer]"
           :participant="volunteer"
           @right-action="handleRightAction"
       />
