@@ -7,7 +7,7 @@
     <div class="relative overflow-hidden">
       <figure class="h-36 bg-gradient-to-br from-base-200 to-base-300">
         <img
-            v-if="announcement.announcementImage?.data"
+            v-if="announcement.announcementImage"
             :src="coverImageUrl"
             alt="Image de l'événement"
             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -131,19 +131,11 @@ const statusBadgeClass = computed(() => {
 
 
 const profileImageUrl = computed(() => {
-  const img = props.announcement.associationLogo;
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`
-  }
-  return ''
+  return  props.announcement.associationLogo;
 })
 
 const coverImageUrl = computed(() => {
-  const img = props.announcement.announcementImage;
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`
-  }
-  return ''
+  return  props.announcement.announcementImage;
 });
 
 const formatDate = (dateString: string) => {

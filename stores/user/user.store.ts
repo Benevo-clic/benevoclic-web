@@ -70,7 +70,6 @@ export const useUserStore = defineStore('user', {
 
     // Récupère les infos utilisateur
     async fetchUser() {
-      const auth = getAuth();
       if (this._isFetching) {
         return this.user;
       }
@@ -186,7 +185,42 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    // Supprime le compte utilisateur
+    async updateAvatar(file: File){
+        this.loading = true;
+        this.error = null;
+
+        try {
+          const { $firebase } = useNuxtApp()
+          const user = $firebase.auth?.currentUser
+          if (!user) {
+            throw new Error('Utilisateur non connecté')
+          }
+
+          const formData = new FormData()
+          formData.append('file', file)
+
+          console.log(`Mise à jour de l'avatar pour l'utilisateur: ${user.uid}`, file)
+          const response = await $fetch<UserInfo>(
+              `/api/user/${user.uid}/updateAvatarUser`,
+              {
+                method: 'PATCH',
+                body: formData,
+              }
+          )
+
+          console.log(`Réponse de la mise à jour de l'avatar:`, response)
+
+          if (response) {
+            this.updateUserData(response)
+          }
+        } catch (error: any) {
+            this.error = error?.message || 'Erreur lors de la mise à jour de l\'avatar';
+            throw error;
+        } finally {
+            this.loading = false;
+        }
+    },
+
     async removeUserAccount() {
       this.loading = true;
       this.error = null;

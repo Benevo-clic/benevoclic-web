@@ -15,7 +15,6 @@ import AssociationBottomBar from "~/components/header/AssociationBottomBar.vue";
 import {useI18n} from "vue-i18n";
 import NoConnectedBottomBar from "~/components/header/NoConnectedBottomBar.vue";
 import type {RoleUser} from "~/common/enums/role.enum";
-import type {imageProfile} from "~/common/types/auth.type";
 const auth = useUser()
 const isAuthenticated = computed(() => auth.isAuthenticated.value)
 const { t } = useI18n()
@@ -29,8 +28,8 @@ onMounted(async () => {
     if (userRole.value) {
       role.value = userRole.value
     }
-    if (auth.user.value?.imageProfile) {
-      img.value = auth.user.value.imageProfile
+    if (auth.user.value?.avatarFileKey) {
+      img.value = auth.user.value.avatarFileKey
     }
   } catch (error) {
     console.error('Error fetching user data:', error)
@@ -44,16 +43,13 @@ const loginModal = ref<HTMLDialogElement | null>(null)
 const isLoading = computed(() => auth.isLoading.value)
 const isAssociationComponentAvailable = ref(true) // Flag to track if association component is available
 const role = ref<RoleUser>() // Default to 'VOLUNTEER' if userRole is not set
-const img = ref<imageProfile>()
+const img = ref<string>()
 
 let mediaQuery: MediaQueryList | undefined;
 let handler: ((e: MediaQueryListEvent) => void) | undefined;
 
 const profileImageUrl = computed(() => {
-  if (img.value?.data && img.value.contentType) {
-    return `data:${img.value.contentType};base64,${img.value.data}`
-  }
-  return ''
+  return img.value
 })
 
 onUnmounted(() => {

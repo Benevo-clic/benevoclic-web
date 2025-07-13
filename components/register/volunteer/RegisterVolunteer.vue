@@ -5,12 +5,12 @@ import {useUser} from "~/composables/auth/useUser";
 const user = useUser()
 
 const isSubmittedForm = ref(false)
-const imageBase64 = ref<string | null>(null)
+const imageBase64 = ref<File | null>(null)
 const currentStep = ref(1)
 
-function saveBase64(base64: string) {
+function saveBase64(base64: File) {
   imageBase64.value = base64
-  user.updateProfile(base64);
+  user.updateAvatar(base64);
   navigateTo("/volunteer")
 }
 

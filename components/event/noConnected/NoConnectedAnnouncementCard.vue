@@ -5,7 +5,7 @@
     <div class="relative overflow-hidden">
       <figure class="h-36 bg-gradient-to-br from-base-200 to-base-300">
         <img
-            v-if="announcement.announcementImage?.data"
+            v-if="announcement.announcementImage"
             :src="coverImageUrl"
             alt="Image de l'événement"
             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -40,7 +40,7 @@
         <div class="avatar">
           <div class="w-12 h-12 rounded-full">
             <img
-                v-if="announcement.associationLogo?.data"
+                v-if="announcement.associationLogo"
                 :src="associationImageUrl"
                 :alt="announcement.associationName || 'Association'"
             />
@@ -120,29 +120,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed } from 'vue';
 import type { Announcement } from '~/common/interface/event.interface';
 import { Heart, HeartHandshake, Users, Calendar, MapPin } from 'lucide-vue-next';
-import {navigateTo} from "#app";
 
 const props = defineProps<{
   announcement: Announcement,
 }>();
 
 const coverImageUrl = computed(() => {
-  const img = props.announcement.announcementImage;
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`
-  }
-  return ''
+  return props.announcement.announcementImage
 });
 
 const associationImageUrl = computed(() => {
-  const img = props.announcement.associationLogo;
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`
-  }
-  return ''
+  return props.announcement.associationLogo
 });
 
 const emit = defineEmits(['favorite', 'participate']);

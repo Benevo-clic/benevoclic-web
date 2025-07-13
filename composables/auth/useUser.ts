@@ -77,6 +77,7 @@ export const useUser = () => {
         getUserById: userStore.getUserById,
         removeUser: userStore.removeUserAccount,
         updateProfile: userStore.uploadProfilePicture,
+        updateAvatar: userStore.updateAvatar,
         register: authStore.registerWithEmailPassword,
         updatePassword: userStore.updatePassword,
         

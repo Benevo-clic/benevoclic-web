@@ -6,7 +6,7 @@
     <div v-else class="container mx-auto px-2 md:px-4 py-6 max-w-2xl">
       <!-- Photo de couverture moderne -->
       <div class="relative w-full aspect-[3/1] rounded-2xl overflow-hidden mb-6 bg-base-200 flex items-center justify-center shadow-md">
-        <img v-if="announcement?.announcementImage?.data" :src="coverImageUrl" alt="Photo de couverture" class="object-cover w-full h-full transition-transform duration-500" />
+        <img v-if="announcement?.announcementImage" :src="coverImageUrl" alt="Photo de couverture" class="object-cover w-full h-full transition-transform duration-500" />
         <div v-else class="w-full h-full flex flex-col items-center justify-center text-base-content/60">
           <div class="avatar placeholder mb-3">
             <div class="bg-base-300 text-base-content rounded-full w-16">
@@ -26,7 +26,7 @@
       <!-- Infos principales -->
       <div class="bg-base-100 rounded-xl shadow-lg p-6 mb-6 relative">
         <div class="flex items-center gap-3 mb-2">
-          <div v-if="announcement?.associationLogo?.data" class="avatar">
+          <div v-if="announcement?.associationLogo" class="avatar">
             <div class="w-10 h-10 rounded-full ring-2 ring-base-300">
               <img :src="profileImageUrl" alt="Logo association" />
             </div>
@@ -142,11 +142,7 @@ const tab = ref<'participants' | 'volunteers'>('participants');
 const announcement = computed(() => useAnnouncementAuth.getCurrentAnnouncement.value);
 
 const profileImageUrl = computed(() => {
-  const img = announcement.value?.associationLogo;
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`
-  }
-  return ''
+  return announcement.value?.associationLogo
 })
 
 const scrollContainer = ref<HTMLElement | null>(null)
@@ -219,11 +215,7 @@ async function announcementDelete() {
 }
 
 const coverImageUrl = computed(() => {
-  const img = announcement.value?.announcementImage;
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`;
-  }
-  return '';
+  return announcement.value?.announcementImage;
 });
 
 function formatDate(dateString?: string) {

@@ -100,9 +100,7 @@ async function buildEventRequests() {
         volunteer: {
           name: volunteer.name,
           email: volunteerInfo.email,
-          avatar: volunteerInfo.imageProfile?.data
-            ? `data:${volunteerInfo.imageProfile.contentType};base64,${volunteerInfo.imageProfile.data}`
-            : undefined,
+          avatar: volunteerInfo.avatarFileKey,
         },
         eventName: ann.nameEvent,
         type: 'event',
@@ -146,9 +144,7 @@ async function buildAssociationRequests() {
         volunteer: {
           name: volunteer.name,
           email: volunteerInfo.email,
-          avatar: volunteerInfo.imageProfile?.data
-            ? `data:${volunteerInfo.imageProfile.contentType};base64,${volunteerInfo.imageProfile.data}`
-            : undefined,
+          avatar: volunteerInfo.avatarFileKey,
         },
         type: 'association',
       };

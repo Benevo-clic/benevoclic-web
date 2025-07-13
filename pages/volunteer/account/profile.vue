@@ -114,11 +114,7 @@ onMounted(async () => {
 })
 
 const profileImageUrl = computed(() => {
-  const img = auth.user.value?.imageProfile
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`
-  }
-  return ''
+  return auth.user.value?.avatarFileKey
 })
 
 const nbAssociations = computed(() => user.value?.myAssociations?.length ?? 0)

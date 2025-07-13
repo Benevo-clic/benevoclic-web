@@ -7,7 +7,7 @@
           <span class="loading loading-spinner loading-sm"></span>
         </div>
       </div>
-      <div v-else-if="userInfo?.imageProfile?.data" class="avatar">
+      <div v-else-if="userInfo?.avatarFileKey" class="avatar">
         <div class="w-16 h-16 rounded-full ring-2 ring-primary ring-offset-2 ring-offset-base-100">
           <img :src="profileImageUrl" :alt="`Photo de ${participant.name}`" class="w-full h-full object-cover rounded-full" />
         </div>
@@ -51,6 +51,7 @@ interface UserInfo {
     contentType: string;
     uploadedAt: string;
   };
+  avatarFileKey?: string;
 }
 
 const props = defineProps<{
@@ -67,11 +68,7 @@ const loading = ref(false);
 
 // URL de l'image de profil
 const profileImageUrl = computed(() => {
-  const img = userInfo.value?.imageProfile;
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`;
-  }
-  return '';
+  return  userInfo.value?.avatarFileKey;
 });
 
 async function loadUserInfo() {
@@ -80,6 +77,7 @@ async function loadUserInfo() {
   loading.value = true;
   try {
     userInfo.value = await getUserById(props.participant.id);
+    console.log('Informations utilisateur chargées:', userInfo.value);
   } catch (error) {
     console.error('Erreur lors du chargement des informations utilisateur:', error);
   } finally {

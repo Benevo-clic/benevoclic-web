@@ -78,11 +78,7 @@ async function changeLanguage(lo: 'fr' | 'en' | 'es', flagEmoji: string) {
 }
 
 const profileImageUrl = computed(() => {
-  const img = user.value?.imageProfile
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`
-  }
-  return ''
+  return  user.value?.avatarFileKey
 })
 
 const toggleBodyScroll = (disable: boolean) => {

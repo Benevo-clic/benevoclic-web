@@ -91,12 +91,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { UserRound, Upload } from 'lucide-vue-next'
-import { useUser } from '~/composables/auth/useUser'
+import {computed, onMounted, ref} from 'vue'
+import {Upload, UserRound} from 'lucide-vue-next'
+import {useUser} from '~/composables/auth/useUser'
 
-import { useI18n } from 'vue-i18n'
-import { isEqual } from 'lodash'
+import {useI18n} from 'vue-i18n'
+import {isEqual} from 'lodash'
 import {useAssociationAuth} from "~/composables/useAssociation";
 
 const { t } = useI18n()
@@ -141,11 +141,7 @@ const alertMessage = ref('')
 const isImageUploading = ref(false)
 
 let profileImageUrl = computed(() => {
-  const img = auth.user.value?.imageProfile
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`
-  }
-  return ''
+  return auth.user.value?.avatarFileKey
 })
 
 const isFormChanged = computed(() => {
@@ -195,16 +191,12 @@ function handleImageChange(event: Event) {
     const reader = new FileReader()
     reader.onload = async () => {
       try {
-        const base64 = reader.result as string
-        await auth.updateProfile(base64)
+        await auth.updateAvatar(file)
         alertStatus.value = 'success'
         alertMessage.value = t('drawer-content.account.profile_updated_success') || 'Profile image updated successfully'
         setTimeout(() => {
           alertStatus.value = null
         }, 10000)
-        profileImageUrl = computed(() => {
-          return base64
-        })
       } catch (error) {
         // Show error alert
         alertStatus.value = 'error'

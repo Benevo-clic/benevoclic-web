@@ -16,10 +16,11 @@ const triggerFileInput = () => {
 };
 
 
-const handleFileChange = (event: Event) => {
-  const input = event.target as HTMLInputElement;
-  if (!input.files || !input.files[0]) return
-  const file = input.files[0]
+const handleFileChange = async (event: Event) => {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) return
+  coverPhotoFile.value = file;
+  await announcement.uploadImageCover(file)
   const reader = new FileReader()
     reader.onload = () => {
       coverPhotoPreview.value = reader.result as string
@@ -44,7 +45,6 @@ const handleFinish = async () => {
   if (coverPhotoPreview.value) {
     isUploading.value = true;
     try {
-      await announcement.uploadImageCover(coverPhotoPreview.value);
       emit('finish');
     } catch (error) {
       console.error('Error uploading cover image:', error);

@@ -144,7 +144,6 @@ const form = ref<Partial<Announcement>>({
 const tagsInput = ref('');
 const imageFile = ref<File|null>(null);
 const coverPhotoPreview = ref<string | null>(null);
-const coverPhotoFile = ref<File | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 
 const statusOptions = Object.values(EventStatus).map(status => ({ label: status, value: status }));
@@ -167,8 +166,8 @@ watch(() => props.announcement, (a) => {
       maxVolunteers: a.maxVolunteers ?? 0,
     };
     tagsInput.value = a.tags ? a.tags.join(', ') : '';
-    if (a.announcementImage?.data && a.announcementImage?.contentType) {
-      coverPhotoPreview.value = `data:${a.announcementImage.contentType};base64,${a.announcementImage.data}`;
+    if (a.announcementImage) {
+      coverPhotoPreview.value = a.announcementImage;
     } else {
       coverPhotoPreview.value = null;
     }
@@ -196,11 +195,11 @@ const triggerFileInput = () => {
 };
 
 
-const handleFileChange = (event: Event) => {
-  const input = event.target as HTMLInputElement;
-  if (!input.files || !input.files[0]) return
-  const file = input.files[0]
+const handleFileChange = async (event: Event) => {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) return
   imageFile.value = file;
+  await store.uploadImageCover(file);
   const reader = new FileReader()
   reader.onload = () => {
     coverPhotoPreview.value = reader.result as string
@@ -237,10 +236,6 @@ async function save() {
     }
     if (Object.keys(updatedFields).length > 0) {
       await store.updateAnnouncement(form.value._id, updatedFields);
-    }
-    if (imageFile.value) {
-      const base64 = await fileToBase64(imageFile.value);
-      await store.uploadImageCover(base64);
     }
   }
     

@@ -1,5 +1,4 @@
 import { EventStatus } from '../enums/event.enum';
-import type {imageProfile} from "~/common/types/auth.type";
 
 export interface Image {
   url: string;
@@ -30,8 +29,8 @@ export interface Announcement {
   tags?: string[];
   associationId: string;
   associationName: string;
-  associationLogo?: imageProfile;
-  announcementImage?: imageProfile;
+  associationLogo?: string;
+  announcementImage?: string;
   locationAnnouncement?: Location;
   participants?: InfoVolunteer[];
   nbParticipants?: number;

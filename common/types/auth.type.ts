@@ -43,5 +43,6 @@ export interface UserInfo {
     isCompleted?: boolean
     createdAt: string
     updatedAt: string
-    imageProfile?: imageProfile
+    imageProfile?: imageProfile,
+    avatarFileKey?: string
 }

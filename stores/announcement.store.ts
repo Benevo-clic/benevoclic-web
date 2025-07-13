@@ -149,20 +149,17 @@ export const useAnnouncementStore = defineStore('announcement', {
       }
     },
 
-    async uploadImageCover(imageBase64: string) {
+    async uploadImageCover(file: File) {
       this.loading = true
       this.error = null
 
       try {
-        const response = await $fetch('/api/announcement/updateCoverAnnouncement', {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            imageBase64,
-            id: this.currentAnnouncement?._id
-          })
+          const formData = new FormData()
+          formData.append('file', file)
+
+          const response = await $fetch(`/api/announcement/${this.currentAnnouncement?._id}/updateCoverAnnouncement`, {
+              method: 'PATCH',
+              body: formData,
         })
 
         if (!response) {

@@ -93,11 +93,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
-import { UserRound, Mail, Phone, MapPin, Globe } from 'lucide-vue-next'
-import { useUser } from '~/composables/auth/useUser'
-import { useAssociationAuth } from '~/composables/useAssociation'
-import { useAnnouncement } from '~/composables/useAnnouncement'
+import {computed, onMounted} from 'vue'
+import {Globe, Mail, MapPin, Phone, UserRound} from 'lucide-vue-next'
+import {useUser} from '~/composables/auth/useUser'
+import {useAssociationAuth} from '~/composables/useAssociation'
+import {useAnnouncement} from '~/composables/useAnnouncement'
 
 definePageMeta({
   middleware: ['auth'],
@@ -135,11 +135,7 @@ const creationDate = computed(() => {
 
 
 const profileImageUrl = computed(() => {
-  const img = auth.user.value?.imageProfile
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`
-  }
-  return ''
+  return auth.user.value?.avatarFileKey
 })
 
 function formatDate(dateString?: string) {
