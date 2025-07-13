@@ -263,24 +263,23 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             }
         },
         async removeVolunteer() {
+            if (!this.volunteer?.volunteerId) {
+                this.error = 'ID du bénévole manquant'
+                throw new Error(this.error)
+            }
             this.loading = true
             this.error = null
             try {
-                const data =  await $fetch('/api/volunteer/remove', {
-                    method: 'DELETE',
-                    query: { id: this.volunteer?.volunteerId },
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                })
+                const response = await $fetch<{ message: string; data: string }>(
+                    `/api/volunteer/${this.volunteer.volunteerId}`,
+                    { method: 'DELETE' }
+                )
 
-                if (this.volunteer?.volunteerId) {
-                    this._volunteerCache.delete(this.volunteer.volunteerId);
-                }
-                this.volunteer = null;
+                // 2️⃣ Mise à jour du cache local
+                this._volunteerCache.delete(this.volunteer?.volunteerId)
+                this.volunteer = null
 
-                return data as { message: string }
-
+                return response
             } catch (err: any) {
                 this.error = err?.message || 'Erreur de suppression du bénévole'
                 throw err

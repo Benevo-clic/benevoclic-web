@@ -17,7 +17,6 @@ export default defineEventHandler(async (event) => {
         });
     }
 
-
     try {
         const removeResponse = await $fetch(`${config.private.api_base_url}/api/v2/association/${query.id}`, {
             method: 'DELETE',
