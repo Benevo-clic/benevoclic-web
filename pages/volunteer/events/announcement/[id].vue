@@ -6,7 +6,19 @@
     <div v-else class="container mx-auto px-2 md:px-4 py-6 max-w-4xl">
       <!-- Photo de couverture moderne -->
       <div class="relative w-full aspect-[3/1] rounded-2xl overflow-hidden mb-6 bg-base-200 flex items-center justify-center shadow-md">
-        <img v-if="announcement?.announcementImage" :src="coverImageUrl" alt="Photo de couverture" class="object-cover w-full h-full transition-transform duration-500" />
+        <div v-if="!announcement">
+          <div class="flex flex-col items-center justify-center w-full h-full text-base-content/60">
+
+            <div class="w-16 h-16 mb-3 flex items-center justify-center bg-base-300 rounded-full">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07" />
+              </svg>
+            </div>
+            <p class="text-sm font-medium">Cette annonce n'existe plus</p>
+          </div>
+        </div>
+
+        <img v-else-if="announcement?.announcementImage" :src="coverImageUrl" alt="Photo de couverture" class="object-cover w-full h-full transition-transform duration-500" />
         <div v-else class="w-full h-full flex flex-col items-center justify-center text-base-content/60">
           <div class="avatar placeholder mb-3">
             <div class="bg-base-300 text-base-content rounded-full w-16">
