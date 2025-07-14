@@ -1,5 +1,6 @@
 import axios from "axios";
 import { defineEventHandler } from 'h3';
+import {ApiError} from "~/utils/ErrorHandler";
 
 export default defineEventHandler(async (event) => {
   const announcementId = event.context.params?.id;
@@ -24,11 +25,9 @@ export default defineEventHandler(async (event) => {
     );
     return response.data;
   }catch (error: any) {
-    console.error(`Error deleting announcement ${announcementId}: ${error.message}`);
-    throw createError({
-      statusCode: error.response?.status || 500,
-      statusMessage: error.response?.statusText || 'Erreur serveur',
-    });
+      if (axios.isAxiosError(error)) {
+          ApiError.handleAxios(error, 'Erreur lors de la suppression de l’annonce');
+      }
   }
 
 }); 

@@ -1,6 +1,7 @@
 import { defineEventHandler, getCookie, createError } from 'h3'
 import { UserInfo } from '~/common/types/auth.type'
-
+import axios from "axios";
+import {ApiError} from "~/utils/ErrorHandler";
 // Types pour la réponse de l'API
 
 export default defineEventHandler(async (event) => {
@@ -15,7 +16,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const currentUser = await $fetch<UserInfo>(`${config.private.api_base_url}/user/current-user`, {
+    const currentUser = await axios.get<UserInfo>(`${config.private.api_base_url}/user/current-user`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -29,11 +30,10 @@ export default defineEventHandler(async (event) => {
     }
 
 
-    return currentUser
+    return currentUser.data
   } catch (error: any) {
-    throw createError({
-      statusCode: error.statusCode || 401,
-      message: error.message || 'Token invalide'
-    })
+    if (axios.isAxiosError(error)) {
+      ApiError.handleAxios(error, 'Erreur lors de la récupération de l’utilisateur actuel');
+    }
   }
 }) 

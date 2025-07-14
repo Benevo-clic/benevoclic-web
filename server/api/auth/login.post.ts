@@ -2,6 +2,7 @@ import {defineEventHandler, readBody, createError, H3Event, EventHandlerRequest}
 import axios from "axios";
 import {setCookie} from 'h3'
 import {decodePasswordBase64} from "~/utils/crypto";
+import {ApiError} from "~/utils/ErrorHandler";
 
 export interface LoginResponse {
     idUser: string
@@ -77,9 +78,8 @@ export default defineEventHandler(async (event) => {
     setCookies(event,loginResponse)
     return loginResponse
   } catch (error: any) {
-    throw createError({
-      statusCode: error.statusCode || 401,
-      message: error.message || "Échec de l'authentification"
-    })
+    if (axios.isAxiosError(error)) {
+      ApiError.handleAxios(error, 'Erreur lors de la connexion');
+    }
   }
 }) 

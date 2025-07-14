@@ -1,6 +1,7 @@
 import { defineEventHandler } from 'h3';
 import { getCookie, readBody } from 'h3';
 import axios from 'axios';
+import {ApiError} from "~/utils/ErrorHandler";
 
 
 export default defineEventHandler(async (event) => {
@@ -24,11 +25,8 @@ export default defineEventHandler(async (event) => {
     );
     return response.data;
   }catch (error : any) {
-    console.error(`Error updating announcement ${announcementId}: ${error.message}`);
-    throw createError({
-      statusCode: error.response?.status || 500,
-      statusMessage: error.response?.statusText || 'Erreur serveur',
-      data: error instanceof Error ? error.message : String(error)
-    });
+    if (axios.isAxiosError(error)) {
+      ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’annonce');
+    }
   }
 }); 

@@ -236,6 +236,32 @@
         </div>
       </div>
     </transition>
+
+    <template v-if="showErrorModal">
+      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-base-100 rounded-xl shadow-lg p-8 max-w-sm w-full text-center">
+          <h2 class="text-xl font-bold mb-4">Erreur</h2>
+          <p class="mb-6">
+            <span v-if="errorType === '4xx'">Cette action n'est plus possible.</span>
+            <span v-else-if="errorType === '5xx'">Une erreur serveur est survenue.</span>
+          </p>
+          <button
+            v-if="errorType === '4xx'"
+            class="btn btn-primary w-full"
+            @click="handleReload"
+          >
+            Recharger la page
+          </button>
+          <button
+            v-else-if="errorType === '5xx'"
+            class="btn btn-primary w-full"
+            @click="handleGoHome"
+          >
+            Revenir à l'accueil
+          </button>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -291,10 +317,28 @@ const followButtonClass = computed(() => {
   return 'btn-primary';
 });
 
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur lors de la participation du volontaire à l\'événement:', error);
+  }
+  return
+}
+
 async function refreshFollowState() {
   if (!volunteerId.value) return;
-  associationsWaitingList.value = await volunteerUse.getAllAssociationsToWaitingList(volunteerId.value);
-  associationsFollowingList.value = await volunteerUse.getAllAssociationsFollowingList(volunteerId.value);
+  try {
+    associationsWaitingList.value = await volunteerUse.getAllAssociationsToWaitingList(volunteerId.value);
+    associationsFollowingList.value = await volunteerUse.getAllAssociationsFollowingList(volunteerId.value);
+  }catch (error : any) {
+    handleError(error);
+  }
+
 }
 
 onMounted(async () => {
@@ -320,26 +364,36 @@ onMounted(async () => {
 });
 
 async function fetchAnnouncement() {
-  if (route.params.id) {
-    announcementUse.invalidateCache();
-    await announcementUse.fetchAnnouncementById(route.params.id as string);
-    loading.value = announcementUse.loading.value;
+  try {
+    if (route.params.id) {
+      announcementUse.invalidateCache();
+      await announcementUse.fetchAnnouncementById(route.params.id as string);
+      loading.value = announcementUse.loading.value;
+    }
+  }catch (error) {
+    handleError(error);
   }
 }
 
 async function toggleFollowAssociation() {
-  if (!volunteerId.value || !associationId.value) return;
-  if (isFollowingPending.value) {
-    await volunteerUse.removeVolunteerFromWaitingListAssociation(associationId.value);
-  } else if (isFollowing.value) {
-    await volunteerUse.removeVolunteerFromAssociation(associationId.value, volunteerId.value);
-  }else {
-    await volunteerUse.addVolunteerToWaitingListAssociation(associationId.value, {
-      id: volunteerId.value,
-      name: volunteerUse.volunteer.value?.firstName + ' ' + volunteerUse.volunteer.value?.lastName
-    });
+
+  try {
+    if (!volunteerId.value || !associationId.value) return;
+    if (isFollowingPending.value) {
+      await volunteerUse.removeVolunteerFromWaitingListAssociation(associationId.value);
+    } else if (isFollowing.value) {
+      await volunteerUse.removeVolunteerFromAssociation(associationId.value, volunteerId.value);
+    }else {
+      await volunteerUse.addVolunteerToWaitingListAssociation(associationId.value, {
+        id: volunteerId.value,
+        name: volunteerUse.volunteer.value?.firstName + ' ' + volunteerUse.volunteer.value?.lastName
+      });
+    }
+    await refreshFollowState();
+  }catch (error: any) {
+    handleError(error);
   }
-  await refreshFollowState();
+
 }
 
 const remainingParticipants = computed(() => {
@@ -378,34 +432,49 @@ const scrollContainer = ref<HTMLElement | null>(null)
 const showScrollDown = ref(false)
 const showScrollUp = ref(false)
 
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+
+function handleGoHome() {
+  window.location.href = '/volunteer';
+}
+
 definePageMeta({
   middleware: ['auth'],
   layout: 'header',
 })
 
-function participateAsVolunteer() {
-  if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
+async function participateAsVolunteer() {
+  if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
     console.error('Aucun événement sélectionné pour la participation');
     return;
   }
-  if(!canParticipateAsVolunteer.value) {
+  if (!canParticipateAsVolunteer.value) {
     console.warn('Aucune place disponible pour participer en tant que bénévole');
     return;
   }
 
-  if(isAlreadyVolunteerWaiting.value) {
+  if (isAlreadyVolunteerWaiting.value) {
     console.warn('Vous êtes déjà inscrit à cet événement en tant que bénévole');
     return;
   }
 
-  announcementUse.addVolunteerWaiting(announcement.value?._id, {
-    id: volunteerUse.volunteer?.value?.volunteerId,
-    name: volunteerUse.volunteer?.value?.firstName + ' ' + volunteerUse.volunteer?.value?.lastName,
-  });
+  try {
+    await announcementUse.addVolunteerWaiting(announcement.value?._id, {
+      id: volunteerUse.volunteer?.value?.volunteerId,
+      name: volunteerUse.volunteer?.value?.firstName + ' ' + volunteerUse.volunteer?.value?.lastName,
+    });
+  } catch (error) {
+    handleError(error);
+  }
 
 }
 
-function participateAsParticipant() {
+async function participateAsParticipant() {
   if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
     console.error('Aucun événement sélectionné pour la participation');
     return;
@@ -417,36 +486,51 @@ function participateAsParticipant() {
     return;
   }
 
-  announcementUse.addParticipant(announcement.value?._id, {
-    id: volunteerUse.volunteer?.value?.volunteerId,
-    name: volunteerUse.volunteer?.value?.firstName + ' ' + volunteerUse.volunteer?.value?.lastName,
-  });
-
+  try {
+    await announcementUse.addParticipant(announcement.value?._id, {
+      id: volunteerUse.volunteer?.value?.volunteerId,
+      name: volunteerUse.volunteer?.value?.firstName + ' ' + volunteerUse.volunteer?.value?.lastName,
+    });
+  } catch (error: any) {
+    handleError(error);
+  }
 }
 
 
-function cancelParticipation() {
-  if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
+async function cancelParticipation() {
+  if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
     console.error('Aucun événement sélectionné pour l\'annulation de participation');
     return;
   }
-  announcementUse.removeParticipant(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
+  try {
+    await announcementUse.removeParticipant(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
+  } catch (error) {
+    handleError(error);
+  }
 }
 
-function cancelVolunteerParticipationWaitingList() {
-  if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
+async function cancelVolunteerParticipationWaitingList() {
+  if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
     console.error('Aucun événement sélectionné pour l\'annulation de participation en tant que bénévole');
     return;
   }
-  announcementUse.removeVolunteerWaiting(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
+  try {
+    await announcementUse.removeVolunteerWaiting(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
+  } catch (error) {
+    handleError(error);
+  }
 }
 
-function cancelVolunteerParticipation() {
-  if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
+async function cancelVolunteerParticipation() {
+  if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
     console.error('Aucun événement sélectionné pour l\'annulation de participation en tant que bénévole');
     return;
   }
-  announcementUse.removeVolunteer(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
+  try {
+    await announcementUse.removeVolunteer(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 function openInGoogleMaps() {

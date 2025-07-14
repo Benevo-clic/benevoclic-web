@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { defineEventHandler, readBody } from "h3";
 import { getCookie, getQuery } from "h3";
+import {ApiError} from "~/utils/ErrorHandler";
 export default defineEventHandler(async (event) => {
     const token = getCookie(event, 'auth_token')
     const config = useRuntimeConfig()
@@ -33,16 +34,9 @@ export default defineEventHandler(async (event) => {
         return response.data;
 
     }catch (error: any) {
-        console.error(`Error updating association: ${error.message}`);
-        throw createError({
-            statusCode: error.response?.status || 500,
-            statusMessage: error.response?.statusText || 'Erreur serveur',
-            data: {
-                message: 'Failed to update association',
-                error: error.message
-            }
-        });
-
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’association');
+        }
     }
 }
 );

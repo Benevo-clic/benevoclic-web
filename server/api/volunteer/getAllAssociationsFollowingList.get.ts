@@ -1,6 +1,7 @@
 import {defineEventHandler, getCookie} from "h3";
 import axios from 'axios';
 import type {AssociationVolunteerFollow} from "~/common/interface/volunteer.interface";
+import {ApiError} from "~/utils/ErrorHandler";
 
 
 
@@ -24,14 +25,8 @@ export default defineEventHandler(async (event) => {
 
         return data
     } catch (error: any) {
-        console.error(`Error fetching associations following list: ${error.message}`);
-        throw createError({
-            statusCode: error.response?.status || 500,
-            statusMessage: error.response?.statusText || 'Erreur serveur',
-            data: {
-                message: 'Failed to fetch associations following list',
-                error: error.message
-            }
-        });
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de la récupération de la liste des associations suivies par le volontaire');
+        }
     }
 })

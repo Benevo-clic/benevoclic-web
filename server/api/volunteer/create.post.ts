@@ -1,6 +1,7 @@
 import type {VolunteerInfo} from "~/common/interface/volunteer.interface";
 import axios from 'axios'
 import { defineEventHandler, readBody } from "h3";
+import {ApiError} from "~/utils/ErrorHandler";
 
 
 
@@ -27,16 +28,9 @@ export default defineEventHandler(async (event) => {
         )
         return response.data;
     }catch (error: any) {
-        console.error(`Error creating volunteer: ${error.message}`);
-        throw createError({
-            statusCode: error.response?.status || 500,
-            statusMessage: error.response?.statusText || 'Erreur serveur',
-            data: {
-                message: 'Failed to create volunteer',
-                error: error.message
-            }
-        });
-
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de la création du volontaire');
+        }
     }
 
 

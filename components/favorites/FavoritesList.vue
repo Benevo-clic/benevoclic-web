@@ -28,7 +28,10 @@
       <!-- Mission favorites -->
       <div 
         v-for="favorite in filteredFavorites" 
-        :key="favorite.id"
+        :key="favorite.id" 
+        v-memo="[
+          favorite
+        ]"
         class="card bg-base-200 shadow-sm"
       >
         <div class="card-body p-4">

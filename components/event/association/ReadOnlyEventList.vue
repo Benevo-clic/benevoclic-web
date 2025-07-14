@@ -15,9 +15,13 @@
           {{ props.announcements.length }} annonces
         </h2>
       </div>
+      <!-- Optimisation avec v-memo basé sur les propriétés critiques -->
       <ReadOnlyEventCard
         v-for="announcement in props.announcements"
         :key="announcement._id"
+        v-memo="[
+          announcement
+        ]"
         :announcement="announcement"
       />
     </div>

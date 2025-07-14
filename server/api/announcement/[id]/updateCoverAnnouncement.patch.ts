@@ -7,6 +7,7 @@ import {
 } from 'h3'
 import axios from 'axios'
 import FormData from 'form-data'
+import {ApiError} from "~/utils/ErrorHandler";
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
@@ -47,15 +48,9 @@ export default defineEventHandler(async (event) => {
             }
         )
         return announcement
-    } catch (err: any) {
-        console.error('Error updating avatar:', err.response?.data || err.message)
-        throw createError({
-            statusCode:    err.response?.status   || 500,
-            statusMessage: err.response?.statusText || 'Server Error',
-            data: {
-                message: 'Failed to update avatar',
-                error:   err.response?.data || err.message,
-            },
-        })
+    } catch (error: any) {
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’avatar de l’annonce');
+        }
     }
 })

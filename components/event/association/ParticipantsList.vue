@@ -2,9 +2,11 @@
   <div>
     <h3 class="text-lg font-bold mb-4">Participants</h3>
     <div v-if="props.participants && props.participants.length" class="space-y-3">
+      <!-- Optimisation avec v-memo basé sur les propriétés importantes -->
       <ParticipantOrVolunteerCard
         v-for="participant in props.participants"
         :key="participant.id"
+        v-memo="[participant.id, participant.name, participant.status]"
         :participant="participant"
         @right-action="handleRightAction"
       />
@@ -28,6 +30,7 @@ import ParticipantOrVolunteerCard from "~/components/event/association/Participa
 interface Participant {
   id: string;
   name: string;
+  status?: string; // Ajouté pour v-memo
 }
 
 const props = defineProps<{

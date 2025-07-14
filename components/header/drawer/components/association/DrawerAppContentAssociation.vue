@@ -1,25 +1,23 @@
 <script setup lang="ts">
-import {computed, onMounted, onUnmounted, ref, watch} from 'vue'
-import {navigateTo, useRoute} from '#app'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { navigateTo, useRoute } from '#app'
 import {
-  Bell,
-  CalendarIcon,
-  CircleHelp,
-  ClipboardList,
-  Globe,
-  LayoutDashboard as DashboardIcon,
-  MoonIcon,
   Pencil,
+  Bell,
+  CircleHelp,
+  UserRound,
+  ClipboardList,
+  CalendarIcon,
+  Globe,
   Settings,
   SunIcon,
-  UserRound
-} from 'lucide-vue-next'
-import {useUser} from '~/composables/auth/useUser'
+  LayoutDashboard as DashboardIcon,
+  MoonIcon} from 'lucide-vue-next'
+import { useUser } from '~/composables/auth/useUser'
 import LanguageComponent from "~/components/header/utils/components/LanguageComponent.vue";
-import {useTheme} from "~/composables/useTheme";
+import { useTheme } from "~/composables/useTheme";
 import {useAssociationAuth} from "~/composables/useAssociation";
 import {useNavigation} from "~/composables/useNavigation";
-
 const { logout: signOut, user ,initializeUser} = useUser()
 const {association: association,getAssociationInfo} =useAssociationAuth()
 const { setLocale,t, locale } = useI18n()
@@ -77,7 +75,11 @@ async function changeLanguage(lo: 'fr' | 'en' | 'es', flagEmoji: string) {
 }
 
 const profileImageUrl = computed(() => {
-  return user.value?.avatarFileKey
+  const img = user.value?.imageProfile
+  if (img?.data && img.contentType) {
+    return `data:${img.contentType};base64,${img.data}`
+  }
+  return ''
 })
 
 const toggleBodyScroll = (disable: boolean) => {

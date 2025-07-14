@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { defineEventHandler, readBody } from "h3";
 import {AssociationInfo} from "~/common/interface/association.interface";
+import {ApiError} from "~/utils/ErrorHandler";
 
 
 
@@ -26,10 +27,8 @@ export default defineEventHandler(async (event) => {
         )
         return response.data;
     }catch (error: any) {
-        console.error(`Error creating association: ${error.message}`);
-        throw createError({
-            statusCode: error.response?.status || 500,
-            statusMessage: error.response?.statusText || 'Erreur serveur'
-        })
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de la création de l’association');
+        }
     }
 });

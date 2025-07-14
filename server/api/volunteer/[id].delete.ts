@@ -7,6 +7,7 @@ import {
 import { useRuntimeConfig } from '#imports'
 import axios from 'axios'
 import { deleteCookies } from '~/server/api/auth/logout.post'
+import {ApiError} from "~/utils/ErrorHandler";
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
@@ -44,15 +45,9 @@ export default defineEventHandler(async (event) => {
             message: 'Volunteer removed successfully',
             data:    removeData.volunteerId
         }
-    } catch (err: any) {
-        console.error('Error removing volunteer:', err.response?.data || err.message)
-        throw createError({
-            statusCode:    err.response?.status   || 500,
-            statusMessage: err.response?.statusText || 'Erreur serveur',
-            data: {
-                message: 'Failed to remove volunteer',
-                error:   err.response?.data || err.message
-            }
-        })
+    } catch (error: any) {
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’avatar');
+        }
     }
 })

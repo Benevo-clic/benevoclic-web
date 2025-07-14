@@ -3,6 +3,7 @@ import {deleteCookies} from "~/server/api/auth/logout.post";
 import {getCookie} from "h3";
 import {useRuntimeConfig} from "#imports";
 import axios from "axios";
+import {ApiError} from "~/utils/ErrorHandler";
 
 
 
@@ -24,7 +25,9 @@ export default defineEventHandler(async (event) => {
         deleteCookies(event);
 
     }catch (error:any){
-        throw new Error("Erreur lors de la suppression de l'utilisateur", error)
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de la suppression de l’utilisateur');
+        }
     }
 
 })

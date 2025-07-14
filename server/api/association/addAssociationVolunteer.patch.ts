@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { defineEventHandler, readBody, getCookie, createError } from "h3";
+import {ApiError} from "~/utils/ErrorHandler";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
@@ -36,15 +37,8 @@ export default defineEventHandler(async (event) => {
 
         return volunteerInfo.data
     } catch (error: any) {
-        console.error('Error adding volunteer to association:', error);
-        throw createError({
-            statusCode: 500,
-            statusMessage: 'Internal Server Error',
-            data: {
-                message: 'Failed to add volunteer to association',
-                error: error.message
-            }
-        });
-
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de l’ajout du volontaire à l’association');
+        }
     }
 });

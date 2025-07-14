@@ -1,5 +1,6 @@
 import {defineEventHandler, getCookie} from "h3";
 import axios from 'axios';
+import {ApiError} from "~/utils/ErrorHandler";
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
@@ -19,14 +20,8 @@ export default defineEventHandler(async (event) => {
         )
         return data
     } catch (error: any) {
-        console.error(`Error fetching associations: ${error.message}`);
-        throw createError({
-            statusCode: error.response?.status || 500,
-            statusMessage: error.response?.statusText || 'Erreur serveur',
-            data: {
-                message: 'Failed to fetch associations',
-                error: error.message
-            }
-        });
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de la récupération des associations du volontaire');
+        }
     }
 })
