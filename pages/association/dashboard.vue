@@ -1,4 +1,5 @@
 <template>
+
   <div class="p-8">
     <div class="max-w-4xl mx-auto">
       <div class="bg-white shadow rounded-lg p-6">
@@ -26,7 +27,7 @@
 import { useUser } from '~/composables/auth/useUser'
 import {definePageMeta} from "#imports";
 import {onMounted} from "vue";
-import {useAssociationAuth} from "~/composables/auth/associationAuth";
+import {useAssociationAuth} from "~/composables/useAssociation";
 
 definePageMeta({
   middleware: ['auth'],
@@ -37,7 +38,7 @@ const auth = useUser()
 const associationAuth = useAssociationAuth()
 
 onMounted(async () => {
-  await auth.fetchUser()
+  await auth.initializeUser()
   const userRole = auth.userRole
   const isVolunteer = await associationAuth.getAssociationInfo()
   const isAuthenticated = auth.isAuthenticated.value

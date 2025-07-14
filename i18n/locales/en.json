@@ -21,7 +21,13 @@
       "wait": "Please wait before requesting a new email",
       "resend": "Resend confirmation email",
       "resend_link": "Click here to resend the confirmation email",
-      "time_remaining": "Time remaining before you can resend the email:"
+      "time_remaining": "Time remaining before you can resend the email:",
+      "check_email": "Check my email",
+      "email_verified": "Email verified successfully!",
+      "continue_registration": "Continue registration",
+      "back_to_login": "Back to login",
+      "instructions": "1. Check your inbox",
+      "click_link": "2. Click the verification link in the email"
     },
     "logout": "Log out",
     "register": {
@@ -90,7 +96,11 @@
     "continue": "Continue",
     "or": "or",
     "placeholder_email": "Enter your email",
-    "placeholder_password": "At least 8 characters"
+    "placeholder_password": "At least 8 characters",
+    "forgot_password": "Forgot your password?",
+    "forgot_password_sent": "A password reset email has been sent to your address.",
+    "forgot_password_error": "Error sending password reset email.",
+    "forgot_password_enter_email": "Please enter your email address to reset your password."
   },
   "drawer-content": {
     "account": {
@@ -129,7 +139,7 @@
         "my_favorites": "My Favorites",
         "history": "History",
       "new-event": "New Event",
-      "history-event": "Past Events",
+      "requests": "My Requests",
       "upcoming-event": "Upcoming Events",
       "manage-event": "Manage Events",
         "dashboard": "Dashboard"
@@ -148,6 +158,7 @@
   },
   "header": {
     "volunteer": {
+      "home": "Home",
       "favorites": "Favorites",
       "recent-search": "Recent search",
       "help": "Help"
@@ -237,7 +248,36 @@
         "history_events": "Past Events",
         "upcoming_events": "Upcoming Events",
         "manage_events": "Manage Events",
+        "requests": "My Requests",
         "dashboard": "Dashboard"
       }
+    },
+  "announcement": {
+    "title": "Announcement",
+    "no_announcements": "No announcements found",
+    "view_all": "View All Announcements",
+    "view_details": "View Details",
+    "read_more": "Read More",
+    "posted_on": "Posted on",
+    "delete_confirmation": {
+      "title": "Confirm Deletion",
+      "message": "Are you sure you want to delete this announcement? This action cannot be undone.",
+      "confirm": "Yes, delete",
+      "cancel": "Cancel"
     }
+  },
+  "verification": {
+    "title": "Confirmation required",
+    "sent": "A confirmation email has been sent to your email address. Please check your inbox and click on the link to activate your account.",
+    "wait": "Please wait before requesting a new email",
+    "resend": "Resend confirmation email",
+    "resend_link": "Click here to resend the confirmation email",
+    "time_remaining": "Time remaining before you can resend the email:",
+    "check_email": "Check my email",
+    "email_verified": "Email verified successfully!",
+    "continue_registration": "Continue registration",
+    "back_to_login": "Back to login",
+    "instructions": "1. Check your inbox",
+    "click_link": "2. Click the verification link in the email"
+  }
 }

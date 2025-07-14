@@ -19,7 +19,16 @@
 import { ArrowLeft } from 'lucide-vue-next'
 import {useUser} from "~/composables/auth/useUser";
 
-const { logout: authLogout } = useUser()
+const { logout: authLogout, initializeUser } = useUser()
+
+onMounted(async () => {
+  try {
+    await initializeUser()
+  } catch (error) {
+    console.error('Error initializing user:', error)
+  }
+})
+
 
 function handleLogoutUser() {
   authLogout()

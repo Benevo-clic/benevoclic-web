@@ -1,17 +1,15 @@
 import {defineStore} from 'pinia'
 import {$fetch} from 'ofetch'
-import type {LoginPayload, LoginResponse, UserInfo} from "~/common/types/auth.type";
-import {useCookie} from "#app/composables/cookie";
+import type {UserInfo} from "~/common/types/auth.type";
 import type {User} from "firebase/auth";
 import {
   signInWithPopup,
   EmailAuthProvider,
   reauthenticateWithCredential,
-  updatePassword
+  updatePassword, getAuth
 } from "firebase/auth";
-import {RoleUser} from "~/common/enums/role.enum";
-
-
+import { useNuxtApp } from '#app';
+import {useAuthStore} from "~/stores/auth/auth.store";
 
 export async function loginWithGoogle(): Promise<User> {
   const {$firebase} = useNuxtApp();
@@ -25,267 +23,258 @@ export async function loginWithGoogle(): Promise<User> {
 interface UserState {
   user: UserInfo | null;
   loading: boolean;
-  isVerified: boolean;
   error: string | null;
+  // Cache pour éviter les appels API redondants
+  _lastUserFetch: number;
+  _userCacheExpiry: number;
+  _isFetching: boolean;
+  _lastUserUpdate: number; // Timestamp de la dernière mise à jour
 }
 
-export const useUserStore = defineStore('auth', {
+export const useUserStore = defineStore('user', {
   state: (): UserState => ({
     user: null,
     loading: false,
     error: null,
-    isVerified: false
+    _lastUserFetch: 0,
+    _userCacheExpiry: 2 * 60 * 1000, // 2 minutes
+    _isFetching: false,
+    _lastUserUpdate: 0,
   }),
 
   getters: {
-    isAuthenticated: () => !useCookie('isConnected').value,
+    userId: (state) => state.user?.userId ?? null,
     getUser: (state) => state.user,
+    getRole: (state) => state.user?.role ?? null,
     fullName: (state) => state.user ? `${state.user.firstName} ${state.user.lastName}` : '',
-    getVerificationStatus: (state) => state.isVerified,
-    getUserRule: (state) => state.user?.role,
+    isFetching: (state) => state._isFetching,
+    isUserCacheValid: (state) => {
+      return Date.now() - state._lastUserFetch < state._userCacheExpiry;
+    },
+    isUserDataFresh: (state) => {
+      return state._lastUserUpdate > state._lastUserFetch;
+    }
   },
+  
   actions: {
-
-    async login(payload: LoginPayload) {
-      this.loading = true
-      this.error = null
-      try {
-        const response = await $fetch<LoginResponse>('/api/auth/login', {
-          method: 'POST',
-          body: payload,
-        })
-
-
-        if(response.idToken) {
-          await this.fetchUser()
-          if(this.user?.role === 'VOLUNTEER') {
-            navigateTo('/volunteer/dashboard')
-          } else if(this.user?.role === 'ASSOCIATION') {
-            navigateTo('/association/dashboard')
-          } else {
-            navigateTo('/dashboard')
-          }
-        }
-        return response
-      } catch (err: any) {
-        this.error = err?.message || 'Erreur d\'authentification'
-        throw err
-      } finally {
-        this.loading = false
-      }
-    },
-    async logout() {
-      this.loading = true
-      this.error = null
-      try {
-        const response = await $fetch('/api/auth/logout', {
-          method: 'POST'
-        })
-
-        if(response.success) {
-            this.user = null
-            navigateTo('/')
-        }
-      } catch (err: any) {
-        this.error = err?.message || 'Erreur de déconnexion'
-        throw err
-      } finally {
-        this.loading = false
-      }
+    invalidateUserCache() {
+      this._lastUserFetch = 0;
+      this._isFetching = false;
     },
 
-    async refreshTokens() {
-      try {
-        this.error = null
-        await $fetch('/api/auth/refresh', {
-          method: 'POST',
-        })
-      } catch (error: any) {
-        this.error = error?.message || 'Erreur de rafraîchissement du token'
-        await this.logout()
-      }
+    updateUserData(userData: UserInfo) {
+      this.user = userData;
+      this._lastUserUpdate = Date.now();
+      this.error = null;
     },
 
+    // Récupère les infos utilisateur
     async fetchUser() {
+      if (this._isFetching) {
+        return this.user;
+      }
+
+      if (this.isUserCacheValid && this.user && !this.isUserDataFresh) {
+        return this.user;
+      }
+
+      this.loading = true;
+      this._isFetching = true;
       try {
-        this.error = null
-
-          await this.refreshTokens()
-
-        this.user = await $fetch<UserInfo>('/api/user/userCurrent')
+        this.error = null;
+        // Appel API pour récupérer les données utilisateur
+        const authStore = useAuthStore();
+        await authStore.refreshTokens();
+        const userData = await $fetch<UserInfo>('/api/user/userCurrent');
+        
+        if (!userData || !userData.userId) {
+          throw new Error('Données utilisateur invalides');
+        }
+        
+        this.updateUserData(userData);
+        this._lastUserFetch = Date.now();
+        return this.user;
       } catch (err: any) {
-        this.error = err?.message || 'Erreur de récupération utilisateur'
-        await this.logout()
+        this.error = err?.message || 'Erreur de récupération utilisateur';
+        throw err;
+      } finally {
+        this._isFetching = false;
+        this.loading = false;
       }
     },
 
-    async fetchUserGoogle(body: { idToken: string, refreshToken: string, uid: string }) {
-      try {
-        this.error = null
+    // Récupère un utilisateur par ID
+    async getUserById(id: string) {
+      if(this.user?.userId === id && this.isUserCacheValid && this.user) {
+        return this.user;
+      }
+      if (!id) {
+        this.error = 'ID utilisateur manquant';
+        throw new Error(this.error);
+      }
 
-        const response = await $fetch('/api/auth/google/updateStatusUser', {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await $fetch<UserInfo>(`/api/user/${id}`);
+
+        if (!response) {
+          this.error = 'Utilisateur non trouvé';
+        }
+
+        return response;
+      } catch (err: any) {
+        this.error = err?.message || 'Erreur de récupération de l\'utilisateur';
+        throw err;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    // Met à jour le statut isCompleted
+    async updateIsCompleted(id: string, isCompleted: boolean) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const response = await $fetch<UserInfo>('/api/user/updateIsCompleted', {
+          method: 'PATCH',
+          body: {id, isCompleted}
+        });
+
+        if (response) {
+          this.updateUserData(response);
+        }
+
+        return response;
+      } catch (err: any) {
+        this.error = err?.message || 'Erreur de mise à jour du profil';
+        throw err;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    // Upload photo de profil
+    async uploadProfilePicture(imageBase64: string) {
+      this.loading = true;
+      this.error = null;
+
+      try {
+        const response = await $fetch('/api/user/updateProfileUser', {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(body)
-        });
-
-        if (!response) {
-          this.error = 'Erreur lors de la connexion'
-          throw new Error(this.error)
-        }
-      } catch (error: any) {
-        this.error = error?.message || 'Erreur lors de la connexion'
-        throw error
-      }
-    },
-
-    async uploadProfilePicture(imageBase64: string) {
-      this.loading = true
-      this.error = null
-
-        try {
-            const response = await $fetch('/api/user/updateProfileUser', {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                imageBase64,
-                id: this.user?.userId
-              })
-            })
-
-            if (!response) {
-              this.error = 'Erreur lors de l\'upload de l\'image'
-              throw new Error(this.error)
-            }
-        } catch (error: any) {
-            this.error = error?.message || 'Erreur lors de l\'upload de l\'image'
-            throw error
-        } finally {
-            this.loading = false
-        }
-    },
-
-    async loginWithGoogle(role: RoleUser) {
-      this.loading = true
-      try {
-        this.error = null
-
-        const user = await loginWithGoogle();
-        const idToken = await user.getIdToken();
-
-        const payload = idToken.split('.')[1];
-        const decodedPayload = JSON.parse(atob(payload));
-
-        if(decodedPayload.role){
-            await this.fetchUserGoogle({idToken, refreshToken: user.refreshToken, uid: user.uid});
-            await this.fetchUser();
-            if(this.user?.role === 'VOLUNTEER') {
-              navigateTo('/volunteer/dashboard')
-            } else if(this.user?.role === 'ASSOCIATION') {
-              navigateTo('/association/dashboard')
-            } else {
-              navigateTo('/dashboard')
-            }
-        }else{
-          await this.callRegisterGoogle(idToken,role)
-          if(role === 'VOLUNTEER'){
-            navigateTo(
-                {
-                  path: '/auth/registerVolunteer',
-                }
-            )
-          }else {
-            navigateTo(
-                {
-                  path: '/auth/registerAssociation',
-                })
-          }
-        }
-
-      } catch (err: any) {
-        this.error = err?.message || 'Erreur d\'authentification Google'
-        throw err
-      } finally {
-        this.loading = false
-      }
-    },
-
-    async callRegisterGoogle(idToken: string, role: RoleUser) {
-      try {
-        this.error = null
-        const response = await $fetch("/api/auth/google/registerGoogle", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
           body: JSON.stringify({
-            idToken,
-            role: role,
-          }),
+            imageBase64,
+            id: this.user?.userId
+          })
         });
+
         if (!response) {
-          this.error = 'Réponse serveur vide'
-          throw new Error(this.error)
+          this.error = 'Erreur lors de l\'upload de l\'image';
+          throw new Error(this.error);
         }
-        return response;
+
+        this.invalidateUserCache();
       } catch (error: any) {
-        this.error = error?.message || 'Erreur lors de l\'inscription Google'
-        throw error
-      }
-
-    },
-
-    async removeUserAccount(){
-
-      try {
-        this.error = null
-        await $fetch("/api/auth/remove",{
-          method:'DELETE',
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: {
-            uid:this.user?.userId
-          }
-        })
-
-        navigateTo('/')
-      } catch (error: any) {
-        this.error = error?.message || 'Erreur lors de la suppression du compte'
-        throw error
+        this.error = error?.message || 'Erreur lors de l\'upload de l\'image';
+        throw error;
+      } finally {
+        this.loading = false;
       }
     },
-    async updatePassword(payload: { oldPassword: string, newPassword: string }) {
-        this.loading = true
-        this.error = null
+
+    async updateAvatar(file: File){
+        this.loading = true;
+        this.error = null;
+
         try {
-            const { $firebase } = useNuxtApp();
-            if (!$firebase.auth) throw new Error('Firebase non initialisé');
+          const { $firebase } = useNuxtApp()
+          const user = $firebase.auth?.currentUser
+          if (!user) {
+            throw new Error('Utilisateur non connecté')
+          }
 
-            const user = $firebase.auth.currentUser;
-            if (!user) throw new Error('Utilisateur non connecté');
-            if (!user.email) throw new Error('Email de l\'utilisateur non disponible');
+          const formData = new FormData()
+          formData.append('file', file)
 
-            // Create credential with the user's email and old password
-            const credential = EmailAuthProvider.credential(user.email, payload.oldPassword);
+          console.log(`Mise à jour de l'avatar pour l'utilisateur: ${user.uid}`, file)
+          const response = await $fetch<UserInfo>(
+              `/api/user/${user.uid}/updateAvatarUser`,
+              {
+                method: 'PATCH',
+                body: formData,
+              }
+          )
 
-            // Re-authenticate the user
-            await reauthenticateWithCredential(user, credential);
+          console.log(`Réponse de la mise à jour de l'avatar:`, response)
 
-            // Update the password
-            await updatePassword(user, payload.newPassword);
-
-            return { success: true };
-        } catch (err: any) {
-            this.error = err?.message || 'Erreur de mise à jour du mot de passe'
-            throw err
+          if (response) {
+            this.updateUserData(response)
+          }
+        } catch (error: any) {
+            this.error = error?.message || 'Erreur lors de la mise à jour de l\'avatar';
+            throw error;
         } finally {
-            this.loading = false
+            this.loading = false;
         }
+    },
+
+    async removeUserAccount() {
+      this.loading = true;
+      this.error = null;
+      if (this.user === null || !this.user.userId) {
+        this.error = 'Aucun utilisateur connecté';
+        throw new Error(this.error);
+      }
+      try {
+        const response = await $fetch('/api/auth/remove', {
+          method: 'DELETE',
+          body: {uid: this.user?.userId}
+        });
+
+        if (response.success) {
+          this.user = null;
+          this.invalidateUserCache();
+        }
+      } catch (err: any) {
+        this.error = err?.message || 'Erreur de suppression du compte';
+        throw err;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    // Met à jour le mot de passe (Firebase)
+    async updatePassword(payload: {oldPassword: string, newPassword: string}) {
+      this.loading = true;
+      this.error = null;
+      try {
+        const {$firebase} = useNuxtApp();
+        if (!$firebase.auth?.currentUser) {
+          throw new Error('Utilisateur non connecté');
+        }
+
+        const credential = EmailAuthProvider.credential(
+          $firebase.auth.currentUser.email!,
+          payload.oldPassword
+        );
+
+        await reauthenticateWithCredential($firebase.auth.currentUser, credential);
+        await updatePassword($firebase.auth.currentUser, payload.newPassword);
+
+        this.invalidateUserCache();
+      } catch (error: any) {
+        this.error = error?.message || 'Erreur lors de la mise à jour du mot de passe';
+        throw error;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    clearUserCache() {
+      this.invalidateUserCache();
     }
   },
-})
+});

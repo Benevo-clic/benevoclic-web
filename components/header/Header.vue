@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { Sun as SunIcon, Moon as MoonIcon, Bell as BellIcon, X as XIcon } from 'lucide-vue-next'
+import { Sun as SunIcon, Moon as MoonIcon, Bell as BellIcon} from 'lucide-vue-next'
 
 import {useUser} from "~/composables/auth/useUser";
 import NavigationActions from "~/components/header/utils/NavigationActions.vue";
@@ -12,31 +12,59 @@ import {navigateTo} from "#app";
 import DrawerAppContentAssociation from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
 import VolunteerBottomBar from "~/components/header/VolunteerBottomBar.vue";
 import AssociationBottomBar from "~/components/header/AssociationBottomBar.vue";
+import {useI18n} from "vue-i18n";
+import NoConnectedBottomBar from "~/components/header/NoConnectedBottomBar.vue";
+import type {RoleUser} from "~/common/enums/role.enum";
 const auth = useUser()
-const isAuthenticated = auth.isAuthenticated
-const userRole = auth.userRole
+const isAuthenticated = computed(() => auth.isAuthenticated.value)
 const { t } = useI18n()
 const {  toggleTheme, isDarkTheme } = useTheme()
+
+const userRole = auth.userRole
+
+onMounted(async () => {
+  try {
+    await auth.initializeUser()
+    if (userRole.value) {
+      role.value = userRole.value
+    }
+    if (auth.user.value?.avatarFileKey) {
+      img.value = auth.user.value.avatarFileKey
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error)
+  }
+})
+
 
 const menuOpen = ref(false)
 const showLoginModal = ref(false)
 const loginModal = ref<HTMLDialogElement | null>(null)
-const isLoading = ref(true)
+const isLoading = computed(() => auth.isLoading.value)
 const isAssociationComponentAvailable = ref(true) // Flag to track if association component is available
+const role = ref<RoleUser>() // Default to 'VOLUNTEER' if userRole is not set
+const img = ref<string>()
+
+let mediaQuery: MediaQueryList | undefined;
+let handler: ((e: MediaQueryListEvent) => void) | undefined;
+
+const profileImageUrl = computed(() => {
+  return img.value
+})
+
+onUnmounted(() => {
+  if (mediaQuery && handler) {
+    mediaQuery.removeEventListener('change', handler)
+  }
+})
 
 const props = defineProps<
     {
-      optionsOpen?: boolean
+      optionsOpen?: boolean,
     }
 >()
 
-const profileImageUrl = computed(() => {
-  const img = auth.user.value?.imageProfile
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`
-  }
-  return ''
-})
+
 
 const handleDrawerClose = () => {
   menuOpen.value = !menuOpen.value
@@ -61,56 +89,39 @@ watch(
     }
 )
 
+watch(
+    () => role.value,
+    (role) => {
+      isAssociationComponentAvailable.value = role !== 'ASSOCIATION';
+    }
+)
+
+
 
 onMounted(async () => {
   try {
-    // Fetch user data as early as possible
-    await auth.fetchUser()
-
-    // Simulate a potential delay or error in loading the association component
-    // In a real scenario, this might be determined by checking if the component loaded successfully
-    if (userRole.value === 'ASSOCIATION') {
-      // For demonstration purposes, we'll set the component as not available to show the placeholder
-      // In a real application, you would have actual logic to determine this
+     await auth.initializeUser()
+    if (role.value === 'ASSOCIATION') {
       isAssociationComponentAvailable.value = false // Set to true to hide the placeholder
     }
   } catch (error) {
     console.error('Error fetching user data:', error)
-    if (userRole.value === 'ASSOCIATION') {
+    if (role.value === 'ASSOCIATION') {
       isAssociationComponentAvailable.value = false
     }
-  } finally {
-    // Set loading to false regardless of whether the fetch succeeded
-    isLoading.value = false
   }
 
-  const mediaQuery = window.matchMedia('(min-width: 1253px)')
-
-  const handler = (e: MediaQueryListEvent) => {
+  mediaQuery = window.matchMedia('(min-width: 1253px)')
+  handler = (e: MediaQueryListEvent) => {
     if (e.matches) {
       menuOpen.value = false
     }
   }
-
   mediaQuery.addEventListener('change', handler)
-
   if (mediaQuery.matches) {
     menuOpen.value = false
   }
-
-  onUnmounted(() => {
-    mediaQuery.removeEventListener('change', handler)
-  })
 })
-
-
-function handleFavorites() {
-  if(isAuthenticated.value) {
-    loginModal.value?.showModal()
-  } else {
-    navigateTo('/activity/favorites')
-  }
-}
 
 function handleNotifications() {
   if(isAuthenticated.value) {
@@ -120,13 +131,15 @@ function handleNotifications() {
   }
 }
 
-
-
-
 </script>
 
 <template>
-  <header>
+<client-only>
+  <div class="bg-base-200 max-h-[calc(100vh-4rem)]">
+  <div v-if="isLoading" class="flex justify-center py-2">
+    <span class="loading loading-dots loading-xl"></span>
+  </div>
+  <header v-else>
     <!-- Login Modal -->
     <dialog ref="loginModal" class="modal">
       <div class="modal-box">
@@ -156,11 +169,11 @@ function handleNotifications() {
         </div>
         <!-- Theme toggle -->
         <label class="swap swap-rotate cursor-pointer">
-          <input 
-            type="checkbox" 
-            aria-label="Toggle theme" 
-            :checked="isDarkTheme()" 
-            @change="toggleTheme" 
+          <input
+            type="checkbox"
+            aria-label="Toggle theme"
+            :checked="isDarkTheme()"
+            @change="toggleTheme"
           />
           <SunIcon class="swap-on w-7 h-7 text-warning"/>
           <MoonIcon class="swap-off w-7 h-7 text-base-content"/>
@@ -176,7 +189,8 @@ function handleNotifications() {
           </button>
         </div>
         <div class="hidden sm:flex items-center gap-6">
-          <div v-if="isAuthenticated" class="flex items-center gap-2">
+
+          <div v-if="!isAuthenticated" class="flex items-center gap-2">
             <HeaderAuthModalAuth  />
           </div>
           <div
@@ -194,19 +208,20 @@ function handleNotifications() {
 
                 </div>
               </label>
+
               <ul tabindex="0" class="menu menu-sm dropdown-content mt-2 p-2 shadow bg-base-100 text-base-content rounded-box w-70 absolute right-0 z-50">
 
                 <DrawerAppContentVolunteer
-                    :is-authenticated="isAuthenticated"
+                    :is-authenticated="!isAuthenticated"
                     :menu-open="menuOpen"
                     :display-profile="false"
-                    v-if="userRole === 'VOLUNTEER'"
+                    v-if="role === 'VOLUNTEER'"
                 />
                 <DrawerAppContentAssociation
-                    :is-authenticated="isAuthenticated"
+                    :is-authenticated="!isAuthenticated"
                     :menu-open="menuOpen"
                     :display-profile="false"
-                    v-if="userRole === 'ASSOCIATION'"
+                    v-if="role === 'ASSOCIATION'"
                 />
               </ul>
             </div>
@@ -214,7 +229,7 @@ function handleNotifications() {
         </div>
 
         <!-- Notifications -->
-        <DrawerContent :is-authenticated="isAuthenticated" :menu-open="menuOpen"  @close-drawer="menuOpen = false" :role="userRole" />
+        <DrawerContent :is-authenticated="!isAuthenticated" :menu-open="menuOpen"  @close-drawer="menuOpen = false" :role="role" />
 
         <button class="sm:hidden btn btn-neutral-content btn-square" @click.prevent="handleDrawerClose">
           <AlignJustify class="icon-burger-button text-base-content w-8 h-8" />
@@ -225,21 +240,21 @@ function handleNotifications() {
 
     <!-- Bottom bar -->
     <div class="bg-base-200 border-t-2 border-b-2 border-base-300 px-4 py-3" v-if="!props.optionsOpen">
-      <div v-if="isLoading" class="flex justify-center py-2">
-        <span class="loading loading-dots loading-xl"></span>
-      </div>
+      <NoConnectedBottomBar v-if="!isAuthenticated"/>
 
-      <template v-else-if="!isLoading">
-        <AssociationBottomBar v-if="userRole === 'ASSOCIATION'" />
-        <VolunteerBottomBar v-else-if="userRole === 'VOLUNTEER'" />
-        <VolunteerBottomBar v-else/>
+      <template v-else>
+        <AssociationBottomBar v-if="role === 'ASSOCIATION'" />
+        <VolunteerBottomBar v-else-if="role === 'VOLUNTEER'" />
       </template>
+
     </div>
 
 
     <!-- Mobile drawer content -->
 <!--    <DrawerContent v-if="menuOpen" @close-drawer="menuOpen = false" />-->
   </header>
+</div>
+</client-only>
 </template>
 
 <style scoped>
@@ -248,4 +263,6 @@ header {
   top: 0;
   z-index: 50;
 }
+
+
 </style>

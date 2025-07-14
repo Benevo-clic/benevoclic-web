@@ -1,5 +1,4 @@
-import {defineEventHandler, createError, deleteCookie, setCookie, H3Event, EventHandlerRequest} from 'h3'
-import {EventHandlerList} from "mitt";
+import {defineEventHandler, createError, deleteCookie, H3Event, EventHandlerRequest} from 'h3'
 
 
 export function deleteCookies(event:H3Event<EventHandlerRequest>){
@@ -18,6 +17,7 @@ export function deleteCookies(event:H3Event<EventHandlerRequest>){
   });
 
   deleteCookie(event,'isConnected');
+  deleteCookie(event,'id_user');
 }
 
 export default defineEventHandler(async (event) => {

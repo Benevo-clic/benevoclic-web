@@ -3,6 +3,7 @@ import { reactive, ref} from 'vue'
 import {RoleUser} from '~/common/enums/role.enum'
 import {useUser} from "~/composables/auth/useUser";
 import VerifSiretAssociation from "~/components/header/auth/form/VerifSiretAssociation.vue";
+import {useI18n} from "vue-i18n";
 
 const {t} = useI18n()
 

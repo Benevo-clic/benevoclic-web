@@ -27,10 +27,16 @@ export default defineEventHandler(async (event) => {
         )
         return response.data;
     }catch (error: any) {
+        console.error(`Error creating volunteer: ${error.message}`);
         throw createError({
             statusCode: error.response?.status || 500,
-            statusMessage: error.response?.statusText || 'Erreur serveur'
-        })
+            statusMessage: error.response?.statusText || 'Erreur serveur',
+            data: {
+                message: 'Failed to create volunteer',
+                error: error.message
+            }
+        });
+
     }
 
 

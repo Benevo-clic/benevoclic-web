@@ -8,6 +8,12 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
     const token = getCookie(event, 'auth_token')
     const { userId } = getQuery(event) as { userId?: string }
+    if (!userId) {
+        throw createError({
+            statusCode: 400,
+            message: 'User ID is required'
+        });
+    }
 
     try {
         const { data } = await axios.get(
@@ -16,12 +22,14 @@ export default defineEventHandler(async (event) => {
         )
         return data
     } catch (error: any) {
-        if (error.response?.status === 401) {
-            throw createError({
-                statusCode: 401,
-                message: 'Token invalide'
-            });
-        }
-        throw error;
+        console.error(`Error fetching volunteer info: ${error.message}`);
+        throw createError({
+            statusCode: error.response?.status || 500,
+            statusMessage: error.response?.statusText || 'Erreur serveur',
+            data: {
+                message: 'Failed to fetch volunteer info',
+                error: error.message
+            }
+        });
     }
 })

@@ -168,7 +168,8 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import {useUser} from "~/composables/auth/useUser";
-import { useAssociationAuth } from '~/composables/auth/associationAuth'
+import { useAssociationAuth } from '~/composables/useAssociation'
+import { useNavigation} from "~/composables/useNavigation";
 
 definePageMeta({
   middleware: ['auth'],
@@ -179,6 +180,18 @@ const { t } = useI18n()
 
 const auth = useUser()
 const association = useAssociationAuth()
+const {navigateToRoute} = useNavigation()
+
+onMounted(async () => {
+
+  if(!auth.isInitialized) {
+    await auth.initializeUser()
+  }
+  if (!association.association.value) {
+    await association.getAssociationInfo()
+  }
+})
+
 const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
 const passwordChangeModal = ref<HTMLDialogElement | null>(null)
 
@@ -259,18 +272,18 @@ function cancelDelete() {
 }
 
 // Function to confirm and proceed with deletion
-function confirmDelete() {
+async function confirmDelete() {
   // Close the modal
   deleteConfirmationModal.value?.close()
+  await removeUser()
 
-  // Proceed with account deletion
-  removeUser()
 }
 
 // Function to remove the user account
-function removeUser() {
-  auth.removeUser()
-  association.removeAssociation()
+async function removeUser() {
+  await auth.removeUser()
+  await association.removeAssociation()
+  await navigateToRoute('/')
 }
 
 // Mock settings data - would be fetched from API in a real app

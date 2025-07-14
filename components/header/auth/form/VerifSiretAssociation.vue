@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {useAssociationAuth} from "~/composables/auth/associationAuth";
+import {useAssociationAuth} from "~/composables/useAssociation";
 import {Info} from "lucide-vue-next";
 
 import {reactive, ref} from "vue";

@@ -19,10 +19,6 @@ function toggleCheck() {
   isAssociation.value = !isAssociation.value
 }
 
-definePageMeta({
-  middleware: ['guest'],
-})
-
 function handleCheckboxChange(value: boolean) {
   isAssociation.value = value
 }

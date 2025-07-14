@@ -4,12 +4,19 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const preview = ref<string | null>(null)
-const uploaded = defineEmits<{ (e: 'uploaded', base64: string): void; (e: 'skipped'): void }>()
+const fileInput = ref<File | null>(null)
+const uploaded = defineEmits<{ (e: 'uploaded', base64: File): void; (e: 'skipped'): void }>()
 
 function onFileChange(event: Event) {
   const input = event.target as HTMLInputElement
-  if (!input.files || !input.files[0]) return
-  const file = input.files[0]
+  const file  = input.files?.[0] ?? null
+  fileInput.value = file
+
+  if (!file) {
+    preview.value = null
+    return
+  }
+
   const reader = new FileReader()
   reader.onload = () => {
     preview.value = reader.result as string
@@ -18,8 +25,9 @@ function onFileChange(event: Event) {
 }
 
 function finishUpload() {
-  if (preview.value) {
-    uploaded('uploaded', preview.value)
+  const file = fileInput.value
+  if (file) {
+    uploaded('uploaded', file)
   }
 }
 

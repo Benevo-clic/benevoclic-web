@@ -12,7 +12,6 @@ export default defineEventHandler(async (event) => {
 
 
     try {
-        console.log(`Creating association with body: ${JSON.stringify(body)}`);
         const response = await axios.post<AssociationInfo>(
             `${config.private.api_base_url}/api/v2/association`,
             {

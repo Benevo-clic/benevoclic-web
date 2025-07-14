@@ -1,6 +1,6 @@
-import {defineEventHandler, readBody, createError, H3Event, EventHandlerRequest} from 'h3'
+import {defineEventHandler, createError, H3Event, EventHandlerRequest} from 'h3'
 import {LoginResponse} from "~/common/types/auth.type";
-import {setCookies} from "~/server/api/auth/login.post";
+import {getCookie, setCookie} from 'h3'
 
 function setAccessTokenOnly(event: H3Event<EventHandlerRequest>, loginResponse: LoginResponse) {
   if(loginResponse.idToken) {
@@ -19,17 +19,13 @@ export default defineEventHandler(async (event) => {
 
   try {
     if(!refreshToken) {
-      throw createError({
-        statusCode: 401,
-        message: "Refresh token manquant"
-      })
+      return
     }
 
     const loginResponse = await $fetch<LoginResponse>(`${config.private.api_base_url}/user/refresh-auth?refreshToken=${refreshToken}`, {
       method: 'POST',
     })
     
-    // Ne renouvelle que le token d'accès
     setAccessTokenOnly(event, loginResponse);
     
     return loginResponse

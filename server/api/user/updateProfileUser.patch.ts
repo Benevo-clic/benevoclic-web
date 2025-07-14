@@ -1,8 +1,6 @@
 import axios from 'axios'
 import { defineEventHandler, readBody } from "h3";
-
-
-
+import { getCookie, createError } from "h3";
 
 export default defineEventHandler(async (event) => {
     const token  = getCookie(event, 'auth_token')

@@ -1,10 +1,9 @@
-<script setup>
-
+<script setup lang="ts">
+import Footer from './layouts/footer.vue';
 </script>
 <template>
-  <div>
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </div>
+  <NuxtLayout>
+    <NuxtPage />
+    <Footer />
+  </NuxtLayout>
 </template>

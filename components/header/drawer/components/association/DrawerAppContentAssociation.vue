@@ -1,51 +1,61 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
-import { navigateTo, useRoute } from '#app'
+import {computed, onMounted, onUnmounted, ref, watch} from 'vue'
+import {navigateTo, useRoute} from '#app'
 import {
-  Pencil,
   Bell,
-  CircleHelp,
-  UserRound,
-  PlusIcon,
-  HistoryIcon,
   CalendarIcon,
+  CircleHelp,
+  ClipboardList,
   Globe,
+  LayoutDashboard as DashboardIcon,
+  MoonIcon,
+  Pencil,
   Settings,
   SunIcon,
-  LayoutDashboard as DashboardIcon,
-  MoonIcon} from 'lucide-vue-next'
-import { useUser } from '~/composables/auth/useUser'
+  UserRound
+} from 'lucide-vue-next'
+import {useUser} from '~/composables/auth/useUser'
 import LanguageComponent from "~/components/header/utils/components/LanguageComponent.vue";
-import { useTheme } from "~/composables/useTheme";
-import {useAssociationAuth} from "~/composables/auth/associationAuth";
-const { logout: signOut, user } = useUser()
-const {association: association} =useAssociationAuth()
+import {useTheme} from "~/composables/useTheme";
+import {useAssociationAuth} from "~/composables/useAssociation";
+import {useNavigation} from "~/composables/useNavigation";
+
+const { logout: signOut, user ,initializeUser} = useUser()
+const {association: association,getAssociationInfo} =useAssociationAuth()
 const { setLocale,t, locale } = useI18n()
-const { theme, toggleTheme, isDarkTheme } = useTheme()
+const { toggleTheme, isDarkTheme } = useTheme()
 const route = useRoute()
+const { navigateToRoute } = useNavigation()
+
+
+onMounted(async () => {
+  await initializeUser()
+  await getAssociationInfo()
+})
 
 const showLanguageMenu = ref(false)
 const flag = ref('🇫🇷')
 
-// Function to check if a route is active
 const isActive = (path: string) => {
   return route.path === path || route.path.startsWith(`${path}/`)
 }
 
 
-const props = defineProps({
-  isAuthenticated: Boolean,
-  menuOpen: Boolean,
-  displayProfile: Boolean,
-})
+const props = defineProps<{
+  isAuthenticated: boolean
+  menuOpen: boolean
+  displayProfile?: boolean
+}>()
 const emit = defineEmits(['closeDrawer'])
 
 
 const profileImage = ref<string | null>(null)
 
-function handleLogout() {
-  signOut()
+async function handleLogout() {
+  await signOut()
   emit('closeDrawer')
+  await navigateToRoute('/')
+
 }
 
 function handleFileChange(e: Event) {
@@ -62,20 +72,14 @@ async function changeLanguage(lo: 'fr' | 'en' | 'es', flagEmoji: string) {
   showLanguageMenu.value = false
   flag.value = flagEmoji
 
-  // Save to localStorage to persist across sessions
   localStorage.setItem('locale', lo)
   localStorage.setItem('flag', flagEmoji)
 }
 
 const profileImageUrl = computed(() => {
-  const img = user.value?.imageProfile
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`
-  }
-  return ''
+  return user.value?.avatarFileKey
 })
 
-// Function to toggle body scroll
 const toggleBodyScroll = (disable: boolean) => {
   if (disable) {
     document.body.style.overflow = 'hidden'
@@ -84,12 +88,10 @@ const toggleBodyScroll = (disable: boolean) => {
   }
 }
 
-// Watch for changes to menuOpen prop
 watch(() => props.menuOpen, (isOpen) => {
   toggleBodyScroll(isOpen)
 })
 
-// Watch for route changes to ensure locale persists across navigation
 watch(() => route.path, () => {
   const savedLocale = localStorage.getItem('locale')
   if (savedLocale && locale.value !== savedLocale) {
@@ -97,13 +99,11 @@ watch(() => route.path, () => {
   }
 })
 
-// Set initial state when component is mounted
 onMounted(() => {
   if (props.menuOpen) {
     toggleBodyScroll(true)
   }
 
-  // Initialize locale from localStorage
   const savedLocale = localStorage.getItem('locale')
   const savedFlag = localStorage.getItem('flag')
 
@@ -125,7 +125,7 @@ function toggleLanguageMenu() {
 
 <template>
   <nav class=" pl-4 pr-4 pb-4"  >
-    <div class="flex gap-4 justify-end w-full pb-4" v-if="!props.isAuthenticated" >
+    <div class="flex gap-4 justify-end w-full pb-4" >
       <div>
         <h3 class="font-semibold text-lg">{{ association?.associationName }} </h3>
         <p class="text-sm text-base-content opacity-70">{{ user?.email }}</p>
@@ -140,7 +140,7 @@ function toggleLanguageMenu() {
   <!-- Sections -->
   <nav class="flex-1 min-h-0 overflow-y-auto px-4 py-2 space-y-4" >
     <!-- Account -->
-    <div class="space-y-2" v-if="!props.isAuthenticated">
+    <div class="space-y-2">
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.account.title')}}</h4>
       <ul class="space-y-1">
         <li><button @click="navigateTo('/association/account/profile'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/account/profile') ? 'bg-base-200 border-l-4 border-primary' : '']"><UserRound class="w-5 h-5"/>{{t('drawer-content.account.view_profile')}}</button></li>
@@ -149,17 +149,17 @@ function toggleLanguageMenu() {
       </ul>
     </div>
     <!-- Activity -->
-    <div class="space-y-2" v-if="!props.isAuthenticated">
+    <div class="space-y-2" >
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.activity.title')}}</h4>
       <ul class="space-y-1">
-        <li><button @click="navigateTo('/association/activity/newEvent'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/activity/newEvent') ? 'bg-base-200 border-l-4 border-primary' : '']"><PlusIcon class="w-5 h-5"/>{{t('drawer-content.activity.new-event')}}</button></li>
         <li><button @click="navigateTo('/association/activity/dashboard'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/activity/dashboard') ? 'bg-base-200 border-l-4 border-primary' : '']"><DashboardIcon class="w-5 h-5"/>{{t('drawer-content.activity.dashboard')}}</button></li>
-        <li><button @click="navigateTo('/association/activity/historyEvent'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/activity/historyEvent') ? 'bg-base-200 border-l-4 border-primary' : '']"><HistoryIcon class="w-5 h-5"/>{{t('drawer-content.activity.history-event')}}</button></li>
-        <li><button @click="navigateTo('/association/activity/manageEvent'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/activity/manageEvent') ? 'bg-base-200 border-l-4 border-primary' : '']"><CalendarIcon class="w-5 h-5"/>{{t('drawer-content.activity.manage-event')}}</button></li>
+        <li><button @click="navigateTo('/association/events/association/manage'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/events/association/manage') ? 'bg-base-200 border-l-4 border-primary' : '']"><CalendarIcon class="w-5 h-5"/>{{t('drawer-content.activity.manage-event')}}</button></li>
+        <li><button @click="navigateTo('/association/events/association/requests'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/events/association/requests') ? 'bg-base-200 border-l-4 border-primary' : '']"><ClipboardList class="w-5 h-5"/>{{t('drawer-content.activity.requests')}}</button></li>
       </ul>
+
     </div>
     <!-- Notifications & Support -->
-    <div class="space-y-2" v-if="!props.isAuthenticated">
+    <div class="space-y-2" >
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.notifications_support.title')}}</h4>
       <ul class="space-y-1">
         <li><button @click="navigateTo('/notifications'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/notifications') ? 'bg-base-200 border-l-4 border-primary' : '']"><Bell class="w-5 h-5"/>{{t('drawer-content.notifications_support.notifications')}}</button></li>
@@ -171,7 +171,6 @@ function toggleLanguageMenu() {
       <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.app.title')}}</h4>
       <ul class="space-y-1">
         <li class="relative">
-          <!-- Bouton qui ouvre/ferme le menu -->
           <button
               :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', showLanguageMenu ? 'bg-base-200 border-l-4 border-primary' : '']"
               @click="toggleLanguageMenu"
@@ -207,15 +206,11 @@ function toggleLanguageMenu() {
   <!-- Footer -->
   <div class="p-4">
     <button
-        v-if="!props.isAuthenticated"
         @click="handleLogout"
         class="btn btn-primary w-full"
     >
       {{t('drawer-content.logout')}}
     </button>
-    <div v-else class="flex flex-col gap-2">
-      <HeaderAuthModalAuth />
-    </div>
   </div>
 </template>
 

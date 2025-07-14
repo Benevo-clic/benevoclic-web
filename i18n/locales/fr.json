@@ -4,7 +4,7 @@
     "login_to_access": "Veuillez vous connecter pour accéder à cette page.",
     "login": {
       "title": "Se connecter",
-      "description": "Aujourd’hui est un nouveau jour. C’est vous qui lui donnez sa forme. Connectez-vous pour gérer vos projets.",
+      "description": "Aujourd'hui est un nouveau jour. C'est vous qui lui donnez sa forme. Connectez-vous pour gérer vos projets.",
       "forgot_password": "Mot de passe oublié ?",
       "no_account": "Vous n'avez pas de compte ?",
       "create_account": "Créer un compte",
@@ -16,12 +16,19 @@
       }
     },
     "verification": {
-      "title": "Confirmation requise",
       "sent": "Un email de confirmation a été envoyé à votre adresse email. Veuillez vérifier votre boîte de réception et cliquer sur le lien pour activer votre compte.",
       "wait": "Veuillez patienter avant de demander un nouvel email",
       "resend": "Renvoyer l'email de confirmation",
       "resend_link": "Cliquez ici pour renvoyer l'email de confirmation",
-      "time_remaining": "Temps restant avant de pouvoir renvoyer l'email:"
+      "time_remaining": "Temps restant avant de pouvoir renvoyer l'email:",
+      "title": "Confirmation requise",
+      "check_email": "Vérifier mon email",
+      "email_verified": "Email vérifié avec succès !",
+      "continue_registration": "Continuer l'inscription",
+      "back_to_login": "Retour à la connexion",
+      "instructions": "1. Vérifiez votre boîte de réception",
+      "click_link": "2. Cliquez sur le lien de vérification dans l'email",
+      "no_email": "Vous n'avez pas reçu l'email ?"
     },
     "logout": "Déconnexion",
     "register": {
@@ -90,7 +97,12 @@
     "continue": "Continuer",
     "or": "ou",
     "placeholder_email": "Entrez votre e-mail",
-    "placeholder_password": "Au moins 8 caractères"
+    "placeholder_password": "Au moins 8 caractères",
+    "forgot_password": "Mot de passe oublié ?",
+"forgot_password_sent": "Un email de réinitialisation a été envoyé à votre adresse.",
+"forgot_password_error": "Erreur lors de l'envoi de l'email de réinitialisation.",
+"forgot_password_enter_email": "Veuillez entrer votre adresse email pour réinitialiser votre mot de passe."
+
   },
   "drawer-content": {
     "account": {
@@ -129,7 +141,7 @@
         "my_favorites": "Mes favoris",
         "history": "Historique",
       "new-event": "Nouvel événement",
-      "history-event": "Événements passés",
+      "requests": "Mes demandes",
       "upcoming-event": "Événements à venir",
       "manage-event": "Gérer les événements",
         "dashboard": "Tableau de bord"
@@ -148,6 +160,7 @@
   },
   "header": {
     "volunteer": {
+      "home": "Accueil",
       "favorites": "Favoris",
       "recent-search": "Recherches récentes",
       "help": "Aide"
@@ -237,7 +250,22 @@
       "history_events": "Événements passés",
       "upcoming_events": "Événements à venir",
       "manage_events": "Gérer les événements",
+      "requests": "Mes demandes",
       "dashboard": "Tableau de bord"
+    }
+  },
+  "announcements": {
+    "title": "Annonces",
+    "no_announcements": "Aucune annonce pour le moment",
+    "view_all": "Voir toutes les annonces",
+    "view_details": "Voir les détails",
+    "read_more": "Lire la suite",
+    "posted_on": "Publié le",
+    "delete_confirmation": {
+      "title": "Confirmer la suppression",
+      "message": "Êtes-vous sûr de vouloir supprimer cette annonce ? Cette action est irréversible.",
+      "confirm": "Oui, supprimer l'annonce",
+      "cancel": "Annuler"
     }
   }
 }

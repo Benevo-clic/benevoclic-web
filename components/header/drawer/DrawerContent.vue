@@ -4,6 +4,7 @@ import {   X} from 'lucide-vue-next'
 import DrawerAppContentVolunteer from "~/components/header/drawer/components/volunteer/DrawerAppContentVolunteer.vue";
 import DrawerAppContentAssociation
   from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
+import DrawerAppContentNoConnected from "~/components/header/drawer/components/DrawerAppContentNoConnected.vue";
 
 
 
@@ -24,6 +25,11 @@ const toggleBodyScroll = (disable: boolean) => {
   }
 }
 
+onUnmounted(() => {
+  toggleBodyScroll(false)
+})
+
+
 watch(() => props.menuOpen, (isOpen) => {
   toggleBodyScroll(isOpen)
 })
@@ -34,9 +40,7 @@ onMounted(() => {
   }
 })
 
-onUnmounted(() => {
-  toggleBodyScroll(false)
-})
+
 
 function handleCloseDrawer() {
   emit('closeDrawer')
@@ -66,19 +70,25 @@ function handleCloseDrawer() {
       </div>
 
       <DrawerAppContentVolunteer
-        :is-authenticated="props.isAuthenticated"
         :menu-open="menuOpen"
         :display-profile="true"
+        :is-authenticated="props.isAuthenticated"
         @close-drawer="handleCloseDrawer"
         v-if="role === 'VOLUNTEER'"
         />
       <DrawerAppContentAssociation
-        :is-authenticated="props.isAuthenticated"
         :menu-open="menuOpen"
         :display-profile="true"
+        :is-authenticated="props.isAuthenticated"
         @close-drawer="handleCloseDrawer"
         v-else-if="role === 'ASSOCIATION'"
         />
+      <DrawerAppContentNoConnected
+          :menu-open="menuOpen"
+          :display-profile="true"
+          @close-drawer="handleCloseDrawer"
+          v-else
+      />
     </aside>
   </transition>
 </template>

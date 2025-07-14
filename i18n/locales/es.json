@@ -21,7 +21,13 @@
       "wait": "Por favor, espera antes de solicitar un nuevo correo electrónico",
       "resend": "Reenviar correo electrónico de confirmación",
       "resend_link": "Haz clic aquí para reenviar el correo electrónico de confirmación",
-      "time_remaining": "Tiempo restante antes de que puedas reenviar el correo electrónico:"
+      "time_remaining": "Tiempo restante antes de que puedas reenviar el correo electrónico:",
+      "check_email": "Verificar mi correo",
+      "email_verified": "¡Correo verificado exitosamente!",
+      "continue_registration": "Continuar registro",
+      "back_to_login": "Volver al inicio de sesión",
+      "instructions": "1. Revisa tu bandeja de entrada",
+      "click_link": "2. Haz clic en el enlace de verificación en el correo"
     },
     "logout": "Cerrar sesión",
     "register": {
@@ -90,7 +96,11 @@
     "continue": "Continuar",
     "or": "o",
     "placeholder_email": "Introduce tu correo electrónico",
-    "placeholder_password": "Al menos 8 caracteres"
+    "placeholder_password": "Al menos 8 caracteres",
+    "forgot_password": "¿Olvidaste tu contraseña?",
+"forgot_password_sent": "Se ha enviado un correo de restablecimiento de contraseña a tu dirección.",
+"forgot_password_error": "Error al enviar el correo de restablecimiento de contraseña.",
+"forgot_password_enter_email": "Por favor, introduce tu dirección de correo electrónico para restablecer tu contraseña."
   },
   "drawer-content": {
     "account": {
@@ -129,7 +139,7 @@
       "my_favorites": "Mis favoritos",
       "history": "Historial",
       "new-event": "Nuevo evento",
-      "history-event": "Eventos pasados",
+      "requests": "Mis solicitudes",
       "upcoming-event": "Eventos próximos",
       "manage-event": "Gestionar eventos",
         "dashboard": "Tablero"
@@ -148,6 +158,7 @@
   },
   "header": {
     "volunteer": {
+      "home": "Inicio",
       "favorites": "Favoritos",
       "recent-search": "Búsquedas recientes",
       "help": "Ayuda"
@@ -237,7 +248,24 @@
       "history_event": "Eventos pasados",
       "upcoming_event": "Eventos próximos",
       "manage_event": "Gestionar eventos",
+      "requests": "Mis solicitudes",
       "dashboard": "Tablero"
     }
+  },
+  "announcement": {
+    "title": "Anuncio",
+    "description": "Mantente informado sobre las últimas noticias y actualizaciones de la comunidad.",
+    "view_all": "Ver todo",
+    "no_announcements": "No hay anuncios disponibles en este momento.",
+    "view_details": "Ver detalles",
+    "read_more": "Leer más",
+    "posted_on": "Publicado el",
+    "delete_confirmation": {
+      "title": "Confirmar eliminación",
+      "message": "¿Estás seguro de que quieres eliminar este anuncio? Esta acción no se puede deshacer.",
+      "confirm": "Sí, eliminar",
+      "cancel": "Cancelar"
+    }
+
   }
 }

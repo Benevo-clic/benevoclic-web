@@ -33,7 +33,7 @@ export default defineNuxtPlugin(() => {
           interval = null
         }
 
-        navigateTo('/auth/login')
+        navigateTo('/')
 
       }
     }

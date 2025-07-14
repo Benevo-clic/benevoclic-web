@@ -1,5 +1,8 @@
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+  <div v-if="isDeleted" class="flex items-center justify-center h-screen">
+    <div class="loading loading-spinner loading-lg"></div>
+  </div>
+  <div v-else class="grid grid-cols-1 md:grid-cols-4 gap-6">
     <!-- Sidebar menu (visible only on desktop) -->
     <div class="hidden md:block">
       <AccountMenuVolunteer />
@@ -92,6 +95,7 @@
     </div>
   </div>
 
+
   <!-- Delete Account Confirmation Modal -->
   <dialog ref="deleteConfirmationModal" class="modal">
     <div class="modal-box">
@@ -166,13 +170,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed , onMounted } from 'vue'
 import AccountMenuVolunteer from '~/components/account/AccountMenuVolunteer.vue'
 import {useUser} from "~/composables/auth/useUser";
-import {useVolunteerAuth} from "~/composables/auth/volunteerAuth";
+import {useVolunteerAuth} from "~/composables/useVolunteer";
+import {useI18n} from "vue-i18n";
 
 definePageMeta({
-  middleware: ['auth'],
   layout: 'app'
 })
 
@@ -180,8 +184,20 @@ const { t } = useI18n()
 
 const auth = useUser()
 const volunteer = useVolunteerAuth()
+
+onMounted(async () => {
+  if (!auth.getUserId) {
+    await auth.initializeUser()
+  }
+  if (auth.getUserId) {
+    await volunteer.getVolunteerInfo()
+  }
+})
+
 const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
 const passwordChangeModal = ref<HTMLDialogElement | null>(null)
+const isDeleted = ref(false)
+
 
 // Password change form data
 const passwordForm = reactive({
@@ -260,18 +276,36 @@ function cancelDelete() {
 }
 
 // Function to confirm and proceed with deletion
-function confirmDelete() {
+async function confirmDelete() {
   // Close the modal
   deleteConfirmationModal.value?.close()
-
-  // Proceed with account deletion
-  removeUser()
+  await removeUser()
+  await removeVolunteer()
+  // Redirect to home or login page after deletion
+  window.location.href = '/'; // Change this to your desired redirect path
 }
 
 // Function to remove the user account
-function removeUser() {
-  auth.removeUser()
-  volunteer.removeVolunteer()
+async function removeUser() {
+  isDeleted.value = true // Masque le contenu et affiche le loader immédiatement
+  try {
+    await auth.removeUser()
+  } catch (error) {
+    isDeleted.value = false
+  }finally {
+    isDeleted.value = false
+  }
+}
+
+async function removeVolunteer() {
+  isDeleted.value = true // Masque le contenu et affiche le loader immédiatement
+  try {
+    await volunteer.removeVolunteer()
+  } catch (error) {
+    isDeleted.value = false
+  }finally {
+    isDeleted.value = false
+  }
 }
 
 // Mock settings data - would be fetched from API in a real app

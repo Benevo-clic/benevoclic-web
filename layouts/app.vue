@@ -5,14 +5,14 @@
       <!-- Drawer for desktop (hidden on mobile) -->
       <div class="hidden md:block w-64 bg-base-100 shadow-lg pt-4">
         <DrawerAppContentVolunteer
-          :is-authenticated="isAuthenticated"
+          :is-authenticated="!isAuthenticated"
           :menu-open="true"
           :display-profile="false"
           class="h-full"
           v-if="userRole === 'VOLUNTEER'"
         />
         <DrawerAppContentAssociation
-          :is-authenticated="isAuthenticated"
+          :is-authenticated="!isAuthenticated"
           :menu-open="true"
           :display-profile="false"
           class="h-full"
@@ -21,7 +21,7 @@
       </div>
 
       <!-- Main content -->
-      <main class="flex-1 p-6 overflow-auto max-h-[calc(100vh-150px)]">
+      <main class="flex-1 p-1 overflow-auto max-h-[calc(100vh-4rem)]">
         <slot />
       </main>
     </div>
@@ -31,9 +31,16 @@
 <script setup>
 import { useUser } from '~/composables/auth/useUser'
 import Header from '~/components/header/Header.vue'
+import {onMounted} from 'vue'
 import DrawerAppContentVolunteer from '~/components/header/drawer/components/volunteer/DrawerAppContentVolunteer.vue'
 import DrawerAppContentAssociation
   from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
 
-const { isAuthenticated, userRole } = useUser()
+const { isAuthenticated, userRole , initializeUser } = useUser()
+
+onMounted(async () => {
+  // Initialize user data if needed
+  await initializeUser();
+})
+
 </script>

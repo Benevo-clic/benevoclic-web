@@ -1,8 +1,6 @@
 import {createError, defineEventHandler, readBody} from 'h3'
-import type {
-    RegisterEmailVerifiedPayload,
-} from "~/common/types/register.type";
 import {login, setCookies} from "~/server/api/auth/login.post";
+import {RegisterEmailVerifiedPayload} from "~/common/types/register.type";
 
 interface RegisterResponse {
     uid: string
@@ -13,7 +11,7 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
 
     try {
-        const registerEmailVerifiedResponse:RegisterResponse =  await $fetch<RegisterResponse>(`${config.private.api_base_url}/user/register-user-verified`, {
+        await $fetch<RegisterResponse>(`${config.private.api_base_url}/user/register-user-verified`, {
             method: 'POST',
             body: {
                 email: body.email,
@@ -21,23 +19,15 @@ export default defineEventHandler(async (event) => {
             } as RegisterEmailVerifiedPayload,
         });
 
-        if(!registerEmailVerifiedResponse.uid){
-            throw createError({
-                statusCode:404,
-                message:`Erreur lors de l'inscription de l'utilisateur vérifié ${body.email}`
-            })
-        }
 
         const loginResponse = await login({ email: body.email, password: body.password }, config.private.api_base_url);
 
         setCookies(event, loginResponse);
 
-        return {
-            message: "Inscription réussie",
-            userId: registerEmailVerifiedResponse.uid
-        }
-
     }catch (error: any) {
+        if( error.statusCode === 400 || error.statusCode === 401) {
+            return
+        }
         throw createError({
             statusCode: error.statusCode || 401,
             message: error.message || "Échec de création de compte"

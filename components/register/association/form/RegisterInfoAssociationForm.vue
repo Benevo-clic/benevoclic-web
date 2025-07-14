@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useUser } from "~/composables/auth/useUser"
-import { useAssociationAuth } from "~/composables/auth/associationAuth"
+import { useAssociationAuth } from "~/composables/useAssociation"
 import type { CreateAssociationDto, FormFieldsAssociation } from "~/common/interface/register.interface"
 import PhoneForm from '../../volunteer/form/PhoneForm.vue'
 import CityForm from '../../volunteer/form/CityForm.vue'
@@ -10,7 +10,7 @@ import BioForm from '../../volunteer/form/BioForm.vue'
 import AssociationNameForm from './AssociationNameForm.vue'
 import AssociationTypeForm from './AssociationTypeForm.vue'
 
-const { user } = useUser()
+const { user, updateIsCompleted } = useUser()
 const { registerAssociation } = useAssociationAuth()
 
 interface Step {
@@ -140,6 +140,9 @@ async function submitForm() {
   loading.value = true
   isError.value = false
   try {
+    if(!user.value?.userId) {
+      throw new Error('User not authenticated')
+    }
     await registerAssociation({
       email: user.value?.email,
       associationName: formData.associationName,
@@ -150,6 +153,9 @@ async function submitForm() {
       country: formData.country,
       type: formData.type
     } as CreateAssociationDto)
+
+    await updateIsCompleted(user.value?.userId,true)
+
     emit('submit', true)
   } catch (error) {
     console.error('Error submitting form:', error)
@@ -167,26 +173,26 @@ async function submitForm() {
 
     <keep-alive>
       <component
-        :is="steps[currentStep].component"
-        :model-value="formData[steps[currentStep].field]"
-        :error="errors[steps[currentStep].field]"
-        @update:model-value="(value: string) => handleInput(steps[currentStep].field, value)"
+          :is="steps[currentStep].component"
+          :model-value="formData[steps[currentStep].field]"
+          :error="errors[steps[currentStep].field]"
+          @update:model-value="(value: string) => handleInput(steps[currentStep].field, value)"
       />
     </keep-alive>
 
     <div class="flex justify-between mt-6">
       <button
-        @click="prev"
-        :disabled="currentStep === 0 || loading"
-        class="btn btn-secondary disabled:cursor-not-allowed"
+          @click="prev"
+          :disabled="currentStep === 0 || loading"
+          class="btn btn-secondary disabled:cursor-not-allowed"
       >
         <span class="text-secondary-content font-bold">Précédent</span>
       </button>
 
       <button
-        @click="next"
-        :disabled="loading"
-        class="btn btn-primary"
+          @click="next"
+          :disabled="loading"
+          class="btn btn-primary"
       >
         <span v-if="loading" class="loading loading-spinner mr-2" />
         {{ currentStep < steps.length - 1 ? 'Suivant' : 'Envoyer' }}
