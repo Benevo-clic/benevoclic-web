@@ -118,31 +118,12 @@
         </div>
       </div>
     </transition>
-    <template v-if="showErrorModal">
-      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-base-100 rounded-xl shadow-lg p-8 max-w-sm w-full text-center">
-          <h2 class="text-xl font-bold mb-4">Erreur</h2>
-          <p class="mb-6">
-            <span v-if="errorType === '4xx'">Cette action n'est plus possible.</span>
-            <span v-else-if="errorType === '5xx'">Une erreur serveur est survenue.</span>
-          </p>
-          <button
-            v-if="errorType === '4xx'"
-            class="btn btn-primary w-full"
-            @click="handleReload"
-          >
-            Recharger la page
-          </button>
-          <button
-            v-else-if="errorType === '5xx'"
-            class="btn btn-primary w-full"
-            @click="handleGoHome"
-          >
-            Revenir à la gestion des annonces
-          </button>
-        </div>
-      </div>
-    </template>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 
@@ -152,14 +133,16 @@ import { useRoute } from 'vue-router';
 import AnnouncementEditForm from '~/components/event/association/AnnouncementEditForm.vue';
 import VolunteersList from '~/components/event/association/VolunteersList.vue';
 import ParticipantsList from '~/components/event/association/ParticipantsList.vue';
-import {definePageMeta} from "#imports";
+import {definePageMeta, useNavigation} from "#imports";
 import {EventStatus} from "~/common/enums/event.enum";
 import {HeartHandshake,Users,Calendar,Clock,MapPin} from 'lucide-vue-next'
 const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
 import { useAnnouncement } from '~/composables/useAnnouncement';
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 
 const route = useRoute();
 const useAnnouncementAuth = useAnnouncement();
+const {navigateToRoute} = useNavigation()
 const loading = ref(true);
 const editModalOpen = ref(false);
 const tab = ref<'participants' | 'volunteers'>('participants');
@@ -181,10 +164,9 @@ function handleReload() {
   window.location.reload();
 }
 function handleGoHome() {
-  window.location.href = '/association/events/association/manage';
+  navigateToRoute('/association/events/association/manage');
 }
 
-// Fonction utilitaire pour gérer les erreurs
 function handleError(error: any) {
   if (error?.response?.status >= 500 && error?.response?.status < 600) {
     errorType.value = '5xx';
@@ -219,6 +201,7 @@ async function fetchAnnouncement() {
     loading.value = useAnnouncementAuth.loading.value;
   } catch (error) {
     handleError(error);
+    return;
   }
 }
 
@@ -255,6 +238,7 @@ async function handleRightAction(id: string) {
     await useAnnouncementAuth.removeParticipant(announcement.value?._id, id);
   } catch (error) {
     handleError(error);
+    return;
   }
 }
 
@@ -265,6 +249,7 @@ async function handleRightActionVolunteer(id: string) {
     await useAnnouncementAuth.removeVolunteer(announcement.value?._id, id);
   } catch (error) {
     handleError(error);
+    return;
   }
 }
 
@@ -275,6 +260,7 @@ async function announcementDelete() {
     navigateTo('/association/events/association/manage');
   } catch (error) {
     handleError(error);
+    return;
   }
 }
 

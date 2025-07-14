@@ -18,6 +18,9 @@ export function deleteCookies(event:H3Event<EventHandlerRequest>){
 
     deleteCookie(event,'isConnected');
     deleteCookie(event,'id_user');
+    deleteCookie(event,'userRole');
+    deleteCookie(event,'email');
+    deleteCookie(event,'tempPassword');
 }
 
 export default defineEventHandler(async (event) => {

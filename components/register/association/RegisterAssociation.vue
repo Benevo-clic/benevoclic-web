@@ -6,17 +6,23 @@ import {useUser} from "~/composables/auth/useUser";
 const user = useUser()
 
 const isSubmittedForm = ref(false)
-const imageBase64 = ref<File | null>(null)
+const image = ref<File | null>(null)
 const currentStep = ref(1)
 
-function saveBase64(base64: File) {
-  imageBase64.value = base64
-  user.updateAvatar(base64);
-  navigateTo("/association/dashboard")
+function saveFile(file: File) {
+  image.value = file
+  try {
+    user.updateAvatar(file);
+    navigateTo("/association/dashboard")
+  }catch (error) {
+    navigateTo("/association/dashboard")
+    console.error("Error updating avatar:", error);
+  }
+
 }
 
-function skipBase64() {
-  imageBase64.value = null
+function skipFile() {
+  image.value = null
   navigateTo("/association/dashboard")
 }
 
@@ -43,8 +49,8 @@ function handleStep(step: number) {
       <RegisterInfoAssociationForm v-if="!isSubmittedForm" @submit="submitForm" @current-step="handleStep" />
       <UploadImageForm
           v-else
-          @uploaded="saveBase64"
-          @skipped="skipBase64"
+          @uploaded="saveFile"
+          @skipped="skipFile"
       />
 
       <div class="hidden md:flex flex-col justify-center items-center w-1/2">

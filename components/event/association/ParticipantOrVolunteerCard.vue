@@ -31,12 +31,21 @@
         <button class="btn btn-sm btn-outline btn-error flex-1" @click="$emit('rightAction', participant.id)">Retirer</button>
       </div>
     </div>
+    <!-- Indicateur de chargement -->
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue';
 import {useUser} from '~/composables/auth/useUser';
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import {useNavigation} from "~/composables/useNavigation";
 
 interface Participant {
   id: string;
@@ -53,17 +62,36 @@ const props = defineProps<{
   participant: Participant;
 }>();
 
-const emit = defineEmits<{
-  rightAction: [participant: string];
-}>();
-
+const {navigateToRoute} = useNavigation()
 const { getUserById } = useUser();
 const userInfo = ref<UserInfo | null>(null);
 const loading = ref(false);
 
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+function handleGoHome() {
+  navigateToRoute('/');
+}
+
 const profileImageUrl = computed(() => {
   return  userInfo.value?.avatarFileKey;
 });
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
 
 async function loadUserInfo() {
   if (!props.participant.id) return;
@@ -72,7 +100,8 @@ async function loadUserInfo() {
   try {
     userInfo.value = await getUserById(props.participant.id);
   } catch (error) {
-    console.error('Erreur lors du chargement des informations utilisateur:', error);
+    handleError(error);
+    return;
   } finally {
     loading.value = false;
   }

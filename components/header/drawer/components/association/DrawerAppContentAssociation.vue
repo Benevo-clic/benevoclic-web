@@ -75,11 +75,7 @@ async function changeLanguage(lo: 'fr' | 'en' | 'es', flagEmoji: string) {
 }
 
 const profileImageUrl = computed(() => {
-  const img = user.value?.imageProfile
-  if (img?.data && img.contentType) {
-    return `data:${img.contentType};base64,${img.data}`
-  }
-  return ''
+  return  user.value?.avatarFileKey
 })
 
 const toggleBodyScroll = (disable: boolean) => {
@@ -134,7 +130,6 @@ function toggleLanguageMenu() {
       </div>
       <label for="avatar-upload" class="cursor-pointer" v-if="props.displayProfile">
         <img :src="profileImageUrl" alt="avatar" class="w-12 h-12 rounded-full border-2 border-primary object-cover mb-2" />
-        <input id="avatar-upload" type="file" accept="image/*" class="hidden" @change="handleFileChange" />
       </label>
     </div>
   </nav>

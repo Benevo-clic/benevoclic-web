@@ -9,9 +9,27 @@ import PostalCodeForm from '../../volunteer/form/PostalCodeForm.vue'
 import BioForm from '../../volunteer/form/BioForm.vue'
 import AssociationNameForm from './AssociationNameForm.vue'
 import AssociationTypeForm from './AssociationTypeForm.vue'
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import {useNavigation} from "~/composables/useNavigation";
+import {useAuthStore} from "~/stores/auth/auth.store";
 
 const { user, updateIsCompleted } = useUser()
+const authStore = useAuthStore()
+
 const { registerAssociation } = useAssociationAuth()
+const {navigateToRoute} = useNavigation()
+
+
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+function handleGoHome() {
+  authStore.deleteCookies()
+  navigateToRoute('/');
+}
 
 interface Step {
   component: Component
@@ -23,6 +41,18 @@ const emit = defineEmits<{
   (e: 'submit', isSend: boolean): void,
   (e: 'currentStep', step: number): void
 }>()
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
 
 const formData = reactive<FormFieldsAssociation>({
   associationName: '',
@@ -158,8 +188,8 @@ async function submitForm() {
 
     emit('submit', true)
   } catch (error) {
-    console.error('Error submitting form:', error)
     isError.value = true
+    handleError(error)
   } finally {
     loading.value = false
   }
@@ -202,5 +232,11 @@ async function submitForm() {
     <p v-if="isError" class="text-red-600 mt-4">
       Une erreur est survenue. Réessayez plus tard.
     </p>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>

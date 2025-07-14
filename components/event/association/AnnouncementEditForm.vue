@@ -68,11 +68,29 @@
         <div class="mb-2 flex gap-2">
           <div class="flex-1">
             <label class="block mb-1">Nombre max. de participants</label>
-            <input v-model.number="form.maxParticipants" type="number" min="0" class="input input-bordered w-full" />
+            <input
+              v-model.number="form.maxParticipants"
+              type="number"
+              min="0"
+              class="input input-bordered w-full"
+              :class="{ 'input-error': maxParticipantsError }"
+            />
+            <p v-if="maxParticipantsError" class="text-error text-xs mt-1">
+              Doit être ≥ au nombre de participants déjà inscrits ({{ minParticipants }})
+            </p>
           </div>
           <div class="flex-1">
             <label class="block mb-1">Nombre max. de bénévoles</label>
-            <input v-model.number="form.maxVolunteers" type="number" min="0" class="input input-bordered w-full" />
+            <input
+              v-model.number="form.maxVolunteers"
+              type="number"
+              min="0"
+              class="input input-bordered w-full"
+              :class="{ 'input-error': maxVolunteersError }"
+            />
+            <p v-if="maxVolunteersError" class="text-error text-xs mt-1">
+              Doit être ≥ au nombre de bénévoles déjà inscrits ({{ minVolunteers }})
+            </p>
           </div>
         </div>
         <div class="mb-2">
@@ -112,23 +130,43 @@
           </select>
         </div>
         <div class="flex gap-2 mt-4">
-          <button class="btn btn-primary flex-1" type="submit">Enregistrer</button>
+          <button class="btn btn-primary flex-1" type="submit" :disabled="isFormInvalid">Enregistrer</button>
           <button class="btn btn-ghost flex-1" type="button" @click="$emit('close')">Annuler</button>
         </div>
       </form>
     </div>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import type { Announcement } from '~/common/interface/event.interface';
-import { useAnnouncementStore } from '~/stores/announcement.store';
 import {EventStatus} from "~/common/enums/event.enum";
+import { useAnnouncement } from '~/composables/useAnnouncement';
+import {useNavigation} from "~/composables/useNavigation";
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 
 const props = defineProps<{ announcement: Announcement | null }>();
 const emit = defineEmits(['close', 'saved']);
-const store = useAnnouncementStore();
+const announcement = useAnnouncement();
+const {navigateToRoute} = useNavigation()
+
+
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+function handleGoHome() {
+  navigateToRoute('/association/events/association/manage');
+}
 
 const form = ref<Partial<Announcement>>({
   nameEvent: '',
@@ -147,6 +185,33 @@ const coverPhotoPreview = ref<string | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 
 const statusOptions = Object.values(EventStatus).map(status => ({ label: status, value: status }));
+
+const minParticipants = computed(() => props.announcement?.nbParticipants ?? 0);
+const minVolunteers = computed(() => props.announcement?.nbVolunteers ?? 0);
+
+const maxParticipantsError = computed(() =>
+  form.value.maxParticipants !== undefined &&
+  form.value.maxParticipants < minParticipants.value
+);
+
+const maxVolunteersError = computed(() =>
+  form.value.maxVolunteers !== undefined &&
+  form.value.maxVolunteers < minVolunteers.value
+);
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
+
+const isFormInvalid = computed(() => maxParticipantsError.value || maxVolunteersError.value);
 
 watch(() => props.announcement, (a) => {
   if (a) {
@@ -196,15 +261,20 @@ const triggerFileInput = () => {
 
 
 const handleFileChange = async (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0]
-  if (!file) return
-  imageFile.value = file;
-  await store.uploadImageCover(file);
-  const reader = new FileReader()
-  reader.onload = () => {
-    coverPhotoPreview.value = reader.result as string
-  };
-  reader.readAsDataURL(file);
+  try {
+    const file = (event.target as HTMLInputElement).files?.[0]
+    if (!file) return
+    imageFile.value = file;
+    await announcement.uploadImageCover(file);
+    const reader = new FileReader()
+    reader.onload = () => {
+      coverPhotoPreview.value = reader.result as string
+    };
+    reader.readAsDataURL(file);
+  }catch (error) {
+    handleError(error);
+    return;
+  }
 };
 
 const removeCoverPhoto = () => {
@@ -234,9 +304,15 @@ async function save() {
     if (JSON.stringify(form.value.locationAnnouncement) !== JSON.stringify(original.locationAnnouncement)) {
       updatedFields.locationAnnouncement = form.value.locationAnnouncement;
     }
-    if (Object.keys(updatedFields).length > 0) {
-      await store.updateAnnouncement(form.value._id, updatedFields);
+    try {
+      if (Object.keys(updatedFields).length > 0) {
+        await announcement.updateAnnouncement(form.value._id, updatedFields);
+      }
+    }catch (error: any) {
+      handleError(error);
+      return;
     }
+
   }
     
   emit('saved');

@@ -23,6 +23,12 @@
           @favorite="toggleFavorite"
       />
     </div>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 
@@ -31,7 +37,9 @@ import type {Announcement} from "~/common/interface/event.interface";
 import VolunteerAnnouncementCard from "~/components/event/volunteer/VolunteerAnnouncementCard.vue";
 import {useFavoritesAnnouncement} from "~/composables/useFavoritesAnnouncement";
 import {useUser} from "~/composables/auth/useUser";
-import {computed} from 'vue'
+import {computed, ref} from 'vue'
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import {useNavigation} from "~/composables/useNavigation";
 
 const props = defineProps<
     {
@@ -42,20 +50,48 @@ const props = defineProps<
 >()
 const useFavorite = useFavoritesAnnouncement();
 const { user } = useUser()
+const {navigateToRoute} = useNavigation()
 
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+function handleGoHome() {
+  navigateToRoute('/');
+}
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
 
 const favoriteIds = computed(() => useFavorite.getFavorites.value.map(fav => fav.announcementId));
 
 async function refreshFavorites() {
   if (!user.value) return
-  await useFavorite.fetchAllFavoritesOfVolunteer(user.value.userId)
+  try {
+    await useFavorite.fetchAllFavoritesOfVolunteer(user.value.userId)
+  }catch (error) {
+    handleError(error);
+    return;
+  }
 }
 
 async function addFavorite( announcementId: string , volunteerId: string) {
   try {
     await useFavorite.addFavorite(announcementId, volunteerId);
   } catch (error) {
-    console.error("Error adding favorite:", error);
+    handleError(error);
+    return;
   }
 }
 
@@ -63,7 +99,8 @@ async function removeFavorite(announcementId: string , volunteerId: string) {
   try {
     await useFavorite.removeByVolunteerIdAndAnnouncementId(announcementId, volunteerId);
   } catch (error) {
-    console.error("Error removing favorite:", error);
+    handleError(error);
+    return;
   }
 }
 

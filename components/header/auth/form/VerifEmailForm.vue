@@ -5,17 +5,19 @@ import { useAuthStore } from "~/stores/auth/auth.store"
 import { useUser } from "~/composables/auth/useUser"
 import { getAuth } from 'firebase/auth'
 import type {RoleUser} from "~/common/enums/role.enum";
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import {useNavigation} from "~/composables/useNavigation";
 
 const { t } = useI18n()
 const useAuth = useUser()
 const authStore = useAuthStore()
+const {navigateToRoute} = useNavigation()
 
-// AJOUT : États pour la vérification manuelle
+
 const isEmailVerified = ref(false)
 const isChecking = ref(false)
 const error = ref('')
 
-//  AJOUT : États pour le minuteur
 const countdown = ref(60) // 60 secondes = 1 minute
 const canResend = ref(false)
 let timerId: ReturnType<typeof setInterval> | null = null
@@ -23,26 +25,41 @@ const tempPwdCookie = useCookie<string>('tempPassword')
 const roleCookie   = useCookie<string>('userRole')
 const emailCookie  = useCookie<string>('email')
 
-// // CORRECTION : Récupérer les bonnes données
-// const email = computed(() => authStore.email)
-// const password = computed(() => authStore.tempPassword)
-// const role = computed(() => authStore.role)
 const isVerified = computed(() => authStore.isVerified)
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
 
-// 🔧 AJOUT : Watcher sur isVerified
+function handleReload() {
+  window.location.reload();
+}
+async function handleGoHome() {
+  await authStore.deleteCookies()
+  await navigateToRoute('/');
+}
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
+
 watch(isVerified, (newValue, oldValue) => {
   console.log(' Watcher isVerified:', { oldValue, newValue })
   
   if (newValue === true && oldValue === false) {
     console.log('✅ Email vérifié détecté par le watcher!')
     isEmailVerified.value = true
-    error.value = '' // Effacer les erreurs
-    //  AJOUT : Arrêter le minuteur si l'email est vérifié
+    error.value = ''
     stopTimer()
   }
 }, { immediate: true })
 
-// 🔧 AJOUT : Fonction pour démarrer le minuteur
 function startTimer() {
   countdown.value = 60
   canResend.value = false
@@ -57,7 +74,6 @@ function startTimer() {
   }, 1000)
 }
 
-// 🔧 AJOUT : Fonction pour arrêter le minuteur
 function stopTimer() {
   if (timerId) {
     clearInterval(timerId)
@@ -65,14 +81,12 @@ function stopTimer() {
   }
 }
 
-// 🔧 AJOUT : Fonction pour formater le temps
 function formatTime(seconds: number): string {
   const mins = Math.floor(seconds / 60)
   const secs = seconds % 60
   return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
 }
 
-// 🔧 AJOUT : Fonction pour renvoyer l'email
 async function resendEmail() {
   try {
     isChecking.value = true
@@ -89,13 +103,12 @@ async function resendEmail() {
     })
     startTimer()
   } catch (err: any) {
-    error.value = 'Erreur lors de l\'envoi: ' + err.message
+    handleError(err)
   } finally {
     isChecking.value = false
   }
 }
 
-// 🔧 AJOUT : Fonction pour vérifier manuellement l'email
 async function checkEmailVerification() {
   isChecking.value = true
   error.value = ''
@@ -112,7 +125,6 @@ async function checkEmailVerification() {
     await currentUser.reload()
 
     if (currentUser.emailVerified) {
-      // 🔧 AJOUT : Mettre à jour le store pour déclencher le watcher
       authStore.$patch({ isVerified: true })
       console.log('✅ Email vérifié avec succès!')
     } else {
@@ -125,7 +137,6 @@ async function checkEmailVerification() {
   }
 }
 
-// 🔧 CORRECTION : Fonction pour continuer l'inscription
 async function continueRegistration() {
   try {
 
@@ -135,7 +146,6 @@ async function continueRegistration() {
       email:        emailCookie.value
     })
 
-    // 🔧 Appeler la fonction login du store auth
     await authStore.login({
       email: authStore.email,
       password: decodePasswordBase64(authStore.tempPassword),
@@ -146,31 +156,27 @@ async function continueRegistration() {
       emailCookie.value = ''
     }).catch((err: any) => {
       error.value = 'Erreur lors de la connexion: ' + err.message
-      console.error('❌ Erreur de connexion:', err)
+      handleError(error)
     })
     
   } catch (err: any) {
     error.value = 'Erreur lors de la connexion: ' + err.message
-    console.error('❌ Erreur de connexion:', err)
+    handleError(err)
   }
 }
 
 
-// 🔧 AJOUT : Fonction pour retourner à la page de connexion
 async function goBackToLogin() {
   await authStore.deleteCookies()
   navigateTo('/')
 }
 
 onMounted(() => {
-  // Vérifier automatiquement au chargement
   checkEmailVerification()
-  // 🔧 AJOUT : Démarrer le minuteur au chargement
   startTimer()
 })
 
 onUnmounted(() => {
-  // 🔧 AJOUT : Nettoyer le minuteur
   stopTimer()
 })
 </script>
@@ -257,6 +263,12 @@ onUnmounted(() => {
         <p class="mt-2">{{ t('auth.verification.click_link') }}</p>
       </div>
     </div>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 

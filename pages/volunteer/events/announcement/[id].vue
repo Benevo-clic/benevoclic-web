@@ -237,38 +237,20 @@
       </div>
     </transition>
 
-    <template v-if="showErrorModal">
-      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-base-100 rounded-xl shadow-lg p-8 max-w-sm w-full text-center">
-          <h2 class="text-xl font-bold mb-4">Erreur</h2>
-          <p class="mb-6">
-            <span v-if="errorType === '4xx'">Cette action n'est plus possible.</span>
-            <span v-else-if="errorType === '5xx'">Une erreur serveur est survenue.</span>
-          </p>
-          <button
-            v-if="errorType === '4xx'"
-            class="btn btn-primary w-full"
-            @click="handleReload"
-          >
-            Recharger la page
-          </button>
-          <button
-            v-else-if="errorType === '5xx'"
-            class="btn btn-primary w-full"
-            @click="handleGoHome"
-          >
-            Revenir à l'accueil
-          </button>
-        </div>
-      </div>
-    </template>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
+
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed, onUnmounted, watch, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
-import {definePageMeta} from "#imports";
+import {definePageMeta, useNavigation} from "#imports";
 import {EventStatus} from "~/common/enums/event.enum";
 import {
   HeartHandshake, Users, Calendar, Clock, MapPin, ExternalLink, Info,
@@ -277,10 +259,12 @@ import {
 import {useAnnouncement} from '~/composables/useAnnouncement';
 import {useVolunteerAuth} from "~/composables/useVolunteer";
 import type { AssociationVolunteerFollow } from '~/common/interface/volunteer.interface';
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 
 const route = useRoute();
 const announcementUse = useAnnouncement();
 const volunteerUse = useVolunteerAuth();
+const {navigateToRoute} = useNavigation()
 const loading = ref(true);
 const loadingVolunteer = computed(() => announcementUse.loading.value)
 const announcement = announcementUse.getCurrentAnnouncement;
@@ -327,7 +311,6 @@ function handleError(error: any) {
   } else {
     console.error('Erreur lors de la participation du volontaire à l\'événement:', error);
   }
-  return
 }
 
 async function refreshFollowState() {
@@ -337,6 +320,7 @@ async function refreshFollowState() {
     associationsFollowingList.value = await volunteerUse.getAllAssociationsFollowingList(volunteerId.value);
   }catch (error : any) {
     handleError(error);
+    return;
   }
 
 }
@@ -372,6 +356,7 @@ async function fetchAnnouncement() {
     }
   }catch (error) {
     handleError(error);
+    return;
   }
 }
 
@@ -392,6 +377,7 @@ async function toggleFollowAssociation() {
     await refreshFollowState();
   }catch (error: any) {
     handleError(error);
+    return;
   }
 
 }
@@ -440,7 +426,7 @@ function handleReload() {
 }
 
 function handleGoHome() {
-  window.location.href = '/volunteer';
+  navigateToRoute('/volunteer');
 }
 
 definePageMeta({
@@ -470,6 +456,7 @@ async function participateAsVolunteer() {
     });
   } catch (error) {
     handleError(error);
+    return;
   }
 
 }
@@ -493,6 +480,7 @@ async function participateAsParticipant() {
     });
   } catch (error: any) {
     handleError(error);
+    return;
   }
 }
 
@@ -506,6 +494,7 @@ async function cancelParticipation() {
     await announcementUse.removeParticipant(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
   } catch (error) {
     handleError(error);
+    return;
   }
 }
 
@@ -518,6 +507,7 @@ async function cancelVolunteerParticipationWaitingList() {
     await announcementUse.removeVolunteerWaiting(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
   } catch (error) {
     handleError(error);
+    return;
   }
 }
 
@@ -530,6 +520,7 @@ async function cancelVolunteerParticipation() {
     await announcementUse.removeVolunteer(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
   } catch (error) {
     handleError(error);
+    return;
   }
 }
 

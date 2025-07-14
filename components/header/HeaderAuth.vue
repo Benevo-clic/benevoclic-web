@@ -30,7 +30,7 @@ onMounted(async () => {
 })
 
 
-function handleLogoutUser() {
-  authLogout()
+async function handleLogoutUser() {
+  await authLogout()
 }
 </script>
