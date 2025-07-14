@@ -118,6 +118,31 @@
         </div>
       </div>
     </transition>
+    <template v-if="showErrorModal">
+      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-base-100 rounded-xl shadow-lg p-8 max-w-sm w-full text-center">
+          <h2 class="text-xl font-bold mb-4">Erreur</h2>
+          <p class="mb-6">
+            <span v-if="errorType === '4xx'">Cette action n'est plus possible.</span>
+            <span v-else-if="errorType === '5xx'">Une erreur serveur est survenue.</span>
+          </p>
+          <button
+            v-if="errorType === '4xx'"
+            class="btn btn-primary w-full"
+            @click="handleReload"
+          >
+            Recharger la page
+          </button>
+          <button
+            v-else-if="errorType === '5xx'"
+            class="btn btn-primary w-full"
+            @click="handleGoHome"
+          >
+            Revenir à la gestion des annonces
+          </button>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -149,6 +174,29 @@ const scrollContainer = ref<HTMLElement | null>(null)
 const showScrollDown = ref(false)
 const showScrollUp = ref(false)
 
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+function handleGoHome() {
+  window.location.href = '/association/events/association/manage';
+}
+
+// Fonction utilitaire pour gérer les erreurs
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
+
 definePageMeta({
   middleware: ['auth'],
   layout: 'header',
@@ -165,9 +213,13 @@ onMounted(async () => {
 });
 
 async function fetchAnnouncement() {
+  try {
     useAnnouncementAuth.invalidateCache();
     await useAnnouncementAuth.fetchAnnouncementById(route.params.id as string);
     loading.value = useAnnouncementAuth.loading.value;
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 function openEditModal() {
@@ -196,22 +248,34 @@ function confirmDelete() {
   announcementDelete()
 }
 
-function handleRightAction(id: string) {
+async function handleRightAction(id: string) {
   console.log(`Retirer le participant avec l'ID: ${id}`);
   if (!announcement.value) return;
-  useAnnouncementAuth.removeParticipant(announcement.value?._id, id);
+  try {
+    await useAnnouncementAuth.removeParticipant(announcement.value?._id, id);
+  } catch (error) {
+    handleError(error);
+  }
 }
 
-function handleRightActionVolunteer(id: string) {
+async function handleRightActionVolunteer(id: string) {
   console.log(`Retirer le participant avec l'ID: ${id}`);
   if (!announcement.value) return;
-  useAnnouncementAuth.removeVolunteer(announcement.value?._id, id);
+  try {
+    await useAnnouncementAuth.removeVolunteer(announcement.value?._id, id);
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 async function announcementDelete() {
   if (!announcement.value) return;
+  try {
     await useAnnouncementAuth.removeAnnouncement(announcement.value._id);
     navigateTo('/association/events/association/manage');
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 const coverImageUrl = computed(() => {
@@ -239,7 +303,6 @@ const statusBadgeClass = computed(() => {
 
 function checkScrollIndicators() {
   const el = document.documentElement;
-  // Si le contenu dépasse la fenêtre
   if (el.scrollHeight > window.innerHeight + 10) {
     showScrollDown.value = (window.scrollY + window.innerHeight) < (el.scrollHeight - 10);
     showScrollUp.value = window.scrollY > 10;
