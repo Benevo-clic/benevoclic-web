@@ -239,20 +239,9 @@ async function save() {
     }
   }
     
-    // Émettre l'événement saved seulement après que tout soit terminé
   emit('saved');
   } catch (error) {
     console.error('Erreur lors de la sauvegarde:', error);
-    // Vous pouvez ajouter ici une gestion d'erreur pour l'utilisateur
   }
-}
-
-function fileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
 }
 </script> 

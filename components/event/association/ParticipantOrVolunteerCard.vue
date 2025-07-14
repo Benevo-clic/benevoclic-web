@@ -46,11 +46,6 @@ interface Participant {
 interface UserInfo {
   userId: string;
   email: string;
-  imageProfile?: {
-    data: string;
-    contentType: string;
-    uploadedAt: string;
-  };
   avatarFileKey?: string;
 }
 
@@ -66,7 +61,6 @@ const { getUserById } = useUser();
 const userInfo = ref<UserInfo | null>(null);
 const loading = ref(false);
 
-// URL de l'image de profil
 const profileImageUrl = computed(() => {
   return  userInfo.value?.avatarFileKey;
 });
@@ -77,7 +71,6 @@ async function loadUserInfo() {
   loading.value = true;
   try {
     userInfo.value = await getUserById(props.participant.id);
-    console.log('Informations utilisateur chargées:', userInfo.value);
   } catch (error) {
     console.error('Erreur lors du chargement des informations utilisateur:', error);
   } finally {

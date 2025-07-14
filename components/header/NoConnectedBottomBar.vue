@@ -8,30 +8,23 @@ const showRecentSearches = ref(false)
 const searchQuery = ref('')
 const { recentSearches, addRecentSearch, clearRecentSearches } = useRecentSearches()
 
-// Function to handle search submission
 const handleSearch = () => {
   if (searchQuery.value.trim()) {
     addRecentSearch(searchQuery.value.trim())
-    // Here you would typically perform the actual search
-    // For now, we're just saving the search query
     console.log('Searching for:', searchQuery.value)
   }
 }
 
-// Function to handle clicking on a recent search
 const selectRecentSearch = (search: string) => {
   searchQuery.value = search
   showRecentSearches.value = false
-  // Optionally perform the search immediately
   handleSearch()
 }
 
-// Toggle recent searches dropdown
 const toggleRecentSearches = () => {
   showRecentSearches.value = !showRecentSearches.value
 }
 
-// Close recent searches dropdown when clicking outside
 const closeRecentSearches = (event: MouseEvent) => {
   const target = event.target as HTMLElement
   if (!target.closest('.recent-searches-container') && !target.closest('.recent-searches-button')) {
@@ -39,7 +32,6 @@ const closeRecentSearches = (event: MouseEvent) => {
   }
 }
 
-// Add event listener to close dropdown when clicking outside
 onMounted(() => {
   document.addEventListener('click', closeRecentSearches)
 })

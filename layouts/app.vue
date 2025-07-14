@@ -2,7 +2,6 @@
   <div class="flex flex-col min-h-screen bg-base-200">
     <Header :options-open="true"/>
     <div class="flex flex-1">
-      <!-- Drawer for desktop (hidden on mobile) -->
       <div class="hidden md:block w-64 bg-base-100 shadow-lg pt-4">
         <DrawerAppContentVolunteer
           :is-authenticated="!isAuthenticated"

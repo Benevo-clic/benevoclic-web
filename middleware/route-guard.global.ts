@@ -130,7 +130,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       if (to.path !== '/auth/VerifyEmailPage') {
         return navigateTo('/auth/VerifyEmailPage')
       }
-      // Ici, tu laisses passer uniquement la page de vérification
       return
     }
   }
@@ -146,8 +145,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!useCookie("isConnected").value) {
     await authStore.initAuth()
   }
-
-  console.log(`🔍 Vérification de la route: ${to.path} depuis ${from.path}`)
 
   if (!useCookie("isConnected").value) {
     // Si c'est une route publique, laisser passer
@@ -181,8 +178,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
 
   const userRole = userStore.getRole || null
-  console.log(`👤 Utilisateur connecté avec le rôle: ${userRole}`)
-
 
   if (!authStore.isAuthenticated && ['/'].includes(to.path)) {
     return navigateTo(getHomePageForRole(userRole))
@@ -204,7 +199,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   // Vérifier si le profil est complété
   if (userStore.user && !userStore.user.isCompleted) {
-    console.log('📝 Profil incomplet, redirection vers complétion')
     switch (userRole) {
       case RoleUser.VOLUNTEER:
         if (to.path !== '/auth/registerVolunteer') {
@@ -224,14 +218,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   // Vérifier si la route est accessible pour le rôle
   if (!isRouteAccessible(to.path, userRole)) {
-    console.log(`🚫 Route ${to.path} non accessible pour le rôle ${userRole}`)
 
     // Rediriger vers la page d'accueil appropriée
     const homePage = getHomePageForRole(userRole)
     console.log(`🏠 Redirection vers la page d'accueil: ${homePage}`)
     return navigateTo(homePage)
   }
-
-  // Route accessible, laisser passer
-  console.log('✅ Route accessible, accès autorisé')
 })

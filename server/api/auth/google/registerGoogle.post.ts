@@ -8,7 +8,6 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     const config = useRuntimeConfig();
 
-    // Vérification que le body contient l'idToken
     if (!body || !body.idToken) {
         return { error: "Token manquant" };
     }

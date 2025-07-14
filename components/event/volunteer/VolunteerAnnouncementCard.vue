@@ -166,10 +166,6 @@ function toggleFavorite() {
   emit('favorite', props.announcement);
 }
 
-function participate() {
-  emit('participate', props.announcement);
-}
-
 function goToDetails() {
   navigateTo(`/volunteer/events/announcement/${props.announcement._id}`)
 }

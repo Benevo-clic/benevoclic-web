@@ -10,7 +10,6 @@ const coverPhotoFile = ref<File | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const isUploading = ref(false);
 
-// Function to trigger the file input click event
 const triggerFileInput = () => {
   fileInput.value?.click();
 };
@@ -52,7 +51,6 @@ const handleFinish = async () => {
       isUploading.value = false;
     }
   } else {
-    // If no image is selected, just finish without uploading
     emit('finish');
   }
 };

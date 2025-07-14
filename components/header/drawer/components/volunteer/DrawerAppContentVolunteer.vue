@@ -35,7 +35,6 @@ onMounted(async() => {
 const showLanguageMenu = ref(false)
 const flag = ref('🇫🇷')
 
-// Function to check if a route is active
 const isActive = (path: string) => {
   return route.path === path || route.path.startsWith(`${path}/`)
 }
@@ -72,7 +71,6 @@ async function changeLanguage(lo: 'fr' | 'en' | 'es', flagEmoji: string) {
   showLanguageMenu.value = false
   flag.value = flagEmoji
 
-  // Save to localStorage to persist across sessions
   localStorage.setItem('locale', lo)
   localStorage.setItem('flag', flagEmoji)
 }

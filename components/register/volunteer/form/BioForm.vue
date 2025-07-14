@@ -22,14 +22,14 @@ function onInput(e: Event) {
       <span class="text-sm text-gray-500 block">Présente-toi en quelques mots (facultatif)</span>
     </label>
     <textarea
-      :value="modelValue"
+      :value="props.modelValue"
       @input="onInput"
       class="textarea textarea-bordered h-24"
-      :class="{ 'textarea-error': error }"
+      :class="{ 'textarea-error': props.error }"
       placeholder="Ex. Passionné·e de bénévolat et de musique"
     ></textarea>
-    <label v-if="error" class="label">
-      <span class="label-text-alt text-error">{{ error }}</span>
+    <label v-if="props.error" class="label">
+      <span class="label-text-alt text-error">{{ props.error }}</span>
     </label>
   </div>
 </template>

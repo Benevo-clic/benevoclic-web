@@ -6,8 +6,6 @@ import DrawerAppContentAssociation
   from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
 import DrawerAppContentNoConnected from "~/components/header/drawer/components/DrawerAppContentNoConnected.vue";
 
-
-
 const props = defineProps({
   isAuthenticated: Boolean,
   menuOpen: Boolean,

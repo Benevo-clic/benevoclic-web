@@ -21,14 +21,14 @@ function onInput(e: Event) {
       <span class="label-text">Date de naissance</span>
     </label>
     <input
-      :value="modelValue"
+      :value="props.modelValue"
       @input="onInput"
       type="date"
       class="input input-bordered w-full"
-      :class="{ 'input-error': error }"
+      :class="{ 'input-error': props.error }"
     />
-    <label v-if="error" class="label">
-      <span class="label-text-alt text-error">{{ error }}</span>
+    <label v-if="props.error" class="label">
+      <span class="label-text-alt text-error">{{ props.error }}</span>
     </label>
   </div>
 </template>

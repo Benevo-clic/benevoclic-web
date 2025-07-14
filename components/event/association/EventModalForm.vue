@@ -55,5 +55,4 @@ const submitCover= () => {
 </template>
 
 <style scoped>
-/* Add any custom styles here */
 </style>

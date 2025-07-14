@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted , watch } from 'vue'
 import { Sun as SunIcon, Moon as MoonIcon, Bell as BellIcon} from 'lucide-vue-next'
-
 import {useUser} from "~/composables/auth/useUser";
 import NavigationActions from "~/components/header/utils/NavigationActions.vue";
 import {AlignJustify} from "lucide-vue-next";
@@ -41,8 +40,8 @@ const menuOpen = ref(false)
 const showLoginModal = ref(false)
 const loginModal = ref<HTMLDialogElement | null>(null)
 const isLoading = computed(() => auth.isLoading.value)
-const isAssociationComponentAvailable = ref(true) // Flag to track if association component is available
-const role = ref<RoleUser>() // Default to 'VOLUNTEER' if userRole is not set
+const isAssociationComponentAvailable = ref(true)
+const role = ref<RoleUser>()
 const img = ref<string>()
 
 let mediaQuery: MediaQueryList | undefined;
@@ -102,7 +101,7 @@ onMounted(async () => {
   try {
      await auth.initializeUser()
     if (role.value === 'ASSOCIATION') {
-      isAssociationComponentAvailable.value = false // Set to true to hide the placeholder
+      isAssociationComponentAvailable.value = false
     }
   } catch (error) {
     console.error('Error fetching user data:', error)

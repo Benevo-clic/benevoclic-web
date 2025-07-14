@@ -10,12 +10,10 @@ const { t } = useI18n()
 const useAuth = useUser()
 const authStore = useAuthStore()
 
-// AJOUT : États pour la vérification manuelle
 const isEmailVerified = ref(false)
 const isChecking = ref(false)
 const error = ref('')
 
-//  AJOUT : États pour le minuteur
 const countdown = ref(60) // 60 secondes = 1 minute
 const canResend = ref(false)
 let timerId: ReturnType<typeof setInterval> | null = null
@@ -23,26 +21,19 @@ const tempPwdCookie = useCookie<string>('tempPassword')
 const roleCookie   = useCookie<string>('userRole')
 const emailCookie  = useCookie<string>('email')
 
-// // CORRECTION : Récupérer les bonnes données
-// const email = computed(() => authStore.email)
-// const password = computed(() => authStore.tempPassword)
-// const role = computed(() => authStore.role)
 const isVerified = computed(() => authStore.isVerified)
 
-// 🔧 AJOUT : Watcher sur isVerified
 watch(isVerified, (newValue, oldValue) => {
   console.log(' Watcher isVerified:', { oldValue, newValue })
   
   if (newValue === true && oldValue === false) {
     console.log('✅ Email vérifié détecté par le watcher!')
     isEmailVerified.value = true
-    error.value = '' // Effacer les erreurs
-    //  AJOUT : Arrêter le minuteur si l'email est vérifié
+    error.value = ''
     stopTimer()
   }
 }, { immediate: true })
 
-// 🔧 AJOUT : Fonction pour démarrer le minuteur
 function startTimer() {
   countdown.value = 60
   canResend.value = false
@@ -57,7 +48,6 @@ function startTimer() {
   }, 1000)
 }
 
-// 🔧 AJOUT : Fonction pour arrêter le minuteur
 function stopTimer() {
   if (timerId) {
     clearInterval(timerId)
@@ -65,14 +55,12 @@ function stopTimer() {
   }
 }
 
-// 🔧 AJOUT : Fonction pour formater le temps
 function formatTime(seconds: number): string {
   const mins = Math.floor(seconds / 60)
   const secs = seconds % 60
   return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
 }
 
-// 🔧 AJOUT : Fonction pour renvoyer l'email
 async function resendEmail() {
   try {
     isChecking.value = true
@@ -95,7 +83,6 @@ async function resendEmail() {
   }
 }
 
-// 🔧 AJOUT : Fonction pour vérifier manuellement l'email
 async function checkEmailVerification() {
   isChecking.value = true
   error.value = ''
@@ -112,20 +99,18 @@ async function checkEmailVerification() {
     await currentUser.reload()
 
     if (currentUser.emailVerified) {
-      // 🔧 AJOUT : Mettre à jour le store pour déclencher le watcher
       authStore.$patch({ isVerified: true })
       console.log('✅ Email vérifié avec succès!')
     } else {
       error.value = 'L\'email n\'est pas encore vérifié. Vérifiez votre boîte de réception.'
     }
   } catch (err: any) {
-    error.value = 'Erreur lors de la vérification: ' + err.message
+    error.value = 'Erreur lors de la vérification de l\'email '
   } finally {
     isChecking.value = false
   }
 }
 
-// 🔧 CORRECTION : Fonction pour continuer l'inscription
 async function continueRegistration() {
   try {
 
@@ -135,7 +120,6 @@ async function continueRegistration() {
       email:        emailCookie.value
     })
 
-    // 🔧 Appeler la fonction login du store auth
     await authStore.login({
       email: authStore.email,
       password: decodePasswordBase64(authStore.tempPassword),
@@ -145,32 +129,28 @@ async function continueRegistration() {
       roleCookie.value = ''
       emailCookie.value = ''
     }).catch((err: any) => {
-      error.value = 'Erreur lors de la connexion: ' + err.message
+      error.value = 'Erreur lors de la connexion'
       console.error('❌ Erreur de connexion:', err)
     })
     
   } catch (err: any) {
-    error.value = 'Erreur lors de la connexion: ' + err.message
+    error.value = 'Erreur lors de la connexion'
     console.error('❌ Erreur de connexion:', err)
   }
 }
 
 
-// 🔧 AJOUT : Fonction pour retourner à la page de connexion
 async function goBackToLogin() {
   await authStore.deleteCookies()
   navigateTo('/')
 }
 
 onMounted(() => {
-  // Vérifier automatiquement au chargement
   checkEmailVerification()
-  // 🔧 AJOUT : Démarrer le minuteur au chargement
   startTimer()
 })
 
 onUnmounted(() => {
-  // 🔧 AJOUT : Nettoyer le minuteur
   stopTimer()
 })
 </script>
@@ -187,11 +167,9 @@ onUnmounted(() => {
         </p>
       </div>
 
-      <!-- AJOUT : Section de vérification manuelle -->
       <div class="bg-base-100 p-6 rounded-lg shadow-md">
         <div class="text-center space-y-4">
-          <!-- Bouton pour vérifier l'email -->
-          <button 
+          <button
             @click="checkEmailVerification"
             :disabled="isChecking"
             class="btn btn-primary w-full"
@@ -200,12 +178,10 @@ onUnmounted(() => {
             <span v-else>{{ t('auth.verification.check_email') }}</span>
           </button>
 
-          <!-- Message d'erreur -->
           <div v-if="error" class="alert alert-error">
             {{ error }}
           </div>
 
-          <!-- 🔧 AJOUT : Bouton de renvoi d'email (visible seulement si pas vérifié) -->
           <div v-if="!isEmailVerified" class="space-y-3">
             <div class="text-center text-sm text-base-content opacity-70">
               <p>{{ t('auth.verification.no_email') }}</p>
@@ -226,7 +202,6 @@ onUnmounted(() => {
             </button>
           </div>
 
-          <!-- 🔧 AJOUT : Boutons après vérification -->
           <div v-if="isEmailVerified" class="space-y-3">
             <div class="alert alert-success">
               ✅ {{ t('auth.verification.email_verified') }}
@@ -251,7 +226,6 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- 🔧 AJOUT : Instructions -->
       <div class="text-center text-sm text-base-content opacity-70">
         <p>{{ t('auth.verification.instructions') }}</p>
         <p class="mt-2">{{ t('auth.verification.click_link') }}</p>

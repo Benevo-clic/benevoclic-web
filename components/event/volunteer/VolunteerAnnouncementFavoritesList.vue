@@ -45,7 +45,6 @@ const props = defineProps<{
 const useFavorite = useFavoritesAnnouncement();
 const { user } = useUser()
 
-// Optimisation : Éviter les appels inutiles
 async function refreshFavorites() {
   if (!user.value) return
   await useFavorite.fetchAllFavoritesOfVolunteer(user.value.userId)

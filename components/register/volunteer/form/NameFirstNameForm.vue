@@ -45,7 +45,7 @@ function updateFirstName(value: string) {
       <BaseFormField
         :model-value="firstName"
         @update:model-value="updateFirstName"
-        :error="error && firstName === '' ? error : ''"
+        :error="props.error && firstName === '' ? props.error : ''"
         label="Prénom"
         placeholder="Ex: Jean"
       />

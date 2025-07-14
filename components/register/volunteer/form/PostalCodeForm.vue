@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BaseFormField from './BaseFormField.vue'
 
-defineProps<{
+const props = defineProps<{
   modelValue: string
   error?: string
 }>()
@@ -13,9 +13,9 @@ defineEmits<{
 
 <template>
   <BaseFormField
-    :model-value="modelValue"
+    :model-value="props.modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
-    :error="error"
+    :error="props.error"
     label="Code postal"
     placeholder="Ex: 75001"
   />

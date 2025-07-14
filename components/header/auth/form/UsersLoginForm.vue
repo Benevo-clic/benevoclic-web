@@ -25,8 +25,6 @@ function verifyAssociation(value:boolean) {
 
 const forgotPasswordSent = ref(false)
 const forgotPasswordError = ref('')
-
-
 </script>
 
 <template>

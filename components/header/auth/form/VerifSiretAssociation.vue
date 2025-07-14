@@ -20,11 +20,9 @@ const emit = defineEmits<{
 }>()
 
 function validateSiret() {
-  // Reset validation state
   errorMessage.value = ''
   isValid.value = true
 
-  // Check if SIRET is 14 digits
   if (!/^\d{14}$/.test(form.siret)) {
     errorMessage.value = t('auth.register.association_siret_status_error')
     isValid.value = false

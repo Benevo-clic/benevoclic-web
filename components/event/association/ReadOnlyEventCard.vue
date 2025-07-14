@@ -129,19 +129,10 @@ const statusBadgeClass = computed(() => {
   }
 });
 
-
-const profileImageUrl = computed(() => {
-  return  props.announcement.associationLogo;
-})
-
 const coverImageUrl = computed(() => {
   return  props.announcement.announcementImage;
 });
 
-const formatDate = (dateString: string) => {
-  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-  return new Date(dateString).toLocaleDateString('fr-FR', options);
-};
 
 const MAX_LEN = 100
 

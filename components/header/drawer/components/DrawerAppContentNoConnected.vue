@@ -30,7 +30,6 @@ async function changeLanguage(lo: 'fr' | 'en' | 'es', flagEmoji: string) {
   showLanguageMenu.value = false
   flag.value = flagEmoji
 
-  // Save to localStorage to persist across sessions
   localStorage.setItem('locale', lo)
   localStorage.setItem('flag', flagEmoji)
 }
