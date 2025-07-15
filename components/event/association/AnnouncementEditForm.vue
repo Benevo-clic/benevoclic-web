@@ -100,19 +100,19 @@
         <div class="mb-2 grid grid-cols-1 md:grid-cols-2 gap-2">
           <div>
             <label class="block mb-1">Ville</label>
-            <input v-model="form.locationAnnouncement!.city" class="input input-bordered w-full" />
+            <input v-model="form.addressAnnouncement!.city" class="input input-bordered w-full" />
           </div>
           <div>
             <label class="block mb-1">Code postal</label>
-            <input v-model="form.locationAnnouncement!.postalCode" class="input input-bordered w-full" />
+            <input v-model="form.addressAnnouncement!.postalCode" class="input input-bordered w-full" />
           </div>
           <div>
             <label class="block mb-1">Adresse</label>
-            <input v-model="form.locationAnnouncement!.address" class="input input-bordered w-full" />
+            <input v-model="form.addressAnnouncement!.address" class="input input-bordered w-full" />
           </div>
           <div>
             <label class="block mb-1">Pays</label>
-            <input v-model="form.locationAnnouncement!.country" class="input input-bordered w-full" />
+            <input v-model="form.addressAnnouncement!.country" class="input input-bordered w-full" />
           </div>
         </div>
 
@@ -174,7 +174,7 @@ const form = ref<Partial<Announcement>>({
   dateEvent: '',
   hoursEvent: '',
   tags: [],
-  locationAnnouncement: { address: '', city: '', postalCode: '', country: '' },
+  addressAnnouncement: { address: '', city: '', postalCode: '', country: '' },
   status: EventStatus.INACTIVE,
   maxParticipants: 0,
   maxVolunteers: 0,
@@ -218,13 +218,13 @@ watch(() => props.announcement, (a) => {
     form.value = {
       ...a,
       tags: a.tags ? [...a.tags] : [],
-      locationAnnouncement: {
-        address: a.locationAnnouncement?.address || '',
-        city: a.locationAnnouncement?.city || '',
-        postalCode: a.locationAnnouncement?.postalCode || '',
-        country: a.locationAnnouncement?.country || '',
-        lat: a.locationAnnouncement?.lat,
-        lng: a.locationAnnouncement?.lng,
+      addressAnnouncement: {
+        address: a.addressAnnouncement?.address || '',
+        city: a.addressAnnouncement?.city || '',
+        postalCode: a.addressAnnouncement?.postalCode || '',
+        country: a.addressAnnouncement?.country || '',
+        lat: a.addressAnnouncement?.lat,
+        lng: a.addressAnnouncement?.lng,
       },
       status: a.status || EventStatus.INACTIVE,
       maxParticipants: a.maxParticipants ?? 0,
@@ -244,7 +244,7 @@ watch(() => props.announcement, (a) => {
       dateEvent: '',
       hoursEvent: '',
       tags: [],
-      locationAnnouncement: { address: '', city: '', postalCode: '', country: '' },
+      addressAnnouncement: { address: '', city: '', postalCode: '', country: '' },
       status: EventStatus.INACTIVE,
       maxParticipants: 0,
       maxVolunteers: 0,
@@ -301,8 +301,8 @@ async function save() {
     if (JSON.stringify(form.value.tags) !== JSON.stringify(original.tags)) {
       updatedFields.tags = form.value.tags;
     }
-    if (JSON.stringify(form.value.locationAnnouncement) !== JSON.stringify(original.locationAnnouncement)) {
-      updatedFields.locationAnnouncement = form.value.locationAnnouncement;
+    if (JSON.stringify(form.value.addressAnnouncement) !== JSON.stringify(original.addressAnnouncement)) {
+      updatedFields.locationAnnouncement = form.value.addressAnnouncement;
     }
     try {
       if (Object.keys(updatedFields).length > 0) {

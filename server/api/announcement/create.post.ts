@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
             tags: body.tags,
             associationId: body.associationId,
             associationName: body.associationName,
-            locationAnnouncement: body.locationAnnouncement,
+            addressAnnouncement: body.addressAnnouncement,
             maxParticipants: body.maxParticipants,
             status: body.status,
             maxVolunteers: body.maxVolunteers

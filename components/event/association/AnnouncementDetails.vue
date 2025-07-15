@@ -10,7 +10,7 @@
       <span v-for="tag in props.announcement.tags" :key="tag" class="badge badge-outline">{{ tag }}</span>
     </div>
     <div class="mt-2">
-      <strong>Lieu :</strong> {{ props.announcement.locationAnnouncement?.city }}
+      <strong>Lieu :</strong> {{ props.announcement.addressAnnouncement?.city }}
     </div>
     <div class="mt-2">
       <strong>Statut :</strong> {{ props.announcement.status }}
