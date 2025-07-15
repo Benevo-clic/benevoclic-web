@@ -70,7 +70,11 @@ export default defineNuxtConfig({
   // Optimisations pour l'hydratation
   nitro: {
     prerender: {
-      crawlLinks: true,
+      ignore: [
+        '/association/account/edit',
+        '/en/association/account/edit',
+        '/es/association/account/edit'
+      ]
     },
     // Optimisations de performance
     compressPublicAssets: true,
