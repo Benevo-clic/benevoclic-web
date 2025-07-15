@@ -1,6 +1,7 @@
 import { defineEventHandler, readBody } from "h3";
 import type {UserInfo} from "~/common/types/auth.type";
 import axios from 'axios'
+import {ApiError} from "~/utils/ErrorHandler";
 
 
 export default defineEventHandler(async (event) => {
@@ -21,16 +22,9 @@ export default defineEventHandler(async (event) => {
         return response.data;
 
     }catch (error: any) {
-        console.error(`Error updating user completion status: ${error.message}`);
-        throw createError({
-            statusCode: error.response?.status || 500,
-            statusMessage: error.response?.statusText || 'Erreur serveur',
-            data: {
-                message: 'Failed to update user completion status',
-                error: error.message
-            }
-        });
-
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de la mise à jour du statut de complétion de l’utilisateur');
+        }
     }
 
 });

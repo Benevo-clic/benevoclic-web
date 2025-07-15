@@ -35,6 +35,13 @@
       <div 
         v-for="notification in filteredNotifications" 
         :key="notification.id" 
+        v-memo="[
+          notification.id,
+          notification.read,
+          notification.title,
+          notification.message,
+          notification.date
+        ]"
         class="p-3 rounded-lg transition-colors"
         :class="notification.read ? 'bg-base-200' : 'bg-base-200 border-l-4 border-primary'"
       >

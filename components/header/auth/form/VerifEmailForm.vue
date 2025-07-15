@@ -5,10 +5,14 @@ import { useAuthStore } from "~/stores/auth/auth.store"
 import { useUser } from "~/composables/auth/useUser"
 import { getAuth } from 'firebase/auth'
 import type {RoleUser} from "~/common/enums/role.enum";
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import {useNavigation} from "~/composables/useNavigation";
 
 const { t } = useI18n()
 const useAuth = useUser()
 const authStore = useAuthStore()
+const {navigateToRoute} = useNavigation()
+
 
 const isEmailVerified = ref(false)
 const isChecking = ref(false)
@@ -22,6 +26,28 @@ const roleCookie   = useCookie<string>('userRole')
 const emailCookie  = useCookie<string>('email')
 
 const isVerified = computed(() => authStore.isVerified)
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+async function handleGoHome() {
+  await authStore.deleteCookies()
+  await navigateToRoute('/');
+}
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
 
 watch(isVerified, (newValue, oldValue) => {
   console.log(' Watcher isVerified:', { oldValue, newValue })
@@ -77,7 +103,7 @@ async function resendEmail() {
     })
     startTimer()
   } catch (err: any) {
-    error.value = 'Erreur lors de l\'envoi: ' + err.message
+    handleError(err)
   } finally {
     isChecking.value = false
   }
@@ -105,7 +131,7 @@ async function checkEmailVerification() {
       error.value = 'L\'email n\'est pas encore vérifié. Vérifiez votre boîte de réception.'
     }
   } catch (err: any) {
-    error.value = 'Erreur lors de la vérification de l\'email '
+    error.value = 'Erreur lors de la vérification: ' + err.message
   } finally {
     isChecking.value = false
   }
@@ -129,13 +155,13 @@ async function continueRegistration() {
       roleCookie.value = ''
       emailCookie.value = ''
     }).catch((err: any) => {
-      error.value = 'Erreur lors de la connexion'
-      console.error('❌ Erreur de connexion:', err)
+      error.value = 'Erreur lors de la connexion: ' + err.message
+      handleError(error)
     })
     
   } catch (err: any) {
-    error.value = 'Erreur lors de la connexion'
-    console.error('❌ Erreur de connexion:', err)
+    error.value = 'Erreur lors de la connexion: ' + err.message
+    handleError(err)
   }
 }
 
@@ -167,9 +193,11 @@ onUnmounted(() => {
         </p>
       </div>
 
+      <!-- AJOUT : Section de vérification manuelle -->
       <div class="bg-base-100 p-6 rounded-lg shadow-md">
         <div class="text-center space-y-4">
-          <button
+          <!-- Bouton pour vérifier l'email -->
+          <button 
             @click="checkEmailVerification"
             :disabled="isChecking"
             class="btn btn-primary w-full"
@@ -178,10 +206,12 @@ onUnmounted(() => {
             <span v-else>{{ t('auth.verification.check_email') }}</span>
           </button>
 
+          <!-- Message d'erreur -->
           <div v-if="error" class="alert alert-error">
             {{ error }}
           </div>
 
+          <!-- 🔧 AJOUT : Bouton de renvoi d'email (visible seulement si pas vérifié) -->
           <div v-if="!isEmailVerified" class="space-y-3">
             <div class="text-center text-sm text-base-content opacity-70">
               <p>{{ t('auth.verification.no_email') }}</p>
@@ -202,6 +232,7 @@ onUnmounted(() => {
             </button>
           </div>
 
+          <!-- 🔧 AJOUT : Boutons après vérification -->
           <div v-if="isEmailVerified" class="space-y-3">
             <div class="alert alert-success">
               ✅ {{ t('auth.verification.email_verified') }}
@@ -226,11 +257,18 @@ onUnmounted(() => {
         </div>
       </div>
 
+      <!-- 🔧 AJOUT : Instructions -->
       <div class="text-center text-sm text-base-content opacity-70">
         <p>{{ t('auth.verification.instructions') }}</p>
         <p class="mt-2">{{ t('auth.verification.click_link') }}</p>
       </div>
     </div>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 

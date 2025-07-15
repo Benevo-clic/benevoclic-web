@@ -89,15 +89,23 @@
         </div>
       </div>
     </div>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import {Globe, Mail, MapPin, Phone, UserRound} from 'lucide-vue-next'
 import {useUser} from '~/composables/auth/useUser'
 import {useAssociationAuth} from '~/composables/useAssociation'
 import {useAnnouncement} from '~/composables/useAnnouncement'
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import {useNavigation} from "~/composables/useNavigation";
 
 definePageMeta({
   middleware: ['auth'],
@@ -107,15 +115,48 @@ definePageMeta({
 const auth = useUser()
 const { association: user, getAssociationInfo } = useAssociationAuth()
 const announcementStore = useAnnouncement()
+const {navigateToRoute} = useNavigation()
 
+
+
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+async function handleGoHome() {
+  await navigateToRoute('/');
+}
 
 onMounted(async () => {
+  try {
+    await initData()
+  }catch (error) {
+    handleError(error)
+  }
+})
+
+
+async function initData() {
   await auth.initializeUser()
   if (!user.value) {
     await getAssociationInfo()
   }
   await announcementStore.fetchAnnouncements(user.value?.associationId)
-})
+}
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
 
 const nbAnnouncements = computed(() =>
   (announcementStore.getAnnouncements.value || []).filter(

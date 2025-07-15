@@ -1,5 +1,7 @@
 import {defineEventHandler} from 'h3'
 import {deleteCookies} from "~/server/api/auth/logout.post";
+import axios from 'axios'
+import {ApiError} from "~/utils/ErrorHandler";
 
 
 
@@ -18,21 +20,18 @@ export default defineEventHandler(async (event) => {
     }
 
     try {
-        const removeResponse = await $fetch(`${config.private.api_base_url}/api/v2/association/${query.id}`, {
-            method: 'DELETE',
+       await axios.delete(`${config.private.api_base_url}/api/v2/association/${query.id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
 
-        if(!removeResponse){
-            throw new Error("Erreur lors de la suppression de l'utilisateur")
-        }
-
         deleteCookies(event);
 
     }catch (error:any){
-        throw new Error("Erreur lors de la suppression de l'utilisateur", error)
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de la suppression de l’association');
+        }
     }
 
 })

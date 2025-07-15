@@ -46,7 +46,6 @@ function handleFavorites() {
 }
 
 function handleHome() {
-  console.log('VolunteerHome')
   navigateTo('/volunteer')
 }
 </script>

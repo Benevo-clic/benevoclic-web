@@ -9,9 +9,26 @@ import BioForm from './BioForm.vue'
 import type {CreateVolunteerDto, FormFieldsVolunteer} from "~/common/interface/register.interface";
 import {useUser} from "~/composables/auth/useUser";
 import {useVolunteerAuth} from "~/composables/useVolunteer";
+import {useNavigation} from "~/composables/useNavigation";
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import {useAuthStore} from "~/stores/auth/auth.store";
 
 const { user, updateIsCompleted } = useUser()
+const authStore = useAuthStore()
 const { registerVolunteer } = useVolunteerAuth()
+const {navigateToRoute} = useNavigation()
+
+
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+async function handleGoHome() {
+  await authStore.deleteCookies()
+  await navigateToRoute('/');
+}
 
 interface Step {
   component: Component
@@ -152,6 +169,18 @@ function prev() {
   }
 }
 
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
+
 async function submitForm() {
   loading.value = true
   isError.value = false
@@ -175,6 +204,7 @@ async function submitForm() {
   } catch (error) {
     console.error('Error submitting form:', error)
     isError.value = true
+    handleError(error)
   } finally {
     loading.value = false
   }
@@ -218,5 +248,11 @@ async function submitForm() {
     <p v-if="isError" class="text-red-600 mt-4">
       Une erreur est survenue. Réessayez plus tard.
     </p>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>

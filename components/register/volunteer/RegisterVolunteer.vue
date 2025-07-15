@@ -1,17 +1,37 @@
 <script setup lang="ts">
 import UploadImageForm from "~/components/register/volunteer/form/UploadImageForm.vue"
 import {useUser} from "~/composables/auth/useUser";
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import {ref} from "vue";
+import {useNavigation} from "~/composables/useNavigation";
 
 const user = useUser()
+const {navigateToRoute} = useNavigation()
+
 
 const isSubmittedForm = ref(false)
 const imageBase64 = ref<File | null>(null)
 const currentStep = ref(1)
 
-function saveBase64(base64: File) {
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+async function handleGoHome() {
+  await navigateToRoute('/');
+}
+
+async function saveBase64(base64: File) {
   imageBase64.value = base64
-  user.updateAvatar(base64);
-  navigateTo("/volunteer")
+  try {
+    await user.updateAvatar(base64);
+    navigateTo("/volunteer")
+  }catch (error) {
+    handleError(error);
+  }
+
 }
 
 function skipBase64() {
@@ -25,6 +45,18 @@ function submitForm(value: boolean) {
 
 function handleStep(step: number) {
   currentStep.value = step
+}
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
 }
 
 </script>
@@ -54,6 +86,12 @@ function handleStep(step: number) {
         />
       </div>
     </div>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 

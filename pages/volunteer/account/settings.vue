@@ -1,4 +1,5 @@
 <template>
+<div>
   <div v-if="isDeleted" class="flex items-center justify-center h-screen">
     <div class="loading loading-spinner loading-lg"></div>
   </div>
@@ -120,10 +121,10 @@
             <span class="label-text">{{ $t('drawer-content.account.password_change.old_password') }}</span>
           </label>
           <input
-            type="password"
-            v-model="passwordForm.oldPassword"
-            class="input input-bordered"
-            required
+              type="password"
+              v-model="passwordForm.oldPassword"
+              class="input input-bordered"
+              required
           />
         </div>
 
@@ -132,11 +133,11 @@
             <span class="label-text">{{ $t('drawer-content.account.password_change.new_password') }}</span>
           </label>
           <input
-            type="password"
-            v-model="passwordForm.newPassword"
-            class="input input-bordered"
-            required
-            minlength="8"
+              type="password"
+              v-model="passwordForm.newPassword"
+              class="input input-bordered"
+              required
+              minlength="8"
           />
         </div>
 
@@ -145,10 +146,10 @@
             <span class="label-text">{{ $t('drawer-content.account.password_change.confirm_password') }}</span>
           </label>
           <input
-            type="password"
-            v-model="passwordForm.confirmPassword"
-            class="input input-bordered"
-            required
+              type="password"
+              v-model="passwordForm.confirmPassword"
+              class="input input-bordered"
+              required
           />
         </div>
 
@@ -167,6 +168,13 @@
       </form>
     </div>
   </dialog>
+  <ErrorPopup
+      :show-error-modal="showErrorModal"
+      :error-type="errorType"
+      @reload="handleReload"
+      @goHome="handleGoHome"
+  />
+</div>
 </template>
 
 <script setup lang="ts">
@@ -175,6 +183,8 @@ import AccountMenuVolunteer from '~/components/account/AccountMenuVolunteer.vue'
 import {useUser} from "~/composables/auth/useUser";
 import {useVolunteerAuth} from "~/composables/useVolunteer";
 import {useI18n} from "vue-i18n";
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import {useNavigation} from "~/composables/useNavigation";
 
 definePageMeta({
   layout: 'app'
@@ -184,19 +194,39 @@ const { t } = useI18n()
 
 const auth = useUser()
 const volunteer = useVolunteerAuth()
+const {navigateToRoute} = useNavigation()
+
 
 onMounted(async () => {
-  if (!auth.getUserId) {
-    await auth.initializeUser()
-  }
-  if (auth.getUserId) {
-    await volunteer.getVolunteerInfo()
-  }
+  await initData()
 })
+
+async function initData() {
+  try {
+    if (!auth.getUserId) {
+      await auth.initializeUser()
+    }
+    if (auth.getUserId) {
+      await volunteer.getVolunteerInfo()
+    }
+  } catch (error) {
+    handleError(error);
+  }
+}
 
 const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
 const passwordChangeModal = ref<HTMLDialogElement | null>(null)
 const isDeleted = ref(false)
+
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+async function handleGoHome() {
+  await navigateToRoute('/');
+}
 
 
 // Password change form data
@@ -260,8 +290,8 @@ async function changePassword() {
     // Show success message (could use a toast or alert)
     alert(t('drawer-content.account.password_change.success'))
   } catch (error: any) {
-    // Display error message
     passwordError.value = error.message || t('drawer-content.account.password_change.error.general')
+    handleError(error);
   }
 }
 
@@ -292,6 +322,7 @@ async function removeUser() {
     await auth.removeUser()
   } catch (error) {
     isDeleted.value = false
+    handleError(error);
   }finally {
     isDeleted.value = false
   }
@@ -303,6 +334,7 @@ async function removeVolunteer() {
     await volunteer.removeVolunteer()
   } catch (error) {
     isDeleted.value = false
+    handleError(error);
   }finally {
     isDeleted.value = false
   }
@@ -321,5 +353,17 @@ function saveSettings() {
   // Save settings to API
   console.log('Saving settings:', settings.value)
   // Show success message
+}
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
 }
 </script>

@@ -118,6 +118,12 @@
         </div>
       </div>
     </transition>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 
@@ -127,14 +133,16 @@ import { useRoute } from 'vue-router';
 import AnnouncementEditForm from '~/components/event/association/AnnouncementEditForm.vue';
 import VolunteersList from '~/components/event/association/VolunteersList.vue';
 import ParticipantsList from '~/components/event/association/ParticipantsList.vue';
-import {definePageMeta} from "#imports";
+import {definePageMeta, useNavigation} from "#imports";
 import {EventStatus} from "~/common/enums/event.enum";
 import {HeartHandshake,Users,Calendar,Clock,MapPin} from 'lucide-vue-next'
 const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
 import { useAnnouncement } from '~/composables/useAnnouncement';
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 
 const route = useRoute();
 const useAnnouncementAuth = useAnnouncement();
+const {navigateToRoute} = useNavigation()
 const loading = ref(true);
 const editModalOpen = ref(false);
 const tab = ref<'participants' | 'volunteers'>('participants');
@@ -149,25 +157,59 @@ const scrollContainer = ref<HTMLElement | null>(null)
 const showScrollDown = ref(false)
 const showScrollUp = ref(false)
 
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+function handleGoHome() {
+  navigateToRoute('/association/events/association/manage');
+}
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
+
 definePageMeta({
   middleware: ['auth'],
   layout: 'header',
 })
 
 onMounted(async () => {
-  // Vérifie si l'ID de l'annonce est présent dans les paramètres de la route
-  if (route.params.id) {
-    await fetchAnnouncement();
-  } else {
-    // Redirige vers la page de gestion des annonces si aucun ID n'est fourni
-    navigateTo('/association/events/association/manage');
-  }
+  await initData();
 });
 
+async function initData() {
+  try {
+    if (route.params.id) {
+      await fetchAnnouncement();
+    } else {
+      navigateTo('/association/events/association/manage');
+    }
+  } catch (error) {
+    handleError(error);
+    return;
+  }
+}
+
 async function fetchAnnouncement() {
+  try {
     useAnnouncementAuth.invalidateCache();
     await useAnnouncementAuth.fetchAnnouncementById(route.params.id as string);
     loading.value = useAnnouncementAuth.loading.value;
+  } catch (error) {
+    handleError(error);
+    return;
+  }
 }
 
 function openEditModal() {
@@ -196,22 +238,37 @@ function confirmDelete() {
   announcementDelete()
 }
 
-function handleRightAction(id: string) {
+async function handleRightAction(id: string) {
   console.log(`Retirer le participant avec l'ID: ${id}`);
   if (!announcement.value) return;
-  useAnnouncementAuth.removeParticipant(announcement.value?._id, id);
+  try {
+    await useAnnouncementAuth.removeParticipant(announcement.value?._id, id);
+  } catch (error) {
+    handleError(error);
+    return;
+  }
 }
 
-function handleRightActionVolunteer(id: string) {
+async function handleRightActionVolunteer(id: string) {
   console.log(`Retirer le participant avec l'ID: ${id}`);
   if (!announcement.value) return;
-  useAnnouncementAuth.removeVolunteer(announcement.value?._id, id);
+  try {
+    await useAnnouncementAuth.removeVolunteer(announcement.value?._id, id);
+  } catch (error) {
+    handleError(error);
+    return;
+  }
 }
 
 async function announcementDelete() {
   if (!announcement.value) return;
+  try {
     await useAnnouncementAuth.removeAnnouncement(announcement.value._id);
     navigateTo('/association/events/association/manage');
+  } catch (error) {
+    handleError(error);
+    return;
+  }
 }
 
 const coverImageUrl = computed(() => {
@@ -239,7 +296,6 @@ const statusBadgeClass = computed(() => {
 
 function checkScrollIndicators() {
   const el = document.documentElement;
-  // Si le contenu dépasse la fenêtre
   if (el.scrollHeight > window.innerHeight + 10) {
     showScrollDown.value = (window.scrollY + window.innerHeight) < (el.scrollHeight - 10);
     showScrollUp.value = window.scrollY > 10;

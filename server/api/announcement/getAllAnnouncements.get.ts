@@ -1,9 +1,10 @@
-import { defineEventHandler, getQuery } from 'h3';
+import { defineEventHandler } from 'h3';
 import axios from 'axios'
 import {Announcement} from "~/common/interface/event.interface";
+import {ApiError} from "~/utils/ErrorHandler";
 
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async () => {
     const config = useRuntimeConfig();
 
     try {
@@ -16,12 +17,9 @@ export default defineEventHandler(async (event) => {
             })
         return response.data;
     }catch (error) {
-        console.error('Error fetching announcements:', error);
-        throw createError({
-            statusCode: 500,
-            statusMessage: 'Erreur lors de la récupération des annonces',
-            data: error instanceof Error ? error.message : String(error)
-        });
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de la récupération des annonces');
+        }
     }
 
 

@@ -15,9 +15,12 @@ export interface Location {
   city: string;
   postalCode: string;
   country: string;
-  lat?: number;
-  lng?: number;
 }
+
+export type LocationGeoJson = {
+    type: 'Point';
+    coordinates: [number, number];
+};
 
 export interface Announcement {
   _id: string;
@@ -31,7 +34,8 @@ export interface Announcement {
   associationName: string;
   associationLogo?: string;
   announcementImage?: string;
-  locationAnnouncement?: Location;
+  addressAnnouncement?: Location;
+  locationAnnouncement?: LocationGeoJson;
   participants?: InfoVolunteer[];
   nbParticipants?: number;
   maxParticipants: number;
@@ -52,7 +56,7 @@ export interface CreateAnnouncementDto {
     tags?: string[];
     associationId: string;
     associationName: string;
-    locationAnnouncement?: Location;
+    addressAnnouncement?: Location;
     maxParticipants: number;
     status: EventStatus;
     maxVolunteers: number;

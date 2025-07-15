@@ -260,15 +260,13 @@ export const useAnnouncementStore = defineStore('announcement', {
             },
             });
 
-
-
             if (this.currentAnnouncement?._id === announcementId) {
               await this.fetchAnnouncementById(announcementId)
             }
 
             this._lastFetch = 0;
 
-          return response;
+            return response;
         } catch (err: any) {
             this.error = err?.message || 'Erreur d\'enregistrement du participant';
             throw err;

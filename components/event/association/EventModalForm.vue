@@ -4,11 +4,18 @@ import type { CreateAnnouncementDto} from '~/common/interface/event.interface';
 import {useAnnouncement} from "~/composables/useAnnouncement";
 import UploadCoverForm from "~/components/event/association/UploadCoverForm.vue";
 import EventForm from "~/components/event/association/EventForm.vue";
+import {ref} from "vue";
+import {useNavigation} from "~/composables/useNavigation";
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 
 const store = useAnnouncementStore();
 const announcementAuth = useAnnouncement();
+const {navigateToRoute} = useNavigation()
+
 const isRegistered = ref(false);
 
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
 
 const emit = defineEmits(['closeModal'])
 
@@ -17,7 +24,8 @@ const handleSubmit = async (formData: CreateAnnouncementDto) => {
     await announcementAuth.createAnnouncement(formData);
     isRegistered.value = true;
   } catch (error) {
-    console.error('Error submitting form:', error);
+    handleError(error);
+    return;
   }
 };
 
@@ -29,8 +37,37 @@ const closeModal = () => {
 const submitCover= () => {
   store.closeCreateModal();
   emit('closeModal');
-  navigateTo('/association/events/association/manage');
+  navigateToRoute('/association/events/association/manage');
 };
+
+
+function handleReload() {
+  window.location.reload();
+}
+function handleGoHome() {
+  navigateToRoute('/association/events/association/manage');
+}
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
+
+async function handleFileChange(file: File) {
+  try {
+    await announcementAuth.uploadImageCover(file);
+  }catch (error) {
+    handleError(error);
+    return;
+  }
+}
 
 </script>
 
@@ -50,6 +87,13 @@ const submitCover= () => {
       v-else
       @ignore="closeModal"
       @finish="submitCover"
+      @submit-cover="handleFileChange"
+    />
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
     />
   </div>
 </template>

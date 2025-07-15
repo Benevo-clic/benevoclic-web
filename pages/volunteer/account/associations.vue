@@ -22,6 +22,12 @@
       </div>
       <VolunteersList :volunteers="filteredAssociations" @right-action="handleRemoveVolunteer"/>
     </div>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 
@@ -33,31 +39,52 @@ import { useVolunteerAuth } from '~/composables/useVolunteer'
 import { useVolunteerAuthStore } from '~/stores/volunteer.store'
 import type { AssociationVolunteerFollow } from '~/common/interface/volunteer.interface'
 import {useUser} from "~/composables/auth/useUser";
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import {useNavigation} from "~/composables/useNavigation";
 
 definePageMeta({
   middleware: ['auth'],
   layout: 'app'
 })
 
+onMounted(async () => {
+    await initData();
+})
+
 const useVolunteer = useVolunteerAuth()
 const volunteerStore = useVolunteerAuthStore()
 const { getUserId,initializeUser } = useUser();
+const {navigateToRoute} = useNavigation()
+
 
 const search = ref('')
 
 const associationsFollowing = computed<AssociationVolunteerFollow[] | null>(() => volunteerStore.getAssociationsFollowingList)
 const loading = computed(() => associationsFollowing.value === null || useVolunteer.loading.value)
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
 
-console.log("Associations Following:", useVolunteer.loading.value)
+function handleReload() {
+  window.location.reload();
+}
+async function handleGoHome() {
+  await navigateToRoute('/');
+}
 
-onMounted(async () => {
-  if (!getUserId) {
-    await initializeUser()
+async function initData() {
+  try {
+    if (!getUserId) {
+      await initializeUser();
+    }
+    if (getUserId) {
+      await useVolunteer.getAllAssociationsFollowingList(getUserId);
+    }
+  } catch (error) {
+    handleError(error);
   }
-  if (getUserId) {
-    await useVolunteer.getAllAssociationsFollowingList(getUserId)
-  }
-})
+}
+
+
 
 const filteredAssociations = computed(() => {
   if (!associationsFollowing.value) return []
@@ -71,11 +98,27 @@ const filteredAssociations = computed(() => {
   )
 })
 
-function handleRemoveVolunteer(associationId: string) {
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
+
+async function handleRemoveVolunteer(associationId: string) {
   if(!getUserId) {
     console.error("User ID is not available")
     return
   }
-  useVolunteer.removeVolunteerFromAssociation(associationId, getUserId)
+  try {
+    await useVolunteer.removeVolunteerFromAssociation(associationId, getUserId)
+  }catch (error) {
+    handleError(error)
+  }
 }
 </script>

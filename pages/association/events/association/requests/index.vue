@@ -32,15 +32,22 @@
       </div>
       <div v-else class="text-gray-400">Aucune demande d'adhésion.</div>
     </div>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import {onMounted, ref, computed, watch} from 'vue';
 import RequestItem from '~/components/event/association/RequestItem.vue';
-import {definePageMeta, useAnnouncement} from "#imports";
+import {definePageMeta, useAnnouncement, useNavigation} from "#imports";
 import {useUser} from "~/composables/auth/useUser";
 import {useAssociationAuth} from '~/composables/useAssociation';
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 
 definePageMeta({
   middleware: ['auth'],
@@ -49,25 +56,61 @@ definePageMeta({
 
 const announcement = useAnnouncement()
 const { getUserById,getUserId,initializeUser } = useUser();
+const {navigateToRoute} = useNavigation()
+
 const announcements = computed(() => announcement.getAnnouncements)
 const loading = ref(false);
 
 onMounted(async () => {
-  if (!getUserId) {
-    await initializeUser();
+  await initData()
+});
+
+async function initData() {
+  try {
+    if (!getUserId) {
+      await initializeUser();
+    }
+    if (getUserId) {
+      loading.value = true;
+      await announcement.fetchAnnouncements(getUserId);
+      await buildEventRequests();
+      await buildAssociationRequests();
+      loading.value = false;
+    }
+  }catch (error) {
+    loading.value = false;
+    handleError(error);
   }
 
-  loading.value = true;
-  await announcement.fetchAnnouncements(getUserId);
-  await buildEventRequests();
-  await buildAssociationRequests();
-  loading.value = false;
-});
+}
 
 const tab = ref<'event' | 'association'>('event');
 
 const eventRequests = ref<any[]>([]);
 const volunteersCache = ref<Record<string, any>>({});
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+async function handleGoHome() {
+  await navigateToRoute('/');
+}
+
+
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
 
 async function buildEventRequests() {
   eventRequests.value = [];
@@ -157,39 +200,58 @@ async function buildAssociationRequests() {
 watch(() => announcements.value, async () => {
   await buildEventRequests();
 });
+
 watch(currentAssociation, async () => {
   await buildAssociationRequests();
 });
 
-function acceptRequestAnnouncement(id: string, volunteerName: string) {
+async function acceptRequestAnnouncement(id: string, volunteerName: string) {
   const volunteerId = id.split('-')[1];
   const announcementId = id.split('-')[0];
-  announcement.addVolunteer(announcementId, {
-    id: volunteerId,
-    name: volunteerName,
-  });
-  eventRequests.value = eventRequests.value.filter(req => req.id !== id);
+  try {
+    await announcement.addVolunteer(announcementId, {
+      id: volunteerId,
+      name: volunteerName,
+    });
+    eventRequests.value = eventRequests.value.filter(req => req.id !== id);
+  }catch (error) {
+    handleError(error);
+  }
+
 }
-function refuseRequestAnnouncement(id: string) {
+async function refuseRequestAnnouncement(id: string) {
   const volunteerId = id.split('-')[1];
   const announcementId = id.split('-')[0];
-  announcement.removeVolunteerWaiting(announcementId, volunteerId);
-  eventRequests.value = eventRequests.value.filter(req => req.id !== id);
+  try {
+    await announcement.removeVolunteerWaiting(announcementId, volunteerId);
+    eventRequests.value = eventRequests.value.filter(req => req.id !== id);
+  }catch (error) {
+    handleError(error);
+  }
+
 }
 
-function acceptRequestAssociation(idAssociation: string,id: string, volunteerName: string) {
-  associationStore.addVolunteerToAssociation(
-    idAssociation,
-    {
-      id: id,
-      name: volunteerName,
+async function acceptRequestAssociation(idAssociation: string,id: string, volunteerName: string) {
+    try {
+      await associationStore.addVolunteerToAssociation(
+          idAssociation,
+          {
+            id: id,
+            name: volunteerName,
+          }
+      )
+      associationRequests.value = associationRequests.value.filter(req => req.id !== id);
+    }catch (error) {
+      handleError(error);
     }
-  )
-  associationRequests.value = associationRequests.value.filter(req => req.id !== id);
 }
-function refuseRequestAssociation(associationId: string, id: string) {
-  associationStore.removeAssociationVolunteerWaiting(associationId,id);
-  associationRequests.value = associationRequests.value.filter(req => req.id !== id);
+async function refuseRequestAssociation(associationId: string, id: string) {
+  try {
+    await associationStore.removeAssociationVolunteerWaiting(associationId,id);
+    associationRequests.value = associationRequests.value.filter(req => req.id !== id);
+  }catch (error) {
+    handleError(error);
+  }
 }
 </script>
 

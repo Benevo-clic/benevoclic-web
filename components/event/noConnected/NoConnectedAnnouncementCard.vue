@@ -77,9 +77,9 @@
           <span class="text-base-content/60">•</span>
           <span>{{ announcement.hoursEvent }}</span>
         </div>
-        <div v-if="announcement.locationAnnouncement?.city" class="flex items-center gap-2">
+        <div v-if="announcement.addressAnnouncement?.city" class="flex items-center gap-2">
           <MapPin class="h-4 w-4 text-secondary" />
-          <span class="truncate max-w-[100px]">{{ announcement.locationAnnouncement.city }}</span>
+          <span class="truncate max-w-[100px]">{{ announcement.addressAnnouncement.city }}</span>
         </div>
       </div>
 

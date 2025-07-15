@@ -229,7 +229,7 @@ export const useAuthStore = defineStore('auth', {
       } catch (error: any) {
         console.error('❌ Erreur lors de l\'envoi de la vérification:', error);
         this.error = error.message;
-        throw new Error('Erreur lors de l\'envoi de la vérification par email: ' + error.message);
+        throw error;
       } finally {
         this.loading = false;
       }

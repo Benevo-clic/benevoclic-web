@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted , watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { Sun as SunIcon, Moon as MoonIcon, Bell as BellIcon} from 'lucide-vue-next'
+
 import {useUser} from "~/composables/auth/useUser";
 import NavigationActions from "~/components/header/utils/NavigationActions.vue";
 import {AlignJustify} from "lucide-vue-next";
@@ -101,7 +102,7 @@ onMounted(async () => {
   try {
      await auth.initializeUser()
     if (role.value === 'ASSOCIATION') {
-      isAssociationComponentAvailable.value = false
+      isAssociationComponentAvailable.value = false // Set to true to hide the placeholder
     }
   } catch (error) {
     console.error('Error fetching user data:', error)

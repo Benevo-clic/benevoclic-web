@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {defineEventHandler, readBody} from "h3";
 import type { FavoritesAnnouncement } from "~/common/interface/event.interface";
+import {ApiError} from "~/utils/ErrorHandler";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event) as FavoritesAnnouncement;
@@ -19,12 +20,9 @@ export default defineEventHandler(async (event) => {
             });
         return response.data;
     } catch (error) {
-        console.error('Error creating favorite announcement:', error);
-        throw createError({
-            statusCode: 500,
-            statusMessage: 'Erreur lors de la création du favori',
-            data: error instanceof Error ? error.message : String(error)
-        });
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de la création du favori de l’annonce');
+        }
     }
 
 

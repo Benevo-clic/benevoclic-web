@@ -6,7 +6,19 @@
     <div v-else class="container mx-auto px-2 md:px-4 py-6 max-w-4xl">
       <!-- Photo de couverture moderne -->
       <div class="relative w-full aspect-[3/1] rounded-2xl overflow-hidden mb-6 bg-base-200 flex items-center justify-center shadow-md">
-        <img v-if="announcement?.announcementImage" :src="coverImageUrl" alt="Photo de couverture" class="object-cover w-full h-full transition-transform duration-500" />
+        <div v-if="!announcement">
+          <div class="flex flex-col items-center justify-center w-full h-full text-base-content/60">
+
+            <div class="w-16 h-16 mb-3 flex items-center justify-center bg-base-300 rounded-full">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07" />
+              </svg>
+            </div>
+            <p class="text-sm font-medium">Cette annonce n'existe plus</p>
+          </div>
+        </div>
+
+        <img v-else-if="announcement?.announcementImage" :src="coverImageUrl" alt="Photo de couverture" class="object-cover w-full h-full transition-transform duration-500" />
         <div v-else class="w-full h-full flex flex-col items-center justify-center text-base-content/60">
           <div class="avatar placeholder mb-3">
             <div class="bg-base-300 text-base-content rounded-full w-16">
@@ -236,13 +248,21 @@
         </div>
       </div>
     </transition>
+
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
+
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed, onUnmounted, watch, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
-import {definePageMeta} from "#imports";
+import {definePageMeta, useNavigation} from "#imports";
 import {EventStatus} from "~/common/enums/event.enum";
 import {
   HeartHandshake, Users, Calendar, Clock, MapPin, ExternalLink, Info,
@@ -251,10 +271,12 @@ import {
 import {useAnnouncement} from '~/composables/useAnnouncement';
 import {useVolunteerAuth} from "~/composables/useVolunteer";
 import type { AssociationVolunteerFollow } from '~/common/interface/volunteer.interface';
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 
 const route = useRoute();
 const announcementUse = useAnnouncement();
 const volunteerUse = useVolunteerAuth();
+const {navigateToRoute} = useNavigation()
 const loading = ref(true);
 const loadingVolunteer = computed(() => announcementUse.loading.value)
 const announcement = announcementUse.getCurrentAnnouncement;
@@ -291,10 +313,28 @@ const followButtonClass = computed(() => {
   return 'btn-primary';
 });
 
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur lors de la participation du volontaire à l\'événement:', error);
+  }
+}
+
 async function refreshFollowState() {
   if (!volunteerId.value) return;
-  associationsWaitingList.value = await volunteerUse.getAllAssociationsToWaitingList(volunteerId.value);
-  associationsFollowingList.value = await volunteerUse.getAllAssociationsFollowingList(volunteerId.value);
+  try {
+    associationsWaitingList.value = await volunteerUse.getAllAssociationsToWaitingList(volunteerId.value);
+    associationsFollowingList.value = await volunteerUse.getAllAssociationsFollowingList(volunteerId.value);
+  }catch (error : any) {
+    handleError(error);
+    return;
+  }
+
 }
 
 onMounted(async () => {
@@ -320,26 +360,38 @@ onMounted(async () => {
 });
 
 async function fetchAnnouncement() {
-  if (route.params.id) {
-    announcementUse.invalidateCache();
-    await announcementUse.fetchAnnouncementById(route.params.id as string);
-    loading.value = announcementUse.loading.value;
+  try {
+    if (route.params.id) {
+      announcementUse.invalidateCache();
+      await announcementUse.fetchAnnouncementById(route.params.id as string);
+      loading.value = announcementUse.loading.value;
+    }
+  }catch (error) {
+    handleError(error);
+    return;
   }
 }
 
 async function toggleFollowAssociation() {
-  if (!volunteerId.value || !associationId.value) return;
-  if (isFollowingPending.value) {
-    await volunteerUse.removeVolunteerFromWaitingListAssociation(associationId.value);
-  } else if (isFollowing.value) {
-    await volunteerUse.removeVolunteerFromAssociation(associationId.value, volunteerId.value);
-  }else {
-    await volunteerUse.addVolunteerToWaitingListAssociation(associationId.value, {
-      id: volunteerId.value,
-      name: volunteerUse.volunteer.value?.firstName + ' ' + volunteerUse.volunteer.value?.lastName
-    });
+
+  try {
+    if (!volunteerId.value || !associationId.value) return;
+    if (isFollowingPending.value) {
+      await volunteerUse.removeVolunteerFromWaitingListAssociation(associationId.value);
+    } else if (isFollowing.value) {
+      await volunteerUse.removeVolunteerFromAssociation(associationId.value, volunteerId.value);
+    }else {
+      await volunteerUse.addVolunteerToWaitingListAssociation(associationId.value, {
+        id: volunteerId.value,
+        name: volunteerUse.volunteer.value?.firstName + ' ' + volunteerUse.volunteer.value?.lastName
+      });
+    }
+    await refreshFollowState();
+  }catch (error: any) {
+    handleError(error);
+    return;
   }
-  await refreshFollowState();
+
 }
 
 const remainingParticipants = computed(() => {
@@ -378,34 +430,50 @@ const scrollContainer = ref<HTMLElement | null>(null)
 const showScrollDown = ref(false)
 const showScrollUp = ref(false)
 
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+
+function handleGoHome() {
+  navigateToRoute('/volunteer');
+}
+
 definePageMeta({
   middleware: ['auth'],
   layout: 'header',
 })
 
-function participateAsVolunteer() {
-  if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
+async function participateAsVolunteer() {
+  if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
     console.error('Aucun événement sélectionné pour la participation');
     return;
   }
-  if(!canParticipateAsVolunteer.value) {
+  if (!canParticipateAsVolunteer.value) {
     console.warn('Aucune place disponible pour participer en tant que bénévole');
     return;
   }
 
-  if(isAlreadyVolunteerWaiting.value) {
+  if (isAlreadyVolunteerWaiting.value) {
     console.warn('Vous êtes déjà inscrit à cet événement en tant que bénévole');
     return;
   }
 
-  announcementUse.addVolunteerWaiting(announcement.value?._id, {
-    id: volunteerUse.volunteer?.value?.volunteerId,
-    name: volunteerUse.volunteer?.value?.firstName + ' ' + volunteerUse.volunteer?.value?.lastName,
-  });
+  try {
+    await announcementUse.addVolunteerWaiting(announcement.value?._id, {
+      id: volunteerUse.volunteer?.value?.volunteerId,
+      name: volunteerUse.volunteer?.value?.firstName + ' ' + volunteerUse.volunteer?.value?.lastName,
+    });
+  } catch (error) {
+    handleError(error);
+    return;
+  }
 
 }
 
-function participateAsParticipant() {
+async function participateAsParticipant() {
   if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
     console.error('Aucun événement sélectionné pour la participation');
     return;
@@ -417,36 +485,55 @@ function participateAsParticipant() {
     return;
   }
 
-  announcementUse.addParticipant(announcement.value?._id, {
-    id: volunteerUse.volunteer?.value?.volunteerId,
-    name: volunteerUse.volunteer?.value?.firstName + ' ' + volunteerUse.volunteer?.value?.lastName,
-  });
-
+  try {
+    await announcementUse.addParticipant(announcement.value?._id, {
+      id: volunteerUse.volunteer?.value?.volunteerId,
+      name: volunteerUse.volunteer?.value?.firstName + ' ' + volunteerUse.volunteer?.value?.lastName,
+    });
+  } catch (error: any) {
+    handleError(error);
+    return;
+  }
 }
 
 
-function cancelParticipation() {
-  if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
+async function cancelParticipation() {
+  if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
     console.error('Aucun événement sélectionné pour l\'annulation de participation');
     return;
   }
-  announcementUse.removeParticipant(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
+  try {
+    await announcementUse.removeParticipant(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
+  } catch (error) {
+    handleError(error);
+    return;
+  }
 }
 
-function cancelVolunteerParticipationWaitingList() {
-  if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
+async function cancelVolunteerParticipationWaitingList() {
+  if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
     console.error('Aucun événement sélectionné pour l\'annulation de participation en tant que bénévole');
     return;
   }
-  announcementUse.removeVolunteerWaiting(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
+  try {
+    await announcementUse.removeVolunteerWaiting(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
+  } catch (error) {
+    handleError(error);
+    return;
+  }
 }
 
-function cancelVolunteerParticipation() {
-  if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
+async function cancelVolunteerParticipation() {
+  if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
     console.error('Aucun événement sélectionné pour l\'annulation de participation en tant que bénévole');
     return;
   }
-  announcementUse.removeVolunteer(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
+  try {
+    await announcementUse.removeVolunteer(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
+  } catch (error) {
+    handleError(error);
+    return;
+  }
 }
 
 function openInGoogleMaps() {

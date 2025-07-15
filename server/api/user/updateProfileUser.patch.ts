@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { defineEventHandler, readBody } from "h3";
 import { getCookie, createError } from "h3";
+import {ApiError} from "~/utils/ErrorHandler";
 
 export default defineEventHandler(async (event) => {
     const token  = getCookie(event, 'auth_token')
@@ -39,10 +40,9 @@ export default defineEventHandler(async (event) => {
 
 
         return response.data
-    } catch (err: any) {
-        throw createError({
-            statusCode:    err.response?.status  ?? 500,
-            statusMessage: err.response?.statusText ?? 'Erreur serveur'
-        })
+    } catch (error: any) {
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’avatar');
+        }
     }
 })

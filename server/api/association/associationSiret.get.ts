@@ -1,5 +1,6 @@
 import {defineEventHandler} from "h3";
 import axios from 'axios';
+import {ApiError} from "~/utils/ErrorHandler";
 
 
 
@@ -27,12 +28,8 @@ export default defineEventHandler(async (event) => {
         )
         return data
     } catch (error: any) {
-        if (error.response?.status === 401) {
-            throw createError({
-                statusCode: 401,
-                message: 'Token invalide'
-            });
+        if (axios.isAxiosError(error)) {
+            ApiError.handleAxios(error, 'Erreur lors de la récupération des informations de l’association par SIRET');
         }
-        throw error;
     }
 })

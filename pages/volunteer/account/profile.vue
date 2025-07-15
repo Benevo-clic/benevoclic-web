@@ -85,15 +85,23 @@
         </div>
       </div>
     </div>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import {computed, ref, onMounted} from 'vue'
 import { UserRound, Mail, Phone, MapPin } from 'lucide-vue-next'
 import { useUser } from '~/composables/auth/useUser'
 import { useVolunteerAuth } from '~/composables/useVolunteer'
 import { useAnnouncement } from '~/composables/useAnnouncement'
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import {useNavigation} from "~/composables/useNavigation";
 
 definePageMeta({
   middleware: ['auth'],
@@ -103,15 +111,36 @@ definePageMeta({
 const auth = useUser()
 const { volunteer: user, getVolunteerInfo } = useVolunteerAuth()
 const announcementStore = useAnnouncement()
+const {navigateToRoute} = useNavigation()
+
+
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+async function handleGoHome() {
+  await navigateToRoute('/');
+}
+
 
 onMounted(async () => {
-  if (!auth.getUserId) {
-    await auth.initializeUser()
-  }
-  if (auth.getUserId) {
-    await getVolunteerInfo()
-  }
+  await initData()
 })
+
+async function initData(){
+  try {
+    if (!auth.getUserId) {
+      await auth.initializeUser()
+    }
+    if (auth.getUserId) {
+      await getVolunteerInfo()
+    }
+  }catch (error) {
+    handleError(error);
+  }
+}
 
 const profileImageUrl = computed(() => {
   return auth.user.value?.avatarFileKey
@@ -134,5 +163,17 @@ function calculateAge(birthdate: string): number {
     age--;
   }
   return age;
+}
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
 }
 </script>

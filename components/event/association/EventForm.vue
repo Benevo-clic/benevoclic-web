@@ -78,7 +78,7 @@
       </label>
       <input 
         type="text" 
-        v-model="formState.locationAnnouncement.address" 
+        v-model="formState.addressAnnouncement.address"
         class="input input-bordered w-full" 
         :class="{ 'input-error': invalidFields.address }"
         placeholder="123 rue de Paris" 
@@ -92,7 +92,7 @@
         </label>
         <input 
           type="text" 
-          v-model="formState.locationAnnouncement.city" 
+          v-model="formState.addressAnnouncement.city"
           class="input input-bordered w-full" 
           :class="{ 'input-error': invalidFields.city }"
           placeholder="Ville"
@@ -104,7 +104,7 @@
         </label>
         <input 
           type="text" 
-          v-model="formState.locationAnnouncement.postalCode" 
+          v-model="formState.addressAnnouncement.postalCode"
           class="input input-bordered w-full" 
           :class="{ 'input-error': invalidFields.postalCode }"
           placeholder="Code postal"
@@ -116,7 +116,7 @@
         </label>
         <input 
           type="text" 
-          v-model="formState.locationAnnouncement.country" 
+          v-model="formState.addressAnnouncement.country"
           class="input input-bordered w-full" 
           placeholder="Pays"
         />
@@ -249,7 +249,7 @@ const createInitialState = () => ({
   dateEvent: '',
   datePublication: new Date().toISOString().split('T')[0],
   hoursEvent: '',
-  locationAnnouncement: {
+  addressAnnouncement: {
     address: '',
     city: '',
     postalCode: '',
@@ -269,7 +269,7 @@ watch(() => props.announcement, (newVal) => {
     Object.assign(formState, {
         ...newVal,
         dateEvent: newVal.dateEvent ? newVal.dateEvent.split('T')[0] : '',
-        locationAnnouncement: newVal.locationAnnouncement || createInitialState().locationAnnouncement,
+      addressAnnouncement: newVal.addressAnnouncement || createInitialState().addressAnnouncement,
         tags: newVal.tags || [],
     });
 
@@ -324,15 +324,15 @@ const validateForm = (): boolean => {
     formErrors.value.push('Heure de l\'événement');
     invalidFields.value.hoursEvent = true;
   }
-  if (!formState.locationAnnouncement.address) {
+  if (!formState.addressAnnouncement.address) {
     formErrors.value.push('Adresse');
     invalidFields.value.address = true;
   }
-  if (!formState.locationAnnouncement.city) {
+  if (!formState.addressAnnouncement.city) {
     formErrors.value.push('Ville');
     invalidFields.value.city = true;
   }
-  if (!formState.locationAnnouncement.postalCode) {
+  if (!formState.addressAnnouncement.postalCode) {
     formErrors.value.push('Code Postal');
     invalidFields.value.postalCode = true;
   }

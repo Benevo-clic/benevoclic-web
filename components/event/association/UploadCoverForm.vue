@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import {useAnnouncement} from "~/composables/useAnnouncement";
 
-const emit = defineEmits(['ignore', 'finish']);
-const announcement = useAnnouncement();
+const emit = defineEmits<{
+  (e: 'ignore'): void;
+  (e: 'finish'): void;
+  (e: 'closeModal'): void;
+  (e: 'submitCover',file: File): void;
+}
+>();
 
 const coverPhotoPreview = ref<string | null>(null);
 const coverPhotoFile = ref<File | null>(null);
@@ -16,10 +20,11 @@ const triggerFileInput = () => {
 
 
 const handleFileChange = async (event: Event) => {
+
   const file = (event.target as HTMLInputElement).files?.[0]
   if (!file) return
   coverPhotoFile.value = file;
-  await announcement.uploadImageCover(file)
+  emit('submitCover', file);
   const reader = new FileReader()
     reader.onload = () => {
       coverPhotoPreview.value = reader.result as string

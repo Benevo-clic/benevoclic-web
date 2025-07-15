@@ -1,5 +1,6 @@
-import {defineEventHandler, createError, deleteCookie, H3Event, EventHandlerRequest} from 'h3'
-
+import {defineEventHandler, deleteCookie, H3Event, EventHandlerRequest} from 'h3'
+import axios from "axios";
+import {ApiError} from "~/utils/ErrorHandler";
 
 export function deleteCookies(event:H3Event<EventHandlerRequest>){
   deleteCookie(event, 'auth_token', {
@@ -25,12 +26,13 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
 
   try {
-    await $fetch(`${config.private.api_base_url}/user/logout`, {
-      method: 'POST',
-      headers: {
-            'Authorization': `Bearer ${token}`
-      }
-    });
+    await axios.post(`${config.private.api_base_url}/user/logout`,
+        {},
+        {
+          headers: {
+                'Authorization': `Bearer ${token}`
+          }
+       });
 
     deleteCookies(event);
 
@@ -39,9 +41,8 @@ export default defineEventHandler(async (event) => {
       message: 'Déconnexion réussie'
     }
   } catch (error: any) {
-    throw createError({
-      statusCode: error.statusCode || 401,
-      message: error.message || "Échec de la déconnexion"
-    })
+    if (axios.isAxiosError(error)) {
+      ApiError.handleAxios(error, 'Erreur lors de la déconnexion');
+    }
   }
 })
