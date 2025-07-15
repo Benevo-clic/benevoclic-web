@@ -185,14 +185,21 @@ definePageMeta({
 })
 
 onMounted(async () => {
-  // Vérifie si l'ID de l'annonce est présent dans les paramètres de la route
-  if (route.params.id) {
-    await fetchAnnouncement();
-  } else {
-    // Redirige vers la page de gestion des annonces si aucun ID n'est fourni
-    navigateTo('/association/events/association/manage');
-  }
+  await initData();
 });
+
+async function initData() {
+  try {
+    if (route.params.id) {
+      await fetchAnnouncement();
+    } else {
+      navigateTo('/association/events/association/manage');
+    }
+  } catch (error) {
+    handleError(error);
+    return;
+  }
+}
 
 async function fetchAnnouncement() {
   try {

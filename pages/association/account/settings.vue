@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
     <!-- Sidebar menu (visible only on desktop) -->
     <div class="hidden md:block">
@@ -163,13 +164,21 @@
       </form>
     </div>
   </dialog>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import {useUser} from "~/composables/auth/useUser";
 import { useAssociationAuth } from '~/composables/useAssociation'
 import { useNavigation} from "~/composables/useNavigation";
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 
 definePageMeta({
   middleware: ['auth'],
@@ -183,17 +192,29 @@ const association = useAssociationAuth()
 const {navigateToRoute} = useNavigation()
 
 onMounted(async () => {
+  try {
+    await initData()
+  }catch (error) {
+    handleError(error)
+  }
 
+})
+
+
+async function initData() {
   if(!auth.isInitialized) {
     await auth.initializeUser()
   }
   if (!association.association.value) {
     await association.getAssociationInfo()
   }
-})
+}
 
 const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
 const passwordChangeModal = ref<HTMLDialogElement | null>(null)
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
 
 // Password change form data
 const passwordForm = reactive({
@@ -224,6 +245,12 @@ function showPasswordChangeModal() {
 
   // Show modal
   passwordChangeModal.value?.showModal()
+}
+function handleReload() {
+  window.location.reload();
+}
+async function handleGoHome() {
+  await navigateToRoute('/');
 }
 
 // Function to cancel password change
@@ -258,6 +285,7 @@ async function changePassword() {
   } catch (error: any) {
     // Display error message
     passwordError.value = error.message || t('drawer-content.account.password_change.error.general')
+    handleError(error)
   }
 }
 
@@ -276,14 +304,25 @@ async function confirmDelete() {
   // Close the modal
   deleteConfirmationModal.value?.close()
   await removeUser()
+  await removeAssociation()
+  await navigateToRoute('/')
+}
 
+async function removeAssociation() {
+  try {
+    await association.removeAssociation()
+  } catch (error: any) {
+    handleError(error)
+  }
 }
 
 // Function to remove the user account
 async function removeUser() {
-  await auth.removeUser()
-  await association.removeAssociation()
-  await navigateToRoute('/')
+  try {
+    await auth.removeUser()
+  }catch (error) {
+    handleError(error)
+  }
 }
 
 // Mock settings data - would be fetched from API in a real app
@@ -294,6 +333,18 @@ const settings = ref({
   profileVisibility: true,
   locationSharing: false
 })
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
 
 function saveSettings() {
   // Save settings to API

@@ -87,6 +87,12 @@
         </div>
       </form>
     </div>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 
@@ -98,6 +104,8 @@ import {useUser} from '~/composables/auth/useUser'
 import {useI18n} from 'vue-i18n'
 import {isEqual} from 'lodash'
 import {useAssociationAuth} from "~/composables/useAssociation";
+import {useNavigation} from "~/composables/useNavigation";
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 
 const { t } = useI18n()
 
@@ -108,13 +116,38 @@ definePageMeta({
 
 const auth = useUser()
 const associationAuth = useAssociationAuth()
+const {navigateToRoute} = useNavigation()
 
-onMounted(async () => {
+
+
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+async function handleGoHome() {
+  await navigateToRoute('/');
+}
+
+async function initData() {
   await auth.initializeUser()
   if (!associationAuth.association.value) {
     await associationAuth.getAssociationInfo()
   }
-})
+}
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
 
 const form = ref({
   associationName: '',
@@ -149,10 +182,10 @@ const isFormChanged = computed(() => {
 })
 
 onMounted(async () => {
-  await auth.initializeUser()
-
-  if (!associationAuth.association.value) {
-    await associationAuth.getAssociationInfo()
+  try {
+    await initData()
+  }catch(error) {
+    handleError(error)
   }
 
   if (associationAuth.association.value) {
@@ -196,18 +229,18 @@ function handleImageChange(event: Event) {
         alertMessage.value = t('drawer-content.account.profile_updated_success') || 'Profile image updated successfully'
         setTimeout(() => {
           alertStatus.value = null
-        }, 10000)
+        }, 1000*3)
       } catch (error) {
         // Show error alert
         alertStatus.value = 'error'
         alertMessage.value = t('drawer-content.account.profile_update_error') || 'Error updating profile image. Please try again.'
-        console.error('Error updating profile image:', error)
+        handleError(error)
+
         // Auto-hide alert after 10 seconds
         setTimeout(() => {
           alertStatus.value = null
-        }, 10000)
+        }, 1000*3)
       } finally {
-        // Reset loading state
         isImageUploading.value = false
       }
     }
@@ -219,22 +252,18 @@ async function saveProfile() {
   try {
     await associationAuth.updateAssociation(form.value, auth.user.value?.userId)
 
-    // Update initialForm to match the new form values
     initialForm.value = { ...form.value }
 
-    // Show success alert
     alertStatus.value = 'success'
     alertMessage.value = t('drawer-content.account.profile_updated_success') || 'Profile updated successfully'
-    // Auto-hide alert after 10 seconds
     setTimeout(() => {
       alertStatus.value = null
-    }, 10000)
+    }, 1000)
   } catch (error) {
-    // Show error alert
     alertStatus.value = 'error'
     alertMessage.value = t('drawer-content.account.profile_update_error') || 'Error updating profile. Please try again.'
     console.error('Error updating profile:', error)
-    // Auto-hide alert after 10 seconds
+    handleError(error)
     setTimeout(() => {
       alertStatus.value = null
     }, 10000)

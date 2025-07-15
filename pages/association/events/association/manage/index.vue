@@ -17,17 +17,23 @@
 
       </div>
     </div>
-
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import {definePageMeta} from "#imports";
+import {definePageMeta, useNavigation} from "#imports";
 import ReadOnlyEventList from '~/components/event/association/ReadOnlyEventList.vue';
 import EventFilters from '~/components/event/association/EventFilters.vue';
 import { useAnnouncement } from "~/composables/useAnnouncement";
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import {useUser} from "~/composables/auth/useUser";
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 
 definePageMeta({
   middleware: ['auth'],
@@ -36,21 +42,55 @@ definePageMeta({
 
 const announcement = useAnnouncement()
 const {getUserId, initializeUser} = useUser()
+const {navigateToRoute} = useNavigation()
+
+onMounted(async () => {
+  await initData()
+});
+
 
 
 const announcements = computed(() => announcement.getAnnouncements)
 const loading = computed(() => announcement.loading)
 const error =  computed(() => announcement.error)
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
 
-onMounted(async () => {
-  if (!getUserId) {
-    await initializeUser();
-  }
-  if(getUserId) {
-    await announcement.fetchAnnouncements(getUserId);
+function handleReload() {
+  window.location.reload();
+}
+async function handleGoHome() {
+  await navigateToRoute('/');
+}
+
+
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
   } else {
-    console.warn("User ID is not available, announcements cannot be fetched.");
+    console.error('Erreur inattendue:', error);
   }
-});
+}
+
+
+async function initData() {
+  try {
+    if (!getUserId) {
+      await initializeUser();
+    }
+    if(getUserId) {
+      await announcement.fetchAnnouncements(getUserId);
+    } else {
+      console.warn("User ID is not available, announcements cannot be fetched.");
+    }
+  } catch (error) {
+    handleError(error);
+  }
+}
 
 </script>

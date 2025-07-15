@@ -101,6 +101,12 @@
         </div>
       </form>
     </div>
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
 
@@ -111,6 +117,8 @@ import {useUser} from '~/composables/auth/useUser'
 import {useVolunteerAuth} from '~/composables/useVolunteer'
 import {useI18n} from 'vue-i18n'
 import {isEqual} from 'lodash'
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import {useNavigation} from "~/composables/useNavigation";
 
 const { t } = useI18n()
 
@@ -121,16 +129,12 @@ definePageMeta({
 
 const auth = useUser()
 const volunteerAuth = useVolunteerAuth()
+const {navigateToRoute} = useNavigation()
+
 
 onMounted(async () => {
-  // Ensure user is initialized
-  if (!auth.user.value) {
-    await auth.initializeUser()
-  }
-  // Ensure volunteer data is loaded
-  if (!volunteerAuth.volunteer.value) {
-    await volunteerAuth.getVolunteerInfo()
-  }
+  await initData();
+  initForm();
 })
 
 const form = ref({
@@ -156,6 +160,10 @@ const initialForm = ref({
 const alertStatus = ref<'success' | 'error' | null>(null)
 const alertMessage = ref('')
 const isImageUploading = ref(false)
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+
 
 let profileImageUrl = computed(() => {
   return auth.user.value?.avatarFileKey
@@ -165,13 +173,23 @@ const isFormChanged = computed(() => {
   return !isEqual(form.value, initialForm.value)
 })
 
-onMounted(async () => {
 
-  // Ensure volunteer data is loaded
-  if (!volunteerAuth.volunteer.value) {
-    await volunteerAuth.getVolunteerInfo()
+
+async function initData(){
+  try {
+    if (!auth.user.value) {
+      await auth.initializeUser()
+    }
+    if (!volunteerAuth.volunteer.value) {
+      await volunteerAuth.getVolunteerInfo()
+    }
+  }catch (error) {
+    handleError(error);
+    return;
   }
+}
 
+function initForm() {
   if (volunteerAuth.volunteer.value) {
 
     const firstName = volunteerAuth.volunteer.value.firstName || ''
@@ -200,7 +218,14 @@ onMounted(async () => {
     initialForm.value.postalCode = postalCode
     initialForm.value.bio = bio
   }
-})
+}
+
+function handleReload() {
+  window.location.reload();
+}
+async function handleGoHome() {
+  await navigateToRoute('/');
+}
 
 function handleImageChange(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0]
@@ -217,17 +242,16 @@ function handleImageChange(event: Event) {
         alertMessage.value = t('drawer-content.account.profile_updated_success') || 'Profile image updated successfully'
         setTimeout(() => {
           alertStatus.value = null
-        }, 10000)
+        }, 1000*3)
 
       } catch (error) {
         // Show error alert
         alertStatus.value = 'error'
         alertMessage.value = t('drawer-content.account.profile_update_error') || 'Error updating profile image. Please try again.'
-        console.error('Error updating profile image:', error)
-        // Auto-hide alert after 10 seconds
+        handleError(error);
         setTimeout(() => {
           alertStatus.value = null
-        }, 10000)
+        }, 1000*3)
       } finally {
         // Reset loading state
         isImageUploading.value = false
@@ -237,30 +261,38 @@ function handleImageChange(event: Event) {
   }
 }
 
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
+
+
 async function saveProfile() {
   try {
-    console.log('Saving profile with data:', form.value)
     await volunteerAuth.updateVolunteer(form.value, auth.user.value?.userId)
 
-    // Update initialForm to match the new form values
     initialForm.value = { ...form.value }
 
-    // Show success alert
     alertStatus.value = 'success'
     alertMessage.value = t('drawer-content.account.profile_updated_success') || 'Profile updated successfully'
-    // Auto-hide alert after 10 seconds
     setTimeout(() => {
       alertStatus.value = null
-    }, 10000)
+    }, 1000)
   } catch (error) {
     // Show error alert
     alertStatus.value = 'error'
     alertMessage.value = t('drawer-content.account.profile_update_error') || 'Error updating profile. Please try again.'
-    console.error('Error updating profile:', error)
-    // Auto-hide alert after 10 seconds
+    handleError(error)
     setTimeout(() => {
       alertStatus.value = null
-    }, 10000)
+    }, 1000)
   }
 }
 </script>
