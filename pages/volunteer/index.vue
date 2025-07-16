@@ -6,6 +6,7 @@
           <div class="flex flex-col items-center w-full">
             <VolunteerEventFilters
                 class="mb-4 w-full"
+                :announcements="announcements.value"
                 @map="() => {}"
                 @sort="() => {}"
                 @location="() => {}"

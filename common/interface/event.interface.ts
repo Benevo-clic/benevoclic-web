@@ -57,6 +57,7 @@ export interface CreateAnnouncementDto {
     associationId: string;
     associationName: string;
     addressAnnouncement?: Location;
+    locationAnnouncement?: LocationGeoJson;
     maxParticipants: number;
     status: EventStatus;
     maxVolunteers: number;

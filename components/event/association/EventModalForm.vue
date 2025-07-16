@@ -30,14 +30,12 @@ const handleSubmit = async (formData: CreateAnnouncementDto) => {
 };
 
 const closeModal = () => {
-  store.closeCreateModal();
   emit('closeModal');
 };
 
 const submitCover= () => {
-  store.closeCreateModal();
   emit('closeModal');
-  navigateToRoute('/association/events/association/manage');
+  navigateToRoute('/association/dashboard');
 };
 
 
@@ -45,7 +43,7 @@ function handleReload() {
   window.location.reload();
 }
 function handleGoHome() {
-  navigateToRoute('/association/events/association/manage');
+  navigateToRoute('/association/dashboard');
 }
 
 function handleError(error: any) {

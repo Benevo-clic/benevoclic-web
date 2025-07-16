@@ -21,6 +21,7 @@ export default defineEventHandler(async (event) => {
             associationId: body.associationId,
             associationName: body.associationName,
             addressAnnouncement: body.addressAnnouncement,
+            locationAnnouncement: body.locationAnnouncement,
             maxParticipants: body.maxParticipants,
             status: body.status,
             maxVolunteers: body.maxVolunteers

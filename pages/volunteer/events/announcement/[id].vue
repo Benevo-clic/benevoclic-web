@@ -74,7 +74,7 @@
         <div class="flex flex-wrap gap-2 text-sm text-base-content/70 mb-2">
           <span class="flex items-center gap-1"><Calendar class="h-4 w-4 text-primary" />{{ formatDate(announcement?.dateEvent) }}</span>
           <span v-if="announcement?.hoursEvent" class="flex items-center gap-1"><Clock class="h-4 w-4 text-primary" />{{ announcement.hoursEvent }}</span>
-          <span v-if="announcement?.locationAnnouncement?.city" class="flex items-center gap-1"><MapPin class="h-4 w-4 text-secondary" />{{ announcement.locationAnnouncement.city }}</span>
+          <span v-if="announcement?.addressAnnouncement?.city" class="flex items-center gap-1"><MapPin class="h-4 w-4 text-secondary" />{{ announcement.addressAnnouncement.city }}</span>
         </div>
         <div class="mb-3 text-base-content/90">{{ announcement?.description }}</div>
         <div class="flex flex-wrap gap-2 mt-2">
@@ -164,13 +164,30 @@
         </h3>
         <div class="h-64 md:h-80 rounded-lg overflow-hidden bg-base-200 relative">
           <!-- Placeholder pour la carte -->
-          <div class="w-full h-full flex items-center justify-center">
-            <div class="text-center">
-              <MapPin class="w-12 h-12 mx-auto mb-2 text-primary" />
-              <p class="text-base-content/70">{{ announcement?.addressAnnouncement?.address || 'Adresse non disponible' }}</p>
-              <p class="text-sm text-base-content/50">{{ announcement?.addressAnnouncement?.city }}, {{ announcement?.addressAnnouncement?.postalCode }}</p>
+
+            <div ref="mapContainer" class="map-container">
+              <!-- Contrôles de zoom personnalisés -->
+              <div class="zoom-controls">
+                <button
+                    @click="zoomIn"
+                    class="zoom-btn zoom-in"
+                    title="Zoomer"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                  </svg>
+                </button>
+                <button
+                    @click="zoomOut"
+                    class="zoom-btn zoom-out"
+                    title="Dézoomer"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 13H5v-2h14v2z"/>
+                  </svg>
+                </button>
+              </div>
             </div>
-          </div>
           <!-- Bouton pour ouvrir dans Google Maps -->
           <button 
             class="btn btn-primary btn-sm absolute bottom-4 right-4"
@@ -201,8 +218,8 @@
               <MapPin class="w-5 h-5 text-primary" />
               <div>
                 <p class="font-medium">Adresse</p>
-                <p class="text-sm text-base-content/70">{{ announcement?.locationAnnouncement?.address }}</p>
-                <p class="text-sm text-base-content/70">{{ announcement?.locationAnnouncement?.city }}, {{ announcement?.locationAnnouncement?.postalCode }}</p>
+                <p class="text-sm text-base-content/70">{{ announcement?.addressAnnouncement?.address }}</p>
+                <p class="text-sm text-base-content/70">{{ announcement?.addressAnnouncement?.city }}, {{ announcement?.addressAnnouncement?.postalCode }}</p>
               </div>
             </div>
           </div>
@@ -357,6 +374,9 @@ onMounted(async () => {
       await volunteerUse.getVolunteerInfo();
     }
   }
+  initMap(announcement.value?.locationAnnouncement?.coordinates[0] || 0,
+           announcement.value?.locationAnnouncement?.coordinates[1] || 0,
+           announcement.value?.addressAnnouncement?.address || '');
 });
 
 async function fetchAnnouncement() {
@@ -537,9 +557,9 @@ async function cancelVolunteerParticipation() {
 }
 
 function openInGoogleMaps() {
-  const address = announcement.value?.locationAnnouncement?.address;
-  const city = announcement.value?.locationAnnouncement?.city;
-  const postalCode = announcement.value?.locationAnnouncement?.postalCode;
+  const address = announcement.value?.addressAnnouncement?.address;
+  const city = announcement.value?.addressAnnouncement?.city;
+  const postalCode = announcement.value?.addressAnnouncement?.postalCode;
   
   if (address && city) {
     const fullAddress = `${address}, ${city} ${postalCode || ''}`;
@@ -572,6 +592,19 @@ const statusBadgeClass = computed(() => {
   }
 });
 
+// Fonctions de zoom
+const zoomIn = () => {
+  if (map.value) {
+    map.value.zoomIn()
+  }
+}
+
+const zoomOut = () => {
+  if (map.value) {
+    map.value.zoomOut()
+  }
+}
+
 function checkScrollIndicators() {
   const el = document.documentElement;
   if (el.scrollHeight > window.innerHeight + 10) {
@@ -582,6 +615,66 @@ function checkScrollIndicators() {
     showScrollUp.value = false;
   }
 }
+
+const { $maplibregl } = useNuxtApp()
+
+const mapContainer = ref<HTMLElement>()
+const map = ref<any>(null)
+const marker = ref<any>(null)
+
+const openGoogleMaps = (lat: number, lng: number, address: string) => {
+  const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}&z=15`
+  window.open(googleMapsUrl, '_blank')
+}
+
+const initMap = (lng: number, lat: number, address: string) => {
+  if (!mapContainer.value) return
+
+  map.value = new $maplibregl.Map({
+    container: mapContainer.value,
+    style: {
+      version: 8,
+      sources: {
+        'osm': {
+          type: 'raster',
+          tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+          tileSize: 256,
+          attribution: '© OpenStreetMap contributors'
+        }
+      },
+      layers: [
+        {
+          id: 'osm-tiles',
+          type: 'raster',
+          source: 'osm',
+          minzoom: 0,
+          maxzoom: 20
+        }
+      ]
+    },
+    center: [lng, lat],
+    zoom: 15,
+    zoomControl: true,
+    keyboard: true,
+    doubleClickZoom: true,
+    scrollZoom: true,
+    dragPan: true,
+    dragRotate: false,
+    minZoom: 3,
+    maxZoom: 18
+  })
+
+  marker.value = new $maplibregl.Marker()
+      .setLngLat([lng, lat])
+      .addTo(map.value)
+
+  marker.value.getElement().addEventListener('click', () => {
+    openGoogleMaps(lat, lng, address)
+  })
+
+  marker.value.getElement().style.cursor = 'pointer'
+}
+
 
 onMounted(() => {
   checkScrollIndicators();
@@ -597,6 +690,66 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+
+.map-container {
+  width: 100%;
+  height: 400px;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.zoom-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.zoom-btn {
+  width: 32px;
+  height: 32px;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #374151;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-btn:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.zoom-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.map-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  border-left: 4px solid #3b82f6;
+}
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s;
 }

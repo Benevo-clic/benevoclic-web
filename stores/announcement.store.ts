@@ -36,10 +36,6 @@ export const useAnnouncementStore = defineStore('announcement', {
 
   actions: {
 
-    closeCreateModal() {
-      this.isCreateModalVisible = false;
-    },
-
     _updateCache() {
       this._announcementsCache.clear();
       this.announcements.forEach(announcement => {

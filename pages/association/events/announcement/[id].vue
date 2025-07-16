@@ -44,7 +44,7 @@
         <div class="flex flex-wrap gap-2 text-sm text-base-content/70 mb-2">
           <span class="flex items-center gap-1"><Calendar class="h-4 w-4 text-primary" />{{ formatDate(announcement?.dateEvent) }}</span>
           <span v-if="announcement?.hoursEvent" class="flex items-center gap-1"><Clock class="h-4 w-4 text-primary" />{{ announcement.hoursEvent }}</span>
-          <span v-if="announcement?.locationAnnouncement?.city" class="flex items-center gap-1"><MapPin class="h-4 w-4 text-secondary" />{{ announcement.locationAnnouncement.city }}</span>
+          <span v-if="announcement?.addressAnnouncement?.city" class="flex items-center gap-1"><MapPin class="h-4 w-4 text-secondary" />{{ announcement.addressAnnouncement.city }}</span>
         </div>
         <div class="mb-3 text-base-content/90">{{ announcement?.description }}</div>
         <div class="flex flex-wrap gap-2 mt-2">
@@ -239,7 +239,6 @@ function confirmDelete() {
 }
 
 async function handleRightAction(id: string) {
-  console.log(`Retirer le participant avec l'ID: ${id}`);
   if (!announcement.value) return;
   try {
     await useAnnouncementAuth.removeParticipant(announcement.value?._id, id);
@@ -250,7 +249,6 @@ async function handleRightAction(id: string) {
 }
 
 async function handleRightActionVolunteer(id: string) {
-  console.log(`Retirer le participant avec l'ID: ${id}`);
   if (!announcement.value) return;
   try {
     await useAnnouncementAuth.removeVolunteer(announcement.value?._id, id);

@@ -51,7 +51,8 @@ const props = defineProps<{
     description: string,
     date: string,
     location: string,
-    coordinates: [number, number]
+    coordinates: [number, number],
+    id: string
   }[]
 }>()
 
@@ -82,12 +83,10 @@ const clearMarkers = () => {
 const addCityMarkers = () => {
   if (!map.value) return
   clearMarkers()
-  // Calculer le nombre d'événements par ville
   const eventsCountByCity: Record<string, number> = {}
   const cityCoords: Record<string, [number, number]> = {}
   props.eventsData.forEach(event => {
     eventsCountByCity[event.location] = (eventsCountByCity[event.location] || 0) + 1
-    // On prend la première coordonnée trouvée pour la ville
     if (!cityCoords[event.location]) cityCoords[event.location] = event.coordinates
   })
   Object.entries(eventsCountByCity).forEach(([city, count]) => {
@@ -97,7 +96,6 @@ const addCityMarkers = () => {
       .setPopup(popup)
       .addTo(map.value)
     marker.getElement().style.cursor = 'pointer'
-    // Badge du nombre d'événements
     const markerElement = marker.getElement()
     const countElement = document.createElement('div')
     countElement.className = 'marker-count'
@@ -126,7 +124,6 @@ const addCityMarkers = () => {
     })
     markers.value.push(marker)
   })
-  // Adapter la vue à tous les marqueurs de ville
   const bounds = new $maplibregl.LngLatBounds()
   Object.values(cityCoords).forEach(coord => bounds.extend(coord))
   map.value.fitBounds(bounds, { padding: 50, maxZoom: 15 })
@@ -135,14 +132,15 @@ const addCityMarkers = () => {
 const addEventMarkers = (city: string) => {
   if (!map.value) return
   clearMarkers()
-  // Filtrer les événements de la ville
   const cityEvents = props.eventsData.filter(event => event.location === city)
   const cityCount = cityEvents.length
   cityEvents.forEach((event, index) => {
+    const truncatedDescription = event.description.split(' ').slice(0, 10).join(' ') + (event.description.split(' ').length > 10 ? '...' : '')
+    
     const popupContent = `
       <div style=\"padding: 8px; max-width: 250px;\">
         <h3 style=\"margin: 0 0 8px 0; font-weight: bold; color: #1f2937;\">${event.name}</h3>
-        <p style=\"margin: 0 0 8px 0; color: #6b7280; font-size: 14px;\">${event.description}</p>
+        <p style=\"margin: 0 0 8px 0; color: #6b7280; font-size: 14px;\">${truncatedDescription}</p>
         <p style=\"margin: 0 0 8px 0; color: #059669; font-size: 12px;\">📅 ${event.date}</p>
         <p style=\"margin: 0; color: #3b82f6; font-size: 12px;\">📍 ${event.location}</p>
       </div>
@@ -153,7 +151,6 @@ const addEventMarkers = (city: string) => {
       .setPopup(popup)
       .addTo(map.value)
     marker.getElement().style.cursor = 'pointer'
-    // Numéro de l'événement
     const markerElement = marker.getElement()
     const numberElement = document.createElement('div')
     numberElement.className = 'event-marker-number'
@@ -175,12 +172,29 @@ const addEventMarkers = (city: string) => {
       border: 1px solid white;
     `
     markerElement.appendChild(numberElement)
-    marker.getElement().addEventListener('click', () => {
-      openGoogleMaps(event.coordinates[1], event.coordinates[0], event.name)
+    markerElement.addEventListener('mouseenter', () => {
+      marker.togglePopup()
+      if (marker.getPopup()) {
+        marker.getPopup().addTo(map.value)
+      }
     })
+    markerElement.addEventListener('mouseleave', () => {
+      marker.togglePopup()
+      if (marker.getPopup()) {
+        marker.getPopup().remove()
+      }
+    })
+
+    markerElement.addEventListener('click', (e: MouseEvent) => {
+      e.stopPropagation()
+      if (marker.getPopup()) {
+        marker.getPopup().remove()
+      }
+      goToDetails(event.id)
+    })
+    marker.setPopup(popup)
     markers.value.push(marker)
   })
-  // Adapter la vue à tous les événements de la ville
   const bounds = new $maplibregl.LngLatBounds()
   cityEvents.forEach(event => bounds.extend(event.coordinates))
   map.value.fitBounds(bounds, { padding: 50, maxZoom: 15 })
@@ -224,10 +238,13 @@ const initMap = () => {
   })
 }
 
+const goToDetails = (announcementId: string) => {
+  navigateTo(`/volunteer/events/announcement/${announcementId}`)
+}
+
 onMounted(() => {
   initMap()
   map.value?.on('load', addCityMarkers)
-  // Fermer la vue détaillée si on clique sur la carte (hors marqueur)
   setTimeout(() => {
     if (map.value) {
       map.value.on('click', (e: any) => {

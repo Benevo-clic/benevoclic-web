@@ -30,8 +30,8 @@
     <div ref="mapContainer" class="map-container">
       <!-- Contrôles de zoom personnalisés -->
       <div class="zoom-controls">
-        <button 
-          @click="zoomIn" 
+        <button
+          @click="zoomIn"
           class="zoom-btn zoom-in"
           title="Zoomer"
         >
@@ -39,8 +39,8 @@
             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
           </svg>
         </button>
-        <button 
-          @click="zoomOut" 
+        <button
+          @click="zoomOut"
           class="zoom-btn zoom-out"
           title="Dézoomer"
         >
@@ -50,7 +50,7 @@
         </button>
       </div>
     </div>
-    
+
     <!-- Info-bulle pour indiquer que le marqueur est cliquable -->
     <div v-if="selectedAddress" class="map-info">
       <p class="text-sm text-gray-600 mb-2">

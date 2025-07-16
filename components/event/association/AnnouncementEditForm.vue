@@ -99,16 +99,16 @@
         </div>
         <div class="mb-2 grid grid-cols-1 md:grid-cols-2 gap-2">
           <div>
+            <label class="block mb-1">Adresse</label>
+            <input v-model="form.addressAnnouncement!.address" class="input input-bordered w-full" />
+          </div>
+          <div>
             <label class="block mb-1">Ville</label>
             <input v-model="form.addressAnnouncement!.city" class="input input-bordered w-full" />
           </div>
           <div>
             <label class="block mb-1">Code postal</label>
             <input v-model="form.addressAnnouncement!.postalCode" class="input input-bordered w-full" />
-          </div>
-          <div>
-            <label class="block mb-1">Adresse</label>
-            <input v-model="form.addressAnnouncement!.address" class="input input-bordered w-full" />
           </div>
           <div>
             <label class="block mb-1">Pays</label>

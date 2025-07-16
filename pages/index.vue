@@ -38,6 +38,7 @@ onMounted(async () => {
             <div class="flex flex-col items-center w-full">
               <VolunteerEventFilters
                   class="mb-4 w-full"
+                  :announcements="allAnnouncements.filter(a => a.status !== 'INACTIVE')"
                   @map="() => {}"
                   @sort="() => {}"
                   @location="() => {}"
