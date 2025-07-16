@@ -262,15 +262,15 @@ const triggerFileInput = () => {
 
 const handleFileChange = async (event: Event) => {
   try {
-    const file = (event.target as HTMLInputElement).files?.[0]
-    if (!file) return
-    imageFile.value = file;
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) return
+  imageFile.value = file;
     await announcement.uploadImageCover(file);
-    const reader = new FileReader()
-    reader.onload = () => {
-      coverPhotoPreview.value = reader.result as string
-    };
-    reader.readAsDataURL(file);
+  const reader = new FileReader()
+  reader.onload = () => {
+    coverPhotoPreview.value = reader.result as string
+  };
+  reader.readAsDataURL(file);
   }catch (error) {
     handleError(error);
     return;
@@ -305,9 +305,9 @@ async function save() {
       updatedFields.locationAnnouncement = form.value.addressAnnouncement;
     }
     try {
-      if (Object.keys(updatedFields).length > 0) {
-        await announcement.updateAnnouncement(form.value._id, updatedFields);
-      }
+    if (Object.keys(updatedFields).length > 0) {
+      await announcement.updateAnnouncement(form.value._id, updatedFields);
+    }
     }catch (error: any) {
       handleError(error);
       return;

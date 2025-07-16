@@ -1,7 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  ssr: true,
   app: {
     head: {
       htmlAttrs: {
@@ -43,6 +42,10 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
     '@nuxtjs/i18n'
+  ],
+
+  plugins: [
+    { src: '~/plugins/maplibre.client.ts', mode: 'client' }
   ],
 
   compatibilityDate: '2025-02-23',

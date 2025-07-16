@@ -167,8 +167,8 @@
           <div class="w-full h-full flex items-center justify-center">
             <div class="text-center">
               <MapPin class="w-12 h-12 mx-auto mb-2 text-primary" />
-              <p class="text-base-content/70">{{ announcement?.locationAnnouncement?.address || 'Adresse non disponible' }}</p>
-              <p class="text-sm text-base-content/50">{{ announcement?.locationAnnouncement?.city }}, {{ announcement?.locationAnnouncement?.postalCode }}</p>
+              <p class="text-base-content/70">{{ announcement?.addressAnnouncement?.address || 'Adresse non disponible' }}</p>
+              <p class="text-sm text-base-content/50">{{ announcement?.addressAnnouncement?.city }}, {{ announcement?.addressAnnouncement?.postalCode }}</p>
             </div>
           </div>
           <!-- Bouton pour ouvrir dans Google Maps -->
