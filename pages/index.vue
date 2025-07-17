@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useAnnouncement} from "~/composables/useAnnouncement";
 import VolunteerEventFilters from "~/components/event/volunteer/VolunteerEventFilters.vue";
-import {computed, onMounted} from "vue";
+import {computed, onMounted, ref} from "vue";
 import NoConnectedAnnouncementList from "~/components/event/noConnected/NoConnectedAnnouncementList.vue";
 
 const announcement = useAnnouncement()
@@ -9,6 +9,29 @@ const announcement = useAnnouncement()
 const allAnnouncements = computed(() => announcement.getAnnouncements.value)
 const loading = computed(() => announcement.loading);
 const error = computed(() => announcement.error);
+
+const currentPage = ref(1);
+const pageSize = 9;
+
+const paginatedItems = computed(() => {
+  const all = allAnnouncements.value;
+  const filtered = all.filter((a: any) => a.status !== 'INACTIVE');
+  const start = (currentPage.value - 1) * pageSize;
+  return filtered.slice(start, start + pageSize);
+});
+
+const totalPages = computed(() => {
+  const all = allAnnouncements.value;
+  const filtered = all.filter((a: any) => a.status !== 'INACTIVE');
+  return Math.ceil(filtered.length / pageSize);
+});
+
+function goToPage(page: number) {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
 
 async function fetchAnnouncements() {
   try {
@@ -52,10 +75,28 @@ onMounted(async () => {
 
         <div class="bg-base-100 rounded-lg shadow-md p-6 w-full mt-4">
           <NoConnectedAnnouncementList
-              :announcements="allAnnouncements.filter(a => a.status !== 'INACTIVE')"
+              :announcements="paginatedItems"
               :error="error.value"
               :loading="loading.value"
           />
+        </div>
+        <!-- Pagination DaisyUI -->
+        <div class="flex justify-center mt-6">
+          <div class="join">
+            <button
+              class="join-item btn"
+              :disabled="currentPage === 1"
+              @click="goToPage(currentPage - 1)"
+            >«</button>
+            <button class="join-item btn" disabled>
+              Page {{ currentPage }} / {{ totalPages }}
+            </button>
+            <button
+              class="join-item btn"
+              :disabled="currentPage === totalPages"
+              @click="goToPage(currentPage + 1)"
+            >»</button>
+          </div>
         </div>
       </div>
     </main>
