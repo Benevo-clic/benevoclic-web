@@ -11,20 +11,6 @@
         Trier par
       </button>
 
-      <!-- Localisation -->
-      <div class="dropdown dropdown-bottom">
-        <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max">
-          <MapPin class="w-4 h-4" />
-          Localisation
-          <ChevronDown class="w-3 h-3" />
-        </button>
-        <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
-          <li><a @click="$emit('location', 'Paris')">Paris</a></li>
-          <li><a @click="$emit('location', 'Lyon')">Lyon</a></li>
-          <li><a @click="$emit('location', 'Marseille')">Marseille</a></li>
-        </ul>
-      </div>
-
       <!-- Type d'association -->
       <div class="dropdown dropdown-bottom">
         <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max">
@@ -76,20 +62,6 @@
           Filtres
         </button>
         <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
-          <li>
-            <div class="dropdown dropdown-right">
-              <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
-                <MapPin class="w-4 h-4" />
-                Localisation
-                <ChevronDown class="w-3 h-3" />
-              </button>
-              <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
-                <li><a @click="$emit('location', 'Paris')">Paris</a></li>
-                <li><a @click="$emit('location', 'Lyon')">Lyon</a></li>
-                <li><a @click="$emit('location', 'Marseille')">Marseille</a></li>
-              </ul>
-            </div>
-          </li>
           <li>
             <div class="dropdown dropdown-right">
               <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
