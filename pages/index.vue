@@ -81,7 +81,7 @@ onMounted(async () => {
           />
         </div>
         <!-- Pagination DaisyUI -->
-        <div class="flex justify-center mt-6">
+        <div class="flex justify-center mt-6" v-if="totalPages > 1">
           <div class="join">
             <button
               class="join-item btn"

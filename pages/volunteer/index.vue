@@ -7,12 +7,9 @@
             <VolunteerEventFilters
                 class="mb-4 w-full"
                 :announcements="announcements"
-                @map="() => {}"
-                @sort="() => {}"
-                @location="() => {}"
-                @type="() => {}"
-                @duration="() => {}"
-                @filters="() => {}"
+                @map="handleMapToggle"
+                @filter="handleFilter"
+                @type="handleTypeFilter"
             />
           </div>
         </div>
@@ -21,12 +18,13 @@
       <div class="bg-base-100 rounded-lg shadow-md p-6 w-full mt-4">
             <VolunteerAnnouncementList
                 :announcements="announcements"
+                :total-announcements="totalAnnouncements"
                 :error="error.value"
                 :loading="loading"
             />
         </div>
       <!-- Pagination DaisyUI -->
-      <div class="flex justify-center mt-6">
+      <div class="flex justify-center mt-6" v-if="totalPages > 1">
         <div class="join">
           <button
             class="join-item btn"
@@ -59,6 +57,7 @@ import VolunteerEventFilters from '~/components/event/volunteer/VolunteerEventFi
 import VolunteerAnnouncementList from "~/components/event/volunteer/VolunteerAnnouncementList.vue";
 import {useUser} from "~/composables/auth/useUser";
 import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import type {FilterAnnouncement} from "~/common/interface/filter.interface";
 
 definePageMeta({
   middleware: ['auth'],
@@ -70,7 +69,6 @@ const useFavorite = useFavoritesAnnouncement();
 const { user , initializeUser} = useUser()
 const {navigateToRoute} = useNavigation()
 
-
 const announcements = ref<any[]>([]);
 const loading = ref(false);
 const error = computed(() => announcement.error);
@@ -79,16 +77,26 @@ const errorType = ref<'4xx' | '5xx' | null>(null);
 const currentPage = ref(1);
 const pageSize = 9;
 const totalAnnouncements = ref(0);
+const currentFilters = ref<FilterAnnouncement>({
+  page: 1,
+  limit: pageSize
+});
 
 async function fetchAnnouncements(page = 1) {
   loading.value = true;
   try {
-    const all = announcement.getAnnouncements.value;
-    const filtered = all.filter((a: any) => a.status !== 'INACTIVE');
-    totalAnnouncements.value = filtered.length;
-    const start = (page - 1) * pageSize;
-    announcements.value = filtered.slice(start, start + pageSize);
-  }catch (error){
+    currentFilters.value.page = page;
+
+    const response = await announcement.filterAnnouncement(currentFilters.value);
+
+    if (response && response.annonces) {
+      announcements.value = response.annonces;
+      totalAnnouncements.value = response.meta.total;
+    } else {
+      announcements.value = [];
+      totalAnnouncements.value = 0;
+    }
+  } catch (error) {
     handleError(error);
     return;
   } finally {
@@ -106,6 +114,25 @@ function goToPage(page: number) {
   }
 }
 
+function handleMapToggle() {
+}
+
+async function handleFilter(filters: FilterAnnouncement) {
+  currentFilters.value = {
+    ...filters,
+    page: currentPage.value,
+    limit: pageSize
+  };
+  currentPage.value = 1;
+  await fetchAnnouncements(1);
+}
+
+async function handleTypeFilter(type: string) {
+  currentFilters.value.tags = [type];
+  currentPage.value = 1;
+  await fetchAnnouncements(1);
+}
+
 onMounted(async () => {
   await initData();
   await fetchAnnouncements(1);
@@ -114,15 +141,13 @@ onMounted(async () => {
 function handleReload() {
   window.location.reload();
 }
+
 async function handleGoHome() {
   await navigateToRoute('/');
 }
 
-
-
 async function initData() {
   try {
-    await announcement.fetchAllAnnouncements();
     await initializeUser();
     if (user.value) {
       await useFavorite.fetchAllFavoritesOfVolunteer(user.value.userId);

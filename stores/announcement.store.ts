@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia';
 import type {Announcement, CreateAnnouncementDto} from '~/common/interface/event.interface';
 import {$fetch} from "ofetch";
+import type {FilterAnnouncement, FilterAnnouncementResponse} from "~/common/interface/filter.interface";
 
 export const useAnnouncementStore = defineStore('announcement', {
   state: () => ({
@@ -9,10 +10,9 @@ export const useAnnouncementStore = defineStore('announcement', {
     isCreateModalVisible: false,
     loading: false,
     error: null as string | null,
-    // Cache pour éviter les recalculs
     _announcementsCache: new Map<string, Announcement>(),
     _lastFetch: 0,
-    _cacheExpiry: 5 * 60 * 1000, // 5 minutes
+    _cacheExpiry: 5 * 60 * 1000,
   }),
 
   getters: {
@@ -423,6 +423,32 @@ export const useAnnouncementStore = defineStore('announcement', {
         } finally {
             this.loading = false;
         }
+    },
+
+    async filterAnnouncement(filterAnnouncement: FilterAnnouncement) {
+        this.loading = true;
+        this.error = null;
+        try {
+            const response = await $fetch<FilterAnnouncementResponse>('/api/announcement/filter/filterAnnouncement', {
+            method: 'POST',
+            body: filterAnnouncement,
+            });
+
+            if (!response || response.annonces.length === 0) {
+            this.error = 'Aucune annonce trouvée pour les critères spécifiés';
+            } else {
+            this.announcements = response.annonces;
+            this._updateCache();
+            }
+
+            return response;
+        } catch (err: any) {
+            this.error = err?.message || 'Erreur de filtrage des annonces';
+            throw err;
+        } finally {
+            this.loading = false;
+        }
     }
+
   },
 }); 

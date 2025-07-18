@@ -14,6 +14,7 @@ export const useAnnouncement = () => {
         uploadImageCover: announcementStore.uploadImageCover,
         updateAnnouncement: announcementStore.updateAnnouncement,
         updateStatus: announcementStore.updateStatus,
+        filterAnnouncement: announcementStore.filterAnnouncement,
         removeAnnouncement: announcementStore.removeAnnouncement,
         getAnnouncements: computed(() => announcementStore.getAnnouncements),
         getCurrentAnnouncement: computed(() => announcementStore.getCurrentAnnouncement),

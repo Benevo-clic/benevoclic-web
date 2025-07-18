@@ -173,10 +173,10 @@ onUnmounted(() => {
         @click="showCityMenu = (!showCityMenu && !showLanguageMenu)"
         class="btn btn-neutral-content btn-md px-0 flex items-center gap-1"
       >
-        <MapPin class="text-base-content w-6 h-6" />
-        <span class="text-sm text-base-content">{{ currentCity }}</span>
-        <ChevronDown :class="showCityMenu ? 'rotate-180 transition-transform' : 'transition-transform'" class="w-4 h-4 text-base-content" />
-      </button>
+      <MapPin class="text-base-content w-6 h-6" />
+      <span class="text-sm text-base-content">{{ currentCity }}</span>
+      <ChevronDown :class="showCityMenu ? 'rotate-180 transition-transform' : 'transition-transform'" class="w-4 h-4 text-base-content" />
+    </button>
       <!-- Menu déroulant -->
       <div
         v-if="showCityMenu && !showLanguageMenu"
@@ -232,14 +232,14 @@ onUnmounted(() => {
         <!-- Villes par défaut -->
         <div class="mb-2">
           <div class="text-xs font-medium text-gray-600 mb-1">Villes populaires</div>
-          <ul class="menu menu-compact">
+      <ul class="menu menu-compact">
             <li v-for="city in defaultCities" :key="city">
               <button @click="selectCity(city)" class="w-full text-left p-2 hover:bg-gray-100">
                 {{ city }}
               </button>
-            </li>
-          </ul>
-        </div>
+        </li>
+      </ul>
+    </div>
 
         <!-- Affichage position utilisateur -->
         <div v-if="userLocation" class="mt-2 pt-2 border-t border-gray-200">
@@ -278,9 +278,9 @@ onUnmounted(() => {
       >
         <span class="indicator-item text-base-content mt-2 mr-2">
           {{ props.flag }}
-        </span>
+      </span>
         <Earth class="text-base-content w-6 h-6" />
-      </button>
+    </button>
     </div>
   </div>
 </template>
@@ -308,4 +308,4 @@ onUnmounted(() => {
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
-</style> 
+</style>
