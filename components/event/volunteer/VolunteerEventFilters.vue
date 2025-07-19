@@ -411,7 +411,7 @@
                 <div class="card-body p-4">
                   <h4 class="font-medium mb-3">Rayon de recherche</h4>
                   <div class="space-y-3">
-                    <input type="range" min="1" max="100" v-model.number="filters.radius" class="range range-sm" />
+                    <input type="range" min="1" max="250" v-model.number="filters.radius" class="range range-sm" />
                     <div class="text-sm text-center font-medium">{{ filters.radius }} km</div>
                   </div>
                 </div>
@@ -441,6 +441,7 @@ import { ref, onMounted, onUnmounted, computed, defineEmits } from 'vue'
 import { Map, SortAsc, ChevronRight, SlidersHorizontal, X } from 'lucide-vue-next';
 import type {Announcement} from "~/common/interface/event.interface";
 import type {FilterAnnouncement, AnnouncementStatus, PublicationInterval, SortOption} from "~/common/interface/filter.interface";
+import {useUserLocation} from "~/composables/useUserLocation";
 
 const props = defineProps<{
   announcements: Announcement[];
@@ -479,7 +480,21 @@ const eventsData = computed(() => {
 const showAdvancedFilters = ref(false)
 const selectedTags = ref<string[]>([])
 const selectedTypes = ref<string[]>([])
-const closeDrawer = ref(false)
+const userLocation = useUserLocation()
+
+const currentLocation = computed(async () => await userLocation.getUserLocation())
+let currentLatitude = ref<number | undefined>(undefined)
+let currentLongitude = ref<number | undefined>(undefined)
+// init latitude and longitude from user location
+const initLocation = async () => {
+  const location = await currentLocation.value
+  if (location) {
+    currentLatitude.value = location.latitude
+    currentLongitude.value = location.longitude
+    filters.value.latitude = currentLatitude.value
+    filters.value.longitude = currentLongitude.value
+  }
+}
 
 // Use props tags if provided, otherwise use default tags
 const availableTags = computed(() => {
@@ -509,9 +524,9 @@ const filters = ref<FilterAnnouncement>({
   datePublicationFrom: undefined,
   datePublicationTo: undefined,
   tags: [],
-  latitude: undefined,
-  longitude: undefined,
-  radius: 10,
+  latitude: currentLatitude.value,
+  longitude: currentLongitude.value,
+  radius: 0,
   page: 1,
   limit: 9,
   sort: undefined
@@ -530,7 +545,7 @@ const hasActiveFilters = computed(() => {
          filters.value.datePublicationFrom || 
          filters.value.datePublicationTo ||
          filters.value.publicationInterval ||
-         (filters.value.radius && filters.value.radius !== 10)
+         (filters.value.radius)
 })
 
 const hasAdvancedFilters = computed(() => {
@@ -541,7 +556,7 @@ const hasAdvancedFilters = computed(() => {
          filters.value.datePublicationFrom || 
          filters.value.datePublicationTo ||
          filters.value.publicationInterval ||
-         (filters.value.radius && filters.value.radius !== 10)
+         (filters.value.radius)
 })
 
 // Helper functions
@@ -660,7 +675,7 @@ const removePublicationInterval = () => {
 }
 
 const removeRadius = () => {
-  filters.value.radius = 10
+  filters.value.radius = 0
   applyFilters()
 }
 
@@ -675,9 +690,9 @@ const resetFilters = () => {
     datePublicationFrom: undefined,
     datePublicationTo: undefined,
     tags: [],
-    latitude: undefined,
-    longitude: undefined,
-    radius: 10,
+    latitude: currentLatitude.value,
+    longitude: currentLongitude.value,
+    radius: 0,
     page: 1,
     limit: 9,
     sort: undefined
@@ -688,8 +703,16 @@ const resetFilters = () => {
 }
 
 const applyFilters = () => {
+  // Log selected filters to console
   showAdvancedFilters.value = false
-  emit('filter', { ...filters.value })
+  
+  // Convert radius from kilometers to meters before sending to backend
+  const filtersToSend = { ...filters.value }
+  if (filtersToSend.radius && filtersToSend.radius > 0) {
+    filtersToSend.radius = filtersToSend.radius * 1000 // Convert km to meters
+  }
+  
+  emit('filter', filtersToSend)
 }
 
 const handleClickOutside = (event: Event) => {
@@ -698,22 +721,9 @@ const handleClickOutside = (event: Event) => {
     showMap.value = false
   }
 }
-
-// Lifecycle hooks
-onMounted(() => {
+onMounted(async () => {
+  await initLocation()
   document.addEventListener('click', handleClickOutside)
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        filters.value.latitude = position.coords.latitude
-        filters.value.longitude = position.coords.longitude
-      },
-      (error) => {
-        console.error('Error getting location:', error)
-      }
-    )
-  }
 })
 
 onUnmounted(() => {
