@@ -7,6 +7,7 @@ export const useAnnouncementStore = defineStore('announcement', {
   state: () => ({
     announcements: [] as Announcement[],
     currentAnnouncement: null as Announcement | null,
+    currentFilter: null as FilterAnnouncement | null,
     isCreateModalVisible: false,
     loading: false,
     error: null as string | null,
@@ -16,19 +17,17 @@ export const useAnnouncementStore = defineStore('announcement', {
   }),
 
   getters: {
-    // Optimisation des getters avec cache
     getAnnouncements: (state) => {
       return state.announcements;
     },
     getCurrentAnnouncement: (state) => state.currentAnnouncement,
     getLoading: (state) => state.loading,
     getError: (state) => state.error,
-    // Getter optimisé pour chercher une annonce par ID
     getAnnouncementById: (state) => (id: string) => {
       return state._announcementsCache.get(id) || 
              state.announcements.find(a => a._id === id);
     },
-    // Vérifier si le cache est valide
+    getCurrentFilter: (state) => state.currentFilter,
     isCacheValid: (state) => {
       return Date.now() - state._lastFetch < state._cacheExpiry;
     }
@@ -45,6 +44,16 @@ export const useAnnouncementStore = defineStore('announcement', {
       });
       this._lastFetch = Date.now();
     },
+  setCurrentFilter(filter: FilterAnnouncement | null) {
+      this.currentFilter = filter
+  },
+  patchCurrentFilter(partial: Partial<FilterAnnouncement>) {
+      if (!this.currentFilter) {
+          this.currentFilter = { ...partial } as FilterAnnouncement
+      } else {
+          this.currentFilter = { ...this.currentFilter, ...partial }
+      }
+  },
 
     async fetchAnnouncements(associationId?: string) {
       if (this.isCacheValid && this.announcements.length > 0) {

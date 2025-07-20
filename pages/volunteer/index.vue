@@ -81,12 +81,30 @@ const currentFilters = ref<FilterAnnouncement>({
   page: 1,
   limit: pageSize
 });
+let currentFilter = ref<FilterAnnouncement>();
+watch(
+  () => announcement.getCurrentFilter.value,
+  async (newFilter) => {
+    currentFilter.value = {
+      ...newFilter,
+    };
+    await fetchAnnouncements(1);
+  }
+)
 
 async function fetchAnnouncements(page = 1) {
   loading.value = true;
   try {
-    currentFilters.value.page = page;
-
+    if (currentFilter.value) {
+      currentFilters.value.associationName = currentFilter.value.associationName;
+      currentFilters.value.nameEvent = currentFilter.value.nameEvent;
+      currentFilters.value.description = currentFilter.value.description;
+      currentFilters.value.page = page;
+      currentFilters.value.limit = pageSize;
+    } else {
+      currentFilters.value.page = page;
+      currentFilters.value.limit = pageSize;
+    }
     const response = await announcement.filterAnnouncement(currentFilters.value);
 
     if (response && response.annonces) {

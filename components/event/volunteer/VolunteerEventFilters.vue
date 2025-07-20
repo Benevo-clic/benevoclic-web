@@ -1,447 +1,299 @@
 <template>
-  <div class="w-full">
-    <!-- Filtres sélectionnés -->
-    <div v-if="hasActiveFilters" class="mb-4 p-4 bg-base-200 rounded-lg border border-base-300">
-      <h4 class="text-sm font-medium mb-3 text-base-content/70 flex items-center gap-2">
-        <SlidersHorizontal class="w-4 h-4" />
-        Filtres actifs:
-      </h4>
-      <div class="flex flex-wrap gap-2">
-        <!-- Statut -->
-        <div v-if="filters.status" class="badge badge-primary gap-1">
-          {{ getStatusLabel(filters.status) }}
-          <button @click="removeStatus" class="btn btn-ghost btn-xs p-0 h-4 w-4">
-            <X class="w-3 h-3" />
+  <div>
+    <div v-if="showHistory && filterHistory.length && !hasActiveFilters" class="w-full mt-6 mb-4">
+      <div class="text-lg font-bold mb-4">Recherches récentes</div>
+      <div class="flex gap-4 overflow-x-auto pb-2">
+        <div
+            v-for="(h, idx) in filterHistory"
+            :key="'history-' + idx"
+            class="rounded-xl border border-base-200 bg-base-100 p-4 min-w-[220px] shadow flex flex-col relative flex-shrink-0 cursor-pointer hover:shadow-lg transition-shadow"
+            @click="applyHistory(idx)"
+        >
+          <button
+              class="absolute top-2 right-2 btn btn-xs btn-ghost z-10"
+              @click.stop="removeHistory(idx)"
+              aria-label="Supprimer cette recherche"
+          >
+            <X class="w-4 h-4" />
           </button>
+          <div class="font-bold text-base mb-1 truncate">
+            {{ filterTitle(h) }}
+          </div>
+          <div class="text-xs text-base-content/70 mb-2">Critères</div>
+          <div class="flex items-center gap-1 text-xs text-base-content/80">
+            <span>
+              {{ getFilterCriteria(h) }}
+            </span>
+          </div>
         </div>
-
-        <!-- Tri -->
-        <div v-if="filters.sort" class="badge badge-secondary gap-1">
-          {{ getSortLabel(filters.sort) }}
-          <button @click="removeSort" class="btn btn-ghost btn-xs p-0 h-4 w-4">
-            <X class="w-3 h-3" />
-          </button>
-        </div>
-
-        <!-- Tags -->
-        <div v-for="tag in selectedTags" :key="tag" class="badge badge-accent gap-1">
-          {{ tag }}
-          <button @click="removeTag(tag)" class="btn btn-ghost btn-xs p-0 h-4 w-4">
-            <X class="w-3 h-3" />
-          </button>
-        </div>
-
-        <!-- Types d'association -->
-        <div v-for="type in selectedTypes" :key="type" class="badge badge-info gap-1">
-          {{ type }}
-          <button @click="removeType(type)" class="btn btn-ghost btn-xs p-0 h-4 w-4">
-            <X class="w-3 h-3" />
-          </button>
-        </div>
-
-        <!-- Date événement -->
-        <div v-if="filters.dateEventFrom || filters.dateEventTo" class="badge badge-warning gap-1">
-          Date événement
-          <button @click="removeDateEvent" class="btn btn-ghost btn-xs p-0 h-4 w-4">
-            <X class="w-3 h-3" />
-          </button>
-        </div>
-
-        <!-- Heure événement -->
-        <div v-if="filters.hoursEventFrom || filters.hoursEventTo" class="badge badge-warning gap-1">
-          Heure événement
-          <button @click="removeHoursEvent" class="btn btn-ghost btn-xs p-0 h-4 w-4">
-            <X class="w-3 h-3" />
-          </button>
-        </div>
-
-        <!-- Date publication -->
-        <div v-if="filters.datePublicationFrom || filters.datePublicationTo" class="badge badge-error gap-1">
-          Date publication
-          <button @click="removeDatePublication" class="btn btn-ghost btn-xs p-0 h-4 w-4">
-            <X class="w-3 h-3" />
-          </button>
-        </div>
-
-        <!-- Intervalle publication -->
-        <div v-if="filters.publicationInterval" class="badge badge-error gap-1">
-          {{ getIntervalLabel(filters.publicationInterval) }}
-          <button @click="removePublicationInterval" class="btn btn-ghost btn-xs p-0 h-4 w-4">
-            <X class="w-3 h-3" />
-          </button>
-        </div>
-
-        <!-- Rayon -->
-        <div v-if="filters.radius && filters.radius !== 10" class="badge badge-success gap-1">
-          {{ filters.radius }}km
-          <button @click="removeRadius" class="btn btn-ghost btn-xs p-0 h-4 w-4">
-            <X class="w-3 h-3" />
-          </button>
-        </div>
-
-        <!-- Bouton tout effacer -->
-        <button @click="resetFilters" class="btn btn-outline btn-xs">
-          Tout effacer
-        </button>
       </div>
     </div>
+    <div>
+      <!-- Conteneur principal des filtres -->
+      <div class="w-full">
+        <FilterActive
+            :has-active-filters="Boolean(hasActiveFilters)"
+            :filters="filters as any"
+            :selected-tags="selectedTags"
+            :selected-types="selectedTypes"
+            @date-event="removeDateEvent"
+            @hours-event="removeHoursEvent"
+            @date-publication="removeDatePublication"
+            @publication-interval="removePublicationInterval"
+            @radius="removeRadius"
+            @status="removeStatus"
+            @sort="removeSort"
+            @tag="removeTag"
+            @type="removeType"
+            @reset-filters="resetFilters"
+        />
 
-    <!-- Boutons de filtres -->
-    <div class="w-full flex flex-wrap justify-center gap-2">
-      <!-- Desktop -->
-      <div class="hidden md:flex flex-wrap gap-2 items-center justify-center w-full max-w-full">
-        <button 
-          class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200" 
-          :class="showMap ? 'btn-primary' : 'btn-outline'"
-          @click="toggleMap"
-        >
-          <Map class="w-4 h-4" />
-          Carte
-        </button>
+        <!-- Boutons de filtres -->
+        <div class="w-full flex flex-wrap justify-center gap-2">
+          <!-- Desktop -->
+          <div class="hidden md:flex flex-wrap gap-2 items-center justify-center w-full max-w-full">
+            <button
+                class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
+                :class="showMap ? 'btn-primary' : 'btn-outline'"
+                @click="toggleMap"
+            >
+              <Map class="w-4 h-4" />
+              Carte
+            </button>
 
-        <!-- Trier par -->
-        <div class="dropdown dropdown-bottom">
-          <button 
-            tabindex="0" 
-            class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
-            :class="filters.sort ? 'btn-secondary' : 'btn-outline'"
-          >
-            <SortAsc class="w-4 h-4" />
-            Trier par
-            <ChevronRight class="w-3 h-3" />
-          </button>
-          <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
-            <li v-for="sortOption in sortOptions" :key="sortOption.value">
-              <a @click="applySort(sortOption.value)">
-                <input 
-                  type="checkbox" 
-                  :checked="filters.sort === sortOption.value" 
-                  class="checkbox checkbox-xs mr-2" 
-                />
-                {{ sortOption.label }}
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Statut -->
-        <div class="dropdown dropdown-bottom">
-          <button 
-            tabindex="0" 
-            class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
-            :class="filters.status ? 'btn-primary' : 'btn-outline'"
-          >
-            Statut
-            <ChevronRight class="w-3 h-3" />
-          </button>
-          <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
-            <li v-for="statusOption in statusOptions" :key="statusOption.value">
-              <a @click="applyStatus(statusOption.value)">
-                <input 
-                  type="checkbox" 
-                  :checked="filters.status === statusOption.value" 
-                  class="checkbox checkbox-xs mr-2" 
-                />
-                {{ statusOption.label }}
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Type d'association -->
-        <div class="dropdown dropdown-bottom">
-          <button 
-            tabindex="0" 
-            class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
-            :class="selectedTypes.length > 0 ? 'btn-info' : 'btn-outline'"
-          >
-            Type d'association
-            <ChevronRight class="w-3 h-3" />
-          </button>
-          <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
-            <li v-for="type in availableTypes" :key="type">
-              <a @click="toggleType(type)">
-                <input type="checkbox" :checked="selectedTypes.includes(type)" class="checkbox checkbox-xs mr-2" />
-                {{ type }}
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Tags -->
-        <div class="dropdown dropdown-bottom">
-          <button 
-            tabindex="0" 
-            class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
-            :class="selectedTags.length > 0 ? 'btn-accent' : 'btn-outline'"
-          >
-            Tags
-            <ChevronRight class="w-3 h-3" />
-          </button>
-          <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
-            <li v-for="tag in availableTags" :key="tag">
-              <a @click="toggleTag(tag)">
-                <input type="checkbox" :checked="selectedTags.includes(tag)" class="checkbox checkbox-xs mr-2" />
-                {{ tag }}
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Filtres avancés -->
-        <button 
-          class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
-          :class="hasAdvancedFilters ? 'btn-warning' : 'btn-outline'"
-          @click="showAdvancedFilters = true"
-        >
-          <SlidersHorizontal class="w-4 h-4" />
-          Filtres avancés
-        </button>
-      </div>
-
-      <!-- Mobile -->
-      <div class="flex md:hidden flex-wrap gap-2 items-center justify-center w-full max-w-full">
-        <button 
-          class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
-          :class="showMap ? 'btn-primary' : 'btn-outline'"
-          @click="toggleMap"
-        >
-          <Map class="w-4 h-4" />
-          Carte
-        </button>
-
-        <!-- Dropdown Filtres Mobile -->
-        <div class="dropdown dropdown-bottom">
-          <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max">
-            <SlidersHorizontal class="w-4 h-4" />
-            Filtres
-          </button>
-          <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
-            <li>
-              <div class="dropdown dropdown-right">
-                <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
-                  Trier par
-                  <ChevronRight class="w-3 h-3" />
-                </button>
-                <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
-                  <li v-for="sortOption in sortOptions" :key="sortOption.value">
-                    <a @click="applySort(sortOption.value)">
-                      <input 
-                        type="checkbox" 
-                        :checked="filters.sort === sortOption.value" 
-                        class="checkbox checkbox-xs mr-2" 
-                      />
-                      {{ sortOption.label }}
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li>
-              <div class="dropdown dropdown-right">
-                <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
-                  Statut
-                  <ChevronRight class="w-3 h-3" />
-                </button>
-                <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
-                  <li v-for="statusOption in statusOptions" :key="statusOption.value">
-                    <a @click="applyStatus(statusOption.value)">
-                      <input 
-                        type="checkbox" 
-                        :checked="filters.status === statusOption.value" 
-                        class="checkbox checkbox-xs mr-2" 
-                      />
-                      {{ statusOption.label }}
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li>
-              <div class="dropdown dropdown-right">
-                <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
-                  Type d'association
-                  <ChevronRight class="w-3 h-3" />
-                </button>
-                <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
-                  <li v-for="type in availableTypes" :key="type">
-                    <a @click="toggleType(type)">
-                      <input type="checkbox" :checked="selectedTypes.includes(type)" class="checkbox checkbox-xs mr-2" />
-                      {{ type }}
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li>
-              <div class="dropdown dropdown-right">
-                <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
-                  Tags
-                  <ChevronRight class="w-3 h-3" />
-                </button>
-                <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
-                  <li v-for="tag in availableTags" :key="tag">
-                    <a @click="toggleTag(tag)">
-                      <input type="checkbox" :checked="selectedTags.includes(tag)" class="checkbox checkbox-xs mr-2" />
-                      {{ tag }}
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li>
-              <button @click="showAdvancedFilters = true" class="btn btn-outline btn-sm w-full">
-                Filtres avancés
+            <!-- Trier par -->
+            <div class="dropdown dropdown-bottom">
+              <button
+                  tabindex="0"
+                  class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
+                  :class="filters.sort ? 'btn-secondary' : 'btn-outline'"
+              >
+                <SortAsc class="w-4 h-4" />
+                Trier par
+                <ChevronRight class="w-3 h-3" />
               </button>
-            </li>
-          </ul>
-        </div>
-      </div>
+              <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
+                <li v-for="sortOption in sortOptions" :key="sortOption.value">
+                  <a @click="applySort(sortOption.value)">
+                    <input
+                        type="checkbox"
+                        :checked="filters.sort === sortOption.value"
+                        class="checkbox checkbox-xs mr-2"
+                    />
+                    {{ sortOption.label }}
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-      <!-- Carte -->
-      <div v-if="showMap" class="w-full mt-4" @click.stop>
-        <MultiMarkerMap :locations="locations" :eventsData="eventsData" />
-      </div>
-    </div>
-  </div>
+            <!-- Statut -->
+            <div class="dropdown dropdown-bottom">
+              <button
+                  tabindex="0"
+                  class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
+                  :class="filters.status ? 'btn-primary' : 'btn-outline'"
+              >
+                Statut
+                <ChevronRight class="w-3 h-3" />
+              </button>
+              <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
+                <li v-for="statusOption in statusOptions" :key="statusOption.value">
+                  <a @click="applyStatus(statusOption.value)">
+                    <input
+                        type="checkbox"
+                        :checked="filters.status === statusOption.value"
+                        class="checkbox checkbox-xs mr-2"
+                    />
+                    {{ statusOption.label }}
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-  <!-- Drawer Filtres Avancés Global -->
-  <Teleport to="body">
-    <div v-if="showAdvancedFilters" class="fixed inset-0 z-50 flex">
-      <!-- Overlay -->
-      <div 
-        class="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
-        @click="showAdvancedFilters = false"
-      ></div>
-      
-      <!-- Drawer Content -->
-      <div class="fixed right-0 top-0 h-full w-96 bg-base-100 shadow-2xl transform transition-transform duration-300 ease-in-out">
-        <div class="flex flex-col h-full">
-          <!-- Header -->
-          <div class="flex justify-between items-center p-6 border-b border-base-300">
-            <h3 class="text-lg font-semibold">Filtres avancés</h3>
-            <button @click="showAdvancedFilters = false" class="btn btn-ghost btn-sm">
-              <X class="w-5 h-5" />
+            <!-- Type d'association -->
+            <div class="dropdown dropdown-bottom">
+              <button
+                  tabindex="0"
+                  class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
+                  :class="selectedTypes.length > 0 ? 'btn-info' : 'btn-outline'"
+              >
+                Type d'association
+                <ChevronRight class="w-3 h-3" />
+              </button>
+              <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
+                <li v-for="type in availableTypes" :key="type">
+                  <a @click="toggleType(type)">
+                    <input type="checkbox" :checked="selectedTypes.includes(type)" class="checkbox checkbox-xs mr-2" />
+                    {{ type }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Tags -->
+            <div class="dropdown dropdown-bottom">
+              <button
+                  tabindex="0"
+                  class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
+                  :class="selectedTags.length > 0 ? 'btn-accent' : 'btn-outline'"
+              >
+                Tags
+                <ChevronRight class="w-3 h-3" />
+              </button>
+              <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
+                <li v-for="tag in availableTags" :key="tag">
+                  <a @click="toggleTag(tag)">
+                    <input type="checkbox" :checked="selectedTags.includes(tag)" class="checkbox checkbox-xs mr-2" />
+                    {{ tag }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <LocationButton
+                :filters="filters"
+                @update:filters="onFilterUpdate"
+                :reset-location="resetLocation"
+            />
+            <!-- Filtres avancés -->
+            <button
+                class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
+                :class="hasAdvancedFilters ? 'btn-warning' : 'btn-outline'"
+                @click="showAdvancedFilters = true"
+            >
+              <SlidersHorizontal class="w-4 h-4" />
+              Filtres avancés
             </button>
           </div>
 
-          <!-- Content -->
-          <div class="flex-1 overflow-y-auto p-6">
-            <div class="space-y-6">
-              <!-- Date de l'événement -->
-              <div class="card bg-base-200 shadow-sm">
-                <div class="card-body p-4">
-                  <h4 class="font-medium mb-3">Date de l'événement</h4>
-                  <div class="space-y-3">
-                    <div>
-                      <label class="label">
-                        <span class="label-text text-sm">Du:</span>
-                      </label>
-                      <input type="date" v-model="filters.dateEventFrom" class="input input-bordered input-sm w-full" />
-                    </div>
-                    <div>
-                      <label class="label">
-                        <span class="label-text text-sm">Au:</span>
-                      </label>
-                      <input type="date" v-model="filters.dateEventTo" class="input input-bordered input-sm w-full" />
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <!-- Mobile -->
+          <div class="flex md:hidden flex-wrap gap-2 items-center justify-center w-full max-w-full">
+            <button
+                class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
+                :class="showMap ? 'btn-primary' : 'btn-outline'"
+                @click="toggleMap"
+            >
+              <Map class="w-4 h-4" />
+              Carte
+            </button>
 
-              <!-- Heure de l'événement -->
-              <div class="card bg-base-200 shadow-sm">
-                <div class="card-body p-4">
-                  <h4 class="font-medium mb-3">Heure de l'événement</h4>
-                  <div class="space-y-3">
-                    <div>
-                      <label class="label">
-                        <span class="label-text text-sm">De:</span>
-                      </label>
-                      <input type="time" v-model="filters.hoursEventFrom" class="input input-bordered input-sm w-full" />
-                    </div>
-                    <div>
-                      <label class="label">
-                        <span class="label-text text-sm">À:</span>
-                      </label>
-                      <input type="time" v-model="filters.hoursEventTo" class="input input-bordered input-sm w-full" />
-                    </div>
+            <!-- Dropdown Filtres Mobile -->
+            <div class="dropdown dropdown-bottom">
+              <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max">
+                <SlidersHorizontal class="w-4 h-4" />
+                Filtres
+              </button>
+              <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
+                <li>
+                  <div class="dropdown dropdown-right">
+                    <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
+                      Trier par
+                      <ChevronRight class="w-3 h-3" />
+                    </button>
+                    <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
+                      <li v-for="sortOption in sortOptions" :key="sortOption.value">
+                        <a @click="applySort(sortOption.value)">
+                          <input
+                              type="checkbox"
+                              :checked="filters.sort === sortOption.value"
+                              class="checkbox checkbox-xs mr-2"
+                          />
+                          {{ sortOption.label }}
+                        </a>
+                      </li>
+                    </ul>
                   </div>
-                </div>
-              </div>
-
-              <!-- Date de publication -->
-              <div class="card bg-base-200 shadow-sm">
-                <div class="card-body p-4">
-                  <h4 class="font-medium mb-3">Date de publication</h4>
-                  <div class="space-y-3">
-                    <div>
-                      <label class="label">
-                        <span class="label-text text-sm">Du:</span>
-                      </label>
-                      <input type="date" v-model="filters.datePublicationFrom" class="input input-bordered input-sm w-full" />
-                    </div>
-                    <div>
-                      <label class="label">
-                        <span class="label-text text-sm">Au:</span>
-                      </label>
-                      <input type="date" v-model="filters.datePublicationTo" class="input input-bordered input-sm w-full" />
-                    </div>
+                </li>
+                <li>
+                  <div class="dropdown dropdown-right">
+                    <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
+                      Statut
+                      <ChevronRight class="w-3 h-3" />
+                    </button>
+                    <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
+                      <li v-for="statusOption in statusOptions" :key="statusOption.value">
+                        <a @click="applyStatus(statusOption.value)">
+                          <input
+                              type="checkbox"
+                              :checked="filters.status === statusOption.value"
+                              class="checkbox checkbox-xs mr-2"
+                          />
+                          {{ statusOption.label }}
+                        </a>
+                      </li>
+                    </ul>
                   </div>
-                </div>
-              </div>
-
-              <!-- Intervalle de publication -->
-              <div class="card bg-base-200 shadow-sm">
-                <div class="card-body p-4">
-                  <h4 class="font-medium mb-3">Intervalle de publication</h4>
-                  <select v-model="filters.publicationInterval" class="select select-bordered select-sm w-full">
-                    <option value="">Tous</option>
-                    <option value="1h">Dernière heure</option>
-                    <option value="5h">5 dernières heures</option>
-                    <option value="1d">Dernière journée</option>
-                    <option value="1w">Dernière semaine</option>
-                    <option value="1M">Dernier mois</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Localisation -->
-              <div class="card bg-base-200 shadow-sm">
-                <div class="card-body p-4">
-                  <h4 class="font-medium mb-3">Rayon de recherche</h4>
-                  <div class="space-y-3">
-                    <input type="range" min="1" max="250" v-model.number="filters.radius" class="range range-sm" />
-                    <div class="text-sm text-center font-medium">{{ filters.radius }} km</div>
+                </li>
+                <li>
+                  <div class="dropdown dropdown-right">
+                    <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
+                      Type d'association
+                      <ChevronRight class="w-3 h-3" />
+                    </button>
+                    <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
+                      <li v-for="type in availableTypes" :key="type">
+                        <a @click="toggleType(type)">
+                          <input type="checkbox" :checked="selectedTypes.includes(type)" class="checkbox checkbox-xs mr-2" />
+                          {{ type }}
+                        </a>
+                      </li>
+                    </ul>
                   </div>
-                </div>
-              </div>
+                </li>
+                <li>
+                  <div class="dropdown dropdown-right">
+                    <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
+                      Tags
+                      <ChevronRight class="w-3 h-3" />
+                    </button>
+                    <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
+                      <li v-for="tag in availableTags" :key="tag">
+                        <a @click="toggleTag(tag)">
+                          <input type="checkbox" :checked="selectedTags.includes(tag)" class="checkbox checkbox-xs mr-2" />
+                          {{ tag }}
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li>
+                  <button @click="showAdvancedFilters = true" class="btn btn-outline btn-sm w-full">
+                    Filtres avancés
+                  </button>
+                </li>
+              </ul>
             </div>
           </div>
 
-          <!-- Footer -->
-          <div class="p-6 border-t border-base-300">
-            <div class="flex flex-col gap-2">
-              <button @click="applyFilters" class="btn btn-primary btn-sm">
-                Appliquer les filtres
-              </button>
-              <button @click="resetFilters" class="btn btn-outline btn-sm">
-                Réinitialiser
-              </button>
-            </div>
+          <!-- Carte -->
+          <div v-if="showMap" class="w-full mt-4" @click.stop>
+            <MultiMarkerMap :locations="locations" :eventsData="eventsData" />
           </div>
         </div>
       </div>
+
+      <!-- Drawer Filtres Avancés Global -->
+      <AdvancedFilters
+          :show-advanced-filters="showAdvancedFilters"
+          :filters="filters"
+          @apply-filters="applyFiltersAdvanced"
+          @reset-filters="resetFilters"
+          @close-filters="closeAdvancedFilters"
+      />
     </div>
-  </Teleport>
+  </div>
+
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, defineEmits } from 'vue'
-import { Map, SortAsc, ChevronRight, SlidersHorizontal, X } from 'lucide-vue-next';
+import { ref, onMounted, onUnmounted, computed, defineEmits, watch } from 'vue'
+import { Map, SortAsc, ChevronRight, SlidersHorizontal, X, MapPin } from 'lucide-vue-next';
 import type {Announcement} from "~/common/interface/event.interface";
-import type {FilterAnnouncement, AnnouncementStatus, PublicationInterval, SortOption} from "~/common/interface/filter.interface";
+import type {FilterAnnouncement, AnnouncementStatus, SortOption} from "~/common/interface/filter.interface";
 import {useUserLocation} from "~/composables/useUserLocation";
+import FilterActive from "~/components/event/volunteer/utils/FilterActive.vue";
+import AdvancedFilters from "~/components/event/volunteer/utils/AdvancedFilters.vue";
+import LocationButton from "~/components/event/volunteer/utils/LocationButton.vue";
 
 const props = defineProps<{
   announcements: Announcement[];
@@ -459,21 +311,21 @@ const showMap = ref(false)
 
 const locations = computed(() => {
   return props.announcements
-    .filter(announcement => announcement.locationAnnouncement)
-    .map(announcement => announcement.locationAnnouncement!)
+      .filter(announcement => announcement.locationAnnouncement)
+      .map(announcement => announcement.locationAnnouncement!)
 })
 
 const eventsData = computed(() => {
   return props.announcements
-    .filter(announcement => announcement.locationAnnouncement)
-    .map(announcement => ({
-      name: announcement.nameEvent,
-      description: announcement.description,
-      date: announcement.dateEvent,
-      location: announcement.addressAnnouncement?.city || 'Localisation inconnue',
-      coordinates: announcement.locationAnnouncement!.coordinates,
-      id: announcement._id
-    }))
+      .filter(announcement => announcement.locationAnnouncement)
+      .map(announcement => ({
+        name: announcement.nameEvent,
+        description: announcement.description,
+        date: announcement.dateEvent,
+        location: announcement.addressAnnouncement?.city || 'Localisation inconnue',
+        coordinates: announcement.locationAnnouncement!.coordinates,
+        id: announcement._id
+      }))
 })
 
 // Filter related
@@ -482,21 +334,33 @@ const selectedTags = ref<string[]>([])
 const selectedTypes = ref<string[]>([])
 const userLocation = useUserLocation()
 
-const currentLocation = computed(async () => await userLocation.getUserLocation())
-let currentLatitude = ref<number | undefined>(undefined)
-let currentLongitude = ref<number | undefined>(undefined)
-// init latitude and longitude from user location
+const searchTimeout = ref<NodeJS.Timeout | null>(null)
+const userCurrentLocation = ref<any>(null)
+const currentLatitude = ref<number | undefined>(undefined)
+const currentLongitude = ref<number | undefined>(undefined)
+const resetLocation = ref(false)
+
 const initLocation = async () => {
-  const location = await currentLocation.value
-  if (location) {
-    currentLatitude.value = location.latitude
-    currentLongitude.value = location.longitude
-    filters.value.latitude = currentLatitude.value
-    filters.value.longitude = currentLongitude.value
+  try {
+    const location = await userLocation.getUserLocation()
+    if (location) {
+      currentLatitude.value = location.latitude
+      currentLongitude.value = location.longitude
+      userCurrentLocation.value = {
+        place_id: 'current_location',
+        display_name: 'Ma position actuelle',
+        city: location.city || 'Position détectée',
+        lat: location.latitude.toString(),
+        lon: location.longitude.toString()
+      }
+      resetLocation.value = true;
+    }
+
+  } catch (error) {
+    console.error('Error getting user location:', error)
   }
 }
 
-// Use props tags if provided, otherwise use default tags
 const availableTags = computed(() => {
   return props.tags || ['Urgent', 'Bénévolat', 'Formation', 'Événement', 'Collecte', 'Sensibilisation']
 })
@@ -532,62 +396,35 @@ const filters = ref<FilterAnnouncement>({
   sort: undefined
 })
 
+
 // Computed properties
 const hasActiveFilters = computed(() => {
-  return filters.value.status || 
-         filters.value.sort || 
-         selectedTags.value.length > 0 ||
-         selectedTypes.value.length > 0 ||
-         filters.value.dateEventFrom || 
-         filters.value.dateEventTo ||
-         filters.value.hoursEventFrom || 
-         filters.value.hoursEventTo ||
-         filters.value.datePublicationFrom || 
-         filters.value.datePublicationTo ||
-         filters.value.publicationInterval ||
-         (filters.value.radius)
+  return filters.value.status ||
+      filters.value.sort ||
+      selectedTags.value.length > 0 ||
+      selectedTypes.value.length > 0 ||
+      filters.value.dateEventFrom ||
+      filters.value.dateEventTo ||
+      filters.value.hoursEventFrom ||
+      filters.value.hoursEventTo ||
+      filters.value.datePublicationFrom ||
+      filters.value.datePublicationTo ||
+      filters.value.publicationInterval ||
+      (filters.value.radius)
 })
 
 const hasAdvancedFilters = computed(() => {
-  return filters.value.dateEventFrom || 
-         filters.value.dateEventTo ||
-         filters.value.hoursEventFrom || 
-         filters.value.hoursEventTo ||
-         filters.value.datePublicationFrom || 
-         filters.value.datePublicationTo ||
-         filters.value.publicationInterval ||
-         (filters.value.radius)
+  return filters.value.dateEventFrom ||
+      filters.value.dateEventTo ||
+      filters.value.hoursEventFrom ||
+      filters.value.hoursEventTo ||
+      filters.value.datePublicationFrom ||
+      filters.value.datePublicationTo ||
+      filters.value.publicationInterval
 })
 
-// Helper functions
-const getStatusLabel = (status: AnnouncementStatus) => {
-  switch (status) {
-    case 'ACTIVE': return 'Actif'
-    case 'COMPLETED': return 'Terminé'
-    case 'INACTIVE': return 'Inactif'
-    default: return status
-  }
-}
+const showLocationDropdown = ref(false)
 
-const getSortLabel = (sort: SortOption) => {
-  switch (sort) {
-    case 'dateEvent_asc': return 'Date événement (croissant)'
-    case 'dateEvent_desc': return 'Date événement (décroissant)'
-    case 'datePublication_desc': return 'Date publication (récent)'
-    default: return sort
-  }
-}
-
-const getIntervalLabel = (interval: PublicationInterval) => {
-  switch (interval) {
-    case '1h': return 'Dernière heure'
-    case '5h': return '5 dernières heures'
-    case '1d': return 'Dernière journée'
-    case '1w': return 'Dernière semaine'
-    case '1M': return 'Dernier mois'
-    default: return interval
-  }
-}
 
 // Methods
 const toggleMap = () => {
@@ -613,6 +450,12 @@ const toggleType = (type: string) => {
   updateFilters()
 }
 
+function onFilterUpdate(newFilters: FilterAnnouncement) {
+  filters.value = newFilters
+  resetLocation.value = false
+  updateFilters()
+}
+
 const updateFilters = () => {
   // Combine tags and types for the API
   const allTags = [...selectedTags.value, ...selectedTypes.value]
@@ -628,6 +471,10 @@ const applySort = (sort: SortOption) => {
 const applyStatus = (status: AnnouncementStatus) => {
   filters.value.status = status
   applyFilters()
+}
+
+const closeAdvancedFilters = () => {
+  showAdvancedFilters.value = false
 }
 
 // Remove filter methods
@@ -676,6 +523,7 @@ const removePublicationInterval = () => {
 
 const removeRadius = () => {
   filters.value.radius = 0
+  resetLocation.value = true
   applyFilters()
 }
 
@@ -699,35 +547,223 @@ const resetFilters = () => {
   }
   selectedTags.value = []
   selectedTypes.value = []
+  resetLocation.value = true
   applyFilters()
 }
 
+const applyFiltersAdvanced = (filtersAdvanced: Partial<FilterAnnouncement>) => {
+  filters.value.dateEventFrom = filtersAdvanced.dateEventFrom || filters.value.dateEventFrom
+  filters.value.dateEventTo = filtersAdvanced.dateEventTo || filters.value.dateEventTo
+  filters.value.hoursEventFrom = filtersAdvanced.hoursEventFrom || filters.value.hoursEventFrom
+  filters.value.hoursEventTo = filtersAdvanced.hoursEventTo || filters.value.hoursEventTo
+  filters.value.datePublicationFrom = filtersAdvanced.datePublicationFrom || filters.value.datePublicationFrom
+  filters.value.datePublicationTo = filtersAdvanced.datePublicationTo || filters.value.datePublicationTo
+  filters.value.publicationInterval = filtersAdvanced.publicationInterval || filters.value.publicationInterval
+
+  applyFilters();
+}
+
 const applyFilters = () => {
-  // Log selected filters to console
-  showAdvancedFilters.value = false
-  
-  // Convert radius from kilometers to meters before sending to backend
   const filtersToSend = { ...filters.value }
+
+  delete filtersToSend.cityCoordinates
+
   if (filtersToSend.radius && filtersToSend.radius > 0) {
     filtersToSend.radius = filtersToSend.radius * 1000 // Convert km to meters
   }
-  
+  showAdvancedFilters.value = false
   emit('filter', filtersToSend)
 }
 
 const handleClickOutside = (event: Event) => {
   const target = event.target as HTMLElement
+
   if (!target.closest('.multi-marker-map-container') && !target.closest('button')) {
     showMap.value = false
   }
+
+  if (!target.closest('.location-dropdown-container')) {
+    showLocationDropdown.value = false
+  }
 }
+
+// Historique des filtres
+const filterHistory = ref<FilterAnnouncement[]>([])
+const showHistory = ref(true)
+const FILTER_HISTORY_KEY = 'filterHistory';
+
+// Sauvegarde dans localStorage à chaque modification de filters
+watch(filters, (newFilters) => {
+  // Ne pas ajouter les filtres vides ou uniquement localisation
+  const filterWithoutLocation = {
+    ...newFilters,
+    latitude: undefined,
+    longitude: undefined,
+    radius: 0
+  };
+  const isEmpty = (
+    (!filterWithoutLocation.status && !filterWithoutLocation.sort && (!filterWithoutLocation.tags || filterWithoutLocation.tags.length === 0) &&
+      !filterWithoutLocation.dateEventFrom && !filterWithoutLocation.dateEventTo && !filterWithoutLocation.hoursEventFrom && !filterWithoutLocation.hoursEventTo &&
+      !filterWithoutLocation.datePublicationFrom && !filterWithoutLocation.datePublicationTo && !filterWithoutLocation.publicationInterval &&
+      (!filterWithoutLocation.latitude || filterWithoutLocation.radius === 0) &&
+        filterWithoutLocation.page === 1 && filterWithoutLocation.limit === 9)
+  );
+
+  if (isEmpty) return;
+  
+  // Compter le nombre d'éléments de critères
+  let criteriaCount = 0;
+  if (filterWithoutLocation.status) criteriaCount++;
+  if (filterWithoutLocation.sort) criteriaCount++;
+  if (filterWithoutLocation.tags && filterWithoutLocation.tags.length > 0) criteriaCount++;
+  if (filterWithoutLocation.dateEventFrom || filterWithoutLocation.dateEventTo) criteriaCount++;
+  if (filterWithoutLocation.hoursEventFrom || filterWithoutLocation.hoursEventTo) criteriaCount++;
+  if (filterWithoutLocation.datePublicationFrom || filterWithoutLocation.datePublicationTo) criteriaCount++;
+  if (filterWithoutLocation.publicationInterval) criteriaCount++;
+  
+  if (criteriaCount <= 3) return;
+  
+  let history: FilterAnnouncement[] = [];
+  try {
+    history = JSON.parse(localStorage.getItem(FILTER_HISTORY_KEY) || '[]')
+  } catch {}
+  
+  // Vérifier si le nouveau filtre diffère suffisamment des filtres existants
+  const isDifferentEnough = history.every(existingFilter => {
+    let differences = 0;
+    
+    // Comparer chaque critère
+    if (filterWithoutLocation.status !== existingFilter.status) differences++;
+    if (filterWithoutLocation.sort !== existingFilter.sort) differences++;
+    if (JSON.stringify(filterWithoutLocation.tags) !== JSON.stringify(existingFilter.tags)) differences++;
+    if (filterWithoutLocation.dateEventFrom !== existingFilter.dateEventFrom) differences++;
+    if (filterWithoutLocation.dateEventTo !== existingFilter.dateEventTo) differences++;
+    if (filterWithoutLocation.hoursEventFrom !== existingFilter.hoursEventFrom) differences++;
+    if (filterWithoutLocation.hoursEventTo !== existingFilter.hoursEventTo) differences++;
+    if (filterWithoutLocation.datePublicationFrom !== existingFilter.datePublicationFrom) differences++;
+    if (filterWithoutLocation.datePublicationTo !== existingFilter.datePublicationTo) differences++;
+    if (filterWithoutLocation.publicationInterval !== existingFilter.publicationInterval) differences++;
+    
+    // Retourner true si au moins 3 différences
+    return differences >= 3;
+  });
+  
+  // Ne sauvegarder que si le filtre est suffisamment différent
+  if (!isDifferentEnough) return;
+  const newHistory = [filterWithoutLocation, ...history.filter(h => JSON.stringify(h) !== JSON.stringify(filterWithoutLocation))]
+
+  filterHistory.value = newHistory.slice(0, 3)
+  localStorage.setItem(FILTER_HISTORY_KEY, JSON.stringify(filterHistory.value))
+}, { deep: true })
+
+// Chargement au montage
 onMounted(async () => {
   await initLocation()
   document.addEventListener('click', handleClickOutside)
+  let history: FilterAnnouncement[] = [];
+  try {
+    history = JSON.parse(localStorage.getItem(FILTER_HISTORY_KEY) || '[]')
+  } catch {}
+  // Filtrer l'historique pour ne garder que les filtres qui ne sont pas uniquement localisation
+  history = history.filter(h => {
+    const isOnlyLocation = (
+        !!h.latitude && !!h.longitude &&
+        (!h.status && !h.sort && (!h.tags || h.tags.length === 0) &&
+            !h.dateEventFrom && !h.dateEventTo && !h.hoursEventFrom && !h.hoursEventTo &&
+            !h.datePublicationFrom && !h.datePublicationTo && !h.publicationInterval)
+    );
+    return !isOnlyLocation;
+  });
+  if (history.length) {
+    filterHistory.value = history.slice(0, 3)
+  }
 })
+
+function applyHistory(idx: number) {
+  if (filterHistory.value[idx]) {
+    const selectedFilter = filterHistory.value[idx];
+
+    // Appliquer le filtre sélectionné
+    filters.value = { ...selectedFilter };
+
+    // Mettre à jour les filtres locaux pour refléter le filtre appliqué
+    if (selectedFilter.tags && selectedFilter.tags.length > 0) {
+      // Séparer les tags et types (supposons que les types sont dans availableTypes)
+      const tags = selectedFilter.tags.filter(tag => availableTags.value.includes(tag));
+      const types = selectedFilter.tags.filter(type => availableTypes.value.includes(type));
+      selectedTags.value = tags;
+      selectedTypes.value = types;
+    } else {
+      selectedTags.value = [];
+      selectedTypes.value = [];
+    }
+
+    // Supprimer l'historique et le localStorage
+    filterHistory.value = [];
+    showHistory.value = false;
+    localStorage.removeItem(FILTER_HISTORY_KEY);
+
+    console.log('Applying history filter:', filters.value);
+    emit('filter', filters.value);
+  }
+}
+
+function removeHistory(idx: number) {
+  filterHistory.value.splice(idx, 1);
+  localStorage.setItem(FILTER_HISTORY_KEY, JSON.stringify(filterHistory.value));
+  if (filterHistory.value.length === 0) showHistory.value = false;
+}
+
+function filterTitle(f: FilterAnnouncement) {
+  return (f.nameEvent || f.description || 'Recherche');
+}
+
+function getFilterCriteria(filter: FilterAnnouncement) {
+  const criteria: string[] = [];
+
+  if (filter.status) {
+    criteria.push(filter.status);
+  }
+  if (filter.sort) {
+    const sortLabel = sortOptions.value.find(s => s.value === filter.sort)?.label;
+    criteria.push(sortLabel?.split('(')[0].trim() || '');
+  }
+  if (filter.tags && filter.tags.length > 0) {
+    criteria.push(filter.tags.slice(0, 2).join(', '));
+  }
+  if (filter.dateEventFrom || filter.dateEventTo) {
+    const from = filter.dateEventFrom ? new Date(filter.dateEventFrom).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) : '';
+    const to = filter.dateEventTo ? new Date(filter.dateEventTo).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) : '';
+    criteria.push(`${from} - ${to}`);
+  }
+  if (filter.hoursEventFrom || filter.hoursEventTo) {
+    const from = filter.hoursEventFrom ? new Date(filter.hoursEventFrom).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
+    const to = filter.hoursEventTo ? new Date(filter.hoursEventTo).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
+    criteria.push(`${from} - ${to}`);
+  }
+  if (filter.datePublicationFrom || filter.datePublicationTo) {
+    const from = filter.datePublicationFrom ? new Date(filter.datePublicationFrom).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) : '';
+    const to = filter.datePublicationTo ? new Date(filter.datePublicationTo).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) : '';
+    criteria.push(`${from} - ${to}`);
+  }
+  if (filter.publicationInterval) {
+    criteria.push(filter.publicationInterval);
+  }
+  if (filter.radius && filter.radius > 0) {
+    criteria.push(`${filter.radius} km`);
+  }
+
+  // Retourner seulement les 2 premiers critères
+  return criteria.slice(0, 2).join(' • ');
+}
+
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
+
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value)
+  }
 })
 </script>
 

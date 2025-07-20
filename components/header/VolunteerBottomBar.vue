@@ -3,16 +3,23 @@ import { ref } from 'vue'
 import { Heart as HeartIcon, Clock as ClockIcon, HelpCircle as HelpIcon, Search as SearchIcon, Home as HomeIcon } from 'lucide-vue-next'
 import { useRecentSearches } from "~/composables/useRecentSearches";
 import { navigateTo } from "#app";
+import {useAnnouncement} from "~/composables/useAnnouncement";
+import type {FilterAnnouncement} from "~/common/interface/filter.interface";
 
 const { t } = useI18n()
 const showRecentSearches = ref(false)
 const searchQuery = ref('')
 const { recentSearches, addRecentSearch, clearRecentSearches } = useRecentSearches()
+const { patchCurrentFilter } = useAnnouncement()
 
 const handleSearch = () => {
   if (searchQuery.value.trim()) {
     addRecentSearch(searchQuery.value.trim())
-    console.log('Searching for:', searchQuery.value)
+    patchCurrentFilter({
+      nameEvent: searchQuery.value.trim(),
+      description: searchQuery.value.trim(),
+      associationName: searchQuery.value.trim(),
+    } as FilterAnnouncement)
   }
 }
 

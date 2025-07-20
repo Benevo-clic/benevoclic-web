@@ -28,6 +28,11 @@ export interface FilterAnnouncement {
     page?: number;
     limit?: number;
     sort?: SortOption;
+    cityCoordinates?: Array<{
+        lat: number;
+        lon: number;
+        name: string;
+    }>;
 }
 
 export interface FilterAnnouncementResponse {

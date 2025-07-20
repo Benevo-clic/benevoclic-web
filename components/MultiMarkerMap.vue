@@ -62,11 +62,6 @@ const map = ref<any>(null)
 const markers = ref<any[]>([])
 const expandedCity = ref<string | null>(null)
 
-const openGoogleMaps = (lat: number, lng: number, label: string) => {
-  const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}&z=15`
-  window.open(googleMapsUrl, '_blank')
-}
-
 const zoomIn = () => {
   if (map.value) map.value.zoomIn()
 }
