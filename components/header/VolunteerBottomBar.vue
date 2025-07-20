@@ -20,6 +20,12 @@ const handleSearch = () => {
       description: searchQuery.value.trim(),
       associationName: searchQuery.value.trim(),
     } as FilterAnnouncement)
+  }else{
+    patchCurrentFilter({
+      nameEvent: '',
+      description: '',
+      associationName: '',
+    } as FilterAnnouncement)
   }
 }
 

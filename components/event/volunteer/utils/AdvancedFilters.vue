@@ -44,7 +44,7 @@ function resetFilters() {
     hoursEventTo: undefined,
     datePublicationFrom: undefined,
     datePublicationTo: undefined,
-    publicationInterval: ''
+    publicationInterval: undefined
   };
   emit('resetFilters');
 }
@@ -59,7 +59,7 @@ const filters = ref({
   hoursEventTo: undefined,
   datePublicationFrom: undefined,
   datePublicationTo: undefined,
-  publicationInterval: ''
+  publicationInterval: undefined
 });
 
 function disableAdvancedFilters() {

@@ -81,7 +81,9 @@ const currentFilters = ref<FilterAnnouncement>({
   page: 1,
   limit: pageSize
 });
+
 let currentFilter = ref<FilterAnnouncement>();
+
 watch(
   () => announcement.getCurrentFilter.value,
   async (newFilter) => {
@@ -95,25 +97,30 @@ watch(
 async function fetchAnnouncements(page = 1) {
   loading.value = true;
   try {
-    if (currentFilter.value) {
-      currentFilters.value.associationName = currentFilter.value.associationName;
-      currentFilters.value.nameEvent = currentFilter.value.nameEvent;
-      currentFilters.value.description = currentFilter.value.description;
-      currentFilters.value.page = page;
-      currentFilters.value.limit = pageSize;
-    } else {
-      currentFilters.value.page = page;
-      currentFilters.value.limit = pageSize;
-    }
-    const response = await announcement.filterAnnouncement(currentFilters.value);
+    // 1) Construis tes filtres de façon déclarative
+    const base = { page, limit: pageSize };
+    const overrides = currentFilter.value
+        ? {
+          associationName: currentFilter.value.associationName,
+          nameEvent:       currentFilter.value.nameEvent,
+          description:     currentFilter.value.description,
+        }
+        : {};
+    const filters = {
+      ...currentFilters.value,
+      ...overrides,
+      ...base
+    };
+    currentFilters.value = filters;
 
-    if (response && response.annonces) {
-      announcements.value = response.annonces;
-      totalAnnouncements.value = response.meta.total;
-    } else {
-      announcements.value = [];
-      totalAnnouncements.value = 0;
-    }
+    const response = await announcement.filterAnnouncement(filters);
+    const {
+      annonces = [],
+      meta: { total = 0 } = {}
+    } = response || {};
+
+    announcements.value      = annonces;
+    totalAnnouncements.value = total;
   } catch (error) {
     handleError(error);
     return;
