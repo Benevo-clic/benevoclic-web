@@ -46,7 +46,7 @@ export default defineNuxtConfig({
 
   plugins: [
     { src: '~/plugins/maplibre.client.ts', mode: 'client' },
-      '~/plugins/firebase.ts',
+      '~/plugins/firebase.client.ts',
   ],
   build: {
     transpile: [

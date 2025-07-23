@@ -1,4 +1,4 @@
-// ~/plugins/firebase.ts
+// ~/plugins/firebase.client.ts
 import { defineNuxtPlugin, useRuntimeConfig } from '#app'      // ← on importe useRuntimeConfig
 import { initializeApp } from 'firebase/app'
 import { getAuth, GoogleAuthProvider, browserPopupRedirectResolver } from 'firebase/auth'
@@ -12,13 +12,9 @@ interface FirebasePlugin {
 
 export default defineNuxtPlugin(() => {
   try {
-    // On récupère la config publique
     const config = useRuntimeConfig().public.firebaseConfig
 
-    // DEBUG : côté client, voir la clé dans la console
-    if (process.client) {
-      console.log('🔑 Firebase API Key (client):', config.apiKey)
-    }
+    console.log('🔑 Firebase API Key (client):', config.apiKey)
 
     const app = initializeApp(config)
     const auth = getAuth(app)
