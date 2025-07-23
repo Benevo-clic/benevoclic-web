@@ -1,8 +1,8 @@
-# === Builder ===
+# === 1) Builder : compile l’app avec toutes les dépendances ===
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# 1) Déclare tous les secrets en build-args
+# 1.1) Déclare les secrets reçus en build-arg
 ARG NUXT_API_BASE_URL
 ARG API_BASE_URL
 ARG API_SIRENE_URL
@@ -13,7 +13,6 @@ ARG MESSAGING_SENDER_ID
 ARG APP_ID
 ARG MEASUREMENT_ID
 ARG PORT
-ARG NODE_ENV
 ARG API_TIMEOUT
 ARG API_RETRY_COUNT
 ARG GOOGLE_CALLBACK_URL
@@ -25,7 +24,6 @@ ARG FIREBASE_MESSAGING_SENDER_ID
 ARG FIREBASE_APP_ID
 ARG FIREBASE_MEASUREMENT_ID
 
-# 2) Expose-les en ENV pour le build Nuxt
 ENV NUXT_API_BASE_URL=$NUXT_API_BASE_URL \
     API_BASE_URL=$API_BASE_URL \
     API_SIRENE_URL=$API_SIRENE_URL \
@@ -36,7 +34,6 @@ ENV NUXT_API_BASE_URL=$NUXT_API_BASE_URL \
     APP_ID=$APP_ID \
     MEASUREMENT_ID=$MEASUREMENT_ID \
     PORT=$PORT \
-    NODE_ENV=$NODE_ENV \
     API_TIMEOUT=$API_TIMEOUT \
     API_RETRY_COUNT=$API_RETRY_COUNT \
     GOOGLE_CALLBACK_URL=$GOOGLE_CALLBACK_URL \
@@ -48,18 +45,15 @@ ENV NUXT_API_BASE_URL=$NUXT_API_BASE_URL \
     FIREBASE_APP_ID=$FIREBASE_APP_ID \
     FIREBASE_MEASUREMENT_ID=$FIREBASE_MEASUREMENT_ID
 
-# 3) Désactive package-lock pour rester cohérent
 RUN npm config set package-lock false
 
-# 4) Installe les dépendances
-COPY package.json ./
+COPY package.json package-lock.json* ./
 RUN npm install
 
-# 5) Copie le code et build
 COPY . .
 RUN npm run build
 
-# === Runner ===
+
 FROM node:20-alpine AS runner
 WORKDIR /app
 
