@@ -2,11 +2,14 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
+# Copier .npmrc AVANT npm ci
+COPY .npmrc .npmrc
 COPY package*.json ./
-RUN npm install                   # install + lockfile, inclut les devDeps
+
+RUN npm ci
 
 COPY . .
-RUN npm run build            # génère .output
+RUN npm run build         # génère .output
 
 FROM node:20-alpine
 WORKDIR /app
