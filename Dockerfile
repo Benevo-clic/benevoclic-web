@@ -1,33 +1,29 @@
-# Étape 1 : build
+# === builder ===
 FROM node:20-alpine AS builder
-
 WORKDIR /app
 
-# Désactive la génération de package-lock.json
+# On veut injecter tes vars avant le build
+COPY .env .env
+
+# Désactive package-lock
 RUN npm config set package-lock false
 
-# Copie uniquement package.json
+# Installe tes dépendances
 COPY package.json ./
-
-# Installe les dépendances
 RUN npm install
 
-# Copie le reste du code
+# Copie tout le code (et .env, qui était ignoré par défaut)
 COPY . .
 
-# Compile l’app
+# Build Nuxt avec tes vraies clés
 RUN npm run build
 
-# Étape 2 : runtime
-FROM node:20-alpine
-
+# === runtime ===
+FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Récupère le build
+# On ne récupère que la sortie du builder
 COPY --from=builder /app/.output ./
 
-# Expose le port Nuxt (5482)
 EXPOSE 5482
-
-# Démarre le serveur Nuxt
 CMD ["node", "server/index.mjs"]

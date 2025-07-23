@@ -1,8 +1,22 @@
+# Dépendances et logs
 node_modules
 npm-debug.log
+
+# Dossiers de build / dist
 dist
+
+# Git
 .git
 .gitignore
+
+# Fichiers de doc & config de build
 Dockerfile
 README.md
 *.md
+
+# Eviter d’inclure le lock (inutile si on désactive package-lock)
+package-lock.json
+
+# Ignorer .env mais le réinclus ensuite pour le builder
+.env
+!.env
