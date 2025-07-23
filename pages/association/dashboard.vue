@@ -1,64 +1,121 @@
-<template>
-
-  <div class="p-8">
-    <div class="max-w-4xl mx-auto">
-      <div class="bg-white shadow rounded-lg p-6">
-        <div class="flex justify-between items-center mb-6">
-          <h1 class="text-2xl font-bold">Dashboard</h1>
-          <button
-              @click="auth.removeUser"
-              class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-          >
-            supprimer mon compte
-          </button>
-        </div>
-        <div v-if="auth.user" class="space-y-4">
-          <p><strong>Email:</strong> {{ auth.user.value?.email }}</p>
-          <p><strong>Rôle:</strong> {{ auth.user.value?.role }}</p>
-          <p><strong>Statut:</strong> {{ auth.user.value?.isOnline ? 'En ligne' : 'Hors ligne' }}</p>
-          <p><strong>Dernière connexion:</strong> {{ new Date(auth.user.value?.lastConnection).toLocaleString() }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { useUser } from '~/composables/auth/useUser'
+import { ref, computed } from 'vue'
+import StatCard from '~/components/dashboard/StatCard.vue'
+import DateRangePicker from '~/components/dashboard/DateRangePicker.vue'
+import TimeSeriesChart from '~/components/dashboard/TimeSeriesChart.vue'
+import PieChart from '~/components/dashboard/PieChart.vue'
+import ObjectiveProgress from '~/components/dashboard/ObjectiveProgress.vue'
+import { mockEvents } from '~/mock/mockEvents'
+import { mockAssociations } from '~/mock/mockAssociations'
 import {definePageMeta} from "#imports";
-import {onMounted} from "vue";
-import {useAssociationAuth} from "~/composables/useAssociation";
+
+const dateRange = ref({ from: '2024-06-01', to: '2024-06-30' })
 
 definePageMeta({
   middleware: ['auth'],
-  layout:'header'
+  layout: 'header',
 })
 
-const auth = useUser()
-const associationAuth = useAssociationAuth()
+const totalAnnouncements = computed(() => mockEvents.length)
+const totalVolunteers = computed(() =>
+  Array.from(new Set(mockAssociations.flatMap(a => a.volunteers?.map(v => v.id) || []))).length
+)
+const totalParticipants = computed(() =>
+  mockEvents.reduce((sum, e) => sum + (e.nbParticipants || (e.participants?.length || 0)), 0)
+)
 
-onMounted(async () => {
-  await auth.initializeUser()
-  const userRole = auth.userRole
-  const isVolunteer = await associationAuth.getAssociationInfo()
-  const isAuthenticated = auth.isAuthenticated.value
-
-  if((!isAuthenticated && !isVolunteer) && userRole.value === 'VOLUNTEER') {
-    return navigateTo(
-        {
-          path: '/auth/registerVolunteer',
-        }
-    )
+const announcementsSeries = computed(() => {
+  const map = new Map()
+  mockEvents.forEach(e => {
+    map.set(e.datePublication, (map.get(e.datePublication) || 0) + 1)
+  })
+  return {
+    labels: Array.from(map.keys()),
+    data: Array.from(map.values())
   }
-
-  if((!isAuthenticated && !isVolunteer) && userRole.value === 'ASSOCIATION'){
-    return navigateTo(
-        {
-          path: '/auth/registerAssociation',
-        }
-    )
-  }
-
 })
 
+const volunteersSeries = computed(() => {
+  let total = 0
+  const map = new Map()
+  mockEvents.forEach(e => {
+    total += e.nbVolunteers || (e.volunteers?.length || 0)
+    map.set(e.datePublication, total)
+  })
+  return {
+    labels: Array.from(map.keys()),
+    data: Array.from(map.values())
+  }
+})
+
+const pieData = computed(() => {
+  const volunteers = totalVolunteers.value
+  const participants = totalParticipants.value
+  return { volunteers, participants }
+})
+
+const objectives = computed(() =>
+  mockEvents.map(e => ({
+    id: e.id,
+    title: e.nameEvent,
+    covered: e.nbParticipants || (e.participants?.length || 0),
+    planned: e.maxParticipants
+  }))
+)
+
+const cumulativeSeries = volunteersSeries
 </script>
+
+<template>
+  <div class="p-6 max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row gap-4 mb-6 items-center">
+      <DateRangePicker v-model="dateRange" />
+      <div class="flex-1 flex gap-4">
+        <StatCard :value="totalAnnouncements" label="Annonces publiées" />
+        <StatCard :value="totalVolunteers" label="Bénévoles inscrits" />
+        <StatCard :value="totalParticipants" label="Participants" />
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
+      <TimeSeriesChart
+        :labels="announcementsSeries.labels"
+        :data="announcementsSeries.data"
+        label="Annonces publiées"
+        type="bar"
+        color="#2563eb"
+      />
+      <TimeSeriesChart
+        :labels="volunteersSeries.labels"
+        :data="volunteersSeries.data"
+        label="Bénévoles inscrits"
+        color="#10b981"
+      />
+      <PieChart
+        :labels="['Bénévoles', 'Participants']"
+        :data="[pieData.volunteers, pieData.participants]"
+        :colors="['#10b981', '#f59e42']"
+      />
+    </div>
+    <div class="mb-6">
+      <h2 class="text-lg font-bold mb-2">Taux d’atteinte des objectifs par annonce</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <ObjectiveProgress
+          v-for="obj in objectives"
+          :key="obj.id"
+          :title="obj.title"
+          :covered="obj.covered"
+          :planned="obj.planned"
+        />
+      </div>
+    </div>
+    <div>
+      <h2 class="text-lg font-bold mb-2">Croissance cumulée des bénévoles adhérents</h2>
+      <TimeSeriesChart
+        :labels="cumulativeSeries.labels"
+        :data="cumulativeSeries.data"
+        label="Bénévoles cumulés"
+        color="#f59e42"
+      />
+    </div>
+  </div>
+</template>

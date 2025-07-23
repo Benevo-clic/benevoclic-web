@@ -5,10 +5,7 @@
       <input v-model="filters.search" type="text" placeholder="Recherche..." class="input input-bordered w-48" />
       <input v-model="filters.tags" type="text" placeholder="Tags (virgules)" class="input input-bordered w-48" />
       <div class="relative">
-        <button :class="['btn btn-outline rounded-full flex items-center gap-2', isActive('location') ? 'btn-primary text-white' : '']" @click="toggleMenu('location')">
-          <MapPin />Localisation
-          <ChevronRight />
-        </button>
+
         <div v-if="openMenu === 'location'" class="absolute z-10 bg-white border rounded shadow p-4 mt-2">
           <input v-model="filters.city" type="text" placeholder="Ville" class="input input-bordered mb-2 w-full" />
           <input v-model="filters.postalCode" type="text" placeholder="Code postal" class="input input-bordered w-full" />

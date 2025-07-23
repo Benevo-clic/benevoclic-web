@@ -118,7 +118,45 @@ const auth = useUser()
 const associationAuth = useAssociationAuth()
 const {navigateToRoute} = useNavigation()
 
+onMounted(async () => {
+  try {
+    await initData()
+  }catch(error) {
+    handleError(error)
+  }
 
+  initForm();
+
+})
+
+function initForm(){
+  if (associationAuth.association.value) {
+
+    const associationName = associationAuth.association.value.associationName || ''
+    const phone = associationAuth.association.value.phone || ''
+    const city = associationAuth.association.value.city || ''
+    const postalCode = associationAuth.association.value.postalCode || ''
+    const bio = associationAuth.association.value.bio || ''
+    const type = associationAuth.association.value.type || ''
+    const country = associationAuth.association.value.country || ''
+
+    form.value.associationName = associationName
+    form.value.phone = phone
+    form.value.city = city
+    form.value.postalCode = postalCode
+    form.value.bio = bio
+    form.value.type = type
+    form.value.country = country
+
+    initialForm.value.associationName = associationName
+    initialForm.value.phone = phone
+    initialForm.value.city = city
+    initialForm.value.postalCode = postalCode
+    initialForm.value.bio = bio
+    initialForm.value.type = type
+    initialForm.value.country = country
+  }
+}
 
 const showErrorModal = ref(false);
 const errorType = ref<'4xx' | '5xx' | null>(null);
@@ -181,40 +219,7 @@ const isFormChanged = computed(() => {
   return !isEqual(form.value, initialForm.value)
 })
 
-onMounted(async () => {
-  try {
-    await initData()
-  }catch(error) {
-    handleError(error)
-  }
 
-  if (associationAuth.association.value) {
-
-    const associationName = associationAuth.association.value.associationName || ''
-    const phone = associationAuth.association.value.phone || ''
-    const city = associationAuth.association.value.city || ''
-    const postalCode = associationAuth.association.value.postalCode || ''
-    const bio = associationAuth.association.value.bio || ''
-    const type = associationAuth.association.value.type || ''
-    const country = associationAuth.association.value.country || ''
-
-    form.value.associationName = associationName
-    form.value.phone = phone
-    form.value.city = city
-    form.value.postalCode = postalCode
-    form.value.bio = bio
-    form.value.type = type
-    form.value.country = country
-
-    initialForm.value.associationName = associationName
-    initialForm.value.phone = phone
-    initialForm.value.city = city
-    initialForm.value.postalCode = postalCode
-    initialForm.value.bio = bio
-    initialForm.value.type = type
-    initialForm.value.country = country
-  }
-})
 
 function handleImageChange(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0]

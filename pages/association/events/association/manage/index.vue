@@ -10,10 +10,28 @@
     <div class="mx-auto px-4 py-5 max-w-10xl">
       <div class="bg-base-100 rounded-2xl shadow-md p-6">
           <ReadOnlyEventList
-              :announcements="announcements.value"
+              :announcements="paginatedAnnouncements"
               :error="error.value"
               :loading="loading.value"
           />
+          <!-- Pagination DaisyUI -->
+          <div class="flex justify-center mt-6" v-if="totalPages > 1">
+            <div class="join">
+              <button
+                class="join-item btn"
+                :disabled="currentPage === 1"
+                @click="goToPage(currentPage - 1)"
+              >«</button>
+              <button class="join-item btn" disabled>
+                Page {{ currentPage }} / {{ totalPages }}
+              </button>
+              <button
+                class="join-item btn"
+                :disabled="currentPage === totalPages"
+                @click="goToPage(currentPage + 1)"
+              >»</button>
+            </div>
+          </div>
 
       </div>
     </div>
@@ -55,6 +73,28 @@ const loading = computed(() => announcement.loading)
 const error =  computed(() => announcement.error)
 const showErrorModal = ref(false);
 const errorType = ref<'4xx' | '5xx' | null>(null);
+const currentPage = ref(1);
+const pageSize = 9;
+
+const paginatedAnnouncements = computed(() => {
+  const all = announcements.value.value;
+  const filtered = all.filter((a: any) => a.status !== 'INACTIVE');
+  const start = (currentPage.value - 1) * pageSize;
+  return filtered.slice(start, start + pageSize);
+});
+
+const totalPages = computed(() => {
+  const all = announcements.value.value;
+  const filtered = all.filter((a: any) => a.status !== 'INACTIVE');
+  return Math.ceil(filtered.length / pageSize);
+});
+
+function goToPage(page: number) {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
 
 function handleReload() {
   window.location.reload();

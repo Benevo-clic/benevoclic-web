@@ -1,3 +1,4 @@
+import type {LocationGeoJson} from "~/common/interface/event.interface";
 
 
 export type FormFieldsVolunteer = {
@@ -7,7 +8,8 @@ export type FormFieldsVolunteer = {
     birthDate: string
     city: string
     postalCode: string
-    bio: string
+    bio: string,
+    locationVolunteer?: LocationGeoJson
 }
 
 export type FormFieldsAssociation = {

@@ -97,7 +97,12 @@
           <label class="block mb-1">Tags (séparés par des virgules)</label>
           <input v-model="tagsInput" class="input input-bordered w-full" />
         </div>
+        <AddressInput
+            @address-selected="selectAddress"
+            :initial-address="form.addressAnnouncement?.address"
+        />
         <div class="mb-2 grid grid-cols-1 md:grid-cols-2 gap-2">
+
           <div>
             <label class="block mb-1">Ville</label>
             <input v-model="form.addressAnnouncement!.city" class="input input-bordered w-full" />
@@ -105,10 +110,6 @@
           <div>
             <label class="block mb-1">Code postal</label>
             <input v-model="form.addressAnnouncement!.postalCode" class="input input-bordered w-full" />
-          </div>
-          <div>
-            <label class="block mb-1">Adresse</label>
-            <input v-model="form.addressAnnouncement!.address" class="input input-bordered w-full" />
           </div>
           <div>
             <label class="block mb-1">Pays</label>
@@ -151,6 +152,7 @@ import {EventStatus} from "~/common/enums/event.enum";
 import { useAnnouncement } from '~/composables/useAnnouncement';
 import {useNavigation} from "~/composables/useNavigation";
 import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import AddressInput from "~/components/common/AddressInput.vue";
 
 const props = defineProps<{ announcement: Announcement | null }>();
 const emit = defineEmits(['close', 'saved']);
@@ -175,6 +177,10 @@ const form = ref<Partial<Announcement>>({
   hoursEvent: '',
   tags: [],
   addressAnnouncement: { address: '', city: '', postalCode: '', country: '' },
+  locationAnnouncement: {
+    type: 'Point',
+    coordinates: [0, 0]
+  },
   status: EventStatus.INACTIVE,
   maxParticipants: 0,
   maxVolunteers: 0,
@@ -213,6 +219,33 @@ function handleError(error: any) {
 
 const isFormInvalid = computed(() => maxParticipantsError.value || maxVolunteersError.value);
 
+const selectAddress = (address: {
+  properties: {
+    address: string;
+    city: string;
+    postcode: string;
+  };
+  geometry: {
+    coordinates: [number, number];
+  };
+}) => {
+
+  form.value = {
+    ...form.value,
+    addressAnnouncement: {
+      address: address.properties.address,
+      city: address.properties.city,
+      postalCode: address.properties.postcode,
+      country: 'France',
+    },
+    locationAnnouncement: {
+      type: 'Point',
+      coordinates: [address.geometry.coordinates[0], address.geometry.coordinates[1]],
+    },
+  };
+
+}
+
 watch(() => props.announcement, (a) => {
   if (a) {
     form.value = {
@@ -223,8 +256,10 @@ watch(() => props.announcement, (a) => {
         city: a.addressAnnouncement?.city || '',
         postalCode: a.addressAnnouncement?.postalCode || '',
         country: a.addressAnnouncement?.country || '',
-        lat: a.addressAnnouncement?.lat,
-        lng: a.addressAnnouncement?.lng,
+      },
+      locationAnnouncement: a.locationAnnouncement || {
+        type: 'Point',
+        coordinates: [0, 0]
       },
       status: a.status || EventStatus.INACTIVE,
       maxParticipants: a.maxParticipants ?? 0,
@@ -245,6 +280,10 @@ watch(() => props.announcement, (a) => {
       hoursEvent: '',
       tags: [],
       addressAnnouncement: { address: '', city: '', postalCode: '', country: '' },
+      locationAnnouncement: {
+        type: 'Point',
+        coordinates: [0, 0]
+      },
       status: EventStatus.INACTIVE,
       maxParticipants: 0,
       maxVolunteers: 0,
@@ -262,15 +301,15 @@ const triggerFileInput = () => {
 
 const handleFileChange = async (event: Event) => {
   try {
-    const file = (event.target as HTMLInputElement).files?.[0]
-    if (!file) return
-    imageFile.value = file;
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) return
+  imageFile.value = file;
     await announcement.uploadImageCover(file);
-    const reader = new FileReader()
-    reader.onload = () => {
-      coverPhotoPreview.value = reader.result as string
-    };
-    reader.readAsDataURL(file);
+  const reader = new FileReader()
+  reader.onload = () => {
+    coverPhotoPreview.value = reader.result as string
+  };
+  reader.readAsDataURL(file);
   }catch (error) {
     handleError(error);
     return;
@@ -289,10 +328,12 @@ async function save() {
   try {
   form.value.tags = tagsInput.value.split(',').map((t: string) => t.trim()).filter(Boolean);
 
+
   if (form.value._id && props.announcement) {
     const updatedFields: any = {};
     const original = props.announcement;
     const keys: (keyof Announcement)[] = ['nameEvent', 'description', 'dateEvent', 'hoursEvent', 'status', 'maxParticipants', 'maxVolunteers'];
+
     for (const key of keys) {
       if (form.value[key] !== original[key]) {
         updatedFields[key] = form.value[key];
@@ -302,12 +343,15 @@ async function save() {
       updatedFields.tags = form.value.tags;
     }
     if (JSON.stringify(form.value.addressAnnouncement) !== JSON.stringify(original.addressAnnouncement)) {
-      updatedFields.locationAnnouncement = form.value.addressAnnouncement;
+      updatedFields.addressAnnouncement = form.value.addressAnnouncement;
+    }
+    if(JSON.stringify(form.value.locationAnnouncement) !== JSON.stringify(original.locationAnnouncement)) {
+      updatedFields.locationAnnouncement = form.value.locationAnnouncement;
     }
     try {
-      if (Object.keys(updatedFields).length > 0) {
-        await announcement.updateAnnouncement(form.value._id, updatedFields);
-      }
+    if (Object.keys(updatedFields).length > 0) {
+      await announcement.updateAnnouncement(form.value._id, updatedFields);
+    }
     }catch (error: any) {
       handleError(error);
       return;

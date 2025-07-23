@@ -42,6 +42,11 @@ const removeCoverPhoto = () => {
 
 const handleIgnore = () => {
   emit('ignore');
+  coverPhotoPreview.value = null;
+  coverPhotoFile.value = null;
+  if (fileInput.value) {
+    fileInput.value.value = '';
+  }
 };
 
 

@@ -1,44 +1,39 @@
 import {defineStore} from 'pinia';
 import type {Announcement, CreateAnnouncementDto} from '~/common/interface/event.interface';
 import {$fetch} from "ofetch";
+import type {FilterAnnouncement, FilterAnnouncementResponse} from "~/common/interface/filter.interface";
 
 export const useAnnouncementStore = defineStore('announcement', {
   state: () => ({
     announcements: [] as Announcement[],
     currentAnnouncement: null as Announcement | null,
+    currentFilter: null as FilterAnnouncement | null,
     isCreateModalVisible: false,
     loading: false,
     error: null as string | null,
-    // Cache pour éviter les recalculs
     _announcementsCache: new Map<string, Announcement>(),
     _lastFetch: 0,
-    _cacheExpiry: 5 * 60 * 1000, // 5 minutes
+    _cacheExpiry: 5 * 60 * 1000,
   }),
 
   getters: {
-    // Optimisation des getters avec cache
     getAnnouncements: (state) => {
       return state.announcements;
     },
     getCurrentAnnouncement: (state) => state.currentAnnouncement,
     getLoading: (state) => state.loading,
     getError: (state) => state.error,
-    // Getter optimisé pour chercher une annonce par ID
     getAnnouncementById: (state) => (id: string) => {
       return state._announcementsCache.get(id) || 
              state.announcements.find(a => a._id === id);
     },
-    // Vérifier si le cache est valide
+    getCurrentFilter: (state) => state.currentFilter,
     isCacheValid: (state) => {
       return Date.now() - state._lastFetch < state._cacheExpiry;
     }
   },
 
   actions: {
-
-    closeCreateModal() {
-      this.isCreateModalVisible = false;
-    },
 
     _updateCache() {
       this._announcementsCache.clear();
@@ -49,6 +44,16 @@ export const useAnnouncementStore = defineStore('announcement', {
       });
       this._lastFetch = Date.now();
     },
+  setCurrentFilter(filter: FilterAnnouncement | null) {
+      this.currentFilter = filter
+  },
+  patchCurrentFilter(partial: Partial<FilterAnnouncement>) {
+      if (!this.currentFilter) {
+          this.currentFilter = { ...partial } as FilterAnnouncement
+      } else {
+          this.currentFilter = { ...this.currentFilter, ...partial }
+      }
+  },
 
     async fetchAnnouncements(associationId?: string) {
       if (this.isCacheValid && this.announcements.length > 0) {
@@ -427,6 +432,32 @@ export const useAnnouncementStore = defineStore('announcement', {
         } finally {
             this.loading = false;
         }
+    },
+
+    async filterAnnouncement(filterAnnouncement: FilterAnnouncement) {
+        this.loading = true;
+        this.error = null;
+        try {
+            const response = await $fetch<FilterAnnouncementResponse>('/api/announcement/filter/filterAnnouncement', {
+            method: 'POST',
+            body: filterAnnouncement,
+            });
+
+            if (!response || response.annonces.length === 0) {
+            this.error = 'Aucune annonce trouvée pour les critères spécifiés';
+            } else {
+            this.announcements = response.annonces;
+            this._updateCache();
+            }
+
+            return response;
+        } catch (err: any) {
+            this.error = err?.message || 'Erreur de filtrage des annonces';
+            throw err;
+        } finally {
+            this.loading = false;
+        }
     }
+
   },
 }); 

@@ -71,19 +71,9 @@
       </div>
     </div>
 
-    <!-- Location -->
-    <div class="form-control w-full">
-      <label class="label">
-        <span class="label-text">Lieu (Adresse) <span class="text-error">*</span></span>
-      </label>
-      <input 
-        type="text" 
-        v-model="formState.addressAnnouncement.address"
-        class="input input-bordered w-full" 
-        :class="{ 'input-error': invalidFields.address }"
-        placeholder="123 rue de Paris" 
+    <AddressInput
+        @address-selected="selectAddress"
       />
-    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div class="form-control w-full">
@@ -206,7 +196,7 @@
       <button 
         type="button" 
         class="btn btn-ghost" 
-        @click="$emit('cancel')"
+        @click="cancel"
       >
         Annuler
       </button>
@@ -227,6 +217,7 @@ import type { Announcement } from '~/common/interface/event.interface';
 import { EventStatus } from '~/common/enums/event.enum';
 import {useAssociationAuth} from "~/composables/useAssociation";
 import {useUser} from "~/composables/auth/useUser";
+import AddressInput from '~/components/common/AddressInput.vue';
 
 const props = defineProps<{
   announcement?: Announcement | null;
@@ -237,7 +228,6 @@ const {association} = useAssociationAuth()
 const user = useUser()
 
 const emit = defineEmits(['submit', 'cancel']);
-
 
 const statusOptions = Object.values(EventStatus).map(status => ({ label: status, value: status }));
 
@@ -254,6 +244,10 @@ const createInitialState = () => ({
     city: '',
     postalCode: '',
     country: '',
+  },
+  locationAnnouncement: {
+    type: 'Point',
+    coordinates: [0, 0]
   },
   maxParticipants: 0,
   maxVolunteers: 0,
@@ -278,6 +272,24 @@ watch(() => props.announcement, (newVal) => {
   }
 }, { immediate: true });
 
+
+function cancel() {
+  initFormState();
+  emit('cancel')
+}
+
+function initFormState() {
+  Object.assign(formState, createInitialState());
+  tagsInput.value = '';
+  formErrors.value = [];
+  invalidFields.value = {};
+}
+
+function submitEvent() {
+  emit('submit', formState);
+  initFormState();
+}
+
 const addTag = () => {
   if (tagsInput.value && !formState.tags.includes(tagsInput.value)) {
     formState.tags.push(tagsInput.value);
@@ -292,6 +304,28 @@ const removeTag = (index: number) => {
 const formErrors = ref<string[]>([]);
 
 const invalidFields = ref<Record<string, boolean>>({});
+
+
+const selectAddress = (address: {
+  properties: {
+    address: string;
+    city: string;
+    postcode: string;
+  };
+  geometry: {
+    coordinates: [number, number];
+  };
+}) => {
+
+  formState.addressAnnouncement.address = address.properties.address;
+  formState.addressAnnouncement.postalCode = address.properties.postcode;
+  formState.addressAnnouncement.city = address.properties.city;
+  formState.addressAnnouncement.country = 'France';
+  formState.locationAnnouncement.coordinates = [address.geometry.coordinates[0], address.geometry.coordinates[1]];
+
+}
+
+
 
 const validateForm = (): boolean => {
   formErrors.value = [];
@@ -352,10 +386,12 @@ const submit = async () => {
   formState.associationName = computed(() => association.value?.associationName || '').value;
   formState.associationId = computed(() => association.value?.associationId).value || user.getUserId || '';
   if (validateForm()) {
-    emit('submit', formState);
+    submitEvent();
   } else {
-    console.error('Veuillez corriger les erreurs suivantes:', formErrors.value);
     setTimeout(scrollToFirstError, 100);
   }
 };
-</script> 
+</script>
+
+<style scoped>
+</style>

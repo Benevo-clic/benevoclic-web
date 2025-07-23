@@ -1,34 +1,5 @@
-<script setup lang="ts">
-import {useAnnouncement} from "~/composables/useAnnouncement";
-import VolunteerEventFilters from "~/components/event/volunteer/VolunteerEventFilters.vue";
-import {computed, onMounted} from "vue";
-import NoConnectedAnnouncementList from "~/components/event/noConnected/NoConnectedAnnouncementList.vue";
-
-const announcement = useAnnouncement()
-
-const allAnnouncements = computed(() => announcement.getAnnouncements.value)
-const loading = computed(() => announcement.loading);
-const error = computed(() => announcement.error);
-
-async function fetchAnnouncements() {
-  try {
-     await announcement.fetchAllAnnouncements();
-  } catch (error) {
-    console.error("Error fetching announcements:", error);
-  }
-}
-
-onMounted(async () => {
-  await fetchAnnouncements();
-})
-
-</script>
-
 <template>
   <div class="home-page">
-    <!-- Header -->
-    <Header />
-
     <!-- Contenu principal -->
     <main class="home-content">
       <div class="mx-auto px-4 py-6 max-w-screen-2xl w-full">
@@ -38,12 +9,10 @@ onMounted(async () => {
             <div class="flex flex-col items-center w-full">
               <VolunteerEventFilters
                   class="mb-4 w-full"
-                  @map="() => {}"
-                  @sort="() => {}"
-                  @location="() => {}"
-                  @type="() => {}"
-                  @duration="() => {}"
-                  @filters="() => {}"
+                  :announcements="announcements"
+                  @map="handleMapToggle"
+                  @filter="handleFilter"
+                  @type="handleTypeFilter"
               />
             </div>
           </div>
@@ -51,16 +20,175 @@ onMounted(async () => {
 
         <div class="bg-base-100 rounded-lg shadow-md p-6 w-full mt-4">
           <NoConnectedAnnouncementList
-              :announcements="allAnnouncements.filter(a => a.status !== 'INACTIVE')"
+              :announcements="announcements"
+              :total-announcements="totalAnnouncements"
               :error="error.value"
-              :loading="loading.value"
+              :loading="loading"
           />
+        </div>
+        <!-- Pagination DaisyUI -->
+        <div class="flex justify-center mt-6" v-if="totalPages > 1">
+          <div class="join">
+            <button
+              class="join-item btn"
+              :disabled="currentPage === 1"
+              @click="goToPage(currentPage - 1)"
+            >«</button>
+            <button class="join-item btn" disabled>
+              Page {{ currentPage }} / {{ totalPages }}
+            </button>
+            <button
+              class="join-item btn"
+              :disabled="currentPage === totalPages"
+              @click="goToPage(currentPage + 1)"
+            >»</button>
+          </div>
         </div>
       </div>
     </main>
-
+    <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+    />
   </div>
 </template>
+<script setup lang="ts">
+import {definePageMeta, useAnnouncement, useNavigation} from "#imports";
+import {onMounted, computed, ref} from 'vue';
+import VolunteerEventFilters from '~/components/event/volunteer/VolunteerEventFilters.vue';
+import {useUser} from "~/composables/auth/useUser";
+import type {FilterAnnouncement} from "~/common/interface/filter.interface";
+import NoConnectedAnnouncementList from "~/components/event/noConnected/NoConnectedAnnouncementList.vue";
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+
+definePageMeta({
+  middleware: ['auth'],
+  layout: 'header'
+})
+
+const announcement = useAnnouncement();
+const { user , initializeUser} = useUser()
+const {navigateToRoute} = useNavigation()
+
+const announcements = ref<any[]>([]);
+const loading = ref(false);
+const error = computed(() => announcement.error);
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+const currentPage = ref(1);
+const pageSize = 9;
+const totalAnnouncements = ref(0);
+const currentFilters = ref<FilterAnnouncement>({
+  page: 1,
+  limit: pageSize
+});
+
+let currentFilterSearch = ref<FilterAnnouncement>();
+
+watch(
+    () => announcement.getCurrentFilter.value,
+    async (newFilter) => {
+      currentFilterSearch.value = {
+        ...newFilter,
+      };
+      await fetchAnnouncements(1);
+    }
+)
+
+function handleReload() {
+  window.location.reload();
+}
+
+async function handleGoHome() {
+  await navigateToRoute('/');
+}
+
+async function fetchAnnouncements(page = 1) {
+  loading.value = true;
+  try {
+    // 1) Construis tes filtres de façon déclarative
+    const base = { page, limit: pageSize };
+    const overrides = currentFilterSearch.value
+        ? {
+          associationName: currentFilterSearch.value.associationName,
+          nameEvent:       currentFilterSearch.value.nameEvent,
+          description:     currentFilterSearch.value.description,
+        }
+        : {};
+    const filters = {
+      ...currentFilters.value,
+      ...overrides,
+      ...base
+    };
+    currentFilters.value = filters;
+
+    const response = await announcement.filterAnnouncement(filters);
+    const {
+      annonces = [],
+      meta: { total = 0 } = {}
+    } = response || {};
+
+    announcements.value      = annonces;
+    totalAnnouncements.value = total;
+  } catch (error) {
+    handleError(error);
+    return;
+  } finally {
+    loading.value = false;
+  }
+}
+
+const totalPages = computed(() => Math.ceil(totalAnnouncements.value / pageSize));
+
+function goToPage(page: number) {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+    fetchAnnouncements(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function handleMapToggle() {
+}
+
+async function handleFilter(filters: FilterAnnouncement) {
+  currentFilters.value = {
+    ...filters,
+    page: currentPage.value,
+    limit: pageSize
+  };
+  currentPage.value = 1;
+  await fetchAnnouncements(1);
+}
+
+async function handleTypeFilter(type: string) {
+  currentFilters.value.tags = [type];
+  currentPage.value = 1;
+  await fetchAnnouncements(1);
+}
+
+onMounted(async () => {
+  await fetchAnnouncements(1);
+});
+
+
+
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
+
+</script>
 
 <style scoped>
 

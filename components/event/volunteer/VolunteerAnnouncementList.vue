@@ -12,7 +12,7 @@
     <div v-else class="grid grid-cols-1 md:grid-cols-2 xl1285:grid-cols-3 gap-4">
       <div class="col-span-full">
         <h2 class="text-lg font-semibold mb-0">
-          {{ props.announcements.length }} annonces
+          {{ props.totalAnnouncements }} annonces
         </h2>
       </div>
       <VolunteerAnnouncementCard
@@ -45,6 +45,7 @@ const props = defineProps<
     {
       announcements: Announcement[];
       error: string | null;
+      totalAnnouncements: number;
       loading: boolean;
     }
 >()

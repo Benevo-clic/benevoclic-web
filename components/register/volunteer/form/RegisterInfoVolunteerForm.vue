@@ -12,6 +12,7 @@ import {useVolunteerAuth} from "~/composables/useVolunteer";
 import {useNavigation} from "~/composables/useNavigation";
 import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 import {useAuthStore} from "~/stores/auth/auth.store";
+import type {LocationGeoJson} from "~/common/interface/event.interface";
 
 const { user, updateIsCompleted } = useUser()
 const authStore = useAuthStore()
@@ -196,7 +197,7 @@ async function submitForm() {
       birthDate: formData.birthDate,
       city: formData.city,
       postalCode: formData.postalCode,
-      bio: formData.bio
+      bio: formData.bio,
     } as CreateVolunteerDto)
 
     await updateIsCompleted(user.value.userId, true)

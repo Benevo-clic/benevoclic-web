@@ -1,7 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  ssr: true,
   app: {
     head: {
       htmlAttrs: {
@@ -45,6 +44,10 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n'
   ],
 
+  plugins: [
+    { src: '~/plugins/maplibre.client.ts', mode: 'client' }
+  ],
+
   compatibilityDate: '2025-02-23',
 
   runtimeConfig: {
@@ -70,7 +73,11 @@ export default defineNuxtConfig({
   // Optimisations pour l'hydratation
   nitro: {
     prerender: {
-      crawlLinks: true,
+      ignore: [
+        '/association/account/edit',
+        '/en/association/account/edit',
+        '/es/association/account/edit'
+      ]
     },
     // Optimisations de performance
     compressPublicAssets: true,
