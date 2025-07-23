@@ -4,8 +4,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm config set registry https://registry.npmjs.org/
-RUN npm install
+RUN npm install --ignore-scripts
 
 COPY . .
 
@@ -22,10 +21,9 @@ WORKDIR /app
 COPY --from=builder /app/.output ./.output
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/.env ./
+COPY .env.production ./.env
 
 ENV NUXT_PORT=5482
-ENV HOST=0.0.0.0
 EXPOSE 5482
 
 CMD ["node", ".output/server/index.mjs"]

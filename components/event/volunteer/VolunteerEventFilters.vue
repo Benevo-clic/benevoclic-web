@@ -1,33 +1,33 @@
 <template>
   <div>
-    <div v-if="showHistory && filterHistory.length && !hasActiveFilters" class="w-full mt-6 mb-4">
-      <div class="text-lg font-bold mb-4">Recherches récentes</div>
-      <div class="flex gap-4 overflow-x-auto pb-2">
-        <div
-            v-for="(h, idx) in filterHistory"
-            :key="'history-' + idx"
-            class="rounded-xl border border-base-200 bg-base-100 p-4 min-w-[220px] shadow flex flex-col relative flex-shrink-0 cursor-pointer hover:shadow-lg transition-shadow"
-            @click="applyHistory(idx)"
-        >
-          <button
-              class="absolute top-2 right-2 btn btn-xs btn-ghost z-10"
-              @click.stop="removeHistory(idx)"
-              aria-label="Supprimer cette recherche"
-          >
-            <X class="w-4 h-4" />
-          </button>
-          <div class="font-bold text-base mb-1 truncate">
-            {{ filterTitle(h) }}
-          </div>
-          <div class="text-xs text-base-content/70 mb-2">Critères</div>
-          <div class="flex items-center gap-1 text-xs text-base-content/80">
-            <span>
-              {{ getFilterCriteria(h) }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
+<!--    <div v-if="showHistory && filterHistory.length && !hasActiveFilters" class="w-full mt-6 mb-4">-->
+<!--      <div class="text-lg font-bold mb-4">Recherches récentes</div>-->
+<!--      <div class="flex gap-4 overflow-x-auto pb-2">-->
+<!--        <div-->
+<!--            v-for="(h, idx) in filterHistory"-->
+<!--            :key="'history-' + idx"-->
+<!--            class="rounded-xl border border-base-200 bg-base-100 p-4 min-w-[220px] shadow flex flex-col relative flex-shrink-0 cursor-pointer hover:shadow-lg transition-shadow"-->
+<!--            @click="applyHistory(idx)"-->
+<!--        >-->
+<!--          <button-->
+<!--              class="absolute top-2 right-2 btn btn-xs btn-ghost z-10"-->
+<!--              @click.stop="removeHistory(idx)"-->
+<!--              aria-label="Supprimer cette recherche"-->
+<!--          >-->
+<!--            <X class="w-4 h-4" />-->
+<!--          </button>-->
+<!--          <div class="font-bold text-base mb-1 truncate">-->
+<!--            {{ filterTitle(h) }}-->
+<!--          </div>-->
+<!--          <div class="text-xs text-base-content/70 mb-2">Critères</div>-->
+<!--          <div class="flex items-center gap-1 text-xs text-base-content/80">-->
+<!--            <span>-->
+<!--              {{ getFilterCriteria(h) }}-->
+<!--            </span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
     <div>
       <!-- Conteneur principal des filtres -->
       <div class="w-full">
@@ -275,19 +275,18 @@
       <!-- Drawer Filtres Avancés Global -->
       <AdvancedFilters
           :show-advanced-filters="showAdvancedFilters"
-          :filters="filters"
+          :filters="tempAdvancedFilters"
           @apply-filters="applyFiltersAdvanced"
           @reset-filters="resetFilters"
           @close-filters="closeAdvancedFilters"
       />
     </div>
   </div>
-
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, defineEmits, watch } from 'vue'
-import { Map, SortAsc, ChevronRight, SlidersHorizontal, X, MapPin } from 'lucide-vue-next';
+import { Map, SortAsc, ChevronRight, SlidersHorizontal } from 'lucide-vue-next';
 import type {Announcement} from "~/common/interface/event.interface";
 import type {FilterAnnouncement, AnnouncementStatus, SortOption} from "~/common/interface/filter.interface";
 import {useUserLocation} from "~/composables/useUserLocation";
@@ -306,7 +305,6 @@ const emit = defineEmits<{
   (e: 'map'): void;
 }>()
 
-// Map related
 const showMap = ref(false)
 
 const locations = computed(() => {
@@ -333,12 +331,36 @@ const showAdvancedFilters = ref(false)
 const selectedTags = ref<string[]>([])
 const selectedTypes = ref<string[]>([])
 const userLocation = useUserLocation()
+const announcement = useAnnouncement()
 
 const searchTimeout = ref<NodeJS.Timeout | null>(null)
 const userCurrentLocation = ref<any>(null)
 const currentLatitude = ref<number | undefined>(undefined)
 const currentLongitude = ref<number | undefined>(undefined)
 const resetLocation = ref(false)
+
+
+let currentFilterSearch = ref<FilterAnnouncement>();
+
+watch(
+    () => announcement.getCurrentFilter.value,
+    async (newFilter) => {
+      currentFilterSearch.value = {
+        ...newFilter,
+      };
+    }
+)
+
+// Filtres avancés temporaires (non encore appliqués)
+const tempAdvancedFilters = ref<Partial<FilterAnnouncement>>({
+  dateEventFrom: undefined,
+  dateEventTo: undefined,
+  hoursEventFrom: undefined,
+  hoursEventTo: undefined,
+  datePublicationFrom: undefined,
+  datePublicationTo: undefined,
+  publicationInterval: undefined
+})
 
 const initLocation = async () => {
   try {
@@ -396,8 +418,19 @@ const filters = ref<FilterAnnouncement>({
   sort: undefined
 })
 
+watch(filters, (newFilters) => {
+  tempAdvancedFilters.value = {
+    dateEventFrom: newFilters.dateEventFrom,
+    dateEventTo: newFilters.dateEventTo,
+    hoursEventFrom: newFilters.hoursEventFrom,
+    hoursEventTo: newFilters.hoursEventTo,
+    datePublicationFrom: newFilters.datePublicationFrom,
+    datePublicationTo: newFilters.datePublicationTo,
+    publicationInterval: newFilters.publicationInterval
+  }
+}, { deep: true, immediate: true })
 
-// Computed properties
+
 const hasActiveFilters = computed(() => {
   return filters.value.status ||
       filters.value.sort ||
@@ -426,7 +459,6 @@ const hasAdvancedFilters = computed(() => {
 const showLocationDropdown = ref(false)
 
 
-// Methods
 const toggleMap = () => {
   showMap.value = !showMap.value
   emit('map')
@@ -457,7 +489,6 @@ function onFilterUpdate(newFilters: FilterAnnouncement) {
 }
 
 const updateFilters = () => {
-  // Combine tags and types for the API
   const allTags = [...selectedTags.value, ...selectedTypes.value]
   filters.value.tags = allTags.length > 0 ? allTags : undefined
   applyFilters()
@@ -477,7 +508,6 @@ const closeAdvancedFilters = () => {
   showAdvancedFilters.value = false
 }
 
-// Remove filter methods
 const removeStatus = () => {
   filters.value.status = undefined
   applyFilters()
@@ -547,6 +577,17 @@ const resetFilters = () => {
   }
   selectedTags.value = []
   selectedTypes.value = []
+  
+  tempAdvancedFilters.value = {
+    dateEventFrom: undefined,
+    dateEventTo: undefined,
+    hoursEventFrom: undefined,
+    hoursEventTo: undefined,
+    datePublicationFrom: undefined,
+    datePublicationTo: undefined,
+    publicationInterval: undefined
+  }
+  
   resetLocation.value = true
   applyFilters()
 }
@@ -559,6 +600,16 @@ const applyFiltersAdvanced = (filtersAdvanced: Partial<FilterAnnouncement>) => {
   filters.value.datePublicationFrom = filtersAdvanced.datePublicationFrom || filters.value.datePublicationFrom
   filters.value.datePublicationTo = filtersAdvanced.datePublicationTo || filters.value.datePublicationTo
   filters.value.publicationInterval = filtersAdvanced.publicationInterval || filters.value.publicationInterval
+
+  tempAdvancedFilters.value = {
+    dateEventFrom: undefined,
+    dateEventTo: undefined,
+    hoursEventFrom: undefined,
+    hoursEventTo: undefined,
+    datePublicationFrom: undefined,
+    datePublicationTo: undefined,
+    publicationInterval: undefined
+  }
 
   applyFilters();
 }
@@ -587,14 +638,11 @@ const handleClickOutside = (event: Event) => {
   }
 }
 
-// Historique des filtres
 const filterHistory = ref<FilterAnnouncement[]>([])
 const showHistory = ref(true)
 const FILTER_HISTORY_KEY = 'filterHistory';
 
-// Sauvegarde dans localStorage à chaque modification de filters
 watch(filters, (newFilters) => {
-  // Ne pas ajouter les filtres vides ou uniquement localisation
   const filterWithoutLocation = {
     ...newFilters,
     latitude: undefined,
@@ -611,7 +659,6 @@ watch(filters, (newFilters) => {
 
   if (isEmpty) return;
   
-  // Compter le nombre d'éléments de critères
   let criteriaCount = 0;
   if (filterWithoutLocation.status) criteriaCount++;
   if (filterWithoutLocation.sort) criteriaCount++;
@@ -628,11 +675,9 @@ watch(filters, (newFilters) => {
     history = JSON.parse(localStorage.getItem(FILTER_HISTORY_KEY) || '[]')
   } catch {}
   
-  // Vérifier si le nouveau filtre diffère suffisamment des filtres existants
   const isDifferentEnough = history.every(existingFilter => {
     let differences = 0;
     
-    // Comparer chaque critère
     if (filterWithoutLocation.status !== existingFilter.status) differences++;
     if (filterWithoutLocation.sort !== existingFilter.sort) differences++;
     if (JSON.stringify(filterWithoutLocation.tags) !== JSON.stringify(existingFilter.tags)) differences++;
@@ -644,19 +689,22 @@ watch(filters, (newFilters) => {
     if (filterWithoutLocation.datePublicationTo !== existingFilter.datePublicationTo) differences++;
     if (filterWithoutLocation.publicationInterval !== existingFilter.publicationInterval) differences++;
     
-    // Retourner true si au moins 3 différences
     return differences >= 3;
   });
   
-  // Ne sauvegarder que si le filtre est suffisamment différent
   if (!isDifferentEnough) return;
+  if(currentFilterSearch.value){
+    filterWithoutLocation.nameEvent = currentFilterSearch.value?.nameEvent
+    filterWithoutLocation.description = currentFilterSearch.value?.description;
+    filterWithoutLocation.associationName = currentFilterSearch.value?.associationName
+  }
+  
   const newHistory = [filterWithoutLocation, ...history.filter(h => JSON.stringify(h) !== JSON.stringify(filterWithoutLocation))]
 
   filterHistory.value = newHistory.slice(0, 3)
   localStorage.setItem(FILTER_HISTORY_KEY, JSON.stringify(filterHistory.value))
 }, { deep: true })
 
-// Chargement au montage
 onMounted(async () => {
   await initLocation()
   document.addEventListener('click', handleClickOutside)
@@ -664,7 +712,6 @@ onMounted(async () => {
   try {
     history = JSON.parse(localStorage.getItem(FILTER_HISTORY_KEY) || '[]')
   } catch {}
-  // Filtrer l'historique pour ne garder que les filtres qui ne sont pas uniquement localisation
   history = history.filter(h => {
     const isOnlyLocation = (
         !!h.latitude && !!h.longitude &&
@@ -683,12 +730,9 @@ function applyHistory(idx: number) {
   if (filterHistory.value[idx]) {
     const selectedFilter = filterHistory.value[idx];
 
-    // Appliquer le filtre sélectionné
     filters.value = { ...selectedFilter };
 
-    // Mettre à jour les filtres locaux pour refléter le filtre appliqué
     if (selectedFilter.tags && selectedFilter.tags.length > 0) {
-      // Séparer les tags et types (supposons que les types sont dans availableTypes)
       const tags = selectedFilter.tags.filter(tag => availableTags.value.includes(tag));
       const types = selectedFilter.tags.filter(type => availableTypes.value.includes(type));
       selectedTags.value = tags;
@@ -698,7 +742,6 @@ function applyHistory(idx: number) {
       selectedTypes.value = [];
     }
 
-    // Supprimer l'historique et le localStorage
     filterHistory.value = [];
     showHistory.value = false;
     localStorage.removeItem(FILTER_HISTORY_KEY);
@@ -753,7 +796,6 @@ function getFilterCriteria(filter: FilterAnnouncement) {
     criteria.push(`${filter.radius} km`);
   }
 
-  // Retourner seulement les 2 premiers critères
   return criteria.slice(0, 2).join(' • ');
 }
 
@@ -772,7 +814,6 @@ onUnmounted(() => {
   display: none;
 }
 
-/* Animation pour les boutons actifs */
 .btn {
   transition: all 0.2s ease-in-out;
 }

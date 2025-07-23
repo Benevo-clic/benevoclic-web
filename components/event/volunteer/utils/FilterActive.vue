@@ -6,7 +6,7 @@ import type {
   PublicationInterval,
   SortOption
 } from "~/common/interface/filter.interface";
-import {computed, ref} from "vue";
+import {watch, ref} from "vue";
 
 
 
@@ -33,26 +33,6 @@ const props = defineProps<{
   hasActiveFilters: boolean
 }>()
 
-watch(props, {
-  filters: (newFilters) => {
-    console.log('Updating filters:', newFilters.filters);
-    filters.value = {
-      status: newFilters.filters.status,
-      hoursEventFrom: newFilters.filters.hoursEventFrom,
-      hoursEventTo: newFilters.filters.hoursEventTo,
-      dateEventFrom: newFilters.filters.dateEventFrom,
-      dateEventTo: newFilters.filters.dateEventTo,
-      publicationInterval: newFilters.filters.publicationInterval,
-      datePublicationFrom: newFilters.filters.datePublicationFrom,
-      datePublicationTo: newFilters.filters.datePublicationTo,
-      tags: newFilters.filters.tags || [],
-      radius: newFilters.filters.radius || 0,
-      page: newFilters.filters.page || 1,
-      limit: newFilters.filters.limit || 9,
-      sort: newFilters.filters.sort
-    }
-  }
-})
 let filters = ref<FilterAnnouncement>({
   status: props.filters.status,
   hoursEventFrom: props.filters.hoursEventFrom,
@@ -69,7 +49,24 @@ let filters = ref<FilterAnnouncement>({
   sort: props.filters.sort
 })
 
-// Computed properties
+watch(props, (newFilters: any) => {
+    filters.value = {
+      status: newFilters.filters.status,
+      hoursEventFrom: newFilters.filters.hoursEventFrom,
+      hoursEventTo: newFilters.filters.hoursEventTo,
+      dateEventFrom: newFilters.filters.dateEventFrom,
+      dateEventTo: newFilters.filters.dateEventTo,
+      publicationInterval: newFilters.filters.publicationInterval,
+      datePublicationFrom: newFilters.filters.datePublicationFrom,
+      datePublicationTo: newFilters.filters.datePublicationTo,
+      tags: newFilters.filters.tags || [],
+      radius: newFilters.filters.radius || 0,
+      page: newFilters.filters.page || 1,
+      limit: newFilters.filters.limit || 9,
+      sort: newFilters.filters.sort
+    }
+  }, { deep: true, immediate: true })
+
 
 const emit = defineEmits<{
   (event: 'status'): void
@@ -127,12 +124,12 @@ const removeSort = () => {
 }
 
 const removeTag = (tag: string) => {
-  selectedTags.value = props.selectedTags.value.filter(t => t !== tag)
+  selectedTags.value = props.selectedTags.filter(t => t !== tag)
   emit('selectedTags', tag)
 }
 
 const removeType = (type: string) => {
-  selectedTypes.value = props.selectedTypes.value.filter(t => t !== type)
+  selectedTypes.value = props.selectedTypes.filter(t => t !== type)
   emit('selectedTypes', type)
 }
 

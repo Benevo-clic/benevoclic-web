@@ -1,8 +1,7 @@
 name: Deploy to DockerHub
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build-and-deploy-to-dockerhub:
@@ -26,6 +25,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-api:latest
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-api:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-api:buildcache,mode=max
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-web:latest
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-web:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-web:buildcache,mode=max

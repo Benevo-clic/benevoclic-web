@@ -82,12 +82,12 @@ const currentFilters = ref<FilterAnnouncement>({
   limit: pageSize
 });
 
-let currentFilter = ref<FilterAnnouncement>();
+let currentFilterSearch = ref<FilterAnnouncement>();
 
 watch(
   () => announcement.getCurrentFilter.value,
   async (newFilter) => {
-    currentFilter.value = {
+    currentFilterSearch.value = {
       ...newFilter,
     };
     await fetchAnnouncements(1);
@@ -99,11 +99,11 @@ async function fetchAnnouncements(page = 1) {
   try {
     // 1) Construis tes filtres de façon déclarative
     const base = { page, limit: pageSize };
-    const overrides = currentFilter.value
+    const overrides = currentFilterSearch.value
         ? {
-          associationName: currentFilter.value.associationName,
-          nameEvent:       currentFilter.value.nameEvent,
-          description:     currentFilter.value.description,
+          associationName: currentFilterSearch.value.associationName,
+          nameEvent:       currentFilterSearch.value.nameEvent,
+          description:     currentFilterSearch.value.description,
         }
         : {};
     const filters = {
