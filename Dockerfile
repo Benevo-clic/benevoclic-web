@@ -8,9 +8,6 @@ RUN npm install --ignore-scripts
 
 COPY . .
 
-# Copie le fichier .env pour le build (si besoin d'accès aux variables à la build)
-COPY .env .env
-
 RUN npm run build
 
 # Étape 2 : Production image
