@@ -1,34 +1,71 @@
-# --- 1) Builder : compile l’app avec tes secrets ---
+# === Builder ===
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# 1.1 Copier ton fichier d’env prod et le renommer en .env
-COPY .env.production .env
+# 1) Déclare tous les secrets en build-args
+ARG NUXT_API_BASE_URL
+ARG API_BASE_URL
+ARG API_SIRENE_URL
+ARG API_KEY
+ARG API_SIRENE_KEY
+ARG STORAGE_BUCKET
+ARG MESSAGING_SENDER_ID
+ARG APP_ID
+ARG MEASUREMENT_ID
+ARG PORT
+ARG NODE_ENV
+ARG API_TIMEOUT
+ARG API_RETRY_COUNT
+ARG GOOGLE_CALLBACK_URL
+ARG FIREBASE_API_KEY
+ARG FIREBASE_AUTH_DOMAIN
+ARG FIREBASE_PROJECT_ID
+ARG FIREBASE_STORAGE_BUCKET
+ARG FIREBASE_MESSAGING_SENDER_ID
+ARG FIREBASE_APP_ID
+ARG FIREBASE_MEASUREMENT_ID
 
-# 1.2 Désactiver package-lock (optionnel)
+# 2) Expose-les en ENV pour le build Nuxt
+ENV NUXT_API_BASE_URL=$NUXT_API_BASE_URL \
+    API_BASE_URL=$API_BASE_URL \
+    API_SIRENE_URL=$API_SIRENE_URL \
+    API_KEY=$API_KEY \
+    API_SIRENE_KEY=$API_SIRENE_KEY \
+    STORAGE_BUCKET=$STORAGE_BUCKET \
+    MESSAGING_SENDER_ID=$MESSAGING_SENDER_ID \
+    APP_ID=$APP_ID \
+    MEASUREMENT_ID=$MEASUREMENT_ID \
+    PORT=$PORT \
+    NODE_ENV=$NODE_ENV \
+    API_TIMEOUT=$API_TIMEOUT \
+    API_RETRY_COUNT=$API_RETRY_COUNT \
+    GOOGLE_CALLBACK_URL=$GOOGLE_CALLBACK_URL \
+    FIREBASE_API_KEY=$FIREBASE_API_KEY \
+    FIREBASE_AUTH_DOMAIN=$FIREBASE_AUTH_DOMAIN \
+    FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID \
+    FIREBASE_STORAGE_BUCKET=$FIREBASE_STORAGE_BUCKET \
+    FIREBASE_MESSAGING_SENDER_ID=$FIREBASE_MESSAGING_SENDER_ID \
+    FIREBASE_APP_ID=$FIREBASE_APP_ID \
+    FIREBASE_MEASUREMENT_ID=$FIREBASE_MEASUREMENT_ID
+
+# 3) Désactive package-lock pour rester cohérent
 RUN npm config set package-lock false
 
-# 1.3 Installer les dépendances
-COPY package.json package-lock.json* ./
+# 4) Installe les dépendances
+COPY package.json ./
 RUN npm install
 
-# 1.4 Copier tout le code (incluant .env)
+# 5) Copie le code et build
 COPY . .
-
-# 1.5 Lancer le build : à ce moment, Nuxt lit process.env.* et génère un .output complet
 RUN npm run build
 
-# --- 2) Runner : image finale légère sans secrets texte ---
+# === Runner ===
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Récupérer uniquement le build
 COPY --from=builder /app/.output ./
 
-# Mettre NODE_ENV en prod
 ENV NODE_ENV=production
-# Par défaut Nuxt écoute sur 5482
 EXPOSE 5482
 
-# Démarrer l’app
 CMD ["node", "server/index.mjs"]

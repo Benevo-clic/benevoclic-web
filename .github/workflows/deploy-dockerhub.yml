@@ -28,3 +28,25 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-web:latest
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-web:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-web:buildcache,mode=max
+          build-args: |
+            NUXT_API_BASE_URL=${{ secrets.NUXT_API_BASE_URL }}
+            API_BASE_URL=${{ secrets.API_BASE_URL }}
+            API_SIRENE_URL=${{ secrets.API_SIRENE_URL }}
+            API_KEY=${{ secrets.API_KEY }}
+            API_SIRENE_KEY=${{ secrets.API_SIRENE_KEY }}
+            STORAGE_BUCKET=${{ secrets.STORAGE_BUCKET }}
+            MESSAGING_SENDER_ID=${{ secrets.MESSAGING_SENDER_ID }}
+            APP_ID=${{ secrets.APP_ID }}
+            MEASUREMENT_ID=${{ secrets.MEASUREMENT_ID }}
+            PORT=${{ secrets.PORT }}
+            NODE_ENV=production
+            API_TIMEOUT=${{ secrets.API_TIMEOUT }}
+            API_RETRY_COUNT=${{ secrets.API_RETRY_COUNT }}
+            GOOGLE_CALLBACK_URL=${{ secrets.GOOGLE_CALLBACK_URL }}
+            FIREBASE_API_KEY=${{ secrets.FIREBASE_API_KEY }}
+            FIREBASE_AUTH_DOMAIN=${{ secrets.FIREBASE_AUTH_DOMAIN }}
+            FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}
+            FIREBASE_STORAGE_BUCKET=${{ secrets.FIREBASE_STORAGE_BUCKET }}
+            FIREBASE_MESSAGING_SENDER_ID=${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+            FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}
+            FIREBASE_MEASUREMENT_ID=${{ secrets.FIREBASE_MEASUREMENT_ID }}
