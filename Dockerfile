@@ -1,33 +1,34 @@
-# === builder ===
+# --- 1) Builder : compile l’app avec tes secrets ---
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Copier et renommer .env.production ➔ .env pour le build
+# 1.1 Copier ton fichier d’env prod et le renommer en .env
 COPY .env.production .env
 
-# Désactive package-lock
+# 1.2 Désactiver package-lock (optionnel)
 RUN npm config set package-lock false
 
-# Dépendances
-COPY package.json ./
+# 1.3 Installer les dépendances
+COPY package.json package-lock.json* ./
 RUN npm install
 
-# Tout le code (incluant .env)
+# 1.4 Copier tout le code (incluant .env)
 COPY . .
 
-# Build Nuxt (utilise les vars de .env)
+# 1.5 Lancer le build : à ce moment, Nuxt lit process.env.* et génère un .output complet
 RUN npm run build
 
-# === runtime ===
+# --- 2) Runner : image finale légère sans secrets texte ---
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Ne récupérer que le build
+# Récupérer uniquement le build
 COPY --from=builder /app/.output ./
 
-# On indique au conteneur de s'appuyer sur le même fichier de prod
-# (optionnel si tu préfères monter en runtime)
+# Mettre NODE_ENV en prod
 ENV NODE_ENV=production
+# Par défaut Nuxt écoute sur 5482
 EXPOSE 5482
 
+# Démarrer l’app
 CMD ["node", "server/index.mjs"]
