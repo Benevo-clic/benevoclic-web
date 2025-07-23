@@ -1,40 +1,20 @@
 // ~/plugins/firebase.client.ts
-import { defineNuxtPlugin, useRuntimeConfig } from '#app'      // ← on importe useRuntimeConfig
+import { defineNuxtPlugin, useRuntimeConfig } from '#app'
 import { initializeApp } from 'firebase/app'
 import { getAuth, GoogleAuthProvider, browserPopupRedirectResolver } from 'firebase/auth'
-import type { Auth } from 'firebase/auth'
-
-interface FirebasePlugin {
-  auth: Auth | null
-  provider: GoogleAuthProvider | null
-  resolver: typeof browserPopupRedirectResolver | null
-}
 
 export default defineNuxtPlugin(() => {
-  try {
-    const config = useRuntimeConfig().public.firebaseConfig
+  const cfg = useRuntimeConfig().public.firebaseConfig
 
-    console.log('🔑 Firebase API Key (client):', config.apiKey)
+  console.log('🔑 Firebase API Key (client):', cfg.apiKey)
 
-    const app = initializeApp(config)
-    const auth = getAuth(app)
-    const provider = new GoogleAuthProvider()
+  const app = initializeApp(cfg)
+  const auth = getAuth(app)
+  const provider = new GoogleAuthProvider()
 
-    return {
-      provide: {
-        firebase: {
-          auth,
-          provider,
-          resolver: browserPopupRedirectResolver,
-        } as FirebasePlugin,
-      },
-    }
-  } catch (error) {
-    console.error('Erreur d’initialisation de Firebase', error)
-    return {
-      provide: {
-        firebase: { auth: null, provider: null, resolver: null } as FirebasePlugin,
-      },
+  return {
+    provide: {
+      firebase: { auth, provider, resolver: browserPopupRedirectResolver }
     }
   }
 })
