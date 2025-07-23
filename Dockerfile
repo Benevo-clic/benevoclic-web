@@ -5,16 +5,7 @@ WORKDIR /app
 # 1) Copier package.json et lockfile
 COPY package*.json ./
 
-# 2) Forcer le registry npmjs.org
-#    - via variable d’env :
-ENV NPM_CONFIG_REGISTRY=https://registry.npmjs.org/
-
-# 3) Installer (avec retries si vous le souhaitez)
-RUN npm ci \
-  --registry=https://registry.npmjs.org/ \
-  --fetch-retries=5 \
-  --fetch-retry-mintimeout=20000 \
-  --fetch-retry-maxtimeout=120000
+RUN npm ci
 
 # 4) Copier tout le code et builder Nuxt
 COPY . .
