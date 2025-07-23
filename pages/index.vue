@@ -46,12 +46,12 @@
         </div>
       </div>
     </main>
-    <ErrorPopup
-        :show-error-modal="showErrorModal"
-        :error-type="errorType"
-        @reload="handleReload"
-        @goHome="handleGoHome"
-    />
+<!--    <ErrorPopup-->
+<!--        :show-error-modal="showErrorModal"-->
+<!--        :error-type="errorType"-->
+<!--        @reload="handleReload"-->
+<!--        @goHome="handleGoHome"-->
+<!--    />-->
   </div>
 </template>
 <script setup lang="ts">

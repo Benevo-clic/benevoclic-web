@@ -47,6 +47,11 @@ export default defineNuxtConfig({
   plugins: [
     { src: '~/plugins/maplibre.client.ts', mode: 'client' }
   ],
+  build: {
+    transpile: [
+      'defu',
+    ],
+  },
 
   compatibilityDate: '2025-02-23',
 
