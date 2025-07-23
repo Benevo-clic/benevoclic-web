@@ -2,8 +2,9 @@
 node_modules
 npm-debug.log
 
-# Dossiers de build / dist
+# Dossiers de build intermédiaire
 dist
+.output
 
 # Git
 .git
@@ -14,9 +15,12 @@ Dockerfile
 README.md
 *.md
 
-# Eviter d’inclure le lock (inutile si on désactive package-lock)
-package-lock.json
-
-# Ignorer .env mais le réinclus ensuite pour le builder
+# On ignore tous les .env par défaut…
 .env
-!.env
+.env.*
+
+# …sauf .env.production, nécessaire au build
+!.env.production
+
+# Pas de lock (on désactive dans le Dockerfile)
+package-lock.json

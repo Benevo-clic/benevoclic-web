@@ -2,28 +2,32 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# On veut injecter tes vars avant le build
-COPY .env .env
+# Copier et renommer .env.production ➔ .env pour le build
+COPY .env.production .env
 
 # Désactive package-lock
 RUN npm config set package-lock false
 
-# Installe tes dépendances
+# Dépendances
 COPY package.json ./
 RUN npm install
 
-# Copie tout le code (et .env, qui était ignoré par défaut)
+# Tout le code (incluant .env)
 COPY . .
 
-# Build Nuxt avec tes vraies clés
+# Build Nuxt (utilise les vars de .env)
 RUN npm run build
 
 # === runtime ===
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# On ne récupère que la sortie du builder
+# Ne récupérer que le build
 COPY --from=builder /app/.output ./
 
+# On indique au conteneur de s'appuyer sur le même fichier de prod
+# (optionnel si tu préfères monter en runtime)
+ENV NODE_ENV=production
 EXPOSE 5482
+
 CMD ["node", "server/index.mjs"]
