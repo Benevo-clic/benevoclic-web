@@ -64,9 +64,7 @@ function handleHome() {
 </script>
 
 <template>
-  <!-- VOLUNTEER layout with search bar -->
   <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-    <!-- Search bar à gauche -->
     <div class="w-full md:max-w-2xl lg:max-w-3xl flex-1">
       <div class="relative">
         <div class="flex">
@@ -87,7 +85,6 @@ function handleHome() {
       </div>
     </div>
 
-    <!-- Volunteer buttons -->
     <div class="w-full md:w-auto flex justify-center md:justify-end flex-wrap text-base-content">
       <button class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1" @click="handleHome">
         <HomeIcon class="w-6 h-6"  /> {{t('header.volunteer.home')}}
@@ -103,8 +100,7 @@ function handleHome() {
           <ClockIcon class="w-6 h-6" /> {{t('header.volunteer.recent-search')}}
         </button>
 
-        <!-- Recent searches dropdown -->
-        <div 
+        <div
           v-if="showRecentSearches" 
           class="absolute right-0 mt-2 w-64 bg-base-100 shadow-lg rounded-lg z-10 p-2"
         >

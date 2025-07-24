@@ -46,12 +46,6 @@
         </div>
       </div>
     </main>
-<!--    <ErrorPopup-->
-<!--        :show-error-modal="showErrorModal"-->
-<!--        :error-type="errorType"-->
-<!--        @reload="handleReload"-->
-<!--        @goHome="handleGoHome"-->
-<!--    />-->
   </div>
 </template>
 <script setup lang="ts">
@@ -69,14 +63,10 @@ definePageMeta({
 })
 
 const announcement = useAnnouncement();
-const { user , initializeUser} = useUser()
-const {navigateToRoute} = useNavigation()
 
 const announcements = ref<any[]>([]);
 const loading = ref(false);
 const error = computed(() => announcement.error);
-const showErrorModal = ref(false);
-const errorType = ref<'4xx' | '5xx' | null>(null);
 const currentPage = ref(1);
 const pageSize = 9;
 const totalAnnouncements = ref(0);
@@ -97,18 +87,9 @@ watch(
     }
 )
 
-function handleReload() {
-  window.location.reload();
-}
-
-async function handleGoHome() {
-  await navigateToRoute('/');
-}
-
 async function fetchAnnouncements(page = 1) {
   loading.value = true;
   try {
-    // 1) Construis tes filtres de façon déclarative
     const base = { page, limit: pageSize };
     const overrides = currentFilterSearch.value
         ? {
@@ -133,7 +114,7 @@ async function fetchAnnouncements(page = 1) {
     announcements.value      = annonces;
     totalAnnouncements.value = total;
   } catch (error) {
-    handleError(error);
+    announcements.value = [];
     return;
   } finally {
     loading.value = false;
@@ -169,27 +150,7 @@ async function handleTypeFilter(type: string) {
   await fetchAnnouncements(1);
 }
 
-onMounted(async () => {
-  await fetchAnnouncements(1);
-});
-
-
-
-
-function handleError(error: any) {
-  if (error?.response?.status >= 500 && error?.response?.status < 600) {
-    errorType.value = '5xx';
-    showErrorModal.value = true;
-  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
-    errorType.value = '4xx';
-    showErrorModal.value = true;
-  } else {
-    console.error('Erreur inattendue:', error);
-  }
-}
-
 </script>
 
 <style scoped>
-
 </style>

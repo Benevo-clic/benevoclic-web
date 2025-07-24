@@ -1,6 +1,5 @@
 <template>
     <div class="mx-auto px-4 py-6 max-w-screen-2xl w-full">
-      <!-- Section filtres -->
       <client-only>
         <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
           <div class="flex flex-col items-center w-full">
@@ -23,7 +22,6 @@
                 :loading="loading"
             />
         </div>
-      <!-- Pagination DaisyUI -->
       <div class="flex justify-center mt-6" v-if="totalPages > 1">
         <div class="join">
           <button
@@ -41,12 +39,6 @@
           >»</button>
         </div>
       </div>
-<!--      <ErrorPopup-->
-<!--          :show-error-modal="showErrorModal"-->
-<!--          :error-type="errorType"-->
-<!--          @reload="handleReload"-->
-<!--          @goHome="handleGoHome"-->
-<!--      />-->
     </div>
 </template>
 
@@ -56,7 +48,6 @@ import {onMounted, computed, ref} from 'vue';
 import VolunteerEventFilters from '~/components/event/volunteer/VolunteerEventFilters.vue';
 import VolunteerAnnouncementList from "~/components/event/volunteer/VolunteerAnnouncementList.vue";
 import {useUser} from "~/composables/auth/useUser";
-import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 import type {FilterAnnouncement} from "~/common/interface/filter.interface";
 
 definePageMeta({
@@ -67,13 +58,10 @@ definePageMeta({
 const announcement = useAnnouncement();
 const useFavorite = useFavoritesAnnouncement();
 const { user , initializeUser} = useUser()
-const {navigateToRoute} = useNavigation()
 
 const announcements = ref<any[]>([]);
 const loading = ref(false);
 const error = computed(() => announcement.error);
-const showErrorModal = ref(false);
-const errorType = ref<'4xx' | '5xx' | null>(null);
 const currentPage = ref(1);
 const pageSize = 9;
 const totalAnnouncements = ref(0);
@@ -97,7 +85,6 @@ watch(
 async function fetchAnnouncements(page = 1) {
   loading.value = true;
   try {
-    // 1) Construis tes filtres de façon déclarative
     const base = { page, limit: pageSize };
     const overrides = currentFilterSearch.value
         ? {
@@ -122,7 +109,6 @@ async function fetchAnnouncements(page = 1) {
     announcements.value      = annonces;
     totalAnnouncements.value = total;
   } catch (error) {
-    handleError(error);
     return;
   } finally {
     loading.value = false;
@@ -160,16 +146,7 @@ async function handleTypeFilter(type: string) {
 
 onMounted(async () => {
   await initData();
-  await fetchAnnouncements(1);
 });
-
-function handleReload() {
-  window.location.reload();
-}
-
-async function handleGoHome() {
-  await navigateToRoute('/');
-}
 
 async function initData() {
   try {
@@ -178,20 +155,7 @@ async function initData() {
       await useFavorite.fetchAllFavoritesOfVolunteer(user.value.userId);
     }
   } catch (error) {
-    handleError(error);
     return;
-  }
-}
-
-function handleError(error: any) {
-  if (error?.response?.status >= 500 && error?.response?.status < 600) {
-    errorType.value = '5xx';
-    showErrorModal.value = true;
-  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
-    errorType.value = '4xx';
-    showErrorModal.value = true;
-  } else {
-    console.error('Erreur inattendue:', error);
   }
 }
 </script>

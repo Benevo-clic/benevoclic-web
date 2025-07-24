@@ -1,28 +1,33 @@
 <template>
-  <div class="flex flex-col min-h-screen bg-base-200">
-    <Header :options-open="true"/>
-    <div class="flex flex-1">
-      <div class="hidden md:block w-64 bg-base-100 shadow-lg pt-4">
-        <DrawerAppContentVolunteer
-          :is-authenticated="!isAuthenticated"
-          :menu-open="true"
-          :display-profile="false"
-          class="h-full"
-          v-if="userRole === 'VOLUNTEER'"
-        />
-        <DrawerAppContentAssociation
-          :is-authenticated="!isAuthenticated"
-          :menu-open="true"
-          :display-profile="false"
-          class="h-full"
-          v-else-if="userRole === 'ASSOCIATION'"
-        />
-      </div>
+  <div class="app">
+    <div v-if="isLoading" class="flex justify-center items-center h-32">
+      <span class="loading loading-bars loading-xl"></span>
+    </div>
+    <div v-else class="flex flex-col min-h-screen bg-base-200">
+      <Header :options-open="true"/>
+      <div class="flex flex-1">
+        <div class="hidden md:block w-64 bg-base-100 shadow-lg pt-4">
+          <DrawerAppContentVolunteer
+              :is-authenticated="!isAuthenticated"
+              :menu-open="true"
+              :display-profile="false"
+              class="h-full"
+              v-if="userRole === 'VOLUNTEER'"
+          />
+          <DrawerAppContentAssociation
+              :is-authenticated="!isAuthenticated"
+              :menu-open="true"
+              :display-profile="false"
+              class="h-full"
+              v-else-if="userRole === 'ASSOCIATION'"
+          />
+        </div>
 
-      <!-- Main content -->
-      <main class="flex-1 p-1 overflow-auto max-h-[calc(100vh-4rem)]">
-        <slot />
-      </main>
+        <!-- Main content -->
+        <main class="flex-1 p-1 overflow-auto max-h-[calc(100vh-4rem)]">
+          <slot />
+        </main>
+      </div>
     </div>
   </div>
 </template>
@@ -30,16 +35,17 @@
 <script setup>
 import { useUser } from '~/composables/auth/useUser'
 import Header from '~/components/header/Header.vue'
-import {onMounted} from 'vue'
+import {onMounted, ref} from 'vue'
 import DrawerAppContentVolunteer from '~/components/header/drawer/components/volunteer/DrawerAppContentVolunteer.vue'
 import DrawerAppContentAssociation
   from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
 
 const { isAuthenticated, userRole , initializeUser } = useUser()
+const isLoading = ref(true)
 
 onMounted(async () => {
-  // Initialize user data if needed
-  await initializeUser();
+  await initializeUser()
+  isLoading.value = false
 })
 
 </script>

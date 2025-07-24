@@ -1,41 +1,44 @@
 <template>
-  <div class="mx-auto px-4 py-6 max-w-screen-2xl w-full">
+  <div v-if="!isReady" class="flex justify-center items-center h-32">
+    <span class="loading loading-bars loading-xl"></span>
+  </div>
+  <div v-else class="mx-auto px-4 py-6 max-w-screen-2xl w-full">
+    <!-- Filtres -->
     <div class="container mx-auto px-4 w-full">
       <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
         <div class="flex flex-col items-center w-full">
-          <VolunteerEventFavoritesFilters class="mb-4"
-                                 @map="() => {}"
-                                 @sort="() => {}"
-                                 @location="() => {}"
-                                 @type="() => {}"
-                                 @duration="() => {}"
-                                 @filters="() => {}"
+          <VolunteerEventFavoritesFilters
+              class="mb-4"
+              @filter="handleFilter"
           />
         </div>
       </div>
     </div>
+
+    <!-- Liste + pagination -->
     <div class="container mx-auto px-4 py-4">
       <div class="bg-base-100 rounded-lg shadow-md p-6">
         <VolunteerAnnouncementFavoritesList
-            :announcementFavorites="paginatedAnnouncementFavorites"
+            :announcementFavorites="paginatedFavorites"
             :error="error.value"
             :loading="loading.value"
         />
+
         <!-- Pagination DaisyUI -->
         <div class="flex justify-center mt-6">
           <div class="join">
             <button
-              class="join-item btn"
-              :disabled="currentPage === 1"
-              @click="goToPage(currentPage - 1)"
+                class="join-item btn"
+                :disabled="currentPage === 1"
+                @click="goToPage(currentPage - 1)"
             >«</button>
             <button class="join-item btn" disabled>
               Page {{ currentPage }} / {{ totalPages }}
             </button>
             <button
-              class="join-item btn"
-              :disabled="currentPage === totalPages"
-              @click="goToPage(currentPage + 1)"
+                class="join-item btn"
+                :disabled="currentPage === totalPages"
+                @click="goToPage(currentPage + 1)"
             >»</button>
           </div>
         </div>
@@ -45,61 +48,101 @@
 </template>
 
 <script setup lang="ts">
-import {definePageMeta, useAnnouncement, useFavoritesAnnouncement} from "#imports";
-import { onMounted, computed, ref } from 'vue';
-import {useUser} from "~/composables/auth/useUser";
-import VolunteerEventFavoritesFilters from "~/components/event/volunteer/VolunteerEventFavoritesFilters.vue";
-import VolunteerAnnouncementFavoritesList from "~/components/event/volunteer/VolunteerAnnouncementFavoritesList.vue";
-import type {Announcement} from "~/common/interface/event.interface";
+import { definePageMeta } from '#imports'
+import { onMounted, ref, computed } from 'vue'
+import { useAnnouncement, useFavoritesAnnouncement } from '#imports'
+import { useUser } from '~/composables/auth/useUser'
+import VolunteerEventFavoritesFilters from '~/components/event/volunteer/VolunteerEventFavoritesFilters.vue'
+import VolunteerAnnouncementFavoritesList from '~/components/event/volunteer/VolunteerAnnouncementFavoritesList.vue'
+import type { Announcement } from '~/common/interface/event.interface'
+import type {FilterAnnouncement} from "~/common/interface/filter.interface";
 
 definePageMeta({
   middleware: ['auth'],
   layout: 'header'
 })
 
-const announcement = useAnnouncement();
-const useFavorite = useFavoritesAnnouncement();
-const { user, initializeUser } = useUser()
+const announcement = useAnnouncement()
+const favStore    = useFavoritesAnnouncement()
+const { user } = useUser()
 
-const favorites = computed(() => useFavorite.getFavorites);
-const announcements = computed(() => announcement.getAnnouncements);
-const loading = computed(() => announcement.loading);
-const error = computed(() => announcement.error);
+const loading = computed(() => announcement.loading)
+const error   = computed(() => announcement.error)
 
-const currentPage = ref(1);
-const pageSize = 9;
+const pageSize      = 9
+const currentPage   = ref(1)
+const currentFilter = ref({
+  page: 1,
+  limit: pageSize,
+  sort: 'datePublication_desc' as FilterAnnouncement['sort'],
+  status: '' as FilterAnnouncement['status'] | undefined
+})
 
-const announcementFavorites = computed(() => {
-  return favorites.value.value.map(fav => {
-    const announcement = announcements.value.value.find(a => a._id === fav.announcementId);
-    return announcement ? { ...announcement, isFavorite: true } : null;
-  }).filter((a): a is Announcement & { isFavorite: true } => a !== null && a.status !== 'INACTIVE');
-});
+const allFavorites = computed(() => {
+  return favStore.getFavorites.value
+      .map(fav => {
+        const a = announcement.getAnnouncements.value.find(x => x._id === fav.announcementId)
+        return a && a.status !== 'INACTIVE' ? { ...a, isFavorite: true } : null
+      })
+      .filter((x): x is Announcement & { isFavorite: true } => !!x)
+})
 
-const paginatedAnnouncementFavorites = computed(() => {
-  const all = announcementFavorites.value;
-  const start = (currentPage.value - 1) * pageSize;
-  return all.slice(start, start + pageSize);
-});
+const filteredFavorites = computed(() => {
+  let list = allFavorites.value.slice()
+  if (currentFilter.value.status) {
+    list = list.filter(a => a.status === currentFilter.value.status)
+  }
+  switch (currentFilter.value.sort) {
+    case 'dateEvent_asc':
+      list.sort((a, b) => new Date(a.dateEvent).getTime() - new Date(b.dateEvent).getTime())
+      break
+    case 'dateEvent_desc':
+      list.sort((a, b) => new Date(b.dateEvent).getTime() - new Date(a.dateEvent).getTime())
+      break
+    case 'datePublication_desc':
+      list.sort((a, b) => new Date(b.datePublication).getTime() - new Date(a.datePublication).getTime())
+      break
+  }
+  return list
+})
 
-const totalPages = computed(() => {
-  const all = announcementFavorites.value;
-  return Math.ceil(all.length / pageSize);
-});
+const totalPages = computed(() => Math.ceil(filteredFavorites.value.length / pageSize))
+const paginatedFavorites = computed(() => {
+  const start = (currentPage.value - 1) * pageSize
+  return filteredFavorites.value.slice(start, start + pageSize)
+})
 
 function goToPage(page: number) {
-  if (page >= 1 && page <= totalPages.value) {
-    currentPage.value = page;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  if (page < 1 || page > totalPages.value) return
+  currentPage.value = page
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
+function handleFilter(filters:FilterAnnouncement) {
+  currentFilter.value = { sort: filters.sort, status: filters.status || undefined, page: 1, limit: pageSize }
+  currentPage.value = 1
+}
+
+const isReady = ref(false)
+
 onMounted(async () => {
-  await initializeUser();
-  await announcement.fetchAllAnnouncements();
+  await announcement.fetchAllAnnouncements()
   if (user.value) {
-    await useFavorite.fetchAllFavoritesOfVolunteer(user.value.userId);
+    await favStore.fetchAllFavoritesOfVolunteer(user.value.userId)
   }
-});
+  isReady.value = true
+})
+
+onBeforeRouteUpdate(
+  async (to, from, next) => {
+    isReady.value = false
+    await announcement.fetchAllAnnouncements()
+    if (user.value) {
+      await favStore.fetchAllFavoritesOfVolunteer(user.value.userId)
+    }
+    isReady.value = true
+    next()
+  }
+)
 
 </script>

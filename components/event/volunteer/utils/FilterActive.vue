@@ -12,25 +12,25 @@ import {watch, ref} from "vue";
 
 const props = defineProps<{
   filters: {
-    status: AnnouncementStatus | undefined,
-    hoursEventFrom: string | undefined,
-    hoursEventTo: string | undefined,
-    dateEventFrom: string | undefined,
-    dateEventTo: string | undefined,
-    publicationInterval: PublicationInterval | undefined,
-    datePublicationFrom: string | undefined,
-    datePublicationTo: string | undefined,
-    tags: string[] | undefined,
-    latitude: number | undefined,
-    longitude: number | undefined,
-    radius: number | undefined,
-    page: number | undefined,
-    limit: number | undefined,
-    sort: SortOption | undefined
+    status?: AnnouncementStatus | undefined,
+    hoursEventFrom?: string | undefined,
+    hoursEventTo?: string | undefined,
+    dateEventFrom?: string | undefined,
+    dateEventTo?: string | undefined,
+    publicationInterval?: PublicationInterval | undefined,
+    datePublicationFrom?: string | undefined,
+    datePublicationTo?: string | undefined,
+    tags?: string[] | undefined,
+    latitude?: number | undefined,
+    longitude?: number | undefined,
+    radius?: number | undefined,
+    page?: number | undefined,
+    limit?: number | undefined,
+    sort?: SortOption | undefined
   },
-  selectedTags: string[],
-  selectedTypes: string[],
-  hasActiveFilters: boolean
+  selectedTags?: string[],
+  selectedTypes?: string[],
+  hasActiveFilters?: boolean
 }>()
 
 let filters = ref<FilterAnnouncement>({

@@ -351,7 +351,6 @@ watch(
     }
 )
 
-// Filtres avancés temporaires (non encore appliqués)
 const tempAdvancedFilters = ref<Partial<FilterAnnouncement>>({
   dateEventFrom: undefined,
   dateEventTo: undefined,
@@ -620,7 +619,7 @@ const applyFilters = () => {
   delete filtersToSend.cityCoordinates
 
   if (filtersToSend.radius && filtersToSend.radius > 0) {
-    filtersToSend.radius = filtersToSend.radius * 1000 // Convert km to meters
+    filtersToSend.radius = filtersToSend.radius * 1000
   }
   showAdvancedFilters.value = false
   emit('filter', filtersToSend)
@@ -726,6 +725,15 @@ onMounted(async () => {
   }
 })
 
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value)
+  }
+})
+
+
 function applyHistory(idx: number) {
   if (filterHistory.value[idx]) {
     const selectedFilter = filterHistory.value[idx];
@@ -798,15 +806,6 @@ function getFilterCriteria(filter: FilterAnnouncement) {
 
   return criteria.slice(0, 2).join(' • ');
 }
-
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-
-  if (searchTimeout.value) {
-    clearTimeout(searchTimeout.value)
-  }
-})
 </script>
 
 <style scoped>
