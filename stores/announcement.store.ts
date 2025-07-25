@@ -439,7 +439,7 @@ export const useAnnouncementStore = defineStore('announcement', {
         }
     },
 
-    async filterAnnouncement(filterAnnouncement: FilterAnnouncement): Promise<FilterAnnouncementResponse> {
+    async filterAnnouncement(filterAnnouncement: FilterAnnouncement): Promise<FilterAnnouncementResponse | undefined> {
         const user = useUserStore().getUser
         if (user?.role === 'ASSOCIATION' && user) {
             return {
@@ -451,6 +451,10 @@ export const useAnnouncementStore = defineStore('announcement', {
                     pages: 1,
                 }
             }
+        }
+        if (this.loading) {
+            console.log('Filtrage déjà en cours, veuillez patienter...');
+            return
         }
         this.loading = true;
         this.error = null;

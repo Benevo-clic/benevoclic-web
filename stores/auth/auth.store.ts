@@ -139,34 +139,39 @@ export const useAuthStore = defineStore('auth', {
 
     // Redirection selon le rôle
     async getPageRole() {
-
       const userStore = useUserStore()
-      await userStore.fetchUser()
+      
+      try {
+        // Attend que fetchUser() retourne l'utilisateur
+        const userStore = useUserStore()
+        await userStore.fetchUser()
 
-      const isCompleted = userStore.user?.isCompleted
-      const role = userStore.getRole as RoleUser | undefined
+        const isCompleted = userStore.user?.isCompleted
+        const role = userStore.getRole as RoleUser | undefined
 
-
-      if (!isCompleted) {
+        if (!isCompleted) {
           switch (role) {
           case RoleUser.VOLUNTEER:
               return navigateTo('/auth/registerVolunteer')
           case RoleUser.ASSOCIATION:
               return navigateTo('/auth/registerAssociation')
           default:
-              return navigateTo('/')
+              return window.location.href = '/'
           }
-      } else {
-        switch (role) {
-          case RoleUser.VOLUNTEER:
-            return navigateTo('/volunteer')
-          case RoleUser.ASSOCIATION:
-            return navigateTo('/association/dashboard')
-          default:
-            return '/'
+        } else {
+          switch (role) {
+            case RoleUser.VOLUNTEER:
+              return window.location.href = '/volunteer'
+            case RoleUser.ASSOCIATION:
+              return window.location.href = '/association/dashboard'
+            default:
+              return window.location.href = '/'
+          }
         }
+      } catch (error) {
+        console.error('Erreur lors de la récupération de l\'utilisateur:', error)
+        await this.logout()
       }
-
     },
 
     // Register email/mot de passe
@@ -350,6 +355,8 @@ export const useAuthStore = defineStore('auth', {
           await this.callRegisterGoogle(idToken, role)
         }
         this.hydrate()
+        
+        // Attend que getPageRole() termine
         await this.getPageRole()
       } catch (e: any) {
         this.error = e?.data?.message || 'Erreur Google'
@@ -392,9 +399,11 @@ export const useAuthStore = defineStore('auth', {
         this.loading = false
         this.error = null
         this.cleanup() // Nettoyer l'écouteur de token
-        navigateTo(
-            '/',
-        )
+        const userStore = useUserStore()
+        userStore.user = null
+        userStore.clearUserCache()
+        this.resetCookies()
+        window.location.href = '/'
       }catch (error) {
 
       }
@@ -406,28 +415,13 @@ export const useAuthStore = defineStore('auth', {
       this.error = null
       try {
         await $fetch('/api/auth/logout', { method: 'POST' })
+        await this.deleteCookies()
       } catch (e: any) {
-
+        this.error = e?.data?.message || 'Erreur de déconnexion'
+        throw e
+      }finally {
+        this.loading = false
       }
-
-      
-      // Nettoyer l'état d'authentification
-      this.idToken = null
-      this.refreshToken = null
-      this.idUser = null
-      this.isConnected = false
-      this.resetCookies()
-      
-      // Nettoyer les données utilisateur
-      const userStore = useUserStore()
-      userStore.user = null
-      userStore.clearUserCache()
-      
-      this.loading = false
-
-      navigateTo(
-            '/',
-      )
     },
 
     // Refresh token
