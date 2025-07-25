@@ -49,7 +49,7 @@
         />
 
         <!-- Boutons de filtres -->
-        <div class="w-full flex flex-wrap justify-center gap-2">
+        <div class="w-full">
           <!-- Desktop -->
           <div class="hidden md:flex flex-wrap gap-2 items-center justify-center w-full max-w-full">
             <button
@@ -170,124 +170,248 @@
           </div>
 
           <!-- Mobile -->
-          <div class="flex md:hidden flex-wrap gap-2 items-center justify-center w-full max-w-full">
+          <div class="flex md:hidden gap-2 w-full">
             <button
-                class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
-                :class="showMap ? 'btn-primary' : 'btn-outline'"
+                :class="[
+      'btn btn-sm rounded-full flex items-center gap-1 justify-center basis-1/3',
+      showMap ? 'btn-primary' : 'btn-outline'
+    ]"
                 @click="toggleMap"
             >
               <Map class="w-4 h-4" />
-              Carte
+              <span class="text-sm">Carte</span>
             </button>
 
-            <!-- Dropdown Filtres Mobile -->
-            <div class="dropdown dropdown-bottom">
-              <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max">
-                <SlidersHorizontal class="w-4 h-4" />
-                Filtres
-              </button>
-              <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
-                <li>
-                  <div class="dropdown dropdown-right">
-                    <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
-                      Trier par
-                      <ChevronRight class="w-3 h-3" />
-                    </button>
-                    <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
-                      <li v-for="sortOption in sortOptions" :key="sortOption.value">
-                        <a @click.stop="applySort(sortOption.value)">
-                          <input
-                              type="checkbox"
-                              :checked="filters.sort === sortOption.value"
-                              class="checkbox checkbox-xs mr-2"
-                          />
-                          {{ sortOption.label }}
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-                <li>
-                  <div class="dropdown dropdown-right">
-                    <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
-                      Statut
-                      <ChevronRight class="w-3 h-3" />
-                    </button>
-                    <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
-                      <li v-for="statusOption in statusOptions" :key="statusOption.value">
-                        <a @click.stop="applyStatus(statusOption.value)">
-                          <input
-                              type="checkbox"
-                              :checked="filters.status === statusOption.value"
-                              class="checkbox checkbox-xs mr-2"
-                          />
-                          {{ statusOption.label }}
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-                <li>
-                  <div class="relative inline-block text-left">
-                    <button
-                        @click="toggleDropdown"
-                        class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
-                        :class="selectedTags.length > 0 ? 'btn-accent' : 'btn-outline'"
-                    >
-                      <span>Type d'annonce</span>
-                      <ChevronRight class="w-3 h-3" />
-                    </button>
+            <LocationButton
+                :filters="filters"
+                @update:filters="onFilterUpdate"
+                :reset-location="resetLocation"
+                :is-mobile="true"
+            />
 
-                    <div
-                        v-if="isOpen"
-                        class="absolute mt-2 w-56 rounded-md shadow-lg bg-base-100 z-50"
-                        @click.stop
-                    >
-                      <ul class="menu p-2 text-sm">
-                        <li v-for="tag in availableTags" :key="tag">
-                          <a @click.stop="toggleTag(tag)">
-                            <input type="checkbox" :checked="selectedTags.includes(tag)" class="checkbox checkbox-xs mr-2" />
-                            {{ tag }}
-                          </a>
-                        </li>
-                        <li v-if="!showCustomInput">
-                          <button @click.stop="openCustomInput" class="text-primary font-semibold cursor-pointer">
-                            <span>Autre</span>
-                          </button>
-                        </li>
-                        <li v-else>
-                          <div class="flex items-center gap-2 mt-2">
-                            <input
-                                v-model="customTag"
-                                @keydown.enter.prevent="addCustomTag"
-                                type="text"
-                                class="input input-sm input-bordered w-full"
-                                placeholder="Nouveau type…"
-                                ref="customInputRef"
-                            />
-                            <button class="btn btn-sm btn-primary" @click.stop="addCustomTag">+</button>
-                            <button class="btn btn-sm btn-ghost" @click="cancelCustomInput" title="Annuler">✕</button>
-                          </div>
-                        </li>
-                      </ul>
+            <button
+                class="btn btn-sm btn-outline rounded-full flex items-center gap-1 justify-center basis-1/3"
+                @click="openMobileFilters"
+            >
+              <SlidersHorizontal class="w-4 h-4" />
+              <span class="text-sm">Filtres</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Drawer Mobile -->
+        <div v-if="mobileFiltersOpen" class="fixed inset-0 z-50 md:hidden">
+          <!-- Overlay -->
+          <div class="absolute inset-0 bg-black/50" @click="closeMobileFilters"></div>
+          
+          <!-- Drawer -->
+          <div class="absolute right-0 top-0 h-full w-80 bg-base-100 shadow-xl p-4 overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+              <h3 class="text-lg font-bold">Filtres</h3>
+              <button @click="closeMobileFilters" class="btn btn-ghost btn-sm">
+                <X class="w-5 h-5" />
+              </button>
+            </div>
+
+            <!-- Contenu du drawer -->
+            <div class="space-y-6">
+              <!-- Trier par -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text font-medium">Trier par</span>
+                </label>
+                <div class="relative">
+                  <button
+                    :class="[
+                      'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+                      showSortMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+                    ]"
+                    @click="toggleSortMenu"
+                  >
+                    <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+                      <SortAsc class="w-4 h-4" />
+                    </div>
+                    <span class="font-medium">
+                      {{ getSortLabel() }}
+                    </span>
+                  </button>
+                  <!-- Dropdown Sort -->
+                  <div v-if="showSortMenu" class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48">
+                    <div class="p-2 space-y-1">
+                      <button
+                        v-for="sortOption in sortOptions"
+                        :key="sortOption.value"
+                        :class="[
+                          'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
+                          filters.sort === sortOption.value ? 'bg-primary/20 text-primary' : 'hover:bg-base-200'
+                        ]"
+                        @click="applySort(sortOption.value); showSortMenu = false"
+                      >
+                        <input
+                          type="radio"
+                          :checked="filters.sort === sortOption.value"
+                          class="radio radio-sm radio-primary"
+                        />
+                        <span class="text-sm">{{ sortOption.label }}</span>
+                      </button>
                     </div>
                   </div>
-                </li>
-                <li>
-                  <button @click.stop="showAdvancedFilters = true" class="btn btn-outline btn-sm w-full">
-                    Filtres avancés
+                </div>
+              </div>
+
+              <!-- Statut -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text font-medium">Statut</span>
+                </label>
+                <div class="relative">
+                  <button
+                    :class="[
+                      'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+                      showStatusMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+                    ]"
+                    @click="toggleStatusMenu"
+                  >
+                    <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+                      <CircleDot class="w-4 h-4" />
+                    </div>
+                    <span class="font-medium">
+                      {{ getStatusLabel() }}
+                    </span>
                   </button>
-                </li>
-              </ul>
+                  <!-- Dropdown Status -->
+                  <div v-if="showStatusMenu" class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48">
+                    <div class="p-2 space-y-1">
+                      <button
+                        v-for="statusOption in statusOptions"
+                        :key="statusOption.value"
+                        :class="[
+                          'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
+                          filters.status === statusOption.value ? 'bg-primary/20 text-primary' : 'hover:bg-base-200'
+                        ]"
+                        @click="applyStatus(statusOption.value); showStatusMenu = false"
+                      >
+                        <input
+                          type="radio"
+                          :checked="filters.status === statusOption.value"
+                          class="radio radio-sm radio-primary"
+                        />
+                        <span class="text-sm">{{ statusOption.label }}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Type d'annonce -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text font-medium">Type d'annonce</span>
+                </label>
+                <div class="relative">
+                  <button
+                    :class="[
+                      'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+                      showTagsMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+                    ]"
+                    @click="toggleTagsMenu"
+                  >
+                    <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+                      <Tag class="w-4 h-4" />
+                    </div>
+                    <span class="font-medium">
+                      {{ getTagsLabel() }}
+                    </span>
+                  </button>
+                  <!-- Dropdown Tags -->
+                  <div v-if="showTagsMenu" class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48 max-h-64 overflow-y-auto">
+                    <div class="p-2 space-y-1">
+                      <button
+                        v-for="tag in availableTags"
+                        :key="tag"
+                        :class="[
+                          'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
+                          selectedTags.includes(tag) ? 'bg-primary/20 text-primary' : 'hover:bg-base-200'
+                        ]"
+                        @click="toggleTag(tag)"
+                      >
+                        <input
+                          type="checkbox"
+                          :checked="selectedTags.includes(tag)"
+                          class="checkbox checkbox-sm checkbox-primary"
+                        />
+                        <span class="text-sm">{{ tag }}</span>
+                      </button>
+                      
+                      <!-- Ajout de tag personnalisé -->
+                      <div class="border-t border-base-300 pt-2 mt-2">
+                        <div v-if="!showCustomInput">
+                          <button
+                            @click="openCustomInput"
+                            class="flex items-center gap-3 p-2 rounded-lg w-full text-left text-primary hover:bg-primary/10 transition-colors"
+                          >
+                            <Plus class="w-4 h-4" />
+                            <span class="text-sm font-medium">Ajouter un type...</span>
+                          </button>
+                        </div>
+                        <div v-else class="flex items-center gap-2 p-2">
+                          <input
+                            v-model="customTag"
+                            @keydown.enter.prevent="addCustomTag"
+                            type="text"
+                            class="input input-sm input-bordered flex-1"
+                            placeholder="Nouveau type…"
+                            ref="customInputRef"
+                          />
+                          <button class="btn btn-sm btn-primary" @click="addCustomTag">+</button>
+                          <button class="btn btn-sm btn-ghost" @click="cancelCustomInput">✕</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Filtres avancés -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text font-medium">Filtres avancés</span>
+                </label>
+                <button
+                  @click="showAdvancedFilters = true; closeMobileFilters()"
+                  class="btn btn-outline w-full"
+                >
+                  <SlidersHorizontal class="w-4 h-4 mr-2" />
+                  Configurer les filtres avancés
+                </button>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex gap-2 pt-4 border-t border-base-300">
+                <button 
+                  @click="resetFilters" 
+                  class="btn btn-ghost flex-1"
+                >
+                  Réinitialiser
+                </button>
+                <button 
+                  @click="closeMobileFilters" 
+                  class="btn btn-primary flex-1"
+                >
+                  Appliquer
+                </button>
+              </div>
             </div>
           </div>
+        </div>
 
           <!-- Carte -->
           <div v-if="showMap" class="w-full mt-4" @click.stop>
             <MultiMarkerMap :locations="locations" :eventsData="eventsData" />
           </div>
         </div>
-      </div>
 
       <!-- Drawer Filtres Avancés Global -->
       <AdvancedFilters
@@ -303,7 +427,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, defineEmits, watch, nextTick } from 'vue'
-import { Map, SortAsc, ChevronRight, SlidersHorizontal } from 'lucide-vue-next';
+import { Map, SortAsc, ChevronRight, SlidersHorizontal, CircleDot, Tag, Plus } from 'lucide-vue-next';
 import type {Announcement} from "~/common/interface/event.interface";
 import type {FilterAnnouncement, AnnouncementStatus, SortOption} from "~/common/interface/filter.interface";
 import {useUserLocation} from "~/composables/useUserLocation";
@@ -482,10 +606,20 @@ const hasAdvancedFilters = computed(() => {
 })
 
 const showLocationDropdown = ref(false)
+const mobileFiltersOpen = ref(false)
 
 const customTag = ref('')
 const showCustomInput = ref(false)
 const customInputRef = ref<HTMLInputElement | null>(null)
+const searchQuery = ref('')
+
+function openMobileFilters() {
+  mobileFiltersOpen.value = true
+}
+
+function closeMobileFilters() {
+  mobileFiltersOpen.value = false
+}
 
 function addCustomTag() {
   const tag = customTag.value.trim()
@@ -513,6 +647,16 @@ function openCustomInput() {
 
 watch(showCustomInput, (val) => {
   if (val) nextTick(() => customInputRef.value && customInputRef.value?.focus())
+})
+
+// Watcher pour la recherche
+watch(searchQuery, (newQuery) => {
+  // Ajouter la logique de recherche ici si nécessaire
+  // Pour l'instant, on peut juste appliquer les filtres
+  if (newQuery !== undefined) {
+    // Vous pouvez ajouter la logique de recherche ici
+    // Par exemple: filters.value.search = newQuery
+  }
 })
 
 
@@ -863,6 +1007,42 @@ function getFilterCriteria(filter: FilterAnnouncement) {
   }
 
   return criteria.slice(0, 2).join(' • ');
+}
+
+const showSortMenu = ref(false)
+const showStatusMenu = ref(false)
+const showTagsMenu = ref(false)
+
+const getSortLabel = () => {
+  const sortOption = sortOptions.value.find(s => s.value === filters.value.sort)
+  return sortOption ? sortOption.label : 'Trier par'
+}
+
+const getStatusLabel = () => {
+  const statusOption = statusOptions.value.find(s => s.value === filters.value.status)
+  return statusOption ? statusOption.label : 'Statut'
+}
+
+const getTagsLabel = () => {
+  if (selectedTags.value.length === 0) {
+    return 'Type d\'annonce';
+  }
+  if (selectedTags.value.length === 1) {
+    return selectedTags.value[0];
+  }
+  return `${selectedTags.value.length} types`;
+}
+
+const toggleSortMenu = () => {
+  showSortMenu.value = !showSortMenu.value
+}
+
+const toggleStatusMenu = () => {
+  showStatusMenu.value = !showStatusMenu.value
+}
+
+const toggleTagsMenu = () => {
+  showTagsMenu.value = !showTagsMenu.value
 }
 </script>
 

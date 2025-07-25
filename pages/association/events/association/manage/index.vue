@@ -11,6 +11,8 @@
     />
   </div>
   <div v-else class="mx-auto  py-6 max-w-screen-2xl w-full">
+    <client-only>
+
     <div class="container mx-auto px-4 w-full">
       <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
         <div class="flex flex-col items-center w-full">
@@ -18,6 +20,8 @@
         </div>
       </div>
     </div>
+    </client-only>
+
     <div  class="mx-auto px-4 py-5 max-w-10xl">
       <div class="bg-base-100 rounded-2xl shadow-md p-6">
         <ReadOnlyEventList

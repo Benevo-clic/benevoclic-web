@@ -65,6 +65,11 @@ function handleFileChange(e: Event) {
   }
 }
 
+function goTo(path: string) {
+  emit('closeDrawer')
+  navigateTo(path)
+}
+
 async function changeLanguage(lo: 'fr' | 'en' | 'es', flagEmoji: string) {
   await setLocale(lo)
   showLanguageMenu.value = false
@@ -122,99 +127,256 @@ function toggleLanguageMenu() {
 </script>
 
 <template>
-  <nav class=" pl-4 pr-4 pb-4"  >
-    <div class="flex gap-4 justify-end w-full pb-4" >
-      <div>
-        <h3 class="font-semibold text-lg">{{ association?.associationName }} </h3>
-        <p class="text-sm text-base-content opacity-70">{{ user?.email }}</p>
-      </div>
-      <label for="avatar-upload" class="cursor-pointer" v-if="props.displayProfile">
-        <img :src="profileImageUrl" alt="avatar" class="w-12 h-12 rounded-full border-2 border-primary object-cover mb-2" />
-      </label>
-    </div>
-  </nav>
-  <hr class="pb-2"/>
-  <!-- Sections -->
-  <nav class="flex-1 min-h-0 overflow-y-auto px-4 py-2 space-y-4" >
-    <!-- Account -->
-    <div class="space-y-2">
-      <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.account.title')}}</h4>
-      <ul class="space-y-1">
-        <li><button @click="navigateTo('/association/account/profile'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/account/profile') ? 'bg-base-200 border-l-4 border-primary' : '']"><UserRound class="w-5 h-5"/>{{t('drawer-content.account.view_profile')}}</button></li>
-        <li><button @click="navigateTo('/association/account/edit'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/account/edit') ? 'bg-base-200 border-l-4 border-primary' : '']"><Pencil class="w-5 h-5"/>{{t('drawer-content.account.edit_profile')}}</button></li>
-        <li><button @click="navigateTo('/association/account/settings'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/account/settings') ? 'bg-base-200 border-l-4 border-primary' : '']"><Settings class="w-5 h-5"/>{{t('drawer-content.account.settings')}}</button></li>
-      </ul>
-    </div>
-    <!-- Activity -->
-    <div class="space-y-2" >
-      <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.activity.title')}}</h4>
-      <ul class="space-y-1">
-        <li><button @click="navigateTo('/association/activity/dashboard'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/activity/dashboard') ? 'bg-base-200 border-l-4 border-primary' : '']"><DashboardIcon class="w-5 h-5"/>{{t('drawer-content.activity.dashboard')}}</button></li>
-        <li><button @click="navigateTo('/association/events/association/manage'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/events/association/manage') ? 'bg-base-200 border-l-4 border-primary' : '']"><CalendarIcon class="w-5 h-5"/>{{t('drawer-content.activity.manage-event')}}</button></li>
-        <li><button @click="navigateTo('/association/events/association/requests'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/association/events/association/requests') ? 'bg-base-200 border-l-4 border-primary' : '']"><ClipboardList class="w-5 h-5"/>{{t('drawer-content.activity.requests')}}</button></li>
-      </ul>
-
-    </div>
-    <!-- Notifications & Support -->
-    <div class="space-y-2" >
-      <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.notifications_support.title')}}</h4>
-      <ul class="space-y-1">
-        <li><button @click="navigateTo('/notifications'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/notifications') ? 'bg-base-200 border-l-4 border-primary' : '']"><Bell class="w-5 h-5"/>{{t('drawer-content.notifications_support.notifications')}}</button></li>
-        <li><button @click="navigateTo('/help'); emit('closeDrawer')" :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isActive('/help') ? 'bg-base-200 border-l-4 border-primary' : '']"><CircleHelp class="w-5 h-5"/>{{t('drawer-content.notifications_support.help')}}</button></li>
-      </ul>
-    </div>
-    <!-- App -->
-    <div class="space-y-2">
-      <h4 class="font-medium text-base-content text-xs uppercase">{{t('drawer-content.app.title')}}</h4>
-      <ul class="space-y-1">
-        <li class="relative">
-          <button
-              :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', showLanguageMenu ? 'bg-base-200 border-l-4 border-primary' : '']"
-              @click="toggleLanguageMenu"
-          >
-            <span>{{ flag }}</span>
-            <Globe class="w-5 h-5"/> {{t('drawer-content.app.language')}}
-          </button>
-          <LanguageComponent
-              :show-language-menu="showLanguageMenu"
-              class="absolute left-0 mt-0"
-              @change-language="changeLanguage"
+  <div class="flex flex-col h-full">
+    <!-- Profile Section avec design moderne -->
+    <div class="p-6 bg-gradient-to-r from-primary/10 to-secondary/10 border-b border-base-300">
+      <div class="flex items-center gap-4">
+        <div class="relative">
+          <img 
+            :src="profileImageUrl" 
+            alt="avatar" 
+            class="w-16 h-16 rounded-2xl border-4 border-white shadow-lg object-cover" 
           />
-        </li>
-
-        <li><button :class="['flex items-center gap-2 p-2 rounded hover:bg-base-200 w-full', isDarkTheme() ? 'bg-base-200 border-l-4 border-primary' : '']">
-          <label class="swap swap-rotate cursor-pointer">
-            <input 
-              type="checkbox" 
-              aria-label="Toggle theme" 
-              :checked="isDarkTheme()" 
-              @change="toggleTheme" 
-            />
-            <SunIcon class="swap-on w-5 h-5 text-warning"></SunIcon>
-            <MoonIcon class="swap-off w-5 h-5 text-base-content"/>
-          </label>
-          <span>{{t('drawer-content.app.theme')}}</span>
-        </button>
-        </li>
-      </ul>
+          <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-success rounded-full border-2 border-white"></div>
+        </div>
+        <div class="flex-1">
+          <h3 class="font-bold text-lg text-base-content">
+            {{ association?.associationName }}
+          </h3>
+          <p class="text-sm text-base-content/70 flex items-center gap-2">
+            <span class="w-2 h-2 bg-success rounded-full"></span>
+            {{ user?.email }}
+          </p>
+        </div>
+      </div>
     </div>
-  </nav>
 
-  <!-- Footer -->
-  <div class="p-4">
-    <button
+    <!-- Navigation avec design moderne -->
+    <nav class="flex-1 overflow-y-auto p-4 space-y-6">
+      <!-- Account Section -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold text-base-content/50 uppercase tracking-wider px-2">
+          {{ t('drawer-content.account.title') }}
+        </h4>
+        <div class="space-y-1">
+          <button 
+            @click="goTo('/association/account/profile')"
+            :class="[
+              'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+              isActive('/association/account/profile') 
+                ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
+                : 'hover:bg-base-200 hover:shadow-sm'
+            ]"
+          >
+            <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <UserRound class="w-4 h-4" />
+            </div>
+            <span class="font-medium">{{ t('drawer-content.account.view_profile') }}</span>
+          </button>
+          
+          <button 
+            @click="goTo('/association/account/edit')"
+            :class="[
+              'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+              isActive('/association/account/edit') 
+                ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
+                : 'hover:bg-base-200 hover:shadow-sm'
+            ]"
+          >
+            <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <Pencil class="w-4 h-4" />
+            </div>
+            <span class="font-medium">{{ t('drawer-content.account.edit_profile') }}</span>
+          </button>
+          
+          <button 
+            @click="goTo('/association/account/settings')"
+            :class="[
+              'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+              isActive('/association/account/settings') 
+                ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
+                : 'hover:bg-base-200 hover:shadow-sm'
+            ]"
+          >
+            <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <Settings class="w-4 h-4" />
+            </div>
+            <span class="font-medium">{{ t('drawer-content.account.settings') }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Activity Section -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold text-base-content/50 uppercase tracking-wider px-2">
+          {{ t('drawer-content.activity.title') }}
+        </h4>
+        <div class="space-y-1">
+          <button 
+            @click="goTo('/association/dashboard')"
+            :class="[
+              'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+              isActive('/association/activity/dashboard') 
+                ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
+                : 'hover:bg-base-200 hover:shadow-sm'
+            ]"
+          >
+            <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <DashboardIcon class="w-4 h-4" />
+            </div>
+            <span class="font-medium">{{ t('drawer-content.activity.dashboard') }}</span>
+          </button>
+          
+          <button 
+            @click="goTo('/association/events/association/manage')"
+            :class="[
+              'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+              isActive('/association/events/association/manage') 
+                ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
+                : 'hover:bg-base-200 hover:shadow-sm'
+            ]"
+          >
+            <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <CalendarIcon class="w-4 h-4" />
+            </div>
+            <span class="font-medium">{{ t('drawer-content.activity.manage-event') }}</span>
+          </button>
+          
+          <button 
+            @click="goTo('/association/events/association/requests')"
+            :class="[
+              'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+              isActive('/association/events/association/requests') 
+                ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
+                : 'hover:bg-base-200 hover:shadow-sm'
+            ]"
+          >
+            <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <ClipboardList class="w-4 h-4" />
+            </div>
+            <span class="font-medium">{{ t('drawer-content.activity.requests') }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Notifications & Support Section -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold text-base-content/50 uppercase tracking-wider px-2">
+          {{ t('drawer-content.notifications_support.title') }}
+        </h4>
+        <div class="space-y-1">
+          <button 
+            @click="goTo('/notifications')"
+            :class="[
+              'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+              isActive('/notifications') 
+                ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
+                : 'hover:bg-base-200 hover:shadow-sm'
+            ]"
+          >
+            <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <Bell class="w-4 h-4" />
+            </div>
+            <span class="font-medium">{{ t('drawer-content.notifications_support.notifications') }}</span>
+          </button>
+          
+          <button 
+            @click="goTo('/help')"
+            :class="[
+              'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+              isActive('/help') 
+                ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
+                : 'hover:bg-base-200 hover:shadow-sm'
+            ]"
+          >
+            <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <CircleHelp class="w-4 h-4" />
+            </div>
+            <span class="font-medium">{{ t('drawer-content.notifications_support.help') }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- App Settings Section -->
+      <div class="space-y-3">
+        <h4 class="text-xs font-bold text-base-content/50 uppercase tracking-wider px-2">
+          {{ t('drawer-content.app.title') }}
+        </h4>
+        <div class="space-y-1">
+          <!-- Language -->
+          <div class="relative">
+            <button
+              :class="[
+                'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+                showLanguageMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+              ]"
+              @click="toggleLanguageMenu"
+            >
+              <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+                <span class="text-lg">{{ flag }}</span>
+              </div>
+              <span class="font-medium">{{ t('drawer-content.app.language') }}</span>
+            </button>
+            <LanguageComponent
+              :show-language-menu="showLanguageMenu"
+              class="absolute left-0 mt-2 z-20"
+              @change-language="changeLanguage"
+            />
+          </div>
+
+          <!-- Theme Toggle -->
+          <button 
+            :class="[
+              'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+              isDarkTheme() ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+            ]"
+          >
+            <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <label class="swap swap-rotate cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  aria-label="Toggle theme" 
+                  :checked="isDarkTheme()" 
+                  @change="toggleTheme" 
+                />
+                <SunIcon class="swap-on w-4 h-4 text-warning"></SunIcon>
+                <MoonIcon class="swap-off w-4 h-4 text-base-content"/>
+              </label>
+            </div>
+            <span class="font-medium">{{ t('drawer-content.app.theme') }}</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Footer avec bouton logout moderne -->
+    <div class="p-6 border-t border-base-300 bg-base-100/50 backdrop-blur-sm">
+      <button
         @click="handleLogout"
-        class="btn btn-primary w-full"
-    >
-      {{t('drawer-content.logout')}}
-    </button>
+        class="btn btn-primary w-full rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
+      >
+        {{ t('drawer-content.logout') }}
+      </button>
+    </div>
   </div>
 </template>
 
 <style scoped>
-/* Active menu item styles */
-.border-l-4.border-primary {
-  padding-left: 6px; /* Adjust padding to account for the border */
-  transition: all 0.2s ease-in-out;
+/* Scrollbar personnalisée */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: hsl(var(--bc) / 0.2);
+  border-radius: 2px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--bc) / 0.4);
 }
 </style>

@@ -15,7 +15,7 @@
       <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
         <div class="flex flex-col items-center w-full">
           <VolunteerEventFilters
-              class="mb-4 w-full"
+              class="mb-4 w-full max-w-4xl"
               :announcements="announcements"
               @map="handleMapToggle"
               @filter="handleFilter"
@@ -25,29 +25,31 @@
       </div>
     </client-only>
 
-    <div class="bg-base-100 rounded-lg shadow-md p-6 w-full mt-4">
-      <VolunteerAnnouncementList
-          :announcements="announcements"
-          :total-announcements="totalAnnouncements"
-          :error="error.value"
-          :loading="loading"
-      />
-    </div>
-    <div class="flex justify-center mt-6" v-if="totalPages > 1">
-      <div class="join">
-        <button
-            class="join-item btn"
-            :disabled="currentPage === 1"
-            @click="goToPage(currentPage - 1)"
-        >«</button>
-        <button class="join-item btn" disabled>
-          Page {{ currentPage }} / {{ totalPages }}
-        </button>
-        <button
-            class="join-item btn"
-            :disabled="currentPage === totalPages"
-            @click="goToPage(currentPage + 1)"
-        >»</button>
+    <div  class="mx-auto px-4 py-5 max-w-10xl">
+      <div class="bg-base-100 rounded-2xl shadow-md p-6">
+        <VolunteerAnnouncementList
+            :announcements="announcements"
+            :total-announcements="totalAnnouncements"
+            :error="error.value"
+            :loading="loading"
+        />
+      </div>
+      <div class="flex justify-center mt-6" v-if="totalPages > 1">
+        <div class="join">
+          <button
+              class="join-item btn"
+              :disabled="currentPage === 1"
+              @click="goToPage(currentPage - 1)"
+          >«</button>
+          <button class="join-item btn" disabled>
+            Page {{ currentPage }} / {{ totalPages }}
+          </button>
+          <button
+              class="join-item btn"
+              :disabled="currentPage === totalPages"
+              @click="goToPage(currentPage + 1)"
+          >»</button>
+        </div>
       </div>
     </div>
   </div>

@@ -11,9 +11,9 @@
           class="w-20 h-20 animate-spin"
         />
         <div class="text-base-content opacity-70">Chargement en cours...</div>
-      </div>
-    </div>
-
+              </div>
+            </div>
+            
     <div v-else class="container mx-auto px-4 py-8 max-w-7xl">
       <!-- Header -->
       <div class="mb-8">
@@ -46,9 +46,9 @@
             </select>
           </div>
         </div>
-      </div>
-
-      <!-- Timeline -->
+          </div>
+          
+          <!-- Timeline -->
       <div class="flex justify-center">
         <div class="w-full md:w-4/5">
           <div v-if="displayedItems.length > 0" class="relative">
@@ -91,7 +91,7 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
                       </button>
-                    </div>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -235,8 +235,8 @@ function handleError(error: any) {
 function formatDate(dateString: string): string {
   const date = new Date(dateString)
   return date.toLocaleDateString('fr-FR', {
-    year: 'numeric',
-    month: 'short',
+    year: 'numeric', 
+    month: 'short', 
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit'
