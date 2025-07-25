@@ -15,6 +15,8 @@ export const useAnnouncementStore = defineStore('announcement', {
     _announcementsCache: new Map<string, Announcement>(),
     _lastFetch: 0,
     _cacheExpiry: 5 * 60 * 1000,
+    lastFilter: null as FilterAnnouncement | null,
+    cachedResponse: null as FilterAnnouncementResponse | null,
   }),
 
   getters: {
@@ -452,29 +454,57 @@ export const useAnnouncementStore = defineStore('announcement', {
                 }
             }
         }
-        if (this.loading) {
-            console.log('Filtrage déjà en cours, veuillez patienter...');
-            return
+
+        if (this.lastFilter && this.cachedResponse && this.isSameFilter(this.lastFilter, filterAnnouncement)) {
+            this.updateAnnouncements(this.cachedResponse.annonces)
+            return this.cachedResponse
         }
-        this.loading = true;
-        this.error = null;
+
+        this.loading = true
+        this.error = null
+        this.lastFilter = { ...filterAnnouncement }
+
         try {
             const response = await $fetch<FilterAnnouncementResponse>('/api/announcement/filter/filterAnnouncement', {
-            method: 'POST',
-            body: filterAnnouncement,
-            });
+                method: 'POST',
+                body: filterAnnouncement,
+            })
 
             if (!response || response.annonces.length === 0) {
-            this.error = 'Aucune annonce trouvée pour les critères spécifiés';
+                this.error = 'Aucune annonce trouvée pour les critères spécifiés'
             }
-            this.updateAnnouncements(response.annonces);
-            return response;
+
+            this.cachedResponse = response
+            this.lastFilter = { ...filterAnnouncement }
+
+            this.updateAnnouncements(response.annonces)
+            return response
         } catch (err: any) {
-            this.error = err?.message || 'Erreur de filtrage des annonces';
-            throw err;
+            this.error = err?.message || 'Erreur de filtrage des annonces'
+            throw err
         } finally {
-            this.loading = false;
+            this.loading = false
         }
+    },
+
+    // Méthode pour comparer deux filtres
+      isSameFilter(filter1: FilterAnnouncement, filter2: FilterAnnouncement): boolean {
+          // Normalise les objets avant comparaison
+          const normalizeFilter = (filter: FilterAnnouncement) => {
+              const normalized = { ...filter }
+              if (normalized.tags) {
+                  normalized.tags = [...normalized.tags].sort()
+              }
+              return normalized
+          }
+
+          return JSON.stringify(normalizeFilter(filter1)) === JSON.stringify(normalizeFilter(filter2))
+      },
+
+    // Méthode pour vider le cache (optionnel)
+    clearFilterCache(): void {
+        this.lastFilter = null
+        this.cachedResponse = null
     }
 
   },

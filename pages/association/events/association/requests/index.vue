@@ -1,4 +1,15 @@
 <template>
+<div>
+  <div
+      v-if="isLoading"
+      class="fixed inset-0 bg-base-200 bg-opacity-80 z-[1000] flex items-center justify-center"
+  >
+    <img
+        src="/logo.png"
+        alt="Chargement…"
+        class="w-24 h-24 animate-spin"
+    />
+  </div>
   <div  class="container mx-auto px-2 md:px-2 py-6 max-w-2xl">
     <h1 class="text-2xl font-bold mb-6">Mes demandes</h1>
     <div role="tablist" class="tabs tabs-bordered mb-6">
@@ -8,13 +19,13 @@
     <div v-if="tab === 'event'">
       <div v-if="eventRequests.length" class="space-y-4">
         <RequestItem
-          v-for="req in eventRequests"
-          :key="req.id"
-          :volunteer="req.volunteer"
-          :context="req.eventName"
-          type="event"
-          @accept="acceptRequestAnnouncement(req.id, req.volunteer.name)"
-          @refuse="refuseRequestAnnouncement(req.id)"
+            v-for="req in eventRequests"
+            :key="req.id"
+            :volunteer="req.volunteer"
+            :context="req.eventName"
+            type="event"
+            @accept="acceptRequestAnnouncement(req.id, req.volunteer.name)"
+            @refuse="refuseRequestAnnouncement(req.id)"
         />
       </div>
       <div v-else class="text-gray-400">Aucune demande de participation.</div>
@@ -22,12 +33,12 @@
     <div v-else>
       <div v-if="associationRequests.length" class="space-y-4">
         <RequestItem
-          v-for="req in associationRequests"
-          :key="req.id"
-          :volunteer="req.volunteer"
-          type="association"
-          @accept="acceptRequestAssociation(req.idAssociation,req.id ,req.volunteer.name)"
-          @refuse="refuseRequestAssociation(req.idAssociation,req.id)"
+            v-for="req in associationRequests"
+            :key="req.id"
+            :volunteer="req.volunteer"
+            type="association"
+            @accept="acceptRequestAssociation(req.idAssociation,req.id ,req.volunteer.name)"
+            @refuse="refuseRequestAssociation(req.idAssociation,req.id)"
         />
       </div>
       <div v-else class="text-gray-400">Aucune demande d'adhésion.</div>
@@ -39,6 +50,7 @@
         @goHome="handleGoHome"
     />
   </div>
+</div>
 </template>
 
 <script setup lang="ts">
@@ -61,8 +73,11 @@ const {navigateToRoute} = useNavigation()
 const announcements = computed(() => announcement.getAnnouncements)
 const loading = ref(false);
 
+const isLoading = ref(true);
+
 onMounted(async () => {
   await initData()
+  isLoading.value = false;
 });
 
 async function initData() {
