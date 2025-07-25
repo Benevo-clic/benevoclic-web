@@ -1,37 +1,48 @@
 <template>
-  <div class="mx-auto  py-6 max-w-screen-2xl w-full">
-      <div class="container mx-auto px-4 w-full">
-        <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
-          <div class="flex flex-col items-center w-full">
-            <EventFilters class="mb-4 w-full max-w-4xl" />
-          </div>
+<div class="app-container">
+  <div
+      v-if="isLoading"
+      class="fixed inset-0 bg-base-200 bg-opacity-80 z-[1000] flex items-center justify-center"
+  >
+    <img
+        src="/logo.png"
+        alt="Chargement…"
+        class="w-24 h-24 animate-spin"
+    />
+  </div>
+  <div v-else class="mx-auto  py-6 max-w-screen-2xl w-full">
+    <div class="container mx-auto px-4 w-full">
+      <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
+        <div class="flex flex-col items-center w-full">
+          <EventFilters class="mb-4 w-full max-w-4xl" />
         </div>
       </div>
-    <div class="mx-auto px-4 py-5 max-w-10xl">
+    </div>
+    <div  class="mx-auto px-4 py-5 max-w-10xl">
       <div class="bg-base-100 rounded-2xl shadow-md p-6">
-          <ReadOnlyEventList
-              :announcements="paginatedAnnouncements"
-              :error="error.value"
-              :loading="loading.value"
-          />
-          <!-- Pagination DaisyUI -->
-          <div class="flex justify-center mt-6" v-if="totalPages > 1">
-            <div class="join">
-              <button
+        <ReadOnlyEventList
+            :announcements="paginatedAnnouncements"
+            :error="error.value"
+            :loading="loading.value"
+        />
+        <!-- Pagination DaisyUI -->
+        <div class="flex justify-center mt-6" v-if="totalPages > 1">
+          <div class="join">
+            <button
                 class="join-item btn"
                 :disabled="currentPage === 1"
                 @click="goToPage(currentPage - 1)"
-              >«</button>
-              <button class="join-item btn" disabled>
-                Page {{ currentPage }} / {{ totalPages }}
-              </button>
-              <button
+            >«</button>
+            <button class="join-item btn" disabled>
+              Page {{ currentPage }} / {{ totalPages }}
+            </button>
+            <button
                 class="join-item btn"
                 :disabled="currentPage === totalPages"
                 @click="goToPage(currentPage + 1)"
-              >»</button>
-            </div>
+            >»</button>
           </div>
+        </div>
 
       </div>
     </div>
@@ -42,6 +53,7 @@
         @goHome="handleGoHome"
     />
   </div>
+</div>
 </template>
 
 <script setup lang="ts">
@@ -62,8 +74,11 @@ const announcement = useAnnouncement()
 const {getUserId, initializeUser} = useUser()
 const {navigateToRoute} = useNavigation()
 
+const isLoading = ref(true);
+
 onMounted(async () => {
   await initData()
+  isLoading.value = false;
 });
 
 

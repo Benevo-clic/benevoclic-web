@@ -11,11 +11,12 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event) as FilterAnnouncement;
 
     try {
-        const payload: any = { ...body };
+        const payload: any = {
+            ...body,
+        } as FilterAnnouncement;
         if (Array.isArray(payload.tags) && payload.tags.length === 0) {
             delete payload.tags;
         }
-
         const response = await axios.post<FilterAnnouncementResponse>(`${config.private.api_base_url}/announcements/filter`,
             {
                 ...payload

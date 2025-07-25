@@ -1,92 +1,142 @@
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-    <!-- Sidebar menu (visible only on desktop) -->
-    <div class="hidden md:block">
-      <ActivityMenu />
+  <div class="min-h-screen bg-gradient-to-br from-base-100 to-base-200">
+    <div
+      v-if="isLoading"
+      class="fixed inset-0 bg-base-200 bg-opacity-90 z-[1000] flex items-center justify-center backdrop-blur-sm"
+    >
+      <div class="flex flex-col items-center space-y-4">
+        <img
+          src="/logo.png"
+          alt="Chargement…"
+          class="w-20 h-20 animate-spin"
+        />
+        <div class="text-base-content opacity-70">Chargement en cours...</div>
+      </div>
     </div>
-    
-    <!-- Main content -->
-    <div class="md:col-span-3">
-      <div class="bg-base-100 rounded-lg shadow-md p-6">
-        <h1 class="text-2xl font-bold mb-6 text-base-content">{{ t('drawer-content.activity.history') }}</h1>
-        
-        <!-- History list -->
-        <div class="space-y-4">
-          <!-- Filter and search -->
-          <div class="flex flex-col md:flex-row gap-4 mb-6">
-            <div class="form-control flex-1">
-              <div class="input-group flex flex-row">
-                <input type="text" placeholder="Search history..." class="input input-bordered w-full mr-2" />
-                <button class="btn btn-square">
-                  <Search class="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-            
-            <select class="select select-bordered">
-              <option value="all">All Activities</option>
-              <option value="missions">Missions</option>
-              <option value="applications">Applications</option>
-              <option value="searches">Searches</option>
+
+    <div v-else class="container mx-auto px-4 py-8 max-w-7xl">
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-base-content mb-2">
+          {{ t('drawer-content.activity.history') }}
+        </h1>
+        <p class="text-base-content opacity-70">Retrouvez ici toutes vos missions et participations passées</p>
+      </div>
+
+      <!-- Filter and search -->
+      <div class="bg-base-100 rounded-2xl shadow-lg p-6 mb-8 border border-base-300">
+        <div class="flex flex-col lg:flex-row gap-4">
+          <div class="flex-1 relative">
+            <input
+              type="text"
+              placeholder="Rechercher dans l'historique..."
+              class="input input-bordered w-full pl-12 pr-4 h-12 bg-base-200 border-base-300 focus:border-primary transition-all duration-300"
+              v-model="searchQuery"
+            />
+            <Search class="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-base-content opacity-50" />
+          </div>
+          <div class="lg:w-48">
+            <select
+              class="select select-bordered w-full h-12 bg-base-200 border-base-300 focus:border-primary transition-all duration-300"
+              v-model="filterType"
+            >
+              <option value="all">Toutes les activités</option>
+              <option value="mission">Missions</option>
+              <option value="participation">Participations</option>
             </select>
-          </div>
-          
-          <!-- Timeline -->
-          <div v-if="historyItems.length > 0" class="relative">
-            <!-- Timeline line -->
-            <div class="absolute left-0 top-0 bottom-0 w-0.5 bg-base-300 ml-6 md:ml-8"></div>
-            
-            <!-- Timeline items -->
-            <div class="space-y-6">
-              <div v-for="(item, index) in historyItems" :key="index" class="relative pl-16 md:pl-20">
-                <!-- Timeline dot -->
-                <div class="absolute left-0 top-0 w-12 md:w-16 flex items-center justify-center">
-                  <div class="w-8 h-8 rounded-full bg-base-300 flex items-center justify-center z-10">
-                    <component :is="getIconForType(item.type)" class="w-4 h-4 text-base-content" />
-                  </div>
-                </div>
-                
-                <!-- Timeline content -->
-                <div class="bg-base-200 rounded-lg p-4">
-                  <div class="flex justify-between items-start mb-2">
-                    <h3 class="font-semibold text-base-content">{{ item.title }}</h3>
-                    <span class="text-sm text-base-content opacity-70">{{ formatDate(item.date) }}</span>
-                  </div>
-                  
-                  <p class="text-base-content">{{ item.description }}</p>
-                  
-                  <!-- Action buttons based on type -->
-                  <div class="flex justify-end mt-4 gap-2">
-                    <button v-if="item.type === 'mission'" class="btn btn-sm btn-outline">View Mission</button>
-                    <button v-if="item.type === 'application'" class="btn btn-sm btn-outline">View Application</button>
-                    <button v-if="item.type === 'search'" class="btn btn-sm btn-outline">Repeat Search</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Empty state -->
-          <div v-else class="text-center py-12">
-            <Clock class="w-16 h-16 mx-auto text-base-content opacity-30" />
-            <h3 class="mt-4 text-lg font-medium text-base-content">No history found</h3>
-            <p class="mt-2 text-base-content opacity-70">Your activity history will appear here.</p>
-          </div>
-          
-          <!-- Load more button -->
-          <div v-if="historyItems.length > 0" class="flex justify-center mt-8">
-            <button class="btn btn-outline">Load More</button>
           </div>
         </div>
       </div>
+
+      <!-- Timeline -->
+      <div class="flex justify-center">
+        <div class="w-full md:w-4/5">
+          <div v-if="displayedItems.length > 0" class="relative">
+            <!-- Timeline line -->
+            <div class="absolute left-6 top-0 bottom-0 w-0.5 bg-base-300"></div>
+            <div class="space-y-8">
+              <div
+                v-for="(item, index) in displayedItems"
+                :key="index"
+                class="relative flex items-start group"
+              >
+                <!-- Timeline period (in the dot) -->
+                <div class="flex flex-col items-center z-10">
+                  <div class="w-16 h-16 rounded-full bg-base-100 border-4 border-primary flex flex-col items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    <span class="text-xs text-primary font-bold text-center leading-tight">
+                      {{ getPeriod(item) }}
+                    </span>
+                  </div>
+                  <div v-if="index < displayedItems.length - 1" class="flex-1 w-0.5 bg-base-300 mt-1"></div>
+                </div>
+                <!-- Timeline card -->
+                <div class="ml-6 flex-1">
+                  <div class="bg-base-100 rounded-2xl shadow-lg border border-base-300 p-6 transition-all duration-300 group-hover:shadow-2xl">
+                    <div class="flex justify-between items-center mb-2">
+                      <h3 class="font-semibold text-lg text-base-content group-hover:text-primary transition-colors duration-300">
+                        {{ item.nameEvent }}
+                      </h3>
+                      <span class="text-sm text-base-content opacity-70">{{ formatDate(item.dateEvent) }}</span>
+                    </div>
+                    <p class="text-base-content mb-4 line-clamp-3">
+                      {{ item.description || 'Aucune description.' }}
+                    </p>
+                    <div class="flex gap-2 justify-end">
+                      <button
+                        class="btn btn-primary btn-sm group-hover:btn-secondary transition-all duration-300"
+                        @click="goDetail(item._id)"
+                      >
+                        Détail
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Empty state -->
+          <div v-else class="text-center py-16">
+            <div class="max-w-md mx-auto">
+              <div class="w-24 h-24 mx-auto mb-6 bg-base-200 rounded-full flex items-center justify-center">
+                <Clock class="w-12 h-12 text-base-content opacity-40" />
+              </div>
+              <h3 class="text-2xl font-bold text-base-content mb-3">Aucun historique trouvé</h3>
+              <p class="text-base-content opacity-70 mb-8 leading-relaxed">
+                Votre historique d'activités apparaîtra ici dès que vous aurez participé à des missions.
+              </p>
+            </div>
+          </div>
+          <!-- Load more button -->
+          <div v-if="displayCount < filteredItems.length" class="flex justify-center mt-8">
+            <button class="btn btn-outline" @click="loadMore">Charger plus</button>
+          </div>
+        </div>
+      </div>
+      <!-- Error popup -->
+      <ErrorPopup
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @goHome="handleGoHome"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Search, Clock, MapPin, FileText, Search as SearchIcon } from 'lucide-vue-next'
-import ActivityMenu from '~/components/activity/ActivityMenu.vue'
+import {ref, computed, watch, onMounted} from 'vue'
+import { Search, Clock } from 'lucide-vue-next'
+import {useUser} from "~/composables/auth/useUser";
+import {useVolunteerAuth} from "~/composables/useVolunteer";
+import {useAnnouncement} from "~/composables/useAnnouncement";
+import type {Announcement} from "~/common/interface/event.interface";
+import {useNavigation} from "~/composables/useNavigation";
+import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+const {getUserId, initializeUser} = useUser()
+const {navigateToRoute} = useNavigation()
 
 definePageMeta({
   middleware: ['auth'],
@@ -95,57 +145,127 @@ definePageMeta({
 
 const { t } = useI18n()
 
-// Mock history data - would be fetched from API in a real app
-const historyItems = ref([
-  {
-    type: 'mission',
-    title: 'Completed Mission: Beach Cleanup',
-    description: 'You completed the Beach Cleanup mission with Ocean Conservation Group.',
-    date: '2023-05-15T14:30:00'
-  },
-  {
-    type: 'application',
-    title: 'Application Submitted',
-    description: 'You applied to the Food Distribution mission with Community Food Bank.',
-    date: '2023-05-10T09:15:00'
-  },
-  {
-    type: 'search',
-    title: 'Search Performed',
-    description: 'You searched for "environmental missions" in Miami.',
-    date: '2023-05-05T16:45:00'
-  },
-  {
-    type: 'mission',
-    title: 'Mission Canceled',
-    description: 'Your participation in Tree Planting Event was canceled.',
-    date: '2023-04-28T11:20:00'
-  }
-])
+const useVolunteer = useVolunteerAuth()
+const announcementUse = useAnnouncement()
+let announcements = ref<Announcement[]>([])
 
-// Format date for display
+const searchQuery = ref('')
+const filterType = ref<'all' | 'mission' | 'participation'>('all')
+
+const showErrorModal = ref(false);
+const errorType = ref<'4xx' | '5xx' | null>(null);
+
+function handleReload() {
+  window.location.reload();
+}
+function handleGoHome() {
+  navigateToRoute('/');
+}
+
+const isLoading = ref(true);
+
+onMounted(async () => {
+  await initData();
+  isLoading.value = false;
+});
+
+async function initData() {
+  try {
+    if (!getUserId) {
+      await initializeUser();
+    }
+    if(getUserId) {
+      announcements.value = await useVolunteer.getPastVolunteerAnnouncement(getUserId);
+    } else {
+      console.warn("User ID is not available, announcements cannot be fetched.");
+    }
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+const displayCount = ref(5)
+
+const filteredItems = computed(() => {
+  return announcements.value
+      .filter(a => {
+        if (filterType.value === 'mission') return isVolunteerAnnouncement(a)
+        if (filterType.value === 'participation') return isParticipationAnnouncement(a)
+        return isVolunteerAnnouncement(a) || isParticipationAnnouncement(a)
+      })
+      .filter(a => a.nameEvent.toLowerCase().includes(searchQuery.value.toLowerCase()))
+})
+
+function isVolunteerAnnouncement(announcement: Announcement): boolean | undefined {
+  if(!getUserId)
+    return false;
+  return announcement.volunteers?.some(
+    volunteer => volunteer.id === getUserId
+  )
+}
+
+function isParticipationAnnouncement(announcement: Announcement): boolean | undefined {
+  if(!getUserId)
+    return false;
+  return announcement.participants?.some(participation => participation.id === getUserId)
+}
+
+const displayedItems = computed(() => filteredItems.value.slice(0, displayCount.value))
+
+watch([searchQuery, filterType], () => {
+  displayCount.value = 5
+})
+
+function loadMore() {
+  displayCount.value = Math.min(displayCount.value + 2, filteredItems.value.length)
+}
+
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx';
+    showErrorModal.value = true;
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx';
+    showErrorModal.value = true;
+  } else {
+    console.error('Erreur inattendue:', error);
+  }
+}
+
 function formatDate(dateString: string): string {
   const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'short', 
+  return date.toLocaleDateString('fr-FR', {
+    year: 'numeric',
+    month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit'
   })
 }
 
-// Get icon component based on activity type
-function getIconForType(type: string) {
-  switch (type) {
-    case 'mission':
-      return MapPin
-    case 'application':
-      return FileText
-    case 'search':
-      return SearchIcon
-    default:
-      return Clock
+// Affiche la période (date ou intervalle) dans le cercle
+function getPeriod(item: Announcement): string {
+  // Si tu as startDate et endDate, adapte ici
+  if (item.dateEvent) {
+    const date = new Date(item.dateEvent)
+    return date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: '2-digit' })
   }
+  return 'N/A'
+}
+
+function goDetail(id: string) {
+  navigateToRoute(`/volunteer/events/announcement/${id}`)
 }
 </script>
+
+<style scoped>
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.group:hover .group-hover\:scale-110 {
+  transform: scale(1.10);
+}
+</style>

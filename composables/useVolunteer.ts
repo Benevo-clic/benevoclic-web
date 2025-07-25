@@ -21,6 +21,9 @@ export const useVolunteerAuth = () => {
         getAllAssociationsFollowingList: volunteerStore.getAllAssociationsFollowingList,
         getAssociationsFollowingList: volunteerStore.getAssociationsFollowingList,
         getAssociations: volunteerStore.getAssociations,
+        getVolunteerAnnouncements: volunteerStore.getVolunteerAnnouncements,
+        getParticipantAnnouncement: volunteerStore.getParticipantAnnouncement,
+        getPastVolunteerAnnouncement: volunteerStore.getPastVolunteerAnnouncement,
     }
 
 }

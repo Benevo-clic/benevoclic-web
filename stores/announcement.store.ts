@@ -2,6 +2,7 @@ import {defineStore} from 'pinia';
 import type {Announcement, CreateAnnouncementDto} from '~/common/interface/event.interface';
 import {$fetch} from "ofetch";
 import type {FilterAnnouncement, FilterAnnouncementResponse} from "~/common/interface/filter.interface";
+import {useUserStore} from "~/stores/user/user.store";
 
 export const useAnnouncementStore = defineStore('announcement', {
   state: () => ({
@@ -46,6 +47,10 @@ export const useAnnouncementStore = defineStore('announcement', {
     },
   setCurrentFilter(filter: FilterAnnouncement | null) {
       this.currentFilter = filter
+  },
+  updateAnnouncements(announcements: Announcement[]) {
+        this.announcements = announcements;
+        this._updateCache();
   },
   patchCurrentFilter(partial: Partial<FilterAnnouncement>) {
       if (!this.currentFilter) {
@@ -434,7 +439,19 @@ export const useAnnouncementStore = defineStore('announcement', {
         }
     },
 
-    async filterAnnouncement(filterAnnouncement: FilterAnnouncement) {
+    async filterAnnouncement(filterAnnouncement: FilterAnnouncement): Promise<FilterAnnouncementResponse> {
+        const user = useUserStore().getUser
+        if (user?.role === 'ASSOCIATION' && user) {
+            return {
+                annonces: [],
+                meta: {
+                    total: 0,
+                    page: 1,
+                    limit: 9,
+                    pages: 1,
+                }
+            }
+        }
         this.loading = true;
         this.error = null;
         try {
@@ -445,11 +462,8 @@ export const useAnnouncementStore = defineStore('announcement', {
 
             if (!response || response.annonces.length === 0) {
             this.error = 'Aucune annonce trouvée pour les critères spécifiés';
-            } else {
-            this.announcements = response.annonces;
-            this._updateCache();
             }
-
+            this.updateAnnouncements(response.annonces);
             return response;
         } catch (err: any) {
             this.error = err?.message || 'Erreur de filtrage des annonces';

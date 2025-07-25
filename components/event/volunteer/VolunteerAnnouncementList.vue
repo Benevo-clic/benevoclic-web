@@ -1,9 +1,6 @@
 <template>
   <div class="space-y-4">
-    <div v-if="props.loading" class="flex justify-center items-center h-32">
-      <div class="loading loading-spinner loading-lg"></div>
-    </div>
-    <div v-else-if="props.announcements.length === 0" class="text-center text-gray-500">
+    <div v-if="props.announcements.length === 0" class="text-center text-gray-500">
       <img
           src="/images/no_data.png"
           alt="Illustration"

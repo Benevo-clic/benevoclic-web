@@ -1,13 +1,12 @@
 <template>
   <div class="space-y-4">
-    <div v-if="props.loading" class="flex justify-center items-center h-32">
-      <span class="loading loading-bars loading-xl"></span>
-    </div>
-    <div v-else-if="props.error" class="p-4 text-red-600 bg-red-100 rounded-md">
-      <p>Une erreur est survenue: {{ props.error }}</p>
-    </div>
-    <div v-else-if="props.announcementFavorites?.length === 0" class="text-center text-gray-500">
-      <p>Aucune annonce à afficher pour le moment.</p>
+    <div v-if="props.announcementFavorites?.length === 0" class="text-center text-gray-500">
+      <img
+          src="/images/no_data.png"
+          alt="Illustration"
+          class="w-full max-w-xl mx-auto"
+          onerror="this.src='/images/volunteer-info.png'"
+      />
     </div>
     <div v-else class="grid grid-cols-1 md:grid-cols-2 xl1285:grid-cols-3 gap-4">
       <div class="col-span-full">
