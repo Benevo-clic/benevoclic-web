@@ -131,14 +131,6 @@ function toggleLanguageMenu() {
     <!-- Profile Section avec design moderne -->
     <div class="p-6 bg-gradient-to-r from-primary/10 to-secondary/10 border-b border-base-300">
       <div class="flex items-center gap-4">
-        <div class="relative">
-          <img 
-            :src="profileImageUrl" 
-            alt="avatar" 
-            class="w-16 h-16 rounded-2xl border-4 border-white shadow-lg object-cover" 
-          />
-          <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-success rounded-full border-2 border-white"></div>
-        </div>
         <div class="flex-1">
           <h3 class="font-bold text-lg text-base-content">
             {{ association?.associationName }}
