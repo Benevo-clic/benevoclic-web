@@ -74,7 +74,7 @@
               </button>
               <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
                 <li v-for="sortOption in sortOptions" :key="sortOption.value">
-                  <a @click="applySort(sortOption.value)">
+                  <a @click.stop="applySort(sortOption.value)">
                     <input
                         type="checkbox"
                         :checked="filters.sort === sortOption.value"
@@ -98,7 +98,7 @@
               </button>
               <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
                 <li v-for="statusOption in statusOptions" :key="statusOption.value">
-                  <a @click="applyStatus(statusOption.value)">
+                  <a @click.stop="applyStatus(statusOption.value)">
                     <input
                         type="checkbox"
                         :checked="filters.status === statusOption.value"
@@ -109,45 +109,48 @@
                 </li>
               </ul>
             </div>
-
-            <!-- Type d'association -->
-            <div class="dropdown dropdown-bottom">
+            <div class="relative inline-block text-left">
               <button
-                  tabindex="0"
-                  class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
-                  :class="selectedTypes.length > 0 ? 'btn-info' : 'btn-outline'"
-              >
-                Type d'association
-                <ChevronRight class="w-3 h-3" />
-              </button>
-              <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
-                <li v-for="type in availableTypes" :key="type">
-                  <a @click="toggleType(type)">
-                    <input type="checkbox" :checked="selectedTypes.includes(type)" class="checkbox checkbox-xs mr-2" />
-                    {{ type }}
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <!-- Tags -->
-            <div class="dropdown dropdown-bottom">
-              <button
-                  tabindex="0"
+                  @click="toggleDropdown"
                   class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
                   :class="selectedTags.length > 0 ? 'btn-accent' : 'btn-outline'"
               >
-                Tags
+                <span>Type d'annonce</span>
                 <ChevronRight class="w-3 h-3" />
               </button>
-              <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
-                <li v-for="tag in availableTags" :key="tag">
-                  <a @click="toggleTag(tag)">
-                    <input type="checkbox" :checked="selectedTags.includes(tag)" class="checkbox checkbox-xs mr-2" />
-                    {{ tag }}
-                  </a>
-                </li>
-              </ul>
+
+              <div
+                  v-if="isOpen"
+                  class="absolute mt-2 w-56 rounded-md shadow-lg bg-base-100 z-50"
+                  @click.stop
+              >
+                <ul class="menu p-2 text-sm">
+                  <li v-for="tag in availableTags" :key="tag">
+                    <a @click.stop="toggleTag(tag)">
+                      <input type="checkbox" :checked="selectedTags.includes(tag)" class="checkbox checkbox-xs mr-2" />
+                      {{ tag }}
+                    </a>
+                  </li>
+                  <li v-if="!showCustomInput">
+                    <button @click.stop="openCustomInput" class="text-primary font-semibold cursor-pointer">
+                      <span>Autre</span>
+                    </button>
+                  </li>
+                  <li v-else>
+                    <div class="flex items-center gap-2 mt-2">
+                      <input
+                          v-model="customTag"
+                          @keydown.enter.prevent="addCustomTag"
+                          type="text"
+                          class="input input-sm input-bordered w-full"
+                          placeholder="Nouveau type…"
+                          ref="customInputRef"
+                      />
+                      <button class="btn btn-sm btn-ghost" @click="cancelCustomInput" title="Annuler">✕</button>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
 
             <LocationButton
@@ -192,7 +195,7 @@
                     </button>
                     <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
                       <li v-for="sortOption in sortOptions" :key="sortOption.value">
-                        <a @click="applySort(sortOption.value)">
+                        <a @click.stop="applySort(sortOption.value)">
                           <input
                               type="checkbox"
                               :checked="filters.sort === sortOption.value"
@@ -212,7 +215,7 @@
                     </button>
                     <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
                       <li v-for="statusOption in statusOptions" :key="statusOption.value">
-                        <a @click="applyStatus(statusOption.value)">
+                        <a @click.stop="applyStatus(statusOption.value)">
                           <input
                               type="checkbox"
                               :checked="filters.status === statusOption.value"
@@ -225,39 +228,53 @@
                   </div>
                 </li>
                 <li>
-                  <div class="dropdown dropdown-right">
-                    <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
-                      Type d'association
+                  <div class="relative inline-block text-left">
+                    <button
+                        @click="toggleDropdown"
+                        class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
+                        :class="selectedTags.length > 0 ? 'btn-accent' : 'btn-outline'"
+                    >
+                      <span>Type d'annonce</span>
                       <ChevronRight class="w-3 h-3" />
                     </button>
-                    <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
-                      <li v-for="type in availableTypes" :key="type">
-                        <a @click="toggleType(type)">
-                          <input type="checkbox" :checked="selectedTypes.includes(type)" class="checkbox checkbox-xs mr-2" />
-                          {{ type }}
-                        </a>
-                      </li>
-                    </ul>
+
+                    <div
+                        v-if="isOpen"
+                        class="absolute mt-2 w-56 rounded-md shadow-lg bg-base-100 z-50"
+                        @click.stop
+                    >
+                      <ul class="menu p-2 text-sm">
+                        <li v-for="tag in availableTags" :key="tag">
+                          <a @click.stop="toggleTag(tag)">
+                            <input type="checkbox" :checked="selectedTags.includes(tag)" class="checkbox checkbox-xs mr-2" />
+                            {{ tag }}
+                          </a>
+                        </li>
+                        <li v-if="!showCustomInput">
+                          <button @click.stop="openCustomInput" class="text-primary font-semibold cursor-pointer">
+                            <span>Autre</span>
+                          </button>
+                        </li>
+                        <li v-else>
+                          <div class="flex items-center gap-2 mt-2">
+                            <input
+                                v-model="customTag"
+                                @keydown.enter.prevent="addCustomTag"
+                                type="text"
+                                class="input input-sm input-bordered w-full"
+                                placeholder="Nouveau type…"
+                                ref="customInputRef"
+                            />
+                            <button class="btn btn-sm btn-primary" @click.stop="addCustomTag">+</button>
+                            <button class="btn btn-sm btn-ghost" @click="cancelCustomInput" title="Annuler">✕</button>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </li>
                 <li>
-                  <div class="dropdown dropdown-right">
-                    <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
-                      Tags
-                      <ChevronRight class="w-3 h-3" />
-                    </button>
-                    <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
-                      <li v-for="tag in availableTags" :key="tag">
-                        <a @click="toggleTag(tag)">
-                          <input type="checkbox" :checked="selectedTags.includes(tag)" class="checkbox checkbox-xs mr-2" />
-                          {{ tag }}
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-                <li>
-                  <button @click="showAdvancedFilters = true" class="btn btn-outline btn-sm w-full">
+                  <button @click.stop="showAdvancedFilters = true" class="btn btn-outline btn-sm w-full">
                     Filtres avancés
                   </button>
                 </li>
@@ -285,7 +302,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, defineEmits, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, defineEmits, watch, nextTick } from 'vue'
 import { Map, SortAsc, ChevronRight, SlidersHorizontal } from 'lucide-vue-next';
 import type {Announcement} from "~/common/interface/event.interface";
 import type {FilterAnnouncement, AnnouncementStatus, SortOption} from "~/common/interface/filter.interface";
@@ -333,6 +350,7 @@ const selectedTypes = ref<string[]>([])
 const userLocation = useUserLocation()
 const announcement = useAnnouncement()
 
+const isOpen = ref(false)
 const searchTimeout = ref<NodeJS.Timeout | null>(null)
 const userCurrentLocation = ref<any>(null)
 const currentLatitude = ref<number | undefined>(undefined)
@@ -361,6 +379,14 @@ const tempAdvancedFilters = ref<Partial<FilterAnnouncement>>({
   publicationInterval: undefined
 })
 
+const toggleDropdown = () => {
+  isOpen.value = !isOpen.value
+  if (isOpen.value) {
+    nextTick(() => {
+      customInputRef.value?.focus()
+    })
+  }
+}
 const initLocation = async () => {
   try {
     const location = await userLocation.getUserLocation()
@@ -456,6 +482,38 @@ const hasAdvancedFilters = computed(() => {
 })
 
 const showLocationDropdown = ref(false)
+
+const customTag = ref('')
+const showCustomInput = ref(false)
+const customInputRef = ref<HTMLInputElement | null>(null)
+
+function addCustomTag() {
+  const tag = customTag.value.trim()
+  if (!tag) return
+  if (!availableTags.value.includes(tag)) {
+    availableTags.value.push(tag)
+  }
+  if (!selectedTags.value.includes(tag)) {
+    selectedTags.value.push(tag)
+  }
+  customTag.value = ''
+  showCustomInput.value = false
+  updateFilters()
+}
+
+function cancelCustomInput() {
+  customTag.value = ''
+  showCustomInput.value = false
+}
+
+function openCustomInput() {
+  console.log('showCustomInput', showCustomInput.value)
+  showCustomInput.value = true
+}
+
+watch(showCustomInput, (val) => {
+  if (val) nextTick(() => customInputRef.value && customInputRef.value?.focus())
+})
 
 
 const toggleMap = () => {

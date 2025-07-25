@@ -58,7 +58,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {definePageMeta, useAnnouncement, useNavigation} from "#imports";
+import {definePageMeta, useAnnouncement} from "#imports";
 import {onMounted, computed, ref} from 'vue';
 import VolunteerEventFilters from '~/components/event/volunteer/VolunteerEventFilters.vue';
 import type {FilterAnnouncement} from "~/common/interface/filter.interface";

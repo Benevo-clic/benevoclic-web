@@ -33,6 +33,7 @@ const props = defineProps<{
   hasActiveFilters?: boolean
 }>()
 
+
 let filters = ref<FilterAnnouncement>({
   status: props.filters.status,
   hoursEventFrom: props.filters.hoursEventFrom,
@@ -81,7 +82,7 @@ const emit = defineEmits<{
   (event: 'selectedTypes', types: string): void
 }>()
 
-const selectedTags = ref<string[]>([])
+const selectedTags = ref<string[] | undefined >([])
 const selectedTypes = ref<string[]>([])
 
 const getStatusLabel = (status: AnnouncementStatus) => {
@@ -124,12 +125,12 @@ const removeSort = () => {
 }
 
 const removeTag = (tag: string) => {
-  selectedTags.value = props.selectedTags.filter(t => t !== tag)
+  selectedTags.value = props.selectedTags?.filter(t => t !== tag)
   emit('selectedTags', tag)
 }
 
 const removeType = (type: string) => {
-  selectedTypes.value = props.selectedTypes.filter(t => t !== type)
+  selectedTypes.value = props.selectedTypes?.filter(t => t !== type)
   emit('selectedTypes', type)
 }
 
@@ -208,7 +209,7 @@ const resetFilters = () => {
       </div>
 
       <!-- Tags -->
-      <div v-for="tag in selectedTags" :key="tag" class="badge badge-accent gap-1">
+      <div v-for="tag in props.selectedTags" :key="tag" class="badge badge-accent gap-1">
         {{ tag }}
         <button @click="removeTag(tag)" class="btn btn-ghost btn-xs p-0 h-4 w-4">
           <X class="w-3 h-3" />
