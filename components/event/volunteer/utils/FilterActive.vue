@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {SlidersHorizontal, X} from "lucide-vue-next";
 import type {
+  AnnouncementState,
   AnnouncementStatus,
   FilterAnnouncement,
   PublicationInterval,
@@ -26,15 +27,18 @@ const props = defineProps<{
     radius?: number | undefined,
     page?: number | undefined,
     limit?: number | undefined,
-    sort?: SortOption | undefined
+    sort?: SortOption | undefined,
+    stateEvent?: AnnouncementState | undefined,
   },
   selectedTags?: string[],
   selectedTypes?: string[],
   hasActiveFilters?: boolean
 }>()
 
-let filters = ref<FilterAnnouncement>({
+
+let filters = ref<FilterAnnouncement & {stateEvent?: AnnouncementState}>({
   status: props.filters.status,
+  stateEvent: props.filters.stateEvent,
   hoursEventFrom: props.filters.hoursEventFrom,
   hoursEventTo: props.filters.hoursEventTo,
   dateEventFrom: props.filters.dateEventFrom,
@@ -70,6 +74,7 @@ watch(props, (newFilters: any) => {
 
 const emit = defineEmits<{
   (event: 'status'): void
+  (event: 'stateEvent'): void
   (event: 'sort'): void
   (event: 'dateEvent'): void
   (event: 'hoursEvent'): void
@@ -81,7 +86,7 @@ const emit = defineEmits<{
   (event: 'selectedTypes', types: string): void
 }>()
 
-const selectedTags = ref<string[]>([])
+const selectedTags = ref<string[] | undefined >([])
 const selectedTypes = ref<string[]>([])
 
 const getStatusLabel = (status: AnnouncementStatus) => {
@@ -90,6 +95,15 @@ const getStatusLabel = (status: AnnouncementStatus) => {
     case 'COMPLETED': return 'Terminé'
     case 'INACTIVE': return 'Inactif'
     default: return status
+  }
+}
+
+const getStateEventLabel = (state: AnnouncementState) => {
+  switch (state) {
+    case 'NOW': return 'En cours'
+    case 'PAST': return 'Terminé'
+    case 'UPCOMING': return 'À venir'
+    default: return state
   }
 }
 
@@ -118,18 +132,23 @@ const removeStatus = () => {
   emit('status')
 }
 
+const removeStateEvent = () => {
+  filters.value.stateEvent = undefined
+  emit('stateEvent')
+}
+
 const removeSort = () => {
   filters.value.sort = undefined
   emit('sort')
 }
 
 const removeTag = (tag: string) => {
-  selectedTags.value = props.selectedTags.filter(t => t !== tag)
+  selectedTags.value = props.selectedTags?.filter(t => t !== tag)
   emit('selectedTags', tag)
 }
 
 const removeType = (type: string) => {
-  selectedTypes.value = props.selectedTypes.filter(t => t !== type)
+  selectedTypes.value = props.selectedTypes?.filter(t => t !== type) || []
   emit('selectedTypes', type)
 }
 
@@ -164,6 +183,7 @@ const removeRadius = () => {
 const resetFilters = () => {
   filters.value = {
     status: undefined,
+    stateEvent: undefined,
     hoursEventFrom: undefined,
     hoursEventTo: undefined,
     dateEventFrom: undefined,
@@ -199,6 +219,14 @@ const resetFilters = () => {
         </button>
       </div>
 
+      <!-- État de l'événement -->
+      <div v-if="props.filters.stateEvent" class="badge badge-secondary gap-1">
+        {{ getStateEventLabel(props.filters.stateEvent) }}
+        <button @click="removeStateEvent" class="btn btn-ghost btn-xs p-0 h-4 w-4">
+          <X class="w-3 h-3" />
+        </button>
+      </div>
+
       <!-- Tri -->
       <div v-if="props.filters.sort" class="badge badge-secondary gap-1">
         {{ getSortLabel(props.filters.sort) }}
@@ -208,7 +236,7 @@ const resetFilters = () => {
       </div>
 
       <!-- Tags -->
-      <div v-for="tag in selectedTags" :key="tag" class="badge badge-accent gap-1">
+      <div v-for="tag in props.selectedTags" :key="tag" class="badge badge-accent gap-1">
         {{ tag }}
         <button @click="removeTag(tag)" class="btn btn-ghost btn-xs p-0 h-4 w-4">
           <X class="w-3 h-3" />

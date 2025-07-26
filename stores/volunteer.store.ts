@@ -6,6 +6,7 @@ import type {AssociationInfo} from "~/common/interface/association.interface";
 import {RoleUser} from "~/common/enums/role.enum";
 import {useCookie} from "#app";
 import {useAuthStore} from "~/stores/auth/auth.store";
+import type {Announcement} from "~/common/interface/event.interface";
 
 
 export const useVolunteerAuthStore = defineStore('volunteerAuth', {
@@ -262,6 +263,60 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                 this.loading = false
             }
         },
+
+        async getVolunteerAnnouncements(volunteerId: string): Promise<Announcement[]> {
+            this.loading = true
+            this.error = null
+            try {
+                const response = await $fetch('/api/volunteer/getVolunteerAnnouncements', {
+                    method: 'GET',
+                    query: { volunteerId },
+                })
+
+                return response as Announcement[]
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de récupération des annonces du bénévole'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
+
+        async getParticipantAnnouncement(volunteerId: string) {
+            this.loading = true
+            this.error = null
+            try {
+                const response = await $fetch('/api/volunteer/getParticipantAnnouncement', {
+                    method: 'GET',
+                    query: { volunteerId },
+                })
+
+                return response as Announcement[]
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de récupération des annonces du participant'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
+        async getPastVolunteerAnnouncement(volunteerId: string) {
+            this.loading = true
+            this.error = null
+            try {
+                const response = await $fetch('/api/volunteer/getPastVolunteerAnnouncement', {
+                    method: 'GET',
+                    query: { volunteerId },
+                })
+
+                return response as Announcement[]
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de récupération des annonces passées du bénévole'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
+
         async removeVolunteer() {
             this.loading = true
             this.error = null

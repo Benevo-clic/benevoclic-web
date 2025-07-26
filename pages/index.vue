@@ -17,8 +17,17 @@
             </div>
           </div>
         </client-only>
-
-        <div class="bg-base-100 rounded-lg shadow-md p-6 w-full mt-4">
+        <div
+            v-if="isLoading"
+            class="fixed inset-0 bg-base-200 bg-opacity-80 z-[1000] flex items-center justify-center"
+        >
+          <img
+              src="/logo.png"
+              alt="Chargement…"
+              class="w-24 h-24 animate-spin"
+          />
+        </div>
+        <div v-else class="bg-base-100 rounded-lg shadow-md p-6 w-full mt-4">
           <NoConnectedAnnouncementList
               :announcements="announcements"
               :total-announcements="totalAnnouncements"
@@ -49,13 +58,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import {definePageMeta, useAnnouncement, useNavigation} from "#imports";
+import {definePageMeta, useAnnouncement} from "#imports";
 import {onMounted, computed, ref} from 'vue';
 import VolunteerEventFilters from '~/components/event/volunteer/VolunteerEventFilters.vue';
-import {useUser} from "~/composables/auth/useUser";
 import type {FilterAnnouncement} from "~/common/interface/filter.interface";
 import NoConnectedAnnouncementList from "~/components/event/noConnected/NoConnectedAnnouncementList.vue";
-import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 
 definePageMeta({
   middleware: ['auth'],
@@ -111,10 +118,9 @@ async function fetchAnnouncements(page = 1) {
       meta: { total = 0 } = {}
     } = response || {};
 
-    announcements.value      = annonces;
+    announcements.value = annonces;
     totalAnnouncements.value = total;
   } catch (error) {
-    announcements.value = [];
     return;
   } finally {
     loading.value = false;
@@ -149,6 +155,13 @@ async function handleTypeFilter(type: string) {
   currentPage.value = 1;
   await fetchAnnouncements(1);
 }
+
+const isLoading = ref(true);
+
+onMounted(async () => {
+  await fetchAnnouncements(1);
+  isLoading.value = false;
+});
 
 </script>
 

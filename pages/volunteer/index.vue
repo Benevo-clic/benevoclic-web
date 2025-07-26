@@ -1,49 +1,63 @@
 <template>
-    <div class="mx-auto px-4 py-6 max-w-screen-2xl w-full">
-      <client-only>
-        <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
-          <div class="flex flex-col items-center w-full">
-            <VolunteerEventFilters
-                class="mb-4 w-full"
-                :announcements="announcements"
-                @map="handleMapToggle"
-                @filter="handleFilter"
-                @type="handleTypeFilter"
-            />
-          </div>
+<div>
+  <div
+      v-if="isLoading"
+      class="fixed inset-0 bg-base-200 bg-opacity-80 z-[1000] flex items-center justify-center"
+  >
+    <img
+        src="/logo.png"
+        alt="Chargement…"
+        class="w-24 h-24 animate-spin"
+    />
+  </div>
+  <div v-else class="mx-auto px-4 py-6 max-w-screen-2xl w-full">
+    <client-only>
+      <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
+        <div class="flex flex-col items-center w-full">
+          <VolunteerEventFilters
+              class="mb-4 w-full max-w-4xl"
+              :announcements="announcements"
+              @map="handleMapToggle"
+              @filter="handleFilter"
+              @type="handleTypeFilter"
+          />
         </div>
-      </client-only>
+      </div>
+    </client-only>
 
-      <div class="bg-base-100 rounded-lg shadow-md p-6 w-full mt-4">
-            <VolunteerAnnouncementList
-                :announcements="announcements"
-                :total-announcements="totalAnnouncements"
-                :error="error.value"
-                :loading="loading"
-            />
-        </div>
+    <div  class="mx-auto px-4 py-5 max-w-10xl">
+      <div class="bg-base-100 rounded-2xl shadow-md p-6">
+        <VolunteerAnnouncementList
+            :announcements="announcements"
+            :total-announcements="totalAnnouncements"
+            :error="error.value"
+            :loading="loading"
+        />
+      </div>
       <div class="flex justify-center mt-6" v-if="totalPages > 1">
         <div class="join">
           <button
-            class="join-item btn"
-            :disabled="currentPage === 1"
-            @click="goToPage(currentPage - 1)"
+              class="join-item btn"
+              :disabled="currentPage === 1"
+              @click="goToPage(currentPage - 1)"
           >«</button>
           <button class="join-item btn" disabled>
             Page {{ currentPage }} / {{ totalPages }}
           </button>
           <button
-            class="join-item btn"
-            :disabled="currentPage === totalPages"
-            @click="goToPage(currentPage + 1)"
+              class="join-item btn"
+              :disabled="currentPage === totalPages"
+              @click="goToPage(currentPage + 1)"
           >»</button>
         </div>
       </div>
     </div>
+  </div>
+</div>
 </template>
 
 <script setup lang="ts">
-import {definePageMeta, useAnnouncement, useFavoritesAnnouncement, useNavigation} from "#imports";
+import {definePageMeta, useAnnouncement, useFavoritesAnnouncement} from "#imports";
 import {onMounted, computed, ref} from 'vue';
 import VolunteerEventFilters from '~/components/event/volunteer/VolunteerEventFilters.vue';
 import VolunteerAnnouncementList from "~/components/event/volunteer/VolunteerAnnouncementList.vue";
@@ -143,9 +157,12 @@ async function handleTypeFilter(type: string) {
   currentPage.value = 1;
   await fetchAnnouncements(1);
 }
+const isLoading = ref(true);
 
 onMounted(async () => {
   await initData();
+  await fetchAnnouncements(1);
+  isLoading.value = false;
 });
 
 async function initData() {

@@ -1,12 +1,18 @@
 <template>
-  <div v-if="!isReady" class="flex justify-center items-center h-32">
-    <span class="loading loading-bars loading-xl"></span>
+  <div
+      v-if="!isReady"
+      class="fixed inset-0 bg-base-200 bg-opacity-80 z-[1000] flex items-center justify-center"
+  >
+    <img
+        src="/logo.png"
+        alt="Chargement…"
+        class="w-24 h-24 animate-spin"
+    />
   </div>
   <div v-else class="mx-auto px-4 py-6 max-w-screen-2xl w-full">
-    <!-- Filtres -->
     <div class="container mx-auto px-4 w-full">
       <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
-        <div class="flex flex-col items-center w-full">
+        <div class="flex flex-col items-start w-full">
           <VolunteerEventFavoritesFilters
               class="mb-4"
               @filter="handleFilter"
@@ -15,7 +21,6 @@
       </div>
     </div>
 
-    <!-- Liste + pagination -->
     <div class="container mx-auto px-4 py-4">
       <div class="bg-base-100 rounded-lg shadow-md p-6">
         <VolunteerAnnouncementFavoritesList

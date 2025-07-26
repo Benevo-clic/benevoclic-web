@@ -1,7 +1,12 @@
 import {defineStore} from 'pinia';
-import type {Announcement, CreateAnnouncementDto} from '~/common/interface/event.interface';
+import type {Announcement, CreateAnnouncementDto, InfoVolunteer} from '~/common/interface/event.interface';
 import {$fetch} from "ofetch";
-import type {FilterAnnouncement, FilterAnnouncementResponse} from "~/common/interface/filter.interface";
+import type {
+    FilterAnnouncement,
+    FilterAnnouncementResponse,
+    FilterAssociationAnnouncement
+} from "~/common/interface/filter.interface";
+import {useUserStore} from "~/stores/user/user.store";
 
 export const useAnnouncementStore = defineStore('announcement', {
   state: () => ({
@@ -14,6 +19,8 @@ export const useAnnouncementStore = defineStore('announcement', {
     _announcementsCache: new Map<string, Announcement>(),
     _lastFetch: 0,
     _cacheExpiry: 5 * 60 * 1000,
+    lastFilter: null as FilterAnnouncement | null,
+    cachedResponse: null as FilterAnnouncementResponse | null,
   }),
 
   getters: {
@@ -46,6 +53,10 @@ export const useAnnouncementStore = defineStore('announcement', {
     },
   setCurrentFilter(filter: FilterAnnouncement | null) {
       this.currentFilter = filter
+  },
+  updateAnnouncements(announcements: Announcement[]) {
+        this.announcements = announcements;
+        this._updateCache();
   },
   patchCurrentFilter(partial: Partial<FilterAnnouncement>) {
       if (!this.currentFilter) {
@@ -424,6 +435,9 @@ export const useAnnouncementStore = defineStore('announcement', {
             }
 
             this._lastFetch = 0;
+            this.validateFilterResponse(response);
+            this.updateAnnouncements(response?.annonces || []);
+
 
             return response;
         } catch (err: any) {
@@ -434,30 +448,148 @@ export const useAnnouncementStore = defineStore('announcement', {
         }
     },
 
-    async filterAnnouncement(filterAnnouncement: FilterAnnouncement) {
+      async filterAssociationAnnouncements(filter: FilterAssociationAnnouncement): Promise<FilterAnnouncementResponse | undefined> {
+          const url = '/api/announcement/filter/filterAssociationAnnouncement';
+          this.loading = true;
+          this.error = null;
+
+          try {
+              const response = await $fetch<FilterAnnouncementResponse>(url, {
+                  method: 'POST',
+                  body: filter,
+              });
+
+              this.validateFilterResponse(response);
+              this.updateAnnouncements(response?.annonces || []);
+              return response;
+          } catch (err: any) {
+              this.error = err?.message || 'Erreur de filtrage des annonces';
+              throw err;
+          } finally {
+              this.loading = false;
+          }
+      },
+
+      async updatePresentParticipant(announcementId: string, participant: InfoVolunteer) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await $fetch<Announcement>(`/api/announcement/updatePresentParticipant`, {
+                    method: 'PATCH',
+                    query: { announcementId },
+                    body: participant,
+                });
+
+                if (this.currentAnnouncement?._id === announcementId) {
+                    await this.fetchAnnouncementById(announcementId);
+                }
+
+                this._lastFetch = 0;
+
+                return response;
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de mise à jour du participant présent';
+                throw err;
+            } finally {
+                this.loading = false;
+            }
+
+      },
+
+    async updatePresentVolunteer(announcementId: string, volunteer: InfoVolunteer) {
         this.loading = true;
         this.error = null;
         try {
-            const response = await $fetch<FilterAnnouncementResponse>('/api/announcement/filter/filterAnnouncement', {
-            method: 'POST',
-            body: filterAnnouncement,
+            const response = await $fetch<Announcement>(`/api/announcement/updatePresentVolunteer`, {
+                method: 'PATCH',
+                query: { announcementId },
+                body: volunteer,
             });
 
-            if (!response || response.annonces.length === 0) {
-            this.error = 'Aucune annonce trouvée pour les critères spécifiés';
-            } else {
-            this.announcements = response.annonces;
-            this._updateCache();
+            if (this.currentAnnouncement?._id === announcementId) {
+                await this.fetchAnnouncementById(announcementId);
             }
+
+            this._lastFetch = 0;
 
             return response;
         } catch (err: any) {
-            this.error = err?.message || 'Erreur de filtrage des annonces';
+            this.error = err?.message || 'Erreur de mise à jour du volontaire présent';
             throw err;
         } finally {
             this.loading = false;
         }
-    }
+    },
+
+    async filterAnnouncement(filterAnnouncement: FilterAnnouncement): Promise<FilterAnnouncementResponse | undefined> {
+        const user = useUserStore().getUser
+        if (user?.role === 'ASSOCIATION' && user) {
+            return {
+                annonces: [],
+                meta: {
+                    total: 0,
+                    page: 1,
+                    limit: 9,
+                    pages: 1,
+                }
+            }
+        }
+
+        if (this.lastFilter && this.cachedResponse && this.isSameFilter(this.lastFilter, filterAnnouncement)) {
+            this.updateAnnouncements(this.cachedResponse.annonces)
+            return this.cachedResponse
+        }
+
+        this.loading = true
+        this.error = null
+        this.lastFilter = { ...filterAnnouncement }
+
+        try {
+            const response = await $fetch<FilterAnnouncementResponse>('/api/announcement/filter/filterAnnouncement', {
+                method: 'POST',
+                body: filterAnnouncement,
+            })
+
+            this.validateFilterResponse(response);
+
+            this.cachedResponse = response
+            this.lastFilter = { ...filterAnnouncement }
+
+            this.updateAnnouncements(response.annonces)
+            return response
+        } catch (err: any) {
+            this.error = err?.message || 'Erreur de filtrage des annonces'
+            throw err
+        } finally {
+            this.loading = false
+        }
+    },
+
+    // Méthode pour comparer deux filtres
+      isSameFilter(filter1: FilterAnnouncement, filter2: FilterAnnouncement): boolean {
+          // Normalise les objets avant comparaison
+          const normalizeFilter = (filter: FilterAnnouncement) => {
+              const normalized = { ...filter }
+              if (normalized.tags) {
+                  normalized.tags = [...normalized.tags].sort()
+              }
+              return normalized
+          }
+
+          return JSON.stringify(normalizeFilter(filter1)) === JSON.stringify(normalizeFilter(filter2))
+      },
+
+    // Méthode pour vider le cache (optionnel)
+    clearFilterCache(): void {
+        this.lastFilter = null
+        this.cachedResponse = null
+    },
+      validateFilterResponse(response: FilterAnnouncementResponse | undefined): void {
+          if (!response || response.annonces.length === 0) {
+              this.error = 'Aucune annonce trouvée pour les critères spécifiés';
+          }
+      }
 
   },
-}); 
+});
+
