@@ -16,7 +16,7 @@
     <div class="container mx-auto px-4 w-full">
       <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
         <div class="flex flex-col items-center w-full">
-          <EventFilters class="mb-4 w-full max-w-4xl" />
+          <EventFilters class="mb-4 w-full max-w-4xl" @update:filters="handleFilterUpdate" />
         </div>
       </div>
     </div>
@@ -65,9 +65,10 @@ import {definePageMeta, useNavigation} from "#imports";
 import ReadOnlyEventList from '~/components/event/association/ReadOnlyEventList.vue';
 import EventFilters from '~/components/event/association/EventFilters.vue';
 import { useAnnouncement } from "~/composables/useAnnouncement";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, computed, watch} from "vue";
 import {useUser} from "~/composables/auth/useUser";
 import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import type {FilterAnnouncement, FilterAssociationAnnouncement} from "~/common/interface/filter.interface";
 
 definePageMeta({
   middleware: ['auth'],
@@ -79,6 +80,12 @@ const {getUserId, initializeUser} = useUser()
 const {navigateToRoute} = useNavigation()
 
 const isLoading = ref(true);
+const totalItems = ref(0);
+const currentFilters = ref<FilterAssociationAnnouncement>({
+  associationId: '',
+  page: 1,
+  limit: 9
+});
 
 onMounted(async () => {
   await initData()
@@ -96,21 +103,18 @@ const currentPage = ref(1);
 const pageSize = 9;
 
 const paginatedAnnouncements = computed(() => {
-  const all = announcements.value.value;
-  const filtered = all.filter((a: any) => a.status !== 'INACTIVE');
-  const start = (currentPage.value - 1) * pageSize;
-  return filtered.slice(start, start + pageSize);
+  return announcements.value.value || [];
 });
 
 const totalPages = computed(() => {
-  const all = announcements.value.value;
-  const filtered = all.filter((a: any) => a.status !== 'INACTIVE');
-  return Math.ceil(filtered.length / pageSize);
+  return Math.ceil(totalItems.value / pageSize);
 });
 
-function goToPage(page: number) {
+async function goToPage(page: number) {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page;
+    currentFilters.value.page = page;
+    await fetchFilteredAnnouncements();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
@@ -137,13 +141,45 @@ function handleError(error: any) {
 }
 
 
+async function handleFilterUpdate(filters: FilterAnnouncement) {
+  try {
+    currentPage.value = 1;
+    currentFilters.value = {
+      ...currentFilters.value,
+      ...filters,
+      associationId: getUserId || '',
+      page: 1,
+      limit: pageSize
+    };
+    await fetchFilteredAnnouncements();
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+async function fetchFilteredAnnouncements() {
+  try {
+    if (!currentFilters.value.associationId) {
+      console.warn("Association ID is not available, announcements cannot be filtered.");
+      return;
+    }
+    const response = await announcement.filterAssociationAnnouncementByAssociationId(currentFilters.value);
+    if (response && response.meta) {
+      totalItems.value = response.meta.total;
+    }
+  } catch (error) {
+    handleError(error);
+  }
+}
+
 async function initData() {
   try {
     if (!getUserId) {
       await initializeUser();
     }
     if(getUserId) {
-      await announcement.fetchAnnouncements(getUserId);
+      currentFilters.value.associationId = getUserId;
+      await fetchFilteredAnnouncements();
     } else {
       console.warn("User ID is not available, announcements cannot be fetched.");
     }

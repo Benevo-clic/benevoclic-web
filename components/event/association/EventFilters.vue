@@ -116,7 +116,7 @@
           <button
             tabindex="0"
             class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
-            :class="filters.eventStatus ? 'btn-info' : 'btn-outline'"
+            :class="filters.stateEvent ? 'btn-info' : 'btn-outline'"
           >
             <Clock class="w-4 h-4" />
             Événements
@@ -124,30 +124,30 @@
           </button>
           <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
             <li>
-              <a @click.stop="applyEventStatus('current' as const)">
+              <a @click.stop="applyEventStatus('NOW' as const)">
                 <input
                   type="checkbox"
-                  :checked="filters.eventStatus === 'current'"
+                  :checked="filters.stateEvent === 'NOW'"
                   class="checkbox checkbox-xs mr-2"
                 />
                 En cours
               </a>
             </li>
             <li>
-              <a @click.stop="applyEventStatus('past' as const)">
+              <a @click.stop="applyEventStatus('PAST' as const)">
                 <input
                   type="checkbox"
-                  :checked="filters.eventStatus === 'past'"
+                  :checked="filters.stateEvent === 'PAST'"
                   class="checkbox checkbox-xs mr-2"
                 />
                 Passés
               </a>
             </li>
             <li>
-              <a @click.stop="applyEventStatus('upcoming' as const)">
+              <a @click.stop="applyEventStatus('UPCOMING' as const)">
                 <input
                   type="checkbox"
-                  :checked="filters.eventStatus === 'upcoming'"
+                  :checked="filters.stateEvent === 'UPCOMING'"
                   class="checkbox checkbox-xs mr-2"
                 />
                 À venir
@@ -356,13 +356,13 @@
                       :key="eventOption.value"
                       :class="[
                         'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
-                        filters.eventStatus === eventOption.value ? 'bg-primary/20 text-primary' : 'hover:bg-base-200'
+                        filters.stateEvent === eventOption.value ? 'bg-primary/20 text-primary' : 'hover:bg-base-200'
                       ]"
-                      @click="applyEventStatus(eventOption.value as 'current' | 'past' | 'upcoming'); showEventsMenu = false"
+                      @click="applyEventStatus(eventOption.value as 'NOW' | 'PAST' | 'UPCOMING'); showEventsMenu = false"
                     >
                       <input
                         type="radio"
-                        :checked="filters.eventStatus === eventOption.value"
+                        :checked="filters.stateEvent === eventOption.value"
                         class="radio radio-sm radio-primary"
                       />
                       <span class="text-sm">{{ eventOption.label }}</span>
@@ -408,7 +408,11 @@ import { ref, computed, watch, nextTick } from 'vue'
 import { Search, CircleDot, Tag, ChevronRight, SlidersHorizontal, Plus, X, Clock } from 'lucide-vue-next'
 import FilterActive from '~/components/event/volunteer/utils/FilterActive.vue'
 import AdvancedFilters from '~/components/event/volunteer/utils/AdvancedFilters.vue'
-import type { FilterAnnouncement, AnnouncementStatus } from '~/common/interface/filter.interface'
+import type {
+  FilterAnnouncement,
+  AnnouncementStatus,
+  FilterAssociationAnnouncement, AnnouncementState
+} from '~/common/interface/filter.interface'
 
 // Props et emits
 const emit = defineEmits<{
@@ -416,7 +420,8 @@ const emit = defineEmits<{
 }>()
 
 // Réactifs
-const filters = ref<FilterAnnouncement & { eventStatus?: 'current' | 'past' | 'upcoming' }>({
+const filters = ref<FilterAssociationAnnouncement>({
+  associationId: '',
   nameEvent: '',
   status: undefined,
   dateEventFrom: undefined,
@@ -426,7 +431,7 @@ const filters = ref<FilterAnnouncement & { eventStatus?: 'current' | 'past' | 'u
   tags: undefined,
   page: 1,
   limit: 9,
-  eventStatus: undefined
+  stateEvent: undefined
 })
 
 const selectedTags = ref<string[]>([])
@@ -455,13 +460,13 @@ const availableTags = ref([
 ])
 
 const eventOptions = ref([
-  { value: 'current', label: 'En cours' },
-  { value: 'past', label: 'Passés' },
-  { value: 'upcoming', label: 'À venir' }
+  { value: 'NOW', label: 'En cours' },
+  { value: 'PAST', label: 'Passés' },
+  { value: 'UPCOMING', label: 'À venir' }
 ])
 
 // Filtres avancés temporaires
-const tempAdvancedFilters = ref<Partial<FilterAnnouncement>>({
+const tempAdvancedFilters = ref<Partial<FilterAssociationAnnouncement>>({
   dateEventFrom: undefined,
   dateEventTo: undefined,
   hoursEventFrom: undefined,
@@ -477,7 +482,7 @@ const hasActiveFilters = computed(() => {
     filters.value.dateEventTo ||
     filters.value.hoursEventFrom ||
     filters.value.hoursEventTo ||
-    filters.value.eventStatus
+    filters.value.stateEvent
 })
 
 const hasAdvancedFilters = computed(() => {
@@ -540,8 +545,8 @@ const addCustomTag = () => {
   applyFilters()
 }
 
-const applyEventStatus = (status: 'current' | 'past' | 'upcoming') => {
-  filters.value.eventStatus = filters.value.eventStatus === status ? undefined : status
+const applyEventStatus = (status: AnnouncementState) => {
+  filters.value.stateEvent = filters.value.stateEvent === status ? undefined : status
   applyFilters()
 }
 
@@ -583,7 +588,7 @@ const getTagsLabel = () => {
 }
 
 const getEventsLabel = () => {
-  const eventOption = eventOptions.value.find(e => e.value === filters.value.eventStatus)
+  const eventOption = eventOptions.value.find(e => e.value === filters.value.stateEvent)
   return eventOption ? eventOption.label : 'Événements'
 }
 
@@ -592,7 +597,7 @@ const closeAdvancedFilters = () => {
   showAdvancedFilters.value = false
 }
 
-const applyFiltersAdvanced = (advancedFilters: Partial<FilterAnnouncement>) => {
+const applyFiltersAdvanced = (advancedFilters: Partial<FilterAssociationAnnouncement>) => {
   filters.value.dateEventFrom = advancedFilters.dateEventFrom || filters.value.dateEventFrom
   filters.value.dateEventTo = advancedFilters.dateEventTo || filters.value.dateEventTo
   filters.value.hoursEventFrom = advancedFilters.hoursEventFrom || filters.value.hoursEventFrom
@@ -632,12 +637,13 @@ const removeHoursEvent = () => {
 }
 
 const removeEventStatus = () => {
-  filters.value.eventStatus = undefined
+  filters.value.stateEvent = undefined
   applyFilters()
 }
 
 const resetFilters = () => {
   filters.value = {
+    associationId: '',
     nameEvent: '',
     status: undefined,
     dateEventFrom: undefined,
@@ -647,7 +653,7 @@ const resetFilters = () => {
     tags: undefined,
     page: 1,
     limit: 9,
-    eventStatus: undefined
+    stateEvent: undefined
   }
   selectedTags.value = []
   tempAdvancedFilters.value = {
