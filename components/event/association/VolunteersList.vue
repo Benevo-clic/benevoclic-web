@@ -1,12 +1,15 @@
 <template>
   <div>
+    <h3 class="text-lg font-bold mb-4">Bénévoles</h3>
     <div v-if="props.volunteers && props.volunteers.length">
       <ParticipantOrVolunteerCard
           v-for="volunteer in props.volunteers"
           :key="volunteer.id"
-          v-memo="[volunteer]"
+          v-memo="[volunteer.id, volunteer.name, volunteer.isPresent]"
           :participant="volunteer"
+          :is-volunteer="true"
           @right-action="handleRightAction"
+          @presence-action="handlePresenceAction"
       />
     </div>
     <div v-else class="text-center py-8 text-base-content/60">
@@ -29,6 +32,7 @@ import ParticipantOrVolunteerCard from "~/components/event/association/Participa
 interface Volunteer {
   id: string;
   name: string;
+  isPresent?: boolean;
 }
 
 const props = defineProps<{
@@ -37,9 +41,14 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   rightAction: [volunteer: string];
+  presenceAction: [volunteer: string, isPresent: boolean];
 }>();
 
 function handleRightAction(id: string) {
   emit('rightAction', id);
+}
+
+function handlePresenceAction(id: string, isPresent: boolean) {
+  emit('presenceAction', id, isPresent);
 }
 </script> 

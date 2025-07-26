@@ -474,7 +474,7 @@ export const useAnnouncementStore = defineStore('announcement', {
             this.loading = true;
             this.error = null;
             try {
-                const response = await $fetch<Announcement>(`/api/announcement/updatePresentParticipant`, {
+                const response = await $fetch<Announcement>(`/api/announcement/updatePresenceParticipant`, {
                     method: 'PATCH',
                     query: { announcementId },
                     body: participant,
@@ -500,7 +500,7 @@ export const useAnnouncementStore = defineStore('announcement', {
         this.loading = true;
         this.error = null;
         try {
-            const response = await $fetch<Announcement>(`/api/announcement/updatePresentVolunteer`, {
+            const response = await $fetch<Announcement>(`/api/announcement/updatePresenceVolunteer`, {
                 method: 'PATCH',
                 query: { announcementId },
                 body: volunteer,

@@ -13,10 +13,13 @@ export default defineEventHandler(async (event) => {
 
 
     try {
+        console.log(`Mise à jour de la présence du participant pour l'annonce ${query.announcementId} avec les données :`, body);
         const response = await axios.patch(
-            `${config.private.api_base_url}/announcements/present/volunteer/${query.announcementId}`,
+            `${config.private.api_base_url}/announcements/presence/participant/${query.announcementId}`,
             {
-                ...body
+                id: body.id,
+                name: body.name,
+                isPresent: body.isPresent
             },
             {
                 headers: {

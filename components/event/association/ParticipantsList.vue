@@ -6,9 +6,11 @@
       <ParticipantOrVolunteerCard
         v-for="participant in props.participants"
         :key="participant.id"
-        v-memo="[participant.id, participant.name, participant.status]"
+        v-memo="[participant.id, participant.name, participant.status, participant.isPresent]"
         :participant="participant"
+        :is-volunteer="false"
         @right-action="handleRightAction"
+        @presence-action="handlePresenceAction"
       />
     </div>
     <div v-else class="text-center py-8 text-base-content/60">
@@ -31,6 +33,7 @@ interface Participant {
   id: string;
   name: string;
   status?: string; // Ajouté pour v-memo
+  isPresent?: boolean;
 }
 
 const props = defineProps<{
@@ -39,9 +42,14 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   rightAction: [participant: string];
+  presenceAction: [participant: string, isPresent: boolean];
 }>();
 
 function handleRightAction(id: string) {
   emit('rightAction', id);
+}
+
+function handlePresenceAction(id: string, isPresent: boolean) {
+  emit('presenceAction', id, isPresent);
 }
 </script> 

@@ -27,8 +27,14 @@
       </div>
       <!-- Boutons en bas -->
       <div class="flex gap-2 mt-auto">
-        <button class="btn btn-sm btn-outline btn-primary flex-1">Détails</button>
-        <button class="btn btn-sm btn-outline btn-error flex-1" @click="$emit('rightAction', participant.id)">Retirer</button>
+        <button 
+          class="btn btn-sm btn-outline flex-1" 
+          :class="participant.isPresent ? 'btn-success' : 'btn-primary'"
+          @click="openPresenceModal"
+        >
+          {{ participant.isPresent ? 'Présent' : 'Marquer présent' }}
+        </button>
+        <button class="btn btn-sm btn-outline btn-error flex-1" @click="emit('rightAction', participant.id)">Retirer</button>
       </div>
     </div>
     <!-- Indicateur de chargement -->
@@ -38,6 +44,17 @@
         @reload="handleReload"
         @goHome="handleGoHome"
     />
+
+    <!-- Modal de présence -->
+    <PresenceModal
+      ref="presenceModalRef"
+      :person-id="participant.id"
+      :person-name="participant.name"
+      :is-volunteer="isVolunteer || false"
+      :initial-presence="participant.isPresent"
+      :loading="loading"
+      @confirm="handlePresenceConfirm"
+    />
   </div>
 </template>
 
@@ -46,10 +63,12 @@ import {computed, onMounted, ref} from 'vue';
 import {useUser} from '~/composables/auth/useUser';
 import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 import {useNavigation} from "~/composables/useNavigation";
+import PresenceModal from "~/components/event/association/PresenceModal.vue";
 
 interface Participant {
   id: string;
   name: string;
+  isPresent?: boolean;
 }
 
 interface UserInfo {
@@ -60,12 +79,19 @@ interface UserInfo {
 
 const props = defineProps<{
   participant: Participant;
+  isVolunteer?: boolean;
+}>();
+
+const emit = defineEmits<{
+  rightAction: [id: string];
+  presenceAction: [id: string, isPresent: boolean];
 }>();
 
 const {navigateToRoute} = useNavigation()
 const { getUserById } = useUser();
 const userInfo = ref<UserInfo | null>(null);
 const loading = ref(false);
+const presenceModalRef = ref<InstanceType<typeof PresenceModal> | null>(null);
 
 const showErrorModal = ref(false);
 const errorType = ref<'4xx' | '5xx' | null>(null);
@@ -95,7 +121,7 @@ function handleError(error: any) {
 
 async function loadUserInfo() {
   if (!props.participant.id) return;
-  
+
   loading.value = true;
   try {
     userInfo.value = await getUserById(props.participant.id);
@@ -105,6 +131,15 @@ async function loadUserInfo() {
   } finally {
     loading.value = false;
   }
+}
+
+function openPresenceModal() {
+  presenceModalRef.value?.showModal();
+}
+
+function handlePresenceConfirm(id: string, isPresent: boolean) {
+  emit('presenceAction', id, isPresent);
+  presenceModalRef.value?.closeModal();
 }
 
 onMounted(() => {

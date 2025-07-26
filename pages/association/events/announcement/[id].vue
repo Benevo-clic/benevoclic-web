@@ -1,87 +1,234 @@
 <template>
   <div ref="scrollContainer" class="relative">
-    <div v-if="loading" class="flex justify-center items-center h-32">
-      <span class="loading loading-bars loading-xl"></span>
+    <!-- Loading state -->
+    <div v-if="loading" class="min-h-screen flex justify-center items-center">
+      <img
+          src="/logo.png"
+          alt="Chargement…"
+          class="w-24 h-24 animate-spin"
+      />
+
     </div>
-    <div v-else class="container mx-auto px-2 md:px-4 py-6 max-w-2xl">
-      <!-- Photo de couverture moderne -->
-      <div class="relative w-full aspect-[3/1] rounded-2xl overflow-hidden mb-6 bg-base-200 flex items-center justify-center shadow-md">
-        <img v-if="announcement?.announcementImage" :src="coverImageUrl" alt="Photo de couverture" class="object-cover w-full h-full transition-transform duration-500" />
-        <div v-else class="w-full h-full flex flex-col items-center justify-center text-base-content/60">
-          <div class="avatar placeholder mb-3">
-            <div class="bg-base-300 text-base-content rounded-full w-16">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
+
+    <!-- Content when loaded -->
+    <div v-else class="container mx-auto px-3 md:px-6 py-8 max-w-4xl">
+      <!-- Hero section with cover image -->
+      <div class="relative w-full rounded-3xl overflow-hidden mb-8 bg-gradient-to-r from-primary/5 to-secondary/5">
+        <!-- Cover image -->
+        <div class="aspect-[16/6] md:aspect-[16/5] lg:aspect-[16/4] overflow-hidden">
+          <img 
+            v-if="announcement?.announcementImage" 
+            :src="coverImageUrl" 
+            alt="Photo de couverture" 
+            class="object-cover w-full h-full transition-all duration-700 hover:scale-105" 
+          />
+          <div v-else class="w-full h-full flex flex-col items-center justify-center text-base-content/60 bg-base-200">
+            <div class="avatar placeholder mb-3">
+              <div class="bg-base-300 text-base-content rounded-full w-20 h-20 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
             </div>
+            <p class="text-sm font-medium">Aucune image disponible</p>
           </div>
-          <p class="text-sm font-medium">Aucune image</p>
         </div>
+
         <!-- Status badge overlay -->
-        <div class="absolute top-3 right-3">
-          <div class="badge badge-md" :class="statusBadgeClass">{{ announcement?.status }}</div>
+        <div class="absolute top-4 right-4">
+          <div class="badge badge-lg shadow-md" :class="statusBadgeClass">{{ announcement?.status }}</div>
         </div>
       </div>
 
-      <!-- Infos principales -->
-      <div class="bg-base-100 rounded-xl shadow-lg p-6 mb-6 relative">
-        <div class="flex items-center gap-3 mb-2">
-          <div v-if="announcement?.associationLogo" class="avatar">
-            <div class="w-10 h-10 rounded-full ring-2 ring-base-300">
-              <img :src="profileImageUrl" alt="Logo association" />
+      <!-- Main content area -->
+      <div class="space-y-6">
+        <!-- Main info -->
+        <div class="space-y-6">
+          <!-- Association and event info card -->
+          <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <div class="card-body p-6">
+              <!-- Association info -->
+              <div class="flex items-center gap-4 mb-4">
+                <div v-if="announcement?.associationLogo" class="avatar">
+                  <div class="w-14 h-14 rounded-full ring-2 ring-primary/20 ring-offset-2 ring-offset-base-100">
+                    <img :src="profileImageUrl" alt="Logo association" class="object-cover" />
+                  </div>
+                </div>
+                <div v-else class="avatar placeholder">
+                  <div class="w-14 h-14 rounded-full bg-primary/10 text-primary ring-2 ring-primary/20 ring-offset-2 ring-offset-base-100">
+                    <span class="text-lg font-bold">{{ announcement?.associationName?.charAt(0) || 'A' }}</span>
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-lg font-semibold text-base-content truncate">{{ announcement?.associationName }}</p>
+                </div>
+              </div>
+
+              <!-- Event title -->
+              <h1 class="text-3xl font-bold mb-4 text-base-content truncate">{{ announcement?.nameEvent }}</h1>
+
+              <!-- Event metadata -->
+              <div class="flex flex-wrap gap-3 mb-4">
+                <div class="badge badge-lg badge-primary gap-2">
+                  <Calendar class="h-4 w-4" />
+                  {{ formatDate(announcement?.dateEvent) }}
+                </div>
+                <div v-if="announcement?.hoursEvent" class="badge badge-lg badge-primary gap-2">
+                  <Clock class="h-4 w-4" />
+                  {{ announcement.hoursEvent }}
+                </div>
+                <div v-if="announcement?.addressAnnouncement?.city" class="badge badge-lg badge-secondary gap-2">
+                  <MapPin class="h-4 w-4" />
+                  {{ announcement.addressAnnouncement.city }}
+                </div>
+              </div>
+
+              <!-- Event description -->
+              <div class="prose prose-sm max-w-none mb-6">
+                <p>{{ announcement?.description }}</p>
+              </div>
+
+              <!-- Tags -->
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span v-for="tag in announcement?.tags" :key="tag" 
+                  class="badge badge-outline hover:badge-primary transition-all duration-300 cursor-pointer transform hover:-translate-y-1">
+                  {{ tag }}
+                </span>
+              </div>
             </div>
           </div>
-          <div v-else class="avatar placeholder">
-            <div class="w-10 h-10 rounded-full bg-base-300 text-base-content">
-              <span class="text-xs font-bold">{{ announcement?.associationName?.charAt(0) || 'A' }}</span>
+
+          <!-- Action buttons -->
+          <div class="bg-base-100 rounded-xl shadow-lg p-6 mb-6 flex flex-wrap justify-center gap-3">
+            <button class="btn btn-primary gap-2 hover:scale-105 transition-transform" @click="openPresenceModal">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Gérer les présences
+            </button>
+            <button class="btn btn-secondary gap-2 hover:scale-105 transition-transform" @click="openEditModal">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Modifier
+            </button>
+            <button class="btn btn-error gap-2 hover:scale-105 transition-transform" @click="showDeleteConfirmation">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Supprimer
+            </button>
+          </div>
+        </div>
+
+        <!-- Stats and additional info -->
+        <div class="space-y-6">
+          <!-- Stats card -->
+          <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <div class="card-body p-6">
+              <h2 class="card-title text-xl mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Statistiques
+              </h2>
+
+              <!-- Participants stats -->
+              <div class="stat bg-base-200 rounded-box p-4 mb-3">
+                <div class="stat-figure text-secondary">
+                  <Users class="h-8 w-8" />
+                </div>
+                <div class="stat-title">Participants</div>
+                <div class="stat-value text-primary">{{announcement?.nbParticipants}}/{{ announcement?.maxParticipants }}</div>
+                <div class="stat-desc">Personnes inscrites à l'événement</div>
+              </div>
+
+              <!-- Volunteers stats -->
+              <div class="stat bg-base-200 rounded-box p-4">
+                <div class="stat-figure text-secondary">
+                  <HeartHandshake class="h-8 w-8" />
+                </div>
+                <div class="stat-title">Bénévoles</div>
+                <div class="stat-value text-secondary">{{announcement?.nbVolunteers}}/{{ announcement?.maxVolunteers }}</div>
+                <div class="stat-desc">Personnes aidant à l'organisation</div>
+              </div>
             </div>
           </div>
-          <div class="flex-1 min-w-0">
-            <p class="text-base font-semibold text-base-content truncate">{{ announcement?.associationName }}</p>
+
+          <!-- Quick info card -->
+          <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <div class="card-body p-6">
+              <h2 class="card-title text-xl mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Informations
+              </h2>
+
+              <ul class="space-y-3">
+                <li class="flex items-center gap-3">
+                  <div class="badge badge-primary badge-outline p-3">Statut</div>
+                  <span>{{ announcement?.status }}</span>
+                </li>
+                <li class="flex items-center gap-3">
+                  <div class="badge badge-primary badge-outline p-3">Date</div>
+                  <span>{{ formatDate(announcement?.dateEvent) }}</span>
+                </li>
+                <li v-if="announcement?.hoursEvent" class="flex items-center gap-3">
+                  <div class="badge badge-primary badge-outline p-3">Heure</div>
+                  <span>{{ announcement?.hoursEvent }}</span>
+                </li>
+                <li v-if="announcement?.addressAnnouncement?.city" class="flex items-center gap-3">
+                  <div class="badge badge-primary badge-outline p-3">Lieu</div>
+                  <span>{{ announcement?.addressAnnouncement?.city }}</span>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-        <h1 class="text-2xl font-bold mb-2 line-clamp-2">{{ announcement?.nameEvent }}</h1>
-        <div class="flex flex-wrap gap-2 text-sm text-base-content/70 mb-2">
-          <span class="flex items-center gap-1"><Calendar class="h-4 w-4 text-primary" />{{ formatDate(announcement?.dateEvent) }}</span>
-          <span v-if="announcement?.hoursEvent" class="flex items-center gap-1"><Clock class="h-4 w-4 text-primary" />{{ announcement.hoursEvent }}</span>
-          <span v-if="announcement?.addressAnnouncement?.city" class="flex items-center gap-1"><MapPin class="h-4 w-4 text-secondary" />{{ announcement.addressAnnouncement.city }}</span>
-        </div>
-        <div class="mb-3 text-base-content/90">{{ announcement?.description }}</div>
-        <div class="flex flex-wrap gap-2 mt-2">
-          <span v-for="tag in announcement?.tags" :key="tag" class="badge badge-outline badge-sm hover:badge-primary transition-colors">{{ tag }}</span>
-        </div>
-        <!-- Statistiques -->
-        <div class="flex gap-4 mt-4 mb-2">
-          <div class="flex items-center gap-1 text-xs">
-            <Users class="h-4 w-4 text-primary" />
-            <span class="font-medium">{{announcement?.nbParticipants}}/{{ announcement?.maxParticipants }}</span>
-            <span class="text-base-content/60">participants</span>
-          </div>
-          <div class="flex items-center gap-1 text-xs">
-            <HeartHandshake class="h-4 w-4 text-secondary" />
-            <span class="font-medium">{{announcement?.nbVolunteers}}/{{ announcement?.maxVolunteers }}</span>
-            <span class="text-base-content/60">bénévoles</span>
-          </div>
-        </div>
-        <!-- Boutons d'action -->
-        <div class="flex justify-end gap-2 mt-4 absolute top-4 right-4">
-          <button class="btn btn-primary btn-sm" @click="openEditModal">Modifier</button>
-          <button class="btn btn-error btn-sm" @click="showDeleteConfirmation">Supprimer</button>
         </div>
       </div>
 
-      <!-- Onglets modernes -->
-      <div role="tablist" class="tabs tabs-bordered mb-4 rounded-xl overflow-hidden bg-base-200">
-        <a role="tab" :class="['tab', tab === 'participants' ? 'tab-active' : '']" @click="tab = 'participants'">Liste des participants</a>
-        <a role="tab" :class="['tab', tab === 'volunteers' ? 'tab-active' : '']" @click="tab = 'volunteers'">Liste des bénévoles</a>
-      </div>
+      <!-- Tabs section -->
+      <div class="mt-8">
+        <!-- Tabs navigation -->
+        <div class="tabs tabs-boxed bg-base-200 p-1 rounded-t-xl justify-center">
+          <a 
+            role="tab" 
+            :class="['tab tab-lg gap-2 transition-all duration-300', tab === 'participants' ? 'tab-active' : '']" 
+            @click="tab = 'participants'"
+          >
+            <Users class="h-5 w-5" />
+            Participants
+          </a>
+          <a 
+            role="tab" 
+            :class="['tab tab-lg gap-2 transition-all duration-300', tab === 'volunteers' ? 'tab-active' : '']" 
+            @click="tab = 'volunteers'"
+          >
+            <HeartHandshake class="h-5 w-5" />
+            Bénévoles
+          </a>
+        </div>
 
-      <!-- Contenu des onglets -->
-      <div v-if="tab === 'participants'">
-        <ParticipantsList :participants="announcement?.participants" @right-action="handleRightAction" />
-      </div>
-      <div v-else>
-        <VolunteersList :volunteers="announcement?.volunteers" @right-action="handleRightActionVolunteer" />
+        <!-- Tab content with animation -->
+        <div class="bg-base-100 rounded-b-xl shadow-xl p-6 min-h-[300px]">
+          <transition name="fade" mode="out-in">
+            <div v-if="tab === 'participants'" key="participants">
+              <ParticipantsList 
+                :participants="announcement?.participants" 
+                @right-action="handleRightAction" 
+                @presence-action="handlePresenceActionParticipant" 
+              />
+            </div>
+            <div v-else key="volunteers">
+              <VolunteersList 
+                :volunteers="announcement?.volunteers" 
+                @right-action="handleRightActionVolunteer" 
+                @presence-action="handlePresenceActionVolunteer" 
+              />
+            </div>
+          </transition>
+        </div>
       </div>
 
       <!-- Modal édition annonce -->
@@ -124,6 +271,16 @@
         @reload="handleReload"
         @goHome="handleGoHome"
     />
+
+    <!-- Presence Modal -->
+    <PresenceListModal
+      ref="presenceModalRef"
+      :announcement-id="announcement?._id || ''"
+      :participants="announcement?.participants"
+      :volunteers="announcement?.volunteers"
+      @close="handleModalClose"
+      @update="handleModalUpdate"
+    />
   </div>
 </template>
 
@@ -139,6 +296,7 @@ import {HeartHandshake,Users,Calendar,Clock,MapPin} from 'lucide-vue-next'
 const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
 import { useAnnouncement } from '~/composables/useAnnouncement';
 import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import PresenceListModal from '~/components/event/association/PresenceListModal.vue';
 
 const route = useRoute();
 const useAnnouncementAuth = useAnnouncement();
@@ -146,6 +304,7 @@ const {navigateToRoute} = useNavigation()
 const loading = ref(true);
 const editModalOpen = ref(false);
 const tab = ref<'participants' | 'volunteers'>('participants');
+const presenceModalRef = ref<InstanceType<typeof PresenceListModal> | null>(null);
 
 const announcement = computed(() => useAnnouncementAuth.getCurrentAnnouncement.value);
 
@@ -258,6 +417,39 @@ async function handleRightActionVolunteer(id: string) {
   }
 }
 
+async function handlePresenceActionParticipant(id: string, isPresent: boolean) {
+  if (!announcement.value) return;
+  try {
+    console.log(`Updating presence for participant ${id}: ${isPresent}`);
+    const participant = {
+      id,
+      name: announcement.value.participants?.find(p => p.id === id)?.name || '',
+      isPresent
+    };
+    await useAnnouncementAuth.updatePresentParticipant(announcement.value._id, participant);
+    await fetchAnnouncement(); // Refresh the data
+  } catch (error) {
+    handleError(error);
+    return;
+  }
+}
+
+async function handlePresenceActionVolunteer(id: string, isPresent: boolean) {
+  if (!announcement.value) return;
+  try {
+    const volunteer = {
+      id,
+      name: announcement.value.volunteers?.find(v => v.id === id)?.name || '',
+      isPresent
+    };
+    await useAnnouncementAuth.updatePresentVolunteer(announcement.value._id, volunteer);
+    await fetchAnnouncement(); // Refresh the data
+  } catch (error) {
+    handleError(error);
+    return;
+  }
+}
+
 async function announcementDelete() {
   if (!announcement.value) return;
   try {
@@ -303,6 +495,24 @@ function checkScrollIndicators() {
   }
 }
 
+// Presence modal functions
+function openPresenceModal() {
+  if (announcement.value) {
+    presenceModalRef.value?.showModal();
+  } else {
+    console.warn("No announcement available to manage presence.");
+  }
+}
+
+function handleModalClose() {
+  // Any cleanup needed after closing the modal
+}
+
+async function handleModalUpdate() {
+  // Refresh the data to show updated presence status
+  await fetchAnnouncement();
+}
+
 onMounted(() => {
   checkScrollIndicators();
   window.addEventListener('scroll', checkScrollIndicators, { passive: true });
@@ -322,9 +532,63 @@ onUnmounted(() => {
 
 <style scoped>
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 0.3s;
+  transition: all 0.3s ease;
 }
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
+  transform: translateY(10px);
+}
+
+/* Card hover effects */
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* Badge hover effects */
+.badge {
+  transition: all 0.2s ease;
+}
+
+/* Button animations */
+.btn {
+  transition: all 0.3s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1rem;
+  }
+
+  .stat {
+    padding: 0.75rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
 }
 </style> 
