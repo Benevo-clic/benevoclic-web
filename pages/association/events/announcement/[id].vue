@@ -519,15 +519,10 @@ onMounted(() => {
   window.addEventListener('resize', checkScrollIndicators);
 });
 
-// Nettoyage
 onUnmounted(() => {
   window.removeEventListener('scroll', checkScrollIndicators);
   window.removeEventListener('resize', checkScrollIndicators);
 });
-
-
-
-
 </script>
 
 <style scoped>

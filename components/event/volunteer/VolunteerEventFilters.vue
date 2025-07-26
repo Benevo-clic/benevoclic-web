@@ -204,7 +204,7 @@
         <div v-if="mobileFiltersOpen" class="fixed inset-0 z-50 md:hidden">
           <!-- Overlay -->
           <div class="absolute inset-0 bg-black/50" @click="closeMobileFilters"></div>
-          
+
           <!-- Drawer -->
           <div class="absolute right-0 top-0 h-full w-80 bg-base-100 shadow-xl p-4 overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
@@ -343,7 +343,7 @@
                         />
                         <span class="text-sm">{{ tag }}</span>
                       </button>
-                      
+
                       <!-- Ajout de tag personnalisé -->
                       <div class="border-t border-base-300 pt-2 mt-2">
                         <div v-if="!showCustomInput">
@@ -427,7 +427,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, defineEmits, watch, nextTick } from 'vue'
-import { Map, SortAsc, ChevronRight, SlidersHorizontal, CircleDot, Tag, Plus } from 'lucide-vue-next';
+import { Map, SortAsc, ChevronRight, SlidersHorizontal, CircleDot, Tag, Plus, X } from 'lucide-vue-next';
 import type {Announcement} from "~/common/interface/event.interface";
 import type {FilterAnnouncement, AnnouncementStatus, SortOption} from "~/common/interface/filter.interface";
 import {useUserLocation} from "~/composables/useUserLocation";
@@ -651,11 +651,7 @@ watch(showCustomInput, (val) => {
 
 // Watcher pour la recherche
 watch(searchQuery, (newQuery) => {
-  // Ajouter la logique de recherche ici si nécessaire
-  // Pour l'instant, on peut juste appliquer les filtres
   if (newQuery !== undefined) {
-    // Vous pouvez ajouter la logique de recherche ici
-    // Par exemple: filters.value.search = newQuery
   }
 })
 
@@ -778,7 +774,7 @@ const resetFilters = () => {
   }
   selectedTags.value = []
   selectedTypes.value = []
-  
+
   tempAdvancedFilters.value = {
     dateEventFrom: undefined,
     dateEventTo: undefined,
@@ -788,7 +784,7 @@ const resetFilters = () => {
     datePublicationTo: undefined,
     publicationInterval: undefined
   }
-  
+
   resetLocation.value = true
   applyFilters()
 }
@@ -859,7 +855,7 @@ watch(filters, (newFilters) => {
   );
 
   if (isEmpty) return;
-  
+
   let criteriaCount = 0;
   if (filterWithoutLocation.status) criteriaCount++;
   if (filterWithoutLocation.sort) criteriaCount++;
@@ -868,17 +864,17 @@ watch(filters, (newFilters) => {
   if (filterWithoutLocation.hoursEventFrom || filterWithoutLocation.hoursEventTo) criteriaCount++;
   if (filterWithoutLocation.datePublicationFrom || filterWithoutLocation.datePublicationTo) criteriaCount++;
   if (filterWithoutLocation.publicationInterval) criteriaCount++;
-  
+
   if (criteriaCount <= 3) return;
-  
+
   let history: FilterAnnouncement[] = [];
   try {
     history = JSON.parse(localStorage.getItem(FILTER_HISTORY_KEY) || '[]')
   } catch {}
-  
+
   const isDifferentEnough = history.every(existingFilter => {
     let differences = 0;
-    
+
     if (filterWithoutLocation.status !== existingFilter.status) differences++;
     if (filterWithoutLocation.sort !== existingFilter.sort) differences++;
     if (JSON.stringify(filterWithoutLocation.tags) !== JSON.stringify(existingFilter.tags)) differences++;
@@ -889,17 +885,17 @@ watch(filters, (newFilters) => {
     if (filterWithoutLocation.datePublicationFrom !== existingFilter.datePublicationFrom) differences++;
     if (filterWithoutLocation.datePublicationTo !== existingFilter.datePublicationTo) differences++;
     if (filterWithoutLocation.publicationInterval !== existingFilter.publicationInterval) differences++;
-    
+
     return differences >= 3;
   });
-  
+
   if (!isDifferentEnough) return;
   if(currentFilterSearch.value){
     filterWithoutLocation.nameEvent = currentFilterSearch.value?.nameEvent
     filterWithoutLocation.description = currentFilterSearch.value?.description;
     filterWithoutLocation.associationName = currentFilterSearch.value?.associationName
   }
-  
+
   const newHistory = [filterWithoutLocation, ...history.filter(h => JSON.stringify(h) !== JSON.stringify(filterWithoutLocation))]
 
   filterHistory.value = newHistory.slice(0, 3)
