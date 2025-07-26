@@ -1,7 +1,11 @@
 import {defineStore} from 'pinia';
-import type {Announcement, CreateAnnouncementDto} from '~/common/interface/event.interface';
+import type {Announcement, CreateAnnouncementDto, InfoVolunteer} from '~/common/interface/event.interface';
 import {$fetch} from "ofetch";
-import type {FilterAnnouncement, FilterAnnouncementResponse} from "~/common/interface/filter.interface";
+import type {
+    FilterAnnouncement,
+    FilterAnnouncementResponse,
+    FilterAssociationAnnouncement
+} from "~/common/interface/filter.interface";
 import {useUserStore} from "~/stores/user/user.store";
 
 export const useAnnouncementStore = defineStore('announcement', {
@@ -431,10 +435,86 @@ export const useAnnouncementStore = defineStore('announcement', {
             }
 
             this._lastFetch = 0;
+            this.validateFilterResponse(response);
+            this.updateAnnouncements(response?.annonces || []);
+
 
             return response;
         } catch (err: any) {
             this.error = err?.message || 'Erreur de mise à jour du statut de l\'annonce';
+            throw err;
+        } finally {
+            this.loading = false;
+        }
+    },
+
+      async filterAssociationAnnouncements(filter: FilterAssociationAnnouncement): Promise<FilterAnnouncementResponse | undefined> {
+          const url = '/api/announcement/filter/filterAssociationAnnouncement';
+          this.loading = true;
+          this.error = null;
+
+          try {
+              const response = await $fetch<FilterAnnouncementResponse>(url, {
+                  method: 'POST',
+                  body: filter,
+              });
+
+              this.validateFilterResponse(response);
+              this.updateAnnouncements(response?.annonces || []);
+              return response;
+          } catch (err: any) {
+              this.error = err?.message || 'Erreur de filtrage des annonces';
+              throw err;
+          } finally {
+              this.loading = false;
+          }
+      },
+
+      async updatePresentParticipant(announcementId: string, participant: InfoVolunteer) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await $fetch<Announcement>(`/api/announcement/updatePresentParticipant`, {
+                    method: 'PATCH',
+                    query: { announcementId },
+                    body: participant,
+                });
+
+                if (this.currentAnnouncement?._id === announcementId) {
+                    await this.fetchAnnouncementById(announcementId);
+                }
+
+                this._lastFetch = 0;
+
+                return response;
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de mise à jour du participant présent';
+                throw err;
+            } finally {
+                this.loading = false;
+            }
+
+      },
+
+    async updatePresentVolunteer(announcementId: string, volunteer: InfoVolunteer) {
+        this.loading = true;
+        this.error = null;
+        try {
+            const response = await $fetch<Announcement>(`/api/announcement/updatePresentVolunteer`, {
+                method: 'PATCH',
+                query: { announcementId },
+                body: volunteer,
+            });
+
+            if (this.currentAnnouncement?._id === announcementId) {
+                await this.fetchAnnouncementById(announcementId);
+            }
+
+            this._lastFetch = 0;
+
+            return response;
+        } catch (err: any) {
+            this.error = err?.message || 'Erreur de mise à jour du volontaire présent';
             throw err;
         } finally {
             this.loading = false;
@@ -470,9 +550,7 @@ export const useAnnouncementStore = defineStore('announcement', {
                 body: filterAnnouncement,
             })
 
-            if (!response || response.annonces.length === 0) {
-                this.error = 'Aucune annonce trouvée pour les critères spécifiés'
-            }
+            this.validateFilterResponse(response);
 
             this.cachedResponse = response
             this.lastFilter = { ...filterAnnouncement }
@@ -505,7 +583,13 @@ export const useAnnouncementStore = defineStore('announcement', {
     clearFilterCache(): void {
         this.lastFilter = null
         this.cachedResponse = null
-    }
+    },
+      validateFilterResponse(response: FilterAnnouncementResponse | undefined): void {
+          if (!response || response.annonces.length === 0) {
+              this.error = 'Aucune annonce trouvée pour les critères spécifiés';
+          }
+      }
 
   },
-}); 
+});
+

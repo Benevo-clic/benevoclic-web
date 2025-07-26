@@ -8,26 +8,30 @@ export type SortOption =
     | 'dateEvent_desc'
     | 'datePublication_desc';
 export type AnnouncementStatus = 'ACTIVE' | 'INACTIVE' | 'COMPLETED';
+export type AnnouncementState = 'NOW' | 'UPCOMING' | 'PAST' | 'ALL';
 
-export interface FilterAnnouncement {
+export interface BaseFilterAnnouncement {
     nameEvent?: string;
     description?: string;
-    status?: AnnouncementStatus;
     hoursEventFrom?: string;
     hoursEventTo?: string;
     dateEventFrom?: string;
     dateEventTo?: string;
     publicationInterval?: PublicationInterval;
     datePublicationFrom?: string;
+    status?: AnnouncementStatus;
     datePublicationTo?: string;
     tags?: string[];
+    page?: number;
+    limit?: number;
+    sort?: SortOption;
+}
+
+export interface FilterAnnouncement extends BaseFilterAnnouncement {
     associationName?: string;
     latitude?: number;
     longitude?: number;
     radius?: number;
-    page?: number;
-    limit?: number;
-    sort?: SortOption;
     cityCoordinates?: Array<{
         lat: number;
         lon: number;
@@ -35,6 +39,11 @@ export interface FilterAnnouncement {
     }>;
 }
 
+export interface FilterAssociationAnnouncement extends BaseFilterAnnouncement {
+    associationId: string;
+    stateEvent?: AnnouncementState;
+    sort?: SortOption;
+}
 export interface FilterAnnouncementResponse {
     annonces: Announcement[];
     meta: {
