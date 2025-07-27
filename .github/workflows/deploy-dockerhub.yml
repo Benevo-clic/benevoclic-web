@@ -2,11 +2,7 @@ name: Deploy to DockerHub
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to deploy (e.g., 1.0.0)'
-        required: true
-        default: 'latest'
+
 
 jobs:
   build-and-deploy-to-dockerhub:
