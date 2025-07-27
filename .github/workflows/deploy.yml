@@ -2,11 +2,6 @@ name: Deploy to OVH VPS
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to deploy (e.g., 1.0.0)'
-        required: true
-        default: 'latest'
 
 jobs:
   deploy-to-ovh:
@@ -36,30 +31,23 @@ jobs:
           FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
-          # Version à déployer
-          VERSION: ${{ github.event.inputs.version }}
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.OVH_SSH_KEY }}
           port: 22
-          envs: API_BASE_URL,API_SIRENE_URL,API_KEY,API_SIRENE_KEY,STORAGE_BUCKET,MESSAGING_SENDER_ID,APP_ID,MEASUREMENT_ID,PORT,NODE_ENV,API_TIMEOUT,API_RETRY_COUNT,GOOGLE_CALLBACK_URL,FIREBASE_API_KEY,FIREBASE_AUTH_DOMAIN,FIREBASE_PROJECT_ID,FIREBASE_STORAGE_BUCKET,FIREBASE_MESSAGING_SENDER_ID,FIREBASE_APP_ID,FIREBASE_MEASUREMENT_ID,VERSION
+          envs: API_BASE_URL,API_SIRENE_URL,API_KEY,API_SIRENE_KEY,STORAGE_BUCKET,MESSAGING_SENDER_ID,APP_ID,MEASUREMENT_ID,PORT,NODE_ENV,API_TIMEOUT,API_RETRY_COUNT,GOOGLE_CALLBACK_URL,FIREBASE_API_KEY,FIREBASE_AUTH_DOMAIN,FIREBASE_PROJECT_ID,FIREBASE_STORAGE_BUCKET,FIREBASE_MESSAGING_SENDER_ID,FIREBASE_APP_ID,FIREBASE_MEASUREMENT_ID
           script: |
             set -e
 
             # Créer le répertoire si nécessaire
             mkdir -p ~/benevoclic
 
-            # Déterminer la version à utiliser
-            IMAGE_TAG=\${VERSION}
-
             # Générer le fichier docker-compose.yml
             cat > ~/benevoclic/docker-compose.yml << EOL
-            version: '3.8'
-
             services:
               app:
-                image: ${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-web:\${IMAGE_TAG}
+                image: ${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-web:latest
                 container_name: benevoclic-web
                 restart: always
                 ports:
@@ -99,7 +87,7 @@ jobs:
             docker compose down || true
 
             echo "Suppression de l'image précédente..."
-            docker image rm ${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-web:\${IMAGE_TAG} || true
+            docker image rm ${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-web:latest || true
 
             echo "Téléchargement de la nouvelle image..."
             docker compose pull
@@ -107,4 +95,4 @@ jobs:
             echo "Démarrage des nouveaux conteneurs..."
             docker compose up -d
 
-            echo "Déploiement terminé avec succès!"
+            echo "✅ Déploiement terminé avec succès !"
