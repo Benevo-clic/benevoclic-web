@@ -41,10 +41,10 @@ jobs:
             set -e
 
             # Créer le répertoire si nécessaire
-            mkdir -p ~/benevoclic
+            mkdir -p ~/benevoclicWeb
 
             # Générer le fichier docker-compose.yml
-            cat > ~/benevoclic/docker-compose.yml << EOL
+            cat > ~/benevoclicWeb/docker-compose.yml << EOL
             services:
               app:
                 image: ${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-web:latest

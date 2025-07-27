@@ -29,10 +29,6 @@ COPY --from=builder /app/.output ./
 # Exposer le port configuré
 EXPOSE ${PORT}
 
-# Healthcheck pour vérifier que l'application est en cours d'exécution
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT}/ || exit 1
-
 # Utilisateur non-root pour la sécurité
 USER node
 
