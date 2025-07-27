@@ -4,7 +4,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copier les fichiers de dépendances pour optimiser le cache
-COPY package*.json .npmrc ./
+COPY package*.json ./
 # Disable the use of global .npmrc file
 RUN npm ci --no-global
 
