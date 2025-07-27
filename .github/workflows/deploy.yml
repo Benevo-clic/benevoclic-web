@@ -82,7 +82,7 @@ jobs:
             EOL
 
             # Déployer l'application
-            cd ~/benevoclic
+            cd ~/benevoclicWeb
             echo "Arrêt des conteneurs existants..."
             docker compose down || true
 
