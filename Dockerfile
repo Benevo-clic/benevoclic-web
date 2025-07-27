@@ -4,7 +4,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copier les fichiers de dépendances pour optimiser le cache
-COPY package*.json ./
+COPY package*.json .npmrc ./
 RUN npm ci
 
 # Copier le reste des fichiers
