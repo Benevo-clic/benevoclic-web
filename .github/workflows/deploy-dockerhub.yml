@@ -24,6 +24,8 @@ jobs:
       - name: Install dependencies
         run: |
           echo "Using .npmrc to ensure packages are fetched from the public npm registry"
+          echo "registry=https://registry.npmjs.org/" > .npmrc
+          echo "@parcel:registry=https://registry.npmjs.org/" >> .npmrc
           npm ci
 
       - name: Set up Docker Buildx
