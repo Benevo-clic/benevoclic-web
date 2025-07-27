@@ -4,9 +4,20 @@ import { useUserStore } from '~/stores/user/user.store'
 import { RoleUser } from '~/common/enums/role.enum'
 import { getAuth } from "firebase/auth";
 
+// Fonction pour extraire le chemin sans préfixe de langue
+function getPathWithoutLocale(path: string): string {
+  // Supprimer les préfixes de langue (/en/, /es/)
+  return path.replace(/^\/(en|es)\//, '/')
+}
 
-// Configuration des routes par rôle
-const ROUTE_CONFIG = {
+// Fonction pour obtenir la locale depuis le chemin
+function getLocaleFromPath(path: string): string {
+  const match = path.match(/^\/(en|es)\//)
+  return match ? match[1] : 'fr'
+}
+
+// Configuration des routes de base par rôle (sans préfixe de langue)
+const BASE_ROUTE_CONFIG = {
   // Routes publiques (accessibles à tous)
   public: [
     '/',
@@ -15,7 +26,9 @@ const ROUTE_CONFIG = {
     '/help',
     '/search',
     '/search/history',
-    '/notifications'
+    '/notifications',
+    '/mentions-legales',
+    '/confidentialite',
   ],
 
   // Routes pour les volontaires
@@ -33,14 +46,6 @@ const ROUTE_CONFIG = {
     '/volunteer/activity/participations',
     '/volunteer/events',
     '/volunteer/events/announcement',
-    '/en/volunteer/account/associations',
-    '/en/volunteer/activity',
-    '/en/volunteer/activity/favorites',
-    '/en/volunteer/activity/history',
-    '/en/volunteer/activity/missions',
-    '/en/volunteer/activity/participations',
-    '/en/volunteer/events',
-    '/en/volunteer/events/announcement'
   ],
 
   // Routes pour les associations
@@ -59,20 +64,6 @@ const ROUTE_CONFIG = {
     '/association/events/association/manage',
     '/association/events/association/requests',
     '/association/events/announcement',
-    '/en/association',
-    '/en/association/dashboard',
-    '/en/association/account',
-    '/en/association/account/profile',
-    '/en/association/account/edit',
-    '/en/association/account/settings',
-    '/en/association/account/volunteers',
-    '/en/association/activity',
-    '/en/association/activity/history',
-    '/en/association/events',
-    '/en/association/events/association',
-    '/en/association/events/association/manage',
-    '/en/association/events/association/requests',
-    '/en/association/events/announcement'
   ],
 
   // Routes pour les admins (si nécessaire)
@@ -84,54 +75,86 @@ const ROUTE_CONFIG = {
 
 // Fonction pour vérifier si une route est accessible pour un rôle
 function isRouteAccessible(path: string, role: RoleUser | null): boolean {
+  const pathWithoutLocale = getPathWithoutLocale(path)
+  
   // Routes publiques toujours accessibles
-  if (ROUTE_CONFIG.public.includes(path)) {
+  if (BASE_ROUTE_CONFIG.public.includes(pathWithoutLocale)) {
     return true
   }
 
   // Vérifier selon le rôle
   switch (role) {
     case RoleUser.VOLUNTEER:
-      return ROUTE_CONFIG.volunteer.some(route => path.startsWith(route))
+      return BASE_ROUTE_CONFIG.volunteer.some(route => pathWithoutLocale.startsWith(route))
     case RoleUser.ASSOCIATION:
-      return ROUTE_CONFIG.association.some(route => path.startsWith(route))
+      return BASE_ROUTE_CONFIG.association.some(route => pathWithoutLocale.startsWith(route))
     case RoleUser.ADMIN:
-      return ROUTE_CONFIG.admin.some(route => path.startsWith(route)) ||
-             ROUTE_CONFIG.volunteer.some(route => path.startsWith(route)) ||
-             ROUTE_CONFIG.association.some(route => path.startsWith(route))
+      return BASE_ROUTE_CONFIG.admin.some(route => pathWithoutLocale.startsWith(route)) ||
+             BASE_ROUTE_CONFIG.volunteer.some(route => pathWithoutLocale.startsWith(route)) ||
+             BASE_ROUTE_CONFIG.association.some(route => pathWithoutLocale.startsWith(route))
     default:
       return false
   }
 }
 
-// Fonction pour obtenir la page d'accueil selon le rôle
-function getHomePageForRole(role: RoleUser | null): string {
-  switch (role) {
-    case RoleUser.VOLUNTEER:
-      return '/volunteer'
-    case RoleUser.ASSOCIATION:
-      return '/association/dashboard'
-    case RoleUser.ADMIN:
-      return '/dashboard'
-    default:
-      return '/'
+// Fonction pour obtenir la page d'accueil selon le rôle et la langue
+function getHomePageForRole(role: RoleUser | null, locale?: string): string {
+  const basePath = (() => {
+    switch (role) {
+      case RoleUser.VOLUNTEER:
+        return '/volunteer'
+      case RoleUser.ASSOCIATION:
+        return '/association/dashboard'
+      case RoleUser.ADMIN:
+        return '/dashboard'
+      default:
+        return '/'
+    }
+  })()
+
+  // Ajouter le préfixe de langue si nécessaire
+  if (locale && locale !== 'fr') {
+    return `/${locale}${basePath}`
   }
+
+  return basePath
 }
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const auth = getAuth()
-
+  // Vérifier si Firebase est initialisé côté client
   if (import.meta.client) {
-    const currentUser = auth.currentUser
-    if (
-        currentUser &&
-        !currentUser.emailVerified
-    ) {
-      if (to.path !== '/auth/VerifyEmailPage') {
-        return navigateTo('/auth/VerifyEmailPage')
+    try {
+      // Essayer d'abord le plugin Firebase avec permissions
+      const { $firebase } = useNuxtApp()
+      let firebase = null
+      
+      if ($firebase) {
+        firebase = await $firebase
       }
-      // Ici, tu laisses passer uniquement la page de vérification
-      return
+      
+      // Fallback vers Firebase de base si nécessaire
+      if (!firebase) {
+        const { $firebaseBase } = useNuxtApp()
+        if ($firebaseBase) {
+          firebase = await $firebaseBase
+        }
+      }
+      
+      if (firebase && firebase.auth) {
+        const currentUser = firebase.auth.currentUser
+        if (
+            currentUser &&
+            !currentUser.emailVerified
+        ) {
+          if (to.path !== '/auth/VerifyEmailPage') {
+            return navigateTo('/auth/VerifyEmailPage')
+          }
+          // Ici, tu laisses passer uniquement la page de vérification
+          return
+        }
+      }
+    } catch (error) {
+      console.warn('Firebase non initialisé dans le route guard:', error)
     }
   }
 
@@ -142,7 +165,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const authStore = useAuthStore()
   const userStore = useUserStore()
 
-
   if (!useCookie("isConnected").value) {
     await authStore.initAuth()
   }
@@ -151,7 +173,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   if (!useCookie("isConnected").value) {
     // Si c'est une route publique, laisser passer
-    if (ROUTE_CONFIG.public.includes(to.path)) {
+    if (BASE_ROUTE_CONFIG.public.includes(getPathWithoutLocale(to.path))) {
       console.log('✅ Route publique, accès autorisé')
       return
     }
@@ -159,13 +181,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if ([
       '/auth/registerVolunteer',
       '/auth/registerAssociation'
-    ].includes(to.path)) {
+    ].includes(getPathWithoutLocale(to.path))) {
       console.log('🔄 Route de transition, redirection vers login')
       return navigateTo('/')
     }
     // Sinon, rediriger vers login
-
-
     return navigateTo('/')
   }
 
@@ -183,20 +203,22 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const userRole = userStore.getRole || null
   console.log(`👤 Utilisateur connecté avec le rôle: ${userRole}`)
 
-
-  if (!authStore.isAuthenticated && ['/'].includes(to.path)) {
-    return navigateTo(getHomePageForRole(userRole))
+  if (!authStore.isAuthenticated && ['/'].includes(getPathWithoutLocale(to.path))) {
+    const locale = getLocaleFromPath(to.path)
+    return navigateTo(getHomePageForRole(userRole, locale))
   }
 
   // Gestion explicite des routes de transition
-  if (['/auth/registerVolunteer', '/auth/registerAssociation'].includes(to.path)) {
+  if (['/auth/registerVolunteer', '/auth/registerAssociation'].includes(getPathWithoutLocale(to.path))) {
     if (userStore.user && userStore.user.isCompleted) {
-      // Rediriger vers la home selon le rôle
-      return navigateTo(getHomePageForRole(userRole))
+      // Rediriger vers la home selon le rôle et la langue
+      const locale = getLocaleFromPath(to.path)
+      return navigateTo(getHomePageForRole(userRole, locale))
     }
     // Sinon, laisser passer (profil incomplet)
     return
   }
+  
   if (to.path === '/auth/VerifyEmailPage') {
     // Ici, tu peux ajouter une vérification supplémentaire si besoin
     return
@@ -205,19 +227,21 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   // Vérifier si le profil est complété
   if (userStore.user && !userStore.user.isCompleted) {
     console.log('📝 Profil incomplet, redirection vers complétion')
+    const locale = getLocaleFromPath(to.path)
+    
     switch (userRole) {
       case RoleUser.VOLUNTEER:
-        if (to.path !== '/auth/registerVolunteer') {
-          return navigateTo('/auth/registerVolunteer')
+        if (getPathWithoutLocale(to.path) !== '/auth/registerVolunteer') {
+          const registerPath = locale !== 'fr' ? `/${locale}/auth/registerVolunteer` : '/auth/registerVolunteer'
+          return navigateTo(registerPath)
         }
         break
       case RoleUser.ASSOCIATION:
-        if (to.path !== '/auth/registerAssociation') {
-          return navigateTo('/auth/registerAssociation')
+        if (getPathWithoutLocale(to.path) !== '/auth/registerAssociation') {
+          const registerPath = locale !== 'fr' ? `/${locale}/auth/registerAssociation` : '/auth/registerAssociation'
+          return navigateTo(registerPath)
         }
         break
-      default:
-        return navigateTo('/auth/register')
     }
     return
   }
@@ -226,8 +250,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!isRouteAccessible(to.path, userRole)) {
     console.log(`🚫 Route ${to.path} non accessible pour le rôle ${userRole}`)
 
-    // Rediriger vers la page d'accueil appropriée
-    const homePage = getHomePageForRole(userRole)
+    // Rediriger vers la page d'accueil appropriée avec la bonne langue
+    const locale = getLocaleFromPath(to.path)
+    const homePage = getHomePageForRole(userRole, locale)
     console.log(`🏠 Redirection vers la page d'accueil: ${homePage}`)
     return navigateTo(homePage)
   }

@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
     try {
         const response = await axios.patch(
-            `${config.private.api_base_url}/announcements/present/participant/${query.announcementId}`,
+            `${config.private.api_base_url}/announcements/presence/volunteer/${query.announcementId}`,
             {
                 ...body
             },

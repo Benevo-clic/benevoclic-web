@@ -1,1 +1,18 @@
+User-agent: *
+Allow: /
 
+# Pages privées à exclure
+Disallow: /admin/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /_nuxt/
+Disallow: /.nuxt/
+Disallow: /user/
+Disallow: /volunteer/account/
+Disallow: /association/account/
+
+# Sitemap
+Sitemap: https://benevoclic.app/sitemap.xml
+
+# Crawl-delay pour éviter de surcharger le serveur
+Crawl-delay: 1 

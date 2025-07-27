@@ -10,6 +10,9 @@
             :src="coverImageUrl"
             alt="Image de l'événement"
             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            width="400"
+            height="144"
+            loading="lazy"
         />
         <div v-else class="w-full h-full flex flex-col items-center justify-center text-base-content/60">
           <div class="avatar placeholder mb-2">
@@ -47,6 +50,9 @@
                 v-if="announcement.associationLogo"
                 :src="associationImageUrl"
                 :alt="announcement.associationName || 'Association'"
+                width="48"
+                height="48"
+                loading="lazy"
             />
             <div v-else class="w-full h-full bg-base-300 flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-base-content/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">

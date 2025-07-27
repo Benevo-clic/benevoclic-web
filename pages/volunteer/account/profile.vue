@@ -9,6 +9,8 @@
             :src="profileImageUrl"
             alt="Photo bénévole"
             class="w-full h-full object-cover"
+            width="128"
+            height="128"
           />
           <UserRound v-else class="w-16 h-16 text-base-content opacity-50" />
         </div>

@@ -43,13 +43,14 @@
           <label class="label">
             <span class="label-text font-medium">Résultats</span>
           </label>
-          <div class="border border-base-300 rounded-lg overflow-hidden max-h-32 overflow-y-auto">
+          <div class="border border-base-300 rounded-lg overflow-hidden max-h-32 overflow-y-auto location-search-results">
             <div class="space-y-0">
               <div
                   v-for="result in locationSearchResults"
                   :key="result.place_id"
                   @click="selectLocation(result)"
-                  class="p-3 hover:bg-base-200 cursor-pointer border-b border-base-200 last:border-b-0 flex items-center justify-between"
+                  class="p-3 hover:bg-base-200 cursor-pointer border-b border-base-200 last:border-b-0 flex items-center justify-between search-result-item"
+                  data-search-result
               >
                 <span class="font-medium text-sm">{{ formatCityName(result) }}</span>
                 <ChevronRight class="w-4 h-4" />
@@ -68,7 +69,7 @@
               <strong>Note:</strong> Seule la première ville est prise en compte.
             </div>
           </div>
-          <div class="space-y-2">
+          <div class="space-y-2 selected-locations">
             <div
                 v-for="(loc, index) in selectedLocations"
                 :key="loc.place_id"
@@ -109,6 +110,20 @@
                 <MapPin class="w-4 h-4 text-primary" />
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Permission Alert -->
+        <div v-if="!canUseLocation" class="alert alert-warning alert-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          </svg>
+          <div>
+            <h4 class="font-bold">Géolocalisation désactivée</h4>
+            <p class="text-xs">Acceptez les cookies de personnalisation pour utiliser votre position.</p>
+            <button @click="openCookieSettings" class="btn btn-primary btn-xs mt-2">
+              Paramétrer les cookies
+            </button>
           </div>
         </div>
 
@@ -187,6 +202,7 @@ const userLocation = useUserLocation();
 const userCurrentLocation = ref<any>(null);
 const currentLatitude = ref<number>();
 const currentLongitude = ref<number>();
+const canUseLocation = ref(false);
 
 const hasLocationFilter = computed(
     () => useCurrentLocation.value || selectedLocations.value.length > 0
@@ -197,38 +213,84 @@ const isCityActive = (index: number) => !useCurrentLocation.value && index === 0
 
 const onClickOutside = (e: MouseEvent) => {
   if (dropdownRef.value && !dropdownRef.value.contains(e.target as Node)) {
-    showLocationDropdown.value = false;
+    // Ne pas fermer si on clique sur les résultats de recherche ou les éléments du dropdown
+    const target = e.target as HTMLElement;
+    const isSearchResult = target.closest('.search-results') || 
+                          target.closest('[data-search-result]') ||
+                          target.closest('.location-search-results') ||
+                          target.closest('.selected-locations') ||
+                          target.closest('.location-dropdown-container');
+    
+    if (!isSearchResult) {
+      showLocationDropdown.value = false;
+    }
   }
 };
 
-onMounted(async () => {
-  const loc = await userLocation.getUserLocation();
-  if (loc) {
-    currentLatitude.value = loc.latitude;
-    currentLongitude.value = loc.longitude;
-    userCurrentLocation.value = {
-      place_id: 'current_location',
-      display_name: 'Ma position actuelle',
-      city: loc.city,
-      lat: loc.latitude.toString(),
-      lon: loc.longitude.toString(),
-    };
+const toggleLocationDropdown = () => {
+  showLocationDropdown.value = !showLocationDropdown.value;
+};
+
+const openCookieSettings = () => {
+  window.dispatchEvent(new CustomEvent('openCookieSettings'));
+};
+
+// Vérifier les permissions de géolocalisation
+const checkLocationPermissions = async () => {
+  try {
+    const { usePermissions } = await import('~/composables/usePermissions');
+    const { hasPermission, loadCookiePreferences } = usePermissions();
+    
+    // S'assurer que les préférences sont chargées
+    loadCookiePreferences();
+    
+    canUseLocation.value = hasPermission('canUseLocation');
+
+    if (!canUseLocation.value) {
+      console.log('Cookies de personnalisation non acceptés - géolocalisation désactivée');
+    }
+  } catch (err) {
+    console.warn('Impossible de vérifier les permissions de géolocalisation:', err);
+    canUseLocation.value = false;
   }
-  document.addEventListener('click', onClickOutside);
-});
+};
+
+const initLocation = async () => {
+  try {
+    const location = await userLocation.getUserLocation()
+    if (location) {
+      currentLatitude.value = location.latitude
+      currentLongitude.value = location.longitude
+      userCurrentLocation.value = {
+        place_id: 'current_location',
+        display_name: 'Ma position actuelle',
+        city: location.city || 'Position détectée',
+        lat: location.latitude.toString(),
+        lon: location.longitude.toString()
+      }
+    } else {
+      console.log('Aucune position obtenue');
+    }
+
+  } catch (error) {
+    console.error('Error getting user location:', error)
+  }
+}
+
+onMounted(async () => {
+  await userLocation.initializeLocation()
+  
+  await checkLocationPermissions()
+  
+  await initLocation()
+  
+  document.addEventListener('click', onClickOutside)
+})
 
 onUnmounted(() => {
   document.removeEventListener('click', onClickOutside);
   if (searchTimeout.value) clearTimeout(searchTimeout.value);
 });
-
-const toggleLocationDropdown = () => {
-  showLocationDropdown.value = !showLocationDropdown.value;
-  if (showLocationDropdown.value) {
-    locationSearch.value = '';
-    locationSearchResults.value = [];
-  }
-};
 
 const formatCityName = (result: any) => {
   const addr = result.address || {};
@@ -253,14 +315,30 @@ const searchLocation = () => {
           )}&countrycodes=fr&limit=10&addressdetails=1`
       );
       const data = await res.json();
+      
+      // Améliorer le filtrage pour inclure plus de types de lieux
       locationSearchResults.value = data
-          .filter(
-              (i: any) =>
-                  ['city', 'town', 'village', 'municipality'].includes(i.type) ||
-                  (i.address && (i.address.city || i.address.town || i.address.village))
-          )
+          .filter((i: any) => {
+            // Inclure les villes, villages, municipalités
+            const validTypes = ['city', 'town', 'village', 'municipality', 'administrative'];
+            const hasValidType = validTypes.includes(i.type);
+            
+            // Ou avoir une adresse avec une ville
+            const hasCityAddress = i.address && (
+              i.address.city || 
+              i.address.town || 
+              i.address.village || 
+              i.address.municipality
+            );
+            
+            // Ou être un lieu administratif de niveau ville
+            const isCityLevel = i.place_rank && i.place_rank <= 16;
+            
+            return hasValidType || hasCityAddress || isCityLevel;
+          })
           .slice(0, 5);
-    } catch {
+    } catch (error) {
+      console.error('Erreur lors de la recherche de villes:', error);
       locationSearchResults.value = [];
     }
   }, 500);
@@ -273,6 +351,7 @@ const selectLocation = (loc: any) => {
   useCurrentLocation.value = false;
   locationSearch.value = '';
   locationSearchResults.value = [];
+  // Ne pas fermer le dropdown ici - laisser l'utilisateur voir les villes sélectionnées
 };
 
 const makeActive = (i: number) => {

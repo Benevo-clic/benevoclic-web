@@ -24,10 +24,14 @@
 
     <div  class="mx-auto px-4 py-5 max-w-10xl">
       <div class="bg-base-100 rounded-2xl shadow-md p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-semibold">Gestion des événements</h2>
+        </div>
         <ReadOnlyEventList
             :announcements="paginatedAnnouncements"
             :error="error.value"
             :loading="loading.value"
+            :total-items="totalItems"
         />
         <!-- Pagination DaisyUI -->
         <div class="flex justify-center mt-6" v-if="totalPages > 1">
@@ -65,7 +69,7 @@ import {definePageMeta, useNavigation} from "#imports";
 import ReadOnlyEventList from '~/components/event/association/ReadOnlyEventList.vue';
 import EventFilters from '~/components/event/association/EventFilters.vue';
 import { useAnnouncement } from "~/composables/useAnnouncement";
-import {onMounted, ref, computed, watch} from "vue";
+import {onMounted, ref, computed} from "vue";
 import {useUser} from "~/composables/auth/useUser";
 import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 import type {FilterAnnouncement, FilterAssociationAnnouncement} from "~/common/interface/filter.interface";
@@ -187,5 +191,6 @@ async function initData() {
     handleError(error);
   }
 }
+
 
 </script>

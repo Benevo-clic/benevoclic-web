@@ -25,6 +25,7 @@ const form = reactive({
 })
 
 const errorMessage = ref('')
+const termsAccepted = ref(false)
 
 const emit = defineEmits<{
   (e: 'emailVerified', isVerified: boolean): void;
@@ -47,6 +48,12 @@ async function handleRegister() {
     errorMessage.value = t('auth.register.error.weak_password')
     return
   }
+
+  if (!termsAccepted.value) {
+    errorMessage.value = t('auth.register.error.terms_not_accepted')
+    return
+  }
+
   loading.value = true
 
   try {
@@ -59,7 +66,7 @@ async function handleRegister() {
     emit('emailVerified', isEmailVerified.value)
   } catch (error) {
     console.error('Erreur de connexion:', error)
-    errorMessage.value = 'Une erreur est survenue lors de l’inscription.'
+    errorMessage.value = 'Une erreur est survenue lors de l\'inscription.'
     isEmailVerified.value = false
     emit('emailVerified', isEmailVerified.value)
   } finally {
@@ -120,10 +127,32 @@ function verifyAssociation(value:boolean) {
       />
     </div>
 
-    <!-- Message d’erreur -->
+    <!-- Case à cocher pour les conditions générales -->
+    <div class="form-control">
+      <label class="label cursor-pointer justify-start gap-3">
+        <input 
+          type="checkbox" 
+          v-model="termsAccepted"
+          class="checkbox checkbox-primary checkbox-sm" 
+          required
+        />
+        <span class="label-text text-sm">
+          J'accepte les 
+          <a href="/mentions-legales" target="_blank" class="text-primary hover:underline">
+            conditions générales d'utilisation
+          </a> 
+          et la 
+          <a href="/confidentialite" target="_blank" class="text-primary hover:underline">
+            politique de confidentialité
+          </a>
+        </span>
+      </label>
+    </div>
+
+    <!-- Message d'erreur -->
     <p v-if="errorMessage" class="text-error text-sm">{{ errorMessage }}</p>
 
-    <button type="submit" class="btn btn-primary w-full" :disabled="loading">
+    <button type="submit" class="btn btn-primary w-full" :disabled="loading || !termsAccepted">
       <span v-if="loading" class="loading loading-spinner loading-sm"></span>
       <span v-else>{{t('auth.continue')}}</span>
     </button>

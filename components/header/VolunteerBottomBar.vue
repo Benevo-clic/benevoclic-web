@@ -74,6 +74,8 @@ function handleHome() {
             placeholder="Search for missions or associations"
             class="input input-bordered w-full h-12 text-base"
             @keyup.enter="handleSearch"
+            id="search-input"
+            aria-label="Rechercher des missions ou associations"
           />
           <button 
             class="btn btn-primary h-12 ml-2" 

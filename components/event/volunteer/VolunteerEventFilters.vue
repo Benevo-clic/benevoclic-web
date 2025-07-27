@@ -204,204 +204,206 @@
         <div v-if="mobileFiltersOpen" class="fixed inset-0 z-50 md:hidden">
           <!-- Overlay -->
           <div class="absolute inset-0 bg-black/50" @click="closeMobileFilters"></div>
-          
+
           <!-- Drawer -->
-          <div class="absolute right-0 top-0 h-full w-80 bg-base-100 shadow-xl p-4 overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
+          <div class="absolute right-0 top-0 h-full w-80 bg-base-100 shadow-xl flex flex-col">
+            <!-- Header fixe -->
+            <div class="flex justify-between items-center p-4 border-b border-base-300 flex-shrink-0">
               <h3 class="text-lg font-bold">Filtres</h3>
               <button @click="closeMobileFilters" class="btn btn-ghost btn-sm">
                 <X class="w-5 h-5" />
               </button>
             </div>
 
-            <!-- Contenu du drawer -->
-            <div class="space-y-6">
-              <!-- Trier par -->
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text font-medium">Trier par</span>
-                </label>
-                <div class="relative">
-                  <button
-                    :class="[
-                      'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                      showSortMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
-                    ]"
-                    @click="toggleSortMenu"
-                  >
-                    <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
-                      <SortAsc class="w-4 h-4" />
-                    </div>
-                    <span class="font-medium">
-                      {{ getSortLabel() }}
-                    </span>
-                  </button>
-                  <!-- Dropdown Sort -->
-                  <div v-if="showSortMenu" class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48">
-                    <div class="p-2 space-y-1">
-                      <button
-                        v-for="sortOption in sortOptions"
-                        :key="sortOption.value"
-                        :class="[
-                          'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
-                          filters.sort === sortOption.value ? 'bg-primary/20 text-primary' : 'hover:bg-base-200'
-                        ]"
-                        @click="applySort(sortOption.value); showSortMenu = false"
-                      >
-                        <input
-                          type="radio"
-                          :checked="filters.sort === sortOption.value"
-                          class="radio radio-sm radio-primary"
-                        />
-                        <span class="text-sm">{{ sortOption.label }}</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Statut -->
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text font-medium">Statut</span>
-                </label>
-                <div class="relative">
-                  <button
-                    :class="[
-                      'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                      showStatusMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
-                    ]"
-                    @click="toggleStatusMenu"
-                  >
-                    <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
-                      <CircleDot class="w-4 h-4" />
-                    </div>
-                    <span class="font-medium">
-                      {{ getStatusLabel() }}
-                    </span>
-                  </button>
-                  <!-- Dropdown Status -->
-                  <div v-if="showStatusMenu" class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48">
-                    <div class="p-2 space-y-1">
-                      <button
-                        v-for="statusOption in statusOptions"
-                        :key="statusOption.value"
-                        :class="[
-                          'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
-                          filters.status === statusOption.value ? 'bg-primary/20 text-primary' : 'hover:bg-base-200'
-                        ]"
-                        @click="applyStatus(statusOption.value); showStatusMenu = false"
-                      >
-                        <input
-                          type="radio"
-                          :checked="filters.status === statusOption.value"
-                          class="radio radio-sm radio-primary"
-                        />
-                        <span class="text-sm">{{ statusOption.label }}</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Type d'annonce -->
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text font-medium">Type d'annonce</span>
-                </label>
-                <div class="relative">
-                  <button
-                    :class="[
-                      'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                      showTagsMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
-                    ]"
-                    @click="toggleTagsMenu"
-                  >
-                    <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
-                      <Tag class="w-4 h-4" />
-                    </div>
-                    <span class="font-medium">
-                      {{ getTagsLabel() }}
-                    </span>
-                  </button>
-                  <!-- Dropdown Tags -->
-                  <div v-if="showTagsMenu" class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48 max-h-64 overflow-y-auto">
-                    <div class="p-2 space-y-1">
-                      <button
-                        v-for="tag in availableTags"
-                        :key="tag"
-                        :class="[
-                          'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
-                          selectedTags.includes(tag) ? 'bg-primary/20 text-primary' : 'hover:bg-base-200'
-                        ]"
-                        @click="toggleTag(tag)"
-                      >
-                        <input
-                          type="checkbox"
-                          :checked="selectedTags.includes(tag)"
-                          class="checkbox checkbox-sm checkbox-primary"
-                        />
-                        <span class="text-sm">{{ tag }}</span>
-                      </button>
-                      
-                      <!-- Ajout de tag personnalisé -->
-                      <div class="border-t border-base-300 pt-2 mt-2">
-                        <div v-if="!showCustomInput">
-                          <button
-                            @click="openCustomInput"
-                            class="flex items-center gap-3 p-2 rounded-lg w-full text-left text-primary hover:bg-primary/10 transition-colors"
-                          >
-                            <Plus class="w-4 h-4" />
-                            <span class="text-sm font-medium">Ajouter un type...</span>
-                          </button>
-                        </div>
-                        <div v-else class="flex items-center gap-2 p-2">
+            <!-- Contenu scrollable -->
+            <div class="flex-1 overflow-y-auto">
+              <div class="p-4 space-y-6 pb-4">
+                <!-- Trier par -->
+                <div class="form-control">
+                  <label class="label">
+                    <span class="label-text font-medium">Trier par</span>
+                  </label>
+                  <div class="relative">
+                    <button
+                      :class="[
+                        'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+                        showSortMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+                      ]"
+                      @click="toggleSortMenu"
+                    >
+                      <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+                        <SortAsc class="w-4 h-4" />
+                      </div>
+                      <span class="font-medium">
+                        {{ getSortLabel() }}
+                      </span>
+                    </button>
+                    <!-- Dropdown Sort -->
+                    <div v-if="showSortMenu" class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48">
+                      <div class="p-2 space-y-1">
+                        <button
+                          v-for="sortOption in sortOptions"
+                          :key="sortOption.value"
+                          :class="[
+                            'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
+                            filters.sort === sortOption.value ? 'bg-primary/20 text-primary' : 'hover:bg-base-200'
+                          ]"
+                          @click="applySort(sortOption.value); showSortMenu = false"
+                        >
                           <input
-                            v-model="customTag"
-                            @keydown.enter.prevent="addCustomTag"
-                            type="text"
-                            class="input input-sm input-bordered flex-1"
-                            placeholder="Nouveau type…"
-                            ref="customInputRef"
+                            type="radio"
+                            :checked="filters.sort === sortOption.value"
+                            class="radio radio-sm radio-primary"
                           />
-                          <button class="btn btn-sm btn-primary" @click="addCustomTag">+</button>
-                          <button class="btn btn-sm btn-ghost" @click="cancelCustomInput">✕</button>
+                          <span class="text-sm">{{ sortOption.label }}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Statut -->
+                <div class="form-control">
+                  <label class="label">
+                    <span class="label-text font-medium">Statut</span>
+                  </label>
+                  <div class="relative">
+                    <button
+                      :class="[
+                        'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+                        showStatusMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+                      ]"
+                      @click="toggleStatusMenu"
+                    >
+                      <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+                        <CircleDot class="w-4 h-4" />
+                      </div>
+                      <span class="font-medium">
+                        {{ getStatusLabel() }}
+                      </span>
+                    </button>
+                    <!-- Dropdown Status -->
+                    <div v-if="showStatusMenu" class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48">
+                      <div class="p-2 space-y-1">
+                        <button
+                          v-for="statusOption in statusOptions"
+                          :key="statusOption.value"
+                          :class="[
+                            'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
+                            filters.status === statusOption.value ? 'bg-primary/20 text-primary' : 'hover:bg-base-200'
+                          ]"
+                          @click="applyStatus(statusOption.value); showStatusMenu = false"
+                        >
+                          <input
+                            type="radio"
+                            :checked="filters.status === statusOption.value"
+                            class="radio radio-sm radio-primary"
+                          />
+                          <span class="text-sm">{{ statusOption.label }}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Type d'annonce -->
+                <div class="form-control">
+                  <label class="label">
+                    <span class="label-text font-medium">Type d'annonce</span>
+                  </label>
+                  <div class="relative">
+                    <button
+                      :class="[
+                        'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+                        showTagsMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+                      ]"
+                      @click="toggleTagsMenu"
+                    >
+                      <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+                        <Tag class="w-4 h-4" />
+                      </div>
+                      <span class="font-medium">
+                        {{ getTagsLabel() }}
+                      </span>
+                    </button>
+                    <!-- Dropdown Tags -->
+                    <div v-if="showTagsMenu" class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48 max-h-64 overflow-y-auto">
+                      <div class="p-2 space-y-1">
+                        <button
+                          v-for="tag in availableTags"
+                          :key="tag"
+                          :class="[
+                            'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
+                            selectedTags.includes(tag) ? 'bg-primary/20 text-primary' : 'hover:bg-base-200'
+                          ]"
+                          @click="toggleTag(tag)"
+                        >
+                          <input
+                            type="checkbox"
+                            :checked="selectedTags.includes(tag)"
+                            class="checkbox checkbox-sm checkbox-primary"
+                          />
+                          <span class="text-sm">{{ tag }}</span>
+                        </button>
+
+                        <!-- Ajout de tag personnalisé -->
+                        <div class="border-t border-base-300 pt-2 mt-2">
+                          <div v-if="!showCustomInput">
+                            <button
+                              @click="openCustomInput"
+                              class="flex items-center gap-3 p-2 rounded-lg w-full text-left text-primary hover:bg-primary/10 transition-colors"
+                            >
+                              <Plus class="w-4 h-4" />
+                              <span class="text-sm font-medium">Ajouter un type...</span>
+                            </button>
+                          </div>
+                          <div v-else class="flex items-center gap-2 p-2">
+                            <input
+                              v-model="customTag"
+                              @keydown.enter.prevent="addCustomTag"
+                              type="text"
+                              class="input input-sm input-bordered flex-1"
+                              placeholder="Nouveau type…"
+                              ref="customInputRef"
+                            />
+                            <button class="btn btn-sm btn-primary" @click="addCustomTag">+</button>
+                            <button class="btn btn-sm btn-ghost" @click="cancelCustomInput">✕</button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
+                <!-- Filtres avancés -->
+                <div class="form-control">
+                  <label class="label">
+                    <span class="label-text font-medium">Filtres avancés</span>
+                  </label>
+                  <button
+                    @click="showAdvancedFilters = true; closeMobileFilters()"
+                    class="btn btn-outline w-full"
+                  >
+                    <SlidersHorizontal class="w-4 h-4 mr-2" />
+                    Configurer les filtres avancés
+                  </button>
+                </div>
 
-              <!-- Filtres avancés -->
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text font-medium">Filtres avancés</span>
-                </label>
-                <button
-                  @click="showAdvancedFilters = true; closeMobileFilters()"
-                  class="btn btn-outline w-full"
-                >
-                  <SlidersHorizontal class="w-4 h-4 mr-2" />
-                  Configurer les filtres avancés
-                </button>
-              </div>
-
-              <!-- Actions -->
-              <div class="flex gap-2 pt-4 border-t border-base-300">
-                <button 
-                  @click="resetFilters" 
-                  class="btn btn-ghost flex-1"
-                >
-                  Réinitialiser
-                </button>
-                <button 
-                  @click="closeMobileFilters" 
-                  class="btn btn-primary flex-1"
-                >
-                  Appliquer
-                </button>
+                <!-- Actions -->
+                <div class="flex gap-2 pt-4 border-t border-base-300">
+                  <button 
+                    @click="resetFilters" 
+                    class="btn btn-ghost flex-1"
+                  >
+                    Réinitialiser
+                  </button>
+                  <button 
+                    @click="closeMobileFilters" 
+                    class="btn btn-primary flex-1"
+                  >
+                    Appliquer
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -427,7 +429,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, defineEmits, watch, nextTick } from 'vue'
-import { Map, SortAsc, ChevronRight, SlidersHorizontal, CircleDot, Tag, Plus } from 'lucide-vue-next';
+import { Map, SortAsc, ChevronRight, SlidersHorizontal, CircleDot, Tag, Plus, X } from 'lucide-vue-next';
 import type {Announcement} from "~/common/interface/event.interface";
 import type {FilterAnnouncement, AnnouncementStatus, SortOption} from "~/common/interface/filter.interface";
 import {useUserLocation} from "~/composables/useUserLocation";
@@ -651,11 +653,7 @@ watch(showCustomInput, (val) => {
 
 // Watcher pour la recherche
 watch(searchQuery, (newQuery) => {
-  // Ajouter la logique de recherche ici si nécessaire
-  // Pour l'instant, on peut juste appliquer les filtres
   if (newQuery !== undefined) {
-    // Vous pouvez ajouter la logique de recherche ici
-    // Par exemple: filters.value.search = newQuery
   }
 })
 
@@ -778,7 +776,7 @@ const resetFilters = () => {
   }
   selectedTags.value = []
   selectedTypes.value = []
-  
+
   tempAdvancedFilters.value = {
     dateEventFrom: undefined,
     dateEventTo: undefined,
@@ -788,7 +786,7 @@ const resetFilters = () => {
     datePublicationTo: undefined,
     publicationInterval: undefined
   }
-  
+
   resetLocation.value = true
   applyFilters()
 }
@@ -859,7 +857,7 @@ watch(filters, (newFilters) => {
   );
 
   if (isEmpty) return;
-  
+
   let criteriaCount = 0;
   if (filterWithoutLocation.status) criteriaCount++;
   if (filterWithoutLocation.sort) criteriaCount++;
@@ -868,17 +866,17 @@ watch(filters, (newFilters) => {
   if (filterWithoutLocation.hoursEventFrom || filterWithoutLocation.hoursEventTo) criteriaCount++;
   if (filterWithoutLocation.datePublicationFrom || filterWithoutLocation.datePublicationTo) criteriaCount++;
   if (filterWithoutLocation.publicationInterval) criteriaCount++;
-  
+
   if (criteriaCount <= 3) return;
-  
+
   let history: FilterAnnouncement[] = [];
   try {
     history = JSON.parse(localStorage.getItem(FILTER_HISTORY_KEY) || '[]')
   } catch {}
-  
+
   const isDifferentEnough = history.every(existingFilter => {
     let differences = 0;
-    
+
     if (filterWithoutLocation.status !== existingFilter.status) differences++;
     if (filterWithoutLocation.sort !== existingFilter.sort) differences++;
     if (JSON.stringify(filterWithoutLocation.tags) !== JSON.stringify(existingFilter.tags)) differences++;
@@ -889,17 +887,17 @@ watch(filters, (newFilters) => {
     if (filterWithoutLocation.datePublicationFrom !== existingFilter.datePublicationFrom) differences++;
     if (filterWithoutLocation.datePublicationTo !== existingFilter.datePublicationTo) differences++;
     if (filterWithoutLocation.publicationInterval !== existingFilter.publicationInterval) differences++;
-    
+
     return differences >= 3;
   });
-  
+
   if (!isDifferentEnough) return;
   if(currentFilterSearch.value){
     filterWithoutLocation.nameEvent = currentFilterSearch.value?.nameEvent
     filterWithoutLocation.description = currentFilterSearch.value?.description;
     filterWithoutLocation.associationName = currentFilterSearch.value?.associationName
   }
-  
+
   const newHistory = [filterWithoutLocation, ...history.filter(h => JSON.stringify(h) !== JSON.stringify(filterWithoutLocation))]
 
   filterHistory.value = newHistory.slice(0, 3)

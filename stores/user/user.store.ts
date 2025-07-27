@@ -11,12 +11,39 @@ import {
 import { useNuxtApp } from '#app';
 import {useAuthStore} from "~/stores/auth/auth.store";
 
+// Fonction utilitaire pour obtenir Firebase de manière sécurisée
+async function getFirebase() {
+  const {$firebase, $firebaseBase} = useNuxtApp();
+  
+  // Essayer d'abord le plugin Firebase avec permissions
+  let firebase = null
+  if ($firebase) {
+    try {
+      firebase = await $firebase
+    } catch (error) {
+      console.warn('Firebase avec permissions non disponible:', error)
+    }
+  }
+  
+  // Fallback vers Firebase de base si nécessaire
+  if (!firebase && $firebaseBase) {
+    try {
+      firebase = await $firebaseBase
+    } catch (error) {
+      console.warn('Firebase de base non disponible:', error)
+    }
+  }
+  
+  if (!firebase || !firebase.auth) {
+    throw new Error('Firebase non initialisé - veuillez réessayer dans quelques secondes')
+  }
+  
+  return firebase
+}
+
 export async function loginWithGoogle(): Promise<User> {
-  const {$firebase} = useNuxtApp();
-  if (!$firebase.auth) throw new Error('Firebase non initialisé');
-
-  const result = await signInWithPopup($firebase.auth, $firebase.provider!);
-
+  const firebase = await getFirebase()
+  const result = await signInWithPopup(firebase.auth, firebase.provider!);
   return result.user;
 }
 
@@ -188,8 +215,8 @@ export const useUserStore = defineStore('user', {
         this.error = null;
 
         try {
-          const { $firebase } = useNuxtApp()
-          const user = $firebase.auth?.currentUser
+          const firebase = await getFirebase()
+          const user = firebase.auth.currentUser
           if (!user) {
             throw new Error('Utilisateur non connecté')
           }
@@ -249,18 +276,18 @@ export const useUserStore = defineStore('user', {
       this.loading = true;
       this.error = null;
       try {
-        const {$firebase} = useNuxtApp();
-        if (!$firebase.auth?.currentUser) {
+        const firebase = await getFirebase();
+        if (!firebase.auth.currentUser) {
           throw new Error('Utilisateur non connecté');
         }
 
         const credential = EmailAuthProvider.credential(
-          $firebase.auth.currentUser.email!,
+          firebase.auth.currentUser.email!,
           payload.oldPassword
         );
 
-        await reauthenticateWithCredential($firebase.auth.currentUser, credential);
-        await updatePassword($firebase.auth.currentUser, payload.newPassword);
+        await reauthenticateWithCredential(firebase.auth.currentUser, credential);
+        await updatePassword(firebase.auth.currentUser, payload.newPassword);
 
         this.invalidateUserCache();
       } catch (error: any) {
