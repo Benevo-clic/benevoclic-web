@@ -5,7 +5,6 @@ dist
 .output
 .git
 *.md
-package-lock.json
 
 # Ignorer tous les .env
 .env
