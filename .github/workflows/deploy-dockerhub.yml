@@ -26,7 +26,9 @@ jobs:
           echo "Using .npmrc to ensure packages are fetched from the public npm registry"
           echo "registry=https://registry.npmjs.org/" > .npmrc
           echo "@parcel:registry=https://registry.npmjs.org/" >> .npmrc
-          npm ci
+          echo "@parcel/watcher-wasm:registry=https://registry.npmjs.org/" >> .npmrc
+          # Disable the use of global .npmrc file
+          npm ci --no-global
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2

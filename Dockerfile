@@ -5,7 +5,8 @@ WORKDIR /app
 
 # Copier les fichiers de dépendances pour optimiser le cache
 COPY package*.json .npmrc ./
-RUN npm ci
+# Disable the use of global .npmrc file
+RUN npm ci --no-global
 
 # Copier le reste des fichiers
 COPY . .
