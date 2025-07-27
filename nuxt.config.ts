@@ -45,6 +45,10 @@ export default defineNuxtConfig({
   ],
 
   plugins: [
+    { src: '~/plugins/firebase-init.client.ts', mode: 'client' },
+    { src: '~/plugins/init-permissions.client.ts', mode: 'client' },
+    { src: '~/plugins/firebase-permissions.client.ts', mode: 'client' },
+    { src: '~/plugins/permissions.client.ts', mode: 'client' },
     { src: '~/plugins/maplibre.client.ts', mode: 'client' },
   ],
   build: {
@@ -92,6 +96,25 @@ export default defineNuxtConfig({
       fs: {
         driver: 'fs',
         base: './.nuxt/storage'
+      }
+    },
+    // Headers de sécurité RGPD
+    routeRules: {
+      '/**': {
+        headers: {
+          // Protection contre le clickjacking
+          'X-Frame-Options': 'SAMEORIGIN',
+          // Protection contre le MIME sniffing
+          'X-Content-Type-Options': 'nosniff',
+          // Protection contre les attaques XSS
+          'X-XSS-Protection': '1; mode=block',
+          // Politique de sécurité du contenu - Corrigée pour Firebase
+          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://*.firebaseio.com https://*.firebase.com https://*.googleapis.com https://www.googletagmanager.com https://www.google-analytics.com blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://*.firebase.com https://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.benevoclic.app https://api-adresse.data.gouv.fr https://nominatim.openstreetmap.org https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://region*.google-analytics.com https://*.openstreetmap.org https://*.cartodb.com https://*.thunderforest.com; img-src 'self' data: https: https://www.google-analytics.com https://*.openstreetmap.org https://*.cartodb.com https://*.thunderforest.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com;",
+          // Référer Policy
+          'Referrer-Policy': 'strict-origin-when-cross-origin',
+          // Permissions Policy
+          'Permissions-Policy': 'camera=(), microphone=(), geolocation=(self), interest-cohort=()'
+        }
       }
     }
   },

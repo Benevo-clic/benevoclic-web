@@ -56,8 +56,8 @@ function handleCloseDrawer() {
         v-if="props.menuOpen"
       class="fixed top-0 right-0 h-screen w-80 max-w-[85vw] bg-gradient-to-b from-base-100 to-base-200 shadow-2xl flex flex-col z-50 text-base-content border-l border-base-300"
     >
-      <!-- Header avec effet de verre -->
-      <div class="sticky top-0 z-10 bg-base-100/80 backdrop-blur-md border-b border-base-300">
+      <!-- Header avec effet de verre - Toujours visible -->
+      <div class="flex-shrink-0 bg-base-100/80 backdrop-blur-md border-b border-base-300">
         <div class="flex items-center justify-between p-4">
           <h2 class="text-lg font-semibold text-base-content">
             {{ props.isAuthenticated ? 'Menu' : 'Bienvenue' }}
@@ -71,28 +71,28 @@ function handleCloseDrawer() {
         </div>
       </div>
 
-      <!-- Contenu dynamique -->
+      <!-- Contenu dynamique - Scrollable -->
       <div class="flex-1 overflow-hidden">
-      <DrawerAppContentVolunteer
-        :menu-open="menuOpen"
-        :display-profile="true"
-        :is-authenticated="props.isAuthenticated"
-        @close-drawer="handleCloseDrawer"
-        v-if="role === 'VOLUNTEER'"
+        <DrawerAppContentVolunteer
+          :menu-open="menuOpen"
+          :display-profile="true"
+          :is-authenticated="props.isAuthenticated"
+          @close-drawer="handleCloseDrawer"
+          v-if="props.role === 'VOLUNTEER'"
         />
-      <DrawerAppContentAssociation
-        :menu-open="menuOpen"
-        :display-profile="true"
-        :is-authenticated="props.isAuthenticated"
-        @close-drawer="handleCloseDrawer"
-        v-else-if="role === 'ASSOCIATION'"
+        <DrawerAppContentAssociation
+          :menu-open="menuOpen"
+          :display-profile="true"
+          :is-authenticated="props.isAuthenticated"
+          @close-drawer="handleCloseDrawer"
+          v-else-if="props.role === 'ASSOCIATION'"
         />
-      <DrawerAppContentNoConnected
+        <DrawerAppContentNoConnected
           :menu-open="menuOpen"
           :display-profile="true"
           @close-drawer="handleCloseDrawer"
           v-else
-      />
+        />
       </div>
     </aside>
   </transition>

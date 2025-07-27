@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header />
-    <main class="bg-base-200 max-h-[calc(100vh-4rem)]">
+    <main class="bg-base-200">
       <slot />
     </main>
   </div>

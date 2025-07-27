@@ -62,7 +62,21 @@ export const useAuthStore = defineStore('auth', {
     async login(payload: { email: string; password: string, role: RoleUser }) {
       this.loading = true
       this.error = null
+      
       try {
+        if (process.client) {
+          try {
+            const { usePermissions } = await import('~/composables/usePermissions')
+            const { hasPermission } = usePermissions()
+            
+            if (!hasPermission('canAuthenticate')) {
+              this.error = 'Vous devez accepter les cookies essentiels pour vous connecter. Veuillez paramétrer vos préférences de cookies.'
+              throw new Error('Cookies essentiels non acceptés')
+            }
+          } catch (err) {
+            console.warn('Impossible de vérifier les permissions de cookies:', err)
+          }
+        }
 
         const encodedPassword = encodePasswordBase64(payload.password)
         const response = await $fetch('/api/auth/login', {
@@ -80,7 +94,7 @@ export const useAuthStore = defineStore('auth', {
         )
         return response
       } catch (e: any) {
-        this.error = e?.data?.message || 'Erreur de connexion'
+        this.error = e?.data?.message || e?.message || 'Erreur de connexion'
         throw e
       } finally {
         this.loading = false
@@ -137,12 +151,10 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    // Redirection selon le rôle
     async getPageRole() {
       const userStore = useUserStore()
       
       try {
-        // Attend que fetchUser() retourne l'utilisateur
         const userStore = useUserStore()
         await userStore.fetchUser()
 
@@ -338,10 +350,32 @@ export const useAuthStore = defineStore('auth', {
     },
 
     // Login Google
-    async loginWithGoogle(role: RoleUser) {
+    async loginWithGoogle(role: RoleUser, isRegisterMode: boolean = false, termsAccepted: boolean = false) {
       this.loading = true
       this.error = null
+      
       try {
+        // Vérifier les permissions de cookies côté client
+        if (process.client) {
+          try {
+            const { usePermissions } = await import('~/composables/usePermissions')
+            const { hasPermission } = usePermissions()
+            
+            if (!hasPermission('canAuthenticate')) {
+              this.error = 'Vous devez accepter les cookies essentiels pour vous connecter. Veuillez paramétrer vos préférences de cookies.'
+              throw new Error('Cookies essentiels non acceptés')
+            }
+          } catch (err) {
+            console.warn('Impossible de vérifier les permissions de cookies:', err)
+          }
+        }
+
+        // Vérifier l'acceptation des conditions générales
+        if (isRegisterMode && !termsAccepted) {
+          this.error = 'Vous devez accepter les conditions générales d\'utilisation pour continuer.'
+          throw new Error('Conditions générales non acceptées')
+        }
+
         const user = await firebaseLoginWithGoogle()
         const idToken = await user.getIdToken()
         const payload = idToken.split('.')[1]
@@ -359,7 +393,7 @@ export const useAuthStore = defineStore('auth', {
         // Attend que getPageRole() termine
         await this.getPageRole()
       } catch (e: any) {
-        this.error = e?.data?.message || 'Erreur Google'
+        this.error = e?.data?.message || e?.message || 'Erreur Google'
         throw e
       } finally {
         this.loading = false

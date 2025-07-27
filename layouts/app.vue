@@ -3,10 +3,10 @@
     <div v-if="isLoading" class="flex justify-center items-center h-32">
       <span class="loading loading-bars loading-xl"></span>
     </div>
-    <div v-else class="flex flex-col min-h-screen bg-base-200">
+    <div v-else class="flex flex-col h-screen bg-base-200">
       <Header :options-open="true"/>
-      <div class="flex flex-1">
-        <div class="hidden md:block w-64 bg-base-100 shadow-lg pt-4">
+      <div class="flex flex-1 overflow-hidden">
+        <div class="hidden md:block w-64 bg-base-100 shadow-lg flex-shrink-0">
           <DrawerAppContentVolunteer
               :is-authenticated="!isAuthenticated"
               :menu-open="true"
@@ -23,18 +23,23 @@
           />
         </div>
 
-        <!-- Main content -->
-        <main class="flex-1 p-1 overflow-auto max-h-[calc(100vh-4rem)]">
+        <main class="flex-1 p-1 overflow-auto">
           <slot />
         </main>
       </div>
     </div>
+    
+    <CookieConsent />
+    
+    <GlobalPermissionAlert />
   </div>
 </template>
 
 <script setup>
 import { useUser } from '~/composables/auth/useUser'
 import Header from '~/components/header/Header.vue'
+import CookieConsent from '~/components/CookieConsent.vue'
+import GlobalPermissionAlert from '~/components/utils/GlobalPermissionAlert.vue'
 import {onMounted, ref} from 'vue'
 import DrawerAppContentVolunteer from '~/components/header/drawer/components/volunteer/DrawerAppContentVolunteer.vue'
 import DrawerAppContentAssociation

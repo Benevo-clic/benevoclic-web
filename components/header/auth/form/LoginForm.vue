@@ -17,13 +17,12 @@ onMounted(async () => {
   await volunteer.getVolunteerInfo()
 })
 
-
-
-
 const loading = ref(false)
 let isError = ref(false)
 const associationExists = ref(false)
 const messageError = ref('')
+const showCookieAlert = ref(false)
+const termsAccepted = ref(false)
 
 const form = reactive({
   email: '',
@@ -37,6 +36,21 @@ const { checked,isRegister } = defineProps<{
 }>()
 
 async function handleLogin() {
+  // Vérifier les permissions de cookies avant la connexion
+  try {
+    const { usePermissions } = await import('~/composables/usePermissions')
+    const { hasPermission } = usePermissions()
+    
+    if (!hasPermission('canAuthenticate')) {
+      showCookieAlert.value = true
+      messageError.value = 'Vous devez accepter les cookies essentiels pour vous connecter'
+      isError.value = true
+      return
+    }
+  } catch (err) {
+    console.warn('Impossible de vérifier les permissions de cookies:', err)
+  }
+
   loading.value = true
   try {
     const response = await auth.login({
@@ -71,6 +85,11 @@ async function handleLogin() {
   }
 }
 
+const openCookieSettings = () => {
+  window.dispatchEvent(new CustomEvent('openCookieSettings'))
+  showCookieAlert.value = false
+}
+
 const emit = defineEmits<{
   (e: 'toggle-check', isChecked: boolean): void;
   (e: 'toggle-register', isRegisterMode: boolean): void;
@@ -91,15 +110,12 @@ watch(
     { immediate: true }
 )
 
-
 function handleCheckboxChange() {
   emit('toggle-check', isAssociation.value)
 }
 
-
 function toggleRegisterMode() {
-  isRegisterMode.value = !isRegisterMode.value
-  emit('toggle-register', isRegisterMode.value)
+  emit('toggle-register', !isRegisterMode.value)
 }
 
 function toggleUserType() {
@@ -112,14 +128,18 @@ async function handleGoogleLogin() {
       isError.value = true
       messageError.value = t('auth.register.association_siret_status')
     }else{
-      await auth.loginWithGoogle(isAssociation.value ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER)
+      await auth.loginWithGoogle(
+        isAssociation.value ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER,
+        isRegisterMode.value, // Passer le mode (inscription/connexion)
+        termsAccepted.value
+      )
       isError.value = false
     }
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Erreur de connexion Google:', error)
     isError.value = true
-
+    messageError.value = error?.message || t('auth.login.error.invalid_credentials')
   }
 }
 
@@ -177,8 +197,21 @@ async function handleForgotPassword(email: string) {
       {{t('auth.register.description')}}
     </p>
 
+    <!-- Alerte pour les cookies essentiels -->
+    <div role="alert" class="alert alert-warning mb-4" v-if="showCookieAlert">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+      </svg>
+      <div>
+        <h4 class="font-bold">Cookies essentiels requis</h4>
+        <p class="text-sm">Vous devez accepter les cookies essentiels pour vous connecter.</p>
+        <button @click="openCookieSettings" class="btn btn-primary btn-xs mt-2">
+          Paramétrer les cookies
+        </button>
+      </div>
+    </div>
 
-    <div role="alert" class="alert alert-error mb-4" v-if="isError">
+    <div role="alert" class="alert alert-error mb-4" v-if="isError && !showCookieAlert">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
@@ -189,7 +222,7 @@ async function handleForgotPassword(email: string) {
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
-      <span>{{t('auth.register.association_siret_status_good')}}</span>
+      <span>{{t('auth.register.association_siret_success')}}</span>
     </div>
 
     <!-- Texte + switch utilisateur -->
@@ -225,8 +258,34 @@ async function handleForgotPassword(email: string) {
     <!-- Divider -->
     <div class="divider">{{t('auth.or')}}</div>
 
+    <!-- Case à cocher pour les conditions générales (visible uniquement en mode inscription) -->
+    <div class="form-control mb-4" v-if="isRegisterMode">
+      <label class="label cursor-pointer justify-start gap-3">
+        <input 
+          type="checkbox" 
+          v-model="termsAccepted"
+          class="checkbox checkbox-primary checkbox-sm" 
+        />
+        <span class="label-text text-sm">
+          J'accepte les 
+          <a href="/mentions-legales" target="_blank" class="text-primary hover:underline">
+            conditions générales d'utilisation
+          </a> 
+          et la 
+          <a href="/confidentialite" target="_blank" class="text-primary hover:underline">
+            politique de confidentialité
+          </a>
+        </span>
+      </label>
+    </div>
+
     <!-- Login with Google -->
-    <button type="button" class="btn btn-outline w-full flex items-center justify-center" @click="handleGoogleLogin">
+    <button 
+      type="button" 
+      class="btn btn-outline w-full flex items-center justify-center" 
+      @click="handleGoogleLogin"
+      :disabled="isRegisterMode && !termsAccepted"
+    >
       <img
           src="https://www.svgrepo.com/show/475656/google-color.svg"
           class="w-5 h-5 mr-2"

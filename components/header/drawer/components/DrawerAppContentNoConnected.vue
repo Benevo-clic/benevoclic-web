@@ -5,7 +5,8 @@ import {
 
   Globe,
   SunIcon,
-  MoonIcon} from 'lucide-vue-next'
+  MoonIcon,
+  UserRound} from 'lucide-vue-next'
 
 import LanguageComponent from "~/components/header/utils/components/LanguageComponent.vue";
 import { useTheme } from "~/composables/useTheme";
@@ -80,8 +81,8 @@ function toggleLanguageMenu() {
 
 <template>
   <div class="flex flex-col h-full">
-    <!-- Welcome Section -->
-    <div class="p-6 bg-gradient-to-r from-primary/10 to-secondary/10 border-b border-base-300">
+    <!-- Welcome Section - Header fixe -->
+    <div class="p-6 bg-gradient-to-r from-primary/10 to-secondary/10 border-b border-base-300 flex-shrink-0">
       <div class="text-center">
         <div class="w-16 h-16 mx-auto mb-4 bg-primary/20 rounded-2xl flex items-center justify-center">
           <UserRound class="w-8 h-8 text-primary" />
@@ -95,62 +96,64 @@ function toggleLanguageMenu() {
       </div>
     </div>
 
-    <!-- Navigation avec design moderne -->
-    <nav class="flex-1 overflow-y-auto p-4 space-y-6">
-      <!-- App Settings Section -->
-      <div class="space-y-3">
-        <h4 class="text-xs font-bold text-base-content/50 uppercase tracking-wider px-2">
-          {{ t('drawer-content.app.title') }}
-        </h4>
-        <div class="space-y-1">
-          <!-- Language -->
-          <div class="relative">
-            <button
+    <!-- Navigation avec design moderne - Contenu scrollable -->
+    <nav class="flex-1 overflow-y-auto">
+      <div class="p-4 space-y-6 pb-4">
+        <!-- App Settings Section -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-base-content/50 uppercase tracking-wider px-2">
+            {{ t('drawer-content.app.title') }}
+          </h4>
+          <div class="space-y-1">
+            <!-- Language -->
+            <div class="relative">
+              <button
+                :class="[
+                  'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+                  showLanguageMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+                ]"
+                @click="toggleLanguageMenu"
+              >
+                <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+                  <span class="text-lg">{{ flag }}</span>
+                </div>
+                <span class="font-medium">{{ t('drawer-content.app.language') }}</span>
+              </button>
+              <LanguageComponent
+                :show-language-menu="showLanguageMenu"
+                class="absolute left-0 mt-2 z-20"
+                @change-language="changeLanguage"
+              />
+            </div>
+
+            <!-- Theme Toggle -->
+            <button 
               :class="[
                 'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                showLanguageMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+                isDarkTheme() ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
               ]"
-              @click="toggleLanguageMenu"
             >
               <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
-                <span class="text-lg">{{ flag }}</span>
+                <label class="swap swap-rotate cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    aria-label="Toggle theme" 
+                    :checked="isDarkTheme()" 
+                    @change="toggleTheme" 
+                  />
+                  <SunIcon class="swap-on w-4 h-4 text-warning"></SunIcon>
+                  <MoonIcon class="swap-off w-4 h-4 text-base-content"/>
+                </label>
               </div>
-              <span class="font-medium">{{ t('drawer-content.app.language') }}</span>
+              <span class="font-medium">{{ t('drawer-content.app.theme') }}</span>
             </button>
-            <LanguageComponent
-              :show-language-menu="showLanguageMenu"
-              class="absolute left-0 mt-2 z-20"
-              @change-language="changeLanguage"
-            />
           </div>
-
-          <!-- Theme Toggle -->
-          <button 
-            :class="[
-              'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-              isDarkTheme() ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
-            ]"
-          >
-            <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
-              <label class="swap swap-rotate cursor-pointer">
-                <input 
-                  type="checkbox" 
-                  aria-label="Toggle theme" 
-                  :checked="isDarkTheme()" 
-                  @change="toggleTheme" 
-                />
-                <SunIcon class="swap-on w-4 h-4 text-warning"></SunIcon>
-                <MoonIcon class="swap-off w-4 h-4 text-base-content"/>
-              </label>
-            </div>
-            <span class="font-medium">{{ t('drawer-content.app.theme') }}</span>
-          </button>
         </div>
       </div>
     </nav>
 
-    <!-- Footer avec authentification -->
-    <div class="p-6 border-t border-base-300 bg-base-100/50 backdrop-blur-sm">
+    <!-- Footer avec authentification - Footer fixe -->
+    <div class="p-6 border-t border-base-300 bg-base-100/50 backdrop-blur-sm flex-shrink-0">
       <div class="space-y-3">
         <HeaderAuthModalAuth />
       </div>

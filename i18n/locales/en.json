@@ -53,7 +53,8 @@
       "error": {
         "invalid_email": "The email address is invalid.",
         "password_mismatch": "Passwords do not match.",
-        "weak_password": "The password must be at least 8 characters long."
+        "weak_password": "The password must be at least 8 characters long.",
+        "terms_not_accepted": "You must accept the terms of service to continue."
       }
     },
     "volunteer": {
@@ -104,45 +105,20 @@
   },
   "drawer-content": {
     "account": {
-        "title": "Account",
-        "view_profile": "View Profile",
-        "edit_profile": "Edit Profile",
-        "settings": "Settings",
-        "profile_updated_success": "Profile updated successfully",
-        "profile_update_error": "Error updating profile. Please try again.",
-        "delete_confirmation": {
-            "title": "Confirm Deletion",
-            "message": "Are you sure you want to delete your account? This action cannot be undone.",
-            "confirm": "Yes, delete my account",
-            "cancel": "Cancel"
-        },
-        "password_change": {
-            "title": "Change Password",
-            "message": "Please enter your current password and your new password.",
-            "old_password": "Current Password",
-            "new_password": "New Password",
-            "confirm_password": "Confirm New Password",
-            "confirm": "Change Password",
-            "cancel": "Cancel",
-            "success": "Your password has been successfully updated.",
-            "error": {
-                "password_mismatch": "Passwords do not match.",
-                "weak_password": "Password must be at least 8 characters long.",
-                "general": "An error occurred while updating the password."
-            }
-        }
+      "title": "Account",
+      "view_profile": "View Profile",
+      "edit_profile": "Edit Profile",
+      "settings": "Settings"
     },
     "activity": {
-        "title": "Activities",
-        "my_missions": "My Missions",
-        "my_participations": "My Participations",
-        "my_favorites": "My Favorites",
-        "history": "History",
-      "new-event": "New Event",
-      "requests": "My Requests",
-      "upcoming-event": "Upcoming Events",
+      "title": "Activity",
+      "my_missions": "My Missions",
+      "my_participations": "My Participations",
+      "my_favorites": "My Favorites",
+      "history": "History",
+      "dashboard": "Dashboard",
       "manage-event": "Manage Events",
-        "dashboard": "Dashboard"
+      "requests": "Requests"
     },
     "notifications_support": {
       "title": "Notifications & Support",
@@ -150,11 +126,11 @@
       "help": "Help/FAQ"
     },
     "app": {
-      "title": "App",
+      "title": "Application",
       "language": "Language",
       "theme": "Theme"
     },
-    "logout": "Log Out"
+    "logout": "Logout"
   },
   "header": {
     "volunteer": {
@@ -279,5 +255,107 @@
     "back_to_login": "Back to login",
     "instructions": "1. Check your inbox",
     "click_link": "2. Click the verification link in the email"
+  },
+  "help": {
+    "title": "Help Center",
+    "description": "Find quick answers to your questions and get the help you need to use BeneVoclic effectively.",
+    "search_placeholder": "Search help...",
+    "quick_actions": {
+      "getting_started": {
+        "title": "Getting Started",
+        "description": "Start with BeneVoclic"
+      },
+      "account": {
+        "title": "Account & Profile",
+        "description": "Manage your account"
+      },
+      "volunteering": {
+        "title": "Volunteering",
+        "description": "Find missions"
+      },
+      "associations": {
+        "title": "Associations",
+        "description": "Manage your association"
+      }
+    },
+    "sections": {
+      "getting_started": {
+        "title": "Getting Started"
+      },
+      "account_profile": {
+        "title": "Account & Profile"
+      },
+      "volunteering": {
+        "title": "Volunteering"
+      },
+      "associations": {
+        "title": "Associations"
+      },
+      "technical": {
+        "title": "Technical Support"
+      }
+    },
+    "faqs": {
+      "getting_started": {
+        "q1": "How do I create an account on BeneVoclic?",
+        "a1": "Click \"Sign Up\" in the top right, choose your account type (volunteer or association), fill in your information and verify your email. For associations, you'll need to provide your SIRET number.",
+        "q2": "What's the difference between a volunteer and association account?",
+        "a2": "Volunteers can search and participate in volunteer missions. Associations can create and manage events, recruit volunteers and track their activities.",
+        "q3": "How do I verify my email address?",
+        "a3": "After registration, you'll receive a confirmation email. Click the link in the email to verify your account. Check your spam if you don't receive the email.",
+        "q4": "Can I use Google to sign up?",
+        "a4": "Yes, you can sign in with Google. Click the \"Continue with Google\" button during registration or login. You'll need to accept the terms of service during registration."
+      },
+      "account": {
+        "q1": "How do I edit my personal information?",
+        "a1": "Go to \"Account\" > \"Edit Profile\" in the sidebar menu. You can modify your name, first name, phone, city, postal code and bio.",
+        "q2": "How do I change my password?",
+        "a2": "In your account settings, you can request a new password. An email will be sent to you with a reset link.",
+        "q3": "How do I delete my account?",
+        "a3": "Contact our support to request account deletion. We'll process your request as soon as possible.",
+        "q4": "How do I manage my privacy preferences?",
+        "a4": "In \"Account\" > \"Settings\", you can manage your cookie preferences, notifications and privacy settings."
+      },
+      "volunteering": {
+        "q1": "How do I find volunteer missions?",
+        "a1": "Use the search bar and filters on the homepage to find missions by location, activity type or date. You can also enable geolocation to see missions near you.",
+        "q2": "How do I sign up for a mission?",
+        "a2": "Click on a mission that interests you, then click \"Sign Up\". You'll receive an email confirmation and can track your participation in \"My Participations\".",
+        "q3": "Can I cancel my participation?",
+        "a3": "Yes, you can cancel your participation up to 48 hours before the mission starts. Go to \"My Participations\" and click \"Cancel\".",
+        "q4": "How do I track my volunteer hours?",
+        "a4": "Your hours are automatically counted for each completed mission. You can see your total and history in \"Activities\" > \"History\"."
+      },
+      "associations": {
+        "q1": "How do I create a volunteer event?",
+        "a1": "Go to \"Manage Events\" and click \"Create Event\". Fill in the required information (title, description, location, date, number of volunteers).",
+        "q2": "How do I manage participation requests?",
+        "a2": "In \"Requests\", you can see all participation requests, accept or reject them, and communicate with volunteers.",
+        "q3": "How do I modify an existing event?",
+        "a3": "In \"Manage Events\", find your event and click \"Edit\". You can change details as long as the event hasn't started.",
+        "q4": "How do I contact registered volunteers?",
+        "a4": "You can send messages to volunteers via the \"Requests\" section or use notifications to inform them of changes."
+      },
+      "technical": {
+        "q1": "The site won't load, what should I do?",
+        "a1": "Check your internet connection, clear your browser cache and try reloading the page. If the problem persists, contact our support.",
+        "q2": "I'm not receiving confirmation emails?",
+        "a2": "Check your spam and make sure the email address is correct. You can request a new confirmation email from the login page.",
+        "q3": "How do I enable geolocation?",
+        "a3": "Accept personalization cookies in settings, then allow access to your location in your browser when prompted.",
+        "q4": "The site doesn't work on mobile?",
+        "a4": "BeneVoclic is optimized for mobile. Make sure you're using a recent browser and have a stable internet connection."
+      }
+    },
+    "contact": {
+      "title": "Need additional help?",
+      "description": "Our support team is here to help. Don't hesitate to contact us if you can't find the answer to your question.",
+      "subject_placeholder": "Subject of your request",
+      "message_placeholder": "Describe your problem in detail...",
+      "send": "Send Request",
+      "sending": "Sending...",
+      "success_message": "Your request has been sent. We'll get back to you as soon as possible!",
+      "error_message": "An error occurred. Please try again or contact us directly."
+    }
   }
 }

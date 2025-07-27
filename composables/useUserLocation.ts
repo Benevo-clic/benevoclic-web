@@ -1,4 +1,4 @@
-import { ref, onMounted, readonly } from 'vue'
+import { ref, readonly } from 'vue'
 
 interface UserLocation {
   latitude: number
@@ -12,6 +12,7 @@ export const useUserLocation = () => {
   const userLocation = ref<UserLocation | null>(null)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
+  const permissionDenied = ref(false)
 
   // Clés pour le localStorage
   const LOCATION_KEY = 'user_location'
@@ -20,6 +21,8 @@ export const useUserLocation = () => {
 
   // Charger la position depuis le storage
   const loadLocationFromStorage = (): UserLocation | null => {
+    if (typeof window === 'undefined') return null
+    
     try {
       const storedLocation = localStorage.getItem(LOCATION_KEY)
       const storedTimestamp = localStorage.getItem(LOCATION_TIMESTAMP_KEY)
@@ -46,6 +49,8 @@ export const useUserLocation = () => {
 
   // Sauvegarder la position dans le storage
   const saveLocationToStorage = (location: UserLocation) => {
+    if (typeof window === 'undefined') return
+    
     try {
       localStorage.setItem(LOCATION_KEY, JSON.stringify(location))
       localStorage.setItem(LOCATION_TIMESTAMP_KEY, Date.now().toString())
@@ -76,6 +81,7 @@ export const useUserLocation = () => {
           switch (err.code) {
             case err.PERMISSION_DENIED:
               errorMessage = 'Permission de géolocalisation refusée'
+              permissionDenied.value = true
               break
             case err.POSITION_UNAVAILABLE:
               errorMessage = 'Position indisponible'
@@ -97,8 +103,25 @@ export const useUserLocation = () => {
 
   // Obtenir la position (depuis le cache ou GPS)
   const getUserLocation = async (forceRefresh = false): Promise<UserLocation | null> => {
+    if (typeof window === 'undefined') return null
+    
+    // Vérifier les permissions de cookies côté client
+    try {
+      const { usePermissions } = await import('./usePermissions')
+      const { hasPermission } = usePermissions()
+      
+      if (!hasPermission('canUseLocation')) {
+        error.value = 'Vous devez accepter les cookies de personnalisation pour utiliser la géolocalisation'
+        permissionDenied.value = true
+        return null
+      }
+    } catch (err) {
+      console.warn('Impossible de vérifier les permissions de cookies:', err)
+    }
+
     isLoading.value = true
     error.value = null
+    permissionDenied.value = false
 
     try {
       // Essayer de charger depuis le storage si pas de refresh forcé
@@ -145,25 +168,77 @@ export const useUserLocation = () => {
 
   // Effacer la position stockée
   const clearStoredLocation = () => {
+    if (typeof window === 'undefined') return
+    
     localStorage.removeItem(LOCATION_KEY)
     localStorage.removeItem(LOCATION_TIMESTAMP_KEY)
     userLocation.value = null
   }
 
-  // Initialiser la position au montage du composant
-  onMounted(() => {
-    const cachedLocation = loadLocationFromStorage()
-    if (cachedLocation) {
-      userLocation.value = cachedLocation
+  // Vérifier si la géolocalisation est autorisée
+  const isLocationAllowed = async (): Promise<boolean> => {
+    if (typeof window === 'undefined') return false
+    
+    try {
+      const { usePermissions } = await import('./usePermissions')
+      const { hasPermission } = usePermissions()
+      return hasPermission('canUseLocation') && !permissionDenied.value
+    } catch (err) {
+      console.warn('Impossible de vérifier les permissions de géolocalisation:', err)
+      return false
     }
-  })
+  }
+
+  // Demander les permissions de géolocalisation
+  const requestLocationPermission = async (): Promise<boolean> => {
+    if (typeof window === 'undefined') return false
+    
+    try {
+      const { usePermissions } = await import('./usePermissions')
+      const { hasPermission } = usePermissions()
+      
+      if (!hasPermission('canUseLocation')) {
+        error.value = 'Vous devez d\'abord accepter les cookies de personnalisation'
+        return false
+      }
+
+      await getUserLocation(true)
+      return true
+    } catch (err) {
+      return false
+    }
+  }
+
+  // Initialiser la position (à appeler depuis un composant)
+  const initializeLocation = async () => {
+    if (typeof window === 'undefined') return
+    
+    try {
+      const { usePermissions } = await import('./usePermissions')
+      const { hasPermission } = usePermissions()
+      
+      if (hasPermission('canUseLocation')) {
+        const cachedLocation = loadLocationFromStorage()
+        if (cachedLocation) {
+          userLocation.value = cachedLocation
+        }
+      }
+    } catch (err) {
+      console.warn('Impossible de vérifier les permissions au montage:', err)
+    }
+  }
 
   return {
     userLocation: readonly(userLocation),
     isLoading: readonly(isLoading),
     error: readonly(error),
+    permissionDenied: readonly(permissionDenied),
+    isClient: readonly(ref(typeof window !== 'undefined')),
     getUserLocation,
     clearStoredLocation,
-    loadLocationFromStorage
+    loadLocationFromStorage,
+    isLocationAllowed,
+    requestLocationPermission,
+    initializeLocation
   }
 } 

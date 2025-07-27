@@ -35,6 +35,20 @@
             <path d="M19 13H5v-2h14v2z"/>
           </svg>
         </button>
+        <!-- Bouton pour basculer vers les tuiles alternatives -->
+        <button 
+          v-if="tileErrorCount > 0"
+          @click="switchToAlternativeTiles" 
+          class="zoom-btn tile-switch"
+          title="Changer de source de carte"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+            <path d="M21 3v5h-5"></path>
+            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+            <path d="M3 21v-5h5"></path>
+          </svg>
+        </button>
       </div>
     </div>
   </div>
@@ -61,6 +75,9 @@ const mapContainer = ref<HTMLElement>()
 const map = ref<any>(null)
 const markers = ref<any[]>([])
 const expandedCity = ref<string | null>(null)
+const tileErrorCount = ref(0)
+const maxTileErrors = 5
+const hasSwitchedTiles = ref(false)
 
 const zoomIn = () => {
   if (map.value) map.value.zoomIn()
@@ -202,35 +219,147 @@ const resetToCities = () => {
 
 const initMap = () => {
   if (!mapContainer.value) return
-  map.value = new $maplibregl.Map({
-    container: mapContainer.value,
-    style: {
-      version: 8,
-      sources: {
-        'osm': {
-          type: 'raster',
-          tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-          tileSize: 256,
-          attribution: '© OpenStreetMap contributors'
-        }
+  
+  try {
+    // Configuration MapLibre avec gestion des workers
+    const mapConfig = {
+      container: mapContainer.value,
+      style: {
+        version: 8,
+        sources: {
+          'osm': {
+            type: 'raster',
+            tiles: [
+              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+              'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
+              'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            ],
+            tileSize: 256,
+            attribution: '© OpenStreetMap contributors'
+          }
+        },
+        layers: [
+          {
+            id: 'osm-tiles',
+            type: 'raster',
+            source: 'osm',
+            minzoom: 0,
+            maxzoom: 20
+          }
+        ]
       },
-      layers: [
-        {
-          id: 'osm-tiles',
-          type: 'raster',
-          source: 'osm',
-          minzoom: 0,
-          maxzoom: 20
+      center: props.locations.length
+        ? props.locations[0].coordinates
+        : [2.3522, 48.8566], // Paris par défaut
+      zoom: 5,
+      minZoom: 3,
+      maxZoom: 18,
+      // Désactiver les workers si nécessaire pour éviter les erreurs CSP
+      workerClass: null,
+      // Configuration pour éviter les problèmes de workers
+      transformRequest: (url: string, resourceType: string) => {
+        if (resourceType === 'Tile' && url.includes('openstreetmap.org')) {
+          return {
+            url: url,
+            headers: {
+              'User-Agent': 'BeneVoclic/1.0',
+              'Accept': 'image/png,image/webp,*/*',
+              'Accept-Language': 'fr-FR,fr;q=0.9,en;q=0.8'
+            }
+          }
         }
-      ]
-    },
-    center: props.locations.length
-      ? props.locations[0].coordinates
-      : [2.3522, 48.8566], // Paris par défaut
-    zoom: 5,
-    minZoom: 3,
-    maxZoom: 18
-  })
+        return { url }
+      }
+    }
+
+    map.value = new $maplibregl.Map(mapConfig)
+    
+    // Gestion des erreurs de la carte
+    map.value.on('error', (e: any) => {
+      console.warn('MapLibre error:', e)
+      
+      // Si c'est une erreur de worker, essayer de réinitialiser sans workers
+      if (e.error && e.error.message && e.error.message.includes('Worker')) {
+        console.log('Attempting to reinitialize map without workers...')
+        if (map.value) {
+          map.value.remove()
+        }
+        // Réessayer sans workers
+        mapConfig.workerClass = null
+        map.value = new $maplibregl.Map(mapConfig)
+      }
+      
+      // Si c'est une erreur de tuile, compter et basculer si nécessaire
+      if (e.error && e.error.message && e.error.message.includes('Failed to fetch') && e.tile) {
+        tileErrorCount.value++
+        console.log(`Tile loading error (${tileErrorCount.value}/${maxTileErrors})`)
+        
+        // Si trop d'erreurs et qu'on n'a pas encore basculé, essayer les tuiles alternatives
+        if (tileErrorCount.value >= maxTileErrors && !hasSwitchedTiles.value) {
+          console.log('Too many tile errors, switching to alternative tile source...')
+          hasSwitchedTiles.value = true
+          switchToAlternativeTiles()
+        }
+      }
+    })
+
+    // Gestion spécifique des erreurs de source
+    map.value.on('sourcedataerror', (e: any) => {
+      console.warn('Source data error:', e)
+      if (e.sourceId === 'osm') {
+        console.log('OpenStreetMap source error, tiles may not be loading properly')
+      }
+    })
+
+  } catch (error) {
+    console.error('Error initializing map:', error)
+    // Fallback: afficher un message d'erreur à l'utilisateur
+    if (mapContainer.value) {
+      mapContainer.value.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #f3f4f6; border-radius: 8px;">
+          <div style="text-align: center; color: #6b7280;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 16px;">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <p style="margin: 0; font-size: 14px;">Impossible de charger la carte</p>
+            <p style="margin: 4px 0 0 0; font-size: 12px;">Vérifiez votre connexion internet</p>
+            <button onclick="window.location.reload()" style="margin-top: 12px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;">
+              Réessayer
+            </button>
+          </div>
+        </div>
+      `
+    }
+  }
+}
+
+// Fonction pour basculer vers une source de tuiles alternative
+const switchToAlternativeTiles = () => {
+  if (!map.value) return
+  
+  try {
+    // Supprimer la source existante
+    if (map.value.getSource('osm')) {
+      map.value.removeSource('osm')
+    }
+    
+    // Ajouter une nouvelle source avec des tuiles alternatives
+    map.value.addSource('osm', {
+      type: 'raster',
+      tiles: [
+        'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png',
+        'https://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png'
+      ],
+      tileSize: 256,
+      attribution: '© CartoDB, © Thunderforest'
+    })
+    
+    console.log('Switched to alternative tile source')
+  } catch (error) {
+    console.error('Error switching to alternative tiles:', error)
+  }
 }
 
 const goToDetails = (announcementId: string) => {
@@ -238,28 +367,59 @@ const goToDetails = (announcementId: string) => {
 }
 
 onMounted(() => {
-  initMap()
-  map.value?.on('load', addCityMarkers)
-  setTimeout(() => {
+  try {
+    initMap()
+    
+    // Attendre que la carte soit chargée avant d'ajouter les marqueurs
     if (map.value) {
+      map.value.on('load', () => {
+        try {
+          addCityMarkers()
+        } catch (error) {
+          console.error('Error adding city markers:', error)
+        }
+      })
+      
+      // Gestion des clics sur la carte
       map.value.on('click', (e: any) => {
-        if (expandedCity.value) resetToCities()
+        try {
+          if (expandedCity.value) resetToCities()
+        } catch (error) {
+          console.error('Error handling map click:', error)
+        }
       })
     }
-  }, 500)
+  } catch (error) {
+    console.error('Error in onMounted:', error)
+  }
 })
 
 watch(
   () => props.locations,
   () => {
-    if (map.value?.loaded()) {
-      if (expandedCity.value) {
-        addEventMarkers(expandedCity.value)
-      } else {
-        addCityMarkers()
+    try {
+      if (map.value && map.value.loaded()) {
+        if (expandedCity.value) {
+          addEventMarkers(expandedCity.value)
+        } else {
+          addCityMarkers()
+        }
+      } else if (map.value) {
+        // Si la carte n'est pas encore chargée, attendre l'événement load
+        map.value.on('load', () => {
+          try {
+            if (expandedCity.value) {
+              addEventMarkers(expandedCity.value)
+            } else {
+              addCityMarkers()
+            }
+          } catch (error) {
+            console.error('Error in map load event:', error)
+          }
+        })
       }
-    } else {
-      map.value?.on('load', addCityMarkers)
+    } catch (error) {
+      console.error('Error in locations watcher:', error)
     }
   },
   { deep: true }
@@ -339,5 +499,17 @@ onUnmounted(() => {
 .zoom-btn:active {
   transform: translateY(0);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tile-switch {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #d97706;
+}
+
+.tile-switch:hover {
+  background: #fde68a;
+  border-color: #d97706;
+  color: #b45309;
 }
 </style> 
