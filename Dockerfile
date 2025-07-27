@@ -1,65 +1,39 @@
-# === 1) Builder : compile l’app avec toutes les dépendances ===
+# Étape 1 : build
 FROM node:20-alpine AS builder
+
 WORKDIR /app
 
-# 1.1) Déclare les secrets reçus en build-arg
-ARG NUXT_API_BASE_URL
-ARG API_BASE_URL
-ARG API_SIRENE_URL
-ARG API_KEY
-ARG API_SIRENE_KEY
-ARG STORAGE_BUCKET
-ARG MESSAGING_SENDER_ID
-ARG APP_ID
-ARG MEASUREMENT_ID
-ARG PORT
-ARG API_TIMEOUT
-ARG API_RETRY_COUNT
-ARG GOOGLE_CALLBACK_URL
-ARG FIREBASE_API_KEY
-ARG FIREBASE_AUTH_DOMAIN
-ARG FIREBASE_PROJECT_ID
-ARG FIREBASE_STORAGE_BUCKET
-ARG FIREBASE_MESSAGING_SENDER_ID
-ARG FIREBASE_APP_ID
-ARG FIREBASE_MEASUREMENT_ID
+# Copier les fichiers de dépendances pour optimiser le cache
+COPY package*.json ./
+RUN npm ci
 
-ENV NUXT_API_BASE_URL=$NUXT_API_BASE_URL \
-    API_BASE_URL=$API_BASE_URL \
-    API_SIRENE_URL=$API_SIRENE_URL \
-    API_KEY=$API_KEY \
-    API_SIRENE_KEY=$API_SIRENE_KEY \
-    STORAGE_BUCKET=$STORAGE_BUCKET \
-    MESSAGING_SENDER_ID=$MESSAGING_SENDER_ID \
-    APP_ID=$APP_ID \
-    MEASUREMENT_ID=$MEASUREMENT_ID \
-    PORT=$PORT \
-    API_TIMEOUT=$API_TIMEOUT \
-    API_RETRY_COUNT=$API_RETRY_COUNT \
-    GOOGLE_CALLBACK_URL=$GOOGLE_CALLBACK_URL \
-    FIREBASE_API_KEY=$FIREBASE_API_KEY \
-    FIREBASE_AUTH_DOMAIN=$FIREBASE_AUTH_DOMAIN \
-    FIREBASE_PROJECT_ID=$FIREBASE_PROJECT_ID \
-    FIREBASE_STORAGE_BUCKET=$FIREBASE_STORAGE_BUCKET \
-    FIREBASE_MESSAGING_SENDER_ID=$FIREBASE_MESSAGING_SENDER_ID \
-    FIREBASE_APP_ID=$FIREBASE_APP_ID \
-    FIREBASE_MEASUREMENT_ID=$FIREBASE_MEASUREMENT_ID
-
-RUN npm config set package-lock false
-
-COPY package.json package-lock.json* ./
-RUN npm install
-
+# Copier le reste des fichiers
 COPY . .
+
+# Construire l'application
 RUN npm run build
 
-
+# Étape 2 : runtime
 FROM node:20-alpine AS runner
+
 WORKDIR /app
 
+# Définir les variables d'environnement
+ENV NODE_ENV=production \
+    PORT=5482
+
+# Copier uniquement les fichiers nécessaires depuis l'étape de build
 COPY --from=builder /app/.output ./
 
-ENV NODE_ENV=production
-EXPOSE 5482
+# Exposer le port configuré
+EXPOSE ${PORT}
 
+# Healthcheck pour vérifier que l'application est en cours d'exécution
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT}/ || exit 1
+
+# Utilisateur non-root pour la sécurité
+USER node
+
+# Commande de démarrage
 CMD ["node", "server/index.mjs"]
