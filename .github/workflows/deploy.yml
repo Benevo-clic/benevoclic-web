@@ -65,7 +65,6 @@ jobs:
                 ports:
                   - "\${PORT}:\${PORT}"
                 environment:
-                  NUXT_API_BASE_URL: \${NUXT_API_BASE_URL}
                   API_BASE_URL: \${API_BASE_URL}
                   API_SIRENE_URL: \${API_SIRENE_URL}
                   API_KEY: \${API_KEY}
