@@ -1,11 +1,57 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  // Configuration pour l'accessibilité
   app: {
     head: {
       htmlAttrs: {
         lang: 'fr'
-      }
+      },
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'format-detection', content: 'telephone=no' },
+        // Métadonnées de base pour le SEO
+        { name: 'description', content: 'Benevoclic - Plateforme de bénévolat connectant associations et volontaires' },
+        { name: 'keywords', content: 'bénévolat, association, volontariat, engagement, solidarité' },
+        { name: 'author', content: 'Benevoclic' },
+        { name: 'robots', content: 'index, follow' },
+        // Open Graph
+        { property: 'og:type', content: 'website' },
+        { property: 'og:site_name', content: 'Benevoclic' },
+        { property: 'og:title', content: 'Benevoclic - Plateforme de bénévolat' },
+        { property: 'og:description', content: 'Connectez-vous avec des associations et participez à des missions de bénévolat' },
+        { property: 'og:image', content: '/logo_benevoclic.png' },
+        { property: 'og:image:alt', content: 'Logo Benevoclic' },
+        // Twitter Card
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: 'Benevoclic - Plateforme de bénévolat' },
+        { name: 'twitter:description', content: 'Connectez-vous avec des associations et participez à des missions de bénévolat' },
+        { name: 'twitter:image', content: '/logo_benevoclic.png' },
+        // Accessibilité
+        { name: 'theme-color', content: '#3B82F6' },
+        { name: 'color-scheme', content: 'light dark' }
+      ],
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'canonical', href: 'https://benevoclic.app' },
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        // Preload des polices critiques
+        {
+          rel: 'preload',
+          href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
+          as: 'style',
+          onload: "this.onload=null;this.rel='stylesheet'"
+        },
+        // Preload du logo principal
+        {
+          rel: 'preload',
+          href: '/logo_benevoclic.png',
+          as: 'image',
+          type: 'image/png'
+        }
+      ]
     },
     // Configuration de l'hydration
     pageTransition: { name: 'page', mode: 'out-in' }
@@ -26,6 +72,7 @@ export default defineNuxtConfig({
   },
   css: [
     '~/assets/css/main.scss',
+    '~/assets/css/accessibility.scss',
   ],
   i18n: {
     locales: [
@@ -34,15 +81,58 @@ export default defineNuxtConfig({
       { code: 'en', name: 'English', file: 'en.json' },
     ],
     lazy: true,
-    langDir: 'locales',
+    langDir: '.',
     defaultLocale: 'fr',
-    vueI18n: './i18n.config.ts'
+    vueI18n: './i18n.config.ts',
+    bundle: {
+      optimizeTranslationDirective: false
+    },
+    strategy: 'prefix_except_default'
   },
   modules: [
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
-    '@nuxtjs/i18n'
+    '@nuxtjs/i18n',
+    '@nuxtjs/color-mode',
+    '@nuxtjs/google-fonts',
+    '@nuxtjs/partytown',
+    'nuxt-schema-org'
   ],
+
+  // Configuration Google Fonts
+  googleFonts: {
+    families: {
+      'Inter': [300, 400, 500, 600, 700],
+      'Poppins': [300, 400, 500, 600, 700]
+    },
+    display: 'swap',
+    prefetch: true,
+    preconnect: true,
+    download: true,
+    base64: false,
+    inject: true,
+    overwriting: false,
+    subsets: ['latin'],
+    fontsDir: 'fonts',
+    fontsPath: '/fonts'
+  },
+
+  // Configuration Color Mode
+  colorMode: {
+    preference: 'system',
+    fallback: 'light',
+    classSuffix: '',
+    storageKey: 'benevoclic-color-mode'
+  },
+
+
+
+  // Configuration Partytown pour les scripts tiers
+  partytown: {
+    lib: '/~partytown/',
+    forward: ['dataLayer.push', 'gtag'],
+    debug: false
+  },
 
   plugins: [
     { src: '~/plugins/firebase-init.client.ts', mode: 'client' },
@@ -67,6 +157,7 @@ export default defineNuxtConfig({
     },
     public: {
       ssr: true,
+      siteUrl: 'https://benevoclic.app',
       firebaseConfig: {
         apiKey: process.env.FIREBASE_API_KEY,
         authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -109,7 +200,7 @@ export default defineNuxtConfig({
           // Protection contre les attaques XSS
           'X-XSS-Protection': '1; mode=block',
           // Politique de sécurité du contenu - Corrigée pour Firebase
-          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://*.firebaseio.com https://*.firebase.com https://*.googleapis.com https://www.googletagmanager.com https://www.google-analytics.com blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://*.firebase.com https://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.benevoclic.app https://api-adresse.data.gouv.fr https://nominatim.openstreetmap.org https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://region*.google-analytics.com https://*.openstreetmap.org https://*.cartodb.com https://*.thunderforest.com; img-src 'self' data: https: https://www.google-analytics.com https://*.openstreetmap.org https://*.cartodb.com https://*.thunderforest.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com;",
+          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://*.firebaseio.com https://*.firebase.com https://*.googleapis.com https://www.googletagmanager.com https://www.google-analytics.com blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://*.firebase.com https://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.benevoclic.app https://api-adresse.data.gouv.fr https://nominatim.openstreetmap.org https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://*.openstreetmap.org https://*.cartodb.com https://*.thunderforest.com; img-src 'self' data: https: https://www.google-analytics.com https://*.openstreetmap.org https://*.cartodb.com https://*.thunderforest.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com;",
           // Référer Policy
           'Referrer-Policy': 'strict-origin-when-cross-origin',
           // Permissions Policy

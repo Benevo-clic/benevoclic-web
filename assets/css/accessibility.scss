@@ -1,0 +1,552 @@
+// Styles d'accessibilité pour Benevoclic
+
+// Amélioration du focus visible
+*:focus {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+}
+
+// Focus pour les éléments interactifs
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+a:focus,
+[tabindex]:focus {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+  border-radius: 4px;
+}
+
+// Focus pour les composants DaisyUI
+.btn:focus,
+.input:focus,
+.select:focus,
+.textarea:focus,
+.link:focus {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+}
+
+// Amélioration du contraste pour les éléments de navigation
+.nav-link,
+.menu-item {
+  &:focus {
+    background-color: #3b82f6 !important;
+    color: white !important;
+  }
+}
+
+// Styles pour les éléments masqués visuellement mais accessibles aux lecteurs d'écran
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+// Amélioration de la lisibilité pour les textes d'erreur
+.text-error {
+  font-weight: 600;
+  color: #dc2626 !important;
+}
+
+// Amélioration des contrastes pour les badges et indicateurs
+.badge {
+  font-weight: 600;
+  color: white !important;
+}
+
+// Styles pour les éléments de chargement
+.loading {
+  &[aria-label] {
+    position: relative;
+    
+    &::after {
+      content: attr(aria-label);
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+  }
+}
+
+// Amélioration de l'accessibilité des modales
+.modal {
+  &[role="dialog"] {
+    z-index: 1000;
+  }
+}
+
+// Styles pour les éléments de navigation clavier
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #3b82f6;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1001;
+  
+  &:focus {
+    top: 6px;
+  }
+}
+
+// Amélioration de l'accessibilité des images
+img {
+  &[alt=""] {
+    border: 1px dashed #ccc;
+  }
+}
+
+// Styles pour les éléments de formulaire avec erreurs
+.input-error,
+.textarea-error,
+.select-error {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 1px #dc2626 !important;
+}
+
+// Amélioration de l'accessibilité des listes
+ul, ol {
+  padding-left: 1.5em;
+}
+
+// Styles pour les éléments de navigation
+nav {
+  &[role="navigation"] {
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+  }
+}
+
+// Amélioration de l'accessibilité des boutons
+button {
+  &[aria-expanded] {
+    &[aria-expanded="true"] {
+      background-color: #3b82f6;
+      color: white;
+    }
+  }
+}
+
+// Styles pour les éléments de statut
+[role="status"] {
+  position: relative;
+}
+
+[aria-live] {
+  position: relative;
+}
+
+// Amélioration de l'accessibilité des tableaux
+table {
+  border-collapse: collapse;
+  width: 100%;
+  
+  th, td {
+    padding: 8px;
+    border: 1px solid #e5e7eb;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #f9fafb;
+    font-weight: 600;
+  }
+}
+
+// Styles pour les éléments de recherche
+.search-input {
+  &:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  }
+}
+
+// Amélioration de l'accessibilité des cartes
+.card {
+  &:focus-within {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+}
+
+// Styles pour les éléments de pagination
+.pagination {
+  .btn {
+    &:focus {
+      background-color: #3b82f6;
+      color: white;
+    }
+  }
+}
+
+// Amélioration de l'accessibilité des dropdowns
+.dropdown {
+  &[data-open] {
+    .dropdown-content {
+      display: block;
+    }
+  }
+}
+
+// Styles pour les éléments de notification
+.notification {
+  &[role="alert"] {
+    border-left: 4px solid #3b82f6;
+    padding-left: 1rem;
+  }
+}
+
+// Amélioration de l'accessibilité des icônes
+.icon {
+  &[aria-hidden="true"] {
+    pointer-events: none;
+  }
+}
+
+// Styles pour les éléments de progression
+.progress {
+  &[role="progressbar"] {
+    &[aria-valuenow] {
+      &::before {
+        content: attr(aria-valuenow) "%";
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Styles pour éviter les CLS (Cumulative Layout Shift)
+// Réserver l'espace pour les images
+.image-container {
+  position: relative;
+  overflow: hidden;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+  }
+}
+
+// Aspect ratio containers
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.aspect-16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+.aspect-3-2 {
+  aspect-ratio: 3 / 2;
+}
+
+// Réserver l'espace pour les cartes
+.card {
+  min-height: 200px; // Hauteur minimale pour éviter les décalages
+  
+  .card-body {
+    min-height: 120px; // Hauteur minimale pour le contenu
+  }
+}
+
+// Réserver l'espace pour les avatars
+.avatar {
+  min-width: 48px;
+  min-height: 48px;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// Réserver l'espace pour les badges
+.badge {
+  min-width: fit-content;
+  white-space: nowrap;
+}
+
+// Réserver l'espace pour les boutons
+.btn {
+  min-width: fit-content;
+  white-space: nowrap;
+}
+
+// Réserver l'espace pour les inputs
+.input,
+.select,
+.textarea {
+  min-height: 40px;
+}
+
+// Réserver l'espace pour les modales
+.modal {
+  .modal-box {
+    min-height: 200px;
+  }
+}
+
+// Réserver l'espace pour les dropdowns
+.dropdown-content {
+  min-width: 200px;
+}
+
+// Réserver l'espace pour les tooltips
+.tooltip {
+  min-width: fit-content;
+}
+
+// Réserver l'espace pour les notifications
+.alert {
+  min-height: 60px;
+}
+
+// Réserver l'espace pour les spinners
+.loading {
+  min-width: 24px;
+  min-height: 24px;
+}
+
+// Réserver l'espace pour les icônes
+.icon {
+  min-width: 16px;
+  min-height: 16px;
+}
+
+// Réserver l'espace pour les textes
+.text {
+  min-height: 1.2em;
+}
+
+// Réserver l'espace pour les titres
+.title {
+  min-height: 1.2em;
+}
+
+// Réserver l'espace pour les descriptions
+.description {
+  min-height: 1.2em;
+}
+
+// Réserver l'espace pour les listes
+.list {
+  min-height: 40px;
+}
+
+// Réserver l'espace pour les grilles
+.grid {
+  min-height: 100px;
+}
+
+// Réserver l'espace pour les flexbox
+.flex {
+  min-height: 40px;
+}
+
+// Réserver l'espace pour les conteneurs
+.container {
+  min-height: 100px;
+}
+
+// Réserver l'espace pour les sections
+section {
+  min-height: 100px;
+}
+
+// Réserver l'espace pour les articles
+article {
+  min-height: 100px;
+}
+
+// Réserver l'espace pour les aside
+aside {
+  min-height: 100px;
+}
+
+// Réserver l'espace pour les nav
+nav {
+  min-height: 40px;
+}
+
+// Réserver l'espace pour les header
+header {
+  min-height: 60px;
+}
+
+// Réserver l'espace pour les footer
+footer {
+  min-height: 120px;
+}
+
+// Réserver l'espace pour les main
+main {
+  min-height: calc(100vh - 120px);
+}
+
+// Styles spécifiques pour éviter les CLS sur les éléments principaux
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+// Éviter les décalages sur les éléments de contenu principal
+[role="main"] {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+// Éviter les décalages sur les éléments de contenu
+.content {
+  min-height: 200px;
+  flex: 1;
+}
+
+// Éviter les décalages sur les éléments de navigation
+[role="navigation"] {
+  min-height: 40px;
+}
+
+// Éviter les décalages sur les éléments de banner
+[role="banner"] {
+  min-height: 60px;
+}
+
+// Éviter les décalages sur les éléments de contentinfo
+[role="contentinfo"] {
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+// Éviter les décalages sur les éléments de complementary
+[role="complementary"] {
+  min-height: 100px;
+}
+
+// Éviter les décalages sur les éléments de application
+[role="application"] {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+// Éviter les décalages sur les éléments de dialog
+[role="dialog"] {
+  min-height: 200px;
+}
+
+// Éviter les décalages sur les éléments de status
+[role="status"] {
+  min-height: 40px;
+}
+
+// Éviter les décalages sur les éléments de alert
+[role="alert"] {
+  min-height: 40px;
+}
+
+// Éviter les décalages sur les éléments de progressbar
+[role="progressbar"] {
+  min-height: 20px;
+}
+
+// Éviter les décalages sur les éléments de menu
+[role="menu"] {
+  min-height: 40px;
+}
+
+// Éviter les décalages sur les éléments de menuitem
+[role="menuitem"] {
+  min-height: 40px;
+}
+
+// Éviter les décalages sur les éléments de tab
+[role="tab"] {
+  min-height: 40px;
+}
+
+// Éviter les décalages sur les éléments de tabpanel
+[role="tabpanel"] {
+  min-height: 100px;
+}
+
+// Éviter les décalages sur les éléments de tree
+[role="tree"] {
+  min-height: 100px;
+}
+
+// Éviter les décalages sur les éléments de treeitem
+[role="treeitem"] {
+  min-height: 40px;
+}
+
+// Éviter les décalages sur les éléments de grid
+[role="grid"] {
+  min-height: 100px;
+}
+
+// Éviter les décalages sur les éléments de gridcell
+[role="gridcell"] {
+  min-height: 40px;
+}
+
+// Éviter les décalages sur les éléments de row
+[role="row"] {
+  min-height: 40px;
+}
+
+// Éviter les décalages sur les éléments de columnheader
+[role="columnheader"] {
+  min-height: 40px;
+}
+
+// Éviter les décalages sur les éléments de rowheader
+[role="rowheader"] {
+  min-height: 40px;
+}
+
+// Éviter les décalages sur les éléments de cell
+[role="cell"] {
+  min-height: 40px;
+}
+
+// Éviter les décalages sur les éléments de rowgroup
+[role="rowgroup"] {
+  min-height: 40px;
+} 

@@ -1,0 +1,504 @@
+{
+  "auth": {
+    "login_required": "Connexion requise",
+    "login_to_access": "Veuillez vous connecter pour accéder à cette page.",
+    "login": {
+      "title": "Se connecter",
+      "description": "Aujourd'hui est un nouveau jour. C'est vous qui lui donnez sa forme. Connectez-vous pour gérer vos projets.",
+      "forgot_password": "Mot de passe oublié ?",
+      "no_account": "Vous n'avez pas de compte ?",
+      "create_account": "Créer un compte",
+      "register": "Inscrivez-vous",
+      "login_with_google": "Se connecter avec Google",
+      "error": {
+        "invalid_credentials": "Votre adresse e-mail ou votre mot de passe est incorrect.",
+        "account_locked": "Votre compte est verrouillé. Veuillez contacter le support."
+      }
+    },
+    "verification": {
+      "sent": "Un email de confirmation a été envoyé à votre adresse email. Veuillez vérifier votre boîte de réception et cliquer sur le lien pour activer votre compte.",
+      "wait": "Veuillez patienter avant de demander un nouvel email",
+      "resend": "Renvoyer l'email de confirmation",
+      "resend_link": "Cliquez ici pour renvoyer l'email de confirmation",
+      "time_remaining": "Temps restant avant de pouvoir renvoyer l'email:",
+      "title": "Confirmation requise",
+      "check_email": "Vérifier mon email",
+      "email_verified": "Email vérifié avec succès !",
+      "continue_registration": "Continuer l'inscription",
+      "back_to_login": "Retour à la connexion",
+      "instructions": "1. Vérifiez votre boîte de réception",
+      "click_link": "2. Cliquez sur le lien de vérification dans l'email"
+      
+    },
+    "logout": "Déconnexion",
+    "register": {
+      "title": "S'inscrire",
+      "association_status_true": "Je suis une association",
+      "association_status_false": "Je ne suis pas une association",
+      "association_siret_status": "Veuillez entrer votre numéro SIRET",
+      "association_siret_status_description": "Le numéro SIRET est un identifiant unique pour les entreprises en France.",
+      "association_siret_status_placeholder": "Entrez votre numéro SIRET",
+      "association_siret_status_error": "Le numéro SIRET doit contenir 14 chiffres.",
+      "association_siret_status_error_description": "Veuillez vérifier que le numéro SIRET est correct.",
+      "association_siret_status_good": "Numéro SIRET valide",
+      "description": "Inscrivez-vous gratuitement pour rejoindre la communauté et agir pour des causes qui vous tiennent à cœur.",
+      "already_have_account": "Vous avez déjà un compte ?",
+      "login": "Se connecter",
+      "association_true": "Vous êtes une association ?",
+      "association_false": "Vous n'êtes pas une association ?",
+      "click_here": "Cliquez ici",
+      "info_click_here": "pour s'inscrire",
+      "association_register": "S'inscrire en tant qu'association",
+      "register_with_google": "S'inscrire avec Google",
+      "terms": "En vous inscrivant, vous acceptez nos",
+      "error": {
+        "invalid_email": "L'adresse e-mail est invalide.",
+        "password_mismatch": "Les mots de passe ne correspondent pas.",
+        "weak_password": "Le mot de passe doit contenir au moins 8 caractères.",
+        "terms_not_accepted": "Vous devez accepter les conditions générales d'utilisation pour continuer."
+      }
+    },
+    "volunteer": {
+      "name": "Nom",
+      "first_name": "Prénom",
+      "phone": "Téléphone",
+      "birthdate": "Date de naissance",
+      "city": "Ville",
+      "postal_code": "Code postal",
+      "bio": "À propos de vous"
+    },
+    "association": {
+      "name": "Nom de l'association",
+      "association_type": "Type d'association",
+      "siret": "Numéro SIRET",
+      "type": "Type d'association",
+      "phone": "Téléphone",
+      "website": "Site web",
+      "email": "E-mail",
+      "contact_info": "Informations de contact",
+      "location": "Adresse",
+      "city": "Ville",
+      "postal_code": "Code postal",
+      "country": "Pays",
+      "bio": "À propos de l'association"
+    },
+    "uploadImageForm": {
+      "instruction": "Veuillez télécharger une image de profil",
+      "message": "Ajoutez votre photo de profil 🖼️",
+      "clickToUpload": "Cliquez ici pour importer une image",
+      "changeImage": "Modifier l'image",
+      "finish": "Terminer",
+      "skip": "Ignorer"
+    },
+    "title": "Content de ",
+    "title_2": "vous revoir !",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "confirm_password": "Confirmer le mot de passe",
+    "continue": "Continuer",
+    "or": "ou",
+    "placeholder_email": "Entrez votre e-mail",
+    "placeholder_password": "Au moins 8 caractères",
+    "forgot_password": "Mot de passe oublié ?",
+"forgot_password_sent": "Un email de réinitialisation a été envoyé à votre adresse.",
+"forgot_password_error": "Erreur lors de l'envoi de l'email de réinitialisation.",
+"forgot_password_enter_email": "Veuillez entrer votre adresse email pour réinitialiser votre mot de passe."
+
+  },
+  "drawer-content": {
+    "account": {
+      "title": "Compte",
+      "view_profile": "Voir le profil",
+      "edit_profile": "Modifier le profil",
+      "settings": "Paramètres",
+      "profile_updated_success": "Profil mis à jour avec succès",
+      "profile_update_error": "Erreur lors de la mise à jour du profil. Veuillez réessayer.",
+      "delete_confirmation": {
+        "title": "Confirmer la suppression",
+        "message": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+        "confirm": "Oui, supprimer mon compte",
+        "cancel": "Annuler"
+      },
+      "password_change": {
+        "title": "Changer le mot de passe",
+        "message": "Veuillez entrer votre mot de passe actuel et votre nouveau mot de passe.",
+        "old_password": "Mot de passe actuel",
+        "new_password": "Nouveau mot de passe",
+        "confirm_password": "Confirmer le nouveau mot de passe",
+        "confirm": "Changer le mot de passe",
+        "cancel": "Annuler",
+        "success": "Votre mot de passe a été mis à jour avec succès.",
+        "error": {
+          "password_mismatch": "Les mots de passe ne correspondent pas.",
+          "weak_password": "Le mot de passe doit contenir au moins 8 caractères.",
+          "general": "Une erreur s'est produite lors de la mise à jour du mot de passe."
+        }
+      }
+    },
+    "activity": {
+        "title": "Activités",
+        "my_missions": "Mes missions",
+        "my_participations": "Mes participations",
+        "my_favorites": "Mes favoris",
+        "history": "Historique",
+      "new-event": "Nouvel événement",
+      "requests": "Mes demandes",
+      "upcoming-event": "Événements à venir",
+      "manage-event": "Gérer les événements",
+        "dashboard": "Tableau de bord"
+    },
+    "notifications_support": {
+      "title": "Notifications & Support",
+      "notifications": "Notifications",
+      "help": "Aide/FAQ"
+    },
+    "app": {
+      "title": "Application",
+      "language": "Langue",
+      "theme": "Thème"
+    },
+    "logout": "Se déconnecter"
+  },
+  "header": {
+    "volunteer": {
+      "home": "Accueil",
+      "favorites": "Favoris",
+      "recent-search": "Recherches récentes",
+      "help": "Aide"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Gérez vos notifications et restez informé de vos activités",
+    "description": "Restez à jour avec toutes vos activités bénévoles et les communications importantes",
+    "refresh": "Actualiser",
+    "statistics": "Statistiques",
+    "total_notifications": "Total",
+    "unread_notifications": "Non lues",
+    "today": "Aujourd'hui",
+    "quick_filters": "Filtres rapides",
+    "settings": {
+      "title": "Paramètres de notification",
+      "email": "Notifications par e-mail",
+      "email_description": "Recevoir des notifications par e-mail",
+      "push": "Notifications push",
+      "push_description": "Recevoir des notifications push sur votre appareil",
+      "mission_updates": "Mises à jour des missions",
+      "mission_updates_description": "Être notifié des changements concernant les missions",
+      "messages": "Messages",
+      "messages_description": "Être notifié des nouveaux messages",
+      "achievements": "Réalisations",
+      "achievements_description": "Être notifié de vos réalisations et badges",
+      "save": "Enregistrer",
+      "saving": "Enregistrement..."
+    },
+    "list": {
+      "title": "Notifications",
+      "mark_all_read": "Marquer tout comme lu",
+      "clear_all": "Tout effacer",
+      "all": "Toutes",
+      "unread": "Non lues",
+      "new": "Nouveau",
+      "view": "Voir",
+      "mark_read": "Marquer comme lu",
+      "delete": "Supprimer",
+      "no_notifications": "Aucune notification",
+      "no_notifications_all": "Vous n'avez aucune notification",
+      "no_notifications_unread": "Vous n'avez aucune notification non lue"
+    },
+    "stats": {
+      "week": "Semaine",
+      "month": "Mois",
+      "requires_attention": "Nécessite attention",
+      "recent": "Récent",
+      "by_type": "Répartition par type",
+      "recent_activity": "Activité récente"
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "subtitle": "Gérez vos préférences et votre compte",
+    "subtitle_association": "Gérez les paramètres de votre association",
+    "navigation": "Navigation",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "notifications": {
+      "title": "Notifications",
+      "description": "Configurez vos préférences de notifications",
+      "description_association": "Configurez les notifications de votre association",
+      "email": "Notifications par e-mail",
+      "email_description": "Recevoir des notifications par e-mail",
+      "email_description_association": "Recevoir des notifications par e-mail pour votre association",
+      "push": "Notifications push",
+      "push_description": "Recevoir des notifications push sur votre appareil",
+      "mission_updates": "Mises à jour des missions",
+      "mission_updates_description": "Être notifié des changements concernant les missions",
+      "achievements": "Réalisations",
+      "achievements_description": "Être notifié de vos réalisations et badges",
+      "volunteer_requests": "Demandes de volontaires",
+      "volunteer_requests_description": "Être notifié des nouvelles demandes de volontaires",
+      "event_updates": "Mises à jour d'événements",
+      "event_updates_description": "Être notifié des changements d'événements",
+      "analytics": "Analyses",
+      "analytics_description": "Recevoir des rapports d'analyse périodiques"
+    },
+    "privacy": {
+      "title": "Confidentialité",
+      "description": "Contrôlez la visibilité de vos informations",
+      "description_association": "Contrôlez la visibilité des informations de votre association",
+      "profile_visibility": "Visibilité du profil",
+      "profile_visibility_description": "Rendre votre profil visible aux autres utilisateurs",
+      "profile_visibility_description_association": "Rendre le profil de votre association visible",
+      "location_sharing": "Partage de localisation",
+      "location_sharing_description": "Partager votre localisation avec les organisateurs de missions",
+      "activity_sharing": "Partage d'activité",
+      "activity_sharing_description": "Partager vos activités avec la communauté",
+      "contact_info": "Informations de contact",
+      "contact_info_description": "Afficher les informations de contact publiquement",
+      "event_visibility": "Visibilité des événements",
+      "event_visibility_description": "Rendre vos événements visibles publiquement",
+      "volunteer_list": "Liste des volontaires",
+      "volunteer_list_description": "Afficher la liste des volontaires de votre association"
+    },
+    "account": {
+      "title": "Compte",
+      "description": "Gérez les paramètres de votre compte",
+      "description_association": "Gérez les paramètres de votre association",
+      "change_password": "Changer le mot de passe",
+      "change_password_description": "Modifier votre mot de passe pour plus de sécurité",
+      "delete_account": "Supprimer le compte",
+      "delete_account_description": "Supprimer définitivement votre compte et toutes vos données",
+      "delete_account_description_association": "Supprimer définitivement votre association et toutes ses données",
+      "association_info": "Informations de l'association",
+      "association_info_description": "Modifier les informations de votre association",
+      "change": "Modifier",
+      "edit": "Éditer",
+      "delete": "Supprimer"
+    },
+    "security": {
+      "title": "Sécurité",
+      "description": "Renforcez la sécurité de votre compte",
+      "description_association": "Renforcez la sécurité de votre association",
+      "two_factor": "Authentification à deux facteurs",
+      "two_factor_description": "Ajouter une couche de sécurité supplémentaire",
+      "login_notifications": "Notifications de connexion",
+      "login_notifications_description": "Être notifié des nouvelles connexions",
+      "siret_verification": "Vérification SIRET",
+      "siret_verification_description": "Activer la vérification automatique du numéro SIRET"
+    },
+    "organization": {
+      "title": "Organisation",
+      "description": "Paramètres d'organisation pour votre association",
+      "auto_approve_volunteers": "Approbation automatique des volontaires",
+      "auto_approve_volunteers_description": "Approuver automatiquement les demandes de volontaires",
+      "volunteer_limits": "Limites de volontaires",
+      "volunteer_limits_description": "Définir des limites sur le nombre de volontaires par événement",
+      "event_approval": "Approbation d'événements",
+      "event_approval_description": "Exiger une approbation pour les nouveaux événements"
+    },
+    "password_change": {
+      "title": "Changer le mot de passe",
+      "message": "Entrez votre mot de passe actuel et votre nouveau mot de passe",
+      "old_password": "Mot de passe actuel",
+      "old_password_placeholder": "Entrez votre mot de passe actuel",
+      "new_password": "Nouveau mot de passe",
+      "new_password_placeholder": "Entrez votre nouveau mot de passe",
+      "confirm_password": "Confirmer le mot de passe",
+      "confirm_password_placeholder": "Confirmez votre nouveau mot de passe",
+      "password_requirements": "Le mot de passe doit contenir au moins 8 caractères",
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "success": "Mot de passe modifié avec succès !",
+      "error": {
+        "password_mismatch": "Les mots de passe ne correspondent pas",
+        "weak_password": "Le mot de passe doit contenir au moins 8 caractères",
+        "general": "Une erreur est survenue lors du changement de mot de passe"
+      }
+    },
+    "delete_confirmation": {
+      "title": "Confirmer la suppression",
+      "message": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+      "message_association": "Êtes-vous sûr de vouloir supprimer votre association ? Cette action est irréversible et supprimera tous les événements associés.",
+      "cancel": "Annuler",
+      "confirm": "Oui, supprimer"
+    }
+  },
+  "search": {
+    "menu": {
+      "title": "Recherche",
+      "search": "Rechercher",
+      "history": "Historique de recherche"
+    },
+    "history": {
+      "title": "Historique de recherche",
+      "recent_searches": "Recherches récentes",
+      "clear_all": "Tout effacer",
+      "repeat_search": "Répéter la recherche",
+      "remove_from_history": "Supprimer de l'historique",
+      "no_history": "Aucun historique de recherche",
+      "no_history_description": "Vos recherches récentes apparaîtront ici"
+    },
+    "results": {
+      "title": "Résultats de recherche",
+      "results_found": "résultats trouvés pour",
+      "use_panel": "Utilisez le panneau de recherche pour trouver des missions et des organisations",
+      "all": "Tous",
+      "missions": "Missions",
+      "organizations": "Organisations",
+      "mission": "Mission",
+      "organization": "Organisation",
+      "view_details": "Voir les détails",
+      "view_profile": "Voir le profil",
+      "apply": "Postuler",
+      "no_results": "Aucun résultat trouvé",
+      "adjust_criteria": "Essayez d'ajuster vos critères de recherche",
+      "start_searching": "Commencer à chercher",
+      "start_searching_description": "Utilisez le panneau de recherche pour trouver des missions et des organisations"
+    },
+    "panel": {
+      "placeholder": "Rechercher des favoris..."
+    }
+  },
+  "favorites": {
+    "list": {
+      "search_placeholder": "Rechercher des favoris...",
+      "all_favorites": "Tous les favoris",
+      "missions": "Missions",
+      "organizations": "Organisations",
+      "mission": "Mission",
+      "organization": "Organisation",
+      "view_details": "Voir les détails",
+      "view_profile": "Voir le profil",
+      "apply": "Postuler",
+      "no_favorites": "Aucun favori trouvé",
+      "no_match": "Aucun favori ne correspond à vos critères de recherche.",
+      "add_items": "Ajoutez des éléments à vos favoris pour les voir ici."
+    }
+  },
+  "association": {
+    "activity": {
+      "new_event": "Nouvel événement",
+      "history_events": "Événements passés",
+      "upcoming_events": "Événements à venir",
+      "manage_events": "Gérer les événements",
+      "requests": "Mes demandes",
+      "dashboard": "Tableau de bord"
+    }
+  },
+  "announcements": {
+    "title": "Annonces",
+    "no_announcements": "Aucune annonce pour le moment",
+    "view_all": "Voir toutes les annonces",
+    "view_details": "Voir les détails",
+    "read_more": "Lire la suite",
+    "posted_on": "Publié le",
+    "delete_confirmation": {
+      "title": "Confirmer la suppression",
+      "message": "Êtes-vous sûr de vouloir supprimer cette annonce ? Cette action est irréversible.",
+      "confirm": "Oui, supprimer l'annonce",
+      "cancel": "Annuler"
+    }
+  },
+  "help": {
+    "title": "Centre d'aide",
+    "description": "Trouvez rapidement des réponses à vos questions et obtenez l'aide dont vous avez besoin pour utiliser BeneVoclic efficacement.",
+    "search_placeholder": "Rechercher dans l'aide...",
+    "quick_actions": {
+      "getting_started": {
+        "title": "Premiers pas",
+        "description": "Commencer avec BeneVoclic"
+      },
+      "account": {
+        "title": "Compte & Profil",
+        "description": "Gérer votre compte"
+      },
+      "volunteering": {
+        "title": "Bénévolat",
+        "description": "Trouver des missions"
+      },
+      "associations": {
+        "title": "Associations",
+        "description": "Gérer votre association"
+      }
+    },
+    "sections": {
+      "getting_started": {
+        "title": "Premiers pas"
+      },
+      "account_profile": {
+        "title": "Compte & Profil"
+      },
+      "volunteering": {
+        "title": "Bénévolat"
+      },
+      "associations": {
+        "title": "Associations"
+      },
+      "technical": {
+        "title": "Support technique"
+      }
+    },
+    "faqs": {
+      "getting_started": {
+        "q1": "Comment créer un compte sur BeneVoclic ?",
+        "a1": "Cliquez sur \"S'inscrire\" en haut à droite, choisissez votre type de compte (volontaire ou association), remplissez vos informations et validez votre email. Pour les associations, vous devrez fournir votre numéro SIRET.",
+        "q2": "Quelle est la différence entre un compte volontaire et association ?",
+        "a2": "Les volontaires peuvent rechercher et participer à des missions bénévoles. Les associations peuvent créer et gérer des événements, recruter des volontaires et suivre leurs activités.",
+        "q3": "Comment valider mon adresse email ?",
+        "a3": "Après l'inscription, vous recevrez un email de confirmation. Cliquez sur le lien dans l'email pour valider votre compte. Vérifiez vos spams si vous ne recevez pas l'email.",
+        "q4": "Puis-je utiliser Google pour m'inscrire ?",
+        "a4": "Oui, vous pouvez vous connecter avec Google. Cliquez sur le bouton \"Continuer avec Google\" lors de l'inscription ou de la connexion. Vous devrez accepter les conditions générales lors de l'inscription."
+      },
+      "account": {
+        "q1": "Comment modifier mes informations personnelles ?",
+        "a1": "Allez dans \"Compte\" > \"Modifier le profil\" dans le menu latéral. Vous pouvez modifier votre nom, prénom, téléphone, ville, code postal et bio.",
+        "q2": "Comment changer mon mot de passe ?",
+        "a2": "Dans les paramètres de votre compte, vous pouvez demander un nouveau mot de passe. Un email vous sera envoyé avec un lien de réinitialisation.",
+        "q3": "Comment supprimer mon compte ?",
+        "a3": "Contactez notre support pour demander la suppression de votre compte. Nous traiterons votre demande dans les plus brefs délais.",
+        "q4": "Comment gérer mes préférences de confidentialité ?",
+        "a4": "Dans \"Compte\" > \"Paramètres\", vous pouvez gérer vos préférences de cookies, notifications et confidentialité."
+      },
+      "volunteering": {
+        "q1": "Comment trouver des missions bénévoles ?",
+        "a1": "Utilisez la barre de recherche et les filtres sur la page d'accueil pour trouver des missions par lieu, type d'activité ou date. Vous pouvez aussi activer la géolocalisation pour voir les missions près de chez vous.",
+        "q2": "Comment s'inscrire à une mission ?",
+        "a2": "Cliquez sur une mission qui vous intéresse, puis sur \"S'inscrire\". Vous recevrez une confirmation par email et pourrez suivre votre participation dans \"Mes participations\".",
+        "q3": "Puis-je annuler ma participation ?",
+        "a3": "Oui, vous pouvez annuler votre participation jusqu'à 48h avant le début de la mission. Allez dans \"Mes participations\" et cliquez sur \"Annuler\".",
+        "q4": "Comment suivre mes heures de bénévolat ?",
+        "a4": "Vos heures sont automatiquement comptabilisées pour chaque mission terminée. Vous pouvez voir votre total et historique dans \"Activités\" > \"Historique\"."
+      },
+      "associations": {
+        "q1": "Comment créer un événement bénévole ?",
+        "a1": "Allez dans \"Gérer les événements\" et cliquez sur \"Créer un événement\". Remplissez les informations requises (titre, description, lieu, date, nombre de volontaires).",
+        "q2": "Comment gérer les demandes de participation ?",
+        "a2": "Dans \"Demandes\", vous pouvez voir toutes les demandes de participation, les accepter ou les refuser, et communiquer avec les volontaires.",
+        "q3": "Comment modifier un événement existant ?",
+        "a3": "Dans \"Gérer les événements\", trouvez votre événement et cliquez sur \"Modifier\". Vous pouvez changer les détails tant que l'événement n'a pas commencé.",
+        "q4": "Comment contacter les volontaires inscrits ?",
+        "a4": "Vous pouvez envoyer des messages aux volontaires via la section \"Demandes\" ou utiliser les notifications pour les informer des changements."
+      },
+      "technical": {
+        "q1": "Le site ne se charge pas, que faire ?",
+        "a1": "Vérifiez votre connexion internet, videz le cache de votre navigateur et essayez de recharger la page. Si le problème persiste, contactez notre support.",
+        "q2": "Je ne reçois pas les emails de confirmation ?",
+        "a2": "Vérifiez vos spams et assurez-vous que l'adresse email est correcte. Vous pouvez demander un nouvel email de confirmation depuis la page de connexion.",
+        "q3": "Comment activer la géolocalisation ?",
+        "a3": "Acceptez les cookies de personnalisation dans les paramètres, puis autorisez l'accès à votre position dans votre navigateur quand demandé.",
+        "q4": "Le site ne fonctionne pas sur mobile ?",
+        "a4": "BeneVoclic est optimisé pour mobile. Assurez-vous d'utiliser un navigateur récent et d'avoir une connexion internet stable."
+      }
+    },
+    "contact": {
+      "title": "Besoin d'aide supplémentaire ?",
+      "description": "Notre équipe support est là pour vous aider. N'hésitez pas à nous contacter si vous ne trouvez pas la réponse à votre question.",
+      "subject_placeholder": "Sujet de votre demande",
+      "message_placeholder": "Décrivez votre problème en détail...",
+      "send": "Envoyer la demande",
+      "sending": "Envoi en cours...",
+      "success_message": "Votre demande a été envoyée. Nous vous répondrons dans les plus brefs délais !",
+      "error_message": "Une erreur est survenue. Veuillez réessayer ou nous contacter directement."
+    }
+  }
+}

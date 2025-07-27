@@ -136,18 +136,18 @@ function handleNotifications() {
 <template>
 <client-only>
   <div class="bg-base-200">
-  <div v-if="isLoading" class="flex justify-center py-2">
-    <span class="loading loading-dots loading-xl"></span>
+  <div v-if="isLoading" class="flex justify-center py-2" role="status" aria-live="polite">
+    <span class="loading loading-dots loading-xl" aria-label="Chargement en cours"></span>
   </div>
-  <header v-else>
+  <header v-else role="banner">
     <!-- Login Modal -->
-    <dialog ref="loginModal" class="modal">
+    <dialog ref="loginModal" class="modal" role="dialog" aria-labelledby="login-modal-title" aria-describedby="login-modal-description">
       <div class="modal-box">
-        <h3 class="font-bold text-lg">{{t('auth.login_required')}}</h3>
-        <p class="py-4">{{t('auth.login_to_access')}}</p>
+        <h3 id="login-modal-title" class="font-bold text-lg">{{t('auth.login_required')}}</h3>
+        <p id="login-modal-description" class="py-4">{{t('auth.login_to_access')}}</p>
         <div class="modal-action">
           <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" aria-label="Fermer la modal">✕</button>
           </form>
           <HeaderAuthModalAuth />
         </div>
@@ -157,8 +157,8 @@ function handleNotifications() {
     <!-- Top bar -->
     <div class="bg-base-100 shadow-sm px-4 py-2 flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <NuxtLink to="/" class="w-14 rounded-full overflow-hidden">
-          <img src="/logo_benevoclic.png" alt="Logo" class="w-full h-auto" />
+        <NuxtLink to="/" class="w-14 rounded-full overflow-hidden" aria-label="Accueil - Logo Benevoclic">
+          <img src="/logo_benevoclic.png" alt="Logo Benevoclic" class="w-full h-auto" width="56" height="56" />
         </NuxtLink>
       </div>
 
@@ -171,21 +171,26 @@ function handleNotifications() {
         <label class="swap swap-rotate cursor-pointer">
           <input
             type="checkbox"
-            aria-label="Toggle theme"
+            aria-label="Basculer entre le thème clair et sombre"
             :checked="isDarkTheme()"
             @change="toggleTheme"
+            class="sr-only"
           />
-          <SunIcon class="swap-on w-7 h-7 text-warning"/>
-          <MoonIcon class="swap-off w-7 h-7 text-base-content"/>
+          <SunIcon class="swap-on w-7 h-7 text-warning" aria-hidden="true"/>
+          <MoonIcon class="swap-off w-7 h-7 text-base-content" aria-hidden="true"/>
         </label>
 
         <!-- Notifications -->
         <div class="indicator hidden sm:flex mr-2">
-          <button class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1" @click="handleNotifications">
-            <span class="indicator-item badge badge-primary text-base-content" >
+          <button 
+            class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" 
+            @click="handleNotifications"
+            aria-label="Notifications (12 nouvelles)"
+          >
+            <span class="indicator-item badge badge-primary text-base-content" aria-label="12 notifications">
               12
             </span>
-            <BellIcon class="w-6 h-6" />
+            <BellIcon class="w-6 h-6" aria-hidden="true" />
           </button>
         </div>
         <div class="hidden sm:flex items-center gap-6">
@@ -198,18 +203,20 @@ function handleNotifications() {
           >
             <!-- Avatar -->
             <div class="dropdown dropdown-end">
-              <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+              <label tabindex="0" class="btn btn-ghost btn-circle avatar focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" aria-label="Menu utilisateur">
                 <div class="w-11/12 rounded-full overflow-hidden">
                   <img
                       :src="profileImageUrl"
-                      alt="Photo de profil"
+                      alt="Photo de profil utilisateur"
                       class="w-12 h-12 rounded-full object-cover"
+                      width="48"
+                      height="48"
                   />
 
                 </div>
               </label>
 
-              <ul tabindex="0" class="menu menu-sm dropdown-content mt-2 p-2 shadow bg-base-100 text-base-content rounded-box w-70 absolute right-0 z-50">
+              <ul tabindex="0" class="menu menu-sm dropdown-content mt-2 p-2 shadow bg-base-100 text-base-content rounded-box w-70 absolute right-0 z-50" role="menu">
 
                 <DrawerAppContentVolunteer
                     :is-authenticated="!isAuthenticated"
@@ -231,15 +238,20 @@ function handleNotifications() {
         <!-- Notifications -->
         <DrawerContent :is-authenticated="!isAuthenticated" :menu-open="menuOpen"  @close-drawer="menuOpen = false" :role="role" />
 
-        <button class="sm:hidden btn btn-neutral-content btn-square" @click.prevent="handleDrawerClose">
-          <AlignJustify class="icon-burger-button text-base-content w-8 h-8" />
+        <button 
+          class="sm:hidden btn btn-neutral-content btn-square focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" 
+          @click.prevent="handleDrawerClose"
+          aria-label="Ouvrir le menu de navigation"
+          :aria-expanded="menuOpen.toString()"
+        >
+          <AlignJustify class="icon-burger-button text-base-content w-8 h-8" aria-hidden="true" />
         </button>
 
       </div>
     </div>
 
     <!-- Bottom bar -->
-    <div class="bg-base-200 border-t-2 border-b-2 border-base-300 px-4 py-3" v-if="!props.optionsOpen">
+    <nav class="bg-base-200 border-t-2 border-b-2 border-base-300 px-4 py-3" v-if="!props.optionsOpen" role="navigation" aria-label="Navigation principale">
       <NoConnectedBottomBar v-if="!isAuthenticated"/>
 
       <template v-else>
@@ -247,7 +259,7 @@ function handleNotifications() {
         <VolunteerBottomBar v-else-if="role === 'VOLUNTEER'" />
       </template>
 
-    </div>
+    </nav>
 
   </header>
 </div>

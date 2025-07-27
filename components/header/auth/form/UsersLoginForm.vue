@@ -26,6 +26,9 @@ function verifyAssociation(value:boolean) {
 const forgotPasswordSent = ref(false)
 const forgotPasswordError = ref('')
 
+// Generate unique IDs for accessibility
+const emailId = `email-${Math.random().toString(36).substr(2, 9)}`
+const passwordId = `password-${Math.random().toString(36).substr(2, 9)}`
 
 </script>
 
@@ -37,33 +40,39 @@ const forgotPasswordError = ref('')
 
   <form class="space-y-4" @submit.prevent="handleLogin" v-if="!isAssociation || associationExists">
     <div class="form-control">
-      <label class="label">
+      <label :for="emailId" class="label">
         <span class="label-text">{{t('auth.email')}}</span>
       </label>
       <input
+          :id="emailId"
           v-model="form.email"
           type="email"
           :placeholder="t('auth.email')"
-          class="input input-bordered w-full"
+          class="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           autocomplete="email"
+          required
+          aria-required="true"
       />
     </div>
 
     <div class="form-control">
-      <label class="label">
+      <label :for="passwordId" class="label">
         <span class="label-text">{{t('auth.password')}}</span>
       </label>
       <input
+          :id="passwordId"
           v-model="form.password"
           type="password"
           :placeholder="t('auth.placeholder_password')"
-          class="input input-bordered w-full"
+          class="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           autocomplete="current-password"
+          required
+          aria-required="true"
       />
       <div class="text-right mt-1">
         <button
           type="button"
-          class="text-primary text-xs hover:underline"
+          class="text-primary text-xs hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
           @click="$emit('forgot-password', form.email)"
         >
           {{ t('auth.forgot_password') }}
@@ -71,18 +80,18 @@ const forgotPasswordError = ref('')
       </div>
     </div>
 
-    <button type="submit" class="btn btn-primary w-full" :disabled="loading">
-      <span v-if="loading" class="loading loading-spinner loading-sm"></span>
+    <button type="submit" class="btn btn-primary w-full focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" :disabled="loading">
+      <span v-if="loading" class="loading loading-spinner loading-sm" aria-hidden="true"></span>
       <span v-else>{{t('auth.login.title')}}</span>
     </button>
 
   </form>
 
   <!-- Message de confirmation ou d'erreur -->
-  <div v-if="forgotPasswordSent" class="alert alert-success mt-2">
+  <div v-if="forgotPasswordSent" class="alert alert-success mt-2" role="alert">
     {{ t('auth.forgot_password_sent') }}
   </div>
-  <div v-if="forgotPasswordError" class="alert alert-error mt-2">
+  <div v-if="forgotPasswordError" class="alert alert-error mt-2" role="alert">
     {{ forgotPasswordError }}
   </div>
 </template>

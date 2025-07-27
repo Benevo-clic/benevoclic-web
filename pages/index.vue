@@ -1,62 +1,95 @@
 <template>
   <div class="home-page">
     <!-- Contenu principal -->
-    <main class="home-content">
+    <main class="home-content" role="main" aria-label="Page d'accueil Benevoclic">
       <div class="mx-auto px-4 py-6 max-w-screen-2xl w-full">
         <!-- Section filtres -->
-        <client-only>
-          <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
-            <div class="flex flex-col items-center w-full">
-              <VolunteerEventFilters
-                  class="mb-4 w-full"
-                  :announcements="announcements"
-                  @map="handleMapToggle"
-                  @filter="handleFilter"
-                  @type="handleTypeFilter"
-              />
+        <section aria-labelledby="filters-heading">
+          <h2 id="filters-heading" class="sr-only">Filtres de recherche</h2>
+          <client-only>
+            <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
+              <div class="flex flex-col items-center w-full">
+                <VolunteerEventFilters
+                    class="mb-4 w-full"
+                    :announcements="announcements"
+                    @map="handleMapToggle"
+                    @filter="handleFilter"
+                    @type="handleTypeFilter"
+                />
+              </div>
             </div>
-          </div>
-        </client-only>
+          </client-only>
+        </section>
+
+        <!-- Section de chargement -->
         <div
             v-if="isLoading"
             class="fixed inset-0 bg-base-200 bg-opacity-80 z-[1000] flex items-center justify-center"
+            role="status"
+            aria-live="polite"
+            aria-label="Chargement en cours"
         >
           <img
               src="/logo.png"
-              alt="Chargement…"
+              alt="Logo Benevoclic - Chargement en cours"
               class="w-24 h-24 animate-spin"
+              aria-hidden="true"
           />
+          <span class="sr-only">Chargement en cours...</span>
         </div>
-        <div v-else class="bg-base-100 rounded-lg shadow-md p-6 w-full mt-4">
-          <NoConnectedAnnouncementList
-              :announcements="announcements"
-              :total-announcements="totalAnnouncements"
-              :error="error.value"
-              :loading="loading"
-          />
-        </div>
-        <!-- Pagination DaisyUI -->
-        <div class="flex justify-center mt-6" v-if="totalPages > 1">
+
+        <!-- Section résultats -->
+        <section v-else aria-labelledby="results-heading">
+          <h2 id="results-heading" class="sr-only">Résultats de recherche</h2>
+          <div class="bg-base-100 rounded-lg shadow-md p-6 w-full mt-4">
+            <NoConnectedAnnouncementList
+                :announcements="announcements"
+                :total-announcements="totalAnnouncements"
+                :error="error.value"
+                :loading="loading"
+            />
+          </div>
+        </section>
+
+        <!-- Pagination -->
+        <nav 
+          v-if="totalPages > 1" 
+          class="flex justify-center mt-6" 
+          role="navigation" 
+          aria-label="Navigation des pages"
+        >
           <div class="join">
             <button
               class="join-item btn"
               :disabled="currentPage === 1"
               @click="goToPage(currentPage - 1)"
-            >«</button>
-            <button class="join-item btn" disabled>
+              :aria-label="`Aller à la page précédente (page ${currentPage - 1})`"
+              :aria-disabled="currentPage === 1"
+            >
+              <span aria-hidden="true">«</span>
+              <span class="sr-only">Page précédente</span>
+            </button>
+            <button class="join-item btn" disabled aria-current="page">
+              <span class="sr-only">Page actuelle : </span>
               Page {{ currentPage }} / {{ totalPages }}
             </button>
             <button
               class="join-item btn"
               :disabled="currentPage === totalPages"
               @click="goToPage(currentPage + 1)"
-            >»</button>
+              :aria-label="`Aller à la page suivante (page ${currentPage + 1})`"
+              :aria-disabled="currentPage === totalPages"
+            >
+              <span aria-hidden="true">»</span>
+              <span class="sr-only">Page suivante</span>
+            </button>
           </div>
-        </div>
+        </nav>
       </div>
     </main>
   </div>
 </template>
+
 <script setup lang="ts">
 import {definePageMeta, useAnnouncement} from "#imports";
 import {onMounted, computed, ref} from 'vue';
@@ -68,6 +101,53 @@ definePageMeta({
   middleware: ['auth'],
   layout: 'header'
 })
+
+// Configuration SEO spécifique à la page d'accueil
+useHead({
+  title: 'Benevoclic - Trouvez des missions de bénévolat près de chez vous',
+  meta: [
+    { 
+      name: 'description', 
+      content: 'Découvrez des missions de bénévolat dans votre région. Rejoignez des associations et participez à des actions solidaires. Inscription gratuite.' 
+    },
+    { name: 'keywords', content: 'bénévolat, missions, association, volontariat, engagement, solidarité, actions sociales' },
+    { property: 'og:title', content: 'Benevoclic - Trouvez des missions de bénévolat près de chez vous' },
+    { property: 'og:description', content: 'Découvrez des missions de bénévolat dans votre région. Rejoignez des associations et participez à des actions solidaires.' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: 'https://benevoclic.app' },
+    { name: 'twitter:title', content: 'Benevoclic - Trouvez des missions de bénévolat près de chez vous' },
+    { name: 'twitter:description', content: 'Découvrez des missions de bénévolat dans votre région. Rejoignez des associations et participez à des actions solidaires.' }
+  ],
+  link: [
+    { rel: 'canonical', href: 'https://benevoclic.app' }
+  ]
+});
+
+// Configuration Schema.org pour la page d'accueil
+useSchemaOrg([
+  defineWebPage({
+    name: 'Accueil - Benevoclic',
+    description: 'Trouvez des missions de bénévolat près de chez vous',
+    url: 'https://benevoclic.app',
+    breadcrumb: {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Accueil',
+          item: 'https://benevoclic.app'
+        }
+      ]
+    }
+  }),
+  defineOrganization({
+    name: 'Benevoclic',
+    url: 'https://benevoclic.app',
+    logo: 'https://benevoclic.app/logo_benevoclic.png',
+    description: 'Plateforme de bénévolat connectant associations et volontaires'
+  })
+]);
 
 const announcement = useAnnouncement();
 
