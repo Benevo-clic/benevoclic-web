@@ -8,6 +8,9 @@ COPY package*.json ./
 # Disable the use of global .npmrc file
 RUN npm ci --no-global
 
+# Copier le fichier .env s'il existe
+COPY .env.production ./.env
+
 # Copier le reste des fichiers
 COPY . .
 
@@ -25,6 +28,9 @@ ENV NODE_ENV=production \
 
 # Copier uniquement les fichiers nécessaires depuis l'étape de build
 COPY --from=builder /app/.output ./
+
+# Copier le fichier .env pour le runtime
+COPY --from=builder /app/.env ./
 
 # Exposer le port configuré
 EXPOSE ${PORT}

@@ -5,14 +5,14 @@ export function deleteCookies(event:H3Event<EventHandlerRequest>){
     deleteCookie(event, 'auth_token', {
         httpOnly: true,
         secure: true,
-        sameSite: 'strict',
+        sameSite: 'none',
         path: '/'
     });
 
     deleteCookie(event, 'refresh_token', {
         httpOnly: true,
         secure: true,
-        sameSite: 'strict',
+        sameSite: 'none',
         path: '/'
     });
 

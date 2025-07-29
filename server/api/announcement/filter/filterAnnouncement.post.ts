@@ -5,10 +5,22 @@ import {FilterAnnouncement, FilterAnnouncementResponse} from "~/common/interface
 
 
 export default defineEventHandler(async (event) => {
-
     const token = getCookie(event, 'auth_token')
     const config = useRuntimeConfig();
     const body = await readBody(event) as FilterAnnouncement;
+
+
+    // Vérification de la configuration
+    if (!config.private.api_base_url) {
+        throw createError({
+            statusCode: 500,
+            statusMessage: 'Configuration Error',
+            data: {
+                message: 'API_BASE_URL is not configured',
+                details: 'Please check your environment variables'
+            }
+        });
+    }
 
     try {
         const payload: any = {
@@ -17,7 +29,10 @@ export default defineEventHandler(async (event) => {
         if (Array.isArray(payload.tags) && payload.tags.length === 0) {
             delete payload.tags;
         }
-        const response = await axios.post<FilterAnnouncementResponse>(`${config.private.api_base_url}/announcements/filter`,
+
+        const url = `${config.private.api_base_url}/announcements/filter`;
+
+        const response = await axios.post<FilterAnnouncementResponse>(url,
             {
                 ...payload
             },
@@ -28,11 +43,9 @@ export default defineEventHandler(async (event) => {
             })
 
         return response.data;
-    }catch (error) {
+    } catch (error) {
         if (axios.isAxiosError(error)) {
-            ApiError.handleAxios(error, 'Erreur lors de la récupération des annonces par association');
+            ApiError.handleAxios(error, 'Erreur lors de l’ajout du volontaire à l’association');
         }
     }
-
-
 });

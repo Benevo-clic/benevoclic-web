@@ -17,21 +17,21 @@ export function setCookies(event:H3Event<EventHandlerRequest>,loginResponse: Log
     setCookie(event, 'auth_token', loginResponse.idToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'strict',
+      sameSite: 'none',
       maxAge: 60 * 60 * 24 // 24 heures
     })
 
     setCookie(event, 'id_user', loginResponse.idUser, {
       httpOnly: false,
         secure: false,
-        sameSite: 'strict',
+        sameSite: 'none',
         maxAge: 60 * 60 * 24 * 30 // 30 jours
     })
 
     setCookie(event, 'refresh_token', loginResponse.refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'strict',
+      sameSite: 'none',
       maxAge: 60 * 60 * 24 * 30 // 30 jours
     })
     setCookie(event,'isConnected','true',{

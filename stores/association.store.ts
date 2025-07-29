@@ -41,11 +41,9 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch<ApiResponseSubset>('/api/association/associationSiret', {
+                const response = await $fetch<ApiResponseSubset>(`/api/association/siret/${siret}`, {
                     method: 'GET',
-                    query: {
-                        siretNum : siret
-                    },
+                    credentials: 'include',
                 })
 
                 return response as ApiResponseSubset
@@ -68,9 +66,9 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch<AssociationInfo>('/api/association/associationInfo', {
+                const response = await $fetch<AssociationInfo>(`/api/association/by-id/${user?.userId || associationId}`, {
                     method: 'GET',
-                    query: { userId: user?.userId || associationId },
+                    credentials: 'include',
                 })
 
                 if(response) {
@@ -93,6 +91,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             try {
                 const response = await $fetch<AssociationInfo>('/api/association/create', {
                     method: 'POST',
+                    credentials: 'include',
                     body: payload,
                 })
 
@@ -114,9 +113,9 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch<AssociationInfo>('/api/association/update', {
+                const response = await $fetch<AssociationInfo>(`/api/association/update/${id || this.association?.associationId}`, {
                     method: 'PATCH',
-                    query: { id},
+                    credentials: 'include',
                     body: payload,
                 })
 
@@ -137,9 +136,9 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch<AssociationInfo>('/api/association/addAssociationVolunteer', {
+                const response = await $fetch<AssociationInfo>(`/api/association/volunteer/add/${associationId}`, {
                     method: 'PATCH',
-                    query: { associationId },
+                    credentials: 'include',
                     body: payload,
                 })
 
@@ -161,9 +160,9 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch<AssociationInfo>('/api/association/removeAssociationVolunteer', {
+                const response = await $fetch<AssociationInfo>(`/api/association/volunteer/remove/${associationId}/${volunteerId}`, {
                     method: 'PATCH',
-                    query: { associationId, volunteerId },
+                    credentials: 'include',
                 })
 
                 if(response) {
@@ -183,9 +182,9 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch<AssociationInfo>('/api/association/removeAssociationVolunteerWaiting', {
+                const response = await $fetch<AssociationInfo>(`/api/association/volunteer-waiting/remove/${associationId}/${volunteerId}`, {
                     method: 'PATCH',
-                    query: { associationId, volunteerId },
+                    credentials: 'include',
                 })
 
                 if(response) {
@@ -205,9 +204,9 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             this.loading = true
             this.error = null
             try {
-                await $fetch<{ message: string }>('/api/association/remove', {
+                await $fetch<{ message: string }>(`/api/association/delete/${this.association?.associationId}`, {
                     method: 'DELETE',
-                    query: { id: this.association?.associationId },
+                    credentials: 'include',
                     headers: {
                         "Content-Type": "application/json"
                     },

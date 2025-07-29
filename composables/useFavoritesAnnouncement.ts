@@ -1,4 +1,4 @@
-import {useFavoriteAnnouncement} from "~/stores/favoritesAnnouncement";
+import {useFavoriteAnnouncement} from "~/stores/favoritesAnnouncement.store";
 
 
 export const useFavoritesAnnouncement = () => {
@@ -8,6 +8,11 @@ export const useFavoritesAnnouncement = () => {
         fetchFavorites : announcementStore.fetchFavorites,
         addFavorite: announcementStore.addFavorite,
         getFavorites : computed(() => announcementStore.getFavorites),
+        fetchAllFavorites: announcementStore.fetchAllFavorites,
+        fetchFavoritesByAnnouncementId: announcementStore.fetchFavoritesByAnnouncementId,
+        removeAllByVolunteerId: announcementStore.removeAllByVolunteerId,
+        removeAllByAnnouncementId: announcementStore.removeAllByAnnouncementId,
+        resetState: announcementStore.resetState,
         getFavoritesAnnouncementsVolunteer: computed(() => announcementStore.getFavoritesAnnouncementsVolunteer),
         loading: computed(() => announcementStore.loading),
         error: computed(() => announcementStore.error),

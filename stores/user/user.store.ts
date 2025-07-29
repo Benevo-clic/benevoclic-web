@@ -110,7 +110,10 @@ export const useUserStore = defineStore('user', {
         this.error = null;
         const authStore = useAuthStore();
         await authStore.refreshTokens();
-        const userData = await $fetch<UserInfo>('/api/user/userCurrent');
+        const userData = await $fetch<UserInfo>('/api/user/current-user',{
+            method: 'GET',
+            credentials: 'include',
+        });
         
         if (!userData || !userData.userId) {
           throw new Error('Données utilisateur invalides');
@@ -141,7 +144,10 @@ export const useUserStore = defineStore('user', {
       this.loading = true;
       this.error = null;
       try {
-        const response = await $fetch<UserInfo>(`/api/user/${id}`);
+        const response = await $fetch<UserInfo>(`/api/user/${id}`,{
+            method: 'GET',
+            credentials: 'include',
+        });
 
         if (!response) {
           this.error = 'Utilisateur non trouvé';
@@ -161,9 +167,9 @@ export const useUserStore = defineStore('user', {
       this.loading = true;
       this.error = null;
       try {
-        const response = await $fetch<UserInfo>('/api/user/updateIsCompleted', {
+        const response = await $fetch<UserInfo>(`/api/user/${id}/isCompleted/${isCompleted}`, {
           method: 'PATCH',
-          body: {id, isCompleted}
+          credentials: 'include'
         });
 
         if (response) {
@@ -187,6 +193,7 @@ export const useUserStore = defineStore('user', {
       try {
         const response = await $fetch('/api/user/updateProfileUser', {
           method: 'PATCH',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -224,16 +231,15 @@ export const useUserStore = defineStore('user', {
           const formData = new FormData()
           formData.append('file', file)
 
-          console.log(`Mise à jour de l'avatar pour l'utilisateur: ${user.uid}`, file)
+
           const response = await $fetch<UserInfo>(
-              `/api/user/${user.uid}/updateAvatarUser`,
+              `/api/user/${user.uid}/update-avatar`,
               {
                 method: 'PATCH',
+                credentials: 'include',
                 body: formData,
               }
           )
-
-          console.log(`Réponse de la mise à jour de l'avatar:`, response)
 
           if (response) {
             this.updateUserData(response)
@@ -254,9 +260,9 @@ export const useUserStore = defineStore('user', {
         throw new Error(this.error);
       }
       try {
-        const response = await $fetch('/api/auth/remove', {
+        const response = await $fetch(`/api/user/${this.user?.userId}`, {
           method: 'DELETE',
-          body: {uid: this.user?.userId}
+          credentials: 'include'
         });
 
         if (response.success) {
