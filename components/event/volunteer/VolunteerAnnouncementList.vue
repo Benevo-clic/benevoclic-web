@@ -97,7 +97,7 @@ async function addFavorite( announcementId: string , volunteerId: string) {
 
 async function removeFavorite(announcementId: string , volunteerId: string) {
   try {
-    await useFavorite.removeByVolunteerIdAndAnnouncementId(announcementId, volunteerId);
+    await useFavorite.removeByVolunteerIdAndAnnouncementId(volunteerId,announcementId);
   } catch (error) {
     handleError(error);
     return;
