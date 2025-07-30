@@ -1,7 +1,7 @@
 
 export interface InfoVolunteer{
-    id: string;
-    name: string;
+    volunteerId: string;
+    volunteerName: string;
 }
 
 export interface AssociationInfo {

@@ -222,7 +222,13 @@
             </div>
             <div v-else key="volunteers">
               <VolunteersList 
-                :volunteers="announcement?.volunteers" 
+                :volunteers="announcement?.volunteers?.map(volunteer => {
+                  return {
+                    volunteerId: volunteer.id,
+                    volunteerName: volunteer.name,
+                    isPresent: volunteer.isPresent
+                  };
+                })"
                 @right-action="handleRightActionVolunteer" 
                 @presence-action="handlePresenceActionVolunteer" 
               />
@@ -336,6 +342,26 @@ function handleError(error: any) {
   } else {
     console.error('Erreur inattendue:', error);
   }
+}
+
+interface MapVolunteer {
+  volunteerId: string;
+  volunteerName: string;
+  isPresent?: boolean;
+}
+
+interface Volunteer {
+  volunteerId: string;
+  volunteerName: string;
+  isPresent?: boolean;
+}
+
+function mapVolunteerToParticipant(volunteer: Volunteer): MapVolunteer {
+  return {
+    volunteerId: volunteer.volunteerId,
+    volunteerName: volunteer.volunteerName,
+    isPresent: volunteer.isPresent
+  };
 }
 
 definePageMeta({

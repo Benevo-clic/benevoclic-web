@@ -9,6 +9,11 @@ export interface AssociationVolunteerFollow {
     associationName: string;
 }
 
+export interface VolunteerFollow {
+    volunteerId: string;
+    volunteerName: string;
+}
+
 export interface VolunteerInfo{
     volunteerId: string;
     bio?: string;

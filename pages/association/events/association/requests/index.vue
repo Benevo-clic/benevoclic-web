@@ -284,14 +284,14 @@ async function buildAssociationRequests() {
 
   const volunteerInfos = await Promise.all(
     association.volunteersWaiting.map(async (volunteer) => {
-      if (!associationVolunteersCache.value[volunteer.id]) {
+      if (!associationVolunteersCache.value[volunteer.volunteerId]) {
         try {
-          associationVolunteersCache.value[volunteer.id] = await getUserById(volunteer.id);
+          associationVolunteersCache.value[volunteer.volunteerId] = await getUserById(volunteer.volunteerId);
         } catch {
-          associationVolunteersCache.value[volunteer.id] = null;
+          associationVolunteersCache.value[volunteer.volunteerId] = null;
         }
       }
-      return associationVolunteersCache.value[volunteer.id];
+      return associationVolunteersCache.value[volunteer.volunteerId];
     })
   );
 
@@ -300,10 +300,10 @@ async function buildAssociationRequests() {
       const volunteerInfo = volunteerInfos[i];
       if (!volunteerInfo) return null;
       return {
-        id: `${volunteer.id}`,
+        id: `${volunteer.volunteerId}`,
         idAssociation: `${association.associationId}`,
         volunteer: {
-          name: volunteer.name,
+          name: volunteer.volunteerName,
           email: volunteerInfo.email,
           avatar: volunteerInfo.avatarFileKey,
         },
@@ -354,8 +354,8 @@ async function acceptRequestAssociation(idAssociation: string,id: string, volunt
       await associationStore.addVolunteerToAssociation(
           idAssociation,
           {
-            id: id,
-            name: volunteerName,
+            volunteerId: id,
+            volunteerName: volunteerName,
           }
       )
       associationRequests.value = associationRequests.value.filter(req => req.id !== id);

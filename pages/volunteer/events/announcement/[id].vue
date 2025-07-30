@@ -287,7 +287,7 @@ import {
 } from 'lucide-vue-next'
 import {useAnnouncement} from '~/composables/useAnnouncement';
 import {useVolunteerAuth} from "~/composables/useVolunteer";
-import type { AssociationVolunteerFollow } from '~/common/interface/volunteer.interface';
+import type {AssociationVolunteerFollow} from '~/common/interface/volunteer.interface';
 import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 
 const route = useRoute();
@@ -402,8 +402,8 @@ async function toggleFollowAssociation() {
       await volunteerUse.removeVolunteerFromAssociation(associationId.value, volunteerId.value);
     }else {
       await volunteerUse.addVolunteerToWaitingListAssociation(associationId.value, {
-        id: volunteerId.value,
-        name: volunteerUse.volunteer.value?.firstName + ' ' + volunteerUse.volunteer.value?.lastName
+        volunteerId: volunteerId.value,
+        volunteerName: volunteerUse.volunteer.value?.firstName + ' ' + volunteerUse.volunteer.value?.lastName
       });
     }
     await refreshFollowState();

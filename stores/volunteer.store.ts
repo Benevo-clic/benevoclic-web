@@ -160,14 +160,21 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                 this.loading = false
             }
         },
-        async  addVolunteerToWaitingListAssociation(associationId: string,volunteer: {id: string, name: string}) {
+        async  addVolunteerToWaitingListAssociation(associationId: string,volunteer: {volunteerId: string, volunteerName: string}) {
             this.loading = true
             this.error = null
             try {
+
                 const response = await $fetch(`/api/association/volunteer-waiting/register/${associationId}`, {
                     method: 'PATCH',
                     credentials: 'include',
+                    body: volunteer,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 })
+
+                console.log('Response from addVolunteerToWaitingListAssociation:', response);
 
                 await this.getVolunteerInfo();
                 return response
@@ -178,14 +185,14 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                 this.loading = false
             }
         },
-        async getAllAssociationsFollowingList(volunteerId: string, forceRefresh = false) {
-            if (!forceRefresh && this.associationsFollowingList !== null) {
+        async getAllAssociationsFollowingList(volunteerId: string) {
+            if (this.associationsFollowingList !== null) {
                 return this.associationsFollowingList
             }
             this.loading = true
             this.error = null
             try {
-                const data = await $fetch<AssociationVolunteerFollow[]>(`/api/association/volunteer-list/all/${volunteerId}`, {
+                const data = await $fetch<AssociationVolunteerFollow[]>(`/api/association/volunteer-list/${volunteerId}`, {
                     method: 'GET',
                     credentials: 'include',
                 });

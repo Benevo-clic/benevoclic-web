@@ -7,7 +7,7 @@
         v-for="participant in props.participants"
         :key="participant.id"
         v-memo="[participant.id, participant.name, participant.status, participant.isPresent]"
-        :participant="participant"
+        :participant="mapVolunteerToParticipant(participant)"
         :is-volunteer="false"
         @right-action="handleRightAction"
         @presence-action="handlePresenceAction"
@@ -34,6 +34,22 @@ interface Participant {
   name: string;
   status?: string; // Ajouté pour v-memo
   isPresent?: boolean;
+}
+
+interface mapVolunteer {
+  volunteerId: string;
+  volunteerName: string;
+  status?: string;
+  isPresent?: boolean;
+}
+
+function mapVolunteerToParticipant(volunteer: Participant): mapVolunteer {
+  return {
+    volunteerId: volunteer.id,
+    volunteerName: volunteer.name,
+    status: volunteer.status,
+    isPresent: volunteer.isPresent
+  };
 }
 
 const props = defineProps<{

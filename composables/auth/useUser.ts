@@ -1,6 +1,6 @@
 import { useAuthStore } from '~/stores/auth/auth.store'
 import { useUserStore } from '~/stores/user/user.store'
-import { onMounted, computed, ref, watch } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import type { UserInfo } from "~/common/types/auth.type"
 
 export const useUser = () => {
@@ -32,14 +32,6 @@ export const useUser = () => {
         await initializeUser()
     })
 
-    // Surveiller les changements d'état pour réagir automatiquement
-    watch(() => userStore.error, (newError) => {
-        if (newError) {
-            console.error('Erreur du store utilisateur:', newError)
-        }
-    })
-
-    // Fonction pour forcer un refresh des données utilisateur
     const refreshUserData = async () => {
         try {
             userStore.clearUserCache()

@@ -46,8 +46,8 @@ definePageMeta({
 })
 
 interface Volunteer {
-  id: string;
-  name: string;
+  volunteerId: string;
+  volunteerName: string;
 }
 
 const useAssociation = useAssociationAuth()
@@ -120,7 +120,7 @@ const filteredVolunteers = computed(() => {
   if (!volunteers.value) return []
   if (!search.value.trim()) return volunteers.value
   return volunteers.value.filter(v =>
-    v.name.toLowerCase().includes(search.value.trim().toLowerCase())
+    v.volunteerName.toLowerCase().includes(search.value.trim().toLowerCase())
   )
 })
 

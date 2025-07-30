@@ -118,9 +118,10 @@ export const useUserStore = defineStore('user', {
         if (!userData || !userData.userId) {
           throw new Error('Données utilisateur invalides');
         }
-        
         this.updateUserData(userData);
         this._lastUserFetch = Date.now();
+        this.user = userData;
+
         return this.user;
       } catch (err: any) {
         this.error = err?.message || 'Erreur de récupération utilisateur';

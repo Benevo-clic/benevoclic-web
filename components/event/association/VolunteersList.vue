@@ -4,8 +4,8 @@
     <div v-if="props.volunteers && props.volunteers.length">
       <ParticipantOrVolunteerCard
           v-for="volunteer in props.volunteers"
-          :key="volunteer.id"
-          v-memo="[volunteer.id, volunteer.name, volunteer.isPresent]"
+          :key="volunteer.volunteerId"
+          v-memo="[volunteer.volunteerId, volunteer.volunteerName, volunteer.isPresent]"
           :participant="volunteer"
           :is-volunteer="true"
           @right-action="handleRightAction"
@@ -30,8 +30,8 @@
 import ParticipantOrVolunteerCard from "~/components/event/association/ParticipantOrVolunteerCard.vue";
 
 interface Volunteer {
-  id: string;
-  name: string;
+  volunteerId: string;
+  volunteerName: string;
   isPresent?: boolean;
 }
 

@@ -1,29 +1,31 @@
 import { defineEventHandler, createError } from 'h3'
 import axios from 'axios'
-import { getCookie } from 'h3'
 import { ApiError } from '~/utils/ErrorHandler'
+import { getCookie } from 'h3'
 
 export default defineEventHandler(async (event) => {
   try {
     const { volunteerId } = event.context.params || {}
-    
-    // Récupérer le token depuis les headers
-    const token = getCookie(event, 'auth_token');
-    
-    // Appel au service backend
-    const config = useRuntimeConfig()
-    const url = `${config.private.api_base_url}/association/volunteer-list/all/${volunteerId}`
+    const token = getCookie(event, 'auth_token')
 
-    
+    console.log(`volunteerId reçu :`, volunteerId)
+
+    const config = useRuntimeConfig()
+    const url = `${config.private.api_base_url}/association/volunteer/list/all/${volunteerId}`
+
     const response = await axios.get(url, {
       headers: {
         'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       }
     })
-    
+
+    console.log('Réponse de l’API Nest :', response.data)
+
     return response.data
   } catch (error: any) {
+    console.error('Erreur API Nuxt :', error)
+
     if (axios.isAxiosError(error)) {
       ApiError.handleAxios(error, 'Erreur lors de la récupération de toutes les listes de volontaires')
     }
@@ -32,4 +34,4 @@ export default defineEventHandler(async (event) => {
       statusMessage: error.statusMessage || 'Erreur lors de la récupération de toutes les listes de volontaires'
     })
   }
-}) 
+})

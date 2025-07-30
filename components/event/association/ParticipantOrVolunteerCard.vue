@@ -9,12 +9,12 @@
       </div>
       <div v-else-if="userInfo?.avatarFileKey" class="avatar">
         <div class="w-16 h-16 rounded-full ring-2 ring-primary ring-offset-2 ring-offset-base-100">
-          <img :src="profileImageUrl" :alt="`Photo de ${participant.name}`" class="w-full h-full object-cover rounded-full" />
+          <img :src="profileImageUrl" :alt="`Photo de ${participant.volunteerName}`" class="w-full h-full object-cover rounded-full" />
         </div>
       </div>
       <div v-else class="avatar placeholder">
         <div class="w-16 h-16 rounded-full bg-base-300 text-base-content ring-2 ring-primary ring-offset-2 ring-offset-base-100 flex items-center justify-center">
-          <span class="text-xl font-bold">{{ participant.name.charAt(0).toUpperCase() }}</span>
+          <span class="text-xl font-bold">{{ participant.volunteerName.charAt(0).toUpperCase() }}</span>
         </div>
       </div>
     </div>
@@ -22,19 +22,24 @@
     <div class="flex-1 flex flex-col justify-between min-w-0">
       <!-- Nom et email en haut -->
       <div class="mb-4">
-        <h4 class="font-semibold text-base-content text-lg truncate">{{ participant.name }}</h4>
+        <h4 class="font-semibold text-base-content text-lg truncate">{{ participant.volunteerName }}</h4>
         <p class="text-sm text-base-content/70 truncate">{{ userInfo?.email || 'Email non disponible' }}</p>
       </div>
       <!-- Boutons en bas -->
       <div class="flex gap-2 mt-auto">
-        <button 
+        <button v-if="props.participant.isPresent === undefined"
+                class="btn btn-sm btn-outline flex-1"
+        >
+            Détails
+        </button>
+        <button v-else
           class="btn btn-sm btn-outline flex-1" 
           :class="participant.isPresent ? 'btn-success' : 'btn-primary'"
           @click="openPresenceModal"
         >
           {{ participant.isPresent ? 'Présent' : 'Marquer présent' }}
         </button>
-        <button class="btn btn-sm btn-outline btn-error flex-1" @click="emit('rightAction', participant.id)">Retirer</button>
+        <button class="btn btn-sm btn-outline btn-error flex-1" @click="emit('rightAction', participant.volunteerId)">Retirer</button>
       </div>
     </div>
     <!-- Indicateur de chargement -->
@@ -48,8 +53,8 @@
     <!-- Modal de présence -->
     <PresenceModal
       ref="presenceModalRef"
-      :person-id="participant.id"
-      :person-name="participant.name"
+      :person-id="participant.volunteerId"
+      :person-name="participant.volunteerName"
       :is-volunteer="isVolunteer || false"
       :initial-presence="participant.isPresent"
       :loading="loading"
@@ -66,8 +71,8 @@ import {useNavigation} from "~/composables/useNavigation";
 import PresenceModal from "~/components/event/association/PresenceModal.vue";
 
 interface Participant {
-  id: string;
-  name: string;
+  volunteerId: string;
+  volunteerName: string;
   isPresent?: boolean;
 }
 
@@ -120,11 +125,11 @@ function handleError(error: any) {
 }
 
 async function loadUserInfo() {
-  if (!props.participant.id) return;
+  if (!props.participant.volunteerId) return;
 
   loading.value = true;
   try {
-    userInfo.value = await getUserById(props.participant.id);
+    userInfo.value = await getUserById(props.participant.volunteerId);
   } catch (error) {
     handleError(error);
     return;

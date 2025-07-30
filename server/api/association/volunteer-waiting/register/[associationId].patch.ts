@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
     
     const config = useRuntimeConfig()
     const url = `${config.private.api_base_url}/association/volunteer-waiting/register/${associationId}`
+    console.log(`Registering volunteer in waiting list for association ${associationId} with body:`, body)
     
     const response = await axios.patch(url, body, {
       headers: {

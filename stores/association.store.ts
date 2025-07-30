@@ -55,7 +55,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             }
         },
         async getAssociationInfo(associationId?: string) {
-            await useUserStore().fetchUser(); // Ensure user is fetched before proceeding
+            await useUserStore().fetchUser();
             const user = useUserStore().getUser
             
             if (this.isCacheValid && this.association) {
@@ -131,7 +131,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
                 this.loading = false
             }
         },
-        async addVolunteerToAssociation(associationId: string,payload: { id: string, name: string }) {
+        async addVolunteerToAssociation(associationId: string,payload: { volunteerId: string, volunteerName: string }) {
             this.loading = true
             this.error = null
             try {
@@ -139,6 +139,9 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
                     method: 'PATCH',
                     credentials: 'include',
                     body: payload,
+                    headers:{
+                        "Content-Type": "application/json"
+                    }
                 })
 
                 if(response) {
