@@ -1,34 +1,31 @@
-import {defineEventHandler, getCookie, createError} from 'h3'
-import {UserInfo} from '~/common/types/auth.type'
-import axios from "axios";
-import {ApiError} from "~/utils/ErrorHandler";
-
-
-// Types pour la réponse de l'API
+import { defineEventHandler, createError } from 'h3'
+import axios from 'axios'
+import { ApiError } from '~/utils/ErrorHandler'
 
 export default defineEventHandler(async (event) => {
-    const token = getCookie(event, 'auth_token')
-    const config = useRuntimeConfig();
-    const id = event.context.params?.id;
-
-    try {
-        const currentUser = await axios.get<UserInfo>(`${config.private.api_base_url}/user/${id}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-
-        if (!currentUser) {
-            throw createError({
-                statusCode: 404,
-                message: 'Utilisateur non trouvé'
-            })
-        }
-
-        return currentUser.data
-    } catch (error: any) {
-        if (axios.isAxiosError(error)) {
-            ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’avatar');
-        }
+  try {
+    const { id } = event.context.params || {}
+    
+    const token  = getCookie(event, 'auth_token')
+    
+    const config = useRuntimeConfig()
+    const url = `${config.private.api_base_url}/user/${id}`
+    
+    const response = await axios.get(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    
+    return response.data
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      ApiError.handleAxios(error, 'Erreur lors de la récupération de l\'utilisateur')
     }
+    throw createError({
+      statusCode: error.statusCode || 500,
+      statusMessage: error.statusMessage || 'Erreur lors de la récupération de l\'utilisateur'
+    })
+  }
 })

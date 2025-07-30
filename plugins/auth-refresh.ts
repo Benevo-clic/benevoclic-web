@@ -1,13 +1,17 @@
 import {defineNuxtPlugin} from '#app'
 import {$fetch} from "ofetch";
+import {useCookie} from '#app'
 
 export default defineNuxtPlugin(() => {
   let interval: ReturnType<typeof setInterval> | null = null;
 
   async function checkTokens() {
     try {
-      const response = await $fetch('/api/auth/check-tokens')
-      return response.hasTokens
+      const refreshToken = useCookie('refresh-token').value
+      const authToken = useCookie('auth_token').value
+      return {
+        hasTokens: !!(refreshToken && authToken)
+      }
     } catch (error) {
       return false
     }
@@ -15,7 +19,7 @@ export default defineNuxtPlugin(() => {
 
   async function refreshTokens() {
     try {
-      await $fetch('/api/auth/refresh', { method: 'POST' })
+      await $fetch('/api/user/refresh', { method: 'POST', credentials: 'include' })
       return true
     } catch (error: any) {
       clearAuthAndRedirect()

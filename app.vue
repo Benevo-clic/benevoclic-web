@@ -50,7 +50,6 @@ useSchemaOrg([
       <main id="main-content" role="main" class="flex-1 min-h-[calc(100vh-120px)]">
         <NuxtPage />
       </main>
-      <Footer />
       <CookieConsent />
     </NuxtLayout>
   </div>

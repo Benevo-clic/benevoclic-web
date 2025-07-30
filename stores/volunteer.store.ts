@@ -56,9 +56,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch<VolunteerInfo>('/api/volunteer/volunteerInfo', {
+                const response = await $fetch<VolunteerInfo>(`/api/volunteer/${user?.userId}`, {
                     method: 'GET',
-                    query: { userId: user?.userId },
+                    credentials: 'include',
                 })
                 if(response) {
                     this.volunteer = response
@@ -77,8 +77,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch<VolunteerInfo>('/api/volunteer/create', {
+                const response = await $fetch<VolunteerInfo>('/api/volunteer', {
                     method: 'POST',
+                    credentials: 'include',
                     body: payload,
                 })
 
@@ -101,9 +102,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch<VolunteerInfo>('/api/volunteer/update', {
+                const response = await $fetch<VolunteerInfo>(`/api/volunteer/${id || this.volunteer?.volunteerId}`, {
                     method: 'PATCH',
-                    query: { id},
+                    credentials: 'include',
                     body: payload,
                 })
 
@@ -126,9 +127,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch('/api/volunteer/getAssociationWaiting', {
+                const response = await $fetch(`/api/association/waiting/by-volunteer/${user?.userId}`, {
                     method: 'GET',
-                    query: { volunteerId: user?.userId },
+                    credentials: 'include',
                 })
                 await this.getVolunteerInfo();
                 return response as VolunteerInfo[]
@@ -145,12 +146,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch('/api/association/removeAssociationVolunteerWaiting', {
+                const response = await $fetch(`/api/association/volunteer-waiting/remove/${associationId}/${user?.userId}`, {
                     method: 'PATCH',
-                    query: { associationId, volunteerId: user?.userId },
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    credentials: 'include',
                 })
 
                 await this.getVolunteerInfo();
@@ -166,12 +164,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch('/api/volunteer/addVolunteerWaiting', {
+                const response = await $fetch(`/api/association/volunteer-waiting/register/${associationId}`, {
                     method: 'PATCH',
-                    body: { associationId, volunteerId: volunteer.id, volunteerName: volunteer.name },
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    credentials: 'include',
                 })
 
                 await this.getVolunteerInfo();
@@ -190,9 +185,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const data = await $fetch<AssociationVolunteerFollow[]>('/api/volunteer/getAllAssociationsFollowingList', {
+                const data = await $fetch<AssociationVolunteerFollow[]>(`/api/association/volunteer-list/all/${volunteerId}`, {
                     method: 'GET',
-                    query: { volunteerId },
+                    credentials: 'include',
                 });
                 this.associationsFollowingList = data
                 return data
@@ -207,9 +202,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch('/api/association/removeAssociationVolunteer', {
+                const response = await $fetch(`/api/association/volunteer/remove/${associationId}/${volunteerId}`, {
                     method: 'PATCH',
-                    query: { associationId, volunteerId },
+                    credentials: 'include',
                 })
 
                 if(response) {
@@ -231,9 +226,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                return await $fetch<AssociationVolunteerFollow[]>('/api/volunteer/getAllAssociationsToWaitingList', {
+                return await $fetch<AssociationVolunteerFollow[]>(`/api/association/volunteer-waiting-list/all/${volunteerId}`, {
                     method: 'GET',
-                    query: {volunteerId},
+                    credentials: 'include',
                 });
             } catch (err: any) {
                 this.error = err?.message || 'Erreur de récupération des associations en attente'
@@ -249,9 +244,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch('/api/volunteer/getAssociations', {
+                const response = await $fetch(`/api/association/by-volunteer/${user?.userId}`, {
                     method: 'GET',
-                    query: { volunteerId: user?.userId },
+                    credentials: 'include',
                 })
 
                 await this.getVolunteerInfo();
@@ -268,9 +263,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch('/api/volunteer/getVolunteerAnnouncements', {
+                const response = await $fetch<Announcement[]>(`/api/announcements/volunteer/${volunteerId}`, {
                     method: 'GET',
-                    query: { volunteerId },
+                    credentials: 'include',
                 })
 
                 return response as Announcement[]
@@ -286,9 +281,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch('/api/volunteer/getParticipantAnnouncement', {
+                const response = await $fetch(`/api/announcements/participant/${volunteerId}`, {
                     method: 'GET',
-                    query: { volunteerId },
+                    credentials: 'include',
                 })
 
                 return response as Announcement[]
@@ -303,9 +298,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch('/api/volunteer/getPastVolunteerAnnouncement', {
+                const response = await $fetch(`/api/announcements/participant/past/${volunteerId}`, {
                     method: 'GET',
-                    query: { volunteerId },
+                    credentials: 'include',
                 })
 
                 return response as Announcement[]
@@ -321,12 +316,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const data =  await $fetch('/api/volunteer/remove', {
+                const data =  await $fetch(`/api/volunteer/${this.volunteer?.volunteerId}`, {
                     method: 'DELETE',
-                    query: { id: this.volunteer?.volunteerId },
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    credentials: 'include',
                 })
 
                 if (this.volunteer?.volunteerId) {

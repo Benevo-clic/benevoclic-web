@@ -153,7 +153,7 @@ function toggleLanguageMenu() {
     </nav>
 
     <!-- Footer avec authentification - Footer fixe -->
-    <div class="p-6 border-t border-base-300 bg-base-100/50 backdrop-blur-sm flex-shrink-0">
+    <div class="p-6 border-t border-base-300 bg-base-100/50 backdrop-blur-sm flex-shrink-0 mb-20">
       <div class="space-y-3">
         <HeaderAuthModalAuth />
       </div>

@@ -11,13 +11,11 @@ import {ApiError} from "~/utils/ErrorHandler";
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
-    // 1️⃣ Récupère le token
     const token = getCookie(event, 'auth_token')
     if (!token) {
         throw createError({ statusCode: 401, statusMessage: 'Token manquant' })
     }
 
-    // 2️⃣ Récupère l’ID depuis le path param
     const { id } = event.context.params as { id?: string }
     if (!id) {
         throw createError({
@@ -28,7 +26,6 @@ export default defineEventHandler(async (event) => {
     }
 
     try {
-        // 3️⃣ Appel DELETE à NestJS
         const { data: removeData } = await axios.delete<{ volunteerId: string }>(
             `${config.private.api_base_url}/volunteer/${id}`,
             {
@@ -38,9 +35,7 @@ export default defineEventHandler(async (event) => {
             }
         )
 
-        // 4️⃣ On nettoie les cookies et on renvoie le succès
         deleteCookies(event)
-        console.log('Volunteer removed successfully:', removeData.volunteerId)
         return {
             message: 'Volunteer removed successfully',
             data:    removeData.volunteerId

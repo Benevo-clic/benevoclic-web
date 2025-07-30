@@ -79,11 +79,12 @@ export const useAuthStore = defineStore('auth', {
         }
 
         const encodedPassword = encodePasswordBase64(payload.password)
-        const response = await $fetch('/api/auth/login', {
+        const response = await $fetch('/api/user/login', {
           method: 'POST',
+          credentials: 'include',
           body: {
             email: payload.email,
-            password: encodedPassword,
+            password: payload.password,
             role: payload.role,
           },
         })
@@ -152,8 +153,6 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async getPageRole() {
-      const userStore = useUserStore()
-      
       try {
         const userStore = useUserStore()
         await userStore.fetchUser()
@@ -194,6 +193,7 @@ export const useAuthStore = defineStore('auth', {
         const encodedPassword = encodePasswordBase64(payload.password)
         await $fetch('/api/auth/registerEmailVerified', {
           method: 'POST',
+          credentials: 'include',
           body: {
             email: payload.email,
             password: encodedPassword,
@@ -280,8 +280,9 @@ export const useAuthStore = defineStore('auth', {
     },
     async callRegisterEmailVerified(payload: RegisterPayload) {
       try {
-        await $fetch<RegisterEmailVerifiedResponse>(`/api/auth/registerEmailVerified`, {
+        await $fetch<RegisterEmailVerifiedResponse>(`/api/user/register-user-verified`, {
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -400,19 +401,19 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    // Appel pour enregistrer un utilisateur Google
     async callRegisterGoogle(idToken: string, role: RoleUser) {
-      await $fetch('/api/auth/google/registerGoogle', {
+      await $fetch('/api/user/register-google', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: { idToken, role },
       })
     },
 
-    // Met à jour le statut utilisateur Google
     async fetchUserGoogle(body: { idToken: string; refreshToken: string; uid: string }) {
-      await $fetch('/api/auth/google/updateStatusUser', {
+      await $fetch(`/api/user/${body.uid}/update-connected/${true}`, {
         method: 'PATCH',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body,
       })
@@ -421,8 +422,9 @@ export const useAuthStore = defineStore('auth', {
     async deleteCookies() {
       try {
         await $fetch('/api/auth/deleteCookies', {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
+          method: 'DELETE',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
         })
         this.idToken = null
         this.refreshToken = null
@@ -448,7 +450,7 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true
       this.error = null
       try {
-        await $fetch('/api/auth/logout', { method: 'POST' })
+        await $fetch('/api/user/logout', { method: 'POST', credentials: 'include' })
         await this.deleteCookies()
       } catch (e: any) {
         this.error = e?.data?.message || 'Erreur de déconnexion'
@@ -458,11 +460,13 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    // Refresh token
     async refreshTokens() {
       try {
         this.error = null
-        await $fetch('/api/auth/refresh', { method: 'POST' })
+        await $fetch('/api/user/refresh',
+            { method: 'POST',
+                      credentials: 'include'
+            })
         this.hydrate()
       } catch (error: any) {
         this.error = error?.message || 'Erreur de rafraîchissement du token'

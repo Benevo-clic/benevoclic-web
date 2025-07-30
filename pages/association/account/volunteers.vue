@@ -92,7 +92,6 @@ async function initData(){
   if (!useAssociation.association.value?.associationId) {
     await useAssociation.getAssociationInfo()
   } else {
-    // Si déjà en cache, on met à jour volunteers
     volunteers.value = useAssociation.association.value?.volunteers || []
     associationId.value = useAssociation.association.value.associationId || null
   }

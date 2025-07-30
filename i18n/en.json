@@ -13,6 +13,16 @@
       "error": {
         "invalid_credentials": "Your email address or password is incorrect.",
         "account_locked": "Your account is locked. Please contact support."
+      },
+      "siret": {
+        "title": "Verify SIRET Number",
+        "description": "For associations, please enter your SIRET number to validate your account",
+        "placeholder": "Enter your SIRET number",
+        "error": {
+          "invalid_format": "The SIRET number must contain 14 digits.",
+          "not_found": "The SIRET number does not exist."
+        },
+        "success": "Numéro SIRET validé avec succès !"
       }
     },
     "verification": {
