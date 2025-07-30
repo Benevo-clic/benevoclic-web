@@ -13,6 +13,16 @@
       "error": {
         "invalid_credentials": "Tu correo electrónico o contraseña son incorrectos.",
         "account_locked": "Tu cuenta está bloqueada. Por favor, contacta con el soporte."
+      },
+      "siret":{
+        "title": "Número SIRET requerido",
+        "description": "Por favor, proporciona tu número SIRET para continuar.",
+        "placeholder": "Introduce tu número SIRET",
+        "error": {
+          "invalid_format": "El número SIRET debe contener 14 dígitos.",
+          "not_found": "No se encontró ninguna asociación con este número SIRET."
+        },
+        "success": "Número SIRET verificado correctamente",
       }
     },
     "verification": {

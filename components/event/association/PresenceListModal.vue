@@ -134,11 +134,9 @@ const activeTab = ref<'participants' | 'volunteers'>('participants');
 const searchQuery = ref('');
 const announcement = useAnnouncement();
 
-// Create local copies of the participants and volunteers arrays
 const localParticipants = ref<InfoVolunteer[]>([]);
 const localVolunteers = ref<InfoVolunteer[]>([]);
 
-// Initialize local copies when props change
 watch(() => props.participants, (newParticipants) => {
   if (newParticipants) {
     localParticipants.value = JSON.parse(JSON.stringify(newParticipants));

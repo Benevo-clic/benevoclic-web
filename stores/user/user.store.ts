@@ -238,6 +238,7 @@ export const useUserStore = defineStore('user', {
                 method: 'PATCH',
                 credentials: 'include',
                 body: formData,
+
               }
           )
 

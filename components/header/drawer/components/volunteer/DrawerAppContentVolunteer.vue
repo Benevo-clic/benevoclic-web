@@ -355,7 +355,7 @@ function toggleLanguageMenu() {
     </nav>
 
     <!-- Footer avec bouton logout moderne - Footer fixe -->
-    <div class="p-6 border-t border-base-300 bg-base-100/50 backdrop-blur-sm flex-shrink-0">
+    <div class="p-6 border-t border-base-300 bg-base-100/50 backdrop-blur-sm flex-shrink-0 mb-20">
       <button
         @click="handleLogout"
         class="btn btn-primary w-full rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"

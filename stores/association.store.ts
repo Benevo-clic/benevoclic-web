@@ -47,7 +47,6 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
                 })
 
                 return response as ApiResponseSubset
-
             } catch (err: any) {
                 this.error = err?.message || 'Erreur de récupération des informations'
                 throw err
@@ -89,7 +88,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch<AssociationInfo>('/api/association/create', {
+                const response = await $fetch<AssociationInfo>('/api/association/createAssociation', {
                     method: 'POST',
                     credentials: 'include',
                     body: payload,

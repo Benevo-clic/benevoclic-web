@@ -56,10 +56,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch<VolunteerInfo>('/api/volunteer', {
+                const response = await $fetch<VolunteerInfo>(`/api/volunteer/${user?.userId}`, {
                     method: 'GET',
                     credentials: 'include',
-                    query: { userId: user?.userId },
                 })
                 if(response) {
                     this.volunteer = response
@@ -147,12 +146,9 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch(`/api/association/volunteerWaiting/${associationId}/${user?.userId}`, {
+                const response = await $fetch(`/api/association/volunteer-waiting/remove/${associationId}/${user?.userId}`, {
                     method: 'PATCH',
                     credentials: 'include',
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
                 })
 
                 await this.getVolunteerInfo();
@@ -171,10 +167,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                 const response = await $fetch(`/api/association/volunteer-waiting/register/${associationId}`, {
                     method: 'PATCH',
                     credentials: 'include',
-                    body: { volunteerId: volunteer.id, volunteerName: volunteer.name },
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
                 })
 
                 await this.getVolunteerInfo();
@@ -271,7 +263,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch(`/api/volunteer/announcements/${volunteerId}`, {
+                const response = await $fetch<Announcement[]>(`/api/announcements/volunteer/${volunteerId}`, {
                     method: 'GET',
                     credentials: 'include',
                 })
@@ -289,7 +281,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch(`/api/volunteer/participant/${volunteerId}`, {
+                const response = await $fetch(`/api/announcements/participant/${volunteerId}`, {
                     method: 'GET',
                     credentials: 'include',
                 })
@@ -306,7 +298,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             this.loading = true
             this.error = null
             try {
-                const response = await $fetch(`/api/volunteer/past/${volunteerId}`, {
+                const response = await $fetch(`/api/announcements/participant/past/${volunteerId}`, {
                     method: 'GET',
                     credentials: 'include',
                 })
@@ -327,10 +319,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
                 const data =  await $fetch(`/api/volunteer/${this.volunteer?.volunteerId}`, {
                     method: 'DELETE',
                     credentials: 'include',
-                    query: { id: this.volunteer?.volunteerId },
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
                 })
 
                 if (this.volunteer?.volunteerId) {

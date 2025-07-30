@@ -46,7 +46,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
             };
         },
 
-        getCache<T>(key: string): T | null {
+        getCacheState<T>(key: string): T | null {
             if (this.isCacheValid(key)) {
                 return this.cache[key].data as T;
             }
@@ -74,7 +74,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
         // API calls with cache
         async fetchFavorites(volunteerId: string, announcementId: string) {
             const cacheKey = `favorites_${volunteerId}_${announcementId}`;
-            const cached = this.getCache<FavoritesAnnouncement[]>(cacheKey);
+            const cached = this.getCacheState<FavoritesAnnouncement[]>(cacheKey);
             
             if (cached) {
                 this.favorites = cached;
@@ -106,7 +106,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
 
         async fetchAllFavoritesOfVolunteer(volunteerId: string) {
             const cacheKey = `favorites_volunteer_${volunteerId}`;
-            const cached = this.getCache<FavoritesAnnouncement[]>(cacheKey);
+            const cached = this.getCacheState<FavoritesAnnouncement[]>(cacheKey);
             
             if (cached) {
                 this.favorites = cached;
@@ -138,7 +138,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
 
         async fetchFavoriteVolunteerByVolunteerId(volunteerId: string) {
             const cacheKey = `favorites_announcements_volunteer_${volunteerId}`;
-            const cached = this.getCache<Announcement[]>(cacheKey);
+            const cached = this.getCacheState<Announcement[]>(cacheKey);
             
             if (cached) {
                 this.favoritesAnnouncementsVolunteer = cached;
@@ -170,7 +170,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
 
         async fetchAllFavorites() {
             const cacheKey = 'favorites_all';
-            const cached = this.getCache<FavoritesAnnouncement[]>(cacheKey);
+            const cached = this.getCacheState<FavoritesAnnouncement[]>(cacheKey);
             
             if (cached) {
                 this.favorites = cached;
@@ -202,7 +202,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
 
         async fetchFavoritesByAnnouncementId(announcementId: string) {
             const cacheKey = `favorites_announcement_${announcementId}`;
-            const cached = this.getCache<FavoritesAnnouncement[]>(cacheKey);
+            const cached = this.getCacheState<FavoritesAnnouncement[]>(cacheKey);
             
             if (cached) {
                 this.favorites = cached;

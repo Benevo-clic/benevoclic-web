@@ -20,8 +20,6 @@ export default defineEventHandler(async (event) => {
     const refreshToken = getCookie(event, 'refresh_token')
 
     try {
-
-        console.log('Refreshing token...', refreshToken)
         if(!refreshToken) {
             return
         }

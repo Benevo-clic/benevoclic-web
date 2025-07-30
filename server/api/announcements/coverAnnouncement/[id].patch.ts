@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
 
     try {
         // 5️⃣ Proxy PATCH vers ton backend NestJS
-        const url = `${config.private.api_base_url}/announcements/cover-announcement/${announcementId}`
+        const url = `${config.private.api_base_url}/announcements/coverAnnouncement/${announcementId}`
 
         const {data: announcement} = await axios.patch(
             url,

@@ -13,6 +13,16 @@
       "error": {
         "invalid_credentials": "Votre adresse e-mail ou votre mot de passe est incorrect.",
         "account_locked": "Votre compte est verrouillé. Veuillez contacter le support."
+      },
+      "siret": {
+        "title": "Vérification SIRET",
+        "description": "Pour les associations, veuillez entrer votre numéro SIRET pour valider votre compte.",
+        "placeholder": "Entrez votre numéro SIRET",
+        "error": {
+          "invalid_format": "Le format du numéro SIRET est invalide.",
+          "not_found": "Aucune association trouvée avec ce numéro SIRET."
+        },
+        "success": "Numéro SIRET validé avec succès !"
       }
     },
     "verification": {
