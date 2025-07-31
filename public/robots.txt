@@ -5,14 +5,17 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 Disallow: /auth/
-Disallow: /_nuxt/
-Disallow: /.nuxt/
-Disallow: /user/
-Disallow: /volunteer/account/
 Disallow: /association/account/
+Disallow: /volunteer/account/
+Disallow: /notifications/
+
+# Fichiers à exclure
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /_nuxt/
 
 # Sitemap
-Sitemap: https://benevoclic.app/sitemap.xml
+Sitemap: https://www.benevoclic.fr/sitemap.xml
 
-# Crawl-delay pour éviter de surcharger le serveur
+# Crawl-delay pour éviter la surcharge
 Crawl-delay: 1 

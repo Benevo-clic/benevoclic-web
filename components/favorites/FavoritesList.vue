@@ -9,14 +9,14 @@
             type="text" 
             placeholder="Search favorites..." 
             class="input input-bordered w-full" 
-          />
+          aria-label="Champ de saisie">
           <button class="btn btn-square">
             <Search class="w-5 h-5" />
           </button>
         </div>
       </div>
       
-      <select v-model="filterType" class="select select-bordered">
+      <select v-model="filterType" class="select select-bordered" aria-label="Sélection">
         <option value="all">All Favorites</option>
         <option value="missions">Missions</option>
         <option value="organizations">Organizations</option>
@@ -62,10 +62,8 @@
           <p class="text-base-content mt-2">{{ favorite.description }}</p>
           
           <div class="card-actions justify-end mt-4">
-            <button class="btn btn-sm btn-outline">
-              {{ favorite.type === 'mission' ? 'View Details' : 'View Profile' }}
-            </button>
-            <button v-if="favorite.type === 'mission'" class="btn btn-sm btn-primary">Apply</button>
+            <button class="btn btn-sm btn-outline" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>{{ favorite.type === 'mission' ? 'View Details' : 'View Profile' }}</button>
+            <button v-if="favorite.type === 'mission'" class="btn btn-sm btn-primary" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Apply</button>
           </div>
         </div>
       </div>

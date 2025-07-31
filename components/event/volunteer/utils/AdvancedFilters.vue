@@ -137,13 +137,13 @@ function disableAdvancedFilters() {
                         <label class="label">
                           <span class="label-text text-sm">Du:</span>
                         </label>
-                        <input type="date" v-model="localFilters.dateEventFrom" class="input input-bordered input-sm w-full" />
+                        <input type="date" v-model="localFilters.dateEventFrom" class="input input-bordered input-sm w-full" aria-label="Champ de saisie">
                       </div>
                       <div>
                         <label class="label">
                           <span class="label-text text-sm">Au:</span>
                         </label>
-                        <input type="date" v-model="localFilters.dateEventTo" class="input input-bordered input-sm w-full" />
+                        <input type="date" v-model="localFilters.dateEventTo" class="input input-bordered input-sm w-full" aria-label="Champ de saisie">
                       </div>
                     </div>
                   </div>
@@ -158,13 +158,13 @@ function disableAdvancedFilters() {
                         <label class="label">
                           <span class="label-text text-sm">De:</span>
                         </label>
-                        <input type="time" v-model="localFilters.hoursEventFrom" class="input input-bordered input-sm w-full" />
+                        <input type="time" v-model="localFilters.hoursEventFrom" class="input input-bordered input-sm w-full" aria-label="Champ de saisie">
                       </div>
                       <div>
                         <label class="label">
                           <span class="label-text text-sm">À:</span>
                         </label>
-                        <input type="time" v-model="localFilters.hoursEventTo" class="input input-bordered input-sm w-full" />
+                        <input type="time" v-model="localFilters.hoursEventTo" class="input input-bordered input-sm w-full" aria-label="Champ de saisie">
                       </div>
                     </div>
                   </div>
@@ -179,13 +179,13 @@ function disableAdvancedFilters() {
                         <label class="label">
                           <span class="label-text text-sm">Du:</span>
                         </label>
-                        <input type="date" v-model="localFilters.datePublicationFrom" class="input input-bordered input-sm w-full" />
+                        <input type="date" v-model="localFilters.datePublicationFrom" class="input input-bordered input-sm w-full" aria-label="Champ de saisie">
                       </div>
                       <div>
                         <label class="label">
                           <span class="label-text text-sm">Au:</span>
                         </label>
-                        <input type="date" v-model="localFilters.datePublicationTo" class="input input-bordered input-sm w-full" />
+                        <input type="date" v-model="localFilters.datePublicationTo" class="input input-bordered input-sm w-full" aria-label="Champ de saisie">
                       </div>
                     </div>
                   </div>
@@ -195,7 +195,7 @@ function disableAdvancedFilters() {
                 <div class="card bg-base-200 shadow-sm">
                   <div class="card-body p-4">
                     <h4 class="font-medium mb-3">Intervalle de publication</h4>
-                    <select v-model="localFilters.publicationInterval" class="select select-bordered select-sm w-full">
+                    <select v-model="localFilters.publicationInterval" class="select select-bordered select-sm w-full" aria-label="Sélection">
                       <option value="">Tous</option>
                       <option value="1h">Dernière heure</option>
                       <option value="5h">5 dernières heures</option>

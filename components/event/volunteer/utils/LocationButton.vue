@@ -34,7 +34,7 @@
                 placeholder="Rechercher une ville..."
                 class="input input-bordered w-full pl-10"
                 @input="searchLocation"
-            />
+            aria-label="Champ de saisie">
           </div>
         </div>
 
@@ -102,7 +102,7 @@
                     :checked="useCurrentLocation"
                     @change="toggleCurrentLocation"
                     class="radio radio-primary radio-sm"
-                />
+                aria-label="Champ de saisie">
                 <div class="flex-1">
                   <div class="font-medium text-sm">Ma position actuelle</div>
                   <div class="text-xs text-base-content/70">{{ userCurrentLocation.city || 'Position détectée' }}</div>
@@ -144,7 +144,7 @@
                 v-model.number="locationRadius"
                 class="range range-sm range-primary w-full"
                 @input="updateLocationFilter"
-            />
+            aria-label="Champ de saisie">
             <div class="flex justify-between text-xs text-base-content/50">
               <span>0 km</span>
               <span>200 km</span>

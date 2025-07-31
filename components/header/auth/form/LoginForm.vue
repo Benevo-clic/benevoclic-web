@@ -205,9 +205,7 @@ async function handleForgotPassword(email: string) {
       <div>
         <h4 class="font-bold">Cookies essentiels requis</h4>
         <p class="text-sm">Vous devez accepter les cookies essentiels pour vous connecter.</p>
-        <button @click="openCookieSettings" class="btn btn-primary btn-xs mt-2">
-          Paramétrer les cookies
-        </button>
+        <button @click="openCookieSettings" class="btn btn-primary btn-xs mt-2" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Paramétrer les cookies</button>
       </div>
     </div>
 
@@ -234,7 +232,7 @@ async function handleForgotPassword(email: string) {
         v-model="isAssociation"
         @change="handleCheckboxChange"
         class="toggle border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400"
-    />
+    aria-label="Champ de saisie">
 
     <!-- Forms dynamiques -->
     <UsersLoginForm
@@ -265,7 +263,7 @@ async function handleForgotPassword(email: string) {
           type="checkbox" 
           v-model="termsAccepted"
           class="checkbox checkbox-primary checkbox-sm" 
-        />
+        aria-label="Champ de saisie">
         <span class="label-text text-sm">
           J'accepte les 
           <a href="/mentions-legales" target="_blank" class="text-primary hover:underline">
@@ -298,9 +296,7 @@ async function handleForgotPassword(email: string) {
     <p class="text-center text-sm text-gray-600 mt-4">
       <span v-if="isRegisterMode">{{t('auth.register.already_have_account')}}</span>
       <span v-else>{{t('auth.login.no_account')}} </span>
-      <button class="text-primary hover:underline" @click="toggleRegisterMode">
-        {{ isRegisterMode ? t('auth.login.title') : t('auth.login.register') }}
-      </button>
+      <button class="text-primary hover:underline" @click="toggleRegisterMode" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>{{ isRegisterMode ? t('auth.login.title') : t('auth.login.register') }}</button>
     </p>
 
     <!-- Version mobile -->
@@ -313,9 +309,7 @@ async function handleForgotPassword(email: string) {
           @click="toggleUserType"
           class="text-base sm:text-lg text-primary hover:underline mt-1"
           v-if="isAssociation"
-      >
-        {{t('auth.register.association_register')}}
-      </button>
+       type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>{{t('auth.register.association_register')}}</button>
       <button
           @click="toggleUserType"
           class="text-base sm:text-lg  mt-1"

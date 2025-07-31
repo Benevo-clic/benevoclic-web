@@ -1,0 +1,379 @@
+/* Styles forcés pour DaisyUI */
+
+/* Boutons primaires */
+.btn-primary {
+  @apply bg-primary text-primary-content border-primary;
+}
+
+.btn-primary:hover {
+  @apply bg-primary/80 text-primary-content border-primary/80 !important;
+}
+
+.btn-primary:focus {
+  @apply bg-primary text-primary-content border-primary ring-2 ring-primary/20 !important;
+}
+
+.btn-primary:active {
+  @apply bg-primary/90 text-primary-content border-primary/90 !important;
+}
+
+/* Boutons secondaires */
+.btn-secondary {
+  @apply bg-secondary text-secondary-content border-secondary;
+}
+
+.btn-secondary:hover {
+  @apply bg-secondary/80 text-secondary-content border-secondary/80 !important;
+}
+
+.btn-secondary:focus {
+  @apply bg-secondary text-secondary-content border-secondary ring-2 ring-secondary/20 !important;
+}
+
+.btn-secondary:active {
+  @apply bg-secondary/90 text-secondary-content border-secondary/90 !important;
+}
+
+/* Boutons d'accent */
+.btn-accent {
+  @apply bg-accent text-accent-content border-accent;
+}
+
+.btn-accent:hover {
+  @apply bg-accent/80 text-accent-content border-accent/80 !important;
+}
+
+.btn-accent:focus {
+  @apply bg-accent text-accent-content border-accent ring-2 ring-accent/20 !important;
+}
+
+.btn-accent:active {
+  @apply bg-accent/90 text-accent-content border-accent/90 !important;
+}
+
+/* Boutons neutres */
+.btn-neutral {
+  @apply bg-neutral text-neutral-content border-neutral;
+}
+
+.btn-neutral:hover {
+  @apply bg-neutral/80 text-neutral-content border-neutral/80 !important;
+}
+
+.btn-neutral:focus {
+  @apply bg-neutral text-neutral-content border-neutral ring-2 ring-neutral/20 !important;
+}
+
+.btn-neutral:active {
+  @apply bg-neutral/90 text-neutral-content border-neutral/90 !important;
+}
+
+/* Boutons d'information */
+.btn-info {
+  @apply bg-info text-info-content border-info;
+}
+
+.btn-info:hover {
+  @apply bg-info/80 text-info-content border-info/80 !important;
+}
+
+.btn-info:focus {
+  @apply bg-info text-info-content border-info ring-2 ring-info/20 !important;
+}
+
+.btn-info:active {
+  @apply bg-info/90 text-info-content border-info/90 !important;
+}
+
+/* Boutons de succès */
+.btn-success {
+  @apply bg-success text-success-content border-success;
+}
+
+.btn-success:hover {
+  @apply bg-success/80 text-success-content border-success/80 !important;
+}
+
+.btn-success:focus {
+  @apply bg-success text-success-content border-success ring-2 ring-success/20 !important;
+}
+
+.btn-success:active {
+  @apply bg-success/90 text-success-content border-success/90 !important;
+}
+
+/* Boutons d'avertissement */
+.btn-warning {
+  @apply bg-warning text-warning-content border-warning;
+}
+
+.btn-warning:hover {
+  @apply bg-warning/80 text-warning-content border-warning/80 !important;
+}
+
+.btn-warning:focus {
+  @apply bg-warning text-warning-content border-warning ring-2 ring-warning/20 !important;
+}
+
+.btn-warning:active {
+  @apply bg-warning/90 text-warning-content border-warning/90 !important;
+}
+
+/* Boutons d'erreur */
+.btn-error {
+  @apply bg-error text-error-content border-error;
+}
+
+.btn-error:hover {
+  @apply bg-error/80 text-error-content border-error/80 !important;
+}
+
+.btn-error:focus {
+  @apply bg-error text-error-content border-error ring-2 ring-error/20 !important;
+}
+
+.btn-error:active {
+  @apply bg-error/90 text-error-content border-error/90 !important;
+}
+
+/* Boutons fantômes */
+.btn-ghost {
+  @apply bg-transparent text-base-content border-transparent;
+}
+
+.btn-ghost:hover {
+  @apply bg-base-200 text-base-content border-base-200 !important;
+}
+
+.btn-ghost:focus {
+  @apply bg-base-200 text-base-content border-base-200 ring-2 ring-base-300 !important;
+}
+
+.btn-ghost:active {
+  @apply bg-base-300 text-base-content border-base-300 !important;
+}
+
+/* Boutons de lien */
+.btn-link {
+  @apply bg-transparent text-primary border-transparent underline;
+}
+
+.btn-link:hover {
+  @apply bg-transparent text-primary/80 border-transparent !important;
+}
+
+.btn-link:focus {
+  @apply bg-transparent text-primary border-transparent ring-2 ring-primary/20 !important;
+}
+
+.btn-link:active {
+  @apply bg-transparent text-primary/90 border-transparent !important;
+}
+
+/* Boutons outline */
+.btn-outline {
+  @apply bg-transparent text-base-content border-base-content;
+}
+
+.btn-outline:hover {
+  @apply bg-base-content text-base-100 border-base-content !important;
+}
+
+.btn-outline:focus {
+  @apply bg-base-content text-base-100 border-base-content ring-2 ring-base-content/20 !important;
+}
+
+.btn-outline:active {
+  @apply bg-base-content/90 text-base-100 border-base-content/90 !important;
+}
+
+/* États désactivés */
+.btn:disabled,
+.btn[disabled] {
+  @apply opacity-50 cursor-not-allowed !important;
+}
+
+/* Tailles de boutons */
+.btn-xs {
+  @apply h-6 min-h-6 px-2 text-xs;
+}
+
+.btn-sm {
+  @apply h-8 min-h-8 px-3 text-sm;
+}
+
+.btn {
+  @apply h-10 min-h-10 px-4 text-base;
+}
+
+.btn-lg {
+  @apply h-12 min-h-12 px-6 text-lg;
+}
+
+.btn-wide {
+  @apply w-full;
+}
+
+.btn-block {
+  @apply w-full;
+}
+
+.btn-circle {
+  @apply w-10 h-10 rounded-full p-0;
+}
+
+.btn-circle.btn-xs {
+  @apply w-6 h-6;
+}
+
+.btn-circle.btn-sm {
+  @apply w-8 h-8;
+}
+
+.btn-circle.btn-lg {
+  @apply w-12 h-12;
+}
+
+/* Loading state */
+.btn.loading {
+  @apply pointer-events-none;
+}
+
+.btn.loading::before {
+  @apply w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin;
+}
+
+/* Formulaires */
+.input {
+  @apply bg-base-100 text-base-content border-base-300;
+}
+
+.input:focus {
+  @apply border-primary ring-2 ring-primary/20;
+}
+
+.input.input-bordered {
+  @apply border-base-300;
+}
+
+.input.input-ghost {
+  @apply border-transparent bg-transparent;
+}
+
+.input.input-primary {
+  @apply border-primary;
+}
+
+.input.input-secondary {
+  @apply border-secondary;
+}
+
+.input.input-accent {
+  @apply border-accent;
+}
+
+.input.input-info {
+  @apply border-info;
+}
+
+.input.input-success {
+  @apply border-success;
+}
+
+.input.input-warning {
+  @apply border-warning;
+}
+
+.input.input-error {
+  @apply border-error;
+}
+
+/* Textarea */
+.textarea {
+  @apply bg-base-100 text-base-content border-base-300;
+}
+
+.textarea:focus {
+  @apply border-primary ring-2 ring-primary/20;
+}
+
+.textarea.textarea-bordered {
+  @apply border-base-300;
+}
+
+.textarea.textarea-ghost {
+  @apply border-transparent bg-transparent;
+}
+
+.textarea.textarea-primary {
+  @apply border-primary;
+}
+
+.textarea.textarea-secondary {
+  @apply border-secondary;
+}
+
+.textarea.textarea-accent {
+  @apply border-accent;
+}
+
+.textarea.textarea-info {
+  @apply border-info;
+}
+
+.textarea.textarea-success {
+  @apply border-success;
+}
+
+.textarea.textarea-warning {
+  @apply border-warning;
+}
+
+.textarea.textarea-error {
+  @apply border-error;
+}
+
+/* Select */
+.select {
+  @apply bg-base-100 text-base-content border-base-300;
+}
+
+.select:focus {
+  @apply border-primary ring-2 ring-primary/20;
+}
+
+.select.select-bordered {
+  @apply border-base-300;
+}
+
+.select.select-ghost {
+  @apply border-transparent bg-transparent;
+}
+
+.select.select-primary {
+  @apply border-primary;
+}
+
+.select.select-secondary {
+  @apply border-secondary;
+}
+
+.select.select-accent {
+  @apply border-accent;
+}
+
+.select.select-info {
+  @apply border-info;
+}
+
+.select.select-success {
+  @apply border-success;
+}
+
+.select.select-warning {
+  @apply border-warning;
+}
+
+.select.select-error {
+  @apply border-error;
+} 

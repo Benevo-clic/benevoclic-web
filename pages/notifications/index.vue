@@ -42,7 +42,7 @@
                     v-model="settings.email" 
                     class="toggle toggle-primary" 
                     @change="saveSettings"
-                  />
+                  aria-label="Champ de saisie">
                 </label>
               </div>
 
@@ -57,7 +57,7 @@
                     v-model="settings.push" 
                     class="toggle toggle-primary" 
                     @change="saveSettings"
-                  />
+                  aria-label="Champ de saisie">
                 </label>
               </div>
 
@@ -72,7 +72,7 @@
                     v-model="settings.missionUpdates" 
                     class="toggle toggle-primary" 
                     @change="saveSettings"
-                  />
+                  aria-label="Champ de saisie">
                 </label>
               </div>
 
@@ -87,7 +87,7 @@
                     v-model="settings.messages" 
                     class="toggle toggle-primary" 
                     @change="saveSettings"
-                  />
+                  aria-label="Champ de saisie">
                 </label>
               </div>
 
@@ -102,7 +102,7 @@
                     v-model="settings.achievements" 
                     class="toggle toggle-primary" 
                     @change="saveSettings"
-                  />
+                  aria-label="Champ de saisie">
                 </label>
               </div>
             </div>

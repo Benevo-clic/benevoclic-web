@@ -1,0 +1,153 @@
+{
+  "timestamp": "2025-07-31T11:08:57.005Z",
+  "testEvent": {
+    "title": "Collecte alimentaire solidaire",
+    "summary": "Un événement de test pour vérifier le SEO et les métadonnées. Cet événement aura lieu dans le centre-ville et réunira des bénévoles passionnés pour une cause importante.",
+    "description": "Un événement de test pour vérifier le SEO et les métadonnées. Cet événement aura lieu dans le centre-ville et réunira des bénévoles passionnés pour une cause importante.",
+    "startDate": "2024-02-20T14:00:00Z",
+    "path": "/volunteer/events/announcement/test-event-123",
+    "locationName": "Paris",
+    "city": "Paris",
+    "region": "France",
+    "address": "123 Rue de la Solidarité",
+    "associationName": "Solidarité Plus",
+    "associationUrl": "https://www.benevoclic.fr/association/assoc-456",
+    "imageUrl": "https://example.com/event-image.jpg"
+  },
+  "headConfig": {
+    "title": "Collecte alimentaire solidaire — Benevoclic",
+    "meta": [
+      {
+        "name": "description",
+        "content": "Un événement de test pour vérifier le SEO et les métadonnées. Cet événement aura lieu dans le centre-ville et réunira des bénévoles passionnés pour une cause..."
+      },
+      {
+        "property": "og:title",
+        "content": "Collecte alimentaire solidaire"
+      },
+      {
+        "property": "og:description",
+        "content": "Un événement de test pour vérifier le SEO et les métadonnées. Cet événement aura lieu dans le centre-ville et réunira des bénévoles passionnés pour une cause..."
+      },
+      {
+        "property": "og:image",
+        "content": "https://example.com/event-image.jpg"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.benevoclic.fr/volunteer/events/announcement/test-event-123"
+      },
+      {
+        "property": "og:type",
+        "content": "event"
+      },
+      {
+        "property": "og:site_name",
+        "content": "Benevoclic"
+      },
+      {
+        "property": "og:locale",
+        "content": "fr_FR"
+      },
+      {
+        "name": "twitter:card",
+        "content": "summary_large_image"
+      },
+      {
+        "name": "twitter:title",
+        "content": "Collecte alimentaire solidaire"
+      },
+      {
+        "name": "twitter:description",
+        "content": "Un événement de test pour vérifier le SEO et les métadonnées. Cet événement aura lieu dans le centre-ville et réunira des bénévoles passionnés pour une cause..."
+      },
+      {
+        "name": "twitter:image",
+        "content": "https://example.com/event-image.jpg"
+      },
+      {
+        "name": "twitter:site",
+        "content": "@benevoclic"
+      },
+      {
+        "name": "robots",
+        "content": "index, follow"
+      },
+      {
+        "name": "author",
+        "content": "Solidarité Plus"
+      },
+      {
+        "name": "keywords",
+        "content": "événement, Solidarité Plus, bénévolat, solidarité"
+      }
+    ],
+    "link": [
+      {
+        "rel": "canonical",
+        "href": "https://www.benevoclic.fr/volunteer/events/announcement/test-event-123"
+      },
+      {
+        "rel": "alternate",
+        "hreflang": "fr",
+        "href": "https://www.benevoclic.fr/volunteer/events/announcement/test-event-123"
+      }
+    ],
+    "script": [
+      {
+        "type": "application/ld+json",
+        "innerHTML": "{\"@context\":\"https://schema.org\",\"@type\":\"Event\",\"name\":\"Collecte alimentaire solidaire\",\"startDate\":\"2024-02-20T14:00:00.000Z\",\"description\":\"Un événement de test pour vérifier le SEO et les métadonnées. Cet événement aura lieu dans le centre-ville et réunira des bénévoles passionnés pour une cause importante.\",\"image\":[\"https://example.com/event-image.jpg\"],\"url\":\"https://www.benevoclic.fr/volunteer/events/announcement/test-event-123\",\"location\":{\"@type\":\"Place\",\"name\":\"Paris\",\"address\":{\"@type\":\"PostalAddress\",\"addressLocality\":\"Paris\",\"addressRegion\":\"France\",\"streetAddress\":\"123 Rue de la Solidarité\"}},\"organizer\":{\"@type\":\"Organization\",\"name\":\"Solidarité Plus\",\"url\":\"https://www.benevoclic.fr/association/assoc-456\"}}"
+      }
+    ]
+  },
+  "jsonLdSchema": {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "Collecte alimentaire solidaire",
+    "startDate": "2024-02-20T14:00:00.000Z",
+    "description": "Un événement de test pour vérifier le SEO et les métadonnées. Cet événement aura lieu dans le centre-ville et réunira des bénévoles passionnés pour une cause importante.",
+    "image": [
+      "https://example.com/event-image.jpg"
+    ],
+    "url": "https://www.benevoclic.fr/volunteer/events/announcement/test-event-123",
+    "location": {
+      "@type": "Place",
+      "name": "Paris",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Paris",
+        "addressRegion": "France",
+        "streetAddress": "123 Rue de la Solidarité"
+      }
+    },
+    "organizer": {
+      "@type": "Organization",
+      "name": "Solidarité Plus",
+      "url": "https://www.benevoclic.fr/association/assoc-456"
+    }
+  },
+  "validation": {
+    "issues": [],
+    "warnings": [],
+    "successes": [
+      "✅ Titre de page présent",
+      "✅ Meta description optimale",
+      "✅ Tag Open Graph présent: og:title",
+      "✅ Tag Open Graph présent: og:description",
+      "✅ Tag Open Graph présent: og:image",
+      "✅ Tag Open Graph présent: og:url",
+      "✅ Tag Open Graph présent: og:type",
+      "✅ Tag Twitter présent: twitter:card",
+      "✅ Tag Twitter présent: twitter:title",
+      "✅ Tag Twitter présent: twitter:description",
+      "✅ Tag Twitter présent: twitter:image",
+      "✅ URL canonique présente",
+      "✅ Type JSON-LD Event correct",
+      "✅ Nom de l'événement présent dans JSON-LD",
+      "✅ Date de début présente dans JSON-LD",
+      "✅ Localisation présente dans JSON-LD",
+      "✅ Organisateur présent dans JSON-LD"
+    ],
+    "score": 100
+  }
+}

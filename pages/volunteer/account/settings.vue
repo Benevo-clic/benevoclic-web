@@ -72,7 +72,7 @@
                       type="checkbox" 
                       v-model="settings.emailNotifications" 
                       class="toggle toggle-primary" 
-                    />
+                    aria-label="Champ de saisie">
                   </label>
                 </div>
 
@@ -86,7 +86,7 @@
                       type="checkbox" 
                       v-model="settings.pushNotifications" 
                       class="toggle toggle-primary" 
-                    />
+                    aria-label="Champ de saisie">
                   </label>
                 </div>
 
@@ -100,7 +100,7 @@
                       type="checkbox" 
                       v-model="settings.missionUpdates" 
                       class="toggle toggle-primary" 
-                    />
+                    aria-label="Champ de saisie">
                   </label>
                 </div>
 
@@ -114,7 +114,7 @@
                       type="checkbox" 
                       v-model="settings.achievements" 
                       class="toggle toggle-primary" 
-                    />
+                    aria-label="Champ de saisie">
                   </label>
                 </div>
               </div>
@@ -145,7 +145,7 @@
                       type="checkbox" 
                       v-model="settings.profileVisibility" 
                       class="toggle toggle-primary" 
-                    />
+                    aria-label="Champ de saisie">
                   </label>
                 </div>
 
@@ -159,7 +159,7 @@
                       type="checkbox" 
                       v-model="settings.locationSharing" 
                       class="toggle toggle-primary" 
-                    />
+                    aria-label="Champ de saisie">
                   </label>
                 </div>
 
@@ -173,7 +173,7 @@
                       type="checkbox" 
                       v-model="settings.activitySharing" 
                       class="toggle toggle-primary" 
-                    />
+                    aria-label="Champ de saisie">
                   </label>
                 </div>
               </div>
@@ -255,7 +255,7 @@
                       type="checkbox" 
                       v-model="settings.twoFactor" 
                       class="toggle toggle-primary" 
-                    />
+                    aria-label="Champ de saisie">
                   </label>
                 </div>
 
@@ -269,7 +269,7 @@
                       type="checkbox" 
                       v-model="settings.loginNotifications" 
                       class="toggle toggle-primary" 
-                    />
+                    aria-label="Champ de saisie">
                   </label>
                 </div>
               </div>
@@ -323,7 +323,7 @@
               class="input input-bordered"
               required
               :placeholder="$t('settings.password_change.old_password_placeholder')"
-            />
+            aria-label="Mot de passe">
           </div>
 
           <div class="form-control">
@@ -337,7 +337,7 @@
               required
               minlength="8"
               :placeholder="$t('settings.password_change.new_password_placeholder')"
-            />
+            aria-label="Mot de passe">
             <label class="label">
               <span class="label-text-alt text-base-content/50">{{ $t('settings.password_change.password_requirements') }}</span>
             </label>
@@ -353,7 +353,7 @@
               class="input input-bordered"
               required
               :placeholder="$t('settings.password_change.confirm_password_placeholder')"
-            />
+            aria-label="Mot de passe">
           </div>
 
           <div v-if="passwordError" class="alert alert-error">

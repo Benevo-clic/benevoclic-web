@@ -359,9 +359,7 @@ function toggleLanguageMenu() {
       <button
         @click="handleLogout"
         class="btn btn-primary w-full rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
-      >
-        {{ t('drawer-content.logout') }}
-      </button>
+       type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>{{ t('drawer-content.logout') }}</button>
     </div>
   </div>
 </template>

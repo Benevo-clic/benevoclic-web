@@ -33,7 +33,7 @@
                   type="checkbox"
                   :checked="filters.sort === sortOption.value"
                   class="checkbox checkbox-xs mr-2"
-              />
+              aria-label="Champ de saisie">
               {{ sortOption.label }}
             </a>
           </li>
@@ -53,7 +53,7 @@
                   type="checkbox"
                   :checked="filters.status === statusOption.value"
                   class="checkbox checkbox-xs mr-2"
-              />
+              aria-label="Champ de saisie">
               {{ statusOption.label }}
             </a>
           </li>

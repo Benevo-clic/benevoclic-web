@@ -7,7 +7,7 @@
     <div class="text-gray-500">{{ props.announcement.dateEvent }} à {{ props.announcement.hoursEvent }}</div>
     <div class="text-base-content">{{ props.announcement.description }}</div>
     <div class="flex flex-wrap gap-2 mt-2">
-      <span v-for="tag in props.announcement.tags" :key="tag" class="badge badge-outline">{{ tag }}</span>
+      <span v-for="tag in props.announcement.tags" :key="tag" class="badge badge-outline text-base-content border-base-content" :aria-label="`Tag: ${tag}`">{{ tag }}</span>
     </div>
     <div class="mt-2">
       <strong>Lieu :</strong> {{ props.announcement.addressAnnouncement?.city }}

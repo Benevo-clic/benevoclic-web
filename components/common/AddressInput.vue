@@ -103,7 +103,7 @@ const searchAddresses = async () => {
         placeholder="Rechercher une adresse..."
         class="search-input"
         type="text"
-    />
+    aria-label="Champ de saisie">
 
     <!-- Suggestions d'adresses -->
     <div v-if="showSuggestions && suggestions.length > 0" class="suggestions-container">

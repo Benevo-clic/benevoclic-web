@@ -79,7 +79,7 @@
                         type="checkbox"
                         :checked="filters.sort === sortOption.value"
                         class="checkbox checkbox-xs mr-2"
-                    />
+                    aria-label="Champ de saisie">
                     {{ sortOption.label }}
                   </a>
                 </li>
@@ -103,7 +103,7 @@
                         type="checkbox"
                         :checked="filters.status === statusOption.value"
                         class="checkbox checkbox-xs mr-2"
-                    />
+                    aria-label="Champ de saisie">
                     {{ statusOption.label }}
                   </a>
                 </li>
@@ -127,7 +127,7 @@
                 <ul class="menu p-2 text-sm">
                   <li v-for="tag in availableTags" :key="tag">
                     <a @click.stop="toggleTag(tag)">
-                      <input type="checkbox" :checked="selectedTags.includes(tag)" class="checkbox checkbox-xs mr-2" />
+                      <input type="checkbox" :checked="selectedTags.includes(tag)" class="checkbox checkbox-xs mr-2" aria-label="Champ de saisie">
                       {{ tag }}
                     </a>
                   </li>
@@ -254,7 +254,7 @@
                             type="radio"
                             :checked="filters.sort === sortOption.value"
                             class="radio radio-sm radio-primary"
-                          />
+                          aria-label="Champ de saisie">
                           <span class="text-sm">{{ sortOption.label }}</span>
                         </button>
                       </div>
@@ -298,7 +298,7 @@
                             type="radio"
                             :checked="filters.status === statusOption.value"
                             class="radio radio-sm radio-primary"
-                          />
+                          aria-label="Champ de saisie">
                           <span class="text-sm">{{ statusOption.label }}</span>
                         </button>
                       </div>
@@ -342,7 +342,7 @@
                             type="checkbox"
                             :checked="selectedTags.includes(tag)"
                             class="checkbox checkbox-sm checkbox-primary"
-                          />
+                          aria-label="Champ de saisie">
                           <span class="text-sm">{{ tag }}</span>
                         </button>
 

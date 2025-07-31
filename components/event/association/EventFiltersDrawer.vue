@@ -40,30 +40,30 @@ function handleValidate() {
         </button>
       </div>
       <div class="flex-1 overflow-y-auto p-4 space-y-4">
-        <input v-model="localFilters.search" type="text" placeholder="Recherche..." class="input input-bordered w-full" />
-        <input v-model="localFilters.tags" type="text" placeholder="Tags (virgules)" class="input input-bordered w-full" />
-        <select v-model="localFilters.status" class="select select-bordered w-full">
+        <input v-model="localFilters.search" type="text" placeholder="Recherche..." class="input input-bordered w-full" aria-label="Champ de saisie">
+        <input v-model="localFilters.tags" type="text" placeholder="Tags (virgules)" class="input input-bordered w-full" aria-label="Champ de saisie">
+        <select v-model="localFilters.status" class="select select-bordered w-full" aria-label="Sélection">
           <option value="">Tous statuts</option>
           <option value="PENDING">En attente</option>
           <option value="ACTIVE">Active</option>
           <option value="CLOSED">Clôturée</option>
         </select>
-        <input v-model="localFilters.city" type="text" placeholder="Ville" class="input input-bordered w-full" />
-        <input v-model="localFilters.postalCode" type="text" placeholder="Code postal" class="input input-bordered w-full" />
-        <select v-model="localFilters.associationType" class="select select-bordered w-full">
+        <input v-model="localFilters.city" type="text" placeholder="Ville" class="input input-bordered w-full" aria-label="Champ de saisie">
+        <input v-model="localFilters.postalCode" type="text" placeholder="Code postal" class="input input-bordered w-full" aria-label="Champ de saisie">
+        <select v-model="localFilters.associationType" class="select select-bordered w-full" aria-label="Sélection">
           <option value="">Tous types d'association</option>
           <option value="solidaire">Solidaire</option>
           <option value="sport">Sport</option>
           <option value="culture">Culture</option>
         </select>
         <label class="block text-sm mb-1">Date de début</label>
-        <input v-model="localFilters.dateStart" type="date" class="input input-bordered w-full" />
+        <input v-model="localFilters.dateStart" type="date" class="input input-bordered w-full" aria-label="Champ de saisie">
         <label class="block text-sm mb-1">Date de fin</label>
-        <input v-model="localFilters.dateEnd" type="date" class="input input-bordered w-full" />
+        <input v-model="localFilters.dateEnd" type="date" class="input input-bordered w-full" aria-label="Champ de saisie">
         <label class="block text-sm mb-1">Heure de début</label>
-        <input v-model="localFilters.timeStart" type="time" class="input input-bordered w-full" />
+        <input v-model="localFilters.timeStart" type="time" class="input input-bordered w-full" aria-label="Champ de saisie">
         <label class="block text-sm mb-1">Heure de fin</label>
-        <input v-model="localFilters.timeEnd" type="time" class="input input-bordered w-full" />
+        <input v-model="localFilters.timeEnd" type="time" class="input input-bordered w-full" aria-label="Champ de saisie">
       </div>
       <div class="p-4 flex gap-2">
         <button class="btn btn-primary flex-1" @click="handleValidate">Valider</button>

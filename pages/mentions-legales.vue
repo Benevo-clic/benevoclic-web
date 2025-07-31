@@ -18,7 +18,7 @@
         
         <div>
           <h3 class="text-lg font-medium">Contact</h3>
-          <p><a href="mailto:contact@benevoclic.app" class="text-primary hover:underline">contact@benevoclic.app</a></p>
+          <p><a href="mailto:contact@www.benevoclic.fr" class="text-primary hover:underline">contact@www.benevoclic.fr</a></p>
         </div>
         
         <div>
@@ -72,7 +72,7 @@
       
       <p>
         Pour toute question relative à l'application des présentes mentions légales, vous pouvez nous contacter à l'adresse email suivante :
-        <a href="mailto:contact@benevoclic.app" class="text-primary hover:underline">contact@benevoclic.app</a>
+        <a href="mailto:contact@www.benevoclic.fr" class="text-primary hover:underline">contact@www.benevoclic.fr</a>
       </p>
     </div>
   </div>

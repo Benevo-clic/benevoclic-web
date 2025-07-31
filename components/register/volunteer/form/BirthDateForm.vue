@@ -26,7 +26,7 @@ function onInput(e: Event) {
       type="date"
       class="input input-bordered w-full"
       :class="{ 'input-error': props.error }"
-    />
+    aria-label="Champ de saisie">
     <label v-if="props.error" class="label">
       <span class="label-text-alt text-error">{{ props.error }}</span>
     </label>

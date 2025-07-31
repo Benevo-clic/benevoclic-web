@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {ref, computed, onMounted} from 'vue'
-import StatCard from '~/components/dashboard/StatCard.vue'
 import DateRangePicker from '~/components/dashboard/DateRangePicker.vue'
 import TimeSeriesChart from '~/components/dashboard/TimeSeriesChart.vue'
 import PieChart from '~/components/dashboard/PieChart.vue'

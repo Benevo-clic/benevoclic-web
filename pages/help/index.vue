@@ -22,7 +22,7 @@
                 type="text" 
                 :placeholder="t('help.search_placeholder')" 
                 class="input input-bordered w-full pl-12 pr-4 py-4 text-lg"
-              />
+              aria-label="Champ de saisie">
               <Search class="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-base-content/50" />
             </div>
           </div>
@@ -68,7 +68,7 @@
                 :key="index"
                 class="collapse collapse-arrow bg-base-200 hover:bg-base-300 transition-colors"
               >
-                <input type="checkbox" /> 
+                <input type="checkbox" aria-label="Champ de saisie">
                 <div class="collapse-title text-base font-medium text-base-content">
                   {{ faq.question }}
                 </div>
@@ -96,7 +96,7 @@
                 :key="index"
                 class="collapse collapse-arrow bg-base-200 hover:bg-base-300 transition-colors"
               >
-                <input type="checkbox" /> 
+                <input type="checkbox" aria-label="Champ de saisie">
                 <div class="collapse-title text-base font-medium text-base-content">
                   {{ faq.question }}
                 </div>
@@ -124,7 +124,7 @@
                 :key="index"
                 class="collapse collapse-arrow bg-base-200 hover:bg-base-300 transition-colors"
               >
-                <input type="checkbox" /> 
+                <input type="checkbox" aria-label="Champ de saisie">
                 <div class="collapse-title text-base font-medium text-base-content">
                   {{ faq.question }}
                 </div>
@@ -152,7 +152,7 @@
                 :key="index"
                 class="collapse collapse-arrow bg-base-200 hover:bg-base-300 transition-colors"
               >
-                <input type="checkbox" /> 
+                <input type="checkbox" aria-label="Champ de saisie">
                 <div class="collapse-title text-base font-medium text-base-content">
                   {{ faq.question }}
                 </div>
@@ -180,7 +180,7 @@
                 :key="index"
                 class="collapse collapse-arrow bg-base-200 hover:bg-base-300 transition-colors"
               >
-                <input type="checkbox" /> 
+                <input type="checkbox" aria-label="Champ de saisie">
                 <div class="collapse-title text-base font-medium text-base-content">
                   {{ faq.question }}
                 </div>
@@ -211,7 +211,7 @@
                   :placeholder="t('help.contact.subject_placeholder')" 
                   class="input input-bordered w-full" 
                   required 
-                />
+                aria-label="Champ de saisie">
               </div>
               
               <div class="form-control">
@@ -220,7 +220,7 @@
                   :placeholder="t('help.contact.message_placeholder')" 
                   class="textarea textarea-bordered h-32" 
                   required
-                ></textarea>
+                 aria-label="Zone de texte"></textarea>
               </div>
               
               <button type="submit" class="btn btn-primary w-full" :disabled="submitting">

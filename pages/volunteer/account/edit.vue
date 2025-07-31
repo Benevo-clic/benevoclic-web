@@ -40,19 +40,19 @@
             <label class="label">
               <span class="label-text text-base-content">{{ t('auth.volunteer.first_name') }}</span>
             </label>
-            <input type="text" v-model="form.firstName" class="input input-bordered w-full" />
+            <input type="text" v-model="form.firstName" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
           <div class="form-control w-full">
             <label class="label">
               <span class="label-text text-base-content">{{ t('auth.volunteer.name') }}</span>
             </label>
-            <input type="text" v-model="form.lastName" class="input input-bordered w-full" />
+            <input type="text" v-model="form.lastName" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
           <div class="form-control w-full">
             <label class="label">
               <span class="label-text text-base-content">{{ t('auth.volunteer.birthdate') }}</span>
             </label>
-            <input type="date" v-model="form.birthDate" class="input input-bordered w-full" />
+            <input type="date" v-model="form.birthDate" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
         </div>
 
@@ -62,7 +62,7 @@
             <label class="label">
               <span class="label-text text-base-content">{{ t('auth.volunteer.phone') }}</span>
             </label>
-            <input type="tel" v-model="form.phone" class="input input-bordered w-full" />
+            <input type="tel" v-model="form.phone" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
         </div>
 
@@ -72,13 +72,13 @@
             <label class="label">
               <span class="label-text text-base-content">{{ t('auth.volunteer.city') }}</span>
             </label>
-            <input type="text" v-model="form.city" class="input input-bordered w-full" />
+            <input type="text" v-model="form.city" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
           <div class="form-control w-full">
             <label class="label">
               <span class="label-text text-base-content">{{ t('auth.volunteer.postal_code') }}</span>
             </label>
-            <input type="text" v-model="form.postalCode" class="input input-bordered w-full" />
+            <input type="text" v-model="form.postalCode" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
         </div>
 
@@ -88,7 +88,7 @@
             <label class="label">
               <span class="label-text text-base-content">{{ t('auth.volunteer.bio') }}</span>
             </label>
-            <textarea v-model="form.bio" class="textarea textarea-bordered h-24 w-full"></textarea>
+            <textarea v-model="form.bio" class="textarea textarea-bordered h-24 w-full" aria-label="Zone de texte"></textarea>
           </div>
         </div>
 

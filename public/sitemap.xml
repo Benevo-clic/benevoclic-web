@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Page d'accueil -->
   <url>
-    <loc>https://benevoclic.app/</loc>
+    <loc>https://www.benevoclic.fr/</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -10,28 +10,28 @@
   
   <!-- Pages publiques -->
   <url>
-    <loc>https://benevoclic.app/search</loc>
+    <loc>https://www.benevoclic.fr/search</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
-    <loc>https://benevoclic.app/help</loc>
+    <loc>https://www.benevoclic.fr/help</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://benevoclic.app/confidentialite</loc>
+    <loc>https://www.benevoclic.fr/confidentialite</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   
   <url>
-    <loc>https://benevoclic.app/mentions-legales</loc>
+    <loc>https://www.benevoclic.fr/mentions-legales</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -39,14 +39,14 @@
   
   <!-- Pages d'authentification -->
   <url>
-    <loc>https://benevoclic.app/auth/registerVolunteer</loc>
+    <loc>https://www.benevoclic.fr/auth/registerVolunteer</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   
   <url>
-    <loc>https://benevoclic.app/auth/registerAssociation</loc>
+    <loc>https://www.benevoclic.fr/auth/registerAssociation</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

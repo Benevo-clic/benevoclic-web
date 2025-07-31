@@ -1,51 +1,71 @@
 <script setup lang="ts">
-import Footer from './layouts/footer.vue';
 import CookieConsent from './components/CookieConsent.vue';
 
-// Configuration SEO globale
+const siteDescription = 'Benevoclic met en relation bénévoles, associations et personnes dans le besoin : publiez et découvrez des événements solidaires, trouvez des missions et mobilisez l’entraide.';
+
 useHead({
-  title: 'Benevoclic - Plateforme de bénévolat',
+  title: 'Benevoclic - Plateforme d’engagement solidaire',
   meta: [
-    { name: 'description', content: 'Connectez-vous avec des associations et participez à des missions de bénévolat' },
-    { name: 'keywords', content: 'bénévolat, association, volontariat, engagement, solidarité' },
-    { property: 'og:title', content: 'Benevoclic - Plateforme de bénévolat' },
-    { property: 'og:description', content: 'Connectez-vous avec des associations et participez à des missions de bénévolat' },
+    { name: 'description', content: siteDescription },
+    { name: 'keywords', content: 'bénévolat, association, événements solidaires, aide, entraide, missions, bénévoles' },
+    { property: 'og:title', content: 'Benevoclic - Plateforme d’engagement solidaire' },
+    { property: 'og:description', content: siteDescription },
     { property: 'og:image', content: '/logo_benevoclic.png' },
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: 'Benevoclic - Plateforme de bénévolat' },
-    { name: 'twitter:description', content: 'Connectez-vous avec des associations et participez à des missions de bénévolat' }
+    { name: 'twitter:title', content: 'Benevoclic - Plateforme d’engagement solidaire' },
+    { name: 'twitter:description', content: siteDescription },
+    { name: 'theme-color', content: '#3B82F6' }
   ],
   link: [
-    { rel: 'canonical', href: 'https://benevoclic.app' }
-  ]
+    { rel: 'canonical', href: 'https://www.benevoclic.fr/' },
+    { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+  ],
+  script: [
+    ({
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "url": "https://www.benevoclic.fr/",
+            "name": "Benevoclic",
+            "description": siteDescription,
+            "publisher": { "@id": "https://www.benevoclic.fr/#organization" },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://www.benevoclic.fr/search?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://www.benevoclic.fr/#organization",
+            "name": "Benevoclic",
+            "url": "https://www.benevoclic.fr/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://www.benevoclic.fr/logo_benevoclic.png"
+            }
+          }
+        ]
+      })
+    } as any)
+  ] as any
 });
-
-// Configuration Schema.org globale
-useSchemaOrg([
-  defineWebSite({
-    name: 'Benevoclic',
-    url: 'https://benevoclic.app',
-    description: 'Plateforme de bénévolat connectant associations et volontaires',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: 'https://benevoclic.app/search?q={search_term_string}',
-      'query-input': 'required name=search_term_string'
-    }
-  })
-]);
 </script>
 
 <template>
   <div id="app" class="min-h-screen flex flex-col">
     <!-- Skip to main content link for accessibility -->
-    <a 
-      href="#main-content" 
+    <a
+      href="#main-content"
       class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50"
       aria-label="Passer au contenu principal"
     >
       Passer au contenu principal
     </a>
-    
+
     <NuxtLayout>
       <main id="main-content" role="main" class="flex-1 min-h-[calc(100vh-120px)]">
         <NuxtPage />

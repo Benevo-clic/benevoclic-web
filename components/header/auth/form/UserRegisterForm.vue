@@ -98,7 +98,7 @@ function verifyAssociation(value:boolean) {
           :placeholder="t('auth.email')"
           class="input input-bordered w-full"
           required
-      />
+      aria-label="Adresse email">
     </div>
 
     <div class="form-control">
@@ -111,7 +111,7 @@ function verifyAssociation(value:boolean) {
           :placeholder="t('auth.placeholder_password')"
           class="input input-bordered w-full"
           required
-      />
+      aria-label="Mot de passe">
     </div>
 
     <div class="form-control">
@@ -124,7 +124,7 @@ function verifyAssociation(value:boolean) {
           :placeholder="t('auth.confirm_password')"
           class="input input-bordered w-full"
           required
-      />
+      aria-label="Mot de passe">
     </div>
 
     <!-- Case à cocher pour les conditions générales -->
@@ -135,7 +135,7 @@ function verifyAssociation(value:boolean) {
           v-model="termsAccepted"
           class="checkbox checkbox-primary checkbox-sm" 
           required
-        />
+        aria-label="Champ de saisie">
         <span class="label-text text-sm">
           J'accepte les 
           <a href="/mentions-legales" target="_blank" class="text-primary hover:underline">

@@ -40,15 +40,13 @@
               class="join-item btn"
               :disabled="currentPage === 1"
               @click="goToPage(currentPage - 1)"
-          >«</button>
-          <button class="join-item btn" disabled>
-            Page {{ currentPage }} / {{ totalPages }}
-          </button>
+           type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>«</button>
+          <button class="join-item btn" disabled type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Page {{ currentPage }} / {{ totalPages }}</button>
           <button
               class="join-item btn"
               :disabled="currentPage === totalPages"
               @click="goToPage(currentPage + 1)"
-          >»</button>
+           type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>»</button>
         </div>
       </div>
     </div>

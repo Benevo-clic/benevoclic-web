@@ -16,14 +16,14 @@
           <div class="flex flex-col md:flex-row gap-4 mb-6">
             <div class="form-control flex-1">
               <div class="input-group flex flex-row">
-                <input type="text" placeholder="Search history..." class="input input-bordered w-full mr-2" />
+                <input type="text" placeholder="Search history..." class="input input-bordered w-full mr-2" aria-label="Champ de saisie">
                 <button class="btn btn-square">
                   <Search class="w-5 h-5" />
                 </button>
               </div>
             </div>
             
-            <select class="select select-bordered">
+            <select class="select select-bordered" aria-label="Sélection">
               <option value="all">All Activities</option>
               <option value="missions">Missions</option>
               <option value="applications">Applications</option>
@@ -57,9 +57,9 @@
                   
                   <!-- Action buttons based on type -->
                   <div class="flex justify-end mt-4 gap-2">
-                    <button v-if="item.type === 'mission'" class="btn btn-sm btn-outline">View Mission</button>
-                    <button v-if="item.type === 'application'" class="btn btn-sm btn-outline">View Application</button>
-                    <button v-if="item.type === 'search'" class="btn btn-sm btn-outline">Repeat Search</button>
+                    <button v-if="item.type === 'mission'" class="btn btn-sm btn-outline" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>View Mission</button>
+                    <button v-if="item.type === 'application'" class="btn btn-sm btn-outline" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>View Application</button>
+                    <button v-if="item.type === 'search'" class="btn btn-sm btn-outline" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Repeat Search</button>
                   </div>
                 </div>
               </div>
@@ -75,7 +75,7 @@
           
           <!-- Load more button -->
           <div v-if="historyItems.length > 0" class="flex justify-center mt-8">
-            <button class="btn btn-outline">Load More</button>
+            <button class="btn btn-outline" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Load More</button>
           </div>
         </div>
       </div>

@@ -74,9 +74,7 @@ const passwordId = `password-${Math.random().toString(36).substr(2, 9)}`
           type="button"
           class="text-primary text-xs hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
           @click="$emit('forgot-password', form.email)"
-        >
-          {{ t('auth.forgot_password') }}
-        </button>
+        >{{ t('auth.forgot_password') }}</button>
       </div>
     </div>
 

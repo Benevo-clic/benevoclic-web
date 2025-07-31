@@ -84,12 +84,15 @@
           <div
               v-for="tag in announcement.tags.slice(0, 2)"
               :key="tag"
-              class="badge badge-outline text-sm hover:badge-primary transition-colors"
+              class="badge badge-outline text-sm hover:badge-primary transition-colors text-base-content border-base-content focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-1"
+              tabindex="0"
+              role="button"
+              :aria-label="`Filtrer par tag : ${tag}`"
           >
-            {{ tag }}
+            <span class="text-base-content/70 group-hover:text-primary transition-colors">{{ tag }}</span>
           </div>
-          <div v-if="announcement.tags.length > 2" class="badge badge-ghost text-sm">
-            +{{ announcement.tags.length - 2 }}
+          <div v-if="announcement.tags.length > 2" class="badge badge-ghost text-sm text-neutral">
+            <span class="text-base-content/70 group-hover:text-primary transition-colors">+{{ announcement.tags.length - 2 }}</span>
           </div>
         </div>
 

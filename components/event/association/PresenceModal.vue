@@ -10,7 +10,7 @@
             type="checkbox" 
             class="checkbox checkbox-primary" 
             v-model="isPresent"
-          />
+          aria-label="Champ de saisie">
           <span class="label-text">{{ isPresent ? 'Présent' : 'Absent' }}</span>
         </label>
       </div>

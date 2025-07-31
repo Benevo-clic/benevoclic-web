@@ -13,7 +13,7 @@
           <UserRound v-else class="w-16 h-16 text-base-content opacity-50" />
         </div>
         <h1 class="text-3xl font-bold text-base-content mb-1">{{ user?.associationName }}</h1>
-        <span class="badge badge-outline badge-primary mb-2">{{ user?.type || 'Type non fourni' }}</span>
+        <span class="badge badge-outline badge-primary mb-2 text-base-content border-base-content">{{ user?.type || 'Type non fourni' }}</span>
         <p class="text-base-content/80 text-center max-w-xl mb-2">{{ user?.bio || 'Aucune description.' }}</p>
         <div class="flex gap-2 mt-2">
           <NuxtLink to="/association/account/edit" class="btn btn-sm btn-outline btn-primary">Éditer le profil</NuxtLink>

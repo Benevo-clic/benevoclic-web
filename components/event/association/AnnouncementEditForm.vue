@@ -18,7 +18,7 @@
               class="hidden"
               accept="image/*"
               @change="handleFileChange"
-          />
+          aria-label="Champ de saisie">
 
           <div v-if="!coverPhotoPreview" class="text-center p-6">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -49,20 +49,21 @@
 
         <div class="mb-2">
           <label class="block mb-1">Titre</label>
-          <input v-model="form.nameEvent" class="input input-bordered w-full" required />
+          <input v-model="form.nameEvent" class="input input-bordered w-full" required aria-label="Champ de saisie">
         </div>
         <div class="mb-2">
           <label class="block mb-1">Description</label>
-          <textarea v-model="form.description" class="textarea textarea-bordered w-full" required />
+          <textarea v-model="form.description" class="textarea textarea-bordered w-full" required aria-label="Zone de texte">
+          </textarea>
         </div>
         <div class="mb-2 flex gap-2">
           <div class="flex-1">
             <label class="block mb-1">Date</label>
-            <input v-model="form.dateEvent" type="date" class="input input-bordered w-full" required />
+            <input v-model="form.dateEvent" type="date" class="input input-bordered w-full" required aria-label="Champ de saisie">
           </div>
           <div class="flex-1">
             <label class="block mb-1">Heure</label>
-            <input v-model="form.hoursEvent" type="time" class="input input-bordered w-full" required />
+            <input v-model="form.hoursEvent" type="time" class="input input-bordered w-full" required aria-label="Champ de saisie">
           </div>
         </div>
         <div class="mb-2 flex gap-2">
@@ -74,7 +75,7 @@
               min="0"
               class="input input-bordered w-full"
               :class="{ 'input-error': maxParticipantsError }"
-            />
+            aria-label="Nombre">
             <p v-if="maxParticipantsError" class="text-error text-xs mt-1">
               Doit être ≥ au nombre de participants déjà inscrits ({{ minParticipants }})
             </p>
@@ -87,7 +88,7 @@
               min="0"
               class="input input-bordered w-full"
               :class="{ 'input-error': maxVolunteersError }"
-            />
+            aria-label="Nombre">
             <p v-if="maxVolunteersError" class="text-error text-xs mt-1">
               Doit être ≥ au nombre de bénévoles déjà inscrits ({{ minVolunteers }})
             </p>
@@ -95,7 +96,7 @@
         </div>
         <div class="mb-2">
           <label class="block mb-1">Tags (séparés par des virgules)</label>
-          <input v-model="tagsInput" class="input input-bordered w-full" />
+          <input v-model="tagsInput" class="input input-bordered w-full" aria-label="Champ de saisie">
         </div>
         <AddressInput
             @address-selected="selectAddress"
@@ -105,15 +106,15 @@
 
           <div>
             <label class="block mb-1">Ville</label>
-            <input v-model="form.addressAnnouncement!.city" class="input input-bordered w-full" />
+            <input v-model="form.addressAnnouncement!.city" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
           <div>
             <label class="block mb-1">Code postal</label>
-            <input v-model="form.addressAnnouncement!.postalCode" class="input input-bordered w-full" />
+            <input v-model="form.addressAnnouncement!.postalCode" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
           <div>
             <label class="block mb-1">Pays</label>
-            <input v-model="form.addressAnnouncement!.country" class="input input-bordered w-full" />
+            <input v-model="form.addressAnnouncement!.country" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
         </div>
 
@@ -124,7 +125,7 @@
           <select
               v-model="form.status"
               class="select select-bordered w-full"
-          >
+           aria-label="Sélection">
             <option v-for="status in statusOptions" :key="status.value" :value="status.value">
               {{ status.label }}
             </option>

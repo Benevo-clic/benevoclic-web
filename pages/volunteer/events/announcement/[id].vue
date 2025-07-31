@@ -77,8 +77,15 @@
           <span v-if="announcement?.addressAnnouncement?.city" class="flex items-center gap-1"><MapPin class="h-4 w-4 text-secondary" />{{ announcement.addressAnnouncement.city }}</span>
         </div>
         <div class="mb-3 text-base-content/90">{{ announcement?.description }}</div>
-        <div class="flex flex-wrap gap-2 mt-2">
-          <span v-for="tag in announcement?.tags" :key="tag" class="badge badge-outline badge-sm hover:badge-primary transition-colors">{{ tag }}</span>
+        <div
+            v-for="tag in announcement?.tags"
+            :key="tag"
+            class="badge badge-outline text-sm hover:badge-primary transition-colors text-base-content border-base-content focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-1 mr-1"
+            tabindex="0"
+            role="button"
+            :aria-label="`Filtrer par tag : ${tag}`"
+        >
+          <span class="text-base-content/70 group-hover:text-primary transition-colors">{{ tag }}</span>
         </div>
         <!-- Statistiques -->
         <div class="flex gap-4 mt-4 mb-2">

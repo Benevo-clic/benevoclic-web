@@ -115,9 +115,7 @@ function handleHome() {
               v-if="recentSearches.length > 0"
               class="btn btn-ghost btn-xs" 
               @click.stop="clearRecentSearches"
-            >
-              {{t('search.history.clear_all')}}
-            </button>
+            >{{t('search.history.clear_all')}}</button>
           </div>
 
           <div v-if="recentSearches.length > 0" class="max-h-60 overflow-y-auto">

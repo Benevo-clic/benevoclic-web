@@ -29,7 +29,7 @@
             v-model="searchQuery" 
             placeholder="Rechercher..." 
             class="input input-bordered w-full"
-          />
+          aria-label="Champ de saisie">
         </div>
       </div>
       
@@ -60,7 +60,7 @@
                 class="checkbox checkbox-primary" 
                 :checked="participant.isPresent"
                 @change="togglePresence(participant, 'participant')"
-              />
+              aria-label="Champ de saisie">
               <span class="label-text">{{ participant.isPresent ? 'Présent' : 'Absent' }}</span>
             </label>
           </div>
@@ -94,7 +94,7 @@
                 class="checkbox checkbox-primary" 
                 :checked="volunteer.isPresent"
                 @change="togglePresence(volunteer, 'volunteer')"
-              />
+              aria-label="Champ de saisie">
               <span class="label-text">{{ volunteer.isPresent ? 'Présent' : 'Absent' }}</span>
             </label>
           </div>
@@ -103,11 +103,11 @@
       
       <!-- Modal actions -->
       <div class="modal-action">
-        <button @click="closeModal" class="btn btn-ghost">Fermer</button>
+        <button @click="closeModal" class="btn btn-ghost" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Fermer</button>
       </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button>Fermer</button>
+      <button type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Fermer</button>
     </form>
   </dialog>
 </template>

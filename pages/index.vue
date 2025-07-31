@@ -26,7 +26,7 @@
             v-if="isLoading"
             class="fixed inset-0 bg-base-200 bg-opacity-80 z-[1000] flex items-center justify-center"
             role="status"
-            aria-live="polite"
+            aria-live="polite" aria-atomic="true"
             aria-label="Chargement en cours"
         >
           <img
@@ -114,12 +114,12 @@ useHead({
     { property: 'og:title', content: 'Benevoclic - Trouvez des missions de bénévolat près de chez vous' },
     { property: 'og:description', content: 'Découvrez des missions de bénévolat dans votre région. Rejoignez des associations et participez à des actions solidaires.' },
     { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: 'https://benevoclic.app' },
+    { property: 'og:url', content: 'https://www.benevoclic.fr' },
     { name: 'twitter:title', content: 'Benevoclic - Trouvez des missions de bénévolat près de chez vous' },
     { name: 'twitter:description', content: 'Découvrez des missions de bénévolat dans votre région. Rejoignez des associations et participez à des actions solidaires.' }
   ],
   link: [
-    { rel: 'canonical', href: 'https://benevoclic.app' }
+    { rel: 'canonical', href: 'https://www.benevoclic.fr' }
   ]
 });
 
@@ -128,7 +128,7 @@ useSchemaOrg([
   defineWebPage({
     name: 'Accueil - Benevoclic',
     description: 'Trouvez des missions de bénévolat près de chez vous',
-    url: 'https://benevoclic.app',
+    url: 'https://www.benevoclic.fr',
     breadcrumb: {
       '@type': 'BreadcrumbList',
       itemListElement: [
@@ -136,15 +136,15 @@ useSchemaOrg([
           '@type': 'ListItem',
           position: 1,
           name: 'Accueil',
-          item: 'https://benevoclic.app'
+          item: 'https://www.benevoclic.fr'
         }
       ]
     }
   }),
   defineOrganization({
     name: 'Benevoclic',
-    url: 'https://benevoclic.app',
-    logo: 'https://benevoclic.app/logo_benevoclic.png',
+    url: 'https://www.benevoclic.fr',
+    logo: 'https://www.benevoclic.fr/logo_benevoclic.png',
     description: 'Plateforme de bénévolat connectant associations et volontaires'
   })
 ]);

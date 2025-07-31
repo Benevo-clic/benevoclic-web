@@ -70,7 +70,7 @@ async function verifyAssociation() {
           type="text"
           :placeholder="t('auth.register.association_siret_status_placeholder')"
           :class="['input input-bordered w-full', { 'input-error': !isValid }]"
-      />
+      aria-label="Champ de saisie">
       <div v-if="!isValid" class="text-error text-sm mt-1">
         {{ errorMessage }}
       </div>

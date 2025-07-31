@@ -4,9 +4,7 @@
       <h1>404</h1>
       <h2>Page non trouvée</h2>
       <p>La page que vous recherchez n'existe pas.</p>
-      <button @click="goHome" class="btn-primary">
-        Retour à l'accueil
-      </button>
+      <button @click="goHome" class="btn-primary" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Retour à l'accueil</button>
     </div>
   </div>
 </template>

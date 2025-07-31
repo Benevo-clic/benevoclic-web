@@ -5,13 +5,13 @@
         type="date" 
         v-model="from" 
         class="input input-sm border rounded flex-1 sm:w-auto min-w-0" 
-      />
+      aria-label="Champ de saisie">
       <span class="hidden sm:inline text-base-content opacity-70">—</span>
       <input 
         type="date" 
         v-model="to" 
         class="input input-sm border rounded flex-1 sm:w-auto min-w-0" 
-      />
+      aria-label="Champ de saisie">
     </div>
     <button 
       class="btn btn-sm btn-primary w-full sm:w-auto sm:ml-2" 

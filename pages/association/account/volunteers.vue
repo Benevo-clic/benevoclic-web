@@ -16,7 +16,7 @@
                 type="text"
                 placeholder="Rechercher un bénévole par nom..."
                 class="input input-bordered w-full pl-10 bg-base-100 rounded-xl shadow focus:ring-2 focus:ring-primary/40 focus:outline-none"
-            />
+            aria-label="Champ de saisie">
           </div>
         </div>
         <VolunteersList :volunteers="filteredVolunteers" @right-action="handleRemoveVolunteer" />

@@ -12,7 +12,7 @@
             placeholder="Search missions, organizations..." 
             class="input input-bordered w-full" 
             @keyup.enter="performSearch"
-          />
+          aria-label="Champ de saisie">
           <button class="btn btn-square" @click="performSearch">
             <Search class="w-5 h-5" />
           </button>
@@ -25,7 +25,7 @@
           <label class="label">
             <span class="label-text text-base-content">Category</span>
           </label>
-          <select v-model="filters.category" class="select select-bordered w-full">
+          <select v-model="filters.category" class="select select-bordered w-full" aria-label="Sélection">
             <option value="">All Categories</option>
             <option value="environmental">Environmental</option>
             <option value="humanitarian">Humanitarian</option>
@@ -39,7 +39,7 @@
           <label class="label">
             <span class="label-text text-base-content">Location</span>
           </label>
-          <select v-model="filters.location" class="select select-bordered w-full">
+          <select v-model="filters.location" class="select select-bordered w-full" aria-label="Sélection">
             <option value="">All Locations</option>
             <option value="paris">Paris</option>
             <option value="lyon">Lyon</option>
@@ -53,7 +53,7 @@
           <label class="label">
             <span class="label-text text-base-content">Date Range</span>
           </label>
-          <select v-model="filters.dateRange" class="select select-bordered w-full">
+          <select v-model="filters.dateRange" class="select select-bordered w-full" aria-label="Sélection">
             <option value="">Any Time</option>
             <option value="today">Today</option>
             <option value="this-week">This Week</option>
@@ -67,7 +67,7 @@
           <label class="label">
             <span class="label-text text-base-content">Type</span>
           </label>
-          <select v-model="filters.type" class="select select-bordered w-full">
+          <select v-model="filters.type" class="select select-bordered w-full" aria-label="Sélection">
             <option value="">All Types</option>
             <option value="missions">Missions</option>
             <option value="organizations">Organizations</option>
@@ -82,21 +82,21 @@
           <label class="label">
             <span class="label-text text-base-content">Start Date</span>
           </label>
-          <input type="date" v-model="filters.startDate" class="input input-bordered w-full" />
+          <input type="date" v-model="filters.startDate" class="input input-bordered w-full" aria-label="Champ de saisie">
         </div>
         
         <div class="form-control">
           <label class="label">
             <span class="label-text text-base-content">End Date</span>
           </label>
-          <input type="date" v-model="filters.endDate" class="input input-bordered w-full" />
+          <input type="date" v-model="filters.endDate" class="input input-bordered w-full" aria-label="Champ de saisie">
         </div>
       </div>
       
       <!-- Action buttons -->
       <div class="flex justify-end gap-2">
-        <button class="btn btn-outline" @click="resetFilters">Reset</button>
-        <button class="btn btn-primary" @click="performSearch">Search</button>
+        <button class="btn btn-outline" @click="resetFilters" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Reset</button>
+        <button class="btn btn-primary" @click="performSearch" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Search</button>
       </div>
     </div>
   </div>

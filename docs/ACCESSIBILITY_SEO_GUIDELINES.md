@@ -110,8 +110,8 @@
 ```html
 <meta property="og:title" content="Titre de la page" />
 <meta property="og:description" content="Description pour les réseaux sociaux" />
-<meta property="og:image" content="https://benevoclic.app/image.jpg" />
-<meta property="og:url" content="https://benevoclic.app/page" />
+<meta property="og:image" content="https://www.benevoclic.fr/image.jpg" />
+<meta property="og:url" content="https://www.benevoclic.fr/page" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Benevoclic" />
 ```
@@ -121,7 +121,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Titre pour Twitter" />
 <meta name="twitter:description" content="Description pour Twitter" />
-<meta name="twitter:image" content="https://benevoclic.app/image.jpg" />
+<meta name="twitter:image" content="https://www.benevoclic.fr/image.jpg" />
 ```
 
 ### Données structurées (Schema.org)
@@ -132,8 +132,8 @@
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Benevoclic",
-  "url": "https://benevoclic.app",
-  "logo": "https://benevoclic.app/logo.png",
+  "url": "https://www.benevoclic.fr",
+  "logo": "https://www.benevoclic.fr/logo.png",
   "description": "Plateforme de bénévolat"
 }
 ```
@@ -144,10 +144,10 @@
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "Benevoclic",
-  "url": "https://benevoclic.app",
+  "url": "https://www.benevoclic.fr",
   "potentialAction": {
     "@type": "SearchAction",
-    "target": "https://benevoclic.app/search?q={search_term_string}",
+    "target": "https://www.benevoclic.fr/search?q={search_term_string}",
     "query-input": "required name=search_term_string"
   }
 }
@@ -189,7 +189,7 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 Disallow: /auth/
-Sitemap: https://benevoclic.app/sitemap.xml
+Sitemap: https://www.benevoclic.fr/sitemap.xml
 ```
 
 ## Modules Nuxt utilisés
@@ -314,8 +314,8 @@ npm run audit:lighthouse
 
 #### 1. Structure des URLs
 ```
-✅ https://benevoclic.app/events/2024/01/15/event-name
-❌ https://benevoclic.app/events?id=123&date=2024-01-15
+✅ https://www.benevoclic.fr/events/2024/01/15/event-name
+❌ https://www.benevoclic.fr/events?id=123&date=2024-01-15
 ```
 
 #### 2. Hiérarchie des titres

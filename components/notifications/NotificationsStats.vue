@@ -7,16 +7,12 @@
           @click="timeRange = 'week'"
           class="btn btn-xs"
           :class="timeRange === 'week' ? 'btn-primary' : 'btn-outline'"
-        >
-          {{ $t('notifications.stats.week') }}
-        </button>
+         type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>{{ $t('notifications.stats.week') }}</button>
         <button 
           @click="timeRange = 'month'"
           class="btn btn-xs"
           :class="timeRange === 'month' ? 'btn-primary' : 'btn-outline'"
-        >
-          {{ $t('notifications.stats.month') }}
-        </button>
+         type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>{{ $t('notifications.stats.month') }}</button>
       </div>
     </div>
 

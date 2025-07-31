@@ -36,7 +36,7 @@ function handleChange(e: Event) {
       @change="handleChange"
       class="select select-bordered w-full"
       :class="{ 'select-error': error }"
-    >
+     aria-label="Sélection">
       <option value="" disabled selected>Sélectionnez un type</option>
       <option 
         v-for="type in associationTypes" 
