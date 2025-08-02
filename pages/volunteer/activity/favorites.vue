@@ -131,7 +131,6 @@ function handleFilter(filters:FilterAnnouncement) {
 const isReady = ref(false)
 
 onMounted(async () => {
-  await announcement.fetchAllAnnouncements()
   if (user.value) {
     await favStore.fetchAllFavoritesOfVolunteer(user.value.userId)
   }
@@ -141,7 +140,6 @@ onMounted(async () => {
 onBeforeRouteUpdate(
   async (to, from, next) => {
     isReady.value = false
-    await announcement.fetchAllAnnouncements()
     if (user.value) {
       await favStore.fetchAllFavoritesOfVolunteer(user.value.userId)
     }

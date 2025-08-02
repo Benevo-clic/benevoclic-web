@@ -23,6 +23,10 @@ const BASE_ROUTE_CONFIG = {
   public: [
     '/',
     '/events',
+    '/announcement',
+    '/announcement/[id]',
+    '/annoucement',
+    '/annoucement/[id]',
     'events',
     '/auth/login',
     '/auth/register',
@@ -85,6 +89,11 @@ function isRouteAccessible(path: string, role: RoleUser | null): boolean {
     return true
   }
 
+  // Vérifier les routes dynamiques publiques (comme /announcement/[id] ou /annoucement/[id])
+  if (pathWithoutLocale.startsWith('/announcement/') || pathWithoutLocale.startsWith('/annoucement/')) {
+    return true
+  }
+
   // Vérifier selon le rôle
   switch (role) {
     case RoleUser.VOLUNTEER:
@@ -124,10 +133,8 @@ function getHomePageForRole(role: RoleUser | null, locale?: string): string {
 }
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  // Vérifier si Firebase est initialisé côté client
   if (import.meta.client) {
     try {
-      // Essayer d'abord le plugin Firebase avec permissions
       const { $firebase } = useNuxtApp()
       let firebase = null
 
@@ -135,7 +142,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         firebase = await $firebase
       }
 
-      // Fallback vers Firebase de base si nécessaire
       if (!firebase) {
         const { $firebaseBase } = useNuxtApp()
         if ($firebaseBase) {
@@ -152,7 +158,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
           if (to.path !== '/auth/VerifyEmailPage') {
             return navigateTo('/auth/VerifyEmailPage')
           }
-          // Ici, tu laisses passer uniquement la page de vérification
           return
         }
       }
@@ -175,21 +180,30 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   console.log(`🔍 Vérification de la route: ${to.path} depuis ${from.path}`)
 
   if (!useCookie("isConnected").value) {
+    const pathWithoutLocale = getPathWithoutLocale(to.path)
+    
     // Si c'est une route publique, laisser passer
-    if (BASE_ROUTE_CONFIG.public.includes(getPathWithoutLocale(to.path))) {
+    if (BASE_ROUTE_CONFIG.public.includes(pathWithoutLocale)) {
       console.log('✅ Route publique, accès autorisé')
       return
     }
+    
+    // Vérifier les routes dynamiques publiques (comme /announcement/[id] ou /annoucement/[id])
+    if (pathWithoutLocale.startsWith('/announcement/') || pathWithoutLocale.startsWith('/annoucement/')) {
+      console.log('✅ Route d\'annonce publique, accès autorisé')
+      return
+    }
+    
     // Si c'est une route de transition, rediriger vers login
     if ([
       '/auth/registerVolunteer',
       '/auth/registerAssociation'
-    ].includes(getPathWithoutLocale(to.path))) {
+    ].includes(pathWithoutLocale)) {
       console.log('🔄 Route de transition, redirection vers login')
       return navigateTo('/')
     }
 
-    return navigateTo('/events')
+    return navigateTo('/')
   }
 
   // Utilisateur connecté, récupérer ses données si nécessaire

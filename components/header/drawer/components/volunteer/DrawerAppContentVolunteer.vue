@@ -13,7 +13,8 @@ import {
   Settings,
   SunIcon,
   HeartIcon,
-  MoonIcon} from 'lucide-vue-next'
+  MoonIcon, HomeIcon
+} from 'lucide-vue-next'
 import { useUser } from '~/composables/auth/useUser'
 import {useVolunteerAuth} from "~/composables/useVolunteer";
 import LanguageComponent from "~/components/header/utils/components/LanguageComponent.vue";
@@ -120,6 +121,28 @@ function toggleLanguageMenu() {
   showLanguageMenu.value = !showLanguageMenu.value
 }
 
+function buttonClass(isActive: boolean) {
+  return [
+    'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+    isActive
+        ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+        : 'hover:bg-base-200 hover:shadow-sm'
+  ]
+}
+
+const activeButton = ref<'home' | 'heart' | null>(null) // centralise l'état actif
+function toggleActive(name: 'home' | 'heart') {
+  activeButton.value = activeButton.value === name ? null : name
+}
+
+function handleFavorites() {
+  navigateTo('/volunteer/activity/favorites')
+}
+
+function handleHome() {
+  navigateTo('/')
+}
+
 </script>
 
 <template>
@@ -201,6 +224,21 @@ function toggleLanguageMenu() {
             {{ t('drawer-content.activity.title') }}
           </h4>
           <div class="space-y-1">
+            <button
+                @click="navigateTo('/volunteer'); emit('closeDrawer')"
+                :class="[
+                'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
+                isActive('/')
+                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+                  : 'hover:bg-base-200 hover:shadow-sm'
+              ]"
+                aria-label="Aller à l'accueil bénévole"
+            >
+              <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+                <HomeIcon class="w-4 h-4" aria-hidden="true" />
+              </div>
+              <span class="font-medium">{{ t('header.volunteer.home') }}</span>
+            </button>
             <button 
               @click="navigateTo('/volunteer/activity/missions'); emit('closeDrawer')" 
               :class="[

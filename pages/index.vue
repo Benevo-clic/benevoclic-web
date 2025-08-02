@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { definePageMeta, useHead, useAnnouncement,useVolunteerAuth,useAssociationAuth, navigateTo } from "#imports";
+import { definePageMeta, useHead, useAnnouncement,useVolunteerAuth,useAssociationAuth } from "#imports";
 import { onMounted, ref, computed, onUnmounted, watch } from 'vue';
-import { Users, HeartHandshake, ArrowRight, Search, Award, Clock, Shield, ChevronDown, ChevronRight, MapPin, X, SlidersHorizontal } from 'lucide-vue-next';
+import { Search, X, SlidersHorizontal } from 'lucide-vue-next';
 import { useUserLocation } from '~/composables/useUserLocation';
-import NoConnectedAnnouncementCard from "~/components/event/noConnected/NoConnectedAnnouncementCard.vue";
 import NoConnectedAnnouncementList from "~/components/event/noConnected/NoConnectedAnnouncementList.vue";
 import VolunteerEventFilters from "~/components/event/volunteer/VolunteerEventFilters.vue";
 import type { Announcement } from "~/common/interface/event.interface";
 import type { FilterAnnouncement } from "~/common/interface/filter.interface";
+import Hero from "~/components/home/hero.vue";
+import Statistique from "~/components/home/statistique.vue";
+import Events from "~/components/home/events.vue";
+import Advantage from "~/components/home/advantage.vue";
+import HowItWorks from "~/components/home/HowItWorks.vue";
+import Cta from "~/components/home/cta.vue";
 
 
 
@@ -159,13 +164,7 @@ async function fetchFeaturedEvents() {
 }
 
 async function searchEvents(page = 1) {
-  // Vérifier qu'au moins un critère de recherche est fourni
-  const hasSearchCriteria = sharedFilters.value.nameEvent?.trim()
   startSearching.value = true;
-
-  if (!hasSearchCriteria) {
-    return;
-  }
 
   searchLoading.value = true;
   if (page === 1) {
@@ -179,7 +178,6 @@ async function searchEvents(page = 1) {
       limit: pageSize
     };
 
-    // Nettoyer les propriétés undefined
     const cleanFilters = Object.fromEntries(
       Object.entries(filters).filter(([_, value]) => value !== undefined && value !== null)
     ) as FilterAnnouncement;
@@ -465,12 +463,10 @@ function setupScrollObservers() {
 onMounted(async () => {
   await fetchFeaturedEvents();
 
-  // Initialize carousel to first slide
   if (featuredEvents.value.length > 0) {
     currentSlideIndex.value = 0;
-    // Use setTimeout to ensure DOM is updated
     setTimeout(() => {
-      window.location.hash = `search-section`;
+      window.location.hash = `hero-section`;
     }, 100);
   }
 
@@ -517,41 +513,9 @@ onUnmounted(() => {
     <!-- Contenu principal -->
     <main id="main-content" class="volunteer-content" role="main" aria-label="Page d'accueil Bénévole">
       <!-- Section Hero -->
-      <section class="hero min-h-[70vh] bg-gradient-to-br from-primary/10 to-secondary/10 py-16 px-4 flex items-center relative" v-if="!startSearching">
-        <div class="max-w-6xl mx-auto w-full">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div class="space-y-6 slide-in-left visible">
-              <h1 class="text-4xl md:text-5xl font-bold text-base-content">
-                Faites la différence avec <span class="text-primary">Benevoclic</span>
-              </h1>
-              <p class="text-lg text-base-content/80 max-w-xl">
-                Découvrez des événements et missions qui correspondent à vos compétences,
-                vos centres d'intérêt et vos disponibilités. Que vous soyez bénévole ou
-                personne dans le besoin, rejoignez une communauté engagée et participez
-                à des projets solidaires.
-              </p>
-              <div class="flex flex-wrap gap-4">
-                <NuxtLink to="/events" class="btn btn-primary group">
-                  Découvrir les événements
-                  <ArrowRight class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                </NuxtLink>
-                <button class="btn btn-outline hover:scale-105 transition-transform duration-300">
-                  En savoir plus
-                </button>
-              </div>
-            </div>
-            <div class="relative slide-in-right visible delay-400 hidden lg:block">
-              <img
-                  src="/images/volunteer-info.png"
-                  alt="Bénévoles en action"
-                  class="w-full h-auto rounded-xl shadow-xl transform hover:scale-[1.02] transition-transform duration-500"
-                  loading="lazy"
-              />
-            </div>
-          </div>
-        </div>
-
-      </section>
+      <Hero
+          :start-searching="startSearching"
+        />
 
       <!-- Section Recherche Rapide -->
       <section id="search-section" class="py-12 px-4 bg-base-100">
@@ -584,33 +548,36 @@ onUnmounted(() => {
 
             <!-- Compteur d'événements filtrés -->
             <div v-if="hasActiveFilters" class="mb-4 text-center">
-              <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full">
+              <div class="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary/10 text-primary rounded-full text-sm sm:text-base">
                 <div v-if="isCounting" class="loading loading-spinner loading-sm"></div>
                 <span v-else class="font-medium">
-                  {{ filteredEventsCount }} événement{{ filteredEventsCount !== 1 ? 's' : '' }} trouvé{{ filteredEventsCount !== 1 ? 's' : '' }}
+                  <span class="hidden sm:inline">{{ filteredEventsCount }} événement{{ filteredEventsCount !== 1 ? 's' : '' }} trouvé{{ filteredEventsCount !== 1 ? 's' : '' }}</span>
+                  <span class="sm:hidden">{{ filteredEventsCount }} résultat{{ filteredEventsCount !== 1 ? 's' : '' }}</span>
                 </span>
               </div>
             </div>
 
             <!-- Boutons d'action -->
-            <div class="flex justify-center gap-4">
+            <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
               <button 
                 @click="() => searchEvents()" 
                 :disabled="searchLoading"
-                class="btn btn-primary px-8 group hover:scale-105 transition-transform duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="btn btn-primary px-4 sm:px-8 group hover:scale-105 transition-transform duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
               >
                 <Search v-if="!searchLoading" class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
                 <div v-else class="loading loading-spinner loading-sm mr-2"></div>
-                {{ searchLoading ? 'Recherche en cours...' : 'Trouver des événements' }}
+                <span class="hidden sm:inline">{{ searchLoading ? 'Recherche en cours...' : 'Trouver des événements' }}</span>
+                <span class="sm:hidden">{{ searchLoading ? 'Recherche...' : 'Rechercher' }}</span>
               </button>
               
               <button 
                 @click="resetAllFilters" 
-                class="btn btn-outline px-6 group hover:scale-105 transition-transform duration-300"
+                class="btn btn-outline px-4 sm:px-6 group hover:scale-105 transition-transform duration-300 text-sm sm:text-base"
                 :disabled="!hasActiveFilters"
               >
                 <X class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
-                Réinitialiser
+                <span class="hidden sm:inline">Réinitialiser</span>
+                <span class="sm:hidden">Reset</span>
               </button>
             </div>
           </div>
@@ -622,23 +589,26 @@ onUnmounted(() => {
             :class="showSearchResults ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
           >
             <!-- Header des résultats -->
-            <div class="flex justify-between items-center mb-6">
-              <div class="flex items-center gap-4">
-                <h3 class="text-2xl font-bold">Résultats de recherche</h3>
-                <div class="badge badge-primary">
-                  {{ searchTotalAnnouncements }} résultat{{ searchTotalAnnouncements !== 1 ? 's' : '' }}
-                </div>
-                <div v-if="hasActiveFilters" class="badge badge-secondary">
-                  <SlidersHorizontal class="w-3 h-3 mr-1" />
-                  Filtres actifs
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6">
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+                <h3 class="text-xl sm:text-2xl font-bold">Résultats de recherche</h3>
+                <div class="flex flex-wrap gap-2">
+                  <div class="badge badge-primary text-xs sm:text-sm">
+                    {{ searchTotalAnnouncements }} résultat{{ searchTotalAnnouncements !== 1 ? 's' : '' }}
+                  </div>
+                  <div v-if="hasActiveFilters" class="badge badge-secondary text-xs sm:text-sm">
+                    <SlidersHorizontal class="w-3 h-3 mr-1" />
+                    <span class="hidden sm:inline">Filtres actifs</span>
+                    <span class="sm:hidden">Filtres</span>
+                  </div>
                 </div>
               </div>
               <button 
                 @click="closeSearchResults" 
-                class="btn btn-ghost btn-sm"
+                class="btn btn-ghost btn-sm self-end sm:self-auto"
                 aria-label="Fermer les résultats de recherche"
               >
-                <X class="w-5 h-5" />
+                <X class="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
 
@@ -670,7 +640,7 @@ onUnmounted(() => {
             >
               <div class="join" role="group" aria-label="Contrôles de pagination">
                 <button
-                    class="join-item btn focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    class="join-item btn btn-sm sm:btn-md focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
                     :disabled="currentSearchPage === 1"
                     @click="goToSearchPage(currentSearchPage - 1)"
                     @keyup.enter="goToSearchPage(currentSearchPage - 1)"
@@ -682,16 +652,17 @@ onUnmounted(() => {
                   <span class="sr-only">Page précédente</span>
                 </button>
                 <button
-                    class="join-item btn"
+                    class="join-item btn btn-sm sm:btn-md"
                     disabled
                     aria-current="page"
                     aria-label="Page actuelle"
                 >
                   <span class="sr-only">Page actuelle : </span>
-                  Page {{ currentSearchPage }} / {{ searchTotalPages }}
+                  <span class="hidden sm:inline">Page {{ currentSearchPage }} / {{ searchTotalPages }}</span>
+                  <span class="sm:hidden">{{ currentSearchPage }}/{{ searchTotalPages }}</span>
                 </button>
                 <button
-                    class="join-item btn focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    class="join-item btn btn-sm sm:btn-md focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
                     :disabled="currentSearchPage === searchTotalPages"
                     @click="goToSearchPage(currentSearchPage + 1)"
                     @keyup.enter="goToSearchPage(currentSearchPage + 1)"
@@ -709,293 +680,46 @@ onUnmounted(() => {
       </section>
 
       <!-- Section Statistiques -->
-      <section id="stats-section" class="py-16 px-4 bg-base-200" v-if="!startSearching">
-        <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-12 slide-in-up" :class="{ 'visible': isVisible.stats }">
-            <h2 class="text-3xl font-bold mb-4">Benevoclic en chiffres</h2>
-            <p class="text-base-content/70 max-w-2xl mx-auto">
-              Rejoignez notre communauté grandissante et participez à des événements qui font la différence.
-            </p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-base-100 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 text-center slide-in-up delay-200" :class="{ 'visible': isVisible.stats }">
-              <div class="text-4xl font-bold text-primary mb-2 counter-animate">
-                {{ animatedStats.events }}
-              </div>
-              <div class="text-xl font-semibold mb-2">Événements</div>
-              <p class="text-base-content/70">
-                Événements disponibles sur notre plateforme pour vous engager et faire la différence.
-              </p>
-            </div>
-
-            <div class="bg-base-100 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 text-center slide-in-up delay-400" :class="{ 'visible': isVisible.stats }">
-              <div class="text-4xl font-bold text-secondary mb-2 counter-animate">
-                {{ animatedStats.associations }}
-              </div>
-              <div class="text-xl font-semibold mb-2">Associations</div>
-              <p class="text-base-content/70">
-                Associations actives qui proposent des missions et événements variés.
-              </p>
-            </div>
-
-            <div class="bg-base-100 p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 text-center slide-in-up delay-600" :class="{ 'visible': isVisible.stats }">
-              <div class="text-4xl font-bold text-accent mb-2 counter-animate">
-                {{ animatedStats.volunteers }}
-              </div>
-              <div class="text-xl font-semibold mb-2">
-                Bénévole<span v-if="animatedStats.volunteers > 1">s</span>
-                &
-                participant<span v-if="animatedStats.volunteers > 1">s</span>
-              </div>
-              <p class="text-base-content/70">
-                Nombre de bénévoles et participants engagés dans des actions solidaires.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Statistique
+        :start-searching="startSearching"
+        :is-visible="isVisible.stats"
+        :animated-stats="{
+          events: animatedStats.events,
+          associations: animatedStats.associations,
+          volunteers: animatedStats.volunteers
+        }"
+        />
 
       <!-- Section Événements à venir -->
-      <section id="events-section" class="py-16 px-4 bg-base-100"  v-if="!startSearching">
-        <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-12 slide-in-up" :class="{ 'visible': isVisible.events }">
-            <h2 class="text-3xl font-bold mb-4">Événements à venir</h2>
-            <p class="text-base-content/70 max-w-2xl mx-auto">
-              Découvrez les prochains événements et rejoignez-les en tant que bénévole ou participant.
-            </p>
-          </div>
-
-          <div v-if="isLoading" class="flex justify-center items-center h-64">
-            <div class="loading loading-spinner loading-lg text-primary"></div>
-          </div>
-
-          <div v-else-if="error" class="alert alert-error shadow-lg slide-in-up" :class="{ 'visible': isVisible.events }">
-            <div>
-              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-              <span>{{ error }}</span>
-            </div>
-          </div>
-
-          <div v-else-if="featuredEvents.length === 0" class="text-center py-12 slide-in-up" :class="{ 'visible': isVisible.events }">
-            <img
-              src="/images/no_data.png"
-              alt="Aucun événement trouvé"
-              class="w-full max-w-md mx-auto mb-4"
-              loading="lazy"
-            />
-            <p class="text-lg text-base-content/70">Aucun événement à venir pour le moment.</p>
-          </div>
-
-          <div v-else class="w-full slide-in-up" :class="{ 'visible': isVisible.events }">
-            <!-- Carousel pour les événements à venir -->
-              <div class="carousel w-full rounded-box relative">
-                <div
-                    v-for="(event, index) in featuredEvents"
-                    :key="event._id"
-                    :id="`event-slide-${index}`"
-                    class="carousel-item relative w-full md:w-1/2 lg:w-1/3 px-2"
-                >
-                  <NoConnectedAnnouncementCard
-                      :announcement="event"
-                      class="w-full h-full"
-                  />
-                </div>
-              </div>
-          </div>
-
-        </div>
-      </section>
+      <Events
+        :start-searching="startSearching"
+        :is-visible="isVisible.events"
+        :animated-stats="{
+          events: animatedStats.events,
+          associations: animatedStats.associations,
+          volunteers: animatedStats.volunteers
+        }"
+        :featured-events="featuredEvents"
+        :is-loading="isLoading"
+        :error="error"
+        />
 
       <!-- Section Avantages -->
-      <section id="benefits-section" class="py-16 px-4 bg-base-200" v-if="!startSearching">
-        <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-12 slide-in-up" :class="{ 'visible': isVisible.benefits }">
-            <h2 class="text-3xl font-bold mb-4">Pourquoi rejoindre Benevoclic ?</h2>
-            <p class="text-base-content/70 max-w-2xl mx-auto">
-              Notre plateforme permet aux associations de promouvoir leurs événements
-              et de connecter à la fois les bénévoles et les personnes dans le besoin
-              avec des actions solidaires qui leur correspondent.
-            </p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Carte 1 -->
-            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:translate-y-[-5px] slide-in-up" :class="{ 'visible': isVisible.benefits }">
-              <div class="card-body">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="p-3 rounded-lg bg-primary/20 group-hover:bg-primary/30 transition-colors duration-300">
-                    <Search class="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 class="card-title text-xl">Trouvez facilement</h3>
-                </div>
-                <p class="text-base-content/70">
-                  Accédez à des milliers d'événements et de missions filtrés selon vos
-                  besoins, préférences et votre localisation, que vous cherchiez à aider
-                  ou à participer.
-                </p>
-              </div>
-            </div>
-
-            <!-- Carte 2 -->
-            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:translate-y-[-5px] slide-in-up delay-200" :class="{ 'visible': isVisible.benefits }">
-              <div class="card-body">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="p-3 rounded-lg bg-secondary/20 group-hover:bg-secondary/30 transition-colors duration-300">
-                    <Clock class="h-6 w-6 text-secondary" />
-                  </div>
-                  <h3 class="card-title text-xl">Gérez votre temps</h3>
-                </div>
-                <p class="text-base-content/70">
-                  Choisissez des missions adaptées à vos disponibilités,
-                  qu'il s'agisse d'un engagement ponctuel ou régulier.
-                </p>
-              </div>
-            </div>
-
-            <!-- Carte 3 -->
-            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:translate-y-[-5px] slide-in-up delay-400" :class="{ 'visible': isVisible.benefits }">
-              <div class="card-body">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="p-3 rounded-lg bg-accent/20 group-hover:bg-accent/30 transition-colors duration-300">
-                    <Award class="h-6 w-6 text-accent" />
-                  </div>
-                  <h3 class="card-title text-xl">Développez vos compétences</h3>
-                </div>
-                <p class="text-base-content/70">
-                  Mettez en pratique vos talents ou acquérez de nouvelles
-                  compétences valorisables dans votre parcours.
-                </p>
-              </div>
-            </div>
-
-            <!-- Carte 4 -->
-            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:translate-y-[-5px] slide-in-up delay-200" :class="{ 'visible': isVisible.benefits }">
-              <div class="card-body">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="p-3 rounded-lg bg-primary/20 group-hover:bg-primary/30 transition-colors duration-300">
-                    <Users class="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 class="card-title text-xl">Rejoignez une communauté</h3>
-                </div>
-                <p class="text-base-content/70">
-                  Connectez-vous avec d'autres bénévoles partageant vos valeurs
-                  et élargissez votre réseau.
-                </p>
-              </div>
-            </div>
-
-            <!-- Carte 5 -->
-            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:translate-y-[-5px] slide-in-up delay-400" :class="{ 'visible': isVisible.benefits }">
-              <div class="card-body">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="p-3 rounded-lg bg-secondary/20 group-hover:bg-secondary/30 transition-colors duration-300">
-                    <HeartHandshake class="h-6 w-6 text-secondary" />
-                  </div>
-                  <h3 class="card-title text-xl">Faites la différence</h3>
-                </div>
-                <p class="text-base-content/70">
-                  Contribuez concrètement à des causes qui vous tiennent à cœur
-                  et ayez un impact positif sur la société.
-                </p>
-              </div>
-            </div>
-
-            <!-- Carte 6 -->
-            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:translate-y-[-5px] slide-in-up delay-600" :class="{ 'visible': isVisible.benefits }">
-              <div class="card-body">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="p-3 rounded-lg bg-accent/20 group-hover:bg-accent/30 transition-colors duration-300">
-                    <Shield class="h-6 w-6 text-accent" />
-                  </div>
-                  <h3 class="card-title text-xl">Sécurité garantie</h3>
-                </div>
-                <p class="text-base-content/70">
-                  Toutes les associations sont vérifiées et les missions sont
-                  encadrées pour assurer votre sécurité.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Advantage
+        :start-searching="startSearching"
+        :is-visible="isVisible.benefits"
+        />
 
       <!-- Section Comment ça marche -->
-      <section id="how-it-works-section" class="py-16 px-4 bg-base-100"  v-if="!startSearching">
-        <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-12 slide-in-up" :class="{ 'visible': isVisible.howItWorks }">
-            <h2 class="text-3xl font-bold mb-4">Comment ça marche ?</h2>
-            <p class="text-base-content/70 max-w-2xl mx-auto">
-              Participer à un événement ou rejoindre une mission n'a jamais été aussi simple.
-              Suivez ces étapes pour trouver l'événement qui vous correspond, que vous soyez
-              bénévole ou personne à la recherche d'aide.
-            </p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            <!-- Ligne de connexion entre les étapes (visible uniquement sur desktop) -->
-            <div class="absolute top-8 left-0 w-full h-1 bg-base-300 hidden md:block z-0">
-              <div class="absolute top-0 left-0 h-full bg-primary transition-all duration-1000" 
-                   :style="{ width: isVisible.howItWorks ? '100%' : '0%' }"></div>
-            </div>
-
-            <!-- Étape 1 -->
-            <div class="flex flex-col items-center text-center slide-in-up" :class="{ 'visible': isVisible.howItWorks }">
-              <div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white text-2xl font-bold mb-6 shadow-lg transform transition-transform duration-300 hover:scale-110 z-10">
-                1
-              </div>
-              <h3 class="text-xl font-bold mb-3">Trouvez un événement</h3>
-              <p class="text-base-content/70">
-                Parcourez les annonces ou utilisez les filtres pour trouver
-                un événement qui correspond à vos besoins ou compétences.
-              </p>
-            </div>
-
-            <!-- Étape 2 -->
-            <div class="flex flex-col items-center text-center slide-in-up delay-300" :class="{ 'visible': isVisible.howItWorks }">
-              <div class="w-16 h-16 rounded-full bg-secondary flex items-center justify-center text-white text-2xl font-bold mb-6 shadow-lg transform transition-transform duration-300 hover:scale-110 z-10">
-                2
-              </div>
-              <h3 class="text-xl font-bold mb-3">Inscrivez-vous en quelques clics</h3>
-              <p class="text-base-content/70">
-                Inscrivez-vous à l'événement directement via la plateforme.
-                Vous pouvez préciser votre rôle (bénévole ou participant) et ajouter un message.
-              </p>
-            </div>
-
-            <!-- Étape 3 -->
-            <div class="flex flex-col items-center text-center slide-in-up delay-600" :class="{ 'visible': isVisible.howItWorks }">
-              <div class="w-16 h-16 rounded-full bg-accent flex items-center justify-center text-white text-2xl font-bold mb-6 shadow-lg transform transition-transform duration-300 hover:scale-110 z-10">
-                3
-              </div>
-              <h3 class="text-xl font-bold mb-3">Participez</h3>
-              <p class="text-base-content/70">
-                Une fois votre inscription confirmée, vous recevrez tous les détails
-                pour participer à l'événement, que ce soit en tant que bénévole ou bénéficiaire.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      <HowItWorks :start-searching="startSearching" :is-visible="isVisible.howItWorks"
+               />
 
       <!-- Section CTA -->
-      <section id="cta-section" class="py-16 px-4 bg-base-100" v-if="!startSearching">
-        <div class="max-w-4xl mx-auto bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl p-8 md:p-12 text-center shadow-lg hover:shadow-xl transition-shadow duration-300 slide-in-up" :class="{ 'visible': isVisible.cta }">
-          <h2 class="text-3xl font-bold mb-4">Prêt à participer ?</h2>
-          <p class="text-base-content/80 max-w-2xl mx-auto mb-8">
-            Des centaines d'associations proposent des événements pour tous. Trouvez dès maintenant
-            un événement qui vous correspond, que vous souhaitiez aider comme bénévole
-            ou participer comme bénéficiaire.
-          </p>
-          <div class="flex flex-wrap justify-center gap-4">
-            <NuxtLink to="#search-section" class="btn btn-primary btn-lg group hover:scale-105 transition-transform duration-300">
-              Découvrir les événements
-              <ArrowRight class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-            </NuxtLink>
-          </div>
-        </div>
-      </section>
+      <Cta
+          :start-searching="startSearching"
+          :is-visible="isVisible.cta"
+      />
+
     </main>
   </div>
 </template>
@@ -1043,6 +767,28 @@ a:focus-visible {
   outline: 2px solid #eb5577;
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* Transitions pour startSearching */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+.fade-slide-enter-to,
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Custom animations */
@@ -1116,25 +862,6 @@ a:focus-visible {
   }
 }
 
-.counter-animate {
-  animation: countUp 0.5s ease-out forwards;
-}
-
-/* Search results transition */
-.search-results-enter-active,
-.search-results-leave-active {
-  transition: all 0.5s ease-in-out;
-}
-
-.search-results-enter-from {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.search-results-leave-to {
-  opacity: 0;
-  transform: translateY(-20px);
-}
 
 /* Smooth scroll to search results */
 html {

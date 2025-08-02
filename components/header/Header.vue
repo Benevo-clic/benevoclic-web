@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { Sun as SunIcon, Moon as MoonIcon, Bell as BellIcon} from 'lucide-vue-next'
+import { Sun as SunIcon,HomeIcon,HeartIcon, Moon as MoonIcon, Bell as BellIcon} from 'lucide-vue-next'
 
 import {useUser} from "~/composables/auth/useUser";
 import NavigationActions from "~/components/header/utils/NavigationActions.vue";
@@ -13,7 +13,6 @@ import DrawerAppContentAssociation from "~/components/header/drawer/components/a
 import VolunteerBottomBar from "~/components/header/VolunteerBottomBar.vue";
 import AssociationBottomBar from "~/components/header/AssociationBottomBar.vue";
 import {useI18n} from "vue-i18n";
-import NoConnectedBottomBar from "~/components/header/NoConnectedBottomBar.vue";
 import type {RoleUser} from "~/common/enums/role.enum";
 
 const auth = useUser()
@@ -125,6 +124,17 @@ function handleUserMenuKeydown(event: KeyboardEvent) {
     dropdown?.blur()
   }
 }
+
+function handleFavorites() {
+  if(!isAuthenticated.value) {
+    return
+  }
+  navigateTo('/volunteer/activity/favorites')
+}
+
+function handleHome() {
+  navigateTo('/')
+}
 </script>
 
 <template>
@@ -184,6 +194,27 @@ function handleUserMenuKeydown(event: KeyboardEvent) {
         </div>
 
         <div class="flex items-center gap-3">
+          <div class="indicator hidden sm:flex mr-2">
+            <button
+                class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+                @click="handleHome"
+                aria-label="Aller à l'accueil bénévole"
+            >
+              <HomeIcon class="w-6 h-6" aria-hidden="true" />
+              <span>{{t('header.volunteer.home')}}</span>
+            </button>
+          </div>
+          <div class="indicator hidden sm:flex mr-2">
+            <button
+                class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+                @click="handleFavorites"
+                aria-label="Voir mes favoris"
+                v-if="isAuthenticated"
+            >
+              <HeartIcon class="w-6 h-6" aria-hidden="true" />
+              <span>{{t('header.volunteer.favorites')}}</span>
+            </button>
+          </div>
           <!-- Location -->
           <div class="flex items-center gap-1 text-base-content">
             <NavigationActions />
@@ -212,6 +243,7 @@ function handleUserMenuKeydown(event: KeyboardEvent) {
               @keyup.space.prevent="handleNotifications"
               aria-label="Notifications (12 nouvelles)"
               :aria-describedby="isAuthenticated ? 'notifications-login-required' : undefined"
+              v-if="isAuthenticated"
             >
               <span class="indicator-item badge badge-primary text-base-content" aria-label="12 notifications">
                 12
@@ -292,24 +324,21 @@ function handleUserMenuKeydown(event: KeyboardEvent) {
           >
             <AlignJustify class="icon-burger-button text-base-content w-8 h-8" aria-hidden="true" />
           </button>
-
         </div>
       </div>
 
       <!-- Bottom bar -->
       <nav 
-        class="bg-base-200 border-t-2 border-b-2 border-base-300 px-4 py-3" 
+        class="bg-base-200 border-t-2 border-b-2 border-base-300"
         v-if="!props.optionsOpen" 
         role="navigation" 
         aria-label="Navigation principale"
         id="mobile-menu"
       >
-        <NoConnectedBottomBar v-if="!isAuthenticated"/>
+<!--        <NoConnectedBottomBar v-if="!isAuthenticated"/>-->
 
-        <template v-else>
           <AssociationBottomBar v-if="role === 'ASSOCIATION'" />
-          <VolunteerBottomBar v-else-if="role === 'VOLUNTEER'" />
-        </template>
+<!--          <VolunteerBottomBar v-else-if="role === 'VOLUNTEER'" />-->
 
       </nav>
 

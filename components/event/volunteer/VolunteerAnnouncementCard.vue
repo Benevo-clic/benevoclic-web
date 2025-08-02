@@ -1,5 +1,5 @@
 <template>
-  <article 
+  <article
     class="group card bg-base-100 shadow-lg border border-base-300 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer overflow-hidden relative text-base focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
     @click="goToDetails"
     @keyup.enter="goToDetails"
@@ -86,7 +86,7 @@
       </h3>
 
       <!-- Description -->
-      <p 
+      <p
         :id="`event-description-${announcement._id}`"
         class="text-sm text-base-content/70 mb-1 line-clamp-2 leading-relaxed"
       >
@@ -166,6 +166,7 @@ import {navigateTo} from "#app";
 const props = defineProps<{
   announcement: Announcement,
   isFavorite?: boolean
+  isConnected?: boolean
 }>();
 
 const favorite = ref(props.isFavorite);
@@ -194,10 +195,14 @@ function toggleFavorite() {
 }
 
 function goToDetails() {
+  if(!props.isConnected) {
+    navigateTo(`/announcement/${props.announcement._id}`);
+    return;
+  }
   navigateTo(`/volunteer/events/announcement/${props.announcement._id}`)
 }
 
 function filterByTag(tag: string) {
   emit('filter-by-tag', tag);
 }
-</script> 
+</script>

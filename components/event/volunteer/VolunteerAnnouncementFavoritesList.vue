@@ -24,6 +24,7 @@
         :announcement="announcement"
         :is-favorite="true"
         @favorite="toggleFavorite"
+        :is-connected="true"
       />
     </div>
     <ErrorPopup

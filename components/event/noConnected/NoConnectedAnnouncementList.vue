@@ -12,11 +12,12 @@
       />
     </div>
     <div v-else class="grid grid-cols-1 md:grid-cols-2 xl1285:grid-cols-3 gap-4">
-      <NoConnectedAnnouncementCard
+      <VolunteerAnnouncementCard
           v-for="announcement in props.announcements"
           :key="announcement._id"
           :announcement="announcement"
           @favorite="toggleFavorite"
+          :is-connected="false"
       />
     </div>
   </div>
@@ -25,6 +26,7 @@
 <script setup lang="ts">
 import type {Announcement} from "~/common/interface/event.interface";
 import NoConnectedAnnouncementCard from "~/components/event/noConnected/NoConnectedAnnouncementCard.vue";
+import VolunteerAnnouncementCard from "~/components/event/volunteer/VolunteerAnnouncementCard.vue";
 
 
 const props = defineProps<

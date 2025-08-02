@@ -55,13 +55,9 @@
             <button
               class="btn btn-sm focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
               :class="followButtonClass"
-              @click="toggleFollowAssociation" @keyup.enter="toggleFollowAssociation" @keyup.space.prevent="toggleFollowAssociation"
-              @mouseenter="hovering = true"
-              @mouseleave="hovering = false"
+              :disabled="true"
             >
-              <UserPlus v-if="!isFollowing" class="w-4 h-4 mr-1" />
-              <Clock v-else-if="isFollowingPending" class="w-4 h-4 mr-1" />
-              <UserCheck v-else class="w-4 h-4 mr-1" />
+              <UserPlus class="w-4 h-4 mr-1" />
               {{ followButtonHoverText }}
             </button>
           </div>
@@ -109,50 +105,17 @@
           <span class="loading loading-spinner loading-md"></span>
         </div>
         <div v-else class="flex flex-col sm:flex-row gap-3">
-
           <button
               class="btn btn-neutral flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-              :disabled="!canParticipateAsVolunteer"
-              @click="cancelVolunteerParticipationWaitingList" @keyup.enter="cancelVolunteerParticipationWaitingList" @keyup.space.prevent="cancelVolunteerParticipationWaitingList"
-              v-if="isAlreadyVolunteerWaiting"
+              :disabled="true"
           >
             <HeartHandshake class="w-5 h-5 mr-2" />
             Bénévole
-            <span  class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">En attente</span>
-          </button>
-          <button
-              class="btn btn-neutral flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-              @click="cancelVolunteerParticipation" @keyup.enter="cancelVolunteerParticipation" @keyup.space.prevent="cancelVolunteerParticipation"
-              v-else-if="isAlreadyVolunteer"
-          >
-            <HeartHandshake class="w-5 h-5 mr-2" />
-            Bénévole
-            <span  class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">Annuler</span>
-          </button>
-          <button
-              class="btn btn-primary flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-              :disabled="!canParticipateAsVolunteer"
-              @click="participateAsVolunteer" @keyup.enter="participateAsVolunteer" @keyup.space.prevent="participateAsVolunteer"
-              v-else
-          >
-            <HeartHandshake class="w-5 h-5 mr-2" />
-            Bénévole
-            <span v-if="!canParticipateAsVolunteer" class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">Complet</span>
-          </button>
-          <button 
-            class="btn btn-secondary flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
-            :disabled="!canParticipateAsParticipant"
-            @click="participateAsParticipant" @keyup.enter="participateAsParticipant" @keyup.space.prevent="participateAsParticipant"
-            v-if="!alreadyParticipating"
-          >
-            <Users class="w-5 h-5 mr-2" />
-            Participer
-            <span v-if="!canParticipateAsParticipant" class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">Complet</span>
           </button>
           <button
             class="btn btn-neutral flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            @click="cancelParticipation" @keyup.enter="cancelParticipation" @keyup.space.prevent="cancelParticipation"
-            v-else>
+            :disabled="true"
+          >
             <Users class="w-5 h-5 mr-2" />
             Participer
             <span  class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">Annuler</span>
@@ -196,7 +159,7 @@
               </div>
             </div>
           <!-- Bouton pour ouvrir dans Google Maps -->
-          <button 
+          <button
             class="btn btn-primary btn-sm absolute bottom-4 right-4 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             @click="openInGoogleMaps" @keyup.enter="openInGoogleMaps" @keyup.space.prevent="openInGoogleMaps"
           >
@@ -284,39 +247,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted, watch, nextTick } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import {definePageMeta, useNavigation,useNuxtApp} from "#imports";
 import {EventStatus} from "~/common/enums/event.enum";
 import {
   HeartHandshake, Users, Calendar, Clock, MapPin, ExternalLink, Info,
-  Tag, UserPlus, UserCheck
+  Tag, UserPlus
 } from 'lucide-vue-next'
 import {useAnnouncement} from '~/composables/useAnnouncement';
-import {useVolunteerAuth} from "~/composables/useVolunteer";
 import type {AssociationVolunteerFollow} from '~/common/interface/volunteer.interface';
 import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 
 const route = useRoute();
 const announcementUse = useAnnouncement();
-const volunteerUse = useVolunteerAuth();
 const {navigateToRoute} = useNavigation()
 const loading = ref(true);
 const loadingVolunteer = computed(() => announcementUse.loading.value)
 const announcement = announcementUse.getCurrentAnnouncement;
 
-const volunteerId = computed(() => volunteerUse.volunteer?.value?.volunteerId);
 const associationId = computed(() => announcement.value?.associationId);
 
-// Listes réactives pour l'état d'adhésion
 const associationsWaitingList = ref<AssociationVolunteerFollow[]>([]);
 const associationsFollowingList = ref<AssociationVolunteerFollow[]>([]);
 
 const isFollowingPending = computed(() =>
-  associationsWaitingList.value.some(a => a.associationId === associationId.value)
+    associationsWaitingList.value.some(a => a.associationId === associationId.value)
 );
 const isFollowing = computed(() =>
-  associationsFollowingList.value.some(a => a.associationId === associationId.value)
+    associationsFollowingList.value.some(a => a.associationId === associationId.value)
 );
 
 const hovering = ref(false);
@@ -349,41 +308,11 @@ function handleError(error: any) {
   }
 }
 
-async function refreshFollowState() {
-  if (!volunteerId.value) return;
-  try {
-    associationsWaitingList.value = await volunteerUse.getAllAssociationsToWaitingList(volunteerId.value);
-    associationsFollowingList.value = await volunteerUse.getAllAssociationsFollowingList(volunteerId.value);
-  }catch (error : any) {
-    handleError(error);
-    return;
-  }
-
-}
-
 onMounted(async () => {
   await fetchAnnouncement();
-  if (volunteerUse.volunteer.value?.volunteerId) {
-    await refreshFollowState();
-  } else {
-    const stop = watch(
-      () => volunteerUse.volunteer.value?.volunteerId,
-      async (id) => {
-        if (id) {
-          await nextTick();
-          await refreshFollowState();
-          stop();
-        }
-      },
-      { immediate: true }
-    );
-    if (!volunteerUse.volunteer.value) {
-      await volunteerUse.getVolunteerInfo();
-    }
-  }
   initMap(announcement.value?.locationAnnouncement?.coordinates[0] || 0,
-           announcement.value?.locationAnnouncement?.coordinates[1] || 0,
-           announcement.value?.addressAnnouncement?.address || '');
+      announcement.value?.locationAnnouncement?.coordinates[1] || 0,
+      announcement.value?.addressAnnouncement?.address || '');
 });
 
 async function fetchAnnouncement() {
@@ -399,27 +328,6 @@ async function fetchAnnouncement() {
   }
 }
 
-async function toggleFollowAssociation() {
-
-  try {
-    if (!volunteerId.value || !associationId.value) return;
-    if (isFollowingPending.value) {
-      await volunteerUse.removeVolunteerFromWaitingListAssociation(associationId.value);
-    } else if (isFollowing.value) {
-      await volunteerUse.removeVolunteerFromAssociation(associationId.value, volunteerId.value);
-    }else {
-      await volunteerUse.addVolunteerToWaitingListAssociation(associationId.value, {
-        volunteerId: volunteerId.value,
-        volunteerName: volunteerUse.volunteer.value?.firstName + ' ' + volunteerUse.volunteer.value?.lastName
-      });
-    }
-    await refreshFollowState();
-  }catch (error: any) {
-    handleError(error);
-    return;
-  }
-
-}
 
 const remainingParticipants = computed(() => {
   const max = announcement.value?.maxParticipants || 0;
@@ -431,22 +339,6 @@ const remainingVolunteers = computed(() => {
   const max = announcement.value?.maxVolunteers || 0;
   const current = announcement.value?.nbVolunteers || 0;
   return Math.max(0, max - current);
-});
-
-const canParticipateAsVolunteer = computed(() => remainingVolunteers.value > 0);
-const canParticipateAsParticipant = computed(() => remainingParticipants.value > 0);
-const alreadyParticipating = computed(() => {
-  const volunteerId = volunteerUse.volunteer?.value?.volunteerId;
-  return announcement.value?.participants?.some(p => p.id === volunteerId) || false;
-});
-const isAlreadyVolunteerWaiting = computed(() => {
-  const volunteerId = volunteerUse.volunteer?.value?.volunteerId;
-  return announcement.value?.volunteersWaiting?.some(v => v.id === volunteerId) || false;
-});
-
-const isAlreadyVolunteer = computed(() => {
-  const volunteerId = volunteerUse.volunteer?.value?.volunteerId;
-  return announcement.value?.volunteers?.some(v => v.id === volunteerId) || false;
 });
 
 const profileImageUrl = computed(() => {
@@ -473,101 +365,11 @@ definePageMeta({
   layout: 'header',
 })
 
-async function participateAsVolunteer() {
-  if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
-    console.error('Aucun événement sélectionné pour la participation');
-    return;
-  }
-  if (!canParticipateAsVolunteer.value) {
-    console.warn('Aucune place disponible pour participer en tant que bénévole');
-    return;
-  }
-
-  if (isAlreadyVolunteerWaiting.value) {
-    console.warn('Vous êtes déjà inscrit à cet événement en tant que bénévole');
-    return;
-  }
-
-  try {
-    await announcementUse.addVolunteerWaiting(announcement.value?._id, {
-      id: volunteerUse.volunteer?.value?.volunteerId,
-      name: volunteerUse.volunteer?.value?.firstName + ' ' + volunteerUse.volunteer?.value?.lastName,
-    });
-  } catch (error) {
-    handleError(error);
-    return;
-  }
-
-}
-
-async function participateAsParticipant() {
-  if(!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
-    console.error('Aucun événement sélectionné pour la participation');
-    return;
-  }
-  if(!alreadyParticipating.value){
-    console.log('Participation en tant que participant');
-  } else {
-    console.warn('Vous êtes déjà inscrit à cet événement en tant que participant');
-    return;
-  }
-
-  try {
-    await announcementUse.addParticipant(announcement.value?._id, {
-      id: volunteerUse.volunteer?.value?.volunteerId,
-      name: volunteerUse.volunteer?.value?.firstName + ' ' + volunteerUse.volunteer?.value?.lastName,
-    });
-  } catch (error: any) {
-    handleError(error);
-    return;
-  }
-}
-
-
-async function cancelParticipation() {
-  if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
-    console.error('Aucun événement sélectionné pour l\'annulation de participation');
-    return;
-  }
-  try {
-    await announcementUse.removeParticipant(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
-  } catch (error) {
-    handleError(error);
-    return;
-  }
-}
-
-async function cancelVolunteerParticipationWaitingList() {
-  if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
-    console.error('Aucun événement sélectionné pour l\'annulation de participation en tant que bénévole');
-    return;
-  }
-  try {
-    await announcementUse.removeVolunteerWaiting(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
-  } catch (error) {
-    handleError(error);
-    return;
-  }
-}
-
-async function cancelVolunteerParticipation() {
-  if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
-    console.error('Aucun événement sélectionné pour l\'annulation de participation en tant que bénévole');
-    return;
-  }
-  try {
-    await announcementUse.removeVolunteer(announcement.value?._id, volunteerUse.volunteer?.value?.volunteerId);
-  } catch (error) {
-    handleError(error);
-    return;
-  }
-}
-
 function openInGoogleMaps() {
   const address = announcement.value?.addressAnnouncement?.address;
   const city = announcement.value?.addressAnnouncement?.city;
   const postalCode = announcement.value?.addressAnnouncement?.postalCode;
-  
+
   if (address && city) {
     const fullAddress = `${address}, ${city} ${postalCode || ''}`;
     const encodedAddress = encodeURIComponent(fullAddress);

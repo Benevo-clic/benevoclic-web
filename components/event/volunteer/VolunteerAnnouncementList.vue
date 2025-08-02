@@ -20,6 +20,7 @@
           :announcement="announcement"
           :is-favorite="favoriteIds.includes(announcement._id)"
           @favorite="toggleFavorite"
+          :is-connected="true"
       />
     </div>
     <ErrorPopup

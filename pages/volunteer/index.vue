@@ -1,10 +1,19 @@
 <script setup lang="ts">
 import { definePageMeta, useHead, useAnnouncement,useVolunteerAuth,useAssociationAuth, navigateTo } from "#imports";
-import { onMounted, ref, onUnmounted } from 'vue';
-import { Users, HeartHandshake, ArrowRight, Search, Award, Clock, Shield, ChevronDown } from 'lucide-vue-next';
+import { onMounted, ref, computed, onUnmounted, watch } from 'vue';
+import { Users, HeartHandshake, ArrowRight, Search, Award, Clock, Shield, ChevronDown, ChevronRight, MapPin, X, SlidersHorizontal } from 'lucide-vue-next';
+import { useUserLocation } from '~/composables/useUserLocation';
 import NoConnectedAnnouncementCard from "~/components/event/noConnected/NoConnectedAnnouncementCard.vue";
+import NoConnectedAnnouncementList from "~/components/event/noConnected/NoConnectedAnnouncementList.vue";
+import VolunteerEventFilters from "~/components/event/volunteer/VolunteerEventFilters.vue";
 import type { Announcement } from "~/common/interface/event.interface";
 import type { FilterAnnouncement } from "~/common/interface/filter.interface";
+import VolunteerAnnouncementList from "~/components/event/volunteer/VolunteerAnnouncementList.vue";
+import Advantage from "~/components/home/advantage.vue";
+import Events from "~/components/home/events.vue";
+import Statistique from "~/components/home/statistique.vue";
+import Cta from "~/components/home/cta.vue";
+import HowItWorks from "~/components/home/HowItWorks.vue";
 
 
 
@@ -41,7 +50,16 @@ const totalEvents = ref(0);
 const totalAssociations = ref(0);
 const totalVolunteerSlots = ref(0);
 
-// Animation variables
+// Nouvelles variables pour la recherche
+const showSearchResults = ref(false);
+const searchAnnouncements = ref<Announcement[]>([]);
+const searchLoading = ref(false);
+const searchError = ref<string | null>(null);
+const searchTotalAnnouncements = ref(0);
+const currentSearchPage = ref(1);
+const pageSize = 9;
+const searchTotalPages = computed(() => Math.ceil(searchTotalAnnouncements.value / pageSize));
+
 const isVisible = ref<{ [key: string]: boolean }>({
   hero: true,
   search: false,
@@ -58,23 +76,65 @@ const animatedStats = ref<{ [key: string]: number }>({
 });
 const statsAnimationStarted = ref(false);
 
-// Scroll observer
 let observers: IntersectionObserver[] = [];
 
-const searchType = ref<string>("");
-const searchLocation = ref<string>("");
-const searchDate = ref<string>("");
+// État partagé pour les filtres
+const sharedFilters = ref<FilterAnnouncement>({
+  nameEvent: undefined,
+  description: undefined,
+  status: undefined,
+  hoursEventFrom: undefined,
+  hoursEventTo: undefined,
+  dateEventFrom: undefined,
+  dateEventTo: undefined,
+  publicationInterval: undefined,
+  datePublicationFrom: undefined,
+  datePublicationTo: undefined,
+  tags: [],
+  latitude: undefined,
+  longitude: undefined,
+  radius: 0,
+  page: 1,
+  limit: 9,
+  sort: undefined
+});
+
+// Variables pour la recherche rapide (synchronisées avec sharedFilters)
+const searchQuery = computed({
+  get: () => sharedFilters.value.nameEvent || "",
+  set: (value: string) => {
+    sharedFilters.value.nameEvent = value || undefined;
+    sharedFilters.value.description = value || undefined;
+    sharedFilters.value.associationName = value || undefined;
+  }
+});
+
+const searchTimeout = ref<NodeJS.Timeout | null>(null);
+
+const filteredEventsCount = ref<number>(0);
+const isCounting = ref<boolean>(false);
+const countTimeout = ref<NodeJS.Timeout | null>(null);
+
+const useCurrentLocation = ref<boolean>(false);
+const locationRadius = ref<number>(5);
+const userCurrentLocation = ref<any>(null);
+const currentLatitude = ref<number>();
+const currentLongitude = ref<number>();
+const canUseLocation = ref<boolean>(false);
+const resetLocation = ref(false);
+const startSearching = ref(false);
+
 
 async function fetchFeaturedEvents() {
   isLoading.value = true;
   try {
-    const filters: FilterAnnouncement = {
+    const fetchFilter: FilterAnnouncement = {
       page: 1,
-      limit: 5,
+      limit: 9,
       sort: "dateEvent_asc"
     };
 
-    const response = await announcement.filterAnnouncement(filters);
+    const response = await announcement.filterAnnouncement(fetchFilter);
     if (response && response.annonces) {
       featuredEvents.value = response.annonces;
 
@@ -104,55 +164,241 @@ async function fetchFeaturedEvents() {
   }
 }
 
-// Fonction pour rediriger vers la page des événements avec les filtres
-function searchEvents() {
-  const filters: Partial<FilterAnnouncement> = {};
+async function searchEvents(page = 1) {
+  startSearching.value = true;
 
-  if (searchType.value) {
-    filters.tags = [searchType.value];
+  searchLoading.value = true;
+  if (page === 1) {
+    showSearchResults.value = true;
   }
 
-  if (searchLocation.value) {
-    // Utiliser cityCoordinates pour la localisation
-    filters.cityCoordinates = [{
-      lat: 0, // Ces valeurs seront remplacées par le backend
-      lon: 0, // Ces valeurs seront remplacées par le backend
-      name: searchLocation.value
-    }];
+  try {
+    const filters: FilterAnnouncement = {
+      ...sharedFilters.value,
+      page: page,
+      limit: pageSize
+    };
+
+    const cleanFilters = Object.fromEntries(
+        Object.entries(filters).filter(([_, value]) => value !== undefined && value !== null)
+    ) as FilterAnnouncement;
+
+    const response = await announcement.filterAnnouncement(cleanFilters);
+    if (response && response.annonces) {
+      searchAnnouncements.value = response.annonces;
+      searchTotalAnnouncements.value = response.meta?.total || 0;
+      currentSearchPage.value = page;
+
+      if (page === 1) {
+        setTimeout(() => {
+          const searchSection = document.getElementById('search-section');
+          if (searchSection) {
+            searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
+      }
+    }
+  } catch (err: any) {
+    console.error("Erreur lors de la recherche:", err);
+
+    if (err?.status === 400) {
+      searchError.value = "Les critères de recherche ne sont pas valides. Veuillez vérifier vos filtres.";
+    } else if (err?.status === 500) {
+      searchError.value = "Erreur serveur. Veuillez réessayer plus tard.";
+    } else {
+      searchError.value = err?.message || "Erreur lors de la recherche";
+    }
+  } finally {
+    searchLoading.value = false;
   }
-
-  if (searchDate.value) {
-    // Utiliser dateEventFrom et dateEventTo pour la date
-    filters.dateEventFrom = searchDate.value;
-    filters.dateEventTo = searchDate.value;
-  }
-
-  // Mettre à jour le filtre courant
-  announcement.patchCurrentFilter(filters);
-
-  // Rediriger vers la page des événements
-  navigateTo('/volunteer/events');
 }
 
-// Function to navigate the carousel
-function navigateCarousel(direction: 'prev' | 'next') {
-  if (featuredEvents.value.length === 0) return;
+async function handleSearchFilter(filters: FilterAnnouncement) {
+  searchLoading.value = true;
 
-  if (direction === 'prev') {
-    currentSlideIndex.value = currentSlideIndex.value === 0
-        ? featuredEvents.value.length - 1
-        : currentSlideIndex.value - 1;
-  } else {
-    currentSlideIndex.value = currentSlideIndex.value === featuredEvents.value.length - 1
-        ? 0
-        : currentSlideIndex.value + 1;
+  try {
+    sharedFilters.value = {
+      ...sharedFilters.value,
+      ...filters,
+      page: 1,
+      limit: pageSize
+    };
+
+    const cleanFilters = Object.fromEntries(
+        Object.entries(sharedFilters.value).filter(([_, value]) => value !== undefined && value !== null)
+    ) as FilterAnnouncement;
+
+    const response = await announcement.filterAnnouncement(cleanFilters);
+    if (response && response.annonces) {
+      searchAnnouncements.value = response.annonces;
+      searchTotalAnnouncements.value = response.meta?.total || 0;
+      currentSearchPage.value = 1;
+    }
+  } catch (err: any) {
+    console.error("Erreur lors de la recherche:", err);
+
+    // Gestion spécifique des erreurs
+    if (err?.status === 400) {
+      searchError.value = "Les critères de recherche ne sont pas valides. Veuillez vérifier vos filtres.";
+    } else if (err?.status === 500) {
+      searchError.value = "Erreur serveur. Veuillez réessayer plus tard.";
+    } else {
+      searchError.value = err?.message || "Erreur lors de la recherche";
+    }
+  } finally {
+    searchLoading.value = false;
   }
-
-  // Navigate to the slide
-  window.location.hash = `event-slide-${currentSlideIndex.value}`;
 }
 
-// Function to animate counting up for statistics
+function closeSearchResults() {
+  showSearchResults.value = false;
+  startSearching.value = false;
+
+  setTimeout(() => {
+    searchAnnouncements.value = [];
+    searchError.value = null;
+    searchTotalAnnouncements.value = 0;
+    currentSearchPage.value = 1;
+  }, 500);
+
+  const searchSection = document.getElementById('search-section');
+  if (searchSection) {
+    searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function resetAllFilters() {
+  sharedFilters.value = {
+    nameEvent: undefined,
+    description: undefined,
+    status: undefined,
+    hoursEventFrom: undefined,
+    hoursEventTo: undefined,
+    dateEventFrom: undefined,
+    dateEventTo: undefined,
+    publicationInterval: undefined,
+    datePublicationFrom: undefined,
+    datePublicationTo: undefined,
+    tags: [],
+    latitude: undefined,
+    longitude: undefined,
+    radius: 0,
+    page: 1,
+    limit: 9,
+    sort: undefined
+  };
+
+  // Réinitialiser les variables locales
+  useCurrentLocation.value = false;
+  locationRadius.value = 5;
+  resetLocation.value = true;
+  searchError.value = null;
+
+  // Réinitialiser les compteurs
+  filteredEventsCount.value = 0;
+  isCounting.value = false;
+}
+
+function goToSearchPage(page: number) {
+  if (page >= 1 && page <= searchTotalPages.value) {
+    searchEvents(page);
+    // Scroll vers les résultats
+    setTimeout(() => {
+      const searchResults = document.querySelector('.search-results');
+      if (searchResults) {
+        searchResults.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  }
+}
+
+
+async function countFilteredEvents() {
+  if (countTimeout.value) {
+    clearTimeout(countTimeout.value);
+  }
+
+  countTimeout.value = setTimeout(async () => {
+    isCounting.value = true;
+
+    try {
+      const filters: Partial<FilterAnnouncement> = {
+        ...sharedFilters.value,
+        page: 1,
+        limit: 9
+      };
+
+      const cleanFilters = Object.fromEntries(
+          Object.entries(filters).filter(([_, value]) => value !== undefined && value !== null)
+      ) as FilterAnnouncement;
+
+      const response = await announcement.filterAnnouncement(cleanFilters);
+      filteredEventsCount.value = response?.meta?.total || 0;
+    } catch (error) {
+      console.error('Erreur lors du comptage des événements:', error);
+      filteredEventsCount.value = 0;
+    } finally {
+      isCounting.value = false;
+    }
+  }, 500);
+}
+
+const hasActiveFilters = computed(() => {
+  return sharedFilters.value.nameEvent ||
+      sharedFilters.value.dateEventFrom ||
+      sharedFilters.value.dateEventTo ||
+      sharedFilters.value.status ||
+      sharedFilters.value.sort ||
+      (sharedFilters.value.tags && sharedFilters.value.tags.length > 0) ||
+      sharedFilters.value.latitude ||
+      sharedFilters.value.longitude ||
+      sharedFilters.value.radius;
+});
+
+const userLocation = useUserLocation();
+
+const checkLocationPermissions = async () => {
+  try {
+    const { usePermissions } = await import('~/composables/usePermissions');
+    const { hasPermission, loadCookiePreferences } = usePermissions();
+
+    loadCookiePreferences();
+    canUseLocation.value = hasPermission('canUseLocation');
+
+    if (!canUseLocation.value) {
+      console.log('Cookies de personnalisation non acceptés - géolocalisation désactivée');
+    }
+  } catch (err) {
+    console.warn('Impossible de vérifier les permissions de géolocalisation:', err);
+    canUseLocation.value = false;
+  }
+};
+
+const initLocation = async () => {
+  try {
+    const location = await userLocation.getUserLocation()
+    if (location) {
+      currentLatitude.value = location.latitude
+      currentLongitude.value = location.longitude
+      userCurrentLocation.value = {
+        place_id: 'current_location',
+        display_name: 'Ma position actuelle',
+        city: location.city || 'Position détectée',
+        lat: location.latitude.toString(),
+        lon: location.longitude.toString()
+      }
+    } else {
+      console.log('Aucune position obtenue');
+    }
+  } catch (error) {
+    console.error('Error getting user location:', error)
+  }
+}
+
+function triggerCount() {
+  countFilteredEvents();
+}
+
 function animateCounters() {
   if (statsAnimationStarted.value) return;
   statsAnimationStarted.value = true;
@@ -183,9 +429,9 @@ function animateCounters() {
   }, interval);
 }
 
-// Function to setup intersection observers for scroll animations
 function setupScrollObservers() {
   const sections = [
+    { id: 'hero-section', key: 'hero' },
     { id: 'search-section', key: 'search' },
     { id: 'stats-section', key: 'stats' },
     { id: 'events-section', key: 'events' },
@@ -216,15 +462,6 @@ function setupScrollObservers() {
   });
 }
 
-// Function to scroll to the next section
-function scrollToNextSection() {
-  const searchSection = document.getElementById('search-section');
-  if (searchSection) {
-    searchSection.scrollIntoView({ behavior: 'smooth' });
-  }
-}
-
-// Charger les données au montage du composant
 onMounted(async () => {
   await fetchFeaturedEvents();
 
@@ -233,20 +470,36 @@ onMounted(async () => {
     currentSlideIndex.value = 0;
     // Use setTimeout to ensure DOM is updated
     setTimeout(() => {
-      window.location.hash = `event-slide-0`;
+      window.location.hash = `hero-section`;
     }, 100);
   }
 
-  // Setup scroll observers after a short delay to ensure DOM is ready
   setTimeout(() => {
     setupScrollObservers();
   }, 200);
+
+  filteredEventsCount.value = totalEvents.value;
+
+  await userLocation.initializeLocation();
+  await checkLocationPermissions();
+  await initLocation();
 });
 
-// Clean up observers when component is unmounted
+watch([sharedFilters], () => {
+  triggerCount();
+}, { deep: true });
+
 onUnmounted(() => {
   observers.forEach(observer => observer.disconnect());
   observers = [];
+
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value);
+  }
+
+  if (countTimeout.value) {
+    clearTimeout(countTimeout.value);
+  }
 });
 </script>
 
@@ -264,81 +517,47 @@ onUnmounted(() => {
     <!-- Contenu principal -->
     <main id="main-content" class="volunteer-content" role="main" aria-label="Page d'accueil Bénévole">
       <!-- Section Hero -->
-      <section class="hero min-h-[90vh] bg-gradient-to-br from-primary/10 to-secondary/10 py-16 px-4 flex items-center relative">
-        <div class="max-w-6xl mx-auto w-full">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div class="space-y-6 slide-in-left visible">
-              <h1 class="text-4xl md:text-5xl font-bold text-base-content">
-                Faites la différence avec <span class="text-primary">Benevoclic</span>
-              </h1>
-              <p class="text-lg text-base-content/80 max-w-xl">
-                Découvrez des événements et missions qui correspondent à vos compétences,
-                vos centres d'intérêt et vos disponibilités. Que vous soyez bénévole ou
-                personne dans le besoin, rejoignez une communauté engagée et participez
-                à des projets solidaires.
-              </p>
-              <div class="flex flex-wrap gap-4">
-                <NuxtLink to="/volunteer/events" class="btn btn-primary group">
-                  Découvrir les événements
-                  <ArrowRight class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                </NuxtLink>
-                <button class="btn btn-outline hover:scale-105 transition-transform duration-300">
-                  En savoir plus
-                </button>
+      <Transition name="fade-slide" mode="out-in">
+        <section id="hero-section" v-if="!startSearching" class="hero min-h-[70vh] bg-gradient-to-br from-primary/10 to-secondary/10 py-16 px-4 flex items-center relative">
+          <div class="max-w-6xl mx-auto w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              <div class="space-y-6 slide-in-left visible">
+                <h1 class="text-4xl md:text-5xl font-bold text-base-content">
+                  Faites la différence avec <span class="text-primary">Benevoclic</span>
+                </h1>
+                <p class="text-lg text-base-content/80 max-w-xl">
+                  Découvrez des événements et missions qui correspondent à vos compétences,
+                  vos centres d'intérêt et vos disponibilités. Que vous soyez bénévole ou
+                  personne dans le besoin, rejoignez une communauté engagée et participez
+                  à des projets solidaires.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                  <NuxtLink to="#search-section" class="btn btn-primary group">
+                    Découvrir les événements
+                    <ArrowRight class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                  </NuxtLink>
+                  <button class="btn btn-outline hover:scale-105 transition-transform duration-300">
+                    En savoir plus
+                  </button>
+                </div>
               </div>
-            </div>
-            <div class="relative slide-in-right visible delay-400">
-              <img
-                  src="/images/volunteer-info.png"
-                  alt="Bénévoles en action"
-                  class="w-full h-auto rounded-xl shadow-xl transform hover:scale-[1.02] transition-transform duration-500"
-                  loading="lazy"
-              />
-              <div class="absolute -bottom-6 -left-6 bg-base-100 p-4 rounded-xl shadow-lg hidden md:flex items-center gap-4 slide-in-up visible delay-800">
-                <div class="avatar-group -space-x-4 rtl:space-x-reverse">
-                  <div class="avatar">
-                    <div class="w-12">
-                      <img src="/images/volunteer-info.png" alt="Avatar bénévole" loading="lazy" />
-                    </div>
-                  </div>
-                  <div class="avatar">
-                    <div class="w-12">
-                      <img src="/images/volunteer-info.png" alt="Avatar bénévole" loading="lazy" />
-                    </div>
-                  </div>
-                  <div class="avatar">
-                    <div class="w-12">
-                      <img src="/images/volunteer-info.png" alt="Avatar bénévole" loading="lazy" />
-                    </div>
-                  </div>
-                  <div class="avatar placeholder">
-                    <div class="w-12 bg-primary text-white">
-                      <span>+99</span>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <p class="font-bold">Rejoignez la communauté</p>
-                  <p class="text-sm text-base-content/70">Des milliers de bénévoles actifs</p>
-                </div>
+              <div class="relative slide-in-right visible delay-400 hidden lg:block">
+                <img
+                    src="/images/volunteer-info.png"
+                    alt="Bénévoles en action"
+                    class="w-full h-auto rounded-xl shadow-xl transform hover:scale-[1.02] transition-transform duration-500"
+                    loading="lazy"
+                />
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- Scroll indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer" @click="scrollToNextSection">
-          <div class="flex flex-col items-center">
-            <span class="text-sm text-base-content/70 mb-2">Découvrir</span>
-            <ChevronDown class="w-6 h-6 text-primary" />
-          </div>
-        </div>
-      </section>
+        </section>
+      </Transition>
 
       <!-- Section Recherche Rapide -->
-      <section class="py-12 px-4 bg-base-100">
+      <section id="search-section" class="py-12 px-4 bg-base-100">
         <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-10">
+          <div class="text-center mb-10 slide-in-up" :class="{ 'visible': isVisible.search }">
             <h2 class="text-3xl font-bold mb-4">Trouvez l'événement qui vous correspond</h2>
             <p class="text-base-content/70 max-w-2xl mx-auto">
               Utilisez notre moteur de recherche avancé pour trouver des événements
@@ -346,342 +565,182 @@ onUnmounted(() => {
             </p>
           </div>
 
-          <div class="bg-base-200 p-6 rounded-xl shadow-md">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">Type d'événement</span>
-                </label>
-                <select v-model="searchType" class="select select-bordered w-full">
-                  <option value="" disabled selected>Sélectionnez un type</option>
-                  <option value="Humanitaire">Humanitaire</option>
-                  <option value="Environnement">Environnement</option>
-                  <option value="Sport">Sport</option>
-                  <option value="Culture">Culture</option>
-                  <option value="Éducation">Éducation</option>
-                  <option value="Santé">Santé</option>
-                  <option value="Aide alimentaire">Aide alimentaire</option>
-                  <option value="Soutien social">Soutien social</option>
-                </select>
-              </div>
-
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">Localisation</span>
-                </label>
-                <div class="input-group">
-                  <input
-                      v-model="searchLocation"
-                      type="text"
-                      placeholder="Ville ou code postal"
-                      class="input input-bordered w-full"
-                  />
-                </div>
-              </div>
-
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">Date</span>
-                </label>
+          <!-- Barre de recherche simple -->
+          <div class="bg-base-200 p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 slide-in-up delay-200" :class="{ 'visible': isVisible.search }">
+            <div class="form-control mb-6">
+              <label class="label">
+                <span class="label-text font-medium">Rechercher un événement</span>
+              </label>
+              <div class="relative">
+                <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-base-content/50" />
                 <input
-                    v-model="searchDate"
-                    type="date"
-                    class="input input-bordered w-full"
+                    v-model="searchQuery"
+                    type="text"
+                    placeholder="Rechercher par nom d'événement, description, nom d'association..."
+                    class="input input-bordered w-full pl-10 focus:border-primary transition-colors duration-300"
+                    @keyup.enter="() => searchEvents()"
                 />
               </div>
             </div>
 
-            <div class="mt-6 flex justify-center">
-              <button @click="searchEvents" class="btn btn-primary px-8">
-                <Search class="w-4 h-4 mr-2" />
-                Trouver des événements
+            <!-- Compteur d'événements filtrés -->
+            <div v-if="hasActiveFilters" class="mb-4 text-center">
+              <div class="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary/10 text-primary rounded-full text-sm sm:text-base">
+                <div v-if="isCounting" class="loading loading-spinner loading-sm"></div>
+                <span v-else class="font-medium">
+                  <span class="hidden sm:inline">{{ filteredEventsCount }} événement{{ filteredEventsCount !== 1 ? 's' : '' }} trouvé{{ filteredEventsCount !== 1 ? 's' : '' }}</span>
+                  <span class="sm:hidden">{{ filteredEventsCount }} résultat{{ filteredEventsCount !== 1 ? 's' : '' }}</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+              <button
+                  @click="() => searchEvents()"
+                  :disabled="searchLoading"
+                  class="btn btn-primary px-4 sm:px-8 group hover:scale-105 transition-transform duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+              >
+                <Search v-if="!searchLoading" class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                <div v-else class="loading loading-spinner loading-sm mr-2"></div>
+                <span class="hidden sm:inline">{{ searchLoading ? 'Recherche en cours...' : 'Trouver des événements' }}</span>
+                <span class="sm:hidden">{{ searchLoading ? 'Recherche...' : 'Rechercher' }}</span>
+              </button>
+
+              <button
+                  @click="resetAllFilters"
+                  class="btn btn-outline px-4 sm:px-6 group hover:scale-105 transition-transform duration-300 text-sm sm:text-base"
+                  :disabled="!hasActiveFilters"
+              >
+                <X class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                <span class="hidden sm:inline">Réinitialiser</span>
+                <span class="sm:hidden">Reset</span>
               </button>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- Section Statistiques -->
-      <section class="py-16 px-4 bg-base-200">
-        <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold mb-4">Benevoclic en chiffres</h2>
-            <p class="text-base-content/70 max-w-2xl mx-auto">
-              Rejoignez notre communauté grandissante et participez à des événements qui font la différence.
-            </p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-base-100 p-8 rounded-xl shadow-md text-center">
-              <div class="text-4xl font-bold text-primary mb-2">{{ totalEvents }}</div>
-              <div class="text-xl font-semibold mb-2">Événements</div>
-              <p class="text-base-content/70">
-                Événements disponibles sur notre plateforme pour vous engager et faire la différence.
-              </p>
-            </div>
-
-            <div class="bg-base-100 p-8 rounded-xl shadow-md text-center">
-              <div class="text-4xl font-bold text-secondary mb-2">{{ countAssociation }}</div>
-              <div class="text-xl font-semibold mb-2">Associations</div>
-              <p class="text-base-content/70">
-                Associations actives qui proposent des missions et événements variés.
-              </p>
-            </div>
-
-            <div class="bg-base-100 p-8 rounded-xl shadow-md text-center">
-              <div class="text-4xl font-bold text-accent mb-2">{{ countVolunteer }}</div>
-              <div class="text-xl font-semibold mb-2">
-                Bénévole<span v-if="countVolunteer > 1">s</span>
-                &
-                participant<span v-if="countVolunteer > 1">s</span>
+          <!-- Résultats de recherche avec transition -->
+          <div
+              v-if="showSearchResults"
+              class="mt-8 transition-all duration-500 ease-in-out search-results"
+              :class="showSearchResults ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
+          >
+            <!-- Header des résultats -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6">
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+                <h3 class="text-xl sm:text-2xl font-bold">Résultats de recherche</h3>
+                <div class="flex flex-wrap gap-2">
+                  <div class="badge badge-primary text-xs sm:text-sm">
+                    {{ searchTotalAnnouncements }} résultat{{ searchTotalAnnouncements !== 1 ? 's' : '' }}
+                  </div>
+                  <div v-if="hasActiveFilters" class="badge badge-secondary text-xs sm:text-sm">
+                    <SlidersHorizontal class="w-3 h-3 mr-1" />
+                    <span class="hidden sm:inline">Filtres actifs</span>
+                    <span class="sm:hidden">Filtres</span>
+                  </div>
+                </div>
               </div>
-              <p class="text-base-content/70">
-                Nombre de bénévoles et participants engagés dans des actions solidaires.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Section Événements à venir -->
-      <section class="py-16 px-4 bg-base-100">
-        <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold mb-4">Événements à venir</h2>
-            <p class="text-base-content/70 max-w-2xl mx-auto">
-              Découvrez les prochains événements et rejoignez-les en tant que bénévole ou participant.
-            </p>
-          </div>
-
-          <div v-if="isLoading" class="flex justify-center items-center h-64">
-            <div class="loading loading-spinner loading-lg"></div>
-          </div>
-
-          <div v-else-if="error" class="alert alert-error shadow-lg">
-            <div>
-              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-              <span>{{ error }}</span>
-            </div>
-          </div>
-
-          <div v-else-if="featuredEvents.length === 0" class="text-center py-12">
-            <img
-                src="/images/no_data.png"
-                alt="Aucun événement trouvé"
-                class="w-full max-w-md mx-auto mb-4"
-            />
-            <p class="text-lg text-base-content/70">Aucun événement à venir pour le moment.</p>
-          </div>
-
-          <div v-else class="w-full">
-            <div class="carousel w-full rounded-box relative">
-              <div
-                  v-for="(event, index) in featuredEvents"
-                  :key="event._id"
-                  :id="`event-slide-${index}`"
-                  class="carousel-item relative w-full md:w-1/2 lg:w-1/3 px-2"
+              <button
+                  @click="closeSearchResults"
+                  class="btn btn-ghost btn-sm self-end sm:self-auto"
+                  aria-label="Fermer les résultats de recherche"
               >
-                <NoConnectedAnnouncementCard
-                    :announcement="event"
-                    class="w-full h-full"
-                />
-              </div>
+                <X class="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
             </div>
 
-          </div>
+            <!-- Filtres avancés pour les résultats -->
+            <div class="bg-base-100 rounded-lg shadow-md p-6 mb-6">
+              <VolunteerEventFilters
+                  :announcements="searchAnnouncements"
+                  @filter="handleSearchFilter"
+                  :filterannouncement="sharedFilters"
+              />
+            </div>
 
-          <div class="text-center mt-8">
-            <NuxtLink to="/volunteer/events" class="btn btn-outline btn-primary">
-              Voir tous les événements
-              <ArrowRight class="w-4 h-4 ml-2" />
-            </NuxtLink>
+            <!-- Liste des annonces -->
+            <div class="bg-base-100 rounded-lg shadow-md p-6">
+              <VolunteerAnnouncementList
+                  :announcements="searchAnnouncements"
+                  :total-announcements="searchTotalAnnouncements"
+                  :error="searchError"
+                  :loading="searchLoading"
+              />
+            </div>
+
+            <!-- Pagination -->
+            <nav
+                v-if="searchTotalPages > 1"
+                class="flex justify-center mt-6"
+                role="navigation"
+                aria-label="Navigation des pages de recherche"
+            >
+              <div class="join" role="group" aria-label="Contrôles de pagination">
+                <button
+                    class="join-item btn btn-sm sm:btn-md focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    :disabled="currentSearchPage === 1"
+                    @click="goToSearchPage(currentSearchPage - 1)"
+                    @keyup.enter="goToSearchPage(currentSearchPage - 1)"
+                    @keyup.space.prevent="goToSearchPage(currentSearchPage - 1)"
+                    :aria-label="`Aller à la page précédente (page ${currentSearchPage - 1})`"
+                    :aria-disabled="currentSearchPage === 1"
+                >
+                  <span aria-hidden="true">«</span>
+                  <span class="sr-only">Page précédente</span>
+                </button>
+                <button
+                    class="join-item btn btn-sm sm:btn-md"
+                    disabled
+                    aria-current="page"
+                    aria-label="Page actuelle"
+                >
+                  <span class="sr-only">Page actuelle : </span>
+                  <span class="hidden sm:inline">Page {{ currentSearchPage }} / {{ searchTotalPages }}</span>
+                  <span class="sm:hidden">{{ currentSearchPage }}/{{ searchTotalPages }}</span>
+                </button>
+                <button
+                    class="join-item btn btn-sm sm:btn-md focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    :disabled="currentSearchPage === searchTotalPages"
+                    @click="goToSearchPage(currentSearchPage + 1)"
+                    @keyup.enter="goToSearchPage(currentSearchPage + 1)"
+                    @keyup.space.prevent="goToSearchPage(currentSearchPage + 1)"
+                    :aria-label="`Aller à la page suivante (page ${currentSearchPage + 1})`"
+                    :aria-disabled="currentSearchPage === searchTotalPages"
+                >
+                  <span aria-hidden="true">»</span>
+                  <span class="sr-only">Page suivante</span>
+                </button>
+              </div>
+            </nav>
           </div>
         </div>
       </section>
+
+      <Statistique
+          :start-searching="startSearching"
+          :is-visible="isVisible.stats"
+          :animated-stats="{
+          events: animatedStats.events,
+          associations: animatedStats.associations,
+          volunteers: animatedStats.volunteers
+        }"
+      />
 
       <!-- Section Avantages -->
-      <section class="py-16 px-4 bg-base-200">
-        <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold mb-4">Pourquoi rejoindre Benevoclic ?</h2>
-            <p class="text-base-content/70 max-w-2xl mx-auto">
-              Notre plateforme permet aux associations de promouvoir leurs événements
-              et de connecter à la fois les bénévoles et les personnes dans le besoin
-              avec des actions solidaires qui leur correspondent.
-            </p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Carte 1 -->
-            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
-              <div class="card-body">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="p-3 rounded-lg bg-primary/20">
-                    <Search class="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 class="card-title text-xl">Trouvez facilement</h3>
-                </div>
-                <p class="text-base-content/70">
-                  Accédez à des milliers d'événements et de missions filtrés selon vos
-                  besoins, préférences et votre localisation, que vous cherchiez à aider
-                  ou à participer.
-                </p>
-              </div>
-            </div>
-
-            <!-- Carte 2 -->
-            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
-              <div class="card-body">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="p-3 rounded-lg bg-secondary/20">
-                    <Clock class="h-6 w-6 text-secondary" />
-                  </div>
-                  <h3 class="card-title text-xl">Gérez votre temps</h3>
-                </div>
-                <p class="text-base-content/70">
-                  Choisissez des missions adaptées à vos disponibilités,
-                  qu'il s'agisse d'un engagement ponctuel ou régulier.
-                </p>
-              </div>
-            </div>
-
-            <!-- Carte 3 -->
-            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
-              <div class="card-body">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="p-3 rounded-lg bg-accent/20">
-                    <Award class="h-6 w-6 text-accent" />
-                  </div>
-                  <h3 class="card-title text-xl">Développez vos compétences</h3>
-                </div>
-                <p class="text-base-content/70">
-                  Mettez en pratique vos talents ou acquérez de nouvelles
-                  compétences valorisables dans votre parcours.
-                </p>
-              </div>
-            </div>
-
-            <!-- Carte 4 -->
-            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
-              <div class="card-body">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="p-3 rounded-lg bg-primary/20">
-                    <Users class="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 class="card-title text-xl">Rejoignez une communauté</h3>
-                </div>
-                <p class="text-base-content/70">
-                  Connectez-vous avec d'autres bénévoles partageant vos valeurs
-                  et élargissez votre réseau.
-                </p>
-              </div>
-            </div>
-
-            <!-- Carte 5 -->
-            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
-              <div class="card-body">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="p-3 rounded-lg bg-secondary/20">
-                    <HeartHandshake class="h-6 w-6 text-secondary" />
-                  </div>
-                  <h3 class="card-title text-xl">Faites la différence</h3>
-                </div>
-                <p class="text-base-content/70">
-                  Contribuez concrètement à des causes qui vous tiennent à cœur
-                  et ayez un impact positif sur la société.
-                </p>
-              </div>
-            </div>
-
-            <!-- Carte 6 -->
-            <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow">
-              <div class="card-body">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="p-3 rounded-lg bg-accent/20">
-                    <Shield class="h-6 w-6 text-accent" />
-                  </div>
-                  <h3 class="card-title text-xl">Sécurité garantie</h3>
-                </div>
-                <p class="text-base-content/70">
-                  Toutes les associations sont vérifiées et les missions sont
-                  encadrées pour assurer votre sécurité.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Advantage
+          :start-searching="startSearching"
+          :is-visible="isVisible.benefits"
+      />
 
       <!-- Section Comment ça marche -->
-      <section class="py-16 px-4 bg-base-100">
-        <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold mb-4">Comment ça marche ?</h2>
-            <p class="text-base-content/70 max-w-2xl mx-auto">
-              Participer à un événement ou rejoindre une mission n'a jamais été aussi simple.
-              Suivez ces étapes pour trouver l'événement qui vous correspond, que vous soyez
-              bénévole ou personne à la recherche d'aide.
-            </p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Étape 1 -->
-            <div class="flex flex-col items-center text-center">
-              <div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white text-2xl font-bold mb-6">
-                1
-              </div>
-              <h3 class="text-xl font-bold mb-3">Trouvez un événement</h3>
-              <p class="text-base-content/70">
-                Parcourez les annonces ou utilisez les filtres pour trouver
-                un événement qui correspond à vos besoins ou compétences.
-              </p>
-            </div>
-
-            <!-- Étape 2 -->
-            <div class="flex flex-col items-center text-center">
-              <div class="w-16 h-16 rounded-full bg-secondary flex items-center justify-center text-white text-2xl font-bold mb-6">
-                2
-              </div>
-              <h3 class="text-xl font-bold mb-3">Inscrivez-vous en quelques clics</h3>
-              <p class="text-base-content/70">
-                Inscrivez-vous à l'événement directement via la plateforme.
-                Vous pouvez préciser votre rôle (bénévole ou participant) et ajouter un message.
-              </p>
-            </div>
-
-            <!-- Étape 3 -->
-            <div class="flex flex-col items-center text-center">
-              <div class="w-16 h-16 rounded-full bg-accent flex items-center justify-center text-white text-2xl font-bold mb-6">
-                3
-              </div>
-              <h3 class="text-xl font-bold mb-3">Participez</h3>
-              <p class="text-base-content/70">
-                Une fois votre inscription confirmée, vous recevrez tous les détails
-                pour participer à l'événement, que ce soit en tant que bénévole ou bénéficiaire.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      <HowItWorks :start-searching="startSearching" :is-visible="isVisible.howItWorks"
+      />
 
       <!-- Section CTA -->
-      <section class="py-16 px-4 bg-base-100">
-        <div class="max-w-4xl mx-auto bg-primary/10 rounded-xl p-8 md:p-12 text-center">
-          <h2 class="text-3xl font-bold mb-4">Prêt à participer ?</h2>
-          <p class="text-base-content/80 max-w-2xl mx-auto mb-8">
-            Des centaines d'associations proposent des événements pour tous. Trouvez dès maintenant
-            un événement qui vous correspond, que vous souhaitiez aider comme bénévole
-            ou participer comme bénéficiaire.
-          </p>
-          <div class="flex flex-wrap justify-center gap-4">
-            <NuxtLink to="/volunteer/events" class="btn btn-primary btn-lg">
-              Découvrir les événements
-              <ArrowRight class="w-5 h-5 ml-2" />
-            </NuxtLink>
-          </div>
-        </div>
-      </section>
+      <Cta
+          :start-searching="startSearching"
+          :is-visible="isVisible.cta"
+      />
     </main>
   </div>
 </template>
@@ -731,6 +790,28 @@ a:focus-visible {
   border-radius: 4px;
 }
 
+/* Transitions pour startSearching */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+.fade-slide-enter-to,
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* Custom animations */
 .fade-in {
   opacity: 0;
@@ -778,10 +859,6 @@ a:focus-visible {
   transition-delay: 200ms;
 }
 
-.delay-300 {
-  transition-delay: 300ms;
-}
-
 .delay-400 {
   transition-delay: 400ms;
 }
@@ -808,5 +885,33 @@ a:focus-visible {
 
 .counter-animate {
   animation: countUp 0.5s ease-out forwards;
+}
+
+/* Search results transition */
+.search-results-enter-active,
+.search-results-leave-active {
+  transition: all 0.5s ease-in-out;
+}
+
+.search-results-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.search-results-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+/* Smooth scroll to search results */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles for better accessibility */
+.search-results:focus-within {
+  outline: 2px solid #eb5577;
+  outline-offset: 2px;
+  border-radius: 8px;
 }
 </style>

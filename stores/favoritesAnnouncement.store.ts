@@ -105,13 +105,6 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
         },
 
         async fetchAllFavoritesOfVolunteer(volunteerId: string) {
-            const cacheKey = `favorites_volunteer_${volunteerId}`;
-            const cached = this.getCacheState<FavoritesAnnouncement[]>(cacheKey);
-            
-            if (cached) {
-                this.favorites = cached;
-                return this.favorites;
-            }
 
             this.loading = true;
             this.error = null;
@@ -123,10 +116,8 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
                 
                 if (!this.favorites || this.favorites.length === 0) {
                     this.error = 'Aucun favori trouvé';
-                } else {
-                    this.setCache(cacheKey, this.favorites);
                 }
-                
+
                 return this.favorites;
             } catch (err: any) {
                 this.error = err?.message || 'Erreur de récupération des favoris';
