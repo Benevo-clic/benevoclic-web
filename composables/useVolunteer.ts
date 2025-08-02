@@ -10,6 +10,7 @@ export const useVolunteerAuth = () => {
         loading: computed(() => volunteerStore.loading),
         error: computed(() => volunteerStore.error),
         registerVolunteer: volunteerStore.registerVolunteer,
+        getNumberOfVolunteers: volunteerStore.getNumberOfVolunteers,
         getVolunteerInfo: volunteerStore.getVolunteerInfo,
         updateVolunteer: volunteerStore.updateVolunteer,
         removeVolunteer: volunteerStore.removeVolunteer,

@@ -1,3 +1,4 @@
+
 import { defineNuxtRouteMiddleware, navigateTo } from '#app'
 import { useAuthStore } from '~/stores/auth/auth.store'
 import { useUserStore } from '~/stores/user/user.store'
@@ -21,6 +22,8 @@ const BASE_ROUTE_CONFIG = {
   // Routes publiques (accessibles à tous)
   public: [
     '/',
+    '/events',
+    'events',
     '/auth/login',
     '/auth/register',
     '/help',
@@ -76,7 +79,7 @@ const BASE_ROUTE_CONFIG = {
 // Fonction pour vérifier si une route est accessible pour un rôle
 function isRouteAccessible(path: string, role: RoleUser | null): boolean {
   const pathWithoutLocale = getPathWithoutLocale(path)
-  
+
   // Routes publiques toujours accessibles
   if (BASE_ROUTE_CONFIG.public.includes(pathWithoutLocale)) {
     return true
@@ -127,11 +130,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       // Essayer d'abord le plugin Firebase avec permissions
       const { $firebase } = useNuxtApp()
       let firebase = null
-      
+
       if ($firebase) {
         firebase = await $firebase
       }
-      
+
       // Fallback vers Firebase de base si nécessaire
       if (!firebase) {
         const { $firebaseBase } = useNuxtApp()
@@ -139,7 +142,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
           firebase = await $firebaseBase
         }
       }
-      
+
       if (firebase && firebase.auth) {
         const currentUser = firebase.auth.currentUser
         if (
@@ -185,8 +188,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       console.log('🔄 Route de transition, redirection vers login')
       return navigateTo('/')
     }
-    // Sinon, rediriger vers login
-    return navigateTo('/')
+
+    return navigateTo('/events')
   }
 
   // Utilisateur connecté, récupérer ses données si nécessaire
@@ -218,7 +221,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     // Sinon, laisser passer (profil incomplet)
     return
   }
-  
+
   if (to.path === '/auth/VerifyEmailPage') {
     // Ici, tu peux ajouter une vérification supplémentaire si besoin
     return
@@ -228,7 +231,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (userStore.user && !userStore.user.isCompleted) {
     console.log('📝 Profil incomplet, redirection vers complétion')
     const locale = getLocaleFromPath(to.path)
-    
+
     switch (userRole) {
       case RoleUser.VOLUNTEER:
         if (getPathWithoutLocale(to.path) !== '/auth/registerVolunteer') {

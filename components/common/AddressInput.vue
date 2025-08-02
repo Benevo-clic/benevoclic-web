@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 
-import {ref} from "vue";
+import {ref, computed} from "vue";
 
 interface AddressFeature {
   properties: {
@@ -23,8 +23,27 @@ const props = defineProps<{
 
 const emit = defineEmits(['addressSelected'])
 
-const selectAddress = (address: AddressFeature) => {
+const query = ref('')
+const suggestions = ref<AddressFeature[]>([])
+const showSuggestions = ref(false)
+const selectedAddress = ref<string>('')
+const isLoading = ref(false)
+const activeIndex = ref(-1)
 
+let searchTimeout: NodeJS.Timeout
+
+if (props.initialAddress) {
+  query.value = props.initialAddress
+}
+
+const activeSuggestionId = computed(() => {
+  if (activeIndex.value >= 0 && suggestions.value[activeIndex.value]) {
+    return `suggestion-${suggestions.value[activeIndex.value].properties.id}`
+  }
+  return undefined
+})
+
+const selectAddress = (address: AddressFeature) => {
   const fullLabel = address.properties.label;
 
   const regex = /^(.*?)\s+((?:0[1-9]|[1-8]\d|9[0-8])\d{3})\s+(.*)$/;
@@ -47,87 +66,146 @@ const selectAddress = (address: AddressFeature) => {
       }
     })
     showSuggestions.value = false
+    activeIndex.value = -1
     query.value = street
   }
-
 }
 
 interface AddressResponse {
   features: AddressFeature[]
 }
 
-const query = ref('')
-const suggestions = ref<AddressFeature[]>([])
-const showSuggestions = ref(false)
-const selectedAddress = ref<string>('')
-
-let searchTimeout: NodeJS.Timeout
-
-if (props.initialAddress) {
-  query.value = props.initialAddress
-}
-
-
 const searchAddresses = async () => {
   if (!query.value || query.value.length < 3) {
     suggestions.value = []
+    showSuggestions.value = false
+    activeIndex.value = -1
     return
   }
 
   clearTimeout(searchTimeout)
   searchTimeout = setTimeout(async () => {
     try {
+      isLoading.value = true
       const response = await fetch(
           `https://api-adresse.data.gouv.fr/search?q=${encodeURIComponent(query.value)}&limit=5`
       )
       const data: AddressResponse = await response.json()
       suggestions.value = data.features
+      showSuggestions.value = true
+      activeIndex.value = -1
     } catch (error) {
       console.error('Erreur lors de la recherche d\'adresses:', error)
       suggestions.value = []
+    } finally {
+      isLoading.value = false
     }
   }, 300)
 }
 
+const handleBlur = () => {
+  // Délai pour permettre le clic sur les suggestions
+  setTimeout(() => {
+    showSuggestions.value = false
+    activeIndex.value = -1
+  }, 200)
+}
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (!showSuggestions.value || suggestions.value.length === 0) return
+
+  switch (event.key) {
+    case 'ArrowDown':
+      event.preventDefault()
+      activeIndex.value = Math.min(activeIndex.value + 1, suggestions.value.length - 1)
+      break
+    case 'ArrowUp':
+      event.preventDefault()
+      activeIndex.value = Math.max(activeIndex.value - 1, -1)
+      break
+    case 'Escape':
+      showSuggestions.value = false
+      activeIndex.value = -1
+      break
+    case 'Enter':
+      if (activeIndex.value >= 0) {
+        event.preventDefault()
+        selectAddress(suggestions.value[activeIndex.value])
+      }
+      break
+  }
+}
 </script>
 
 <template>
   <div class="form-control w-full search-container">
-    <label class="label">
-      <span class="label-text">Lieu (Adresse) <span class="text-error">*</span></span>
+    <label for="address-input" class="label">
+      <span class="label-text">Lieu (Adresse) <span class="text-error" aria-label="Champ obligatoire">*</span></span>
     </label>
-    <input
-        v-model="query"
-        @input="searchAddresses"
-        @focus="showSuggestions = true"
-        placeholder="Rechercher une adresse..."
-        class="search-input"
-        type="text"
-    aria-label="Champ de saisie">
+    <div class="relative">
+      <input
+          id="address-input"
+          v-model="query"
+          @input="searchAddresses"
+          @focus="showSuggestions = true"
+          @blur="handleBlur"
+          @keydown="handleKeydown"
+          placeholder="Rechercher une adresse..."
+          class="search-input focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+          type="text"
+          autocomplete="street-address"
+          aria-label="Rechercher une adresse"
+          :aria-expanded="showSuggestions && suggestions.length > 0"
+          :aria-activedescendant="activeSuggestionId"
+          role="combobox"
+          aria-haspopup="listbox"
+          aria-describedby="address-description"
+      />
+      
+      <!-- Indicateur de chargement -->
+      <div v-if="isLoading" class="absolute right-3 top-1/2 transform -translate-y-1/2" aria-hidden="true">
+        <div class="loading loading-spinner loading-sm"></div>
+      </div>
+    </div>
+
+    <!-- Description pour l'accessibilité -->
+    <div id="address-description" class="text-sm text-base-content opacity-70 mt-1">
+      Tapez au moins 3 caractères pour voir les suggestions d'adresses
+    </div>
 
     <!-- Suggestions d'adresses -->
-    <div v-if="showSuggestions && suggestions.length > 0" class="suggestions-container">
+    <div 
+      v-if="showSuggestions && suggestions.length > 0" 
+      class="suggestions-container"
+      role="listbox"
+      aria-label="Suggestions d'adresses"
+    >
       <div
-          v-for="suggestion in suggestions"
+          v-for="(suggestion, index) in suggestions"
           :key="suggestion.properties.id"
           @click="selectAddress(suggestion)"
-          class="suggestion-item"
+          @keyup.enter="selectAddress(suggestion)"
+          @keyup.space.prevent="selectAddress(suggestion)"
+          :class="['suggestion-item', { 'active': index === activeIndex }]"
+          :id="`suggestion-${suggestion.properties.id}`"
+          role="option"
+          :aria-selected="index === activeIndex"
+          tabindex="0"
       >
         <div class="suggestion-text">
           {{ suggestion.properties.label }}
         </div>
       </div>
     </div>
+
+    <!-- Message d'état pour les lecteurs d'écran -->
+    <div v-if="showSuggestions && suggestions.length === 0 && query.length >= 3" class="sr-only" aria-live="polite">
+      Aucune adresse trouvée pour cette recherche
+    </div>
   </div>
 </template>
 
 <style scoped>
-.address-map-container {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
 .search-container {
   position: relative;
   margin-bottom: 1rem;
@@ -174,8 +252,14 @@ const searchAddresses = async () => {
   border-bottom: none;
 }
 
-.suggestion-item:hover {
+.suggestion-item:hover,
+.suggestion-item.active {
   background-color: #f9fafb;
+}
+
+.suggestion-item:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
 }
 
 .suggestion-text {
@@ -183,11 +267,16 @@ const searchAddresses = async () => {
   color: #374151;
 }
 
-.map-container {
-  width: 100%;
-  height: 400px;
-  border-radius: 0.375rem;
+/* Amélioration pour l'accessibilité */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
-  position: relative;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 </style>

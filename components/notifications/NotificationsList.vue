@@ -1,21 +1,21 @@
 <template>
-  <div class="bg-base-100 rounded-xl shadow-lg border border-base-300">
+  <div class="bg-base-100 rounded-xl shadow-lg border border-base-300" role="region" aria-labelledby="notifications-title">
     <!-- Header avec statistiques -->
     <div class="p-6 border-b border-base-300">
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 class="text-2xl font-bold text-base-content">{{ $t('notifications.title') }}</h2>
-          <p class="text-base-content/70 mt-1">{{ $t('notifications.subtitle') }}</p>
+          <h2 id="notifications-title" class="text-2xl font-bold text-base-content">{{ $t('notifications.title') }}</h2>
+          <p class="text-base-content/70 mt-1" id="notifications-subtitle">{{ $t('notifications.subtitle') }}</p>
         </div>
         
         <!-- Statistiques rapides -->
-        <div class="flex gap-3">
+        <div class="flex gap-3" role="group" aria-label="Statistiques des notifications">
           <div class="stat bg-base-200 rounded-lg px-4 py-2 text-center">
-            <div class="stat-value text-primary text-lg font-bold">{{ unreadCount }}</div>
+            <div class="stat-value text-primary text-lg font-bold" aria-label="Nombre de notifications non lues">{{ unreadCount }}</div>
             <div class="stat-desc text-xs text-base-content/70">{{ $t('notifications.unread') }}</div>
           </div>
           <div class="stat bg-base-200 rounded-lg px-4 py-2 text-center">
-            <div class="stat-value text-base-content text-lg font-bold">{{ notifications.length }}</div>
+            <div class="stat-value text-base-content text-lg font-bold" aria-label="Nombre total de notifications">{{ notifications.length }}</div>
             <div class="stat-desc text-xs text-base-content/70">{{ $t('notifications.total') }}</div>
           </div>
         </div>
@@ -26,48 +26,59 @@
     <div class="p-4 border-b border-base-300 bg-base-50">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <!-- Filtres -->
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-2" role="group" aria-label="Filtres des notifications">
           <button 
             v-for="filter in filters" 
             :key="filter.value"
             @click="activeFilter = filter.value"
-            class="btn btn-sm transition-all duration-200"
+            class="btn btn-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             :class="activeFilter === filter.value ? 'btn-primary' : 'btn-outline'"
+            :aria-pressed="activeFilter === filter.value"
+            :aria-label="`Filtrer par ${filter.label} (${filter.count})`"
           >
-            <component :is="filter.icon" class="w-4 h-4 mr-1" />
+            <component :is="filter.icon" class="w-4 h-4 mr-1" aria-hidden="true" />
             {{ filter.label }}
             <span class="badge badge-sm ml-1">{{ filter.count }}</span>
           </button>
         </div>
 
         <!-- Actions -->
-        <div class="flex gap-2">
+        <div class="flex gap-2" role="group" aria-label="Actions sur les notifications">
           <button 
             v-if="hasUnread"
             @click="markAllAsRead" 
-            class="btn btn-sm btn-ghost text-success hover:bg-success/10"
+            class="btn btn-sm btn-ghost text-success hover:bg-success/10 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             :disabled="isLoading"
+            :aria-describedby="isLoading ? 'mark-all-loading' : undefined"
           >
-            <Check class="w-4 h-4 mr-1" />
+            <Check class="w-4 h-4 mr-1" aria-hidden="true" />
             {{ $t('notifications.mark_all_read') }}
           </button>
+          <div id="mark-all-loading" class="sr-only" v-if="isLoading">
+            Marquer toutes comme lues en cours...
+          </div>
           <button 
             v-if="notifications.length > 0"
             @click="clearAll" 
-            class="btn btn-sm btn-ghost text-error hover:bg-error/10"
+            class="btn btn-sm btn-ghost text-error hover:bg-error/10 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             :disabled="isLoading"
+            :aria-describedby="isLoading ? 'clear-all-loading' : undefined"
           >
-            <Trash2 class="w-4 h-4 mr-1" />
+            <Trash2 class="w-4 h-4 mr-1" aria-hidden="true" />
             {{ $t('notifications.clear_all') }}
           </button>
+          <div id="clear-all-loading" class="sr-only" v-if="isLoading">
+            Supprimer toutes les notifications en cours...
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Liste des notifications -->
     <div class="p-4">
-      <div v-if="isLoading" class="flex justify-center items-center py-12">
-        <div class="loading loading-spinner loading-lg text-primary"></div>
+      <div v-if="isLoading" class="flex justify-center items-center py-12" role="status" aria-live="polite">
+        <div class="loading loading-spinner loading-lg text-primary" aria-hidden="true"></div>
+        <span class="sr-only">Chargement des notifications...</span>
       </div>
       
       <div v-else-if="filteredNotifications.length > 0" class="space-y-3">
@@ -75,23 +86,28 @@
           name="notification" 
           tag="div" 
           class="space-y-3"
+          role="list"
+          aria-label="Liste des notifications"
         >
           <div 
             v-for="notification in filteredNotifications" 
             :key="notification.id" 
-            class="group bg-base-100 border border-base-300 rounded-xl p-4 transition-all duration-300 hover:shadow-lg hover:border-primary/20"
+            class="group bg-base-100 border border-base-300 rounded-xl p-4 transition-all duration-300 hover:shadow-lg hover:border-primary/20 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             :class="{
               'border-l-4 border-l-primary bg-primary/5': !notification.read,
               'opacity-75': notification.read
             }"
+            role="listitem"
+            :aria-label="`Notification ${notification.read ? 'lue' : 'non lue'}: ${notification.title}`"
+            tabindex="0"
           >
             <div class="flex items-start gap-4">
               <!-- Icône avec badge -->
               <div class="relative flex-shrink-0">
                 <div class="w-12 h-12 rounded-full bg-base-200 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-                  <component :is="getIconForType(notification.type)" class="w-6 h-6" :class="getIconColor(notification.type)" />
+                  <component :is="getIconForType(notification.type)" class="w-6 h-6" :class="getIconColor(notification.type)" aria-hidden="true" />
                 </div>
-                <div v-if="!notification.read" class="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-base-100"></div>
+                <div v-if="!notification.read" class="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-base-100" aria-label="Notification non lue"></div>
               </div>
 
               <!-- Contenu -->
@@ -106,8 +122,8 @@
                     </p>
                     <div class="flex items-center gap-3 mt-2">
                       <span class="text-xs text-base-content/50 flex items-center gap-1">
-                        <Clock class="w-3 h-3" />
-                        {{ formatDate(notification.date) }}
+                        <Clock class="w-3 h-3" aria-hidden="true" />
+                        <time :datetime="notification.date">{{ formatDate(notification.date) }}</time>
                       </span>
                       <span v-if="!notification.read" class="badge badge-sm badge-primary">
                         {{ $t('notifications.new') }}
@@ -116,21 +132,23 @@
                   </div>
 
                   <!-- Actions -->
-                  <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200" role="group" aria-label="Actions sur la notification">
                     <button 
                       v-if="!notification.read"
                       @click="markAsRead(notification)" 
-                      class="btn btn-ghost btn-xs text-success hover:bg-success/10"
+                      class="btn btn-ghost btn-xs text-success hover:bg-success/10 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
                       :title="$t('notifications.mark_read')"
+                      :aria-label="`Marquer comme lue: ${notification.title}`"
                     >
-                      <Check class="w-4 h-4" />
+                      <Check class="w-4 h-4" aria-hidden="true" />
                     </button>
                     <button 
                       @click="removeNotification(notification.id)"
-                      class="btn btn-ghost btn-xs text-error hover:bg-error/10"
+                      class="btn btn-ghost btn-xs text-error hover:bg-error/10 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
                       :title="$t('notifications.delete')"
+                      :aria-label="`Supprimer la notification: ${notification.title}`"
                     >
-                      <X class="w-4 h-4" />
+                      <X class="w-4 h-4" aria-hidden="true" />
                     </button>
                   </div>
                 </div>
@@ -139,7 +157,8 @@
                 <div v-if="notification.actionUrl" class="flex justify-end mt-3 pt-3 border-t border-base-200">
                   <button 
                     @click="navigateTo(notification.actionUrl)"
-                    class="btn btn-sm btn-outline btn-primary"
+                    class="btn btn-sm btn-outline btn-primary focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    :aria-label="`${notification.actionText || $t('notifications.view')}: ${notification.title}`"
                   >
                     {{ notification.actionText || $t('notifications.view') }}
                   </button>
@@ -151,8 +170,8 @@
       </div>
 
       <!-- État vide -->
-      <div v-else class="text-center py-12">
-        <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-base-200 flex items-center justify-center">
+      <div v-else class="text-center py-12" role="status" aria-live="polite">
+        <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-base-200 flex items-center justify-center" aria-hidden="true">
           <Bell class="w-12 h-12 text-base-content/30" />
         </div>
         <h3 class="text-lg font-semibold text-base-content mb-2">

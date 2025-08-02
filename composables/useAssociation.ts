@@ -10,6 +10,7 @@ export const useAssociationAuth = () => {
         loading: computed(() => associationStore.loading),
         error: computed(() => associationStore.error),
         registerAssociation: associationStore.registerAssociation,
+        getNumberOfAssociations: associationStore.getNumberOfAssociations,
         getAssociationInfo: associationStore.getAssociationInfo,
         getAssociationInfoBySiret: associationStore.getAssociationInfoBySiret,
         removeAssociation: associationStore.removeAssociation,

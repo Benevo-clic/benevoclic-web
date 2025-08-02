@@ -24,7 +24,16 @@
           </div>
 
           <!-- Profile image -->
-          <img v-if="profileImageUrl" :src="profileImageUrl" alt="Profile" class="w-full h-full object-cover" />
+          <img 
+            v-if="profileImageUrl" 
+            :src="profileImageUrl" 
+            alt="Logo de l'association" 
+            class="w-full h-full object-cover"
+            width="200"
+            height="200"
+            loading="lazy"
+            decoding="async"
+          />
           <div v-else class="w-full h-full flex items-center justify-center">
             <UserRound class="w-16 h-16 text-base-content opacity-50" />
           </div>

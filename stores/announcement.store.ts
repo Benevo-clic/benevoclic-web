@@ -51,7 +51,7 @@ export const useAnnouncementStore = defineStore('announcement', {
       });
       this._lastFetch = Date.now();
     },
-  setCurrentFilter(filter: FilterAnnouncement | null) {
+  setCurrentFilter(filter: Partial<FilterAnnouncement>) {
       this.currentFilter = filter
   },
   updateAnnouncements(announcements: Announcement[]) {

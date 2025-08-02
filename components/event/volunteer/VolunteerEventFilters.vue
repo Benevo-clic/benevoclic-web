@@ -442,6 +442,7 @@ const props = defineProps<{
   tags?: string[];
 }>()
 
+
 const emit = defineEmits<{
   (e: 'filter', filters: FilterAnnouncement): void;
   (e: 'type', type: string): void;
@@ -643,7 +644,6 @@ function cancelCustomInput() {
 }
 
 function openCustomInput() {
-  console.log('showCustomInput', showCustomInput.value)
   showCustomInput.value = true
 }
 
@@ -651,7 +651,6 @@ watch(showCustomInput, (val) => {
   if (val) nextTick(() => customInputRef.value && customInputRef.value?.focus())
 })
 
-// Watcher pour la recherche
 watch(searchQuery, (newQuery) => {
   if (newQuery !== undefined) {
   }
@@ -668,15 +667,6 @@ const toggleTag = (tag: string) => {
     selectedTags.value = selectedTags.value.filter(t => t !== tag)
   } else {
     selectedTags.value.push(tag)
-  }
-  updateFilters()
-}
-
-const toggleType = (type: string) => {
-  if (selectedTypes.value.includes(type)) {
-    selectedTypes.value = selectedTypes.value.filter(t => t !== type)
-  } else {
-    selectedTypes.value.push(type)
   }
   updateFilters()
 }

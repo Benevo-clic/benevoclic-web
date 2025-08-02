@@ -31,7 +31,7 @@
         </div>
         <!-- Status badge overlay -->
         <div class="absolute top-3 right-3">
-          <div class="badge badge-md" :class="statusBadgeClass">{{ announcement?.status }}</div>
+          <div class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" :class="statusBadgeClass">{{ announcement?.status }}</div>
         </div>
       </div>
       <!-- Informations de l'association -->
@@ -39,7 +39,7 @@
         <div class="flex items-center gap-3 mb-2">
           <div v-if="announcement?.associationLogo" class="avatar">
             <div class="ring-primary ring-offset-base-100 w-14 rounded-full ring-2 ring-offset-2">
-              <img :src="profileImageUrl" alt="Logo association" />
+              <img :src="profileImageUrl" alt="Logo association" :alt="'Image descriptive'" />
             </div>
           </div>
           <div v-else class="avatar placeholder">
@@ -53,9 +53,9 @@
           <!-- Bouton Adhérer -->
           <div class="flex-shrink-0">
             <button
-              class="btn btn-sm"
+              class="btn btn-sm focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
               :class="followButtonClass"
-              @click="toggleFollowAssociation"
+              @click="toggleFollowAssociation" @keyup.enter="toggleFollowAssociation" @keyup.space.prevent="toggleFollowAssociation"
               @mouseenter="hovering = true"
               @mouseleave="hovering = false"
             >
@@ -80,7 +80,7 @@
         <div
             v-for="tag in announcement?.tags"
             :key="tag"
-            class="badge badge-outline text-sm hover:badge-primary transition-colors text-base-content border-base-content focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-1 mr-1"
+            class="badge badge-outline text-sm hover:badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none mr-1"
             tabindex="0"
             role="button"
             :aria-label="`Filtrer par tag : ${tag}`"
@@ -111,51 +111,51 @@
         <div v-else class="flex flex-col sm:flex-row gap-3">
 
           <button
-              class="btn btn-neutral flex-1"
+              class="btn btn-neutral flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
               :disabled="!canParticipateAsVolunteer"
-              @click="cancelVolunteerParticipationWaitingList"
+              @click="cancelVolunteerParticipationWaitingList" @keyup.enter="cancelVolunteerParticipationWaitingList" @keyup.space.prevent="cancelVolunteerParticipationWaitingList"
               v-if="isAlreadyVolunteerWaiting"
           >
             <HeartHandshake class="w-5 h-5 mr-2" />
             Bénévole
-            <span  class="badge badge-warning ml-2">En attente</span>
+            <span  class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">En attente</span>
           </button>
           <button
-              class="btn btn-neutral flex-1"
-              @click="cancelVolunteerParticipation"
+              class="btn btn-neutral flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+              @click="cancelVolunteerParticipation" @keyup.enter="cancelVolunteerParticipation" @keyup.space.prevent="cancelVolunteerParticipation"
               v-else-if="isAlreadyVolunteer"
           >
             <HeartHandshake class="w-5 h-5 mr-2" />
             Bénévole
-            <span  class="badge badge-success ml-2">Annuler</span>
+            <span  class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">Annuler</span>
           </button>
           <button
-              class="btn btn-primary flex-1"
+              class="btn btn-primary flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
               :disabled="!canParticipateAsVolunteer"
-              @click="participateAsVolunteer"
+              @click="participateAsVolunteer" @keyup.enter="participateAsVolunteer" @keyup.space.prevent="participateAsVolunteer"
               v-else
           >
             <HeartHandshake class="w-5 h-5 mr-2" />
             Bénévole
-            <span v-if="!canParticipateAsVolunteer" class="badge badge-warning ml-2">Complet</span>
+            <span v-if="!canParticipateAsVolunteer" class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">Complet</span>
           </button>
           <button 
-            class="btn btn-secondary flex-1" 
+            class="btn btn-secondary flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
             :disabled="!canParticipateAsParticipant"
-            @click="participateAsParticipant"
+            @click="participateAsParticipant" @keyup.enter="participateAsParticipant" @keyup.space.prevent="participateAsParticipant"
             v-if="!alreadyParticipating"
           >
             <Users class="w-5 h-5 mr-2" />
             Participer
-            <span v-if="!canParticipateAsParticipant" class="badge badge-warning ml-2">Complet</span>
+            <span v-if="!canParticipateAsParticipant" class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">Complet</span>
           </button>
           <button
-            class="btn btn-neutral flex-1"
-            @click="cancelParticipation"
+            class="btn btn-neutral flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+            @click="cancelParticipation" @keyup.enter="cancelParticipation" @keyup.space.prevent="cancelParticipation"
             v-else>
             <Users class="w-5 h-5 mr-2" />
             Participer
-            <span  class="badge badge-secondary ml-2">Annuler</span>
+            <span  class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">Annuler</span>
           </button>
         </div>
       </div>
@@ -176,8 +176,8 @@
               <!-- Contrôles de zoom personnalisés -->
               <div class="zoom-controls">
                 <button
-                    @click="zoomIn"
-                    class="zoom-btn zoom-in"
+                    @click="zoomIn" @keyup.enter="zoomIn" @keyup.space.prevent="zoomIn"
+                    class="zoom-btn zoom-in focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
                     title="Zoomer"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -185,8 +185,8 @@
                   </svg>
                 </button>
                 <button
-                    @click="zoomOut"
-                    class="zoom-btn zoom-out"
+                    @click="zoomOut" @keyup.enter="zoomOut" @keyup.space.prevent="zoomOut"
+                    class="zoom-btn zoom-out focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
                     title="Dézoomer"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -197,8 +197,8 @@
             </div>
           <!-- Bouton pour ouvrir dans Google Maps -->
           <button 
-            class="btn btn-primary btn-sm absolute bottom-4 right-4"
-            @click="openInGoogleMaps"
+            class="btn btn-primary btn-sm absolute bottom-4 right-4 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+            @click="openInGoogleMaps" @keyup.enter="openInGoogleMaps" @keyup.space.prevent="openInGoogleMaps"
           >
             <ExternalLink class="w-4 h-4 mr-1" />
             Voir sur la carte
@@ -254,7 +254,7 @@
 
     <!-- Indicateur scroll bas -->
     <transition name="fade">
-      <div v-if="showScrollDown" class="fixed left-1/2 -translate-x-1/2 bottom-4 z-50 flex flex-col items-center pointer-events-none select-none">
+      <div v-if="showScrollDown" class="fixed left-1/2 -translate-x-1/2 bottom-4 z-50 flex flex-col items-center pointer-events-none select focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">
         <div class="bg-base-200/80 rounded-full shadow p-2 animate-bounce">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-label="Faire défiler vers le bas">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -264,7 +264,7 @@
     </transition>
     <!-- Indicateur scroll haut -->
     <transition name="fade">
-      <div v-if="showScrollUp" class="fixed left-1/2 -translate-x-1/2 top-4 z-50 flex flex-col items-center pointer-events-none select-none">
+      <div v-if="showScrollUp" class="fixed left-1/2 -translate-x-1/2 top-4 z-50 flex flex-col items-center pointer-events-none select focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">
         <div class="bg-base-200/80 rounded-full shadow p-2 animate-bounce rotate-180">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-label="Faire défiler vers le haut">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />

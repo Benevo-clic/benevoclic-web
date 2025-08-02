@@ -5,12 +5,12 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'fr' },
-      title: 'Benevoclic - Plateforme d’engagement solidaire',
+      title: 'Benevoclic - Plateforme d\'engagement solidaire',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'format-detection', content: 'telephone=no' },
-        { name: 'description', content: 'Benevoclic met en relation bénévoles, associations et personnes dans le besoin : publiez et découvrez des événements solidaires, trouvez des missions et mobilisez l’entraide.' },
+        { name: 'description', content: 'Benevoclic met en relation bénévoles, associations et personnes dans le besoin : publiez et découvrez des événements solidaires, trouvez des missions et mobilisez l\'entraide.' },
         { name: 'keywords', content: 'bénévolat, association, événements solidaires, aide, entraide, missions, bénévoles' },
         { name: 'author', content: 'Benevoclic' },
         { name: 'robots', content: 'index, follow' },
@@ -18,19 +18,19 @@ export default defineNuxtConfig({
         // Open Graph aligné
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'Benevoclic' },
-        { property: 'og:title', content: 'Benevoclic - Plateforme d’engagement solidaire' },
-        { property: 'og:description', content: 'Benevoclic met en relation bénévoles, associations et personnes dans le besoin : publiez et découvrez des événements solidaires, trouvez des missions et mobilisez l’entraide.' },
+        { property: 'og:title', content: 'Benevoclic - Plateforme d\'engagement solidaire' },
+        { property: 'og:description', content: 'Benevoclic met en relation bénévoles, associations et personnes dans le besoin : publiez et découvrez des événements solidaires, trouvez des missions et mobilisez l\'entraide.' },
         { property: 'og:image', content: '/logo_benevoclic.png' },
         { property: 'og:image:alt', content: 'Logo Benevoclic' },
 
         // Twitter
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: 'Benevoclic - Plateforme d’engagement solidaire' },
-        { name: 'twitter:description', content: 'Benevoclic met en relation bénévoles, associations et personnes dans le besoin : publiez et découvrez des événements solidaires, trouvez des missions et mobilisez l’entraide.' },
+        { name: 'twitter:title', content: 'Benevoclic - Plateforme d\'engagement solidaire' },
+        { name: 'twitter:description', content: 'Benevoclic met en relation bénévoles, associations et personnes dans le besoin : publiez et découvrez des événements solidaires, trouvez des missions et mobilisez l\'entraide.' },
         { name: 'twitter:image', content: '/logo_benevoclic.png' },
 
         // Accessibilité / thème
-        { name: 'theme-color', content: '#3B82F6' },
+        { name: 'theme-color', content: '#eb5577' },
         { name: 'color-scheme', content: 'light dark' }
       ],
       link: [
@@ -65,7 +65,7 @@ export default defineNuxtConfig({
     // Optimise le chargement des composants
     componentIslands: false,
     // Optimisations de performance
-    payloadExtraction: false,
+    payloadExtraction: true,
     renderJsonPayloads: true,
     // Optimisation du bundling
     treeshakeClientOnly: true
@@ -76,7 +76,6 @@ export default defineNuxtConfig({
   css: [
     '~/assets/css/main.scss',
     '~/assets/css/accessibility.scss',
-    '~/assets/css/daisyui-forced.css',
   ],
   i18n: {
     locales: [

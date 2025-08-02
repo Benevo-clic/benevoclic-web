@@ -9,7 +9,15 @@
       </div>
       <div v-else-if="userInfo?.avatarFileKey" class="avatar">
         <div class="w-16 h-16 rounded-full ring-2 ring-primary ring-offset-2 ring-offset-base-100">
-          <img :src="profileImageUrl" :alt="`Photo de ${participant.volunteerName}`" class="w-full h-full object-cover rounded-full" />
+          <img 
+            :src="profileImageUrl" 
+            :alt="`Photo de ${participant.volunteerName}`" 
+            class="w-full h-full object-cover rounded-full"
+            width="48"
+            height="48"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
       </div>
       <div v-else class="avatar placeholder">

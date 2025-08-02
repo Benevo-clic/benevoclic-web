@@ -98,6 +98,24 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
 
         },
 
+        async getNumberOfVolunteers(): Promise<number> {
+            this.loading = true
+            this.error = null
+            try {
+                const response = await $fetch<{ nbVolunteer: number }>('/api/volunteer/nb-volunteer', {
+                    method: 'GET',
+                    credentials: 'include',
+                })
+
+                return response.nbVolunteer
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de récupération du nombre de bénévoles'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
+
         async updateVolunteer(payload: Partial<VolunteerInfo>, id: string | null = null) {
             this.loading = true
             this.error = null

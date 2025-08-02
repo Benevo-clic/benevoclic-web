@@ -58,7 +58,7 @@ function handleFavorites() {
 }
 
 function handleHome() {
-  console.log('Navigating to home 2')
+  navigateTo('/')
 }
 </script>
 

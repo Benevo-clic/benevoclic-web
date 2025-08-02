@@ -51,7 +51,15 @@
               <div class="flex items-center gap-4 mb-4">
                 <div v-if="announcement?.associationLogo" class="avatar">
                   <div class="w-14 h-14 rounded-full ring-2 ring-primary/20 ring-offset-2 ring-offset-base-100">
-                    <img :src="profileImageUrl" alt="Logo association" class="object-cover" />
+                    <img 
+                      :src="profileImageUrl" 
+                      alt="Logo de l'association"
+                      width="64"
+                      height="64"
+                      loading="lazy"
+                      decoding="async"
+                      class="object-cover"
+                    />
                   </div>
                 </div>
                 <div v-else class="avatar placeholder">

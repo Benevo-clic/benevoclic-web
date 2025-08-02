@@ -108,6 +108,25 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
             }
 
         },
+
+        async getNumberOfAssociations(){
+            this.loading = true
+            this.error = null
+            try {
+                const response = await $fetch<{ nbAssociation: number }>('/api/association/nb-association', {
+                    method: 'GET',
+                    credentials: 'include',
+                })
+
+                return response.nbAssociation
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de récupération du nombre d\'associations'
+                throw err
+            } finally {
+                this.loading = false
+            }
+        },
+
         async updateAssociation(payload: Partial<AssociationInfo>, id: string | null = null) {
             this.loading = true
             this.error = null

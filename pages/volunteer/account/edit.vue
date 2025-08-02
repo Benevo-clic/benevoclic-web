@@ -18,7 +18,16 @@
       <!-- Avatar/logo -->
       <div class="flex flex-col items-center mb-8">
         <div class="w-32 h-32 rounded-full overflow-hidden bg-base-300 relative group mb-2 shadow-lg border-4 border-base-200">
-          <img v-if="profileImageUrl" :src="profileImageUrl" alt="Profile" class="w-full h-full object-cover" />
+          <img 
+            v-if="profileImageUrl" 
+            :src="profileImageUrl" 
+            alt="Photo de profil" 
+            class="w-full h-full object-cover"
+            width="200"
+            height="200"
+            loading="lazy"
+            decoding="async"
+          />
           <div v-else class="w-full h-full flex items-center justify-center">
             <UserRound class="w-16 h-16 text-base-content opacity-50" />
           </div>
