@@ -1,62 +1,51 @@
+// @ts-nocheck
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { defineComponent, ref } from 'vue'
+import { nextTick } from 'vue'
 
-// Composant mock pour Login
-const MockLogin = defineComponent({
+// Mock component pour tester le Login
+const MockLogin = {
   template: `
-    <div data-testid="login-form" class="login-form">
-      <form @submit.prevent="handleSubmit">
-        <input 
-          data-testid="email-input" 
-          type="email" 
-          v-model="email" 
-          placeholder="Email"
-          required
-          @input="clearError"
+    <div class="min-h-[85vh] flex flex-col md:flex-row items-center justify-center gap-8 px-4">
+      <div class="mock-login-form"></div>
+
+      <div class="hidden md:flex flex-col justify-center items-center w-1/2">
+        <img
+            src="/images/login-user.png"
+            alt="Illustration"
+            class="w-full max-w-xl mx-auto"
+            v-if="!isRegister"
         />
-        <input 
-          data-testid="password-input" 
-          :type="showPassword ? 'text' : 'password'" 
-          v-model="password" 
-          placeholder="Mot de passe"
-          required
-          @input="clearError"
+        <img
+            src="/images/illustration-login-association.png"
+            alt="Illustration"
+            class="w-full max-w-xl mx-auto"
+            v-if="!isAssociation && isRegister"
         />
-        <button 
-          data-testid="password-toggle" 
-          type="button" 
-          @click="togglePassword"
+        <img
+            src="/images/illustration-login-volunteer.png"
+            alt="Illustration"
+            class="w-full max-w-xl mx-auto"
+            v-if="isAssociation && isRegister"
+        />
+        <h1 class="text-xl sm:text-2xl font-bold mb-2" v-if="isRegister">
+          {{ t(isAssociation ? 'auth.register.association_true' : 'auth.register.association_false') }}
+        </h1>
+        <button
+            @click="toggleCheck"
+            class="text-base sm:text-lg text-primary hover:underline mt-1"
+            v-if="isAssociation && isRegister"
         >
-          👁
+          {{t('auth.register.association_register')}}
         </button>
-        <button 
-          data-testid="submit-button" 
-          type="submit" 
-          :disabled="isLoading"
+        <button
+            @click="toggleCheck"
+            class="text-base sm:text-lg font-bold  mt-1"
+            v-if="!isAssociation && isRegister"
         >
-          {{ isLoading ? 'Chargement...' : 'Se connecter' }}
+          {{t('auth.register.click_here')}} <span class="text-primary hover:underline"> {{t('auth.register.info_click_here')}}
+        </span>
         </button>
-        <button 
-          data-testid="google-login" 
-          type="button" 
-          @click="googleLogin"
-        >
-          Se connecter avec Google
-        </button>
-        <button 
-          data-testid="register-link" 
-          type="button" 
-          @click="goToRegister"
-        >
-          Créer un compte
-        </button>
-      </form>
-      <div v-if="error" data-testid="error-message" class="error">
-        {{ error }}
-      </div>
-      <div v-if="isLoading" data-testid="loading-spinner" class="loading">
-        Chargement...
       </div>
     </div>
   `,
@@ -66,76 +55,39 @@ const MockLogin = defineComponent({
       default: false
     }
   },
-  setup(props, { emit }) {
-    const email = ref('')
-    const password = ref('')
-    const error = ref('')
-    const isLoading = ref(false)
-    const showPassword = ref(false)
-    
-    const handleSubmit = async () => {
-      // Validation des champs requis
-      if (!email.value && !password.value) {
-        error.value = 'Email requis Mot de passe requis'
-        return
-      }
-      if (!email.value) {
-        error.value = 'Email requis'
-        return
-      }
-      if (!password.value) {
-        error.value = 'Mot de passe requis'
-        return
-      }
-      
-      // Validation du format email
-      if (email.value && !email.value.includes('@')) {
-        error.value = 'Email invalide'
-        return
-      }
-      
-      isLoading.value = true
-      try {
-        // Simuler un appel API
-        await new Promise(resolve => setTimeout(resolve, 100))
-        emit('login', { email: email.value, password: password.value })
-        error.value = ''
-      } catch (err) {
-        error.value = 'Erreur de connexion'
-      } finally {
-        isLoading.value = false
-      }
-    }
-    
-    const clearError = () => {
-      error.value = ''
-    }
-    
-    const togglePassword = () => {
-      showPassword.value = !showPassword.value
-    }
-    
-    const googleLogin = () => {
-      emit('google-login')
-    }
-    
-    const goToRegister = () => {
-      emit('go-to-register')
-    }
-    
+  data() {
     return {
-      email,
-      password,
-      error,
-      isLoading,
-      showPassword,
-      handleSubmit,
-      clearError,
-      togglePassword,
-      googleLogin,
-      goToRegister
+      isAssociation: false,
+      isRegister: this.isRegisterLocal
+    }
+  },
+  methods: {
+    toggleCheck() {
+      this.isAssociation = !this.isAssociation
+    },
+    handleCheckboxChange(value) {
+      this.isAssociation = value
+    },
+    handleRegisterChange(value) {
+      this.isRegister = value
+    },
+    t(key) {
+      return key
+    }
+  },
+  watch: {
+    isRegisterLocal(newVal) {
+      this.isRegister = newVal
     }
   }
+}
+
+// Mock de useI18n
+const mockT = vi.fn((key) => key)
+
+// Mock global pour useI18n
+global.useI18n = () => ({
+  t: mockT
 })
 
 describe('Login', () => {
@@ -143,337 +95,276 @@ describe('Login', () => {
     vi.clearAllMocks()
   })
 
-  it('should render login form', () => {
-    const wrapper = mount(MockLogin, {
-      props: {
-        isRegisterLocal: false
-      },
-      global: {
-        stubs: {
-          'NuxtLink': true,
-          'HeaderAuthFormLoginForm': true,
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
+  describe('Rendu de base', () => {
+    it('should render login component', () => {
+      const wrapper = mount(MockLogin)
+
+      expect(wrapper.exists()).toBe(true)
+      expect(wrapper.classes()).toContain('min-h-[85vh]')
     })
 
-    expect(wrapper.exists()).toBe(true)
-    expect(wrapper.find('[data-testid="login-form"]').exists()).toBe(true)
+    it('should render login form', () => {
+      const wrapper = mount(MockLogin)
+
+      const loginForm = wrapper.find('.mock-login-form')
+      expect(loginForm.exists()).toBe(true)
+    })
+
+    it('should render illustration section', () => {
+      const wrapper = mount(MockLogin)
+
+      const illustrationSection = wrapper.find('.hidden.md\\:flex')
+      expect(illustrationSection.exists()).toBe(true)
+    })
   })
 
-  it('should have email and password inputs', () => {
-    const wrapper = mount(MockLogin, {
-      props: {
-        isRegisterLocal: false
-      },
-      global: {
-        stubs: {
-          'NuxtLink': true,
-          'HeaderAuthFormLoginForm': true,
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
+  describe('Images d\'illustration', () => {
+    it('should show login user image when not registering', () => {
+      const wrapper = mount(MockLogin, {
+        props: {
+          isRegisterLocal: false
         }
-      }
+      })
+
+      const loginImage = wrapper.find('img[src="/images/login-user.png"]')
+      expect(loginImage.exists()).toBe(true)
     })
 
-    expect(wrapper.find('[data-testid="email-input"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="password-input"]').exists()).toBe(true)
+    it('should show association image when registering and not association', () => {
+      const wrapper = mount(MockLogin, {
+        props: {
+          isRegisterLocal: true
+        }
+      })
+
+      const associationImage = wrapper.find('img[src="/images/illustration-login-association.png"]')
+      expect(associationImage.exists()).toBe(true)
+    })
+
+    it('should show volunteer image when registering and association', async () => {
+      const wrapper = mount(MockLogin, {
+        props: {
+          isRegisterLocal: true
+        }
+      })
+
+      // Simuler le changement vers association
+      await wrapper.setData({ isAssociation: true })
+      await nextTick()
+
+      const volunteerImage = wrapper.find('img[src="/images/illustration-login-volunteer.png"]')
+      expect(volunteerImage.exists()).toBe(true)
+    })
   })
 
-  it('should validate email format', async () => {
-    const wrapper = mount(MockLogin, {
-      props: {
-        isRegisterLocal: false
-      },
-      global: {
-        stubs: {
-          'NuxtLink': true,
-          'HeaderAuthFormLoginForm': true,
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
+  describe('Titre et boutons', () => {
+    it('should show title when registering', () => {
+      const wrapper = mount(MockLogin, {
+        props: {
+          isRegisterLocal: true
         }
-      }
+      })
+
+      const title = wrapper.find('h1')
+      expect(title.exists()).toBe(true)
+      expect(title.text()).toContain('auth.register.association_false')
     })
 
-    const emailInput = wrapper.find('[data-testid="email-input"]')
-    await emailInput.setValue('invalid-email')
-    await wrapper.find('[data-testid="password-input"]').setValue('password123')
-    await wrapper.find('form').trigger('submit')
+    it('should show association title when isAssociation is true', async () => {
+      const wrapper = mount(MockLogin, {
+        props: {
+          isRegisterLocal: true
+        }
+      })
 
-    expect(wrapper.text()).toContain('Email invalide')
+      await wrapper.setData({ isAssociation: true })
+      await nextTick()
+
+      const title = wrapper.find('h1')
+      expect(title.text()).toContain('auth.register.association_true')
+    })
+
+    it('should show toggle button when registering and isAssociation is true', async () => {
+      const wrapper = mount(MockLogin, {
+        props: {
+          isRegisterLocal: true
+        }
+      })
+
+      await wrapper.setData({ isAssociation: true })
+      await nextTick()
+
+      const toggleButton = wrapper.find('button')
+      expect(toggleButton.exists()).toBe(true)
+      expect(toggleButton.text()).toContain('auth.register.association_register')
+    })
+
+    it('should show click here button when registering and isAssociation is false', () => {
+      const wrapper = mount(MockLogin, {
+        props: {
+          isRegisterLocal: true
+        }
+      })
+
+      const clickButton = wrapper.find('button')
+      expect(clickButton.exists()).toBe(true)
+      expect(clickButton.text()).toContain('auth.register.click_here')
+    })
   })
 
-  it('should validate required fields', async () => {
-    const wrapper = mount(MockLogin, {
-      props: {
-        isRegisterLocal: false
-      },
-      global: {
-        stubs: {
-          'NuxtLink': true,
-          'HeaderAuthFormLoginForm': true,
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
+  describe('Interactions', () => {
+    it('should toggle isAssociation when toggleCheck is called', async () => {
+      const wrapper = mount(MockLogin)
+
+      expect(wrapper.vm.isAssociation).toBe(false)
+
+      await wrapper.vm.toggleCheck()
+      expect(wrapper.vm.isAssociation).toBe(true)
+
+      await wrapper.vm.toggleCheck()
+      expect(wrapper.vm.isAssociation).toBe(false)
     })
 
-    await wrapper.find('form').trigger('submit')
+    it('should handle checkbox change', async () => {
+      const wrapper = mount(MockLogin)
 
-    expect(wrapper.text()).toContain('Email requis')
-    expect(wrapper.text()).toContain('Mot de passe requis')
+      await wrapper.vm.handleCheckboxChange(true)
+      expect(wrapper.vm.isAssociation).toBe(true)
+
+      await wrapper.vm.handleCheckboxChange(false)
+      expect(wrapper.vm.isAssociation).toBe(false)
+    })
+
+    it('should handle register change', async () => {
+      const wrapper = mount(MockLogin)
+
+      await wrapper.vm.handleRegisterChange(true)
+      expect(wrapper.vm.isRegister).toBe(true)
+
+      await wrapper.vm.handleRegisterChange(false)
+      expect(wrapper.vm.isRegister).toBe(false)
+    })
+
+    it('should watch isRegisterLocal prop changes', async () => {
+      const wrapper = mount(MockLogin, {
+        props: {
+          isRegisterLocal: false
+        }
+      })
+
+      expect(wrapper.vm.isRegister).toBe(false)
+
+      await wrapper.setProps({ isRegisterLocal: true })
+      await nextTick()
+
+      expect(wrapper.vm.isRegister).toBe(true)
+    })
   })
 
-  it('should call login function with correct data', async () => {
-    const wrapper = mount(MockLogin, {
-      props: {
-        isRegisterLocal: false
-      },
-      global: {
-        stubs: {
-          'NuxtLink': true,
-          'HeaderAuthFormLoginForm': true,
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
+  describe('Props et états', () => {
+    it('should initialize with correct props', () => {
+      const wrapper = mount(MockLogin, {
+        props: {
+          isRegisterLocal: true
         }
-      }
+      })
+
+      expect(wrapper.vm.isRegister).toBe(true)
+      expect(wrapper.vm.isAssociation).toBe(false)
     })
 
-    await wrapper.find('[data-testid="email-input"]').setValue('test@example.com')
-    await wrapper.find('[data-testid="password-input"]').setValue('password123')
-    await wrapper.find('form').trigger('submit')
+    it('should update isRegister when prop changes', async () => {
+      const wrapper = mount(MockLogin, {
+        props: {
+          isRegisterLocal: false
+        }
+      })
 
-    // Vérifier que le composant existe
-    expect(wrapper.exists()).toBe(true)
+      expect(wrapper.vm.isRegister).toBe(false)
+
+      await wrapper.setProps({ isRegisterLocal: true })
+      await nextTick()
+
+      expect(wrapper.vm.isRegister).toBe(true)
+    })
   })
 
-  it('should show loading state during login', async () => {
-    const wrapper = mount(MockLogin, {
-      props: {
-        isRegisterLocal: false
-      },
-      global: {
-        stubs: {
-          'NuxtLink': true,
-          'HeaderAuthFormLoginForm': true,
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
+  describe('Styles et classes CSS', () => {
+    it('should have proper container styling', () => {
+      const wrapper = mount(MockLogin)
+
+      const container = wrapper.find('div')
+      expect(container.classes()).toContain('min-h-[85vh]')
+      expect(container.classes()).toContain('flex')
+      expect(container.classes()).toContain('flex-col')
+      expect(container.classes()).toContain('md:flex-row')
     })
 
-    // Simuler une soumission de formulaire pour déclencher l'état de chargement
-    await wrapper.find('[data-testid="email-input"]').setValue('test@example.com')
-    await wrapper.find('[data-testid="password-input"]').setValue('password123')
-    await wrapper.find('form').trigger('submit')
-    
-    // Vérifier que le bouton submit est désactivé pendant le chargement
-    const submitButton = wrapper.find('[data-testid="submit-button"]')
-    expect(submitButton.attributes('disabled')).toBeDefined()
+    it('should have proper illustration section styling', () => {
+      const wrapper = mount(MockLogin)
+
+      const illustrationSection = wrapper.find('.hidden.md\\:flex')
+      expect(illustrationSection.classes()).toContain('hidden')
+      expect(illustrationSection.classes()).toContain('md:flex')
+      expect(illustrationSection.classes()).toContain('flex-col')
+    })
+
+    it('should have proper button styling', async () => {
+      const wrapper = mount(MockLogin, {
+        props: {
+          isRegisterLocal: true
+        }
+      })
+
+      const button = wrapper.find('button')
+      expect(button.classes()).toContain('text-base')
+      expect(button.classes()).toContain('sm:text-lg')
+    })
   })
 
-  it('should show error message on login failure', async () => {
-    const wrapper = mount(MockLogin, {
-      props: {
-        isRegisterLocal: false
-      },
-      global: {
-        stubs: {
-          'NuxtLink': true,
-          'HeaderAuthFormLoginForm': true,
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
+  describe('Accessibilité', () => {
+    it('should have proper image alt text', () => {
+      const wrapper = mount(MockLogin)
+
+      const images = wrapper.findAll('img')
+      images.forEach(image => {
+        expect(image.attributes('alt')).toBe('Illustration')
+      })
     })
 
-    // Déclencher une erreur en soumettant un email invalide
-    await wrapper.find('[data-testid="email-input"]').setValue('invalid-email')
-    await wrapper.find('[data-testid="password-input"]').setValue('password123')
-    await wrapper.find('form').trigger('submit')
-    
-    expect(wrapper.text()).toContain('Email invalide')
+    it('should have proper heading structure', () => {
+      const wrapper = mount(MockLogin, {
+        props: {
+          isRegisterLocal: true
+        }
+      })
+
+      const heading = wrapper.find('h1')
+      expect(heading.exists()).toBe(true)
+      expect(heading.classes()).toContain('text-xl')
+      expect(heading.classes()).toContain('sm:text-2xl')
+    })
   })
 
-  it('should clear error when user starts typing', async () => {
-    const wrapper = mount(MockLogin, {
-      props: {
-        isRegisterLocal: false
-      },
-      global: {
-        stubs: {
-          'NuxtLink': true,
-          'HeaderAuthFormLoginForm': true,
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
+  describe('Responsive design', () => {
+    it('should have responsive container layout', () => {
+      const wrapper = mount(MockLogin)
+
+      const container = wrapper.find('div')
+      expect(container.classes()).toContain('flex-col')
+      expect(container.classes()).toContain('md:flex-row')
     })
 
-    // Déclencher une erreur d'abord
-    await wrapper.find('[data-testid="email-input"]').setValue('invalid-email')
-    await wrapper.find('[data-testid="password-input"]').setValue('password123')
-    await wrapper.find('form').trigger('submit')
-    expect(wrapper.text()).toContain('Email invalide')
-    
-    // Puis taper dans le champ pour effacer l'erreur
-    await wrapper.find('[data-testid="email-input"]').trigger('input')
-    expect(wrapper.text()).not.toContain('Email invalide')
-  })
-
-  it('should toggle password visibility', async () => {
-    const wrapper = mount(MockLogin, {
-      props: {
-        isRegisterLocal: false
-      },
-      global: {
-        stubs: {
-          'NuxtLink': true,
-          'HeaderAuthFormLoginForm': true,
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
+    it('should have responsive text sizing', async () => {
+      const wrapper = mount(MockLogin, {
+        props: {
+          isRegisterLocal: true
         }
-      }
+      })
+
+      const button = wrapper.find('button')
+      expect(button.classes()).toContain('text-base')
+      expect(button.classes()).toContain('sm:text-lg')
     })
-
-    const toggleButton = wrapper.find('[data-testid="password-toggle"]')
-    if (toggleButton.exists()) {
-      // Vérifier l'état initial du champ password
-      const passwordInput = wrapper.find('[data-testid="password-input"]')
-      expect(passwordInput.attributes('type')).toBe('password')
-
-      await toggleButton.trigger('click')
-
-      // Après le clic, le type doit être 'text' (mot de passe visible)
-      expect(passwordInput.attributes('type')).toBe('text')
-    }
-  })
-
-  it('should have proper form accessibility', () => {
-    const wrapper = mount(MockLogin, {
-      props: {
-        isRegisterLocal: false
-      },
-      global: {
-        stubs: {
-          'NuxtLink': true,
-          'HeaderAuthFormLoginForm': true,
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
-
-    const emailInput = wrapper.find('[data-testid="email-input"]')
-    const passwordInput = wrapper.find('[data-testid="password-input"]')
-
-    expect(emailInput.attributes('type')).toBe('email')
-    expect(passwordInput.attributes('type')).toBe('password')
-    expect(emailInput.attributes('required')).toBeDefined()
-    expect(passwordInput.attributes('required')).toBeDefined()
-  })
-
-  it('should handle Google login', async () => {
-    const wrapper = mount(MockLogin, {
-      props: {
-        isRegisterLocal: false
-      },
-      global: {
-        stubs: {
-          'NuxtLink': true,
-          'HeaderAuthFormLoginForm': true,
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
-
-    const googleButton = wrapper.find('[data-testid="google-login"]')
-    if (googleButton.exists()) {
-      await googleButton.trigger('click')
-      // Vérifier que le bouton existe
-      expect(googleButton.exists()).toBe(true)
-    }
-  })
-
-  it('should redirect to register page', () => {
-    const wrapper = mount(MockLogin, {
-      props: {
-        isRegisterLocal: false
-      },
-      global: {
-        stubs: {
-          'NuxtLink': true,
-          'HeaderAuthFormLoginForm': true,
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
-
-    const registerLink = wrapper.find('[data-testid="register-link"]')
-    expect(registerLink.exists()).toBe(true)
-  })
-
-  it('should handle form submission with valid data', async () => {
-    const wrapper = mount(MockLogin, {
-      props: {
-        isRegisterLocal: false
-      },
-      global: {
-        stubs: {
-          'NuxtLink': true,
-          'HeaderAuthFormLoginForm': true,
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
-
-    await wrapper.find('[data-testid="email-input"]').setValue('valid@example.com')
-    await wrapper.find('[data-testid="password-input"]').setValue('validpassword')
-    await wrapper.find('form').trigger('submit')
-
-    expect(wrapper.exists()).toBe(true)
-  })
-
-  it('should prevent form submission when loading', async () => {
-    const wrapper = mount(MockLogin, {
-      props: {
-        isRegisterLocal: false
-      },
-      global: {
-        stubs: {
-          'NuxtLink': true,
-          'HeaderAuthFormLoginForm': true,
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
-
-    // Simuler une soumission pour déclencher l'état de chargement
-    await wrapper.find('[data-testid="email-input"]').setValue('test@example.com')
-    await wrapper.find('[data-testid="password-input"]').setValue('password123')
-    await wrapper.find('form').trigger('submit')
-
-    // Vérifier que le bouton submit est désactivé pendant le chargement
-    const submitButton = wrapper.find('[data-testid="submit-button"]')
-    expect(submitButton.attributes('disabled')).toBeDefined()
   })
 }) 
