@@ -1,13 +1,13 @@
 <template>
   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
     <!-- Sidebar with search panel and menu -->
-    <div class="md:col-span-1 space-y-6">
+    <aside class="md:col-span-1 space-y-6" role="complementary" aria-label="Panneau de recherche">
       <SearchMenu />
       <SearchPanel @search="handleSearch" />
-    </div>
+    </aside>
 
     <!-- Main content with search results -->
-    <div class="md:col-span-3">
+    <main class="md:col-span-3" role="main" aria-label="Résultats de recherche">
       <div class="bg-base-100 rounded-lg shadow-md p-6">
         <h1 class="text-2xl font-bold mb-2 text-base-content">Search Results</h1>
         <p v-if="searchPerformed" class="text-base-content opacity-70 mb-6">
@@ -20,32 +20,55 @@
         <!-- Search results -->
         <div v-if="searchPerformed && searchResults.length > 0" class="space-y-4">
           <!-- Results tabs -->
-          <div class="tabs tabs-boxed bg-base-200 mb-4">
+          <div class="tabs tabs-boxed bg-base-200 mb-4" role="tablist" aria-label="Filtrer les résultats">
             <button 
-              class="tab" 
+              class="tab focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
               :class="{ 'tab-active': activeTab === 'all' }"
               @click="activeTab = 'all'"
+              @keyup.enter="activeTab = 'all'"
+              @keyup.space.prevent="activeTab = 'all'"
+              role="tab"
+              :aria-selected="activeTab === 'all'"
+              :aria-controls="'tabpanel-all'"
+              aria-label="Tous les résultats"
             >
               All ({{ searchResults.length }})
             </button>
             <button 
-              class="tab" 
+              class="tab focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
               :class="{ 'tab-active': activeTab === 'missions' }"
               @click="activeTab = 'missions'"
+              @keyup.enter="activeTab = 'missions'"
+              @keyup.space.prevent="activeTab = 'missions'"
+              role="tab"
+              :aria-selected="activeTab === 'missions'"
+              :aria-controls="'tabpanel-missions'"
+              aria-label="Missions uniquement"
             >
               Missions ({{ missionResults.length }})
             </button>
             <button 
-              class="tab" 
+              class="tab focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
               :class="{ 'tab-active': activeTab === 'organizations' }"
               @click="activeTab = 'organizations'"
+              @keyup.enter="activeTab = 'organizations'"
+              @keyup.space.prevent="activeTab = 'organizations'"
+              role="tab"
+              :aria-selected="activeTab === 'organizations'"
+              :aria-controls="'tabpanel-organizations'"
+              aria-label="Organisations uniquement"
             >
               Organizations ({{ organizationResults.length }})
             </button>
           </div>
 
           <!-- Mission results -->
-          <div v-if="activeTab === 'all' || activeTab === 'missions'">
+          <div 
+            v-if="activeTab === 'all' || activeTab === 'missions'"
+            :id="'tabpanel-' + (activeTab === 'all' ? 'all' : 'missions')"
+            role="tabpanel"
+            :aria-labelledby="'tab-' + (activeTab === 'all' ? 'all' : 'missions')"
+          >
             <div v-for="result in filteredResults" :key="result.id" class="card bg-base-200 shadow-sm mb-4" v-show="result.type === 'mission' || activeTab === 'all'">
               <div class="card-body p-4">
                 <div class="flex justify-between items-start">
@@ -56,39 +79,60 @@
                     </div>
                     <p class="text-base-content opacity-70">{{ result.organization }}</p>
                     <div class="flex items-center gap-2 mt-2">
-                      <Calendar class="w-4 h-4 text-base-content opacity-70" />
-                      <span class="text-sm text-base-content opacity-70">{{ result.date }}</span>
+                      <Calendar class="w-4 h-4 text-base-content opacity-70" aria-hidden="true" />
+                      <time class="text-sm text-base-content opacity-70" :datetime="result.date">{{ result.date }}</time>
                     </div>
                     <div class="flex items-center gap-2 mt-1">
-                      <MapPin class="w-4 h-4 text-base-content opacity-70" />
+                      <MapPin class="w-4 h-4 text-base-content opacity-70" aria-hidden="true" />
                       <span class="text-sm text-base-content opacity-70">{{ result.location }}</span>
                     </div>
                   </div>
 
-                  <button class="btn btn-ghost btn-circle" @click="toggleFavorite(result)">
-                    <Heart class="w-5 h-5" :class="result.isFavorite ? 'text-error fill-error' : 'text-base-content'" />
+                  <button 
+                    class="btn btn-ghost btn-circle focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+                    @click="toggleFavorite(result)"
+                    @keyup.enter="toggleFavorite(result)"
+                    @keyup.space.prevent="toggleFavorite(result)"
+                    :aria-label="result.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+                    :aria-pressed="result.isFavorite"
+                  >
+                    <Heart class="w-5 h-5" :class="result.isFavorite ? 'text-error fill-error' : 'text-base-content'" aria-hidden="true" />
                   </button>
                 </div>
 
                 <p class="text-base-content mt-2">{{ result.description }}</p>
 
                 <div class="card-actions justify-end mt-4">
-                  <button class="btn btn-sm btn-outline">View Details</button>
-                  <button class="btn btn-sm btn-primary">Apply</button>
+                  <button class="btn btn-sm btn-outline focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">View Details</button>
+                  <button class="btn btn-sm btn-primary focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">Apply</button>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Organization results -->
-          <div v-if="activeTab === 'all' || activeTab === 'organizations'">
+          <div 
+            v-if="activeTab === 'all' || activeTab === 'organizations'"
+            :id="'tabpanel-' + (activeTab === 'all' ? 'all' : 'organizations')"
+            role="tabpanel"
+            :aria-labelledby="'tab-' + (activeTab === 'all' ? 'all' : 'organizations')"
+          >
             <div v-for="result in filteredResults" :key="result.id" class="card bg-base-200 shadow-sm mb-4" v-show="result.type === 'organization' || activeTab === 'all'">
               <div class="card-body p-4">
                 <div class="flex justify-between items-start">
                   <div class="flex gap-3">
                     <div class="avatar">
                       <div class="w-12 h-12 rounded-full bg-base-300">
-                        <img v-if="result.logo" :src="result.logo" alt="Logo" />
+                        <img 
+                          v-if="result.logo" 
+                          :src="result.logo" 
+                          :alt="`Logo de ${result.name}`"
+                          width="48"
+                          height="48"
+                          loading="lazy"
+                          decoding="async"
+                          class="w-12 h-12 object-cover rounded-full"
+                        />
                       </div>
                     </div>
                     <div>
@@ -101,15 +145,22 @@
                     </div>
                   </div>
 
-                  <button class="btn btn-ghost btn-circle" @click="toggleFavorite(result)">
-                    <Heart class="w-5 h-5" :class="result.isFavorite ? 'text-error fill-error' : 'text-base-content'" />
+                  <button 
+                    class="btn btn-ghost btn-circle focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+                    @click="toggleFavorite(result)"
+                    @keyup.enter="toggleFavorite(result)"
+                    @keyup.space.prevent="toggleFavorite(result)"
+                    :aria-label="result.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+                    :aria-pressed="result.isFavorite"
+                  >
+                    <Heart class="w-5 h-5" :class="result.isFavorite ? 'text-error fill-error' : 'text-base-content'" aria-hidden="true" />
                   </button>
                 </div>
 
                 <p class="text-base-content mt-2">{{ result.description }}</p>
 
                 <div class="card-actions justify-end mt-4">
-                  <button class="btn btn-sm btn-outline">View Profile</button>
+                  <button class="btn btn-sm btn-outline focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">View Profile</button>
                 </div>
               </div>
             </div>
@@ -117,20 +168,20 @@
         </div>
 
         <!-- Empty state -->
-        <div v-else-if="searchPerformed" class="text-center py-12">
-          <Search class="w-16 h-16 mx-auto text-base-content opacity-30" />
+        <div v-else-if="searchPerformed" class="text-center py-12" role="status" aria-live="polite">
+          <Search class="w-16 h-16 mx-auto text-base-content opacity-30" aria-hidden="true" />
           <h3 class="mt-4 text-lg font-medium text-base-content">No results found</h3>
           <p class="mt-2 text-base-content opacity-70">Try adjusting your search criteria</p>
         </div>
 
         <!-- Initial state -->
-        <div v-else class="text-center py-12">
-          <Search class="w-16 h-16 mx-auto text-base-content opacity-30" />
+        <div v-else class="text-center py-12" role="status" aria-live="polite">
+          <Search class="w-16 h-16 mx-auto text-base-content opacity-30" aria-hidden="true" />
           <h3 class="mt-4 text-lg font-medium text-base-content">Start searching</h3>
           <p class="mt-2 text-base-content opacity-70">Use the search panel to find missions and organizations</p>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
@@ -228,3 +279,35 @@ function toggleFavorite(result: any) {
   // In a real app, this would make an API call to update the favorite status
 }
 </script>
+
+<style scoped>
+/* Amélioration de l'accessibilité pour les éléments interactifs */
+.btn:focus-visible,
+.tab:focus-visible {
+  outline: 2px solid #eb5577;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Amélioration du contraste pour les utilisateurs en mode high-contrast */
+@media (prefers-contrast: more) {
+  .btn {
+    border-width: 2px;
+  }
+  
+  .tab {
+    border-width: 2px;
+  }
+}
+
+/* Respect des préférences de réduction de mouvement */
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+  
+  .tab {
+    transition: none;
+  }
+}
+</style>

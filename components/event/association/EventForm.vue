@@ -29,7 +29,7 @@
         class="input input-bordered w-full" 
         :class="{ 'input-error': invalidFields.nameEvent }"
         placeholder="Nom de l'événement"
-      />
+      aria-label="Champ de saisie">
     </div>
 
     <!-- Description -->
@@ -42,7 +42,7 @@
         class="textarea textarea-bordered h-24 w-full" 
         :class="{ 'textarea-error': invalidFields.description }"
         placeholder="Description de l'événement"
-      ></textarea>
+       aria-label="Zone de texte"></textarea>
     </div>
 
     <!-- Date and Time -->
@@ -56,7 +56,7 @@
           v-model="formState.dateEvent" 
           class="input input-bordered w-full" 
           :class="{ 'input-error': invalidFields.dateEvent }"
-        />
+        aria-label="Champ de saisie">
       </div>
       <div class="form-control w-full">
         <label class="label">
@@ -67,7 +67,7 @@
           v-model="formState.hoursEvent" 
           class="input input-bordered w-full" 
           :class="{ 'input-error': invalidFields.hoursEvent }"
-        />
+        aria-label="Champ de saisie">
       </div>
     </div>
 
@@ -86,7 +86,7 @@
           class="input input-bordered w-full" 
           :class="{ 'input-error': invalidFields.city }"
           placeholder="Ville"
-        />
+        aria-label="Champ de saisie">
       </div>
       <div class="form-control w-full">
         <label class="label">
@@ -98,7 +98,7 @@
           class="input input-bordered w-full" 
           :class="{ 'input-error': invalidFields.postalCode }"
           placeholder="Code postal"
-        />
+        aria-label="Champ de saisie">
       </div>
       <div class="form-control w-full">
         <label class="label">
@@ -109,7 +109,7 @@
           v-model="formState.addressAnnouncement.country"
           class="input input-bordered w-full" 
           placeholder="Pays"
-        />
+        aria-label="Champ de saisie">
       </div>
     </div>
 
@@ -124,7 +124,7 @@
           v-model.number="formState.maxParticipants" 
           class="input input-bordered w-full" 
           min="0"
-        />
+        aria-label="Nombre">
       </div>
       <div class="form-control w-full">
         <label class="label">
@@ -135,7 +135,7 @@
           v-model.number="formState.maxVolunteers" 
           class="input input-bordered w-full" 
           min="0"
-        />
+        aria-label="Nombre">
       </div>
     </div>
 
@@ -151,7 +151,7 @@
           class="input input-bordered w-full" 
           placeholder="Ajouter un tag et appuyer sur Entrée" 
           @keydown.enter.prevent="addTag"
-        />
+        aria-label="Champ de saisie">
         <button 
           type="button" 
           class="btn btn-primary ml-2" 
@@ -184,7 +184,7 @@
       <select 
         v-model="formState.status" 
         class="select select-bordered w-full"
-      >
+       aria-label="Sélection">
         <option v-for="status in statusOptions" :key="status.value" :value="status.value">
           {{ status.label }}
         </option>

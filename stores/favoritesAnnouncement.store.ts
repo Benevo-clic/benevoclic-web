@@ -15,6 +15,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
     state: () => ({
         favorites: [] as FavoritesAnnouncement[],
         favoritesAnnouncementsVolunteer: [] as Announcement[],
+        favoriteVolunteers: [] as Announcement[],
         loading: false,
         error: null as string | null,
         cache: {} as Cache,
@@ -24,6 +25,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
     getters: {
         getFavorites: (state) => state.favorites,
         getFavoritesAnnouncementsVolunteer: (state) => state.favoritesAnnouncementsVolunteer,
+        getFavoriteVolunteers: (state) => state.favoriteVolunteers,
         isLoading: (state) => state.loading,
         getError: (state) => state.error,
         
@@ -103,15 +105,31 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
                 this.loading = false;
             }
         },
+        async findAllFavoritesAnnouncementsByVolunteerId(volunteerId: string) {
+
+            this.loading = true;
+            this.error = null;
+            try {
+                this.favoriteVolunteers = await $fetch<Announcement[]>(`/api/favorites-announcement/volunteer/announcements/${volunteerId}`, {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+
+                if (!this.favoriteVolunteers || this.favoriteVolunteers.length === 0) {
+                    this.error = 'Aucun favori trouvé';
+                }
+
+                return this.favoriteVolunteers;
+            } catch (err: any) {
+                this.error = err?.message || 'Erreur de récupération des favoris';
+                throw err;
+            } finally {
+                this.loading = false;
+            }
+        },
+
 
         async fetchAllFavoritesOfVolunteer(volunteerId: string) {
-            const cacheKey = `favorites_volunteer_${volunteerId}`;
-            const cached = this.getCacheState<FavoritesAnnouncement[]>(cacheKey);
-            
-            if (cached) {
-                this.favorites = cached;
-                return this.favorites;
-            }
 
             this.loading = true;
             this.error = null;
@@ -123,10 +141,8 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
                 
                 if (!this.favorites || this.favorites.length === 0) {
                     this.error = 'Aucun favori trouvé';
-                } else {
-                    this.setCache(cacheKey, this.favorites);
                 }
-                
+
                 return this.favorites;
             } catch (err: any) {
                 this.error = err?.message || 'Erreur de récupération des favoris';
@@ -268,6 +284,9 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
                 
                 this.favorites = this.favorites.filter(fav =>
                     fav.volunteerId !== volunteerId || fav.announcementId !== announcementId
+                );
+                this.favoriteVolunteers = this.favoriteVolunteers.filter(fav =>
+                    fav._id !== announcementId
                 );
                 
                 this.invalidateCache('favorites_');

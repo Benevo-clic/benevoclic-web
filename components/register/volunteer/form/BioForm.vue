@@ -27,7 +27,7 @@ function onInput(e: Event) {
       class="textarea textarea-bordered h-24"
       :class="{ 'textarea-error': props.error }"
       placeholder="Ex. Passionné·e de bénévolat et de musique"
-    ></textarea>
+     aria-label="Zone de texte"></textarea>
     <label v-if="props.error" class="label">
       <span class="label-text-alt text-error">{{ props.error }}</span>
     </label>

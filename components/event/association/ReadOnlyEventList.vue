@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import ReadOnlyEventCard from './ReadOnlyEventCard.vue';
-import type {Announcement} from "~/common/interface/event.interface";
+import type {Announcement} from "../../../common/interface/event.interface";
 
 const props = defineProps<{
     announcements: Announcement[];

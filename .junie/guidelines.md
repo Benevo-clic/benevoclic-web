@@ -368,4 +368,4 @@ For ongoing GDPR compliance, consider:
 
 ---
 
-For any questions regarding GDPR implementation, contact the development team or the Data Protection Officer at dpo@benevoclic.app.
+For any questions regarding GDPR implementation, contact the development team or the Data Protection Officer at dpo@www.benevoclic.fr.

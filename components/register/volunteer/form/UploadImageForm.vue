@@ -54,7 +54,7 @@ function skipUpload() {
           accept="image/*"
           @change="onFileChange"
           class="hidden"
-      />
+      aria-label="Champ de saisie">
       <div v-if="preview">
         <img
             :src="preview"

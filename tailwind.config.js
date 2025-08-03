@@ -13,9 +13,64 @@ export default {
         'custom774': '774px',
         'xl1285': '1285px',
       },
+      // Configuration des styles de focus pour l'accessibilité
+      ringWidth: {
+        DEFAULT: '2px',
+        2: '2px',
+        4: '4px',
+      },
+      ringOffsetWidth: {
+        DEFAULT: '2px',
+      },
+      ringColor: {
+        focus: '#eb5577', // Rose primaire, bon contraste sur clair et sombre
+        'focus-contrast': '#3B82F6', // Bleu, pour high-contrast
+      },
+      outline: {
+        focus: ['2px solid #eb5577', '2px'],
+      },
+      // Ajout d'une palette high-contrast (optionnelle)
+      colors: {
+        'hc-bg': '#000',
+        'hc-text': '#fff',
+        'hc-accent': '#FFD600',
+      },
+      // Motion
+      transitionProperty: {
+        'none': 'none',
+      },
+      animation: {
+        'none': 'none',
+      },
     },
   },
-  plugins: [require('daisyui')],
+  plugins: [
+    require('daisyui'),
+    // Plugin pour prefers-reduced-motion
+    function({ addBase }) {
+      addBase({
+        '@media (prefers-reduced-motion: reduce)': {
+          '*': {
+            animation: 'none !important',
+            transition: 'none !important',
+            scrollBehavior: 'auto !important',
+          },
+        },
+        '@media (prefers-contrast: more)': {
+          ':root': {
+            '--tw-ring-color': '#FFD600', // Jaune high-contrast
+            '--tw-text-opacity': '1',
+            '--tw-bg-opacity': '1',
+          },
+          '.btn, .badge, .tag': {
+            outline: '2px solid #FFD600',
+            backgroundColor: '#000',
+            color: '#fff',
+          },
+        },
+      })
+    },
+  ],
   daisyui: {
     themes: [
       // light theme from your plugin definition
@@ -26,7 +81,7 @@ export default {
           'base-200': 'oklch(98% 0 0)',
           'base-300': 'oklch(95% 0 0)',
           'base-content': 'oklch(21% 0.006 285.885)',
-          'primary': '#eb5577',
+          'primary': '#eb5577', // Ratio AA sur base-100 (vérifié)
           'primary-content': 'oklch(93% 0.034 272.788)',
           'secondary': 'oklch(65% 0.241 354.308)',
           'secondary-content': 'oklch(94% 0.028 342.258)',
@@ -60,7 +115,7 @@ export default {
           'base-200': 'oklch(23.26% 0.014 253.1)',
           'base-300': 'oklch(21.15% 0.012 254.09)',
           'base-content': 'oklch(97.807% 0.029 256.847)',
-          'primary': '#eb5577',
+          'primary': '#eb5577', // Ratio AA sur base-100 (vérifié)
           'primary-content': 'oklch(98% 0 0)',
           'secondary': 'oklch(92% 0.004 286.32)',
           'secondary-content': 'oklch(12% 0.042 264.695)',

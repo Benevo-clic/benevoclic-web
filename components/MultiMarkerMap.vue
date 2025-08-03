@@ -325,9 +325,7 @@ const initMap = () => {
             </svg>
             <p style="margin: 0; font-size: 14px;">Impossible de charger la carte</p>
             <p style="margin: 4px 0 0 0; font-size: 12px;">Vérifiez votre connexion internet</p>
-            <button onclick="window.location.reload()" style="margin-top: 12px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;">
-              Réessayer
-            </button>
+            <button onclick="window.location.reload()" style="margin-top: 12px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Réessayer</button>
           </div>
         </div>
       `

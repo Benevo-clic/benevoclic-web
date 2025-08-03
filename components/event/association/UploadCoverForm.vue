@@ -80,7 +80,7 @@ const handleFinish = async () => {
           class="hidden"
           accept="image/*"
           @change="handleFileChange"
-      />
+      aria-label="Champ de saisie">
 
       <div v-if="!coverPhotoPreview" class="text-center p-6">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

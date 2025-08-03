@@ -51,7 +51,15 @@
               <div class="flex items-center gap-4 mb-4">
                 <div v-if="announcement?.associationLogo" class="avatar">
                   <div class="w-14 h-14 rounded-full ring-2 ring-primary/20 ring-offset-2 ring-offset-base-100">
-                    <img :src="profileImageUrl" alt="Logo association" class="object-cover" />
+                    <img 
+                      :src="profileImageUrl" 
+                      alt="Logo de l'association"
+                      width="64"
+                      height="64"
+                      loading="lazy"
+                      decoding="async"
+                      class="object-cover"
+                    />
                   </div>
                 </div>
                 <div v-else class="avatar placeholder">
@@ -77,7 +85,7 @@
                   <Clock class="h-4 w-4" />
                   {{ announcement.hoursEvent }}
                 </div>
-                <div v-if="announcement?.addressAnnouncement?.city" class="badge badge-lg badge-secondary gap-2">
+                <div v-if="announcement?.addressAnnouncement?.city" class="badge badge-lg badge-primary gap-2">
                   <MapPin class="h-4 w-4" />
                   {{ announcement.addressAnnouncement.city }}
                 </div>
@@ -88,13 +96,21 @@
                 <p>{{ announcement?.description }}</p>
               </div>
 
-              <!-- Tags -->
-              <div class="flex flex-wrap gap-2 mb-4">
-                <span v-for="tag in announcement?.tags" :key="tag" 
-                  class="badge badge-outline hover:badge-primary transition-all duration-300 cursor-pointer transform hover:-translate-y-1">
-                  {{ tag }}
-                </span>
+              <div v-if="announcement?.tags?.length" class="flex flex-row gap-2 overflow-x-auto whitespace-nowrap">
+                <div
+                    v-for="tag in announcement.tags"
+                    :key="tag"
+                    class="badge badge-outline text-sm hover:badge-primary transition-colors text-base-content border-base-content focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-1 mr-1"
+                    tabindex="0"
+                    role="button"
+                    :aria-label="`Filtrer par tag : ${tag}`"
+                >
+                    <span class="text-base-content/70 dark:text-white/80 group-hover:text-primary transition-colors">
+                      {{ tag }}
+                    </span>
+                </div>
               </div>
+
             </div>
           </div>
 
@@ -155,36 +171,6 @@
             </div>
           </div>
 
-          <!-- Quick info card -->
-          <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300">
-            <div class="card-body p-6">
-              <h2 class="card-title text-xl mb-4 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Informations
-              </h2>
-
-              <ul class="space-y-3">
-                <li class="flex items-center gap-3">
-                  <div class="badge badge-primary badge-outline p-3">Statut</div>
-                  <span>{{ announcement?.status }}</span>
-                </li>
-                <li class="flex items-center gap-3">
-                  <div class="badge badge-primary badge-outline p-3">Date</div>
-                  <span>{{ formatDate(announcement?.dateEvent) }}</span>
-                </li>
-                <li v-if="announcement?.hoursEvent" class="flex items-center gap-3">
-                  <div class="badge badge-primary badge-outline p-3">Heure</div>
-                  <span>{{ announcement?.hoursEvent }}</span>
-                </li>
-                <li v-if="announcement?.addressAnnouncement?.city" class="flex items-center gap-3">
-                  <div class="badge badge-primary badge-outline p-3">Lieu</div>
-                  <span>{{ announcement?.addressAnnouncement?.city }}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
 

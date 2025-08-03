@@ -4,37 +4,40 @@ export default defineNuxtConfig({
   // Configuration pour l'accessibilité
   app: {
     head: {
-      htmlAttrs: {
-        lang: 'fr'
-      },
+      htmlAttrs: { lang: 'fr' },
+      title: 'Benevoclic - Plateforme d\'engagement solidaire',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'format-detection', content: 'telephone=no' },
-        // Métadonnées de base pour le SEO
-        { name: 'description', content: 'Benevoclic - Plateforme de bénévolat connectant associations et volontaires' },
-        { name: 'keywords', content: 'bénévolat, association, volontariat, engagement, solidarité' },
+        { name: 'description', content: 'Benevoclic met en relation bénévoles, associations et personnes dans le besoin : publiez et découvrez des événements solidaires, trouvez des missions et mobilisez l\'entraide.' },
+        { name: 'keywords', content: 'bénévolat, association, événements solidaires, aide, entraide, missions, bénévoles' },
         { name: 'author', content: 'Benevoclic' },
         { name: 'robots', content: 'index, follow' },
-        // Open Graph
+
+        // Open Graph aligné
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'Benevoclic' },
-        { property: 'og:title', content: 'Benevoclic - Plateforme de bénévolat' },
-        { property: 'og:description', content: 'Connectez-vous avec des associations et participez à des missions de bénévolat' },
+        { property: 'og:title', content: 'Benevoclic - Plateforme d\'engagement solidaire' },
+        { property: 'og:description', content: 'Benevoclic met en relation bénévoles, associations et personnes dans le besoin : publiez et découvrez des événements solidaires, trouvez des missions et mobilisez l\'entraide.' },
         { property: 'og:image', content: '/logo_benevoclic.png' },
         { property: 'og:image:alt', content: 'Logo Benevoclic' },
-        // Twitter Card
+
+        // Twitter
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: 'Benevoclic - Plateforme de bénévolat' },
-        { name: 'twitter:description', content: 'Connectez-vous avec des associations et participez à des missions de bénévolat' },
+        { name: 'twitter:title', content: 'Benevoclic - Plateforme d\'engagement solidaire' },
+        { name: 'twitter:description', content: 'Benevoclic met en relation bénévoles, associations et personnes dans le besoin : publiez et découvrez des événements solidaires, trouvez des missions et mobilisez l\'entraide.' },
         { name: 'twitter:image', content: '/logo_benevoclic.png' },
-        // Accessibilité
-        { name: 'theme-color', content: '#3B82F6' },
+
+        // Accessibilité / thème
+        { name: 'theme-color', content: '#eb5577' },
         { name: 'color-scheme', content: 'light dark' }
       ],
       link: [
+        { rel: 'canonical', href: 'https://www.benevoclic.fr' },
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'canonical', href: 'https://benevoclic.app' },
+        { rel: 'icon', type: 'image/png', sizes: '192x192', href: '/logo_benevoclic.png' },
+        { rel: 'icon', type: 'image/png', sizes: '512x512', href: '/logo_benevoclic.png' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         // Preload des polices critiques
@@ -62,7 +65,7 @@ export default defineNuxtConfig({
     // Optimise le chargement des composants
     componentIslands: false,
     // Optimisations de performance
-    payloadExtraction: false,
+    payloadExtraction: true,
     renderJsonPayloads: true,
     // Optimisation du bundling
     treeshakeClientOnly: true
@@ -157,7 +160,7 @@ export default defineNuxtConfig({
     },
     public: {
       ssr: true,
-      siteUrl: 'https://benevoclic.app',
+      siteUrl: 'https://www.benevoclic.fr',
       firebaseConfig: {
         apiKey: process.env.FIREBASE_API_KEY,
         authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -200,7 +203,7 @@ export default defineNuxtConfig({
           // Protection contre les attaques XSS
           'X-XSS-Protection': '1; mode=block',
           // Politique de sécurité du contenu - Corrigée pour Firebase
-          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://*.firebaseio.com https://*.firebase.com https://*.googleapis.com https://www.googletagmanager.com https://www.google-analytics.com blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://*.firebase.com https://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.benevoclic.app https://api-adresse.data.gouv.fr https://nominatim.openstreetmap.org https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://*.openstreetmap.org https://*.cartodb.com https://*.thunderforest.com; img-src 'self' data: https: https://www.google-analytics.com https://*.openstreetmap.org https://*.cartodb.com https://*.thunderforest.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com;",
+          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://*.firebaseio.com https://*.firebase.com https://*.googleapis.com https://www.googletagmanager.com https://www.google-analytics.com blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://*.firebase.com https://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.www.benevoclic.fr https://api-adresse.data.gouv.fr https://nominatim.openstreetmap.org https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://*.openstreetmap.org https://*.cartodb.com https://*.thunderforest.com; img-src 'self' data: https: https://www.google-analytics.com https://*.openstreetmap.org https://*.cartodb.com https://*.thunderforest.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com;",
           // Référer Policy
           'Referrer-Policy': 'strict-origin-when-cross-origin',
           // Permissions Policy

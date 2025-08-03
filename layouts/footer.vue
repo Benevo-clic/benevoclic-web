@@ -18,9 +18,7 @@
           @click.prevent="openCookieSettings" 
           class="link link-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
           aria-label="Ouvrir les paramètres des cookies"
-        >
-          Paramètres des cookies
-        </button>
+         type="button">Paramètres des cookies</button>
       </nav>
     </div>
   </footer>

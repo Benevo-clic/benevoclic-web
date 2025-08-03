@@ -25,7 +25,7 @@
             placeholder="Rechercher un événement..." 
             class="input input-bordered input-sm w-64 pr-10"
             @input="applyFilters"
-          />
+          aria-label="Champ de saisie">
           <Search class="w-4 h-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-base-content/50" />
         </div>
 
@@ -47,7 +47,7 @@
                   type="checkbox"
                   :checked="filters.status === statusOption.value"
                   class="checkbox checkbox-xs mr-2"
-                />
+                aria-label="Champ de saisie">
                 {{ statusOption.label }}
               </a>
             </li>
@@ -74,7 +74,7 @@
             <ul class="menu p-2 text-sm">
               <li v-for="tag in availableTags" :key="tag">
                 <a @click.stop="toggleTag(tag)">
-                  <input type="checkbox" :checked="selectedTags.includes(tag)" class="checkbox checkbox-xs mr-2" />
+                  <input type="checkbox" :checked="selectedTags.includes(tag)" class="checkbox checkbox-xs mr-2" aria-label="Champ de saisie">
                   {{ tag }}
                 </a>
               </li>
@@ -93,8 +93,8 @@
                     class="input input-sm input-bordered w-full"
                     placeholder="Nouveau tag…"
                     ref="customTagInputRef"
-                  />
-                  <button class="btn btn-sm btn-ghost" @click="cancelCustomTagInput" title="Annuler">✕</button>
+                  aria-label="Champ de saisie">
+                  <button class="btn btn-sm btn-ghost" @click="cancelCustomTagInput" title="Annuler" type="button" aria-label="Fermer" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>✕</button>
                 </div>
               </li>
             </ul>
@@ -129,7 +129,7 @@
                   type="checkbox"
                   :checked="filters.stateEvent === 'NOW'"
                   class="checkbox checkbox-xs mr-2"
-                />
+                aria-label="Champ de saisie">
                 En cours
               </a>
             </li>
@@ -139,7 +139,7 @@
                   type="checkbox"
                   :checked="filters.stateEvent === 'PAST'"
                   class="checkbox checkbox-xs mr-2"
-                />
+                aria-label="Champ de saisie">
                 Passés
               </a>
             </li>
@@ -149,7 +149,7 @@
                   type="checkbox"
                   :checked="filters.stateEvent === 'UPCOMING'"
                   class="checkbox checkbox-xs mr-2"
-                />
+                aria-label="Champ de saisie">
                 À venir
               </a>
             </li>
@@ -196,7 +196,7 @@
                   placeholder="Rechercher un événement..." 
                   class="input input-bordered w-full pr-10"
                   @input="applyFilters"
-                />
+                aria-label="Champ de saisie">
                 <Search class="w-4 h-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-base-content/50" />
               </div>
             </div>
@@ -237,7 +237,7 @@
                         type="radio"
                         :checked="filters.status === statusOption.value"
                         class="radio radio-sm radio-primary"
-                      />
+                      aria-label="Champ de saisie">
                       <span class="text-sm">{{ statusOption.label }}</span>
                     </button>
                   </div>
@@ -281,7 +281,7 @@
                         type="checkbox"
                         :checked="selectedTags.includes(tag)"
                         class="checkbox checkbox-sm checkbox-primary"
-                      />
+                      aria-label="Champ de saisie">
                       <span class="text-sm">{{ tag }}</span>
                     </button>
                     
@@ -304,9 +304,9 @@
                           class="input input-sm input-bordered flex-1"
                           placeholder="Nouveau tag…"
                           ref="customTagInputRef"
-                        />
-                        <button class="btn btn-sm btn-primary" @click="addCustomTag">+</button>
-                        <button class="btn btn-sm btn-ghost" @click="cancelCustomTagInput">✕</button>
+                        aria-label="Champ de saisie">
+                        <button class="btn btn-sm btn-primary" @click="addCustomTag" type="button" aria-label="Ajouter" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>+</button>
+                        <button class="btn btn-sm btn-ghost" @click="cancelCustomTagInput" type="button" aria-label="Fermer" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>✕</button>
                       </div>
                     </div>
                   </div>
@@ -364,7 +364,7 @@
                         type="radio"
                         :checked="filters.stateEvent === eventOption.value"
                         class="radio radio-sm radio-primary"
-                      />
+                      aria-label="Champ de saisie">
                       <span class="text-sm">{{ eventOption.label }}</span>
                     </button>
                   </div>
@@ -377,15 +377,11 @@
               <button 
                 @click="resetFilters" 
                 class="btn btn-ghost flex-1"
-              >
-                Réinitialiser
-              </button>
+               type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Réinitialiser</button>
               <button 
                 @click="closeMobileFilters" 
                 class="btn btn-primary flex-1"
-              >
-                Appliquer
-              </button>
+               type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Appliquer</button>
             </div>
           </div>
         </div>

@@ -33,8 +33,8 @@ const structuredData = computed(() => {
         ...baseData,
         '@type': 'Organization',
         name: props.data.name || 'Benevoclic',
-        url: props.data.url || 'https://benevoclic.app',
-        logo: props.data.logo || 'https://benevoclic.app/logo_benevoclic.png',
+        url: props.data.url || 'https://www.benevoclic.fr',
+        logo: props.data.logo || 'https://www.benevoclic.fr/logo_benevoclic.png',
         description: props.data.description || 'Plateforme de bénévolat connectant associations et volontaires',
         sameAs: [
           'https://www.facebook.com/benevoclic',
@@ -48,11 +48,11 @@ const structuredData = computed(() => {
         ...baseData,
         '@type': 'WebSite',
         name: props.data.name || 'Benevoclic',
-        url: props.data.url || 'https://benevoclic.app',
+        url: props.data.url || 'https://www.benevoclic.fr',
         description: props.data.description || 'Plateforme de bénévolat',
         potentialAction: {
           '@type': 'SearchAction',
-          target: 'https://benevoclic.app/search?q={search_term_string}',
+          target: 'https://www.benevoclic.fr/search?q={search_term_string}',
           'query-input': 'required name=search_term_string'
         }
       }
@@ -62,7 +62,7 @@ const structuredData = computed(() => {
         ...baseData,
         '@type': 'WebPage',
         name: props.data.name || 'Page Benevoclic',
-        url: props.data.url || 'https://benevoclic.app',
+        url: props.data.url || 'https://www.benevoclic.fr',
         description: props.data.description || 'Page de la plateforme Benevoclic',
         breadcrumb: props.data.breadcrumb || {
           '@type': 'BreadcrumbList',
@@ -71,7 +71,7 @@ const structuredData = computed(() => {
               '@type': 'ListItem',
               position: 1,
               name: 'Accueil',
-              item: 'https://benevoclic.app'
+              item: 'https://www.benevoclic.fr'
             }
           ]
         }
@@ -86,7 +86,7 @@ const structuredData = computed(() => {
             '@type': 'ListItem',
             position: 1,
             name: 'Accueil',
-            item: 'https://benevoclic.app'
+            item: 'https://www.benevoclic.fr'
           }
         ]
       }

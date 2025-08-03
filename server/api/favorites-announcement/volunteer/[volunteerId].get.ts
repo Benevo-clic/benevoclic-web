@@ -1,6 +1,7 @@
 import { defineEventHandler, createError } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
+import type {Announcement} from "~/common/interface/event.interface";
 
 export default defineEventHandler(async (event) => {
   try {

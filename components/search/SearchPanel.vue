@@ -1,46 +1,72 @@
 <template>
-  <div class="bg-base-100 rounded-lg shadow-md p-4">
-    <h2 class="text-xl font-semibold mb-4 text-base-content">Search</h2>
+  <div class="bg-base-100 rounded-lg shadow-md p-4" role="search" aria-label="Panneau de recherche">
+    <h2 class="text-xl font-semibold mb-4 text-base-content" id="search-panel-heading">Recherche</h2>
     
     <!-- Search form -->
-    <div class="space-y-4">
+    <form @submit.prevent="performSearch" class="space-y-4" aria-labelledby="search-panel-heading">
       <div class="form-control">
+        <label for="search-input" class="label">
+          <span class="label-text text-base-content">Rechercher</span>
+        </label>
         <div class="input-group">
           <input 
+            id="search-input"
             type="text" 
             v-model="searchQuery" 
-            placeholder="Search missions, organizations..." 
-            class="input input-bordered w-full" 
+            placeholder="Rechercher des missions, organisations..." 
+            class="input input-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
             @keyup.enter="performSearch"
+            aria-describedby="search-description"
+            autocomplete="off"
           />
-          <button class="btn btn-square" @click="performSearch">
-            <Search class="w-5 h-5" />
+          <button 
+            type="submit"
+            class="btn btn-square focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+            @click="performSearch"
+            aria-label="Lancer la recherche"
+          >
+            <Search class="w-5 h-5" aria-hidden="true" />
           </button>
+        </div>
+        <div id="search-description" class="text-sm text-base-content opacity-70 mt-1">
+          Tapez vos mots-clés pour trouver des missions et organisations
         </div>
       </div>
       
       <!-- Filters -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <fieldset class="grid grid-cols-1 md:grid-cols-2 gap-4" aria-labelledby="filters-heading">
+        <legend id="filters-heading" class="sr-only">Filtres de recherche</legend>
+        
         <div class="form-control">
-          <label class="label">
-            <span class="label-text text-base-content">Category</span>
+          <label for="category-select" class="label">
+            <span class="label-text text-base-content">Catégorie</span>
           </label>
-          <select v-model="filters.category" class="select select-bordered w-full">
-            <option value="">All Categories</option>
-            <option value="environmental">Environmental</option>
-            <option value="humanitarian">Humanitarian</option>
-            <option value="education">Education</option>
-            <option value="health">Health</option>
-            <option value="community">Community</option>
+          <select 
+            id="category-select"
+            v-model="filters.category" 
+            class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+            aria-label="Filtrer par catégorie"
+          >
+            <option value="">Toutes les catégories</option>
+            <option value="environmental">Environnement</option>
+            <option value="humanitarian">Humanitaire</option>
+            <option value="education">Éducation</option>
+            <option value="health">Santé</option>
+            <option value="community">Communauté</option>
           </select>
         </div>
         
         <div class="form-control">
-          <label class="label">
-            <span class="label-text text-base-content">Location</span>
+          <label for="location-select" class="label">
+            <span class="label-text text-base-content">Localisation</span>
           </label>
-          <select v-model="filters.location" class="select select-bordered w-full">
-            <option value="">All Locations</option>
+          <select 
+            id="location-select"
+            v-model="filters.location" 
+            class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+            aria-label="Filtrer par localisation"
+          >
+            <option value="">Toutes les localisations</option>
             <option value="paris">Paris</option>
             <option value="lyon">Lyon</option>
             <option value="marseille">Marseille</option>
@@ -50,55 +76,93 @@
         </div>
         
         <div class="form-control">
-          <label class="label">
-            <span class="label-text text-base-content">Date Range</span>
+          <label for="date-range-select" class="label">
+            <span class="label-text text-base-content">Période</span>
           </label>
-          <select v-model="filters.dateRange" class="select select-bordered w-full">
-            <option value="">Any Time</option>
-            <option value="today">Today</option>
-            <option value="this-week">This Week</option>
-            <option value="this-month">This Month</option>
-            <option value="next-month">Next Month</option>
-            <option value="custom">Custom Range</option>
+          <select 
+            id="date-range-select"
+            v-model="filters.dateRange" 
+            class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+            aria-label="Filtrer par période"
+          >
+            <option value="">N'importe quand</option>
+            <option value="today">Aujourd'hui</option>
+            <option value="this-week">Cette semaine</option>
+            <option value="this-month">Ce mois</option>
+            <option value="next-month">Mois prochain</option>
+            <option value="custom">Période personnalisée</option>
           </select>
         </div>
         
         <div class="form-control">
-          <label class="label">
+          <label for="type-select" class="label">
             <span class="label-text text-base-content">Type</span>
           </label>
-          <select v-model="filters.type" class="select select-bordered w-full">
-            <option value="">All Types</option>
+          <select 
+            id="type-select"
+            v-model="filters.type" 
+            class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+            aria-label="Filtrer par type"
+          >
+            <option value="">Tous les types</option>
             <option value="missions">Missions</option>
-            <option value="organizations">Organizations</option>
-            <option value="events">Events</option>
+            <option value="organizations">Organisations</option>
+            <option value="events">Événements</option>
           </select>
         </div>
-      </div>
+      </fieldset>
       
       <!-- Custom date range (shown only when custom is selected) -->
-      <div v-if="filters.dateRange === 'custom'" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <fieldset v-if="filters.dateRange === 'custom'" class="grid grid-cols-1 md:grid-cols-2 gap-4" aria-labelledby="custom-date-heading">
+        <legend id="custom-date-heading" class="sr-only">Période personnalisée</legend>
+        
         <div class="form-control">
-          <label class="label">
-            <span class="label-text text-base-content">Start Date</span>
+          <label for="start-date" class="label">
+            <span class="label-text text-base-content">Date de début</span>
           </label>
-          <input type="date" v-model="filters.startDate" class="input input-bordered w-full" />
+          <input 
+            id="start-date"
+            type="date" 
+            v-model="filters.startDate" 
+            class="input input-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+            aria-label="Sélectionner la date de début"
+          />
         </div>
         
         <div class="form-control">
-          <label class="label">
-            <span class="label-text text-base-content">End Date</span>
+          <label for="end-date" class="label">
+            <span class="label-text text-base-content">Date de fin</span>
           </label>
-          <input type="date" v-model="filters.endDate" class="input input-bordered w-full" />
+          <input 
+            id="end-date"
+            type="date" 
+            v-model="filters.endDate" 
+            class="input input-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+            aria-label="Sélectionner la date de fin"
+          />
         </div>
-      </div>
+      </fieldset>
       
       <!-- Action buttons -->
-      <div class="flex justify-end gap-2">
-        <button class="btn btn-outline" @click="resetFilters">Reset</button>
-        <button class="btn btn-primary" @click="performSearch">Search</button>
+      <div class="flex justify-end gap-2" role="group" aria-label="Actions de recherche">
+        <button 
+          type="button"
+          class="btn btn-outline focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+          @click="resetFilters"
+          aria-label="Réinitialiser tous les filtres"
+        >
+          Réinitialiser
+        </button>
+        <button 
+          type="submit"
+          class="btn btn-primary focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+          @click="performSearch"
+          aria-label="Lancer la recherche avec les filtres actuels"
+        >
+          Rechercher
+        </button>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
@@ -135,5 +199,10 @@ function resetFilters() {
     startDate: '',
     endDate: ''
   }
+  // Émettre une recherche vide pour réinitialiser les résultats
+  emit('search', {
+    query: '',
+    filters: { ...filters.value }
+  })
 }
 </script>

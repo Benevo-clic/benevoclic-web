@@ -8,7 +8,7 @@
         @date-publication="()=> {}"
         @publication-interval="()=> {}"
         @radius="()=> {}"
-        @status="removeStatus"
+        @status="()=> {}"
         @sort="removeSort"
         @tag="()=> {}"
         @type="()=> {}"
@@ -33,32 +33,13 @@
                   type="checkbox"
                   :checked="filters.sort === sortOption.value"
                   class="checkbox checkbox-xs mr-2"
-              />
+              aria-label="Champ de saisie">
               {{ sortOption.label }}
             </a>
           </li>
         </ul>
       </div>
 
-      <!-- Dropdown Type d'association -->
-      <div class="dropdown dropdown-right">
-        <button tabindex="0" class="btn btn-outline btn-sm rounded-full flex items-center gap-2 min-w-max w-full">
-          Statut
-          <ChevronRight class="w-3 h-3" />
-        </button>
-        <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm">
-          <li v-for="statusOption in statusOptions" :key="statusOption.value">
-            <a @click="applyStatus(statusOption.value)">
-              <input
-                  type="checkbox"
-                  :checked="filters.status === statusOption.value"
-                  class="checkbox checkbox-xs mr-2"
-              />
-              {{ statusOption.label }}
-            </a>
-          </li>
-        </ul>
-      </div>
     </div>
 
   </div>
@@ -67,7 +48,7 @@
 <script setup lang="ts">
 import { SortAsc, ChevronRight } from 'lucide-vue-next';
 import {computed, defineEmits, ref} from "vue";
-import type {AnnouncementStatus, FilterAnnouncement, SortOption} from "~/common/interface/filter.interface";
+import type { FilterAnnouncement, SortOption} from "~/common/interface/filter.interface";
 import FilterActive from "~/components/event/volunteer/utils/FilterActive.vue";
 
 const emit = defineEmits<{
@@ -87,26 +68,11 @@ const sortOptions = ref([
   { value: 'datePublication_desc' as SortOption, label: 'Date de publication (récent)' }
 ])
 
-const applyStatus = (status: AnnouncementStatus) => {
-  filters.value.status = status
-  applyFilters()
-}
-
-const statusOptions = ref([
-  { value: 'ACTIVE' as AnnouncementStatus, label: 'Actif' },
-  { value: 'COMPLETED' as AnnouncementStatus, label: 'Terminé' }
-])
-
-
 const hasActiveFilters = computed(() => {
   return filters.value.status ||
       filters.value.sort
 })
 
-const removeStatus = () => {
-  filters.value.status = undefined
-  applyFilters()
-}
 
 const removeSort = () => {
   filters.value.sort = undefined

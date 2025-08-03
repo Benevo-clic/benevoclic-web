@@ -65,7 +65,7 @@
       
       <p class="mb-4">
         Nous conservons vos données personnelles pendant une durée maximale de 5 ans à compter de votre dernière activité sur notre plateforme.
-        Vous pouvez à tout moment demander la suppression de vos données via l'adresse email dédiée : dpo@benevoclic.app.
+        Vous pouvez à tout moment demander la suppression de vos données via l'adresse email dédiée : dpo@www.benevoclic.fr.
       </p>
     </div>
     
@@ -105,7 +105,7 @@
       
       <p class="mb-4">
         Pour exercer vos droits ou pour toute question concernant le traitement de vos données personnelles, vous pouvez nous contacter à l'adresse suivante :
-        <a href="mailto:dpo@benevoclic.app" class="text-primary hover:underline">dpo@benevoclic.app</a>
+        <a href="mailto:dpo@www.benevoclic.fr" class="text-primary hover:underline">dpo@www.benevoclic.fr</a>
       </p>
       
       <p class="mb-4">

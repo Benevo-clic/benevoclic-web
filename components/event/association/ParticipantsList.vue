@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import ParticipantOrVolunteerCard from "~/components/event/association/ParticipantOrVolunteerCard.vue";
+import ParticipantOrVolunteerCard from "./ParticipantOrVolunteerCard.vue";
 
 interface Participant {
   id: string;

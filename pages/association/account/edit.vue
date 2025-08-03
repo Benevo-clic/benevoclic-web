@@ -24,7 +24,16 @@
           </div>
 
           <!-- Profile image -->
-          <img v-if="profileImageUrl" :src="profileImageUrl" alt="Profile" class="w-full h-full object-cover" />
+          <img 
+            v-if="profileImageUrl" 
+            :src="profileImageUrl" 
+            alt="Logo de l'association" 
+            class="w-full h-full object-cover"
+            width="200"
+            height="200"
+            loading="lazy"
+            decoding="async"
+          />
           <div v-else class="w-full h-full flex items-center justify-center">
             <UserRound class="w-16 h-16 text-base-content opacity-50" />
           </div>
@@ -46,37 +55,37 @@
         <div class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="form-control w-full">
             <label class="label"><span class="label-text text-base-content">{{ t('auth.association.name') || 'Association Name' }}</span></label>
-            <input type="text" v-model="form.associationName" class="input input-bordered w-full" />
+            <input type="text" v-model="form.associationName" class="input input-bordered w-full" aria-label="Nom de l'association">
           </div>
           <div class="form-control w-full">
             <label class="label"><span class="label-text text-base-content">{{ t('auth.association.type') || 'Type' }}</span></label>
-            <input type="text" v-model="form.type" class="input input-bordered w-full" />
+            <input type="text" v-model="form.type" class="input input-bordered w-full" aria-label="Type d'association">
           </div>
         </div>
         <div class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="form-control w-full">
             <label class="label"><span class="label-text text-base-content">{{ t('auth.association.phone') || 'Phone' }}</span></label>
-            <input type="tel" v-model="form.phone" class="input input-bordered w-full" />
+            <input type="tel" v-model="form.phone" class="input input-bordered w-full" aria-label="Numéro de téléphone de l'association">
           </div>
           <div class="form-control w-full">
             <label class="label"><span class="label-text text-base-content">{{ t('auth.association.country') || 'Country' }}</span></label>
-            <input type="text" v-model="form.country" class="input input-bordered w-full" />
+            <input type="text" v-model="form.country" class="input input-bordered w-full" aria-label="Pays de l'association">
           </div>
         </div>
         <div class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="form-control w-full">
             <label class="label"><span class="label-text text-base-content">{{ t('auth.association.city') || 'City' }}</span></label>
-            <input type="text" v-model="form.city" class="input input-bordered w-full" />
+            <input type="text" v-model="form.city" class="input input-bordered w-full" aria-label="Ville de l'association">
           </div>
           <div class="form-control w-full">
             <label class="label"><span class="label-text text-base-content">{{ t('auth.association.postal_code') || 'Postal Code' }}</span></label>
-            <input type="text" v-model="form.postalCode" class="input input-bordered w-full" />
+            <input type="text" v-model="form.postalCode" class="input input-bordered w-full" aria-label="Code postal de l'association">
           </div>
         </div>
         <div class="bg-base-100 rounded-xl shadow p-6">
           <div class="form-control w-full">
             <label class="label"><span class="label-text text-base-content">{{ t('auth.association.bio') || 'Bio' }}</span></label>
-            <textarea v-model="form.bio" class="textarea textarea-bordered h-24 w-full"></textarea>
+            <textarea v-model="form.bio" class="textarea textarea-bordered h-24 w-full" aria-label="Description de l'association"></textarea>
           </div>
         </div>
         <div class="flex justify-end">
@@ -112,6 +121,18 @@ const { t } = useI18n()
 definePageMeta({
   middleware: ['auth'],
   layout: 'app'
+})
+
+// Configuration SEO spécifique à la page
+useHead({
+  title: 'Modifier le profil - Benevoclic',
+  meta: [
+    { name: 'description', content: 'Modifiez les informations de votre association : nom, type, coordonnées et description. Gérez votre profil Benevoclic.' },
+    { property: 'og:title', content: 'Modifier le profil - Benevoclic' },
+    { property: 'og:description', content: 'Modifiez les informations de votre association : nom, type, coordonnées et description.' },
+    { property: 'og:type', content: 'website' },
+    { name: 'robots', content: 'noindex, nofollow' } // Page privée
+  ]
 })
 
 const auth = useUser()

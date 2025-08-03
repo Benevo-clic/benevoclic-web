@@ -10,7 +10,15 @@
     </button>
 
     <NuxtLink to="/" class="mx-auto w-14">
-      <img src="/logo_benevoclic.png" alt="Logo" class="w-full h-auto" />
+      <img 
+        src="/logo_benevoclic.png" 
+        alt="Logo Benevoclic" 
+        class="w-full h-auto"
+        width="120"
+        height="40"
+        loading="eager"
+        decoding="sync"
+      />
     </NuxtLink>
   </header>
 </template>

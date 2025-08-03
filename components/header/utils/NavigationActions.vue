@@ -40,11 +40,54 @@ async function changeLanguage(lo: 'fr' | 'en' | 'es', flagEmoji: string) {
 function toggleLanguageMenu(value: boolean) {
   showLanguageMenu.value = value
 }
+
+// Gestion de la navigation clavier
+function handleKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    showLanguageMenu.value = false
+  }
+}
 </script>
 
 <template>
-  <div class="relative">
-    <LocationContextComponent @toggle-language-menu="toggleLanguageMenu" :flag="flag" />
-    <LanguageComponent @change-language="changeLanguage" :show-language-menu="showLanguageMenu" />
+  <div 
+    class="relative" 
+    role="group" 
+    aria-label="Actions de navigation"
+    @keydown="handleKeydown"
+  >
+    <LocationContextComponent 
+      @toggle-language-menu="toggleLanguageMenu" 
+      :flag="flag" 
+    />
+    <LanguageComponent 
+      @change-language="changeLanguage" 
+      :show-language-menu="showLanguageMenu" 
+    />
   </div>
 </template>
+
+<style scoped>
+/* Amélioration de l'accessibilité pour les éléments interactifs */
+:deep(.btn:focus-visible),
+:deep(input:focus-visible),
+:deep(label:focus-visible) {
+  outline: 2px solid #eb5577;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Amélioration du contraste pour les utilisateurs en mode high-contrast */
+@media (prefers-contrast: more) {
+  :deep(.btn) {
+    border-width: 2px;
+  }
+}
+
+/* Respect des préférences de réduction de mouvement */
+@media (prefers-reduced-motion: reduce) {
+  :deep(.transition-all) {
+    transition: none;
+  }
+}
+</style>

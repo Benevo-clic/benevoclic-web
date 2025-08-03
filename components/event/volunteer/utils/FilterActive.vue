@@ -292,9 +292,7 @@ const resetFilters = () => {
       </div>
 
       <!-- Bouton tout effacer -->
-      <button @click="resetFilters" class="btn btn-outline btn-xs">
-        Tout effacer
-      </button>
+      <button @click="resetFilters" class="btn btn-outline btn-xs" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Tout effacer</button>
     </div>
   </div>
 </template>

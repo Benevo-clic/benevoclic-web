@@ -51,7 +51,7 @@ export const useAnnouncementStore = defineStore('announcement', {
       });
       this._lastFetch = Date.now();
     },
-  setCurrentFilter(filter: FilterAnnouncement | null) {
+  setCurrentFilter(filter: Partial<FilterAnnouncement>) {
       this.currentFilter = filter
   },
   updateAnnouncements(announcements: Announcement[]) {
@@ -93,9 +93,9 @@ export const useAnnouncementStore = defineStore('announcement', {
     },
 
     async fetchAllAnnouncements() {
-        if (this.isCacheValid && this.announcements.length > 0) {
-          return this.announcements;
-        }
+        // if (this.isCacheValid && this.announcements.length > 0) {
+        //   return this.announcements;
+        // }
 
         this.loading = true;
         this.error = null;

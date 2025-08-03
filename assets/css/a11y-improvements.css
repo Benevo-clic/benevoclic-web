@@ -1,0 +1,157 @@
+
+/* Améliorations d'accessibilité globales */
+
+/* Focus visible pour tous les éléments interactifs */
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus,
+[tabindex]:focus {
+  outline: 2px solid hsl(var(--p)) !important;
+  outline-offset: 2px !important;
+}
+
+/* Amélioration de la visibilité des tags en mode clair */
+.badge-outline {
+  color: hsl(var(--bc)) !important;
+  border-color: hsl(var(--bc)) !important;
+  background-color: transparent !important;
+}
+
+.badge-outline:hover {
+  color: hsl(var(--pc)) !important;
+  background-color: hsl(var(--p)) !important;
+  border-color: hsl(var(--p)) !important;
+}
+
+/* Amélioration des contrastes pour les boutons */
+.btn {
+  color: hsl(var(--bc)) !important;
+  background-color: hsl(var(--b1)) !important;
+  border: 1px solid hsl(var(--b3)) !important;
+}
+
+.btn:hover {
+  background-color: hsl(var(--b2)) !important;
+}
+
+.btn-primary {
+  color: hsl(var(--pc)) !important;
+  background-color: hsl(var(--p)) !important;
+  border-color: hsl(var(--p)) !important;
+}
+
+.btn-primary:hover {
+  background-color: hsl(var(--pf)) !important;
+}
+
+.btn-error {
+  color: hsl(var(--ec)) !important;
+  background-color: hsl(var(--e)) !important;
+  border-color: hsl(var(--e)) !important;
+}
+
+.btn-error:hover {
+  background-color: hsl(var(--ef)) !important;
+}
+
+.btn-ghost {
+  color: hsl(var(--bc)) !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+.btn-ghost:hover {
+  background-color: hsl(var(--b2)) !important;
+}
+
+.btn-outline {
+  color: hsl(var(--bc)) !important;
+  background-color: transparent !important;
+  border-color: hsl(var(--b3)) !important;
+}
+
+.btn-outline:hover {
+  background-color: hsl(var(--b2)) !important;
+}
+
+/* Amélioration des formulaires */
+input, select, textarea {
+  color: hsl(var(--bc)) !important;
+  background-color: hsl(var(--b1)) !important;
+  border: 1px solid hsl(var(--b3)) !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: hsl(var(--p)) !important;
+  box-shadow: 0 0 0 2px hsl(var(--p) / 0.2) !important;
+}
+
+/* Amélioration des liens */
+a {
+  color: hsl(var(--p)) !important;
+  text-decoration: underline !important;
+}
+
+a:hover {
+  color: hsl(var(--pf)) !important;
+}
+
+/* Amélioration des images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+img:focus {
+  outline: 2px solid hsl(var(--p));
+  outline-offset: 2px;
+}
+
+/* Mode contraste élevé */
+.high-contrast {
+  --bc: 0 0% 0%;
+  --b1: 0 0% 100%;
+  --b2: 0 0% 95%;
+  --b3: 0 0% 90%;
+  --p: 240 100% 50%;
+  --pc: 0 0% 100%;
+  --pf: 240 100% 40%;
+  --e: 0 100% 50%;
+  --ec: 0 0% 100%;
+  --ef: 0 100% 40%;
+}
+
+.high-contrast * {
+  color: var(--bc) !important;
+  background-color: var(--b1) !important;
+}
+
+.high-contrast .btn-primary {
+  color: var(--pc) !important;
+  background-color: var(--p) !important;
+}
+
+.high-contrast .btn-error {
+  color: var(--ec) !important;
+  background-color: var(--e) !important;
+}
+
+.high-contrast .badge-outline {
+  color: var(--bc) !important;
+  border-color: var(--bc) !important;
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -24,6 +24,7 @@
         :announcement="announcement"
         :is-favorite="true"
         @favorite="toggleFavorite"
+        :is-connected="true"
       />
     </div>
     <ErrorPopup
@@ -49,6 +50,7 @@ const props = defineProps<{
   error: string | null;
   loading: boolean;
 }>()
+
 
 const useFavorite = useFavoritesAnnouncement();
 const { user } = useUser()

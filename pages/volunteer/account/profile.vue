@@ -20,7 +20,7 @@
         >
           {{ user?.firstName }} {{ user?.lastName }}
         </h1>
-        <span class="badge badge-outline badge-primary mb-2">{{ user?.birthDate ? calculateAge(user.birthDate) + ' ans' : 'Date de naissance non fournie' }}</span>
+        <span class="badge badge-outline badge-primary mb-2 text-base-content border-base-content">{{ user?.birthDate ? calculateAge(user.birthDate) + ' ans' : 'Date de naissance non fournie' }}</span>
         <p class="text-base-content/80 text-center max-w-xl mb-2">{{ user?.bio || 'Aucune description.' }}</p>
         <div class="flex gap-2 mt-2">
           <NuxtLink to="/volunteer/account/edit" class="btn btn-sm btn-outline btn-primary">Éditer le profil</NuxtLink>

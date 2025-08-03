@@ -32,14 +32,14 @@
               placeholder="Rechercher dans l'historique..."
               class="input input-bordered w-full pl-12 pr-4 h-12 bg-base-200 border-base-300 focus:border-primary transition-all duration-300"
               v-model="searchQuery"
-            />
+            aria-label="Champ de saisie">
             <Search class="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-base-content opacity-50" />
           </div>
           <div class="lg:w-48">
             <select
               class="select select-bordered w-full h-12 bg-base-200 border-base-300 focus:border-primary transition-all duration-300"
               v-model="filterType"
-            >
+             aria-label="Sélection">
               <option value="all">Toutes les activités</option>
               <option value="mission">Missions</option>
               <option value="participation">Participations</option>

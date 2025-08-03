@@ -28,7 +28,7 @@
         <!-- Cookies essentiels -->
         <div class="form-control">
           <label class="label cursor-pointer justify-start gap-4">
-            <input type="checkbox" checked disabled class="checkbox checkbox-primary" />
+            <input type="checkbox" checked disabled class="checkbox checkbox-primary"  aria-label="Champ de saisie">
             <div>
               <span class="label-text font-semibold">Cookies essentiels</span>
               <p class="text-xs text-base-content/70 mt-1">
@@ -43,7 +43,7 @@
         <!-- Cookies de personnalisation -->
         <div class="form-control">
           <label class="label cursor-pointer justify-start gap-4">
-            <input type="checkbox" v-model="localPreferences.personalization" class="checkbox checkbox-primary" />
+            <input type="checkbox" v-model="localPreferences.personalization" class="checkbox checkbox-primary" aria-label="Champ de saisie">
             <div>
               <span class="label-text font-semibold">Cookies de personnalisation</span>
               <p class="text-xs text-base-content/70 mt-1">
@@ -58,7 +58,7 @@
         <!-- Cookies analytiques -->
         <div class="form-control">
           <label class="label cursor-pointer justify-start gap-4">
-            <input type="checkbox" v-model="localPreferences.analytics" class="checkbox checkbox-primary" />
+            <input type="checkbox" v-model="localPreferences.analytics" class="checkbox checkbox-primary" aria-label="Champ de saisie">
             <div>
               <span class="label-text font-semibold">Cookies analytiques</span>
               <p class="text-xs text-base-content/70 mt-1">
@@ -72,7 +72,7 @@
         <!-- Cookies tiers -->
         <div class="form-control">
           <label class="label cursor-pointer justify-start gap-4">
-            <input type="checkbox" v-model="localPreferences.thirdParty" class="checkbox checkbox-primary" />
+            <input type="checkbox" v-model="localPreferences.thirdParty" class="checkbox checkbox-primary" aria-label="Champ de saisie">
             <div>
               <span class="label-text font-semibold">Cookies tiers</span>
               <p class="text-xs text-base-content/70 mt-1">

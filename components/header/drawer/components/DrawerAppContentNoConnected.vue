@@ -127,7 +127,7 @@ function toggleLanguageMenu() {
             </div>
 
             <!-- Theme Toggle -->
-            <button 
+            <button
               :class="[
                 'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
                 isDarkTheme() ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
@@ -135,11 +135,11 @@ function toggleLanguageMenu() {
             >
               <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
                 <label class="swap swap-rotate cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    aria-label="Toggle theme" 
-                    :checked="isDarkTheme()" 
-                    @change="toggleTheme" 
+                  <input
+                    type="checkbox"
+                    aria-label="Toggle theme"
+                    :checked="isDarkTheme()"
+                    @change="toggleTheme"
                   />
                   <SunIcon class="swap-on w-4 h-4 text-warning"></SunIcon>
                   <MoonIcon class="swap-off w-4 h-4 text-base-content"/>

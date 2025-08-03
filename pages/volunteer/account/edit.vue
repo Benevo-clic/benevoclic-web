@@ -18,7 +18,16 @@
       <!-- Avatar/logo -->
       <div class="flex flex-col items-center mb-8">
         <div class="w-32 h-32 rounded-full overflow-hidden bg-base-300 relative group mb-2 shadow-lg border-4 border-base-200">
-          <img v-if="profileImageUrl" :src="profileImageUrl" alt="Profile" class="w-full h-full object-cover" />
+          <img 
+            v-if="profileImageUrl" 
+            :src="profileImageUrl" 
+            alt="Photo de profil" 
+            class="w-full h-full object-cover"
+            width="200"
+            height="200"
+            loading="lazy"
+            decoding="async"
+          />
           <div v-else class="w-full h-full flex items-center justify-center">
             <UserRound class="w-16 h-16 text-base-content opacity-50" />
           </div>
@@ -40,19 +49,19 @@
             <label class="label">
               <span class="label-text text-base-content">{{ t('auth.volunteer.first_name') }}</span>
             </label>
-            <input type="text" v-model="form.firstName" class="input input-bordered w-full" />
+            <input type="text" v-model="form.firstName" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
           <div class="form-control w-full">
             <label class="label">
               <span class="label-text text-base-content">{{ t('auth.volunteer.name') }}</span>
             </label>
-            <input type="text" v-model="form.lastName" class="input input-bordered w-full" />
+            <input type="text" v-model="form.lastName" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
           <div class="form-control w-full">
             <label class="label">
               <span class="label-text text-base-content">{{ t('auth.volunteer.birthdate') }}</span>
             </label>
-            <input type="date" v-model="form.birthDate" class="input input-bordered w-full" />
+            <input type="date" v-model="form.birthDate" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
         </div>
 
@@ -62,7 +71,7 @@
             <label class="label">
               <span class="label-text text-base-content">{{ t('auth.volunteer.phone') }}</span>
             </label>
-            <input type="tel" v-model="form.phone" class="input input-bordered w-full" />
+            <input type="tel" v-model="form.phone" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
         </div>
 
@@ -72,13 +81,13 @@
             <label class="label">
               <span class="label-text text-base-content">{{ t('auth.volunteer.city') }}</span>
             </label>
-            <input type="text" v-model="form.city" class="input input-bordered w-full" />
+            <input type="text" v-model="form.city" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
           <div class="form-control w-full">
             <label class="label">
               <span class="label-text text-base-content">{{ t('auth.volunteer.postal_code') }}</span>
             </label>
-            <input type="text" v-model="form.postalCode" class="input input-bordered w-full" />
+            <input type="text" v-model="form.postalCode" class="input input-bordered w-full" aria-label="Champ de saisie">
           </div>
         </div>
 
@@ -88,7 +97,7 @@
             <label class="label">
               <span class="label-text text-base-content">{{ t('auth.volunteer.bio') }}</span>
             </label>
-            <textarea v-model="form.bio" class="textarea textarea-bordered h-24 w-full"></textarea>
+            <textarea v-model="form.bio" class="textarea textarea-bordered h-24 w-full" aria-label="Zone de texte"></textarea>
           </div>
         </div>
 
