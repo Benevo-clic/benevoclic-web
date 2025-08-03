@@ -10,10 +10,10 @@ export default defineEventHandler(async (event) => {
     const token = getCookie(event, 'auth_token');
     
     const config = useRuntimeConfig()
-    const url = `${config.private.api_base_url}/favorites-announcement/volunteer/${volunteerId}`
+    const url = `${config.private.api_base_url}/favorites-announcement/volunteer/announcements/${volunteerId}`
 
     
-    const response = await axios.get(url, {
+    const response = await axios.get<Announcement[]>(url, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'

@@ -84,12 +84,7 @@ const currentFilter = ref({
 })
 
 const allFavorites = computed(() => {
-  return favStore.getFavorites.value
-      .map(fav => {
-        const a = announcement.getAnnouncements.value.find(x => x._id === fav.announcementId)
-        return a && a.status !== 'INACTIVE' ? { ...a, isFavorite: true } : null
-      })
-      .filter((x): x is Announcement & { isFavorite: true } => !!x)
+  return favStore.getFavoriteVolunteers.value
 })
 
 const filteredFavorites = computed(() => {
@@ -132,20 +127,10 @@ const isReady = ref(false)
 
 onMounted(async () => {
   if (user.value) {
-    await favStore.fetchAllFavoritesOfVolunteer(user.value.userId)
+    await favStore.findAllFavoritesAnnouncementsByVolunteerId(user.value.userId)
   }
   isReady.value = true
 })
 
-onBeforeRouteUpdate(
-  async (to, from, next) => {
-    isReady.value = false
-    if (user.value) {
-      await favStore.fetchAllFavoritesOfVolunteer(user.value.userId)
-    }
-    isReady.value = true
-    next()
-  }
-)
 
 </script>

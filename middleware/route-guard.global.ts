@@ -177,20 +177,17 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     await authStore.initAuth()
   }
 
-  console.log(`🔍 Vérification de la route: ${to.path} depuis ${from.path}`)
 
   if (!useCookie("isConnected").value) {
     const pathWithoutLocale = getPathWithoutLocale(to.path)
     
     // Si c'est une route publique, laisser passer
     if (BASE_ROUTE_CONFIG.public.includes(pathWithoutLocale)) {
-      console.log('✅ Route publique, accès autorisé')
       return
     }
     
     // Vérifier les routes dynamiques publiques (comme /announcement/[id] ou /annoucement/[id])
     if (pathWithoutLocale.startsWith('/announcement/') || pathWithoutLocale.startsWith('/annoucement/')) {
-      console.log('✅ Route d\'annonce publique, accès autorisé')
       return
     }
     
@@ -199,7 +196,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       '/auth/registerVolunteer',
       '/auth/registerAssociation'
     ].includes(pathWithoutLocale)) {
-      console.log('🔄 Route de transition, redirection vers login')
       return navigateTo('/')
     }
 
@@ -243,7 +239,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   // Vérifier si le profil est complété
   if (userStore.user && !userStore.user.isCompleted) {
-    console.log('📝 Profil incomplet, redirection vers complétion')
     const locale = getLocaleFromPath(to.path)
 
     switch (userRole) {
@@ -265,12 +260,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   // Vérifier si la route est accessible pour le rôle
   if (!isRouteAccessible(to.path, userRole)) {
-    console.log(`🚫 Route ${to.path} non accessible pour le rôle ${userRole}`)
 
     // Rediriger vers la page d'accueil appropriée avec la bonne langue
     const locale = getLocaleFromPath(to.path)
     const homePage = getHomePageForRole(userRole, locale)
-    console.log(`🏠 Redirection vers la page d'accueil: ${homePage}`)
     return navigateTo(homePage)
   }
 

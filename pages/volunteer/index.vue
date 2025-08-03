@@ -1,19 +1,24 @@
 <script setup lang="ts">
-import { definePageMeta, useHead, useAnnouncement,useVolunteerAuth,useAssociationAuth, navigateTo } from "#imports";
+import {
+  definePageMeta,
+  useHead,
+  useAnnouncement,
+  useVolunteerAuth,
+  useAssociationAuth,
+  navigateTo,
+} from "#imports";
 import { onMounted, ref, computed, onUnmounted, watch } from 'vue';
-import { Users, HeartHandshake, ArrowRight, Search, Award, Clock, Shield, ChevronDown, ChevronRight, MapPin, X, SlidersHorizontal } from 'lucide-vue-next';
+import { Users, HeartHandshake, ArrowRight, Search, X, SlidersHorizontal } from 'lucide-vue-next';
 import { useUserLocation } from '~/composables/useUserLocation';
-import NoConnectedAnnouncementCard from "~/components/event/noConnected/NoConnectedAnnouncementCard.vue";
-import NoConnectedAnnouncementList from "~/components/event/noConnected/NoConnectedAnnouncementList.vue";
 import VolunteerEventFilters from "~/components/event/volunteer/VolunteerEventFilters.vue";
 import type { Announcement } from "~/common/interface/event.interface";
 import type { FilterAnnouncement } from "~/common/interface/filter.interface";
 import VolunteerAnnouncementList from "~/components/event/volunteer/VolunteerAnnouncementList.vue";
 import Advantage from "~/components/home/advantage.vue";
-import Events from "~/components/home/events.vue";
 import Statistique from "~/components/home/statistique.vue";
 import Cta from "~/components/home/cta.vue";
 import HowItWorks from "~/components/home/HowItWorks.vue";
+import { useFavoritesAnnouncement } from "~/composables/useFavoritesAnnouncement";
 
 
 
@@ -38,6 +43,7 @@ useHead({
 
 const announcement = useAnnouncement();
 const associations = useAssociationAuth()
+const useFavourites = useFavoritesAnnouncement()
 const volunteers = useVolunteerAuth()
 const featuredEvents = ref<Announcement[]>([]);
 const isLoading = ref(true);
@@ -477,6 +483,13 @@ onMounted(async () => {
   setTimeout(() => {
     setupScrollObservers();
   }, 200);
+
+  if(volunteers.volunteer.value?.volunteerId) {
+    await useFavourites.fetchAllFavoritesOfVolunteer(
+        volunteers.volunteer.value?.volunteerId
+    );
+  }
+
 
   filteredEventsCount.value = totalEvents.value;
 

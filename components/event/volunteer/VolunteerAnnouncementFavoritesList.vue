@@ -51,6 +51,7 @@ const props = defineProps<{
   loading: boolean;
 }>()
 
+
 const useFavorite = useFavoritesAnnouncement();
 const { user } = useUser()
 const {navigateToRoute} = useNavigation()

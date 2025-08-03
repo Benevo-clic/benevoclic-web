@@ -76,6 +76,7 @@ function handleError(error: any) {
 }
 
 const favoriteIds = computed(() => useFavorite.getFavorites.value.map(fav => fav.announcementId));
+console.log("Favorite IDs:", favoriteIds.value);
 
 async function refreshFavorites() {
   if (!user.value) return

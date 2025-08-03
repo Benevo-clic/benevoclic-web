@@ -118,7 +118,6 @@
           >
             <Users class="w-5 h-5 mr-2" />
             Participer
-            <span  class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">Annuler</span>
           </button>
         </div>
       </div>
