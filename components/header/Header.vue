@@ -10,7 +10,6 @@ import DrawerAppContentVolunteer from "~/components/header/drawer/components/vol
 import { useTheme } from "~/composables/useTheme";
 import {navigateTo} from "#app";
 import DrawerAppContentAssociation from "~/components/header/drawer/components/association/DrawerAppContentAssociation.vue";
-import VolunteerBottomBar from "~/components/header/VolunteerBottomBar.vue";
 import AssociationBottomBar from "~/components/header/AssociationBottomBar.vue";
 import {useI18n} from "vue-i18n";
 import type {RoleUser} from "~/common/enums/role.enum";

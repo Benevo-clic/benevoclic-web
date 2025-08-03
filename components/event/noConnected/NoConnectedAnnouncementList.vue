@@ -24,9 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import type {Announcement} from "~/common/interface/event.interface";
-import NoConnectedAnnouncementCard from "~/components/event/noConnected/NoConnectedAnnouncementCard.vue";
-import VolunteerAnnouncementCard from "~/components/event/volunteer/VolunteerAnnouncementCard.vue";
+import type {Announcement} from "../../../common/interface/event.interface";
+import VolunteerAnnouncementCard from "../volunteer/VolunteerAnnouncementCard.vue";
 
 
 const props = defineProps<

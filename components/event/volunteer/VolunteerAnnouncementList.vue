@@ -33,13 +33,13 @@
 </template>
 
 <script setup lang="ts">
-import type {Announcement} from "~/common/interface/event.interface";
-import VolunteerAnnouncementCard from "~/components/event/volunteer/VolunteerAnnouncementCard.vue";
-import {useFavoritesAnnouncement} from "~/composables/useFavoritesAnnouncement";
-import {useUser} from "~/composables/auth/useUser";
+import type {Announcement} from "../../../common/interface/event.interface";
+import VolunteerAnnouncementCard from "./VolunteerAnnouncementCard.vue";
+import {useFavoritesAnnouncement} from "../../../composables/useFavoritesAnnouncement";
+import {useUser} from "../../../composables/auth/useUser";
 import {computed, ref} from 'vue'
-import ErrorPopup from "~/components/utils/ErrorPopup.vue";
-import {useNavigation} from "~/composables/useNavigation";
+import ErrorPopup from "../../utils/ErrorPopup.vue";
+import {useNavigation} from "../../../composables/useNavigation";
 
 const props = defineProps<
     {

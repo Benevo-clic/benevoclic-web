@@ -540,7 +540,7 @@ onUnmounted(() => {
                   v-model="searchQuery" 
                   type="text" 
                   placeholder="Rechercher par nom d'événement, description, nom d'association..." 
-                  class="input input-bordered w-full pl-10 focus:border-primary transition-colors duration-300"
+                  class="input input-bordered w-full pl-10 focus:border-primary transition-colors duration-300" 
                   @keyup.enter="() => searchEvents()"
                 />
               </div>
@@ -579,8 +579,8 @@ onUnmounted(() => {
                 <span class="hidden sm:inline">Réinitialiser</span>
                 <span class="sm:hidden">Reset</span>
               </button>
-            </div>
           </div>
+            </div>
 
           <!-- Résultats de recherche avec transition -->
           <div 
@@ -595,13 +595,13 @@ onUnmounted(() => {
                 <div class="flex flex-wrap gap-2">
                   <div class="badge badge-primary text-xs sm:text-sm">
                     {{ searchTotalAnnouncements }} résultat{{ searchTotalAnnouncements !== 1 ? 's' : '' }}
-                  </div>
+              </div>
                   <div v-if="hasActiveFilters" class="badge badge-secondary text-xs sm:text-sm">
                     <SlidersHorizontal class="w-3 h-3 mr-1" />
                     <span class="hidden sm:inline">Filtres actifs</span>
                     <span class="sm:hidden">Filtres</span>
-                  </div>
-                </div>
+            </div>
+              </div>
               </div>
               <button 
                 @click="closeSearchResults" 
@@ -619,7 +619,7 @@ onUnmounted(() => {
                 @filter="handleSearchFilter"
                 :filterannouncement="sharedFilters"
               />
-            </div>
+          </div>
 
             <!-- Liste des annonces -->
             <div class="bg-base-100 rounded-lg shadow-md p-6">
@@ -629,7 +629,7 @@ onUnmounted(() => {
                 :error="searchError"
                 :loading="searchLoading"
               />
-            </div>
+          </div>
 
             <!-- Pagination -->
             <nav
@@ -673,7 +673,7 @@ onUnmounted(() => {
                   <span aria-hidden="true">»</span>
                   <span class="sr-only">Page suivante</span>
                 </button>
-              </div>
+                </div>
             </nav>
           </div>
         </div>
