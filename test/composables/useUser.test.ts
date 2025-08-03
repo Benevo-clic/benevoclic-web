@@ -113,7 +113,11 @@ const useUser = () => {
     user: mockComputed(() => userStore.getUser),
     isAuthenticated: mockComputed(() => mockCookie("isConnected").value),
     userRole: mockComputed(() => userStore.getRole),
-    error: mockComputed(() => initializationError.value || userStore.error),
+    error: { 
+      get value() { 
+        return initializationError.value || userStore.error 
+      } 
+    },
     isLoading: mockComputed(() => userStore.loading),
     isFetching: mockComputed(() => userStore.isFetching),
     isInitialized: mockComputed(() => hasInitialized.value),
@@ -191,6 +195,9 @@ describe('useUser', () => {
       const error = new Error('Initialization failed')
       mockUserStore.fetchUser.mockRejectedValue(error)
 
+      // Reset mock to avoid automatic initialization
+      mockOnMounted.mockImplementation(() => {})
+      
       const user = useUser()
 
       // Vérifier que l'erreur est gérée après l'initialisation
@@ -304,6 +311,9 @@ describe('useUser', () => {
 
   describe('Méthodes utilisateur', () => {
     it('should call fetchUser method', async () => {
+      // Reset mock to avoid automatic initialization
+      mockOnMounted.mockImplementation(() => {})
+      
       const user = useUser()
 
       await user.fetchUser()
@@ -367,6 +377,9 @@ describe('useUser', () => {
 
   describe('Méthodes utilitaires', () => {
     it('should call refreshUser method', async () => {
+      // Reset mock to avoid automatic initialization
+      mockOnMounted.mockImplementation(() => {})
+      
       const user = useUser()
 
       await user.refreshUser()
