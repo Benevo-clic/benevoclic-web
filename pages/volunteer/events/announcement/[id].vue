@@ -158,6 +158,17 @@
             <span  class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none">Annuler</span>
           </button>
         </div>
+
+        <!-- Bouton Signaler pour les volontaires connectés -->
+        <div v-if="volunteerUse.volunteer?.value?.volunteerId" class="mt-4 pt-4 border-t border-base-300">
+          <button
+            class="btn btn-outline btn-error btn-sm w-full focus-visible:ring-2 focus-visible:ring-error/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+            @click="openReportModal" @keyup.enter="openReportModal" @keyup.space.prevent="openReportModal"
+          >
+            <AlertTriangle class="w-4 h-4 mr-2" />
+            Signaler cette annonce
+          </button>
+        </div>
       </div>
 
 
@@ -280,6 +291,24 @@
         @goHome="handleGoHome"
     />
 
+    <!-- Modal de signalement -->
+    <ReportModal
+        :is-open="showReportModal"
+        :announcement-id="announcement?._id"
+        :announcement-title="announcement?.nameEvent"
+        :user-email="userEmail"
+        @close="closeReportModal"
+        @submitted="handleReportSubmitted"
+    />
+
+    <!-- Notification Toast -->
+    <NotificationToast
+        :show="showNotification"
+        :message="notificationMessage"
+        :type="notificationType"
+        @close="closeNotification"
+    />
+
   </div>
 </template>
 
@@ -290,22 +319,27 @@ import {definePageMeta, useNavigation,useNuxtApp} from "#imports";
 import {EventStatus} from "~/common/enums/event.enum";
 import {
   HeartHandshake, Users, Calendar, Clock, MapPin, ExternalLink, Info,
-  Tag, UserPlus, UserCheck
+  Tag, UserPlus, UserCheck, AlertTriangle
 } from 'lucide-vue-next'
 import {useAnnouncement} from '~/composables/useAnnouncement';
 import {useVolunteerAuth} from "~/composables/useVolunteer";
 import type {AssociationVolunteerFollow} from '~/common/interface/volunteer.interface';
 import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import ReportModal from "~/components/utils/ReportModal.vue";
+import NotificationToast from "~/components/utils/NotificationToast.vue";
+import {useUser} from "~/composables/auth/useUser";
 
 const route = useRoute();
 const announcementUse = useAnnouncement();
 const volunteerUse = useVolunteerAuth();
+const user = useUser()
 const {navigateToRoute} = useNavigation()
 const loading = ref(true);
 const loadingVolunteer = computed(() => announcementUse.loading.value)
 const announcement = announcementUse.getCurrentAnnouncement;
 
 const volunteerId = computed(() => volunteerUse.volunteer?.value?.volunteerId);
+const volunteerEmail = computed(() => user.user.value?.email);
 const associationId = computed(() => announcement.value?.associationId);
 
 // Listes réactives pour l'état d'adhésion
@@ -336,6 +370,45 @@ const followButtonClass = computed(() => {
   if (isFollowing.value) return 'btn-success';
   return 'btn-primary';
 });
+
+// Modal de signalement
+const showReportModal = ref(false);
+
+// Notifications
+const showNotification = ref(false);
+const notificationMessage = ref('');
+const notificationType = ref<'success' | 'error' | 'info' | 'warning'>('info');
+
+// Email de l'utilisateur (pour l'instant, on utilise une valeur par défaut)
+const userEmail = computed(() => {
+  return volunteerEmail;
+});
+
+function openReportModal() {
+  showReportModal.value = true;
+}
+
+function closeReportModal() {
+  showReportModal.value = false;
+}
+
+function showNotificationToast(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info') {
+  notificationMessage.value = message;
+  notificationType.value = type;
+  showNotification.value = true;
+}
+
+function closeNotification() {
+  showNotification.value = false;
+}
+
+function handleReportSubmitted(success: boolean) {
+  if (success) {
+    showNotificationToast('Votre signalement a été envoyé avec succès. Nous l\'examinerons dans les plus brefs délais.', 'success');
+  } else {
+    showNotificationToast('Une erreur est survenue lors de l\'envoi du signalement. Veuillez réessayer.', 'error');
+  }
+}
 
 function handleError(error: any) {
   if (error?.response?.status >= 500 && error?.response?.status < 600) {

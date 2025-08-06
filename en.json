@@ -356,6 +356,67 @@
       "sending": "Sending...",
       "success_message": "Your request has been sent. We'll get back to you as soon as possible!",
       "error_message": "An error occurred. Please try again or contact us directly."
+    },
+    "report": {
+      "title": "Report an issue",
+      "announcement_title": "Report an announcement",
+      "type_label": "Report type",
+      "category_label": "Category",
+      "description_label": "Detailed description",
+      "description_placeholder": "Describe the problem in detail...",
+      "submit": "Submit report",
+      "submitting": "Submitting...",
+      "cancel": "Cancel",
+      "success_message": "Your report has been submitted successfully. We'll review it as soon as possible.",
+      "error_message": "An error occurred while submitting the report. Please try again.",
+      "types": {
+        "announcement": "Announcement",
+        "technical": "Technical issue",
+        "user_feedback": "User feedback",
+        "other": "Other",
+        "select": "Select a type"
+      },
+      "categories": {
+        "select": "Select a category",
+        "announcement": {
+          "inappropriate_content": "Inappropriate content",
+          "outdated_info": "Outdated information",
+          "wrong_address": "Wrong address",
+          "wrong_date_time": "Wrong date/time",
+          "wrong_capacity": "Wrong capacity",
+          "inappropriate_tags": "Inappropriate tags",
+          "other": "Other"
+        },
+        "technical": {
+          "connection_issue": "Connection issue",
+          "image_not_loading": "Images not loading",
+          "responsive_issue": "Mobile display issue",
+          "search_problem": "Search problem",
+          "form_not_working": "Form not working",
+          "slow_performance": "Slow performance",
+          "other": "Other"
+        },
+        "user_feedback": {
+          "feature_request": "Feature request",
+          "bug_report": "Bug report",
+          "usability_issue": "Usability issue",
+          "content_suggestion": "Content suggestion",
+          "general_feedback": "General feedback",
+          "other": "Other"
+        },
+        "other": {
+          "general_inquiry": "General inquiry",
+          "account_issue": "Account issue",
+          "billing_question": "Billing question",
+          "partnership_request": "Partnership request",
+          "press_inquiry": "Press inquiry",
+          "other": "Other"
+        }
+      },
+      "auto_info": "Automatic information",
+      "page": "Page",
+      "email": "Email",
+      "announcement_id": "Announcement ID"
     }
   }
 }
