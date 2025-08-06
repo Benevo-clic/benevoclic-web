@@ -3,10 +3,10 @@
     <div class="alert" :class="alertClass">
       <component :is="icon" class="w-5 h-5" />
       <span>{{ message }}</span>
-      <button
+      <button 
+        @click="close" 
         class="btn btn-sm btn-circle btn-ghost"
         aria-label="Fermer la notification"
-        @click="close"
       >
         <X class="w-4 h-4" />
       </button>
@@ -19,10 +19,10 @@ import { ref, onMounted } from 'vue'
 import { X, CheckCircle, AlertCircle, Info } from 'lucide-vue-next'
 
 interface Props {
-  message: string;
-  type: 'success' | 'error' | 'info' | 'warning';
-  duration?: number;
-  show: boolean;
+  message: string
+  type: 'success' | 'error' | 'info' | 'warning'
+  duration?: number
+  show: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-  close: [];
+  close: []
 }>()
 
 const show = ref(props.show)
@@ -66,7 +66,7 @@ const icon = computed(() => {
   }
 })
 
-function close () {
+function close() {
   show.value = false
   emit('close')
 }
@@ -79,10 +79,7 @@ onMounted(() => {
   }
 })
 
-watch(
-  () => props.show,
-  (newValue) => {
-    show.value = newValue
-  }
-)
-</script>
+watch(() => props.show, (newValue) => {
+  show.value = newValue
+})
+</script> 
