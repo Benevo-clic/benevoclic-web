@@ -1,10 +1,13 @@
 <script setup lang="ts">
-// Accès protégé déjà géré par le middleware admin.global.ts
 import AdminHeader from '~/components/admin/AdminHeader.vue'
 import { ref, onMounted } from 'vue'
 import { useRequestFetch } from '#app'
+import { useAdmin } from '~/composables/useAdmin'
+import { useAnnouncement } from '~/composables/useAnnouncement'
 
 const $fetch = useRequestFetch()
+const admin = useAdmin()
+const announcement = useAnnouncement()
 
 const loading = ref(false)
 const usersCount = ref<number | null>(null)
@@ -16,7 +19,7 @@ async function loadOverview() {
   loading.value = true
   errorMsg.value = ''
   try {
-    // Utilisateurs
+    // Utilisateurs (pas de composable pour la liste globale → API admin)
     try {
       const users = await $fetch<any[]>('/api/admin/users', { method: 'GET', credentials: 'include' })
       usersCount.value = Array.isArray(users) ? users.length : null
@@ -24,18 +27,23 @@ async function loadOverview() {
       usersCount.value = null
     }
 
-    // Support stats
+    // Support (via composable useAdmin)
     try {
-      const stats = await $fetch<any>('/api/admin/support-stats', { method: 'GET', credentials: 'include' })
-      supportStats.value = stats || null
+      await admin.fetchReports()
+      const reports = admin.reports.value
+      supportStats.value = {
+        totalReports: reports.length,
+        pendingReports: reports.filter(r => r.status === 'PENDING').length,
+        resolvedReports: reports.filter(r => r.status === 'RESOLVED').length,
+      }
     } catch (e) {
       supportStats.value = null
     }
 
-    // Annonces (liste simple)
+    // Annonces (via composable useAnnouncement)
     try {
-      const list = await $fetch<any[]>('/api/announcements', { method: 'GET', credentials: 'include' })
-      announcementsCount.value = Array.isArray(list) ? list.length : null
+      await announcement.fetchAllAnnouncements()
+      announcementsCount.value = announcement.getAnnouncements.value?.length ?? null
     } catch (e) {
       announcementsCount.value = null
     }

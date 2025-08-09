@@ -14,6 +14,9 @@ export const useAdmin = () => {
         fetchReportById: adminStore.fetchReportById,
         updateReportStatus: adminStore.updateReportStatus,
         filteredByStatus: adminStore.filteredByStatus,
+        getStats: computed(() => adminStore.getStats),
+        isLoading: computed(() => adminStore.isLoading),
+        getReports: computed(() => adminStore.getReports),
     }
 
 }
