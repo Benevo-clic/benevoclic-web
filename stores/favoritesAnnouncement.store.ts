@@ -42,7 +42,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
 
   actions: {
     // Cache management
-    setCache<T>(key: string, data: T, ttl?: number): void {
+    setCache<T> (key: string, data: T, ttl?: number): void {
       this.cache[key] = {
         data,
         timestamp: Date.now(),
@@ -50,7 +50,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    getCacheState<T>(key: string): T | null {
+    getCacheState<T> (key: string): T | null {
       if (this.isCacheValid(key)) {
         return this.cache[key].data as T
       }
@@ -59,9 +59,9 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       return null
     },
 
-    clearCache(pattern?: string): void {
+    clearCache (pattern?: string): void {
       if (pattern) {
-        Object.keys(this.cache).forEach(key => {
+        Object.keys(this.cache).forEach((key) => {
           if (key.includes(pattern)) {
             delete this.cache[key]
           }
@@ -71,12 +71,12 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    invalidateCache(pattern?: string): void {
+    invalidateCache (pattern?: string): void {
       this.clearCache(pattern)
     },
 
     // API calls with cache
-    async fetchFavorites(volunteerId: string, announcementId: string) {
+    async fetchFavorites (volunteerId: string, announcementId: string) {
       const cacheKey = `favorites_${volunteerId}_${announcementId}`
       const cached = this.getCacheState<FavoritesAnnouncement[]>(cacheKey)
 
@@ -110,7 +110,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
         this.loading = false
       }
     },
-    async findAllFavoritesAnnouncementsByVolunteerId(volunteerId: string) {
+    async findAllFavoritesAnnouncementsByVolunteerId (volunteerId: string) {
       this.loading = true
       this.error = null
       try {
@@ -135,7 +135,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async fetchAllFavoritesOfVolunteer(volunteerId: string) {
+    async fetchAllFavoritesOfVolunteer (volunteerId: string) {
       this.loading = true
       this.error = null
       try {
@@ -160,7 +160,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async fetchFavoriteVolunteerByVolunteerId(volunteerId: string) {
+    async fetchFavoriteVolunteerByVolunteerId (volunteerId: string) {
       const cacheKey = `favorites_announcements_volunteer_${volunteerId}`
       const cached = this.getCacheState<Announcement[]>(cacheKey)
 
@@ -198,7 +198,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async fetchAllFavorites() {
+    async fetchAllFavorites () {
       const cacheKey = 'favorites_all'
       const cached = this.getCacheState<FavoritesAnnouncement[]>(cacheKey)
 
@@ -230,7 +230,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async fetchFavoritesByAnnouncementId(announcementId: string) {
+    async fetchFavoritesByAnnouncementId (announcementId: string) {
       const cacheKey = `favorites_announcement_${announcementId}`
       const cached = this.getCacheState<FavoritesAnnouncement[]>(cacheKey)
 
@@ -265,7 +265,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async addFavorite(announcementId: string, volunteerId: string) {
+    async addFavorite (announcementId: string, volunteerId: string) {
       this.loading = true
       this.error = null
       try {
@@ -290,7 +290,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async removeByVolunteerIdAndAnnouncementId(volunteerId: string, announcementId: string) {
+    async removeByVolunteerIdAndAnnouncementId (volunteerId: string, announcementId: string) {
       this.loading = true
       this.error = null
       try {
@@ -318,7 +318,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async removeAllByVolunteerId(volunteerId: string) {
+    async removeAllByVolunteerId (volunteerId: string) {
       this.loading = true
       this.error = null
       try {
@@ -341,7 +341,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async removeAllByAnnouncementId(announcementId: string) {
+    async removeAllByAnnouncementId (announcementId: string) {
       this.loading = true
       this.error = null
       try {
@@ -364,11 +364,11 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
     },
 
     // Utility methods
-    clearError(): void {
+    clearError (): void {
       this.error = null
     },
 
-    resetState(): void {
+    resetState (): void {
       this.favorites = []
       this.favoritesAnnouncementsVolunteer = []
       this.error = null
