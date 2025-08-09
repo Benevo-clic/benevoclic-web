@@ -1,23 +1,6 @@
 <template>
   <div class="min-h-screen bg-base-200">
-    <div class="bg-base-100 shadow-lg">
-      <div class="container mx-auto px-4 py-6">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            </div>
-            <div>
-              <h1 class="text-2xl font-bold text-base-content">Support Admin</h1>
-              <p class="text-base-content/70">Gestion du support de la plateforme</p>
-            </div>
-          </div>
-          <button @click="logout" class="btn btn-outline btn-error">Déconnexion</button>
-        </div>
-      </div>
-    </div>
+    <AdminHeader />
 
     <div class="container mx-auto px-4 py-8">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -196,10 +179,9 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { useAdminStore, type SupportReport } from '~/stores/admin/admin.store'
+import AdminHeader from '~/components/admin/AdminHeader.vue'
 
-const router = useRouter()
 const admin = useAdminStore()
 
 const loading = computed(() => admin.loading)
@@ -298,16 +280,6 @@ function formatDate(dateString?: string) {
   return new Date(dateString).toLocaleDateString('fr-FR', {
     year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
   })
-}
-
-async function logout() {
-  try {
-    await $fetch('/api/user/logout', { method: 'POST' })
-  } catch (error) {
-    console.error('Erreur lors de la déconnexion:', error)
-  } finally {
-    await router.push('/')
-  }
 }
 
 onMounted(() => {

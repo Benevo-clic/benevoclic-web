@@ -9,19 +9,16 @@ export default defineEventHandler(async (event) => {
 
   try {
     const response = await axios.get(url, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     })
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la récupération des utilisateurs'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la récupération des utilisateurs')
     }
     throw createError({
       statusCode: error?.response?.status || 500,
-      statusMessage: 'Erreur lors de la récupération des utilisateurs'
+      statusMessage: 'Erreur lors de la récupération des utilisateurs',
     })
   }
 })

@@ -1,12 +1,10 @@
 
 import { defineNuxtRouteMiddleware, navigateTo } from '#app'
-import { useAuthStore } from '~/stores/auth/auth.store'
+import { useAuthStore } from '@/stores/auth/auth.store'
 import { useUserStore } from '~/stores/user/user.store'
 import { RoleUser } from '~/common/enums/role.enum'
 
-// Fonction pour extraire le chemin sans préfixe de langue
 function getPathWithoutLocale(path: string): string {
-  // Supprimer les préfixes de langue (/en/, /es/)
   return path.replace(/^\/(en|es)\//, '/')
 }
 

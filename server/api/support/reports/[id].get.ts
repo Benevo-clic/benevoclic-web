@@ -11,8 +11,8 @@ export default defineEventHandler(async (event) => {
   try {
     const response = await axios.get(url, {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
     return response.data
   } catch (error: any) {
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     }
     throw createError({
       statusCode: error?.response?.status || 500,
-      statusMessage: 'Erreur lors de la récupération du ticket'
+      statusMessage: 'Erreur lors de la récupération du ticket',
     })
   }
 })

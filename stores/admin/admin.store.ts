@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useRequestFetch, useCookie } from '#app'
+import { useRequestFetch } from '#app'
 
 export interface SupportReport {
   _id: string
@@ -38,7 +38,7 @@ export const useAdminStore = defineStore('admin', {
       this.error = null
       try {
         const $fetch = useRequestFetch()
-        const data = await $fetch<SupportReport[]>('/api/admin/support-reports', {
+        const data = await $fetch<SupportReport[]>('/api/support/reports', {
           method: 'GET',
           credentials: 'include',
         })
@@ -52,14 +52,14 @@ export const useAdminStore = defineStore('admin', {
     },
     async fetchReportById(id: string) {
       const $fetch = useRequestFetch()
-      return $fetch<SupportReport>(`/api/admin/support-reports/${id}`, {
+      return $fetch<SupportReport>(`/api/support/reports/${id}`, {
         method: 'GET',
         credentials: 'include',
       })
     },
     async updateReportStatus(id: string, status: SupportReport['status']) {
       const $fetch = useRequestFetch()
-      await $fetch(`/api/admin/support-reports/${id}/status`, {
+      await $fetch(`/api/support/reports/${id}/status`, {
         method: 'PATCH',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
