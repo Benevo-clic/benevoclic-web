@@ -10,8 +10,8 @@
               </svg>
             </div>
             <div>
-              <h1 class="text-2xl font-bold text-base-content">Dashboard Admin</h1>
-              <p class="text-base-content/70">Gestion de la plateforme</p>
+              <h1 class="text-2xl font-bold text-base-content">Support Admin</h1>
+              <p class="text-base-content/70">Gestion du support de la plateforme</p>
             </div>
           </div>
           <button @click="logout" class="btn btn-outline btn-error">Déconnexion</button>

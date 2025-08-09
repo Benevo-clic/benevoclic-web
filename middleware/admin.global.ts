@@ -13,7 +13,7 @@ const BASE_ROUTE_CONFIG = {
 
   admin: [
     '/admin',
-    '/admin/dashboard',
+    '/admin/support',
     '/admin/users',
     '/admin/associations',
     '/admin/volunteers',
