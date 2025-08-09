@@ -1,5 +1,5 @@
-import type { AxiosError } from "axios";
-import { createError } from "h3";
+import type { AxiosError } from 'axios'
+import { createError } from 'h3'
 
 export class ApiError {
   /**
@@ -7,29 +7,29 @@ export class ApiError {
    * @param err AxiosError intercepté
    * @param userMessage Message utilisateur par défaut
    */
-  public static handleAxios(
+  public static handleAxios (
     err: AxiosError,
-    userMessage = "Erreur lors de l’appel à l’API",
+    userMessage = 'Erreur lors de l’appel à l’API'
   ): never {
     if (err.response) {
-      const { status, statusText, data } = err.response;
+      const { status, statusText, data } = err.response
       throw createError({
         statusCode: status,
         statusMessage: statusText,
         data: {
           message: userMessage,
-          details: data,
-        },
-      });
+          details: data
+        }
+      })
     }
 
     throw createError({
       statusCode: 502,
-      statusMessage: "Bad Gateway",
+      statusMessage: 'Bad Gateway',
       data: {
         message: userMessage,
-        details: err.message,
-      },
-    });
+        details: err.message
+      }
+    })
   }
 }
