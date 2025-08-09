@@ -46,7 +46,7 @@ export const useAdminStore = defineStore('admin', {
     getError: state => state.error
   },
   actions: {
-    async fetchReports () {
+    async fetchReports() {
       this.loading = true
       this.error = null
       try {
@@ -62,14 +62,14 @@ export const useAdminStore = defineStore('admin', {
         this.loading = false
       }
     },
-    async fetchReportById (id: string): Promise<SupportReport> {
+    async fetchReportById(id: string): Promise<SupportReport> {
       const $fetch = useRequestFetch()
       return await $fetch<SupportReport>(`/api/support/reports/${id}`, {
         method: 'GET',
         credentials: 'include'
       })
     },
-    async updateReportStatus (id: string, status: SupportReport['status']) {
+    async updateReportStatus(id: string, status: SupportReport['status']) {
       const $fetch = useRequestFetch()
       await $fetch(`/api/support/reports/${id}/status`, {
         method: 'PATCH',
@@ -83,7 +83,7 @@ export const useAdminStore = defineStore('admin', {
       }
     },
 
-    async supportStats (): Promise<Stats> {
+    async supportStats(): Promise<Stats> {
       const $fetch = useRequestFetch()
       try {
         const stats = await $fetch<Stats>('/api/support/stats', {

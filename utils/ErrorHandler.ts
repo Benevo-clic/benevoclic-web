@@ -7,7 +7,7 @@ export class ApiError {
    * @param err AxiosError intercepté
    * @param userMessage Message utilisateur par défaut
    */
-  public static handleAxios (
+  public static handleAxios(
     err: AxiosError,
     userMessage = 'Erreur lors de l’appel à l’API'
   ): never {

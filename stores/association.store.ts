@@ -17,25 +17,25 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
   getters: {
     getAssociation: state => state.association,
     isExist: state => state.association !== null,
-    isCacheValid: (state) => {
+    isCacheValid: state => {
       return Date.now() - state._lastFetch < state._cacheExpiry
     }
   },
 
   actions: {
-    _updateCache (association: AssociationInfo) {
+    _updateCache(association: AssociationInfo) {
       if (association?.associationId) {
         this._associationCache.set(association.associationId, association)
       }
       this._lastFetch = Date.now()
     },
 
-    clearCache () {
+    clearCache() {
       this._associationCache.clear()
       this._lastFetch = 0
     },
 
-    async getAssociationInfoBySiret (siret: string) {
+    async getAssociationInfoBySiret(siret: string) {
       this.loading = true
       this.error = null
       try {
@@ -52,7 +52,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
         this.loading = false
       }
     },
-    async getAssociationInfo (associationId?: string) {
+    async getAssociationInfo(associationId?: string) {
       await useUserStore().fetchUser()
       const user = useUserStore().getUser
 
@@ -84,7 +84,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
         this.loading = false
       }
     },
-    async registerAssociation (payload: CreateAssociationDto) {
+    async registerAssociation(payload: CreateAssociationDto) {
       this.loading = true
       this.error = null
       try {
@@ -107,7 +107,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
       }
     },
 
-    async getNumberOfAssociations () {
+    async getNumberOfAssociations() {
       this.loading = true
       this.error = null
       try {
@@ -128,7 +128,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
       }
     },
 
-    async updateAssociation (payload: Partial<AssociationInfo>, id: string | null = null) {
+    async updateAssociation(payload: Partial<AssociationInfo>, id: string | null = null) {
       this.loading = true
       this.error = null
       try {
@@ -154,7 +154,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
         this.loading = false
       }
     },
-    async addVolunteerToAssociation (
+    async addVolunteerToAssociation(
       associationId: string,
       payload: { volunteerId: string; volunteerName: string }
     ) {
@@ -186,7 +186,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
         this.loading = false
       }
     },
-    async removeVolunteerFromAssociation (associationId: string, volunteerId: string) {
+    async removeVolunteerFromAssociation(associationId: string, volunteerId: string) {
       this.loading = true
       this.error = null
       try {
@@ -211,7 +211,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
         this.loading = false
       }
     },
-    async removeAssociationVolunteerWaiting (associationId: string, volunteerId: string) {
+    async removeAssociationVolunteerWaiting(associationId: string, volunteerId: string) {
       this.loading = true
       this.error = null
       try {
@@ -237,7 +237,7 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
         this.loading = false
       }
     },
-    async removeAssociation () {
+    async removeAssociation() {
       this.loading = true
       this.error = null
       try {
