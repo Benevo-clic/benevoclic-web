@@ -11,7 +11,7 @@ import AssociationNameForm from './AssociationNameForm.vue'
 import AssociationTypeForm from './AssociationTypeForm.vue'
 import ErrorPopup from "~/components/utils/ErrorPopup.vue";
 import {useNavigation} from "~/composables/useNavigation";
-import { useAuthStore } from '@/stores/auth/auth.store'
+import {useAuthStore} from "~/stores/auth/auth.store";
 
 const { user, updateIsCompleted } = useUser()
 const authStore = useAuthStore()
@@ -138,7 +138,7 @@ const isError = ref(false)
 
 function validateCurrentStep(): boolean {
   const step = steps[currentStep.value]
-  const error = step.validate(formData[step.field])
+  const error = step.validate(formData[step.field] as string)
   errors[step.field] = error
   return !error
 }
