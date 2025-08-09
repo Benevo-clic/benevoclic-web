@@ -1,34 +1,39 @@
 import axios from 'axios'
-import { defineEventHandler, readBody, getCookie } from "h3";
-import { ApiError } from '~/utils/ErrorHandler';
+import { defineEventHandler, readBody, getCookie } from 'h3'
+import { ApiError } from '~/utils/ErrorHandler'
 
 export default defineEventHandler(async (event) => {
-    const announcementId  = event.context.params?.id;
-    const body = await readBody(event);
-    const token = getCookie(event, 'auth_token')
-    const config = useRuntimeConfig();
+  const announcementId = event.context.params?.id
+  const body = await readBody(event)
+  const token = getCookie(event, 'auth_token')
+  const config = useRuntimeConfig()
 
-    try {
-        const url = `${config.private.api_base_url}/announcements/participant/register/${announcementId}`;
-        const participant = {
-            id: body.id,
-            name: body.name
-        }
-        const participantInfo = await axios.patch(url,
-            {
-                ...participant,
-            },
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                }
-            });
-
-        return participantInfo.data
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            ApiError.handleAxios(error, 'Erreur lors de l’inscription au participant')
-        }
+  try {
+    const url = `${config.private.api_base_url}/announcements/participant/register/${announcementId}`
+    const participant = {
+      id: body.id,
+      name: body.name
     }
-});
+    const participantInfo = await axios.patch(
+      url,
+      {
+        ...participant
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    return participantInfo.data
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      ApiError.handleAxios(
+        error,
+        'Erreur lors de l’inscription au participant'
+      )
+    }
+  }
+})

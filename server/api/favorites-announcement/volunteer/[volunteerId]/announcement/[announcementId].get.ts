@@ -5,20 +5,19 @@ import { ApiError } from '~/utils/ErrorHandler'
 export default defineEventHandler(async (event) => {
   try {
     const { volunteerId, announcementId } = event.context.params || {}
-    
-    const token = getCookie(event, 'auth_token');
-    
+
+    const token = getCookie(event, 'auth_token')
+
     const config = useRuntimeConfig()
     const url = `${config.private.api_base_url}/favorites-announcement/volunteer/${volunteerId}/announcement/${announcementId}`
 
-    
     const response = await axios.get(url, {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     })
-    
+
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
@@ -26,7 +25,8 @@ export default defineEventHandler(async (event) => {
     }
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.statusMessage || 'Erreur lors de la récupération du favori'
+      statusMessage:
+        error.statusMessage || 'Erreur lors de la récupération du favori'
     })
   }
-}) 
+})

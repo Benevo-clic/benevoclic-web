@@ -1,36 +1,38 @@
 import { ref, computed } from 'vue'
 
 export interface CookiePreferences {
-  essential: boolean
-  analytics: boolean
-  personalization: boolean
-  thirdParty: boolean
+  essential: boolean;
+  analytics: boolean;
+  personalization: boolean;
+  thirdParty: boolean;
 }
 
 export interface PermissionState {
-  canUseLocation: boolean
-  canUsePersonalData: boolean
-  canUseAnalytics: boolean
-  canUseThirdParty: boolean
-  canAuthenticate: boolean
+  canUseLocation: boolean;
+  canUsePersonalData: boolean;
+  canUseAnalytics: boolean;
+  canUseThirdParty: boolean;
+  canAuthenticate: boolean;
 }
 
 const COOKIE_PREFERENCES_KEY = 'benevoclic_cookie_preferences'
 
 // Variables globales pour éviter les problèmes de contexte
 let isInitialized = false
-let cookiePreferencesGlobal = ref<CookiePreferences>({
+const cookiePreferencesGlobal = ref<CookiePreferences>({
   essential: true,
   analytics: false,
   personalization: false,
   thirdParty: false
 })
-let hasConsentedGlobal = ref(false)
+const hasConsentedGlobal = ref(false)
 
 // Fonction d'initialisation
 const initializePermissions = () => {
-  if (isInitialized || typeof window === 'undefined') return
-  
+  if (isInitialized || typeof window === 'undefined') {
+    return
+  }
+
   try {
     const savedPreferences = localStorage.getItem(COOKIE_PREFERENCES_KEY)
     if (savedPreferences) {
@@ -41,9 +43,12 @@ const initializePermissions = () => {
       }
     }
   } catch (error) {
-    console.error('Erreur lors du chargement des préférences de cookies:', error)
+    console.error(
+      'Erreur lors du chargement des préférences de cookies:',
+      error
+    )
   }
-  
+
   isInitialized = true
 }
 
@@ -55,8 +60,10 @@ export const usePermissions = () => {
 
   // Charger les préférences depuis le localStorage
   const loadCookiePreferences = (): boolean => {
-    if (typeof window === 'undefined') return false
-    
+    if (typeof window === 'undefined') {
+      return false
+    }
+
     try {
       const savedPreferences = localStorage.getItem(COOKIE_PREFERENCES_KEY)
       if (savedPreferences) {
@@ -68,15 +75,20 @@ export const usePermissions = () => {
         }
       }
     } catch (error) {
-      console.error('Erreur lors du chargement des préférences de cookies:', error)
+      console.error(
+        'Erreur lors du chargement des préférences de cookies:',
+        error
+      )
     }
     return false
   }
 
   // Sauvegarder les préférences
   const saveCookiePreferences = (preferences: CookiePreferences) => {
-    if (typeof window === 'undefined') return
-    
+    if (typeof window === 'undefined') {
+      return
+    }
+
     try {
       const toSave = {
         version: '1.0',
@@ -86,15 +98,20 @@ export const usePermissions = () => {
       localStorage.setItem(COOKIE_PREFERENCES_KEY, JSON.stringify(toSave))
       cookiePreferencesGlobal.value = preferences
       hasConsentedGlobal.value = true
-      
+
       // Émettre un événement pour informer l'application
       if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('cookiePreferencesUpdated', {
-          detail: preferences
-        }))
+        window.dispatchEvent(
+          new CustomEvent('cookiePreferencesUpdated', {
+            detail: preferences
+          })
+        )
       }
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde des préférences de cookies:', error)
+      console.error(
+        'Erreur lors de la sauvegarde des préférences de cookies:',
+        error
+      )
     }
   }
 
@@ -102,16 +119,16 @@ export const usePermissions = () => {
   const permissions = computed<PermissionState>(() => ({
     // L'authentification nécessite les cookies essentiels
     canAuthenticate: cookiePreferencesGlobal.value.essential,
-    
+
     // La localisation nécessite les cookies de personnalisation
     canUseLocation: cookiePreferencesGlobal.value.personalization,
-    
+
     // Les données personnelles nécessitent les cookies de personnalisation
     canUsePersonalData: cookiePreferencesGlobal.value.personalization,
-    
+
     // Les analytics nécessitent les cookies analytiques
     canUseAnalytics: cookiePreferencesGlobal.value.analytics,
-    
+
     // Les services tiers nécessitent les cookies tiers
     canUseThirdParty: cookiePreferencesGlobal.value.thirdParty
   }))
@@ -151,8 +168,10 @@ export const usePermissions = () => {
 
   // Réinitialiser les préférences (pour forcer l'affichage de la bannière)
   const resetPreferences = () => {
-    if (typeof window === 'undefined') return
-    
+    if (typeof window === 'undefined') {
+      return
+    }
+
     localStorage.removeItem(COOKIE_PREFERENCES_KEY)
     hasConsentedGlobal.value = false
     cookiePreferencesGlobal.value = {
@@ -169,10 +188,10 @@ export const usePermissions = () => {
     hasConsented: computed(() => hasConsentedGlobal.value),
     permissions: computed(() => permissions.value),
     isClient: computed(() => typeof window !== 'undefined'),
-    
+
     // Méthodes de vérification
     hasPermission,
-    
+
     // Méthodes de gestion des cookies
     loadCookiePreferences,
     saveCookiePreferences,
@@ -181,4 +200,4 @@ export const usePermissions = () => {
     acceptSpecificCookies,
     resetPreferences
   }
-} 
+}

@@ -1,13 +1,13 @@
-declare module '#app' {
+declare module "#app" {
   interface NuxtApp {
-    $maplibregl: any
+    $maplibregl: any;
   }
 }
 
-declare module '@vue/runtime-core' {
+declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
-    $maplibregl: any
+    $maplibregl: any;
   }
 }
 
-export {} 
+export {};

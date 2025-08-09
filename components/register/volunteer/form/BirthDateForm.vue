@@ -2,14 +2,16 @@
 import { defineProps, defineEmits } from 'vue'
 
 const props = defineProps<{
-  modelValue: string
-  error?: string
-}>()
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void
+  modelValue: string;
+  error?: string;
 }>()
 
-function onInput(e: Event) {
+// eslint-disable-next-line func-call-spacing
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void;
+}>()
+
+function onInput (e: Event) {
   const value = (e.target as HTMLInputElement).value
   emit('update:modelValue', value)
 }
@@ -22,14 +24,14 @@ function onInput(e: Event) {
     </label>
     <input
       :value="props.modelValue"
-      @input="onInput"
       type="date"
       class="input input-bordered w-full"
       :class="{ 'input-error': props.error }"
-    aria-label="Champ de saisie">
+      aria-label="Champ de saisie"
+      @input="onInput"
+    >
     <label v-if="props.error" class="label">
       <span class="label-text-alt text-error">{{ props.error }}</span>
     </label>
   </div>
 </template>
-

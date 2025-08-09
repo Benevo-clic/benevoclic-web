@@ -28,7 +28,6 @@
       "back_to_login": "Retour à la connexion",
       "instructions": "1. Vérifiez votre boîte de réception",
       "click_link": "2. Cliquez sur le lien de vérification dans l'email"
-      
     },
     "logout": "Déconnexion",
     "register": {
@@ -100,10 +99,9 @@
     "placeholder_email": "Entrez votre e-mail",
     "placeholder_password": "Au moins 8 caractères",
     "forgot_password": "Mot de passe oublié ?",
-"forgot_password_sent": "Un email de réinitialisation a été envoyé à votre adresse.",
-"forgot_password_error": "Erreur lors de l'envoi de l'email de réinitialisation.",
-"forgot_password_enter_email": "Veuillez entrer votre adresse email pour réinitialiser votre mot de passe."
-
+    "forgot_password_sent": "Un email de réinitialisation a été envoyé à votre adresse.",
+    "forgot_password_error": "Erreur lors de l'envoi de l'email de réinitialisation.",
+    "forgot_password_enter_email": "Veuillez entrer votre adresse email pour réinitialiser votre mot de passe."
   },
   "drawer-content": {
     "account": {
@@ -136,16 +134,16 @@
       }
     },
     "activity": {
-        "title": "Activités",
-        "my_missions": "Mes missions",
-        "my_participations": "Mes participations",
-        "my_favorites": "Mes favoris",
-        "history": "Historique",
+      "title": "Activités",
+      "my_missions": "Mes missions",
+      "my_participations": "Mes participations",
+      "my_favorites": "Mes favoris",
+      "history": "Historique",
       "new-event": "Nouvel événement",
       "requests": "Mes demandes",
       "upcoming-event": "Événements à venir",
       "manage-event": "Gérer les événements",
-        "dashboard": "Tableau de bord"
+      "dashboard": "Tableau de bord"
     },
     "notifications_support": {
       "title": "Notifications & Support",
@@ -499,6 +497,67 @@
       "sending": "Envoi en cours...",
       "success_message": "Votre demande a été envoyée. Nous vous répondrons dans les plus brefs délais !",
       "error_message": "Une erreur est survenue. Veuillez réessayer ou nous contacter directement."
+    },
+    "report": {
+      "title": "Signaler un problème",
+      "announcement_title": "Signaler une annonce",
+      "type_label": "Type de signalement",
+      "category_label": "Catégorie",
+      "description_label": "Description détaillée",
+      "description_placeholder": "Décrivez le problème en détail...",
+      "submit": "Envoyer le signalement",
+      "submitting": "Envoi en cours...",
+      "cancel": "Annuler",
+      "success_message": "Votre signalement a été envoyé avec succès. Nous l'examinerons dans les plus brefs délais.",
+      "error_message": "Une erreur est survenue lors de l'envoi du signalement. Veuillez réessayer.",
+      "types": {
+        "announcement": "Annonce",
+        "technical": "Problème technique",
+        "user_feedback": "Feedback utilisateur",
+        "other": "Autre",
+        "select": "Sélectionner un type"
+      },
+      "categories": {
+        "select": "Sélectionner une catégorie",
+        "announcement": {
+          "inappropriate_content": "Contenu inapproprié",
+          "outdated_info": "Informations obsolètes",
+          "wrong_address": "Adresse incorrecte",
+          "wrong_date_time": "Date/heure incorrecte",
+          "wrong_capacity": "Capacité incorrecte",
+          "inappropriate_tags": "Tags inappropriés",
+          "other": "Autre"
+        },
+        "technical": {
+          "connection_issue": "Problème de connexion",
+          "image_not_loading": "Images qui ne se chargent pas",
+          "responsive_issue": "Problème d'affichage mobile",
+          "search_problem": "Problème de recherche",
+          "form_not_working": "Formulaire qui ne fonctionne pas",
+          "slow_performance": "Performance lente",
+          "other": "Autre"
+        },
+        "user_feedback": {
+          "feature_request": "Demande de fonctionnalité",
+          "bug_report": "Signalement de bug",
+          "usability_issue": "Problème d'ergonomie",
+          "content_suggestion": "Suggestion de contenu",
+          "general_feedback": "Feedback général",
+          "other": "Autre"
+        },
+        "other": {
+          "general_inquiry": "Question générale",
+          "account_issue": "Problème de compte",
+          "billing_question": "Question de facturation",
+          "partnership_request": "Demande de partenariat",
+          "press_inquiry": "Demande de presse",
+          "other": "Autre"
+        }
+      },
+      "auto_info": "Informations automatiques",
+      "page": "Page",
+      "email": "Email",
+      "announcement_id": "Annonce ID"
     }
   }
 }

@@ -1,16 +1,16 @@
 <template>
-  <div 
-    class="w-full h-full flex items-center justify-center" 
-    role="img" 
+  <div
+    class="w-full h-full flex items-center justify-center"
+    role="img"
     :aria-label="chartDescription"
     :aria-describedby="`chart-description-${uniqueId}`"
   >
-    <canvas 
-      ref="canvas" 
-      class="max-w-full max-h-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+    <canvas
+      ref="canvas"
+      class="max-w-full max-h-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
       tabindex="0"
       :aria-label="chartDescription"
-    ></canvas>
+    />
     <div :id="`chart-description-${uniqueId}`" class="sr-only">
       {{ chartDescription }}
     </div>
@@ -21,11 +21,11 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import Chart from 'chart.js/auto'
 
-const props = defineProps<{ 
-  labels: string[], 
-  data: number[], 
-  colors?: string[],
-  title?: string
+const props = defineProps<{
+  labels: string[];
+  data: number[];
+  colors?: string[];
+  title?: string;
 }>()
 
 const canvas = ref<HTMLCanvasElement>()
@@ -39,14 +39,16 @@ const chartDescription = computed(() => {
   if (!props.labels.length || !props.data.length) {
     return 'Graphique en cours de chargement'
   }
-  
+
   const total = props.data.reduce((sum, value) => sum + value, 0)
-  const segments = props.labels.map((label, index) => {
-    const value = props.data[index]
-    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0'
-    return `${label}: ${value} (${percentage}%)`
-  }).join(', ')
-  
+  const segments = props.labels
+    .map((label, index) => {
+      const value = props.data[index]
+      const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0'
+      return `${label}: ${value} (${percentage}%)`
+    })
+    .join(', ')
+
   return `${props.title || 'Graphique circulaire'} - ${segments}`
 })
 
@@ -54,23 +56,25 @@ onMounted(() => renderChart())
 
 watch(() => [props.labels, props.data], renderChart)
 
-function renderChart() {
-  if (!canvas.value) return
-  
-  if (chart) chart.destroy()
-  
+function renderChart () {
+  if (!canvas.value) { return }
+
+  if (chart) { chart.destroy() }
+
   chart = new Chart(canvas.value, {
     type: 'pie',
     data: {
       labels: props.labels,
-      datasets: [{
-        data: props.data,
-        backgroundColor: props.colors || ['#2563eb', '#10b981', '#f59e42'],
-        borderWidth: 2,
-        borderColor: '#ffffff'
-      }]
+      datasets: [
+        {
+          data: props.data,
+          backgroundColor: props.colors || ['#2563eb', '#10b981', '#f59e42'],
+          borderWidth: 2,
+          borderColor: '#ffffff'
+        }
+      ]
     },
-    options: { 
+    options: {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
@@ -82,20 +86,29 @@ function renderChart() {
             font: {
               size: 12
             },
-            generateLabels: function(chart) {
+            generateLabels: function (chart) {
               const data = chart.data
-              if (data.labels && data.labels.length && data.datasets && data.datasets.length) {
+              if (
+                data.labels &&
+                data.labels.length &&
+                data.datasets &&
+                data.datasets.length
+              ) {
                 return data.labels.map((label, i) => {
                   const dataset = data.datasets[0]
                   const value = dataset.data[i] as number
-                  const total = (dataset.data as number[]).reduce((sum: number, val: number) => sum + (val || 0), 0)
-                  const percentage = total > 0 ? ((value || 0) / total * 100).toFixed(1) : '0'
-                  
+                  const total = (dataset.data as number[]).reduce(
+                    (sum: number, val: number) => sum + (val || 0),
+                    0
+                  )
+                  const percentage =
+                    total > 0 ? (((value || 0) / total) * 100).toFixed(1) : '0'
+
                   // Gestion sûre des couleurs
-                  const backgroundColor = Array.isArray(dataset.backgroundColor) 
-                    ? dataset.backgroundColor[i] as string
-                    : dataset.backgroundColor as string || '#2563eb'
-                  
+                  const backgroundColor = Array.isArray(dataset.backgroundColor)
+                    ? (dataset.backgroundColor[i] as string)
+                    : (dataset.backgroundColor as string) || '#2563eb'
+
                   return {
                     text: `${label}: ${value || 0} (${percentage}%)`,
                     fillStyle: backgroundColor,
@@ -112,11 +125,15 @@ function renderChart() {
         },
         tooltip: {
           callbacks: {
-            label: function(context) {
+            label: function (context) {
               const label = context.label || ''
               const value = context.parsed
-              const total = context.dataset.data.reduce((sum: number, val: number) => sum + val, 0)
-              const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0'
+              const total = context.dataset.data.reduce(
+                (sum: number, val: number) => sum + val,
+                0
+              )
+              const percentage =
+                total > 0 ? ((value / total) * 100).toFixed(1) : '0'
               return `${label}: ${value} (${percentage}%)`
             }
           }
@@ -126,14 +143,6 @@ function renderChart() {
   })
 }
 
-// Gestion de la navigation clavier
-function handleKeydown(event: KeyboardEvent) {
-  if (event.key === 'Enter' || event.key === ' ') {
-    event.preventDefault()
-    // Focus sur le canvas pour permettre l'interaction
-    canvas.value?.focus()
-  }
-}
 </script>
 
 <style scoped>
@@ -183,4 +192,4 @@ canvas:focus-visible {
     max-height: 300px;
   }
 }
-</style> 
+</style>

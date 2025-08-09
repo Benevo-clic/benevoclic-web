@@ -11,6 +11,13 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "start:prod": "node .output/server/index.mjs",
+    "pm2:start": "pm2 start ecosystem.config.cjs --env production",
+    "pm2:reload": "pm2 reload benevoclic-web",
+    "pm2:logs": "pm2 logs benevoclic-web",
+    "pm2:stop": "pm2 stop benevoclic-web",
+    "pm2:delete": "pm2 delete benevoclic-web",
+    "pm2:status": "pm2 status",
     "test": "vitest --run",
     "test:components": "vitest test/components/",
     "test:all": "node test/run-all-tests.js",
@@ -22,8 +29,9 @@
     "a11y:audit": "lighthouse http://localhost:5482 --config=./lighthouserc.a11y.js --output=html --output-path=./lighthouse-reports/a11y-report.html",
     "test:cls": "node scripts/test-cls.js",
     "audit:all": "npm run audit:lighthouse && npm run audit:seo && npm run audit:a11y",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint utils/** stores/**",
+    "lint:fix": "eslint utils/** stores/** --fix",
+    "prettier:fix": "prettier -w .",
     "type-check": "nuxt typecheck"
   },
   "dependencies": {
@@ -48,8 +56,8 @@
     "nuxt": "3.16.0",
     "nuxt-schema-org": "^5.0.6",
     "sass": "^1.85.0",
-    "vue": "latest",
-    "vue-router": "latest"
+    "vue": "3.5.18",
+    "vue-router": "4.5.1"
   },
   "devDependencies": {
     "@nuxt/postcss8": "^1.1.3",
@@ -63,6 +71,7 @@
     "happy-dom": "^16.0.0",
     "lighthouse-ci": "^1.13.1",
     "postcss": "^8.5.3",
+    "prettier": "^3.6.2",
     "tailwindcss": "^3.4.17",
     "vitest": "^3.1.3"
   }

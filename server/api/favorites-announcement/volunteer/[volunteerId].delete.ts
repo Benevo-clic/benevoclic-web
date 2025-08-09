@@ -5,27 +5,32 @@ import { ApiError } from '~/utils/ErrorHandler'
 export default defineEventHandler(async (event) => {
   try {
     const { volunteerId } = event.context.params || {}
-    
-    const token = getCookie(event, 'auth_token');
-    
+
+    const token = getCookie(event, 'auth_token')
+
     const config = useRuntimeConfig()
     const url = `${config.private.api_base_url}/favorites-announcement/volunteer/${volunteerId}`
-    
+
     const response = await axios.delete(url, {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     })
-    
+
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la suppression de tous les favoris du volontaire')
+      ApiError.handleAxios(
+        error,
+        'Erreur lors de la suppression de tous les favoris du volontaire'
+      )
     }
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.statusMessage || 'Erreur lors de la suppression de tous les favoris du volontaire'
+      statusMessage:
+        error.statusMessage ||
+        'Erreur lors de la suppression de tous les favoris du volontaire'
     })
   }
-}) 
+})

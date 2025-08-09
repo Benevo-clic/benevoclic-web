@@ -37,15 +37,15 @@
   border-radius: 4px;
   font-weight: 600;
   transition: top 0.2s ease;
-  
+
   &:focus {
     top: 6px;
     outline: 2px solid white;
     outline-offset: 2px;
   }
-  
+
   &:hover {
     background: #2563eb;
   }
 }
-</style> 
+</style>

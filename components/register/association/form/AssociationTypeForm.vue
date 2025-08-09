@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 
 const props = defineProps<{
-  modelValue: string
-  error?: string
+  modelValue: string;
+  error?: string;
 }>()
 
+// eslint-disable-next-line func-call-spacing
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void
+  (e: 'update:modelValue', value: string): void;
 }>()
 
 const associationTypes = [
@@ -20,7 +20,7 @@ const associationTypes = [
   { value: 'other', label: 'Autre' }
 ]
 
-function handleChange(e: Event) {
+function handleChange (e: Event) {
   const value = (e.target as HTMLSelectElement).value
   emit('update:modelValue', value)
 }
@@ -31,16 +31,19 @@ function handleChange(e: Event) {
     <label class="label">
       <span class="label-text">Type d'association</span>
     </label>
-    <select 
-      :value="modelValue"
-      @change="handleChange"
+    <select
+      :value="props.modelValue"
       class="select select-bordered w-full"
       :class="{ 'select-error': error }"
-     aria-label="Sélection">
-      <option value="" disabled selected>Sélectionnez un type</option>
-      <option 
-        v-for="type in associationTypes" 
-        :key="type.value" 
+      aria-label="Sélection"
+      @change="handleChange"
+    >
+      <option value="" disabled selected>
+        Sélectionnez un type
+      </option>
+      <option
+        v-for="type in associationTypes"
+        :key="type.value"
         :value="type.value"
       >
         {{ type.label }}

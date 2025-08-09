@@ -1,7 +1,6 @@
-import { defineEventHandler, createError } from 'h3'
+import { defineEventHandler, createError, getCookie } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
-import { getCookie } from 'h3'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -13,8 +12,8 @@ export default defineEventHandler(async (event) => {
 
     const response = await axios.get(url, {
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
     })
 
@@ -23,11 +22,16 @@ export default defineEventHandler(async (event) => {
     console.error('Erreur API Nuxt :', error)
 
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la récupération de toutes les listes de volontaires')
+      ApiError.handleAxios(
+        error,
+        'Erreur lors de la récupération de toutes les listes de volontaires'
+      )
     }
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.statusMessage || 'Erreur lors de la récupération de toutes les listes de volontaires'
+      statusMessage:
+        error.statusMessage ||
+        'Erreur lors de la récupération de toutes les listes de volontaires'
     })
   }
 })

@@ -1,21 +1,21 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock des stores
 const mockAuthStore = {
   getIsVerified: true,
-  getTempPassword: 'temp123',
+  getTempPassword: "temp123",
   login: vi.fn(),
   sendEmailVerification: vi.fn(),
   forgotPassword: vi.fn(),
   logout: vi.fn(),
   loginWithGoogle: vi.fn(),
-  registerWithEmailPassword: vi.fn()
-}
+  registerWithEmailPassword: vi.fn(),
+};
 
 const mockUserStore = {
-  getUser: { id: 'user123', name: 'John Doe', email: 'john@example.com' },
-  getRole: 'volunteer',
+  getUser: { id: "user123", name: "John Doe", email: "john@example.com" },
+  getRole: "volunteer",
   loading: false,
   error: null,
   isFetching: false,
@@ -26,97 +26,98 @@ const mockUserStore = {
   uploadProfilePicture: vi.fn(),
   updateAvatar: vi.fn(),
   updatePassword: vi.fn(),
-  fullName: 'John Doe',
-  userId: 'user123',
+  fullName: "John Doe",
+  userId: "user123",
   clearUserCache: vi.fn(),
   isUserCacheValid: true,
-  isUserDataFresh: true
-}
+  isUserDataFresh: true,
+};
 
 // Mock de useCookie
 const mockCookie = vi.fn(() => ({
-  value: true
-}))
+  value: true,
+}));
 
 // Mock des modules Vue
 const mockRef = vi.fn((initialValue) => ({
-  value: initialValue
-}))
+  value: initialValue,
+}));
 
 const mockComputed = vi.fn((getter) => ({
-  value: getter()
-}))
+  value: getter(),
+}));
 
 const mockOnMounted = vi.fn((callback) => {
   // Simuler onMounted en appelant directement le callback
-  callback()
-})
+  callback();
+});
 
 // Mock des modules
-vi.mock('../../stores/auth/auth.store', () => ({
-  useAuthStore: () => mockAuthStore
-}))
+vi.mock("../../stores/auth/auth.store", () => ({
+  useAuthStore: () => mockAuthStore,
+}));
 
-vi.mock('../../stores/user/user.store', () => ({
-  useUserStore: () => mockUserStore
-}))
+vi.mock("../../stores/user/user.store", () => ({
+  useUserStore: () => mockUserStore,
+}));
 
 // Mock globaux
-global.useCookie = mockCookie
-global.onMounted = mockOnMounted
-global.computed = mockComputed
-global.ref = mockRef
+global.useCookie = mockCookie;
+global.onMounted = mockOnMounted;
+global.computed = mockComputed;
+global.ref = mockRef;
 
 // Fonction mock pour useUser
 const useUser = () => {
-  const authStore = mockAuthStore
-  const userStore = mockUserStore
-  const hasInitialized = mockRef(false)
-  const initializationError = mockRef(null)
+  const authStore = mockAuthStore;
+  const userStore = mockUserStore;
+  const hasInitialized = mockRef(false);
+  const initializationError = mockRef(null);
 
   // Fonction d'initialisation améliorée
   const initializeUser = async () => {
-    if (hasInitialized.value) return
+    if (hasInitialized.value) return;
 
     // Protection : n'appelle fetchUser que si authentifié
-    if (!mockCookie("isConnected").value) return
+    if (!mockCookie("isConnected").value) return;
 
     try {
-      await userStore.fetchUser()
-      hasInitialized.value = true
-      initializationError.value = null
-      return userStore.getUser
+      await userStore.fetchUser();
+      hasInitialized.value = true;
+      initializationError.value = null;
+      return userStore.getUser;
     } catch (error) {
-      initializationError.value = error?.message || 'Erreur lors de l\'initialisation'
-      console.error('Erreur d\'initialisation:', error)
+      initializationError.value =
+        error?.message || "Erreur lors de l'initialisation";
+      console.error("Erreur d'initialisation:", error);
       // Don't re-throw to avoid unhandled promise rejections in tests
     }
-  }
+  };
 
   // Initialisation au montage du composant
   mockOnMounted(async () => {
-    await initializeUser()
-  })
+    await initializeUser();
+  });
 
   const refreshUserData = async () => {
     try {
-      userStore.clearUserCache()
-      return await userStore.fetchUser()
+      userStore.clearUserCache();
+      return await userStore.fetchUser();
     } catch (error) {
-      console.error('Erreur lors du refresh:', error)
-      throw error
+      console.error("Erreur lors du refresh:", error);
+      throw error;
     }
-  }
+  };
 
   return {
     // État réactif
     user: mockComputed(() => userStore.getUser),
     isAuthenticated: mockComputed(() => mockCookie("isConnected").value),
     userRole: mockComputed(() => userStore.getRole),
-    error: { 
-      get value() { 
-        return initializationError.value || userStore.error 
-      } 
+    error: {
+      get value() {
+        return initializationError.value || userStore.error;
+      },
     },
     isLoading: mockComputed(() => userStore.loading),
     isFetching: mockComputed(() => userStore.isFetching),
@@ -140,382 +141,390 @@ const useUser = () => {
     updateAvatar: userStore.updateAvatar,
     register: authStore.registerWithEmailPassword,
     updatePassword: userStore.updatePassword,
-    
+
     // Méthodes utilitaires
     refreshUser: refreshUserData,
     initializeUser,
-    
+
     // Getters calculés utiles
     fullName: mockComputed(() => userStore.fullName),
     hasUserData: mockComputed(() => Boolean(userStore.getUser)),
     isUserCacheValid: mockComputed(() => userStore.isUserCacheValid),
-    isUserDataFresh: mockComputed(() => userStore.isUserDataFresh)
-  }
-}
+    isUserDataFresh: mockComputed(() => userStore.isUserDataFresh),
+  };
+};
 
-describe('useUser', () => {
+describe("useUser", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-    mockCookie.mockReturnValue({ value: true })
+    vi.clearAllMocks();
+    mockCookie.mockReturnValue({ value: true });
     mockRef.mockImplementation((initialValue) => ({
-      value: initialValue
-    }))
+      value: initialValue,
+    }));
     mockComputed.mockImplementation((getter) => ({
-      value: getter()
-    }))
+      value: getter(),
+    }));
     // Reset the hasInitialized state
     mockRef.mockImplementation((initialValue) => ({
-      value: initialValue
-    }))
+      value: initialValue,
+    }));
     // Reset mockUserStore.fetchUser to resolve successfully
-    mockUserStore.fetchUser.mockResolvedValue(undefined)
-  })
+    mockUserStore.fetchUser.mockResolvedValue(undefined);
+  });
 
-  describe('Initialisation', () => {
-    it('should initialize user on mount when authenticated', async () => {
-      const user = useUser()
+  describe("Initialisation", () => {
+    it("should initialize user on mount when authenticated", async () => {
+      const user = useUser();
 
       // Vérifier que onMounted a été appelé
-      expect(mockOnMounted).toHaveBeenCalled()
+      expect(mockOnMounted).toHaveBeenCalled();
 
       // Vérifier que initializeUser a été appelé
-      expect(mockUserStore.fetchUser).toHaveBeenCalled()
-    })
+      expect(mockUserStore.fetchUser).toHaveBeenCalled();
+    });
 
-    it('should not initialize when not authenticated', async () => {
-      mockCookie.mockReturnValue({ value: false })
+    it("should not initialize when not authenticated", async () => {
+      mockCookie.mockReturnValue({ value: false });
 
-      const user = useUser()
+      const user = useUser();
 
       // Vérifier que fetchUser n'a pas été appelé
-      expect(mockUserStore.fetchUser).not.toHaveBeenCalled()
-    })
+      expect(mockUserStore.fetchUser).not.toHaveBeenCalled();
+    });
 
-    it('should handle initialization errors', async () => {
-      const error = new Error('Initialization failed')
-      mockUserStore.fetchUser.mockRejectedValue(error)
+    it("should handle initialization errors", async () => {
+      const error = new Error("Initialization failed");
+      mockUserStore.fetchUser.mockRejectedValue(error);
 
       // Reset mock to avoid automatic initialization
-      mockOnMounted.mockImplementation(() => {})
-      
-      const user = useUser()
+      mockOnMounted.mockImplementation(() => {});
+
+      const user = useUser();
 
       // Vérifier que l'erreur est gérée après l'initialisation
-      await user.initializeUser()
+      await user.initializeUser();
       // The error should be set in the initializationError ref
-      expect(user.error.value).toBe('Initialization failed')
-    })
-  })
+      expect(user.error.value).toBe("Initialization failed");
+    });
+  });
 
-  describe('État réactif', () => {
-    it('should return user data', () => {
-      const user = useUser()
+  describe("État réactif", () => {
+    it("should return user data", () => {
+      const user = useUser();
 
       expect(user.user.value).toEqual({
-        id: 'user123',
-        name: 'John Doe',
-        email: 'john@example.com'
-      })
-    })
+        id: "user123",
+        name: "John Doe",
+        email: "john@example.com",
+      });
+    });
 
-    it('should return authentication state', () => {
-      const user = useUser()
+    it("should return authentication state", () => {
+      const user = useUser();
 
-      expect(user.isAuthenticated.value).toBe(true)
-    })
+      expect(user.isAuthenticated.value).toBe(true);
+    });
 
-    it('should return user role', () => {
-      const user = useUser()
+    it("should return user role", () => {
+      const user = useUser();
 
-      expect(user.userRole.value).toBe('volunteer')
-    })
+      expect(user.userRole.value).toBe("volunteer");
+    });
 
-    it('should return loading states', () => {
-      const user = useUser()
+    it("should return loading states", () => {
+      const user = useUser();
 
-      expect(user.isLoading.value).toBe(false)
-      expect(user.isFetching.value).toBe(false)
-    })
+      expect(user.isLoading.value).toBe(false);
+      expect(user.isFetching.value).toBe(false);
+    });
 
-    it('should return initialization state', () => {
-      const user = useUser()
+    it("should return initialization state", () => {
+      const user = useUser();
 
-      expect(user.isInitialized.value).toBe(false) // Initialement false
-    })
+      expect(user.isInitialized.value).toBe(false); // Initialement false
+    });
 
-    it('should return verification state', () => {
-      const user = useUser()
+    it("should return verification state", () => {
+      const user = useUser();
 
-      expect(user.isVerified.value).toBe(true)
-    })
+      expect(user.isVerified.value).toBe(true);
+    });
 
-    it('should return temp password', () => {
-      const user = useUser()
+    it("should return temp password", () => {
+      const user = useUser();
 
-      expect(user.getTempPassword.value).toBe('temp123')
-    })
-  })
+      expect(user.getTempPassword.value).toBe("temp123");
+    });
+  });
 
-  describe('Méthodes d\'authentification', () => {
-    it('should call login method', async () => {
-      const user = useUser()
-      const credentials = { email: 'test@example.com', password: 'password' }
+  describe("Méthodes d'authentification", () => {
+    it("should call login method", async () => {
+      const user = useUser();
+      const credentials = { email: "test@example.com", password: "password" };
 
-      await user.login(credentials)
+      await user.login(credentials);
 
-      expect(mockAuthStore.login).toHaveBeenCalledWith(credentials)
-    })
+      expect(mockAuthStore.login).toHaveBeenCalledWith(credentials);
+    });
 
-    it('should call sendEmailVerification method', async () => {
-      const user = useUser()
+    it("should call sendEmailVerification method", async () => {
+      const user = useUser();
 
-      await user.sendEmailVerification()
+      await user.sendEmailVerification();
 
-      expect(mockAuthStore.sendEmailVerification).toHaveBeenCalled()
-    })
+      expect(mockAuthStore.sendEmailVerification).toHaveBeenCalled();
+    });
 
-    it('should call forgotPassword method', async () => {
-      const user = useUser()
-      const email = 'test@example.com'
+    it("should call forgotPassword method", async () => {
+      const user = useUser();
+      const email = "test@example.com";
 
-      await user.forgotPassword(email)
+      await user.forgotPassword(email);
 
-      expect(mockAuthStore.forgotPassword).toHaveBeenCalledWith(email)
-    })
+      expect(mockAuthStore.forgotPassword).toHaveBeenCalledWith(email);
+    });
 
-    it('should call logout method', async () => {
-      const user = useUser()
+    it("should call logout method", async () => {
+      const user = useUser();
 
-      await user.logout()
+      await user.logout();
 
-      expect(mockAuthStore.logout).toHaveBeenCalled()
-    })
+      expect(mockAuthStore.logout).toHaveBeenCalled();
+    });
 
-    it('should call loginWithGoogle method', async () => {
-      const user = useUser()
+    it("should call loginWithGoogle method", async () => {
+      const user = useUser();
 
-      await user.loginWithGoogle()
+      await user.loginWithGoogle();
 
-      expect(mockAuthStore.loginWithGoogle).toHaveBeenCalled()
-    })
+      expect(mockAuthStore.loginWithGoogle).toHaveBeenCalled();
+    });
 
-    it('should call register method', async () => {
-      const user = useUser()
-      const userData = { email: 'test@example.com', password: 'password', name: 'Test User' }
+    it("should call register method", async () => {
+      const user = useUser();
+      const userData = {
+        email: "test@example.com",
+        password: "password",
+        name: "Test User",
+      };
 
-      await user.register(userData)
+      await user.register(userData);
 
-      expect(mockAuthStore.registerWithEmailPassword).toHaveBeenCalledWith(userData)
-    })
-  })
+      expect(mockAuthStore.registerWithEmailPassword).toHaveBeenCalledWith(
+        userData,
+      );
+    });
+  });
 
-  describe('Méthodes utilisateur', () => {
-    it('should call fetchUser method', async () => {
+  describe("Méthodes utilisateur", () => {
+    it("should call fetchUser method", async () => {
       // Reset mock to avoid automatic initialization
-      mockOnMounted.mockImplementation(() => {})
-      
-      const user = useUser()
+      mockOnMounted.mockImplementation(() => {});
 
-      await user.fetchUser()
+      const user = useUser();
 
-      expect(mockUserStore.fetchUser).toHaveBeenCalled()
-    })
+      await user.fetchUser();
 
-    it('should call updateIsCompleted method', async () => {
-      const user = useUser()
-      const isCompleted = true
+      expect(mockUserStore.fetchUser).toHaveBeenCalled();
+    });
 
-      await user.updateIsCompleted(isCompleted)
+    it("should call updateIsCompleted method", async () => {
+      const user = useUser();
+      const isCompleted = true;
 
-      expect(mockUserStore.updateIsCompleted).toHaveBeenCalledWith(isCompleted)
-    })
+      await user.updateIsCompleted(isCompleted);
 
-    it('should call getUserById method', async () => {
-      const user = useUser()
-      const userId = 'user123'
+      expect(mockUserStore.updateIsCompleted).toHaveBeenCalledWith(isCompleted);
+    });
 
-      await user.getUserById(userId)
+    it("should call getUserById method", async () => {
+      const user = useUser();
+      const userId = "user123";
 
-      expect(mockUserStore.getUserById).toHaveBeenCalledWith(userId)
-    })
+      await user.getUserById(userId);
 
-    it('should call removeUser method', async () => {
-      const user = useUser()
+      expect(mockUserStore.getUserById).toHaveBeenCalledWith(userId);
+    });
 
-      await user.removeUser()
+    it("should call removeUser method", async () => {
+      const user = useUser();
 
-      expect(mockUserStore.removeUserAccount).toHaveBeenCalled()
-    })
+      await user.removeUser();
 
-    it('should call updateProfile method', async () => {
-      const user = useUser()
-      const file = new File([''], 'test.jpg', { type: 'image/jpeg' })
+      expect(mockUserStore.removeUserAccount).toHaveBeenCalled();
+    });
 
-      await user.updateProfile(file)
+    it("should call updateProfile method", async () => {
+      const user = useUser();
+      const file = new File([""], "test.jpg", { type: "image/jpeg" });
 
-      expect(mockUserStore.uploadProfilePicture).toHaveBeenCalledWith(file)
-    })
+      await user.updateProfile(file);
 
-    it('should call updateAvatar method', async () => {
-      const user = useUser()
-      const file = new File([''], 'avatar.jpg', { type: 'image/jpeg' })
+      expect(mockUserStore.uploadProfilePicture).toHaveBeenCalledWith(file);
+    });
 
-      await user.updateAvatar(file)
+    it("should call updateAvatar method", async () => {
+      const user = useUser();
+      const file = new File([""], "avatar.jpg", { type: "image/jpeg" });
 
-      expect(mockUserStore.updateAvatar).toHaveBeenCalledWith(file)
-    })
+      await user.updateAvatar(file);
 
-    it('should call updatePassword method', async () => {
-      const user = useUser()
-      const newPassword = 'newpassword123'
+      expect(mockUserStore.updateAvatar).toHaveBeenCalledWith(file);
+    });
 
-      await user.updatePassword(newPassword)
+    it("should call updatePassword method", async () => {
+      const user = useUser();
+      const newPassword = "newpassword123";
 
-      expect(mockUserStore.updatePassword).toHaveBeenCalledWith(newPassword)
-    })
-  })
+      await user.updatePassword(newPassword);
 
-  describe('Méthodes utilitaires', () => {
-    it('should call refreshUser method', async () => {
+      expect(mockUserStore.updatePassword).toHaveBeenCalledWith(newPassword);
+    });
+  });
+
+  describe("Méthodes utilitaires", () => {
+    it("should call refreshUser method", async () => {
       // Reset mock to avoid automatic initialization
-      mockOnMounted.mockImplementation(() => {})
-      
-      const user = useUser()
+      mockOnMounted.mockImplementation(() => {});
 
-      await user.refreshUser()
+      const user = useUser();
 
-      expect(mockUserStore.clearUserCache).toHaveBeenCalled()
-      expect(mockUserStore.fetchUser).toHaveBeenCalled()
-    })
+      await user.refreshUser();
 
-    it('should handle refreshUser errors', async () => {
-      const error = new Error('Refresh failed')
-      mockUserStore.fetchUser.mockRejectedValue(error)
+      expect(mockUserStore.clearUserCache).toHaveBeenCalled();
+      expect(mockUserStore.fetchUser).toHaveBeenCalled();
+    });
 
-      const user = useUser()
+    it("should handle refreshUser errors", async () => {
+      const error = new Error("Refresh failed");
+      mockUserStore.fetchUser.mockRejectedValue(error);
 
-      await expect(user.refreshUser()).rejects.toThrow('Refresh failed')
-    })
+      const user = useUser();
 
-    it('should call initializeUser method', async () => {
-      const user = useUser()
+      await expect(user.refreshUser()).rejects.toThrow("Refresh failed");
+    });
 
-      await user.initializeUser()
+    it("should call initializeUser method", async () => {
+      const user = useUser();
 
-      expect(mockUserStore.fetchUser).toHaveBeenCalled()
-    })
+      await user.initializeUser();
 
-    it('should not initialize twice', async () => {
+      expect(mockUserStore.fetchUser).toHaveBeenCalled();
+    });
+
+    it("should not initialize twice", async () => {
       // Reset mock to avoid automatic initialization
-      mockOnMounted.mockImplementation(() => {})
-      
-      const user = useUser()
+      mockOnMounted.mockImplementation(() => {});
+
+      const user = useUser();
 
       // Première initialisation
-      await user.initializeUser()
-      expect(mockUserStore.fetchUser).toHaveBeenCalledTimes(1)
+      await user.initializeUser();
+      expect(mockUserStore.fetchUser).toHaveBeenCalledTimes(1);
 
       // Reset the mock to check the second call
-      mockUserStore.fetchUser.mockClear()
+      mockUserStore.fetchUser.mockClear();
 
       // Deuxième initialisation (ne devrait pas appeler fetchUser)
-      await user.initializeUser()
-      expect(mockUserStore.fetchUser).not.toHaveBeenCalled()
-    })
-  })
+      await user.initializeUser();
+      expect(mockUserStore.fetchUser).not.toHaveBeenCalled();
+    });
+  });
 
-  describe('Getters calculés', () => {
-    it('should return full name', () => {
-      const user = useUser()
+  describe("Getters calculés", () => {
+    it("should return full name", () => {
+      const user = useUser();
 
-      expect(user.fullName.value).toBe('John Doe')
-    })
+      expect(user.fullName.value).toBe("John Doe");
+    });
 
-    it('should return hasUserData', () => {
-      const user = useUser()
+    it("should return hasUserData", () => {
+      const user = useUser();
 
-      expect(user.hasUserData.value).toBe(true)
-    })
+      expect(user.hasUserData.value).toBe(true);
+    });
 
-    it('should return isUserCacheValid', () => {
-      const user = useUser()
+    it("should return isUserCacheValid", () => {
+      const user = useUser();
 
-      expect(user.isUserCacheValid.value).toBe(true)
-    })
+      expect(user.isUserCacheValid.value).toBe(true);
+    });
 
-    it('should return isUserDataFresh', () => {
-      const user = useUser()
+    it("should return isUserDataFresh", () => {
+      const user = useUser();
 
-      expect(user.isUserDataFresh.value).toBe(true)
-    })
+      expect(user.isUserDataFresh.value).toBe(true);
+    });
 
-    it('should return user ID', () => {
-      const user = useUser()
+    it("should return user ID", () => {
+      const user = useUser();
 
-      expect(user.getUserId).toBe('user123')
-    })
-  })
+      expect(user.getUserId).toBe("user123");
+    });
+  });
 
-  describe('Gestion des erreurs', () => {
-    it('should handle user store errors', () => {
-      mockUserStore.error = 'User data error'
+  describe("Gestion des erreurs", () => {
+    it("should handle user store errors", () => {
+      mockUserStore.error = "User data error";
 
-      const user = useUser()
+      const user = useUser();
 
-      expect(user.error.value).toBe('User data error')
-    })
+      expect(user.error.value).toBe("User data error");
+    });
 
-    it('should handle initialization errors', () => {
+    it("should handle initialization errors", () => {
       // Reset the user store error
-      mockUserStore.error = null
-      
-      const user = useUser()
+      mockUserStore.error = null;
+
+      const user = useUser();
 
       // L'erreur devrait être null par défaut
-      expect(user.error.value).toBe(null)
-    })
-  })
+      expect(user.error.value).toBe(null);
+    });
+  });
 
-  describe('Intégration avec les stores', () => {
-    it('should use auth store for auth methods', () => {
-      const user = useUser()
+  describe("Intégration avec les stores", () => {
+    it("should use auth store for auth methods", () => {
+      const user = useUser();
 
-      expect(user.login).toBe(mockAuthStore.login)
-      expect(user.logout).toBe(mockAuthStore.logout)
-      expect(user.sendEmailVerification).toBe(mockAuthStore.sendEmailVerification)
-    })
+      expect(user.login).toBe(mockAuthStore.login);
+      expect(user.logout).toBe(mockAuthStore.logout);
+      expect(user.sendEmailVerification).toBe(
+        mockAuthStore.sendEmailVerification,
+      );
+    });
 
-    it('should use user store for user methods', () => {
-      const user = useUser()
+    it("should use user store for user methods", () => {
+      const user = useUser();
 
-      expect(user.fetchUser).toBe(mockUserStore.fetchUser)
-      expect(user.updateIsCompleted).toBe(mockUserStore.updateIsCompleted)
-      expect(user.removeUser).toBe(mockUserStore.removeUserAccount)
-    })
-  })
+      expect(user.fetchUser).toBe(mockUserStore.fetchUser);
+      expect(user.updateIsCompleted).toBe(mockUserStore.updateIsCompleted);
+      expect(user.removeUser).toBe(mockUserStore.removeUserAccount);
+    });
+  });
 
-  describe('Computed properties', () => {
-    it('should have reactive computed properties', () => {
-      const user = useUser()
+  describe("Computed properties", () => {
+    it("should have reactive computed properties", () => {
+      const user = useUser();
 
-      expect(user.user.value).toBeDefined()
-      expect(user.isAuthenticated.value).toBe(true)
-      expect(user.userRole.value).toBe('volunteer')
-      expect(user.fullName.value).toBe('John Doe')
-    })
+      expect(user.user.value).toBeDefined();
+      expect(user.isAuthenticated.value).toBe(true);
+      expect(user.userRole.value).toBe("volunteer");
+      expect(user.fullName.value).toBe("John Doe");
+    });
 
-    it('should update computed properties when stores change', () => {
-      const user = useUser()
+    it("should update computed properties when stores change", () => {
+      const user = useUser();
 
       // Changer les valeurs des stores
-      mockUserStore.getUser = { id: 'newuser456', name: 'Jane Doe' }
-      mockUserStore.getRole = 'association'
+      mockUserStore.getUser = { id: "newuser456", name: "Jane Doe" };
+      mockUserStore.getRole = "association";
 
       // Les computed properties devraient être réactives
       // Note: Les computed properties sont évaluées au moment de la création
       // Pour tester la réactivité, il faudrait recréer les computed
-      expect(user.user.value.id).toBe('user123') // Valeur initiale
-      expect(user.userRole.value).toBe('volunteer') // Valeur initiale
-    })
-  })
-}) 
+      expect(user.user.value.id).toBe("user123"); // Valeur initiale
+      expect(user.userRole.value).toBe("volunteer"); // Valeur initiale
+    });
+  });
+});

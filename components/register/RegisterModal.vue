@@ -1,14 +1,12 @@
 <script setup lang="ts">
-
 const props = defineProps<{
-  isAssociation: boolean
+  isAssociation: boolean;
 }>()
 
 const registerModal = ref<HTMLDialogElement | null>(null)
 const isRegisterMode = ref(false)
 
-
-function handleRegister() {
+function handleRegister () {
   if (registerModal.value) {
     registerModal.value.showModal()
     isRegisterMode.value = true
@@ -20,7 +18,6 @@ function handleRegister() {
 defineExpose({
   openRegisterModal: handleRegister
 })
-
 </script>
 
 <template>

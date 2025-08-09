@@ -1,24 +1,23 @@
 <script setup lang="ts">
-
-
-import {ref, computed} from "vue";
+import { ref, computed } from 'vue'
+const { t } = useI18n()
 
 interface AddressFeature {
   properties: {
-    id: string
-    label: string
-    name: string
-    postcode: string
-    city: string
-    context: string
-  }
+    id: string;
+    label: string;
+    name: string;
+    postcode: string;
+    city: string;
+    context: string;
+  };
   geometry: {
-    coordinates: [number, number]
-  }
+    coordinates: [number, number];
+  };
 }
 
 const props = defineProps<{
-  initialAddress?: string
+  initialAddress?: string;
 }>()
 
 const emit = defineEmits(['addressSelected'])
@@ -44,22 +43,22 @@ const activeSuggestionId = computed(() => {
 })
 
 const selectAddress = (address: AddressFeature) => {
-  const fullLabel = address.properties.label;
+  const fullLabel = address.properties.label
 
-  const regex = /^(.*?)\s+((?:0[1-9]|[1-8]\d|9[0-8])\d{3})\s+(.*)$/;
-  const match = fullLabel.match(regex);
+  const regex = /^(.*?)\s+((?:0[1-9]|[1-8]\d|9[0-8])\d{3})\s+(.*)$/
+  const match = fullLabel.match(regex)
   if (match) {
-    const street   = match[1];
-    const zipCode  = match[2];
-    const city     = match[3];
-    query.value = street;
+    const street = match[1]
+    const zipCode = match[2]
+    const city = match[3]
+    query.value = street
 
     selectedAddress.value = address.properties.label
     emit('addressSelected', {
-      properties:{
+      properties: {
         address: street,
-        city: city,
-        postcode: zipCode,
+        city,
+        postcode: zipCode
       },
       geometry: {
         coordinates: address.geometry.coordinates
@@ -72,10 +71,10 @@ const selectAddress = (address: AddressFeature) => {
 }
 
 interface AddressResponse {
-  features: AddressFeature[]
+  features: AddressFeature[];
 }
 
-const searchAddresses = async () => {
+const searchAddresses = () => {
   if (!query.value || query.value.length < 3) {
     suggestions.value = []
     showSuggestions.value = false
@@ -88,14 +87,13 @@ const searchAddresses = async () => {
     try {
       isLoading.value = true
       const response = await fetch(
-          `https://api-adresse.data.gouv.fr/search?q=${encodeURIComponent(query.value)}&limit=5`
+        `https://api-adresse.data.gouv.fr/search?q=${encodeURIComponent(query.value)}&limit=5`
       )
       const data: AddressResponse = await response.json()
       suggestions.value = data.features
       showSuggestions.value = true
       activeIndex.value = -1
     } catch (error) {
-      console.error('Erreur lors de la recherche d\'adresses:', error)
       suggestions.value = []
     } finally {
       isLoading.value = false
@@ -112,12 +110,15 @@ const handleBlur = () => {
 }
 
 const handleKeydown = (event: KeyboardEvent) => {
-  if (!showSuggestions.value || suggestions.value.length === 0) return
+  if (!showSuggestions.value || suggestions.value.length === 0) { return }
 
   switch (event.key) {
     case 'ArrowDown':
       event.preventDefault()
-      activeIndex.value = Math.min(activeIndex.value + 1, suggestions.value.length - 1)
+      activeIndex.value = Math.min(
+        activeIndex.value + 1,
+        suggestions.value.length - 1
+      )
       break
     case 'ArrowUp':
       event.preventDefault()
@@ -140,57 +141,66 @@ const handleKeydown = (event: KeyboardEvent) => {
 <template>
   <div class="form-control w-full search-container">
     <label for="address-input" class="label">
-      <span class="label-text">Lieu (Adresse) <span class="text-error" aria-label="Champ obligatoire">*</span></span>
+      <span class="label-text">Lieu (Adresse)
+        <span class="text-error" aria-label="Champ obligatoire">*</span></span>
     </label>
     <div class="relative">
       <input
-          id="address-input"
-          v-model="query"
-          @input="searchAddresses"
-          @focus="showSuggestions = true"
-          @blur="handleBlur"
-          @keydown="handleKeydown"
-          placeholder="Rechercher une adresse..."
-          class="search-input focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-          type="text"
-          autocomplete="street-address"
-          aria-label="Rechercher une adresse"
-          :aria-expanded="showSuggestions && suggestions.length > 0"
-          :aria-activedescendant="activeSuggestionId"
-          role="combobox"
-          aria-haspopup="listbox"
-          aria-describedby="address-description"
-      />
-      
+        id="address-input"
+        v-model="query"
+        :placeholder="t('common.placeholder_address_search')"
+        class="search-input focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+        type="text"
+        :autocomplete="t('common.auto_complete_address')"
+        :aria-label="t('common.aria_label_search')"
+        :aria-expanded="showSuggestions && suggestions.length > 0"
+        :aria-activedescendant="activeSuggestionId"
+        role="combobox"
+        aria-haspopup="listbox"
+        :aria-describedby="t('common.address_description')"
+        @input="searchAddresses"
+        @focus="showSuggestions = true"
+        @blur="handleBlur"
+        @keydown="handleKeydown"
+      >
+
       <!-- Indicateur de chargement -->
-      <div v-if="isLoading" class="absolute right-3 top-1/2 transform -translate-y-1/2" aria-hidden="true">
-        <div class="loading loading-spinner loading-sm"></div>
+      <div
+        v-if="isLoading"
+        class="absolute right-3 top-1/2 transform -translate-y-1/2"
+        aria-hidden="true"
+      >
+        <div class="loading loading-spinner loading-sm" />
       </div>
     </div>
 
     <!-- Description pour l'accessibilité -->
-    <div id="address-description" class="text-sm text-base-content opacity-70 mt-1">
+    <div
+      id="address-description"
+      class="text-sm text-base-content opacity-70 mt-1"
+    >
+      {{ t("common.address_description") }}
       Tapez au moins 3 caractères pour voir les suggestions d'adresses
     </div>
 
     <!-- Suggestions d'adresses -->
-    <div 
-      v-if="showSuggestions && suggestions.length > 0" 
+    <div
+      v-if="showSuggestions && suggestions.length > 0"
       class="suggestions-container"
       role="listbox"
-      aria-label="Suggestions d'adresses"
+      :aria-label="t('common.aria_label_suggestions')"
     >
       <div
-          v-for="(suggestion, index) in suggestions"
-          :key="suggestion.properties.id"
-          @click="selectAddress(suggestion)"
-          @keyup.enter="selectAddress(suggestion)"
-          @keyup.space.prevent="selectAddress(suggestion)"
-          :class="['suggestion-item', { 'active': index === activeIndex }]"
-          :id="`suggestion-${suggestion.properties.id}`"
-          role="option"
-          :aria-selected="index === activeIndex"
-          tabindex="0"
+        v-for="(suggestion, index) in suggestions"
+        :id="`suggestion-${suggestion.properties.id}`"
+        :key="suggestion.properties.id"
+        :class="['suggestion-item', { active: index === activeIndex }]"
+        role="option"
+        :aria-selected="index === activeIndex"
+        tabindex="0"
+        @click="selectAddress(suggestion)"
+        @keyup.enter="selectAddress(suggestion)"
+        @keyup.space.prevent="selectAddress(suggestion)"
       >
         <div class="suggestion-text">
           {{ suggestion.properties.label }}
@@ -199,8 +209,12 @@ const handleKeydown = (event: KeyboardEvent) => {
     </div>
 
     <!-- Message d'état pour les lecteurs d'écran -->
-    <div v-if="showSuggestions && suggestions.length === 0 && query.length >= 3" class="sr-only" aria-live="polite">
-      Aucune adresse trouvée pour cette recherche
+    <div
+      v-if="showSuggestions && suggestions.length === 0 && query.length >= 3"
+      class="sr-only"
+      aria-live="polite"
+    >
+      {{ t("common.no_suggestions_found") }}
     </div>
   </div>
 </template>

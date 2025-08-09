@@ -2,37 +2,25 @@
   <div>
     <!-- Skip links pour l'accessibilité -->
     <nav class="skip-links" aria-label="Liens d'accessibilité">
-      <a 
-        href="#main-content" 
-        class="skip-link"
-        @click="handleSkipLink"
-      >
+      <a href="#main-content" class="skip-link" @click="handleSkipLink">
         Passer au contenu principal
       </a>
-      <a 
-        href="#main-navigation" 
-        class="skip-link"
-        @click="handleSkipLink"
-      >
+      <a href="#main-navigation" class="skip-link" @click="handleSkipLink">
         Passer à la navigation
       </a>
-      <a 
-        href="#footer" 
-        class="skip-link"
-        @click="handleSkipLink"
-      >
+      <a href="#footer" class="skip-link" @click="handleSkipLink">
         Passer au pied de page
       </a>
     </nav>
 
     <!-- Annonceur de statut pour les lecteurs d'écran -->
-    <div 
-      id="status-announcer" 
-      class="sr-only" 
-      aria-live="polite" 
-      aria-atomic="true"
+    <div
+      id="status-announcer"
       ref="statusAnnouncer"
-    ></div>
+      class="sr-only"
+      aria-live="polite"
+      aria-atomic="true"
+    />
 
     <!-- Slot pour le contenu -->
     <slot />
@@ -49,7 +37,7 @@ const handleSkipLink = (event: Event) => {
   event.preventDefault()
   const target = event.target as HTMLAnchorElement
   const targetId = target.getAttribute('href')?.substring(1)
-  
+
   if (targetId) {
     const targetElement = document.getElementById(targetId)
     if (targetElement) {
@@ -85,20 +73,20 @@ onMounted(() => {
       const focusableElements = document.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       )
-      
+
       const firstElement = focusableElements[0] as HTMLElement
-      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement
-      
+      const lastElement = focusableElements[
+        focusableElements.length - 1
+      ] as HTMLElement
+
       if (event.shiftKey) {
         if (document.activeElement === firstElement) {
           event.preventDefault()
           lastElement.focus()
         }
-      } else {
-        if (document.activeElement === lastElement) {
-          event.preventDefault()
-          firstElement.focus()
-        }
+      } else if (document.activeElement === lastElement) {
+        event.preventDefault()
+        firstElement.focus()
       }
     }
   })
@@ -117,7 +105,7 @@ onMounted(() => {
   position: absolute;
   top: -40px;
   left: 6px;
-  background: #3B82F6;
+  background: #3b82f6;
   color: white;
   padding: 8px;
   text-decoration: none;
@@ -143,18 +131,18 @@ onMounted(() => {
 
 /* Amélioration du focus visible */
 :focus-visible {
-  outline: 2px solid #3B82F6;
+  outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
 
 /* Mode sombre */
 @media (prefers-color-scheme: dark) {
   .skip-link {
-    background: #60A5FA;
+    background: #60a5fa;
   }
-  
+
   :focus-visible {
-    outline-color: #60A5FA;
+    outline-color: #60a5fa;
   }
 }
 
@@ -164,4 +152,4 @@ onMounted(() => {
     transition: none;
   }
 }
-</style> 
+</style>

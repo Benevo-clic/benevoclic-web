@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { mount } from "@vue/test-utils";
+import { nextTick } from "vue";
 
 // Mock component pour tester la liste des favoris
 const MockFavoritesList = {
@@ -91,585 +91,617 @@ const MockFavoritesList = {
   props: {
     favorites: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   data() {
     return {
-      searchQuery: '',
-      filterType: 'all'
-    }
+      searchQuery: "",
+      filterType: "all",
+    };
   },
   computed: {
     filteredFavorites() {
-      let results = this.favorites
+      let results = this.favorites;
 
       // Filter by type
-      if (this.filterType !== 'all') {
-        results = results.filter(item => item.type === this.filterType.slice(0, -1)) // Remove 's' from end
+      if (this.filterType !== "all") {
+        results = results.filter(
+          (item) => item.type === this.filterType.slice(0, -1),
+        ); // Remove 's' from end
       }
 
       // Filter by search query
       if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase()
-        results = results.filter(item => {
-          const title = (item.title || item.name || '').toLowerCase()
-          const description = (item.description || '').toLowerCase()
-          const organization = (item.organization || item.category || '').toLowerCase()
-          
-          return title.includes(query) || 
-                 description.includes(query) || 
-                 organization.includes(query)
-        })
+        const query = this.searchQuery.toLowerCase();
+        results = results.filter((item) => {
+          const title = (item.title || item.name || "").toLowerCase();
+          const description = (item.description || "").toLowerCase();
+          const organization = (
+            item.organization ||
+            item.category ||
+            ""
+          ).toLowerCase();
+
+          return (
+            title.includes(query) ||
+            description.includes(query) ||
+            organization.includes(query)
+          );
+        });
       }
 
-      return results
-    }
+      return results;
+    },
   },
   methods: {
     removeFavorite(favorite) {
-      this.$emit('remove', favorite)
-    }
+      this.$emit("remove", favorite);
+    },
   },
-  emits: ['remove']
-}
+  emits: ["remove"],
+};
 
-describe('FavoritesList', () => {
+describe("FavoritesList", () => {
   const mockFavorites = [
     {
-      id: '1',
-      type: 'mission',
-      title: 'Help at Food Bank',
-      description: 'Volunteer to help distribute food to families in need',
-      organization: 'Community Food Bank',
-      date: '2024-12-25',
-      location: 'Paris, France'
+      id: "1",
+      type: "mission",
+      title: "Help at Food Bank",
+      description: "Volunteer to help distribute food to families in need",
+      organization: "Community Food Bank",
+      date: "2024-12-25",
+      location: "Paris, France",
     },
     {
-      id: '2',
-      type: 'organization',
-      name: 'Red Cross',
-      description: 'Humanitarian organization providing emergency assistance',
-      category: 'Humanitarian Aid',
-      location: 'Geneva, Switzerland'
+      id: "2",
+      type: "organization",
+      name: "Red Cross",
+      description: "Humanitarian organization providing emergency assistance",
+      category: "Humanitarian Aid",
+      location: "Geneva, Switzerland",
     },
     {
-      id: '3',
-      type: 'mission',
-      title: 'Clean Beach Initiative',
-      description: 'Help clean up the local beach and protect marine life',
-      organization: 'Ocean Conservation',
-      date: '2024-12-26',
-      location: 'Marseille, France'
-    }
-  ]
+      id: "3",
+      type: "mission",
+      title: "Clean Beach Initiative",
+      description: "Help clean up the local beach and protect marine life",
+      organization: "Ocean Conservation",
+      date: "2024-12-26",
+      location: "Marseille, France",
+    },
+  ];
 
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  describe('Rendu de base', () => {
-    it('should render component', () => {
-      const wrapper = mount(MockFavoritesList)
+  describe("Rendu de base", () => {
+    it("should render component", () => {
+      const wrapper = mount(MockFavoritesList);
 
-      expect(wrapper.exists()).toBe(true)
-    })
+      expect(wrapper.exists()).toBe(true);
+    });
 
-    it('should display search input', () => {
-      const wrapper = mount(MockFavoritesList)
+    it("should display search input", () => {
+      const wrapper = mount(MockFavoritesList);
 
-      expect(wrapper.find('input[type="text"]').exists()).toBe(true)
-      expect(wrapper.find('input[type="text"]').attributes('placeholder')).toBe('Search favorites...')
-    })
+      expect(wrapper.find('input[type="text"]').exists()).toBe(true);
+      expect(wrapper.find('input[type="text"]').attributes("placeholder")).toBe(
+        "Search favorites...",
+      );
+    });
 
-    it('should display filter select', () => {
-      const wrapper = mount(MockFavoritesList)
+    it("should display filter select", () => {
+      const wrapper = mount(MockFavoritesList);
 
-      const select = wrapper.find('select')
-      expect(select.exists()).toBe(true)
-      expect(select.find('option[value="all"]').text()).toBe('All Favorites')
-      expect(select.find('option[value="missions"]').text()).toBe('Missions')
-      expect(select.find('option[value="organizations"]').text()).toBe('Organizations')
-    })
-  })
+      const select = wrapper.find("select");
+      expect(select.exists()).toBe(true);
+      expect(select.find('option[value="all"]').text()).toBe("All Favorites");
+      expect(select.find('option[value="missions"]').text()).toBe("Missions");
+      expect(select.find('option[value="organizations"]').text()).toBe(
+        "Organizations",
+      );
+    });
+  });
 
-  describe('Affichage des favoris', () => {
-    it('should display favorites when provided', () => {
+  describe("Affichage des favoris", () => {
+    it("should display favorites when provided", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
-      expect(wrapper.find('.card').exists()).toBe(true)
-      expect(wrapper.findAll('.card')).toHaveLength(3)
-    })
+      expect(wrapper.find(".card").exists()).toBe(true);
+      expect(wrapper.findAll(".card")).toHaveLength(3);
+    });
 
-    it('should display mission favorites correctly', () => {
+    it("should display mission favorites correctly", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: [mockFavorites[0]]
-        }
-      })
+          favorites: [mockFavorites[0]],
+        },
+      });
 
-      expect(wrapper.find('.badge').text()).toBe('Mission')
-      expect(wrapper.find('.card-title').text()).toBe('Help at Food Bank')
-      expect(wrapper.find('.text-base-content.opacity-70').text()).toBe('Community Food Bank')
-    })
+      expect(wrapper.find(".badge").text()).toBe("Mission");
+      expect(wrapper.find(".card-title").text()).toBe("Help at Food Bank");
+      expect(wrapper.find(".text-base-content.opacity-70").text()).toBe(
+        "Community Food Bank",
+      );
+    });
 
-    it('should display organization favorites correctly', () => {
+    it("should display organization favorites correctly", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: [mockFavorites[1]]
-        }
-      })
+          favorites: [mockFavorites[1]],
+        },
+      });
 
-      expect(wrapper.find('.badge').text()).toBe('Organization')
-      expect(wrapper.find('.card-title').text()).toBe('Red Cross')
-      expect(wrapper.find('.text-base-content.opacity-70').text()).toBe('Humanitarian Aid')
-    })
+      expect(wrapper.find(".badge").text()).toBe("Organization");
+      expect(wrapper.find(".card-title").text()).toBe("Red Cross");
+      expect(wrapper.find(".text-base-content.opacity-70").text()).toBe(
+        "Humanitarian Aid",
+      );
+    });
 
-    it('should display empty state when no favorites', () => {
+    it("should display empty state when no favorites", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: []
-        }
-      })
+          favorites: [],
+        },
+      });
 
-      expect(wrapper.find('.text-center.py-12').exists()).toBe(true)
-      expect(wrapper.find('h3').text()).toBe('No favorites found')
-    })
-  })
+      expect(wrapper.find(".text-center.py-12").exists()).toBe(true);
+      expect(wrapper.find("h3").text()).toBe("No favorites found");
+    });
+  });
 
-  describe('Filtrage des favoris', () => {
-    it('should filter by search query', async () => {
+  describe("Filtrage des favoris", () => {
+    it("should filter by search query", async () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
-      const searchInput = wrapper.find('input[type="text"]')
-      await searchInput.setValue('Food')
+      const searchInput = wrapper.find('input[type="text"]');
+      await searchInput.setValue("Food");
 
-      expect(wrapper.vm.filteredFavorites).toHaveLength(1)
-      expect(wrapper.vm.filteredFavorites[0].title).toBe('Help at Food Bank')
-    })
+      expect(wrapper.vm.filteredFavorites).toHaveLength(1);
+      expect(wrapper.vm.filteredFavorites[0].title).toBe("Help at Food Bank");
+    });
 
-    it('should filter by type missions', async () => {
+    it("should filter by type missions", async () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
-      const select = wrapper.find('select')
-      await select.setValue('missions')
+      const select = wrapper.find("select");
+      await select.setValue("missions");
 
-      expect(wrapper.vm.filteredFavorites).toHaveLength(2)
-      expect(wrapper.vm.filteredFavorites.every(fav => fav.type === 'mission')).toBe(true)
-    })
+      expect(wrapper.vm.filteredFavorites).toHaveLength(2);
+      expect(
+        wrapper.vm.filteredFavorites.every((fav) => fav.type === "mission"),
+      ).toBe(true);
+    });
 
-    it('should filter by type organizations', async () => {
+    it("should filter by type organizations", async () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
-      const select = wrapper.find('select')
-      await select.setValue('organizations')
+      const select = wrapper.find("select");
+      await select.setValue("organizations");
 
-      expect(wrapper.vm.filteredFavorites).toHaveLength(1)
-      expect(wrapper.vm.filteredFavorites[0].type).toBe('organization')
-    })
+      expect(wrapper.vm.filteredFavorites).toHaveLength(1);
+      expect(wrapper.vm.filteredFavorites[0].type).toBe("organization");
+    });
 
-    it('should show all favorites when filter is all', async () => {
+    it("should show all favorites when filter is all", async () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
-      const select = wrapper.find('select')
-      await select.setValue('all')
+      const select = wrapper.find("select");
+      await select.setValue("all");
 
-      expect(wrapper.vm.filteredFavorites).toHaveLength(3)
-    })
-  })
+      expect(wrapper.vm.filteredFavorites).toHaveLength(3);
+    });
+  });
 
-  describe('Recherche avancée', () => {
-    it('should search in title', async () => {
+  describe("Recherche avancée", () => {
+    it("should search in title", async () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
-      const searchInput = wrapper.find('input[type="text"]')
-      await searchInput.setValue('Beach')
+      const searchInput = wrapper.find('input[type="text"]');
+      await searchInput.setValue("Beach");
 
-      expect(wrapper.vm.filteredFavorites).toHaveLength(1)
-      expect(wrapper.vm.filteredFavorites[0].title).toBe('Clean Beach Initiative')
-    })
+      expect(wrapper.vm.filteredFavorites).toHaveLength(1);
+      expect(wrapper.vm.filteredFavorites[0].title).toBe(
+        "Clean Beach Initiative",
+      );
+    });
 
-    it('should search in description', async () => {
+    it("should search in description", async () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
-      const searchInput = wrapper.find('input[type="text"]')
-      await searchInput.setValue('marine')
+      const searchInput = wrapper.find('input[type="text"]');
+      await searchInput.setValue("marine");
 
-      expect(wrapper.vm.filteredFavorites).toHaveLength(1)
-      expect(wrapper.vm.filteredFavorites[0].title).toBe('Clean Beach Initiative')
-    })
+      expect(wrapper.vm.filteredFavorites).toHaveLength(1);
+      expect(wrapper.vm.filteredFavorites[0].title).toBe(
+        "Clean Beach Initiative",
+      );
+    });
 
-    it('should search in organization/category', async () => {
+    it("should search in organization/category", async () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
-      const searchInput = wrapper.find('input[type="text"]')
-      await searchInput.setValue('Conservation')
+      const searchInput = wrapper.find('input[type="text"]');
+      await searchInput.setValue("Conservation");
 
-      expect(wrapper.vm.filteredFavorites).toHaveLength(1)
-      expect(wrapper.vm.filteredFavorites[0].title).toBe('Clean Beach Initiative')
-    })
+      expect(wrapper.vm.filteredFavorites).toHaveLength(1);
+      expect(wrapper.vm.filteredFavorites[0].title).toBe(
+        "Clean Beach Initiative",
+      );
+    });
 
-    it('should be case insensitive', async () => {
+    it("should be case insensitive", async () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
-      const searchInput = wrapper.find('input[type="text"]')
-      await searchInput.setValue('FOOD')
+      const searchInput = wrapper.find('input[type="text"]');
+      await searchInput.setValue("FOOD");
 
-      expect(wrapper.vm.filteredFavorites).toHaveLength(1)
-      expect(wrapper.vm.filteredFavorites[0].title).toBe('Help at Food Bank')
-    })
-  })
+      expect(wrapper.vm.filteredFavorites).toHaveLength(1);
+      expect(wrapper.vm.filteredFavorites[0].title).toBe("Help at Food Bank");
+    });
+  });
 
-  describe('Suppression des favoris', () => {
-    it('should emit remove event when remove button is clicked', async () => {
+  describe("Suppression des favoris", () => {
+    it("should emit remove event when remove button is clicked", async () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: [mockFavorites[0]]
-        }
-      })
+          favorites: [mockFavorites[0]],
+        },
+      });
 
-      const removeButton = wrapper.find('.btn-ghost.btn-circle')
-      await removeButton.trigger('click')
+      const removeButton = wrapper.find(".btn-ghost.btn-circle");
+      await removeButton.trigger("click");
 
-      expect(wrapper.emitted('remove')).toBeTruthy()
-      expect(wrapper.emitted('remove')[0][0]).toEqual(mockFavorites[0])
-    })
+      expect(wrapper.emitted("remove")).toBeTruthy();
+      expect(wrapper.emitted("remove")[0][0]).toEqual(mockFavorites[0]);
+    });
 
-    it('should emit remove event with correct favorite data', async () => {
+    it("should emit remove event with correct favorite data", async () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
-      const removeButtons = wrapper.findAll('.btn-ghost.btn-circle')
-      await removeButtons[1].trigger('click')
+      const removeButtons = wrapper.findAll(".btn-ghost.btn-circle");
+      await removeButtons[1].trigger("click");
 
-      expect(wrapper.emitted('remove')[0][0]).toEqual(mockFavorites[1])
-    })
-  })
+      expect(wrapper.emitted("remove")[0][0]).toEqual(mockFavorites[1]);
+    });
+  });
 
-  describe('États conditionnels', () => {
-    it('should show empty state message when no search results', async () => {
+  describe("États conditionnels", () => {
+    it("should show empty state message when no search results", async () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
-      const searchInput = wrapper.find('input[type="text"]')
-      await searchInput.setValue('NonExistentItem')
+      const searchInput = wrapper.find('input[type="text"]');
+      await searchInput.setValue("NonExistentItem");
 
-      expect(wrapper.find('.text-center.py-12').exists()).toBe(true)
-      expect(wrapper.find('p').text()).toContain('No favorites match your search criteria')
-    })
+      expect(wrapper.find(".text-center.py-12").exists()).toBe(true);
+      expect(wrapper.find("p").text()).toContain(
+        "No favorites match your search criteria",
+      );
+    });
 
-    it('should show default empty state message when no favorites', () => {
+    it("should show default empty state message when no favorites", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: []
-        }
-      })
+          favorites: [],
+        },
+      });
 
-      expect(wrapper.find('p').text()).toContain('Add items to your favorites to see them here')
-    })
+      expect(wrapper.find("p").text()).toContain(
+        "Add items to your favorites to see them here",
+      );
+    });
 
-    it('should show mission-specific buttons for missions', () => {
+    it("should show mission-specific buttons for missions", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: [mockFavorites[0]]
-        }
-      })
+          favorites: [mockFavorites[0]],
+        },
+      });
 
-      const buttons = wrapper.findAll('.btn')
-      expect(buttons.some(btn => btn.text().includes('View Details'))).toBe(true)
-      expect(buttons.some(btn => btn.text().includes('Apply'))).toBe(true)
-    })
+      const buttons = wrapper.findAll(".btn");
+      expect(buttons.some((btn) => btn.text().includes("View Details"))).toBe(
+        true,
+      );
+      expect(buttons.some((btn) => btn.text().includes("Apply"))).toBe(true);
+    });
 
-    it('should show organization-specific buttons for organizations', () => {
+    it("should show organization-specific buttons for organizations", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: [mockFavorites[1]]
-        }
-      })
+          favorites: [mockFavorites[1]],
+        },
+      });
 
-      const buttons = wrapper.findAll('.btn')
-      expect(buttons.some(btn => btn.text().includes('View Profile'))).toBe(true)
-      expect(buttons.some(btn => btn.text().includes('Apply'))).toBe(false)
-    })
-  })
+      const buttons = wrapper.findAll(".btn");
+      expect(buttons.some((btn) => btn.text().includes("View Profile"))).toBe(
+        true,
+      );
+      expect(buttons.some((btn) => btn.text().includes("Apply"))).toBe(false);
+    });
+  });
 
-  describe('Accessibilité', () => {
-    it('should have proper input aria-label', () => {
-      const wrapper = mount(MockFavoritesList)
+  describe("Accessibilité", () => {
+    it("should have proper input aria-label", () => {
+      const wrapper = mount(MockFavoritesList);
 
-      const input = wrapper.find('input[type="text"]')
-      expect(input.attributes('aria-label')).toBe('Champ de saisie')
-    })
+      const input = wrapper.find('input[type="text"]');
+      expect(input.attributes("aria-label")).toBe("Champ de saisie");
+    });
 
-    it('should have proper select aria-label', () => {
-      const wrapper = mount(MockFavoritesList)
+    it("should have proper select aria-label", () => {
+      const wrapper = mount(MockFavoritesList);
 
-      const select = wrapper.find('select')
-      expect(select.attributes('aria-label')).toBe('Sélection')
-    })
+      const select = wrapper.find("select");
+      expect(select.attributes("aria-label")).toBe("Sélection");
+    });
 
-    it('should have proper heading structure', () => {
+    it("should have proper heading structure", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: [mockFavorites[0]]
-        }
-      })
+          favorites: [mockFavorites[0]],
+        },
+      });
 
-      const headings = wrapper.findAll('h2, h3')
-      expect(headings.length).toBeGreaterThan(0)
-    })
+      const headings = wrapper.findAll("h2, h3");
+      expect(headings.length).toBeGreaterThan(0);
+    });
 
-    it('should have proper button structure', () => {
+    it("should have proper button structure", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: [mockFavorites[0]]
-        }
-      })
+          favorites: [mockFavorites[0]],
+        },
+      });
 
-      const buttons = wrapper.findAll('button')
-      expect(buttons.length).toBeGreaterThan(0)
-    })
-  })
+      const buttons = wrapper.findAll("button");
+      expect(buttons.length).toBeGreaterThan(0);
+    });
+  });
 
-  describe('Styles et classes CSS', () => {
-    it('should have proper container styling', () => {
-      const wrapper = mount(MockFavoritesList)
+  describe("Styles et classes CSS", () => {
+    it("should have proper container styling", () => {
+      const wrapper = mount(MockFavoritesList);
 
-      expect(wrapper.find('.space-y-4').exists()).toBe(true)
-    })
+      expect(wrapper.find(".space-y-4").exists()).toBe(true);
+    });
 
-    it('should have proper card styling', () => {
+    it("should have proper card styling", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: [mockFavorites[0]]
-        }
-      })
+          favorites: [mockFavorites[0]],
+        },
+      });
 
-      const card = wrapper.find('.card')
-      expect(card.classes()).toContain('bg-base-200')
-      expect(card.classes()).toContain('shadow-sm')
-    })
+      const card = wrapper.find(".card");
+      expect(card.classes()).toContain("bg-base-200");
+      expect(card.classes()).toContain("shadow-sm");
+    });
 
-    it('should have proper badge styling', () => {
+    it("should have proper badge styling", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: [mockFavorites[0]]
-        }
-      })
+          favorites: [mockFavorites[0]],
+        },
+      });
 
-      const badge = wrapper.find('.badge')
-      expect(badge.classes()).toContain('badge-sm')
-    })
+      const badge = wrapper.find(".badge");
+      expect(badge.classes()).toContain("badge-sm");
+    });
 
-    it('should have proper button styling', () => {
+    it("should have proper button styling", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: [mockFavorites[0]]
-        }
-      })
+          favorites: [mockFavorites[0]],
+        },
+      });
 
-      const buttons = wrapper.findAll('.btn')
-      buttons.forEach(button => {
-        expect(button.classes()).toContain('btn')
-      })
-    })
-  })
+      const buttons = wrapper.findAll(".btn");
+      buttons.forEach((button) => {
+        expect(button.classes()).toContain("btn");
+      });
+    });
+  });
 
-  describe('Optimisation v-memo', () => {
-    it('should use v-memo for performance optimization', () => {
+  describe("Optimisation v-memo", () => {
+    it("should use v-memo for performance optimization", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
       // Vérifier que le template contient v-memo
-      expect(wrapper.vm.$options.template).toContain('v-memo')
-    })
+      expect(wrapper.vm.$options.template).toContain("v-memo");
+    });
 
-    it('should memoize based on favorite property', () => {
+    it("should memoize based on favorite property", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
       // Vérifier que v-memo utilise l'array [favorite]
-      expect(wrapper.vm.$options.template).toContain('v-memo="[favorite]"')
-    })
-  })
+      expect(wrapper.vm.$options.template).toContain('v-memo="[favorite]"');
+    });
+  });
 
-  describe('Interactions utilisateur', () => {
-    it('should update search query on input', async () => {
-      const wrapper = mount(MockFavoritesList)
+  describe("Interactions utilisateur", () => {
+    it("should update search query on input", async () => {
+      const wrapper = mount(MockFavoritesList);
 
-      const searchInput = wrapper.find('input[type="text"]')
-      await searchInput.setValue('test search')
+      const searchInput = wrapper.find('input[type="text"]');
+      await searchInput.setValue("test search");
 
-      expect(wrapper.vm.searchQuery).toBe('test search')
-    })
+      expect(wrapper.vm.searchQuery).toBe("test search");
+    });
 
-    it('should update filter type on select change', async () => {
-      const wrapper = mount(MockFavoritesList)
+    it("should update filter type on select change", async () => {
+      const wrapper = mount(MockFavoritesList);
 
-      const select = wrapper.find('select')
-      await select.setValue('missions')
+      const select = wrapper.find("select");
+      await select.setValue("missions");
 
-      expect(wrapper.vm.filterType).toBe('missions')
-    })
+      expect(wrapper.vm.filterType).toBe("missions");
+    });
 
-    it('should handle multiple filter changes', async () => {
+    it("should handle multiple filter changes", async () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
-      const select = wrapper.find('select')
-      await select.setValue('missions')
-      expect(wrapper.vm.filteredFavorites).toHaveLength(2)
+      const select = wrapper.find("select");
+      await select.setValue("missions");
+      expect(wrapper.vm.filteredFavorites).toHaveLength(2);
 
-      await select.setValue('organizations')
-      expect(wrapper.vm.filteredFavorites).toHaveLength(1)
+      await select.setValue("organizations");
+      expect(wrapper.vm.filteredFavorites).toHaveLength(1);
 
-      await select.setValue('all')
-      expect(wrapper.vm.filteredFavorites).toHaveLength(3)
-    })
-  })
+      await select.setValue("all");
+      expect(wrapper.vm.filteredFavorites).toHaveLength(3);
+    });
+  });
 
-  describe('Événements', () => {
-    it('should emit remove event with correct data', async () => {
+  describe("Événements", () => {
+    it("should emit remove event with correct data", async () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
-      const removeButton = wrapper.find('.btn-ghost.btn-circle')
-      await removeButton.trigger('click')
+      const removeButton = wrapper.find(".btn-ghost.btn-circle");
+      await removeButton.trigger("click");
 
-      expect(wrapper.emitted('remove')).toBeTruthy()
-      expect(wrapper.emitted('remove')[0][0]).toEqual(mockFavorites[0])
-    })
+      expect(wrapper.emitted("remove")).toBeTruthy();
+      expect(wrapper.emitted("remove")[0][0]).toEqual(mockFavorites[0]);
+    });
 
-    it('should emit remove event for different favorites', async () => {
+    it("should emit remove event for different favorites", async () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
-      const removeButtons = wrapper.findAll('.btn-ghost.btn-circle')
-      await removeButtons[2].trigger('click')
+      const removeButtons = wrapper.findAll(".btn-ghost.btn-circle");
+      await removeButtons[2].trigger("click");
 
-      expect(wrapper.emitted('remove')[0][0]).toEqual(mockFavorites[2])
-    })
-  })
+      expect(wrapper.emitted("remove")[0][0]).toEqual(mockFavorites[2]);
+    });
+  });
 
-  describe('Props et états', () => {
-    it('should handle empty favorites array', () => {
+  describe("Props et états", () => {
+    it("should handle empty favorites array", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: []
-        }
-      })
+          favorites: [],
+        },
+      });
 
-      expect(wrapper.vm.favorites).toHaveLength(0)
-      expect(wrapper.vm.filteredFavorites).toHaveLength(0)
-    })
+      expect(wrapper.vm.favorites).toHaveLength(0);
+      expect(wrapper.vm.filteredFavorites).toHaveLength(0);
+    });
 
-    it('should handle undefined favorites prop', () => {
-      const wrapper = mount(MockFavoritesList)
+    it("should handle undefined favorites prop", () => {
+      const wrapper = mount(MockFavoritesList);
 
-      expect(wrapper.vm.favorites).toEqual([])
-    })
+      expect(wrapper.vm.favorites).toEqual([]);
+    });
 
-    it('should handle large favorites array', () => {
+    it("should handle large favorites array", () => {
       const largeFavorites = Array.from({ length: 100 }, (_, i) => ({
         id: `favorite-${i}`,
-        type: i % 2 === 0 ? 'mission' : 'organization',
+        type: i % 2 === 0 ? "mission" : "organization",
         title: `Favorite ${i}`,
         description: `Description ${i}`,
         organization: `Organization ${i}`,
-        location: `Location ${i}`
-      }))
+        location: `Location ${i}`,
+      }));
 
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: largeFavorites
-        }
-      })
+          favorites: largeFavorites,
+        },
+      });
 
-      expect(wrapper.vm.favorites).toHaveLength(100)
-      expect(wrapper.vm.filteredFavorites).toHaveLength(100)
-    })
-  })
+      expect(wrapper.vm.favorites).toHaveLength(100);
+      expect(wrapper.vm.filteredFavorites).toHaveLength(100);
+    });
+  });
 
-  describe('Computed properties', () => {
-    it('should compute filteredFavorites correctly', () => {
+  describe("Computed properties", () => {
+    it("should compute filteredFavorites correctly", () => {
       const wrapper = mount(MockFavoritesList, {
         props: {
-          favorites: mockFavorites
-        }
-      })
+          favorites: mockFavorites,
+        },
+      });
 
       // Par défaut, tous les favoris
-      expect(wrapper.vm.filteredFavorites).toHaveLength(3)
+      expect(wrapper.vm.filteredFavorites).toHaveLength(3);
 
       // Avec recherche
-      wrapper.vm.searchQuery = 'Food'
-      expect(wrapper.vm.filteredFavorites).toHaveLength(1)
+      wrapper.vm.searchQuery = "Food";
+      expect(wrapper.vm.filteredFavorites).toHaveLength(1);
 
       // Avec filtre de type
-      wrapper.vm.searchQuery = ''
-      wrapper.vm.filterType = 'missions'
-      expect(wrapper.vm.filteredFavorites).toHaveLength(2)
+      wrapper.vm.searchQuery = "";
+      wrapper.vm.filterType = "missions";
+      expect(wrapper.vm.filteredFavorites).toHaveLength(2);
 
       // Avec recherche et filtre
-      wrapper.vm.searchQuery = 'Beach'
-      expect(wrapper.vm.filteredFavorites).toHaveLength(1)
-    })
-  })
-}) 
+      wrapper.vm.searchQuery = "Beach";
+      expect(wrapper.vm.filteredFavorites).toHaveLength(1);
+    });
+  });
+});

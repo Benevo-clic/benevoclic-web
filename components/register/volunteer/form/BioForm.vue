@@ -2,14 +2,16 @@
 import { defineProps, defineEmits } from 'vue'
 
 const props = defineProps<{
-  modelValue: string
-  error?: string
-}>()
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void
+  modelValue: string;
+  error?: string;
 }>()
 
-function onInput(e: Event) {
+// eslint-disable-next-line func-call-spacing
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void;
+}>()
+
+function onInput (e: Event) {
   const value = (e.target as HTMLTextAreaElement).value
   emit('update:modelValue', value)
 }
@@ -23,11 +25,12 @@ function onInput(e: Event) {
     </label>
     <textarea
       :value="props.modelValue"
-      @input="onInput"
       class="textarea textarea-bordered h-24"
       :class="{ 'textarea-error': props.error }"
       placeholder="Ex. Passionné·e de bénévolat et de musique"
-     aria-label="Zone de texte"></textarea>
+      aria-label="Zone de texte"
+      @input="onInput"
+    />
     <label v-if="props.error" class="label">
       <span class="label-text-alt text-error">{{ props.error }}</span>
     </label>

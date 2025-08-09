@@ -1,42 +1,39 @@
 <script setup lang="ts">
-import {SlidersHorizontal, X} from "lucide-vue-next";
+import { SlidersHorizontal, X } from 'lucide-vue-next'
+import { watch, ref } from 'vue'
 import type {
   AnnouncementState,
   AnnouncementStatus,
   FilterAnnouncement,
   PublicationInterval,
   SortOption
-} from "~/common/interface/filter.interface";
-import {watch, ref} from "vue";
-
-
+} from '~/common/interface/filter.interface'
 
 const props = defineProps<{
   filters: {
-    status?: AnnouncementStatus | undefined,
-    hoursEventFrom?: string | undefined,
-    hoursEventTo?: string | undefined,
-    dateEventFrom?: string | undefined,
-    dateEventTo?: string | undefined,
-    publicationInterval?: PublicationInterval | undefined,
-    datePublicationFrom?: string | undefined,
-    datePublicationTo?: string | undefined,
-    tags?: string[] | undefined,
-    latitude?: number | undefined,
-    longitude?: number | undefined,
-    radius?: number | undefined,
-    page?: number | undefined,
-    limit?: number | undefined,
-    sort?: SortOption | undefined,
-    stateEvent?: AnnouncementState | undefined,
-  },
-  selectedTags?: string[],
-  selectedTypes?: string[],
-  hasActiveFilters?: boolean
+    status?: AnnouncementStatus | undefined;
+    hoursEventFrom?: string | undefined;
+    hoursEventTo?: string | undefined;
+    dateEventFrom?: string | undefined;
+    dateEventTo?: string | undefined;
+    publicationInterval?: PublicationInterval | undefined;
+    datePublicationFrom?: string | undefined;
+    datePublicationTo?: string | undefined;
+    tags?: string[] | undefined;
+    latitude?: number | undefined;
+    longitude?: number | undefined;
+    radius?: number | undefined;
+    page?: number | undefined;
+    limit?: number | undefined;
+    sort?: SortOption | undefined;
+    stateEvent?: AnnouncementState | undefined;
+  };
+  selectedTags?: string[];
+  selectedTypes?: string[];
+  hasActiveFilters?: boolean;
 }>()
 
-
-let filters = ref<FilterAnnouncement & {stateEvent?: AnnouncementState}>({
+const filters = ref<FilterAnnouncement & { stateEvent?: AnnouncementState }>({
   status: props.filters.status,
   stateEvent: props.filters.stateEvent,
   hoursEventFrom: props.filters.hoursEventFrom,
@@ -53,7 +50,9 @@ let filters = ref<FilterAnnouncement & {stateEvent?: AnnouncementState}>({
   sort: props.filters.sort
 })
 
-watch(props, (newFilters: any) => {
+watch(
+  props,
+  (newFilters: any) => {
     filters.value = {
       status: newFilters.filters.status,
       hoursEventFrom: newFilters.filters.hoursEventFrom,
@@ -69,61 +68,81 @@ watch(props, (newFilters: any) => {
       limit: newFilters.filters.limit || 9,
       sort: newFilters.filters.sort
     }
-  }, { deep: true, immediate: true })
+  },
+  { deep: true, immediate: true }
+)
 
-
+// eslint-disable-next-line func-call-spacing
 const emit = defineEmits<{
-  (event: 'status'): void
-  (event: 'stateEvent'): void
-  (event: 'sort'): void
-  (event: 'dateEvent'): void
-  (event: 'hoursEvent'): void
-  (event: 'datePublication'): void
-  (event: 'publicationInterval'): void
-  (event: 'radius'): void
-  (event: 'resetFilters'): void
-  (event: 'selectedTags', tags: string): void
-  (event: 'selectedTypes', types: string): void
+  (event: 'status'): void;
+  (event: 'stateEvent'): void;
+  (event: 'sort'): void;
+  (event: 'dateEvent'): void;
+  (event: 'hoursEvent'): void;
+  (event: 'datePublication'): void;
+  (event: 'publicationInterval'): void;
+  (event: 'radius'): void;
+  (event: 'resetFilters'): void;
+  (event: 'selectedTags', tags: string): void;
+  (event: 'selectedTypes', types: string): void;
 }>()
 
-const selectedTags = ref<string[] | undefined >([])
-const selectedTypes = ref<string[]>([])
+const localSelectedTags = ref<string[] | undefined>([])
+const localSelectedTypes = ref<string[]>([])
 
 const getStatusLabel = (status: AnnouncementStatus) => {
   switch (status) {
-    case 'ACTIVE': return 'Actif'
-    case 'COMPLETED': return 'Terminé'
-    case 'INACTIVE': return 'Inactif'
-    default: return status
+    case 'ACTIVE':
+      return 'Actif'
+    case 'COMPLETED':
+      return 'Terminé'
+    case 'INACTIVE':
+      return 'Inactif'
+    default:
+      return status
   }
 }
 
 const getStateEventLabel = (state: AnnouncementState) => {
   switch (state) {
-    case 'NOW': return 'En cours'
-    case 'PAST': return 'Terminé'
-    case 'UPCOMING': return 'À venir'
-    default: return state
+    case 'NOW':
+      return 'En cours'
+    case 'PAST':
+      return 'Terminé'
+    case 'UPCOMING':
+      return 'À venir'
+    default:
+      return state
   }
 }
 
 const getSortLabel = (sort: SortOption) => {
   switch (sort) {
-    case 'dateEvent_asc': return 'Date événement (croissant)'
-    case 'dateEvent_desc': return 'Date événement (décroissant)'
-    case 'datePublication_desc': return 'Date publication (récent)'
-    default: return sort
+    case 'dateEvent_asc':
+      return 'Date événement (croissant)'
+    case 'dateEvent_desc':
+      return 'Date événement (décroissant)'
+    case 'datePublication_desc':
+      return 'Date publication (récent)'
+    default:
+      return sort
   }
 }
 
 const getIntervalLabel = (interval: PublicationInterval) => {
   switch (interval) {
-    case '1h': return 'Dernière heure'
-    case '5h': return '5 dernières heures'
-    case '1d': return 'Dernière journée'
-    case '1w': return 'Dernière semaine'
-    case '1M': return 'Dernier mois'
-    default: return interval
+    case '1h':
+      return 'Dernière heure'
+    case '5h':
+      return '5 dernières heures'
+    case '1d':
+      return 'Dernière journée'
+    case '1w':
+      return 'Dernière semaine'
+    case '1M':
+      return 'Dernier mois'
+    default:
+      return interval
   }
 }
 
@@ -143,12 +162,12 @@ const removeSort = () => {
 }
 
 const removeTag = (tag: string) => {
-  selectedTags.value = props.selectedTags?.filter(t => t !== tag)
+  localSelectedTags.value = props.selectedTags?.filter(t => t !== tag)
   emit('selectedTags', tag)
 }
 
 const removeType = (type: string) => {
-  selectedTypes.value = props.selectedTypes?.filter(t => t !== type) || []
+  localSelectedTypes.value = props.selectedTypes?.filter(t => t !== type) || []
   emit('selectedTypes', type)
 }
 
@@ -197,16 +216,20 @@ const resetFilters = () => {
     limit: 9,
     sort: undefined
   }
-  selectedTags.value = []
-  selectedTypes.value = []
+  localSelectedTags.value = []
+  localSelectedTypes.value = []
   emit('resetFilters')
 }
-
 </script>
 
 <template>
-  <div v-if="props.hasActiveFilters" class="mb-4 p-4 bg-base-200 rounded-lg border border-base-300">
-    <h4 class="text-sm font-medium mb-3 text-base-content/70 flex items-center gap-2">
+  <div
+    v-if="props.hasActiveFilters"
+    class="mb-4 p-4 bg-base-200 rounded-lg border border-base-300"
+  >
+    <h4
+      class="text-sm font-medium mb-3 text-base-content/70 flex items-center gap-2"
+    >
       <SlidersHorizontal class="w-4 h-4" />
       Filtres actifs:
     </h4>
@@ -214,7 +237,7 @@ const resetFilters = () => {
       <!-- Statut -->
       <div v-if="props.filters.status" class="badge badge-primary gap-1">
         {{ getStatusLabel(props.filters.status) }}
-        <button @click="removeStatus" class="btn btn-ghost btn-xs p-0 h-4 w-4">
+        <button class="btn btn-ghost btn-xs p-0 h-4 w-4" @click="removeStatus">
           <X class="w-3 h-3" />
         </button>
       </div>
@@ -222,7 +245,10 @@ const resetFilters = () => {
       <!-- État de l'événement -->
       <div v-if="props.filters.stateEvent" class="badge badge-secondary gap-1">
         {{ getStateEventLabel(props.filters.stateEvent) }}
-        <button @click="removeStateEvent" class="btn btn-ghost btn-xs p-0 h-4 w-4">
+        <button
+          class="btn btn-ghost btn-xs p-0 h-4 w-4"
+          @click="removeStateEvent"
+        >
           <X class="w-3 h-3" />
         </button>
       </div>
@@ -230,73 +256,124 @@ const resetFilters = () => {
       <!-- Tri -->
       <div v-if="props.filters.sort" class="badge badge-secondary gap-1">
         {{ getSortLabel(props.filters.sort) }}
-        <button @click="removeSort" class="btn btn-ghost btn-xs p-0 h-4 w-4">
+        <button class="btn btn-ghost btn-xs p-0 h-4 w-4" @click="removeSort">
           <X class="w-3 h-3" />
         </button>
       </div>
 
       <!-- Tags -->
-      <div v-for="tag in props.selectedTags" :key="tag" class="badge badge-accent gap-1">
+      <div
+        v-for="tag in props.selectedTags"
+        :key="tag"
+        class="badge badge-accent gap-1"
+      >
         {{ tag }}
-        <button @click="removeTag(tag)" class="btn btn-ghost btn-xs p-0 h-4 w-4">
+        <button
+          class="btn btn-ghost btn-xs p-0 h-4 w-4"
+          @click="removeTag(tag)"
+        >
           <X class="w-3 h-3" />
         </button>
       </div>
 
       <!-- Types d'association -->
-      <div v-for="type in selectedTypes" :key="type" class="badge badge-info gap-1">
+      <div
+        v-for="type in localSelectedTypes"
+        :key="type"
+        class="badge badge-info gap-1"
+      >
         {{ type }}
-        <button @click="removeType(type)" class="btn btn-ghost btn-xs p-0 h-4 w-4">
+        <button
+          class="btn btn-ghost btn-xs p-0 h-4 w-4"
+          @click="removeType(type)"
+        >
           <X class="w-3 h-3" />
         </button>
       </div>
 
       <!-- Date événement -->
-      <div v-if="props.filters.dateEventFrom || props.filters.dateEventTo" class="badge badge-warning gap-1">
+      <div
+        v-if="props.filters.dateEventFrom || props.filters.dateEventTo"
+        class="badge badge-warning gap-1"
+      >
         Date événement
-        <button @click="removeDateEvent" class="btn btn-ghost btn-xs p-0 h-4 w-4">
+        <button
+          class="btn btn-ghost btn-xs p-0 h-4 w-4"
+          @click="removeDateEvent"
+        >
           <X class="w-3 h-3" />
         </button>
       </div>
 
       <!-- Heure événement -->
-      <div v-if="props.filters.hoursEventFrom || props.filters.hoursEventTo" class="badge badge-warning gap-1">
+      <div
+        v-if="props.filters.hoursEventFrom || props.filters.hoursEventTo"
+        class="badge badge-warning gap-1"
+      >
         Heure événement
-        <button @click="removeHoursEvent" class="btn btn-ghost btn-xs p-0 h-4 w-4">
+        <button
+          class="btn btn-ghost btn-xs p-0 h-4 w-4"
+          @click="removeHoursEvent"
+        >
           <X class="w-3 h-3" />
         </button>
       </div>
 
       <!-- Date publication -->
-      <div v-if="props.filters.datePublicationFrom || props.filters.datePublicationTo" class="badge badge-error gap-1">
+      <div
+        v-if="
+          props.filters.datePublicationFrom || props.filters.datePublicationTo
+        "
+        class="badge badge-error gap-1"
+      >
         Date publication
-        <button @click="removeDatePublication" class="btn btn-ghost btn-xs p-0 h-4 w-4">
+        <button
+          class="btn btn-ghost btn-xs p-0 h-4 w-4"
+          @click="removeDatePublication"
+        >
           <X class="w-3 h-3" />
         </button>
       </div>
 
       <!-- Intervalle publication -->
-      <div v-if="props.filters.publicationInterval" class="badge badge-error gap-1">
+      <div
+        v-if="props.filters.publicationInterval"
+        class="badge badge-error gap-1"
+      >
         {{ getIntervalLabel(props.filters.publicationInterval) }}
-        <button @click="removePublicationInterval" class="btn btn-ghost btn-xs p-0 h-4 w-4">
+        <button
+          class="btn btn-ghost btn-xs p-0 h-4 w-4"
+          @click="removePublicationInterval"
+        >
           <X class="w-3 h-3" />
         </button>
       </div>
 
       <!-- Rayon -->
-      <div v-if="props.filters.radius && props.filters.radius !== 10" class="badge badge-success gap-1">
+      <div
+        v-if="props.filters.radius && props.filters.radius !== 10"
+        class="badge badge-success gap-1"
+      >
         {{ props.filters.radius }}km
-        <button @click="removeRadius" class="btn btn-ghost btn-xs p-0 h-4 w-4">
+        <button class="btn btn-ghost btn-xs p-0 h-4 w-4" @click="removeRadius">
           <X class="w-3 h-3" />
         </button>
       </div>
 
       <!-- Bouton tout effacer -->
-      <button @click="resetFilters" class="btn btn-outline btn-xs" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Tout effacer</button>
+      <button
+        class="btn btn-outline btn-xs"
+        type="button"
+        focus:outline-none
+        focus:ring-2
+        focus:ring-primary
+        focus:ring-offset-2
+        @click="resetFilters"
+      >
+        Tout effacer
+      </button>
     </div>
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

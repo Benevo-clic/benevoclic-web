@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { mount } from "@vue/test-utils";
+import { nextTick } from "vue";
 
 // Mock component pour tester NoConnectedBottomBar
 const MockNoConnectedBottomBar = {
@@ -87,438 +87,483 @@ const MockNoConnectedBottomBar = {
   data() {
     return {
       showRecentSearches: false,
-      searchQuery: '',
-      recentSearches: ['recherche1', 'recherche2', 'recherche3'],
+      searchQuery: "",
+      recentSearches: ["recherche1", "recherche2", "recherche3"],
       t: (key) => {
         const translations = {
-          'header.volunteer.home': 'Accueil',
-          'header.volunteer.favorites': 'Favoris',
-          'header.volunteer.recent-search': 'Recherches récentes',
-          'header.volunteer.help': 'Aide',
-          'search.history.clear_all': 'Effacer tout',
-          'search.history.no_history_description': 'Aucune recherche récente'
-        }
-        return translations[key] || key
-      }
-    }
+          "header.volunteer.home": "Accueil",
+          "header.volunteer.favorites": "Favoris",
+          "header.volunteer.recent-search": "Recherches récentes",
+          "header.volunteer.help": "Aide",
+          "search.history.clear_all": "Effacer tout",
+          "search.history.no_history_description": "Aucune recherche récente",
+        };
+        return translations[key] || key;
+      },
+    };
   },
   methods: {
     handleSearch() {
       if (this.searchQuery.trim()) {
-        this.addRecentSearch(this.searchQuery.trim())
+        this.addRecentSearch(this.searchQuery.trim());
         this.patchCurrentFilter({
           nameEvent: this.searchQuery.trim(),
           description: this.searchQuery.trim(),
           associationName: this.searchQuery.trim(),
-        })
+        });
       } else {
         this.patchCurrentFilter({
-          nameEvent: '',
-          description: '',
-          associationName: '',
-        })
+          nameEvent: "",
+          description: "",
+          associationName: "",
+        });
       }
     },
     selectRecentSearch(search) {
-      this.searchQuery = search
-      this.showRecentSearches = false
-      this.addRecentSearch(search)
+      this.searchQuery = search;
+      this.showRecentSearches = false;
+      this.addRecentSearch(search);
     },
     toggleRecentSearches() {
-      this.showRecentSearches = !this.showRecentSearches
+      this.showRecentSearches = !this.showRecentSearches;
     },
     closeRecentSearches(event) {
-      const target = event.target
-      if (!target.closest('.recent-searches-container') && !target.closest('.recent-searches-button')) {
-        this.showRecentSearches = false
+      const target = event.target;
+      if (
+        !target.closest(".recent-searches-container") &&
+        !target.closest(".recent-searches-button")
+      ) {
+        this.showRecentSearches = false;
       }
     },
     addRecentSearch(search) {
       if (!this.recentSearches.includes(search)) {
-        this.recentSearches.unshift(search)
+        this.recentSearches.unshift(search);
         if (this.recentSearches.length > 10) {
-          this.recentSearches = this.recentSearches.slice(0, 10)
+          this.recentSearches = this.recentSearches.slice(0, 10);
         }
       }
     },
     clearRecentSearches() {
-      this.recentSearches = []
+      this.recentSearches = [];
     },
     patchCurrentFilter(filter) {
       // Simuler la mise à jour du filtre
-      return filter
+      return filter;
     },
     handleFavorites() {
       // Fonction vide pour les utilisateurs non connectés
     },
     handleHome() {
-      return '/'
-    }
+      return "/";
+    },
   },
   mounted() {
     // Simuler l'ajout d'un event listener
-    this.documentEventListener = this.closeRecentSearches
+    this.documentEventListener = this.closeRecentSearches;
   },
   unmounted() {
     // Simuler la suppression de l'event listener
-    this.documentEventListener = null
-  }
-}
+    this.documentEventListener = null;
+  },
+};
 
-describe('NoConnectedBottomBar', () => {
+describe("NoConnectedBottomBar", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  describe('Rendu de base', () => {
-    it('should render component', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+  describe("Rendu de base", () => {
+    it("should render component", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      expect(wrapper.exists()).toBe(true)
-    })
+      expect(wrapper.exists()).toBe(true);
+    });
 
-    it('should display search bar', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+    it("should display search bar", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      const searchInput = wrapper.find('input[aria-label="Rechercher des missions ou associations"]')
-      expect(searchInput.exists()).toBe(true)
-      expect(searchInput.attributes('placeholder')).toBe('Search for missions or associations')
-    })
+      const searchInput = wrapper.find(
+        'input[aria-label="Rechercher des missions ou associations"]',
+      );
+      expect(searchInput.exists()).toBe(true);
+      expect(searchInput.attributes("placeholder")).toBe(
+        "Search for missions or associations",
+      );
+    });
 
-    it('should display search button', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+    it("should display search button", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      const searchButton = wrapper.find('button.btn-primary')
-      expect(searchButton.exists()).toBe(true)
-      expect(searchButton.classes()).toContain('btn-primary')
-    })
-  })
+      const searchButton = wrapper.find("button.btn-primary");
+      expect(searchButton.exists()).toBe(true);
+      expect(searchButton.classes()).toContain("btn-primary");
+    });
+  });
 
-  describe('Barre de recherche', () => {
-    it('should handle search input', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+  describe("Barre de recherche", () => {
+    it("should handle search input", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      const searchInput = wrapper.find('input[aria-label="Rechercher des missions ou associations"]')
-      await searchInput.setValue('test search')
-      
-      expect(wrapper.vm.searchQuery).toBe('test search')
-    })
+      const searchInput = wrapper.find(
+        'input[aria-label="Rechercher des missions ou associations"]',
+      );
+      await searchInput.setValue("test search");
 
-    it('should handle search on enter key', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      expect(wrapper.vm.searchQuery).toBe("test search");
+    });
 
-      const searchInput = wrapper.find('input[aria-label="Rechercher des missions ou associations"]')
-      await searchInput.setValue('test search')
-      await searchInput.trigger('keyup.enter')
+    it("should handle search on enter key", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      expect(wrapper.vm.recentSearches).toContain('test search')
-    })
+      const searchInput = wrapper.find(
+        'input[aria-label="Rechercher des missions ou associations"]',
+      );
+      await searchInput.setValue("test search");
+      await searchInput.trigger("keyup.enter");
 
-    it('should handle search button click', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      expect(wrapper.vm.recentSearches).toContain("test search");
+    });
 
-      const searchInput = wrapper.find('input[aria-label="Rechercher des missions ou associations"]')
-      await searchInput.setValue('test search')
-      
-      const searchButton = wrapper.find('button.btn-primary')
-      await searchButton.trigger('click')
+    it("should handle search button click", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      expect(wrapper.vm.recentSearches).toContain('test search')
-    })
+      const searchInput = wrapper.find(
+        'input[aria-label="Rechercher des missions ou associations"]',
+      );
+      await searchInput.setValue("test search");
 
-    it('should handle empty search', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      const searchButton = wrapper.find("button.btn-primary");
+      await searchButton.trigger("click");
 
-      const searchButton = wrapper.find('button.btn-primary')
-      await searchButton.trigger('click')
+      expect(wrapper.vm.recentSearches).toContain("test search");
+    });
 
-      expect(wrapper.vm.searchQuery).toBe('')
-    })
-  })
+    it("should handle empty search", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-  describe('Boutons d\'action', () => {
-    it('should display home button', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      const searchButton = wrapper.find("button.btn-primary");
+      await searchButton.trigger("click");
 
-      const homeButton = wrapper.findAll('button').find(btn => btn.text().includes('🏠'))
-      expect(homeButton.exists()).toBe(true)
-      expect(homeButton.text()).toContain('Accueil')
-    })
+      expect(wrapper.vm.searchQuery).toBe("");
+    });
+  });
 
-    it('should display favorites button', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+  describe("Boutons d'action", () => {
+    it("should display home button", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      const favoritesButton = wrapper.findAll('button').find(btn => btn.text().includes('❤️'))
-      expect(favoritesButton.exists()).toBe(true)
-      expect(favoritesButton.text()).toContain('Favoris')
-    })
+      const homeButton = wrapper
+        .findAll("button")
+        .find((btn) => btn.text().includes("🏠"));
+      expect(homeButton.exists()).toBe(true);
+      expect(homeButton.text()).toContain("Accueil");
+    });
 
-    it('should display help button', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+    it("should display favorites button", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      const helpButton = wrapper.findAll('button').find(btn => btn.text().includes('❓'))
-      expect(helpButton.exists()).toBe(true)
-      expect(helpButton.text()).toContain('Aide')
-    })
+      const favoritesButton = wrapper
+        .findAll("button")
+        .find((btn) => btn.text().includes("❤️"));
+      expect(favoritesButton.exists()).toBe(true);
+      expect(favoritesButton.text()).toContain("Favoris");
+    });
 
-    it('should handle home navigation', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+    it("should display help button", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      const result = await wrapper.vm.handleHome()
-      expect(result).toBe('/')
-    })
+      const helpButton = wrapper
+        .findAll("button")
+        .find((btn) => btn.text().includes("❓"));
+      expect(helpButton.exists()).toBe(true);
+      expect(helpButton.text()).toContain("Aide");
+    });
 
-    it('should handle favorites (empty function for non-connected)', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+    it("should handle home navigation", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      const result = wrapper.vm.handleFavorites()
-      expect(result).toBeUndefined()
-    })
-  })
+      const result = await wrapper.vm.handleHome();
+      expect(result).toBe("/");
+    });
 
-  describe('Recherches récentes', () => {
-    it('should display recent searches button', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+    it("should handle favorites (empty function for non-connected)", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      const recentSearchesButton = wrapper.findAll('button').find(btn => btn.text().includes('⏰'))
-      expect(recentSearchesButton.exists()).toBe(true)
-      expect(recentSearchesButton.text()).toContain('Recherches récentes')
-    })
+      const result = wrapper.vm.handleFavorites();
+      expect(result).toBeUndefined();
+    });
+  });
 
-    it('should toggle recent searches dropdown', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+  describe("Recherches récentes", () => {
+    it("should display recent searches button", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      const recentSearchesButton = wrapper.findAll('button').find(btn => btn.text().includes('⏰'))
-      await recentSearchesButton.trigger('click')
+      const recentSearchesButton = wrapper
+        .findAll("button")
+        .find((btn) => btn.text().includes("⏰"));
+      expect(recentSearchesButton.exists()).toBe(true);
+      expect(recentSearchesButton.text()).toContain("Recherches récentes");
+    });
 
-      expect(wrapper.vm.showRecentSearches).toBe(true)
-    })
+    it("should toggle recent searches dropdown", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-    it('should display recent searches items', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
-      wrapper.vm.showRecentSearches = true
+      const recentSearchesButton = wrapper
+        .findAll("button")
+        .find((btn) => btn.text().includes("⏰"));
+      await recentSearchesButton.trigger("click");
 
-      const searchItems = wrapper.findAll('button').filter(btn => btn.text().includes('🔍'))
-      expect(searchItems.length).toBeGreaterThan(0)
-    })
+      expect(wrapper.vm.showRecentSearches).toBe(true);
+    });
 
-    it('should select recent search', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
-      wrapper.vm.showRecentSearches = true
+    it("should display recent searches items", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
+      wrapper.vm.showRecentSearches = true;
+
+      const searchItems = wrapper
+        .findAll("button")
+        .filter((btn) => btn.text().includes("🔍"));
+      expect(searchItems.length).toBeGreaterThan(0);
+    });
+
+    it("should select recent search", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
+      wrapper.vm.showRecentSearches = true;
 
       // Simuler directement la sélection
-      wrapper.vm.selectRecentSearch('recherche1')
-      expect(wrapper.vm.searchQuery).toBe('recherche1')
-    })
+      wrapper.vm.selectRecentSearch("recherche1");
+      expect(wrapper.vm.searchQuery).toBe("recherche1");
+    });
 
-    it('should clear recent searches', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
-      wrapper.vm.showRecentSearches = true
+    it("should clear recent searches", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
+      wrapper.vm.showRecentSearches = true;
 
-      const clearButton = wrapper.findAll('button').find(btn => btn.text().includes('Effacer tout'))
+      const clearButton = wrapper
+        .findAll("button")
+        .find((btn) => btn.text().includes("Effacer tout"));
       if (clearButton) {
-        await clearButton.trigger('click')
-        expect(wrapper.vm.recentSearches.length).toBe(0)
+        await clearButton.trigger("click");
+        expect(wrapper.vm.recentSearches.length).toBe(0);
       }
-    })
+    });
 
-    it('should display no history message when empty', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+    it("should display no history message when empty", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      wrapper.vm.recentSearches = []
-      wrapper.vm.showRecentSearches = true
-      await nextTick()
+      wrapper.vm.recentSearches = [];
+      wrapper.vm.showRecentSearches = true;
+      await nextTick();
 
-      const noHistoryMessage = wrapper.find('.py-4.text-center')
-      expect(noHistoryMessage.exists()).toBe(true)
-      expect(noHistoryMessage.text()).toContain('Aucune recherche récente')
-    })
-  })
+      const noHistoryMessage = wrapper.find(".py-4.text-center");
+      expect(noHistoryMessage.exists()).toBe(true);
+      expect(noHistoryMessage.text()).toContain("Aucune recherche récente");
+    });
+  });
 
-  describe('Navigation', () => {
-    it('should handle home navigation', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+  describe("Navigation", () => {
+    it("should handle home navigation", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      const result = await wrapper.vm.handleHome()
-      expect(result).toBe('/')
-    })
+      const result = await wrapper.vm.handleHome();
+      expect(result).toBe("/");
+    });
 
-    it('should handle favorites (no action for non-connected)', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+    it("should handle favorites (no action for non-connected)", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      const result = wrapper.vm.handleFavorites()
-      expect(result).toBeUndefined()
-    })
-  })
+      const result = wrapper.vm.handleFavorites();
+      expect(result).toBeUndefined();
+    });
+  });
 
-  describe('Gestion des événements', () => {
-    it('should close recent searches on outside click', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+  describe("Gestion des événements", () => {
+    it("should close recent searches on outside click", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      wrapper.vm.showRecentSearches = true
-      
+      wrapper.vm.showRecentSearches = true;
+
       const mockEvent = {
-        target: document.createElement('div')
-      }
-      
-      wrapper.vm.closeRecentSearches(mockEvent)
-      expect(wrapper.vm.showRecentSearches).toBe(false)
-    })
+        target: document.createElement("div"),
+      };
 
-    it('should not close recent searches on inside click', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      wrapper.vm.closeRecentSearches(mockEvent);
+      expect(wrapper.vm.showRecentSearches).toBe(false);
+    });
 
-      wrapper.vm.showRecentSearches = true
-      
+    it("should not close recent searches on inside click", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
+
+      wrapper.vm.showRecentSearches = true;
+
       const mockEvent = {
         target: {
           closest: (selector) => {
-            if (selector === '.recent-searches-container') return true
-            return null
-          }
-        }
-      }
-      
-      wrapper.vm.closeRecentSearches(mockEvent)
-      expect(wrapper.vm.showRecentSearches).toBe(true)
-    })
-  })
+            if (selector === ".recent-searches-container") return true;
+            return null;
+          },
+        },
+      };
 
-  describe('Styles et classes CSS', () => {
-    it('should have proper container styling', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      wrapper.vm.closeRecentSearches(mockEvent);
+      expect(wrapper.vm.showRecentSearches).toBe(true);
+    });
+  });
 
-      const container = wrapper.find('.flex.flex-col.md\\:flex-row')
-      expect(container.exists()).toBe(true)
-    })
+  describe("Styles et classes CSS", () => {
+    it("should have proper container styling", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-    it('should have proper search bar styling', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      const container = wrapper.find(".flex.flex-col.md\\:flex-row");
+      expect(container.exists()).toBe(true);
+    });
 
-      const searchInput = wrapper.find('input[aria-label="Rechercher des missions ou associations"]')
-      expect(searchInput.classes()).toContain('input')
-      expect(searchInput.classes()).toContain('input-bordered')
-      expect(searchInput.classes()).toContain('w-full')
-      expect(searchInput.classes()).toContain('h-12')
-    })
+    it("should have proper search bar styling", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-    it('should have proper button styling', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      const searchInput = wrapper.find(
+        'input[aria-label="Rechercher des missions ou associations"]',
+      );
+      expect(searchInput.classes()).toContain("input");
+      expect(searchInput.classes()).toContain("input-bordered");
+      expect(searchInput.classes()).toContain("w-full");
+      expect(searchInput.classes()).toContain("h-12");
+    });
 
-      const buttons = wrapper.findAll('.btn')
-      buttons.forEach(button => {
-        expect(button.classes()).toContain('btn')
-      })
-    })
-  })
+    it("should have proper button styling", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-  describe('Accessibilité', () => {
-    it('should have proper search input aria-label', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      const buttons = wrapper.findAll(".btn");
+      buttons.forEach((button) => {
+        expect(button.classes()).toContain("btn");
+      });
+    });
+  });
 
-      const searchInput = wrapper.find('input[aria-label="Rechercher des missions ou associations"]')
-      expect(searchInput.attributes('aria-label')).toBe('Rechercher des missions ou associations')
-    })
+  describe("Accessibilité", () => {
+    it("should have proper search input aria-label", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-    it('should have proper search input id', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      const searchInput = wrapper.find(
+        'input[aria-label="Rechercher des missions ou associations"]',
+      );
+      expect(searchInput.attributes("aria-label")).toBe(
+        "Rechercher des missions ou associations",
+      );
+    });
 
-      const searchInput = wrapper.find('input[id="search-input"]')
-      expect(searchInput.exists()).toBe(true)
-    })
+    it("should have proper search input id", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-    it('should have proper button structure', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      const searchInput = wrapper.find('input[id="search-input"]');
+      expect(searchInput.exists()).toBe(true);
+    });
 
-      const buttons = wrapper.findAll('button')
-      buttons.forEach(button => {
-        expect(button.exists()).toBe(true)
-      })
-    })
-  })
+    it("should have proper button structure", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-  describe('Responsive design', () => {
-    it('should have responsive container layout', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      const buttons = wrapper.findAll("button");
+      buttons.forEach((button) => {
+        expect(button.exists()).toBe(true);
+      });
+    });
+  });
 
-      const container = wrapper.find('.flex.flex-col.md\\:flex-row')
-      expect(container.classes()).toContain('md:flex-row')
-    })
+  describe("Responsive design", () => {
+    it("should have responsive container layout", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-    it('should have responsive search bar width', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      const container = wrapper.find(".flex.flex-col.md\\:flex-row");
+      expect(container.classes()).toContain("md:flex-row");
+    });
 
-      const searchContainer = wrapper.find('.w-full.md\\:max-w-2xl.lg\\:max-w-3xl')
-      expect(searchContainer.classes()).toContain('md:max-w-2xl')
-      expect(searchContainer.classes()).toContain('lg:max-w-3xl')
-    })
+    it("should have responsive search bar width", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-    it('should have responsive button layout', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      const searchContainer = wrapper.find(
+        ".w-full.md\\:max-w-2xl.lg\\:max-w-3xl",
+      );
+      expect(searchContainer.classes()).toContain("md:max-w-2xl");
+      expect(searchContainer.classes()).toContain("lg:max-w-3xl");
+    });
 
-      const buttonContainer = wrapper.find('.w-full.md\\:w-auto.flex.justify-center.md\\:justify-end')
-      expect(buttonContainer.classes()).toContain('md:justify-end')
-    })
-  })
+    it("should have responsive button layout", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-  describe('Gestion des états', () => {
-    it('should handle search query state', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      const buttonContainer = wrapper.find(
+        ".w-full.md\\:w-auto.flex.justify-center.md\\:justify-end",
+      );
+      expect(buttonContainer.classes()).toContain("md:justify-end");
+    });
+  });
 
-      const searchInput = wrapper.find('input[aria-label="Rechercher des missions ou associations"]')
-      await searchInput.setValue('test query')
-      
-      expect(wrapper.vm.searchQuery).toBe('test query')
-    })
+  describe("Gestion des états", () => {
+    it("should handle search query state", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-    it('should handle recent searches state', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      const searchInput = wrapper.find(
+        'input[aria-label="Rechercher des missions ou associations"]',
+      );
+      await searchInput.setValue("test query");
 
-      wrapper.vm.showRecentSearches = true
-      await nextTick()
+      expect(wrapper.vm.searchQuery).toBe("test query");
+    });
 
-      expect(wrapper.vm.showRecentSearches).toBe(true)
-    })
+    it("should handle recent searches state", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-    it('should maintain recent searches list', () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      wrapper.vm.showRecentSearches = true;
+      await nextTick();
 
-      expect(wrapper.vm.recentSearches.length).toBe(3)
-      expect(wrapper.vm.recentSearches).toContain('recherche1')
-    })
-  })
+      expect(wrapper.vm.showRecentSearches).toBe(true);
+    });
 
-  describe('Fonctionnalités de recherche', () => {
-    it('should add search to recent searches', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+    it("should maintain recent searches list", () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-      const searchInput = wrapper.find('input[aria-label="Rechercher des missions ou associations"]')
-      await searchInput.setValue('new search')
-      await searchInput.trigger('keyup.enter')
+      expect(wrapper.vm.recentSearches.length).toBe(3);
+      expect(wrapper.vm.recentSearches).toContain("recherche1");
+    });
+  });
 
-      expect(wrapper.vm.recentSearches).toContain('new search')
-    })
+  describe("Fonctionnalités de recherche", () => {
+    it("should add search to recent searches", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-    it('should not add empty search to recent searches', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      const searchInput = wrapper.find(
+        'input[aria-label="Rechercher des missions ou associations"]',
+      );
+      await searchInput.setValue("new search");
+      await searchInput.trigger("keyup.enter");
 
-      const initialLength = wrapper.vm.recentSearches.length
-      const searchInput = wrapper.find('input[aria-label="Rechercher des missions ou associations"]')
-      await searchInput.setValue('')
-      await searchInput.trigger('keyup.enter')
+      expect(wrapper.vm.recentSearches).toContain("new search");
+    });
 
-      expect(wrapper.vm.recentSearches.length).toBe(initialLength)
-    })
+    it("should not add empty search to recent searches", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
 
-    it('should patch current filter with search query', async () => {
-      const wrapper = mount(MockNoConnectedBottomBar)
+      const initialLength = wrapper.vm.recentSearches.length;
+      const searchInput = wrapper.find(
+        'input[aria-label="Rechercher des missions ou associations"]',
+      );
+      await searchInput.setValue("");
+      await searchInput.trigger("keyup.enter");
 
-      const searchInput = wrapper.find('input[aria-label="Rechercher des missions ou associations"]')
-      await searchInput.setValue('test search')
-      await searchInput.trigger('keyup.enter')
+      expect(wrapper.vm.recentSearches.length).toBe(initialLength);
+    });
+
+    it("should patch current filter with search query", async () => {
+      const wrapper = mount(MockNoConnectedBottomBar);
+
+      const searchInput = wrapper.find(
+        'input[aria-label="Rechercher des missions ou associations"]',
+      );
+      await searchInput.setValue("test search");
+      await searchInput.trigger("keyup.enter");
 
       // Vérifier que la fonction patchCurrentFilter a été appelée
-      expect(wrapper.vm.patchCurrentFilter).toBeDefined()
-    })
-  })
-}) 
+      expect(wrapper.vm.patchCurrentFilter).toBeDefined();
+    });
+  });
+});

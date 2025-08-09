@@ -1,11 +1,19 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock du store
 const mockFavoriteAnnouncementStore = {
-  getFavorites: [{ id: '1', title: 'Favorite Announcement 1' }, { id: '2', title: 'Favorite Announcement 2' }],
-  getFavoriteVolunteers: [{ id: 'vol1', name: 'Volunteer 1' }, { id: 'vol2', name: 'Volunteer 2' }],
-  getFavoritesAnnouncementsVolunteer: [{ id: '1', title: 'Volunteer Favorite' }],
+  getFavorites: [
+    { id: "1", title: "Favorite Announcement 1" },
+    { id: "2", title: "Favorite Announcement 2" },
+  ],
+  getFavoriteVolunteers: [
+    { id: "vol1", name: "Volunteer 1" },
+    { id: "vol2", name: "Volunteer 2" },
+  ],
+  getFavoritesAnnouncementsVolunteer: [
+    { id: "1", title: "Volunteer Favorite" },
+  ],
   loading: false,
   error: null,
   fetchFavorites: vi.fn(),
@@ -18,294 +26,340 @@ const mockFavoriteAnnouncementStore = {
   resetState: vi.fn(),
   removeByVolunteerIdAndAnnouncementId: vi.fn(),
   fetchAllFavoritesOfVolunteer: vi.fn(),
-  fetchFavoriteVolunteerByVolunteerId: vi.fn()
-}
+  fetchFavoriteVolunteerByVolunteerId: vi.fn(),
+};
 
 // Mock des modules Vue
 const mockComputed = vi.fn((getter) => ({
-  value: getter()
-}))
+  value: getter(),
+}));
 
 // Mock des modules
-vi.mock('../../stores/favoritesAnnouncement.store', () => ({
-  useFavoriteAnnouncement: () => mockFavoriteAnnouncementStore
-}))
+vi.mock("../../stores/favoritesAnnouncement.store", () => ({
+  useFavoriteAnnouncement: () => mockFavoriteAnnouncementStore,
+}));
 
 // Mock globaux
-global.computed = mockComputed
+global.computed = mockComputed;
 
 // Fonction mock pour useFavoritesAnnouncement
 const useFavoritesAnnouncement = () => {
-  const announcementStore = mockFavoriteAnnouncementStore
+  const announcementStore = mockFavoriteAnnouncementStore;
 
   return {
     fetchFavorites: announcementStore.fetchFavorites,
     addFavorite: announcementStore.addFavorite,
     getFavorites: mockComputed(() => announcementStore.getFavorites),
-    getFavoriteVolunteers: mockComputed(() => announcementStore.getFavoriteVolunteers),
+    getFavoriteVolunteers: mockComputed(
+      () => announcementStore.getFavoriteVolunteers,
+    ),
     fetchAllFavorites: announcementStore.fetchAllFavorites,
-    fetchFavoritesByAnnouncementId: announcementStore.fetchFavoritesByAnnouncementId,
-    findAllFavoritesAnnouncementsByVolunteerId: announcementStore.findAllFavoritesAnnouncementsByVolunteerId,
+    fetchFavoritesByAnnouncementId:
+      announcementStore.fetchFavoritesByAnnouncementId,
+    findAllFavoritesAnnouncementsByVolunteerId:
+      announcementStore.findAllFavoritesAnnouncementsByVolunteerId,
     removeAllByVolunteerId: announcementStore.removeAllByVolunteerId,
     removeAllByAnnouncementId: announcementStore.removeAllByAnnouncementId,
     resetState: announcementStore.resetState,
-    getFavoritesAnnouncementsVolunteer: mockComputed(() => announcementStore.getFavoritesAnnouncementsVolunteer),
+    getFavoritesAnnouncementsVolunteer: mockComputed(
+      () => announcementStore.getFavoritesAnnouncementsVolunteer,
+    ),
     loading: mockComputed(() => announcementStore.loading),
     error: mockComputed(() => announcementStore.error),
-    removeByVolunteerIdAndAnnouncementId: announcementStore.removeByVolunteerIdAndAnnouncementId,
-    fetchAllFavoritesOfVolunteer: announcementStore.fetchAllFavoritesOfVolunteer,
-    fetchFavoriteVolunteerByVolunteerId: announcementStore.fetchFavoriteVolunteerByVolunteerId
-  }
-}
+    removeByVolunteerIdAndAnnouncementId:
+      announcementStore.removeByVolunteerIdAndAnnouncementId,
+    fetchAllFavoritesOfVolunteer:
+      announcementStore.fetchAllFavoritesOfVolunteer,
+    fetchFavoriteVolunteerByVolunteerId:
+      announcementStore.fetchFavoriteVolunteerByVolunteerId,
+  };
+};
 
-describe('useFavoritesAnnouncement', () => {
+describe("useFavoritesAnnouncement", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    vi.clearAllMocks();
     mockComputed.mockImplementation((getter) => ({
-      value: getter()
-    }))
-  })
+      value: getter(),
+    }));
+  });
 
-  describe('Propriétés réactives', () => {
-    it('should return favorites data', () => {
-      const favorites = useFavoritesAnnouncement()
+  describe("Propriétés réactives", () => {
+    it("should return favorites data", () => {
+      const favorites = useFavoritesAnnouncement();
 
       expect(favorites.getFavorites.value).toEqual([
-        { id: '1', title: 'Favorite Announcement 1' },
-        { id: '2', title: 'Favorite Announcement 2' }
-      ])
-    })
+        { id: "1", title: "Favorite Announcement 1" },
+        { id: "2", title: "Favorite Announcement 2" },
+      ]);
+    });
 
-    it('should return favorite volunteers data', () => {
-      const favorites = useFavoritesAnnouncement()
+    it("should return favorite volunteers data", () => {
+      const favorites = useFavoritesAnnouncement();
 
       expect(favorites.getFavoriteVolunteers.value).toEqual([
-        { id: 'vol1', name: 'Volunteer 1' },
-        { id: 'vol2', name: 'Volunteer 2' }
-      ])
-    })
+        { id: "vol1", name: "Volunteer 1" },
+        { id: "vol2", name: "Volunteer 2" },
+      ]);
+    });
 
-    it('should return favorites announcements volunteer data', () => {
-      const favorites = useFavoritesAnnouncement()
+    it("should return favorites announcements volunteer data", () => {
+      const favorites = useFavoritesAnnouncement();
 
       expect(favorites.getFavoritesAnnouncementsVolunteer.value).toEqual([
-        { id: '1', title: 'Volunteer Favorite' }
-      ])
-    })
+        { id: "1", title: "Volunteer Favorite" },
+      ]);
+    });
 
-    it('should return loading state', () => {
-      const favorites = useFavoritesAnnouncement()
+    it("should return loading state", () => {
+      const favorites = useFavoritesAnnouncement();
 
-      expect(favorites.loading.value).toBe(false)
-    })
+      expect(favorites.loading.value).toBe(false);
+    });
 
-    it('should return error state', () => {
-      const favorites = useFavoritesAnnouncement()
+    it("should return error state", () => {
+      const favorites = useFavoritesAnnouncement();
 
-      expect(favorites.error.value).toBe(null)
-    })
-  })
+      expect(favorites.error.value).toBe(null);
+    });
+  });
 
-  describe('Méthodes de récupération', () => {
-    it('should call fetchFavorites', async () => {
-      const favorites = useFavoritesAnnouncement()
+  describe("Méthodes de récupération", () => {
+    it("should call fetchFavorites", async () => {
+      const favorites = useFavoritesAnnouncement();
 
-      await favorites.fetchFavorites()
+      await favorites.fetchFavorites();
 
-      expect(mockFavoriteAnnouncementStore.fetchFavorites).toHaveBeenCalled()
-    })
+      expect(mockFavoriteAnnouncementStore.fetchFavorites).toHaveBeenCalled();
+    });
 
-    it('should call fetchAllFavorites', async () => {
-      const favorites = useFavoritesAnnouncement()
+    it("should call fetchAllFavorites", async () => {
+      const favorites = useFavoritesAnnouncement();
 
-      await favorites.fetchAllFavorites()
+      await favorites.fetchAllFavorites();
 
-      expect(mockFavoriteAnnouncementStore.fetchAllFavorites).toHaveBeenCalled()
-    })
+      expect(
+        mockFavoriteAnnouncementStore.fetchAllFavorites,
+      ).toHaveBeenCalled();
+    });
 
-    it('should call fetchFavoritesByAnnouncementId', async () => {
-      const favorites = useFavoritesAnnouncement()
-      const announcementId = 'announcement1'
+    it("should call fetchFavoritesByAnnouncementId", async () => {
+      const favorites = useFavoritesAnnouncement();
+      const announcementId = "announcement1";
 
-      await favorites.fetchFavoritesByAnnouncementId(announcementId)
+      await favorites.fetchFavoritesByAnnouncementId(announcementId);
 
-      expect(mockFavoriteAnnouncementStore.fetchFavoritesByAnnouncementId).toHaveBeenCalledWith(announcementId)
-    })
+      expect(
+        mockFavoriteAnnouncementStore.fetchFavoritesByAnnouncementId,
+      ).toHaveBeenCalledWith(announcementId);
+    });
 
-    it('should call findAllFavoritesAnnouncementsByVolunteerId', async () => {
-      const favorites = useFavoritesAnnouncement()
-      const volunteerId = 'volunteer1'
+    it("should call findAllFavoritesAnnouncementsByVolunteerId", async () => {
+      const favorites = useFavoritesAnnouncement();
+      const volunteerId = "volunteer1";
 
-      await favorites.findAllFavoritesAnnouncementsByVolunteerId(volunteerId)
+      await favorites.findAllFavoritesAnnouncementsByVolunteerId(volunteerId);
 
-      expect(mockFavoriteAnnouncementStore.findAllFavoritesAnnouncementsByVolunteerId).toHaveBeenCalledWith(volunteerId)
-    })
+      expect(
+        mockFavoriteAnnouncementStore.findAllFavoritesAnnouncementsByVolunteerId,
+      ).toHaveBeenCalledWith(volunteerId);
+    });
 
-    it('should call fetchAllFavoritesOfVolunteer', async () => {
-      const favorites = useFavoritesAnnouncement()
-      const volunteerId = 'volunteer1'
+    it("should call fetchAllFavoritesOfVolunteer", async () => {
+      const favorites = useFavoritesAnnouncement();
+      const volunteerId = "volunteer1";
 
-      await favorites.fetchAllFavoritesOfVolunteer(volunteerId)
+      await favorites.fetchAllFavoritesOfVolunteer(volunteerId);
 
-      expect(mockFavoriteAnnouncementStore.fetchAllFavoritesOfVolunteer).toHaveBeenCalledWith(volunteerId)
-    })
+      expect(
+        mockFavoriteAnnouncementStore.fetchAllFavoritesOfVolunteer,
+      ).toHaveBeenCalledWith(volunteerId);
+    });
 
-    it('should call fetchFavoriteVolunteerByVolunteerId', async () => {
-      const favorites = useFavoritesAnnouncement()
-      const volunteerId = 'volunteer1'
+    it("should call fetchFavoriteVolunteerByVolunteerId", async () => {
+      const favorites = useFavoritesAnnouncement();
+      const volunteerId = "volunteer1";
 
-      await favorites.fetchFavoriteVolunteerByVolunteerId(volunteerId)
+      await favorites.fetchFavoriteVolunteerByVolunteerId(volunteerId);
 
-      expect(mockFavoriteAnnouncementStore.fetchFavoriteVolunteerByVolunteerId).toHaveBeenCalledWith(volunteerId)
-    })
-  })
+      expect(
+        mockFavoriteAnnouncementStore.fetchFavoriteVolunteerByVolunteerId,
+      ).toHaveBeenCalledWith(volunteerId);
+    });
+  });
 
-  describe('Méthodes d\'ajout', () => {
-    it('should call addFavorite', async () => {
-      const favorites = useFavoritesAnnouncement()
-      const favoriteData = { 
-        volunteerId: 'volunteer1', 
-        announcementId: 'announcement1' 
-      }
+  describe("Méthodes d'ajout", () => {
+    it("should call addFavorite", async () => {
+      const favorites = useFavoritesAnnouncement();
+      const favoriteData = {
+        volunteerId: "volunteer1",
+        announcementId: "announcement1",
+      };
 
-      await favorites.addFavorite(favoriteData)
+      await favorites.addFavorite(favoriteData);
 
-      expect(mockFavoriteAnnouncementStore.addFavorite).toHaveBeenCalledWith(favoriteData)
-    })
-  })
+      expect(mockFavoriteAnnouncementStore.addFavorite).toHaveBeenCalledWith(
+        favoriteData,
+      );
+    });
+  });
 
-  describe('Méthodes de suppression', () => {
-    it('should call removeAllByVolunteerId', async () => {
-      const favorites = useFavoritesAnnouncement()
-      const volunteerId = 'volunteer1'
+  describe("Méthodes de suppression", () => {
+    it("should call removeAllByVolunteerId", async () => {
+      const favorites = useFavoritesAnnouncement();
+      const volunteerId = "volunteer1";
 
-      await favorites.removeAllByVolunteerId(volunteerId)
+      await favorites.removeAllByVolunteerId(volunteerId);
 
-      expect(mockFavoriteAnnouncementStore.removeAllByVolunteerId).toHaveBeenCalledWith(volunteerId)
-    })
+      expect(
+        mockFavoriteAnnouncementStore.removeAllByVolunteerId,
+      ).toHaveBeenCalledWith(volunteerId);
+    });
 
-    it('should call removeAllByAnnouncementId', async () => {
-      const favorites = useFavoritesAnnouncement()
-      const announcementId = 'announcement1'
+    it("should call removeAllByAnnouncementId", async () => {
+      const favorites = useFavoritesAnnouncement();
+      const announcementId = "announcement1";
 
-      await favorites.removeAllByAnnouncementId(announcementId)
+      await favorites.removeAllByAnnouncementId(announcementId);
 
-      expect(mockFavoriteAnnouncementStore.removeAllByAnnouncementId).toHaveBeenCalledWith(announcementId)
-    })
+      expect(
+        mockFavoriteAnnouncementStore.removeAllByAnnouncementId,
+      ).toHaveBeenCalledWith(announcementId);
+    });
 
-    it('should call removeByVolunteerIdAndAnnouncementId', async () => {
-      const favorites = useFavoritesAnnouncement()
-      const data = { 
-        volunteerId: 'volunteer1', 
-        announcementId: 'announcement1' 
-      }
+    it("should call removeByVolunteerIdAndAnnouncementId", async () => {
+      const favorites = useFavoritesAnnouncement();
+      const data = {
+        volunteerId: "volunteer1",
+        announcementId: "announcement1",
+      };
 
-      await favorites.removeByVolunteerIdAndAnnouncementId(data)
+      await favorites.removeByVolunteerIdAndAnnouncementId(data);
 
-      expect(mockFavoriteAnnouncementStore.removeByVolunteerIdAndAnnouncementId).toHaveBeenCalledWith(data)
-    })
-  })
+      expect(
+        mockFavoriteAnnouncementStore.removeByVolunteerIdAndAnnouncementId,
+      ).toHaveBeenCalledWith(data);
+    });
+  });
 
-  describe('Méthodes de gestion d\'état', () => {
-    it('should call resetState', async () => {
-      const favorites = useFavoritesAnnouncement()
+  describe("Méthodes de gestion d'état", () => {
+    it("should call resetState", async () => {
+      const favorites = useFavoritesAnnouncement();
 
-      favorites.resetState()
+      favorites.resetState();
 
-      expect(mockFavoriteAnnouncementStore.resetState).toHaveBeenCalled()
-    })
-  })
+      expect(mockFavoriteAnnouncementStore.resetState).toHaveBeenCalled();
+    });
+  });
 
-  describe('Gestion des erreurs', () => {
-    it('should handle store errors', () => {
-      mockFavoriteAnnouncementStore.error = 'Test error'
-      
-      const favorites = useFavoritesAnnouncement()
+  describe("Gestion des erreurs", () => {
+    it("should handle store errors", () => {
+      mockFavoriteAnnouncementStore.error = "Test error";
 
-      expect(favorites.error.value).toBe('Test error')
-    })
+      const favorites = useFavoritesAnnouncement();
 
-    it('should handle loading states', () => {
-      mockFavoriteAnnouncementStore.loading = true
-      
-      const favorites = useFavoritesAnnouncement()
+      expect(favorites.error.value).toBe("Test error");
+    });
 
-      expect(favorites.loading.value).toBe(true)
-    })
-  })
+    it("should handle loading states", () => {
+      mockFavoriteAnnouncementStore.loading = true;
 
-  describe('Intégration avec le store', () => {
-    it('should use favorite announcement store for all methods', () => {
-      const favorites = useFavoritesAnnouncement()
+      const favorites = useFavoritesAnnouncement();
 
-      expect(favorites.fetchFavorites).toBe(mockFavoriteAnnouncementStore.fetchFavorites)
-      expect(favorites.addFavorite).toBe(mockFavoriteAnnouncementStore.addFavorite)
-      expect(favorites.fetchAllFavorites).toBe(mockFavoriteAnnouncementStore.fetchAllFavorites)
-      expect(favorites.resetState).toBe(mockFavoriteAnnouncementStore.resetState)
-    })
+      expect(favorites.loading.value).toBe(true);
+    });
+  });
 
-    it('should have reactive computed properties', () => {
-      const favorites = useFavoritesAnnouncement()
+  describe("Intégration avec le store", () => {
+    it("should use favorite announcement store for all methods", () => {
+      const favorites = useFavoritesAnnouncement();
 
-      expect(favorites.getFavorites.value).toBeDefined()
-      expect(favorites.getFavoriteVolunteers.value).toBeDefined()
-      expect(favorites.getFavoritesAnnouncementsVolunteer.value).toBeDefined()
-      expect(favorites.loading.value).toBeDefined()
-      expect(favorites.error.value).toBeDefined()
-    })
-  })
+      expect(favorites.fetchFavorites).toBe(
+        mockFavoriteAnnouncementStore.fetchFavorites,
+      );
+      expect(favorites.addFavorite).toBe(
+        mockFavoriteAnnouncementStore.addFavorite,
+      );
+      expect(favorites.fetchAllFavorites).toBe(
+        mockFavoriteAnnouncementStore.fetchAllFavorites,
+      );
+      expect(favorites.resetState).toBe(
+        mockFavoriteAnnouncementStore.resetState,
+      );
+    });
 
-  describe('Validation des données', () => {
-    it('should return valid favorites data structure', () => {
-      const favorites = useFavoritesAnnouncement()
+    it("should have reactive computed properties", () => {
+      const favorites = useFavoritesAnnouncement();
 
-      expect(Array.isArray(favorites.getFavorites.value)).toBe(true)
-      expect(favorites.getFavorites.value[0]).toHaveProperty('id')
-      expect(favorites.getFavorites.value[0]).toHaveProperty('title')
-    })
+      expect(favorites.getFavorites.value).toBeDefined();
+      expect(favorites.getFavoriteVolunteers.value).toBeDefined();
+      expect(favorites.getFavoritesAnnouncementsVolunteer.value).toBeDefined();
+      expect(favorites.loading.value).toBeDefined();
+      expect(favorites.error.value).toBeDefined();
+    });
+  });
 
-    it('should return valid favorite volunteers data structure', () => {
-      const favorites = useFavoritesAnnouncement()
+  describe("Validation des données", () => {
+    it("should return valid favorites data structure", () => {
+      const favorites = useFavoritesAnnouncement();
 
-      expect(Array.isArray(favorites.getFavoriteVolunteers.value)).toBe(true)
-      expect(favorites.getFavoriteVolunteers.value[0]).toHaveProperty('id')
-      expect(favorites.getFavoriteVolunteers.value[0]).toHaveProperty('name')
-    })
+      expect(Array.isArray(favorites.getFavorites.value)).toBe(true);
+      expect(favorites.getFavorites.value[0]).toHaveProperty("id");
+      expect(favorites.getFavorites.value[0]).toHaveProperty("title");
+    });
 
-    it('should handle empty favorites data', () => {
-      mockFavoriteAnnouncementStore.getFavorites = []
-      
-      const favorites = useFavoritesAnnouncement()
+    it("should return valid favorite volunteers data structure", () => {
+      const favorites = useFavoritesAnnouncement();
 
-      expect(favorites.getFavorites.value).toEqual([])
-    })
-  })
+      expect(Array.isArray(favorites.getFavoriteVolunteers.value)).toBe(true);
+      expect(favorites.getFavoriteVolunteers.value[0]).toHaveProperty("id");
+      expect(favorites.getFavoriteVolunteers.value[0]).toHaveProperty("name");
+    });
 
-  describe('Méthodes utilitaires', () => {
-    it('should handle multiple operations', async () => {
-      const favorites = useFavoritesAnnouncement()
-      const favoriteData = { volunteerId: 'vol1', announcementId: 'announcement1' }
-      const volunteerId = 'volunteer1'
+    it("should handle empty favorites data", () => {
+      mockFavoriteAnnouncementStore.getFavorites = [];
 
-      await favorites.addFavorite(favoriteData)
-      await favorites.fetchAllFavoritesOfVolunteer(volunteerId)
+      const favorites = useFavoritesAnnouncement();
 
-      expect(mockFavoriteAnnouncementStore.addFavorite).toHaveBeenCalledWith(favoriteData)
-      expect(mockFavoriteAnnouncementStore.fetchAllFavoritesOfVolunteer).toHaveBeenCalledWith(volunteerId)
-    })
+      expect(favorites.getFavorites.value).toEqual([]);
+    });
+  });
 
-    it('should handle favorite management operations', async () => {
-      const favorites = useFavoritesAnnouncement()
-      const volunteerId = 'volunteer1'
-      const announcementId = 'announcement1'
+  describe("Méthodes utilitaires", () => {
+    it("should handle multiple operations", async () => {
+      const favorites = useFavoritesAnnouncement();
+      const favoriteData = {
+        volunteerId: "vol1",
+        announcementId: "announcement1",
+      };
+      const volunteerId = "volunteer1";
 
-      await favorites.fetchFavorites()
-      await favorites.removeAllByVolunteerId(volunteerId)
-      await favorites.removeAllByAnnouncementId(announcementId)
+      await favorites.addFavorite(favoriteData);
+      await favorites.fetchAllFavoritesOfVolunteer(volunteerId);
 
-      expect(mockFavoriteAnnouncementStore.fetchFavorites).toHaveBeenCalled()
-      expect(mockFavoriteAnnouncementStore.removeAllByVolunteerId).toHaveBeenCalledWith(volunteerId)
-      expect(mockFavoriteAnnouncementStore.removeAllByAnnouncementId).toHaveBeenCalledWith(announcementId)
-    })
-  })
-}) 
+      expect(mockFavoriteAnnouncementStore.addFavorite).toHaveBeenCalledWith(
+        favoriteData,
+      );
+      expect(
+        mockFavoriteAnnouncementStore.fetchAllFavoritesOfVolunteer,
+      ).toHaveBeenCalledWith(volunteerId);
+    });
+
+    it("should handle favorite management operations", async () => {
+      const favorites = useFavoritesAnnouncement();
+      const volunteerId = "volunteer1";
+      const announcementId = "announcement1";
+
+      await favorites.fetchFavorites();
+      await favorites.removeAllByVolunteerId(volunteerId);
+      await favorites.removeAllByAnnouncementId(announcementId);
+
+      expect(mockFavoriteAnnouncementStore.fetchFavorites).toHaveBeenCalled();
+      expect(
+        mockFavoriteAnnouncementStore.removeAllByVolunteerId,
+      ).toHaveBeenCalledWith(volunteerId);
+      expect(
+        mockFavoriteAnnouncementStore.removeAllByAnnouncementId,
+      ).toHaveBeenCalledWith(announcementId);
+    });
+  });
+});

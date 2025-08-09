@@ -58,7 +58,8 @@ nav a:focus-visible {
 }
 
 /* Styles pour les listes */
-ul, ol {
+ul,
+ol {
   padding-left: 1.5rem;
 }
 
@@ -72,7 +73,8 @@ table {
   width: 100%;
 }
 
-th, td {
+th,
+td {
   border: 1px solid #d1d5db;
   padding: 0.75rem;
   text-align: left;
@@ -120,17 +122,17 @@ th {
 
 @media (prefers-contrast: more) {
   :root {
-    --tw-ring-color: #FFD600;
+    --tw-ring-color: #ffd600;
   }
-  
+
   .btn,
   .badge,
   .tag {
-    outline: 2px solid #FFD600;
+    outline: 2px solid #ffd600;
     background-color: #000;
     color: #fff;
   }
-  
+
   .input,
   .textarea,
   .select {
@@ -322,4 +324,4 @@ th {
 .filter-tag .remove-button:focus-visible {
   outline: 2px solid #eb5577 !important;
   outline-offset: 2px !important;
-} 
+}

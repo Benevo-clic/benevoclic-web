@@ -1,10 +1,5 @@
 <template>
-  <component 
-    :is="tag" 
-    :class="titleClass"
-    :id="id"
-    :aria-level="ariaLevel"
-  >
+  <component :is="tag" :id="id" :class="titleClass" :aria-level="ariaLevel">
     <slot />
   </component>
 </template>
@@ -18,15 +13,20 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   level: 1
-});
+})
 
-const tag = computed(() => `h${props.level}`);
-const titleClass = computed(() => props.class || '');
-const ariaLevel = computed(() => props.level);
+const tag = computed(() => `h${props.level}`)
+const titleClass = computed(() => props.class || '')
+const ariaLevel = computed(() => props.level)
 </script>
 
 <style scoped>
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0;
   padding: 0;
   font-weight: 600;

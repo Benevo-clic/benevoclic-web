@@ -1,0 +1,93 @@
+name: Branch CI
+
+on:
+  push:
+    branches:
+      - "feature/**"
+      - "fix/**"
+      - "feat/**"
+      - "release/**"
+      - "develop"
+      - "main"
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log trigger source
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "🚀 Branch CI déclenché manuellement"
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "🚀 Branch CI déclenché par Pull Request #${{ github.event.number }}"
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            echo "🚀 Branch CI déclenché par push sur ${{ github.ref_name }}"
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Prettier Check
+        run: npm run prettier:fix
+
+  test:
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build

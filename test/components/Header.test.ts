@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { mount } from "@vue/test-utils";
+import { nextTick } from "vue";
 
 // Mock component pour tester le Header principal
 const MockHeader = {
@@ -151,411 +151,431 @@ const MockHeader = {
       user: null,
       profileImageUrl: null,
       role: null,
-      t: (key) => key // Mock pour les traductions
-    }
+      t: (key) => key, // Mock pour les traductions
+    };
   },
   methods: {
     toggleTheme() {
-      this.isDarkTheme = !this.isDarkTheme
+      this.isDarkTheme = !this.isDarkTheme;
     },
     handleHome() {
       // Simuler la navigation
-      return '/'
+      return "/";
     },
     handleNotifications() {
       if (this.isAuthenticated) {
-        this.loginModal?.showModal()
+        this.loginModal?.showModal();
       } else {
-        return '/notifications'
+        return "/notifications";
       }
     },
     handleFavorites() {
       if (!this.isAuthenticated) {
-        return
+        return;
       }
-      return '/volunteer/activity/favorites'
+      return "/volunteer/activity/favorites";
     },
     handleUserMenuKeydown(event) {
-      if (event.key === 'Escape') {
-        const dropdown = event.target
-        dropdown?.blur()
+      if (event.key === "Escape") {
+        const dropdown = event.target;
+        dropdown?.blur();
       }
     },
     handleProfile() {
-      return '/user'
+      return "/user";
     },
     handleLogout() {
-      this.isAuthenticated = false
-      this.user = null
-    }
+      this.isAuthenticated = false;
+      this.user = null;
+    },
   },
   mounted() {
     // Simuler l'initialisation
     setTimeout(() => {
-      this.isLoading = false
-    }, 100)
-  }
-}
+      this.isLoading = false;
+    }, 100);
+  },
+};
 
-describe('Header', () => {
+describe("Header", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  describe('Rendu de base', () => {
-    it('should render component', () => {
-      const wrapper = mount(MockHeader)
+  describe("Rendu de base", () => {
+    it("should render component", () => {
+      const wrapper = mount(MockHeader);
 
-      expect(wrapper.exists()).toBe(true)
-    })
+      expect(wrapper.exists()).toBe(true);
+    });
 
-    it('should display loading state initially', () => {
-      const wrapper = mount(MockHeader)
+    it("should display loading state initially", () => {
+      const wrapper = mount(MockHeader);
 
-      const loadingDiv = wrapper.find('[role="status"]')
-      expect(loadingDiv.exists()).toBe(true)
-    })
+      const loadingDiv = wrapper.find('[role="status"]');
+      expect(loadingDiv.exists()).toBe(true);
+    });
 
-    it('should display header after loading', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should display header after loading", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const header = wrapper.find('header')
-      expect(header.exists()).toBe(true)
-    })
-  })
+      const header = wrapper.find("header");
+      expect(header.exists()).toBe(true);
+    });
+  });
 
-  describe('Logo et navigation', () => {
-    it('should display logo', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+  describe("Logo et navigation", () => {
+    it("should display logo", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const logo = wrapper.find('img[alt="Logo Benevoclic"]')
-      expect(logo.exists()).toBe(true)
-      expect(logo.attributes('src')).toBe('/logo_benevoclic.png')
-    })
+      const logo = wrapper.find('img[alt="Logo Benevoclic"]');
+      expect(logo.exists()).toBe(true);
+      expect(logo.attributes("src")).toBe("/logo_benevoclic.png");
+    });
 
-    it('should have proper logo link', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should have proper logo link", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const logoLink = wrapper.find('NuxtLink[to="/"]')
-      expect(logoLink.exists()).toBe(true)
-      expect(logoLink.classes()).toContain('w-14')
-    })
-  })
+      const logoLink = wrapper.find('NuxtLink[to="/"]');
+      expect(logoLink.exists()).toBe(true);
+      expect(logoLink.classes()).toContain("w-14");
+    });
+  });
 
-  describe('Boutons d\'action', () => {
-    it('should display theme toggle button', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+  describe("Boutons d'action", () => {
+    it("should display theme toggle button", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const themeButton = wrapper.find('button[aria-label="Changer le thème"]')
-      expect(themeButton.exists()).toBe(true)
-    })
+      const themeButton = wrapper.find('button[aria-label="Changer le thème"]');
+      expect(themeButton.exists()).toBe(true);
+    });
 
-    it('should toggle theme when clicked', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should toggle theme when clicked", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const themeButton = wrapper.find('button[aria-label="Changer le thème"]')
-      const initialTheme = wrapper.vm.isDarkTheme
+      const themeButton = wrapper.find('button[aria-label="Changer le thème"]');
+      const initialTheme = wrapper.vm.isDarkTheme;
 
-      await themeButton.trigger('click')
+      await themeButton.trigger("click");
 
-      expect(wrapper.vm.isDarkTheme).toBe(!initialTheme)
-    })
+      expect(wrapper.vm.isDarkTheme).toBe(!initialTheme);
+    });
 
-    it('should display home button', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 200))
-      await wrapper.vm.$nextTick()
-      
-      const homeButton = wrapper.findAll('button').find(btn => btn.text().includes('🏠'))
+    it("should display home button", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      await wrapper.vm.$nextTick();
+
+      const homeButton = wrapper
+        .findAll("button")
+        .find((btn) => btn.text().includes("🏠"));
       if (!homeButton.exists()) {
         // Affiche le HTML pour debug si le bouton n'est pas trouvé
-        console.log(wrapper.html())
+        console.log(wrapper.html());
       }
-      expect(homeButton.exists()).toBe(true)
-    })
-  })
+      expect(homeButton.exists()).toBe(true);
+    });
+  });
 
-  describe('États d\'authentification', () => {
-    it('should show login button when not authenticated', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+  describe("États d'authentification", () => {
+    it("should show login button when not authenticated", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const loginButton = wrapper.find('button[aria-label="Se connecter"]')
-      expect(loginButton.exists()).toBe(true)
-      expect(loginButton.text()).toBe('Se connecter')
-    })
+      const loginButton = wrapper.find('button[aria-label="Se connecter"]');
+      expect(loginButton.exists()).toBe(true);
+      expect(loginButton.text()).toBe("Se connecter");
+    });
 
-    it('should show user menu when authenticated', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should show user menu when authenticated", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
       // Simuler l'authentification
-      wrapper.vm.isAuthenticated = true
-      wrapper.vm.user = { name: 'John Doe' }
-      await nextTick()
+      wrapper.vm.isAuthenticated = true;
+      wrapper.vm.user = { name: "John Doe" };
+      await nextTick();
 
-      const userMenuButton = wrapper.find('button[aria-label="Menu utilisateur"]')
-      expect(userMenuButton.exists()).toBe(true)
-    })
+      const userMenuButton = wrapper.find(
+        'button[aria-label="Menu utilisateur"]',
+      );
+      expect(userMenuButton.exists()).toBe(true);
+    });
 
-    it('should show notification button when authenticated', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should show notification button when authenticated", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      wrapper.vm.isAuthenticated = true
-      await nextTick()
+      wrapper.vm.isAuthenticated = true;
+      await nextTick();
 
-      const notificationButton = wrapper.find('button[aria-label="Notifications"]')
-      expect(notificationButton.exists()).toBe(true)
-    })
+      const notificationButton = wrapper.find(
+        'button[aria-label="Notifications"]',
+      );
+      expect(notificationButton.exists()).toBe(true);
+    });
 
-    it('should show favorites button when authenticated', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should show favorites button when authenticated", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      wrapper.vm.isAuthenticated = true
-      await nextTick()
+      wrapper.vm.isAuthenticated = true;
+      await nextTick();
 
-      const favoritesButton = wrapper.find('button[aria-label="Favoris"]')
-      expect(favoritesButton.exists()).toBe(true)
-    })
-  })
+      const favoritesButton = wrapper.find('button[aria-label="Favoris"]');
+      expect(favoritesButton.exists()).toBe(true);
+    });
+  });
 
-  describe('Menu utilisateur', () => {
-    it('should toggle menu when user button is clicked', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+  describe("Menu utilisateur", () => {
+    it("should toggle menu when user button is clicked", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      wrapper.vm.isAuthenticated = true
-      wrapper.vm.user = { name: 'John Doe' }
-      await nextTick()
+      wrapper.vm.isAuthenticated = true;
+      wrapper.vm.user = { name: "John Doe" };
+      await nextTick();
 
-      const userMenuButton = wrapper.find('button[aria-label="Menu utilisateur"]')
-      await userMenuButton.trigger('click')
+      const userMenuButton = wrapper.find(
+        'button[aria-label="Menu utilisateur"]',
+      );
+      await userMenuButton.trigger("click");
 
-      expect(wrapper.vm.menuOpen).toBe(true)
-    })
+      expect(wrapper.vm.menuOpen).toBe(true);
+    });
 
-    it('should display user avatar when available', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should display user avatar when available", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      wrapper.vm.isAuthenticated = true
-      wrapper.vm.user = { name: 'John Doe' }
-      wrapper.vm.profileImageUrl = '/avatar.jpg'
-      await nextTick()
+      wrapper.vm.isAuthenticated = true;
+      wrapper.vm.user = { name: "John Doe" };
+      wrapper.vm.profileImageUrl = "/avatar.jpg";
+      await nextTick();
 
-      const avatar = wrapper.find('img[alt*="Photo de profil"]')
-      expect(avatar.exists()).toBe(true)
-    })
+      const avatar = wrapper.find('img[alt*="Photo de profil"]');
+      expect(avatar.exists()).toBe(true);
+    });
 
-    it('should display user initial when no avatar', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should display user initial when no avatar", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      wrapper.vm.isAuthenticated = true
-      wrapper.vm.user = { name: 'John Doe' }
-      await nextTick()
+      wrapper.vm.isAuthenticated = true;
+      wrapper.vm.user = { name: "John Doe" };
+      await nextTick();
 
-      const initial = wrapper.find('.bg-primary.text-primary-content')
-      expect(initial.exists()).toBe(true)
-      expect(initial.text()).toBe('J')
-    })
-  })
+      const initial = wrapper.find(".bg-primary.text-primary-content");
+      expect(initial.exists()).toBe(true);
+      expect(initial.text()).toBe("J");
+    });
+  });
 
-  describe('Modal de connexion', () => {
-    it('should show login modal when login button is clicked', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+  describe("Modal de connexion", () => {
+    it("should show login modal when login button is clicked", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const loginButton = wrapper.find('button[aria-label="Se connecter"]')
-      await loginButton.trigger('click')
+      const loginButton = wrapper.find('button[aria-label="Se connecter"]');
+      await loginButton.trigger("click");
 
-      expect(wrapper.vm.showLoginModal).toBe(true)
-    })
+      expect(wrapper.vm.showLoginModal).toBe(true);
+    });
 
-    it('should have proper modal structure', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should have proper modal structure", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const modal = wrapper.find('dialog')
-      expect(modal.exists()).toBe(true)
-      expect(modal.attributes('role')).toBe('dialog')
-    })
+      const modal = wrapper.find("dialog");
+      expect(modal.exists()).toBe(true);
+      expect(modal.attributes("role")).toBe("dialog");
+    });
 
-    it('should have proper modal accessibility', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should have proper modal accessibility", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const modal = wrapper.find('dialog')
-      expect(modal.attributes('aria-modal')).toBe('true')
-      expect(modal.attributes('aria-labelledby')).toBe('login-modal-title')
-    })
-  })
+      const modal = wrapper.find("dialog");
+      expect(modal.attributes("aria-modal")).toBe("true");
+      expect(modal.attributes("aria-labelledby")).toBe("login-modal-title");
+    });
+  });
 
-  describe('Navigation', () => {
-    it('should handle home navigation', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+  describe("Navigation", () => {
+    it("should handle home navigation", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const homeButton = wrapper.find('button[aria-label="Aller à l\'accueil bénévole"]')
-      const result = await wrapper.vm.handleHome()
-      expect(result).toBe('/')
-    })
+      const homeButton = wrapper.find(
+        'button[aria-label="Aller à l\'accueil bénévole"]',
+      );
+      const result = await wrapper.vm.handleHome();
+      expect(result).toBe("/");
+    });
 
-    it('should handle favorites navigation when authenticated', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should handle favorites navigation when authenticated", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      wrapper.vm.isAuthenticated = true
-      await nextTick()
+      wrapper.vm.isAuthenticated = true;
+      await nextTick();
 
-      const result = await wrapper.vm.handleFavorites()
-      expect(result).toBe('/volunteer/activity/favorites')
-    })
+      const result = await wrapper.vm.handleFavorites();
+      expect(result).toBe("/volunteer/activity/favorites");
+    });
 
-    it('should not navigate to favorites when not authenticated', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should not navigate to favorites when not authenticated", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const result = await wrapper.vm.handleFavorites()
-      expect(result).toBeUndefined()
-    })
-  })
+      const result = await wrapper.vm.handleFavorites();
+      expect(result).toBeUndefined();
+    });
+  });
 
-  describe('Gestion du clavier', () => {
-    it('should handle escape key in user menu', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+  describe("Gestion du clavier", () => {
+    it("should handle escape key in user menu", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
       const mockEvent = {
-        key: 'Escape',
+        key: "Escape",
         target: {
-          blur: vi.fn()
-        }
-      }
+          blur: vi.fn(),
+        },
+      };
 
-      wrapper.vm.handleUserMenuKeydown(mockEvent)
+      wrapper.vm.handleUserMenuKeydown(mockEvent);
 
-      expect(mockEvent.target.blur).toHaveBeenCalled()
-    })
-  })
+      expect(mockEvent.target.blur).toHaveBeenCalled();
+    });
+  });
 
-  describe('Accessibilité', () => {
-    it('should have proper loading accessibility', () => {
-      const wrapper = mount(MockHeader)
+  describe("Accessibilité", () => {
+    it("should have proper loading accessibility", () => {
+      const wrapper = mount(MockHeader);
 
-      const loadingDiv = wrapper.find('[role="status"]')
-      expect(loadingDiv.exists()).toBe(true)
-      expect(loadingDiv.attributes('aria-live')).toBe('polite')
-    })
+      const loadingDiv = wrapper.find('[role="status"]');
+      expect(loadingDiv.exists()).toBe(true);
+      expect(loadingDiv.attributes("aria-live")).toBe("polite");
+    });
 
-    it('should have proper header accessibility', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should have proper header accessibility", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const header = wrapper.find('header')
-      expect(header.attributes('role')).toBe('banner')
-      expect(header.attributes('aria-label')).toBe('En-tête de l\'application Benevoclic')
-    })
+      const header = wrapper.find("header");
+      expect(header.attributes("role")).toBe("banner");
+      expect(header.attributes("aria-label")).toBe(
+        "En-tête de l'application Benevoclic",
+      );
+    });
 
-    it('should have proper button accessibility', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should have proper button accessibility", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const buttons = wrapper.findAll('button')
-      buttons.forEach(button => {
-        expect(button.attributes('aria-label')).toBeTruthy()
-      })
-    })
-  })
+      const buttons = wrapper.findAll("button");
+      buttons.forEach((button) => {
+        expect(button.attributes("aria-label")).toBeTruthy();
+      });
+    });
+  });
 
-  describe('Styles et classes CSS', () => {
-    it('should have proper container styling', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+  describe("Styles et classes CSS", () => {
+    it("should have proper container styling", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      expect(wrapper.find('.bg-base-200').exists()).toBe(true)
-    })
+      expect(wrapper.find(".bg-base-200").exists()).toBe(true);
+    });
 
-    it('should have proper header styling', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should have proper header styling", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const header = wrapper.find('header')
-      expect(header.exists()).toBe(true)
-    })
+      const header = wrapper.find("header");
+      expect(header.exists()).toBe(true);
+    });
 
-    it('should have proper button styling', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+    it("should have proper button styling", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-      const buttons = wrapper.findAll('.btn')
-      buttons.forEach(button => {
-        expect(button.classes()).toContain('btn')
-      })
-    })
-  })
+      const buttons = wrapper.findAll(".btn");
+      buttons.forEach((button) => {
+        expect(button.classes()).toContain("btn");
+      });
+    });
+  });
 
-  describe('États conditionnels', () => {
-    it('should show different content based on authentication state', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
+  describe("États conditionnels", () => {
+    it("should show different content based on authentication state", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
       // Non authentifié
-      expect(wrapper.find('button[aria-label="Se connecter"]').exists()).toBe(true)
-      expect(wrapper.find('button[aria-label="Menu utilisateur"]').exists()).toBe(false)
+      expect(wrapper.find('button[aria-label="Se connecter"]').exists()).toBe(
+        true,
+      );
+      expect(
+        wrapper.find('button[aria-label="Menu utilisateur"]').exists(),
+      ).toBe(false);
 
       // Authentifié
-      wrapper.vm.isAuthenticated = true
-      await nextTick()
+      wrapper.vm.isAuthenticated = true;
+      await nextTick();
 
-      expect(wrapper.find('button[aria-label="Se connecter"]').exists()).toBe(false)
-      expect(wrapper.find('button[aria-label="Menu utilisateur"]').exists()).toBe(true)
-    })
+      expect(wrapper.find('button[aria-label="Se connecter"]').exists()).toBe(
+        false,
+      );
+      expect(
+        wrapper.find('button[aria-label="Menu utilisateur"]').exists(),
+      ).toBe(true);
+    });
 
-    it('should show different theme icons based on theme state', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
-      const themeButton = wrapper.find('button[aria-label="Changer le thème"]')
+    it("should show different theme icons based on theme state", async () => {
+      const wrapper = mount(MockHeader);
+      await nextTick();
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      const themeButton = wrapper.find('button[aria-label="Changer le thème"]');
       // Thème clair
-      expect(themeButton.text()).toContain('☀️')
+      expect(themeButton.text()).toContain("☀️");
       // Thème sombre
-      wrapper.vm.isDarkTheme = true
-      await nextTick()
-      expect(themeButton.text()).toContain('🌙')
-    })
-  })
-}) 
+      wrapper.vm.isDarkTheme = true;
+      await nextTick();
+      expect(themeButton.text()).toContain("🌙");
+    });
+  });
+});

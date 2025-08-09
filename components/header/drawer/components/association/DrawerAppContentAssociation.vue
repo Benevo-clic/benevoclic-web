@@ -8,23 +8,22 @@ import {
   UserRound,
   ClipboardList,
   CalendarIcon,
-  Globe,
   Settings,
   SunIcon,
   LayoutDashboard as DashboardIcon,
-  MoonIcon} from 'lucide-vue-next'
+  MoonIcon
+} from 'lucide-vue-next'
 import { useUser } from '~/composables/auth/useUser'
-import LanguageComponent from "~/components/header/utils/components/LanguageComponent.vue";
-import { useTheme } from "~/composables/useTheme";
-import {useAssociationAuth} from "~/composables/useAssociation";
-import {useNavigation} from "~/composables/useNavigation";
-const { logout: signOut, user ,initializeUser} = useUser()
-const {association: association,getAssociationInfo} =useAssociationAuth()
-const { setLocale,t, locale } = useI18n()
+import LanguageComponent from '~/components/header/utils/components/LanguageComponent.vue'
+import { useTheme } from '~/composables/useTheme'
+import { useAssociationAuth } from '~/composables/useAssociation'
+import { useNavigation } from '~/composables/useNavigation'
+const { logout: signOut, user, initializeUser } = useUser()
+const { association, getAssociationInfo } = useAssociationAuth()
+const { setLocale, t, locale } = useI18n()
 const { toggleTheme, isDarkTheme } = useTheme()
 const route = useRoute()
 const { navigateToRoute } = useNavigation()
-
 
 onMounted(async () => {
   await initializeUser()
@@ -38,39 +37,25 @@ const isActive = (path: string) => {
   return route.path === path || route.path.startsWith(`${path}/`)
 }
 
-
 const props = defineProps<{
-  isAuthenticated: boolean
-  menuOpen: boolean
-  displayProfile?: boolean
+  isAuthenticated: boolean;
+  menuOpen: boolean;
+  displayProfile?: boolean;
 }>()
 const emit = defineEmits(['closeDrawer'])
 
-
-const profileImage = ref<string | null>(null)
-
-async function handleLogout() {
+async function handleLogout () {
   await signOut()
   emit('closeDrawer')
   await navigateToRoute('/')
-
 }
 
-function handleFileChange(e: Event) {
-  const file = (e.target as HTMLInputElement).files?.[0]
-  if (file) {
-    const reader = new FileReader()
-    reader.onload = () => { profileImage.value = reader.result as string }
-    reader.readAsDataURL(file)
-  }
-}
-
-function goTo(path: string) {
+function goTo (path: string) {
   emit('closeDrawer')
   navigateTo(path)
 }
 
-async function changeLanguage(lo: 'fr' | 'en' | 'es', flagEmoji: string) {
+async function changeLanguage (lo: 'fr' | 'en' | 'es', flagEmoji: string) {
   await setLocale(lo)
   showLanguageMenu.value = false
   flag.value = flagEmoji
@@ -78,10 +63,6 @@ async function changeLanguage(lo: 'fr' | 'en' | 'es', flagEmoji: string) {
   localStorage.setItem('locale', lo)
   localStorage.setItem('flag', flagEmoji)
 }
-
-const profileImageUrl = computed(() => {
-  return  user.value?.avatarFileKey
-})
 
 const toggleBodyScroll = (disable: boolean) => {
   if (disable) {
@@ -91,16 +72,22 @@ const toggleBodyScroll = (disable: boolean) => {
   }
 }
 
-watch(() => props.menuOpen, (isOpen) => {
-  toggleBodyScroll(isOpen)
-})
-
-watch(() => route.path, () => {
-  const savedLocale = localStorage.getItem('locale')
-  if (savedLocale && locale.value !== savedLocale) {
-    setLocale(savedLocale as 'fr' | 'en' | 'es')
+watch(
+  () => props.menuOpen,
+  (isOpen) => {
+    toggleBodyScroll(isOpen)
   }
-})
+)
+
+watch(
+  () => route.path,
+  () => {
+    const savedLocale = localStorage.getItem('locale')
+    if (savedLocale && locale.value !== savedLocale) {
+      setLocale(savedLocale as 'fr' | 'en' | 'es')
+    }
+  }
+)
 
 onMounted(() => {
   if (props.menuOpen) {
@@ -120,23 +107,24 @@ onUnmounted(() => {
   toggleBodyScroll(false)
 })
 
-function toggleLanguageMenu() {
+function toggleLanguageMenu () {
   showLanguageMenu.value = !showLanguageMenu.value
 }
-
 </script>
 
 <template>
   <div class="flex flex-col h-full">
     <!-- Profile Section avec design moderne - Header fixe -->
-    <div class="p-6 bg-gradient-to-r from-primary/10 to-secondary/10 border-b border-base-300 flex-shrink-0">
+    <div
+      class="p-6 bg-gradient-to-r from-primary/10 to-secondary/10 border-b border-base-300 flex-shrink-0"
+    >
       <div class="flex items-center gap-4">
         <div class="flex-1">
           <h3 class="font-bold text-lg text-base-content">
             {{ association?.associationName }}
           </h3>
           <p class="text-sm text-base-content/70 flex items-center gap-2">
-            <span class="w-2 h-2 bg-success rounded-full"></span>
+            <span class="w-2 h-2 bg-success rounded-full" />
             {{ user?.email }}
           </p>
         </div>
@@ -148,152 +136,192 @@ function toggleLanguageMenu() {
       <div class="p-4 space-y-6 pb-4">
         <!-- Account Section -->
         <div class="space-y-3">
-          <h4 class="text-xs font-bold text-base-content/50 uppercase tracking-wider px-2">
-            {{ t('drawer-content.account.title') }}
+          <h4
+            class="text-xs font-bold text-base-content/50 uppercase tracking-wider px-2"
+          >
+            {{ t("drawer-content.account.title") }}
           </h4>
           <div class="space-y-1">
-            <button 
-              @click="goTo('/association/account/profile')"
+            <button
               :class="[
                 'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                isActive('/association/account/profile') 
-                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
-                  : 'hover:bg-base-200 hover:shadow-sm'
+                isActive('/association/account/profile')
+                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+                  : 'hover:bg-base-200 hover:shadow-sm',
               ]"
+              @click="goTo('/association/account/profile')"
             >
-              <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <div
+                class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors"
+              >
                 <UserRound class="w-4 h-4" />
               </div>
-              <span class="font-medium">{{ t('drawer-content.account.view_profile') }}</span>
+              <span class="font-medium">{{
+                t("drawer-content.account.view_profile")
+              }}</span>
             </button>
-            
-            <button 
-              @click="goTo('/association/account/edit')"
+
+            <button
               :class="[
                 'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                isActive('/association/account/edit') 
-                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
-                  : 'hover:bg-base-200 hover:shadow-sm'
+                isActive('/association/account/edit')
+                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+                  : 'hover:bg-base-200 hover:shadow-sm',
               ]"
+              @click="goTo('/association/account/edit')"
             >
-              <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <div
+                class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors"
+              >
                 <Pencil class="w-4 h-4" />
               </div>
-              <span class="font-medium">{{ t('drawer-content.account.edit_profile') }}</span>
+              <span class="font-medium">{{
+                t("drawer-content.account.edit_profile")
+              }}</span>
             </button>
-            
-            <button 
-              @click="goTo('/association/account/settings')"
+
+            <button
               :class="[
                 'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                isActive('/association/account/settings') 
-                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
-                  : 'hover:bg-base-200 hover:shadow-sm'
+                isActive('/association/account/settings')
+                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+                  : 'hover:bg-base-200 hover:shadow-sm',
               ]"
+              @click="goTo('/association/account/settings')"
             >
-              <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <div
+                class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors"
+              >
                 <Settings class="w-4 h-4" />
               </div>
-              <span class="font-medium">{{ t('drawer-content.account.settings') }}</span>
+              <span class="font-medium">{{
+                t("drawer-content.account.settings")
+              }}</span>
             </button>
           </div>
         </div>
 
         <!-- Activity Section -->
         <div class="space-y-3">
-          <h4 class="text-xs font-bold text-base-content/50 uppercase tracking-wider px-2">
-            {{ t('drawer-content.activity.title') }}
+          <h4
+            class="text-xs font-bold text-base-content/50 uppercase tracking-wider px-2"
+          >
+            {{ t("drawer-content.activity.title") }}
           </h4>
           <div class="space-y-1">
-            <button 
-              @click="goTo('/association/dashboard')"
+            <button
               :class="[
                 'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                isActive('/association/activity/dashboard') 
-                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
-                  : 'hover:bg-base-200 hover:shadow-sm'
+                isActive('/association/activity/dashboard')
+                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+                  : 'hover:bg-base-200 hover:shadow-sm',
               ]"
+              @click="goTo('/association/dashboard')"
             >
-              <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <div
+                class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors"
+              >
                 <DashboardIcon class="w-4 h-4" />
               </div>
-              <span class="font-medium">{{ t('drawer-content.activity.dashboard') }}</span>
+              <span class="font-medium">{{
+                t("drawer-content.activity.dashboard")
+              }}</span>
             </button>
-            
-            <button 
-              @click="goTo('/association/events/association/manage')"
+
+            <button
               :class="[
                 'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                isActive('/association/events/association/manage') 
-                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
-                  : 'hover:bg-base-200 hover:shadow-sm'
+                isActive('/association/events/association/manage')
+                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+                  : 'hover:bg-base-200 hover:shadow-sm',
               ]"
+              @click="goTo('/association/events/association/manage')"
             >
-              <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <div
+                class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors"
+              >
                 <CalendarIcon class="w-4 h-4" />
               </div>
-              <span class="font-medium">{{ t('drawer-content.activity.manage-event') }}</span>
+              <span class="font-medium">{{
+                t("drawer-content.activity.manage-event")
+              }}</span>
             </button>
-            
-            <button 
-              @click="goTo('/association/events/association/requests')"
+
+            <button
               :class="[
                 'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                isActive('/association/events/association/requests') 
-                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
-                  : 'hover:bg-base-200 hover:shadow-sm'
+                isActive('/association/events/association/requests')
+                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+                  : 'hover:bg-base-200 hover:shadow-sm',
               ]"
+              @click="goTo('/association/events/association/requests')"
             >
-              <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <div
+                class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors"
+              >
                 <ClipboardList class="w-4 h-4" />
               </div>
-              <span class="font-medium">{{ t('drawer-content.activity.requests') }}</span>
+              <span class="font-medium">{{
+                t("drawer-content.activity.requests")
+              }}</span>
             </button>
           </div>
         </div>
 
         <!-- Notifications & Support Section -->
         <div class="space-y-3">
-          <h4 class="text-xs font-bold text-base-content/50 uppercase tracking-wider px-2">
-            {{ t('drawer-content.notifications_support.title') }}
+          <h4
+            class="text-xs font-bold text-base-content/50 uppercase tracking-wider px-2"
+          >
+            {{ t("drawer-content.notifications_support.title") }}
           </h4>
           <div class="space-y-1">
-            <button 
-              @click="goTo('/notifications')"
+            <button
               :class="[
                 'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                isActive('/notifications') 
-                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
-                  : 'hover:bg-base-200 hover:shadow-sm'
+                isActive('/notifications')
+                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+                  : 'hover:bg-base-200 hover:shadow-sm',
               ]"
+              @click="goTo('/notifications')"
             >
-              <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <div
+                class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors"
+              >
                 <Bell class="w-4 h-4" />
               </div>
-              <span class="font-medium">{{ t('drawer-content.notifications_support.notifications') }}</span>
+              <span class="font-medium">{{
+                t("drawer-content.notifications_support.notifications")
+              }}</span>
             </button>
-            
-            <button 
-              @click="goTo('/help')"
+
+            <button
               :class="[
                 'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                isActive('/help') 
-                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' 
-                  : 'hover:bg-base-200 hover:shadow-sm'
+                isActive('/help')
+                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+                  : 'hover:bg-base-200 hover:shadow-sm',
               ]"
+              @click="goTo('/help')"
             >
-              <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <div
+                class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors"
+              >
                 <CircleHelp class="w-4 h-4" />
               </div>
-              <span class="font-medium">{{ t('drawer-content.notifications_support.help') }}</span>
+              <span class="font-medium">{{
+                t("drawer-content.notifications_support.help")
+              }}</span>
             </button>
           </div>
         </div>
 
         <!-- App Settings Section -->
         <div class="space-y-3">
-          <h4 class="text-xs font-bold text-base-content/50 uppercase tracking-wider px-2">
-            {{ t('drawer-content.app.title') }}
+          <h4
+            class="text-xs font-bold text-base-content/50 uppercase tracking-wider px-2"
+          >
+            {{ t("drawer-content.app.title") }}
           </h4>
           <div class="space-y-1">
             <!-- Language -->
@@ -301,14 +329,20 @@ function toggleLanguageMenu() {
               <button
                 :class="[
                   'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                  showLanguageMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+                  showLanguageMenu
+                    ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+                    : 'hover:bg-base-200 hover:shadow-sm',
                 ]"
                 @click="toggleLanguageMenu"
               >
-                <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+                <div
+                  class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors"
+                >
                   <span class="text-lg">{{ flag }}</span>
                 </div>
-                <span class="font-medium">{{ t('drawer-content.app.language') }}</span>
+                <span class="font-medium">{{
+                  t("drawer-content.app.language")
+                }}</span>
               </button>
               <LanguageComponent
                 :show-language-menu="showLanguageMenu"
@@ -318,25 +352,31 @@ function toggleLanguageMenu() {
             </div>
 
             <!-- Theme Toggle -->
-            <button 
+            <button
               :class="[
                 'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                isDarkTheme() ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+                isDarkTheme()
+                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+                  : 'hover:bg-base-200 hover:shadow-sm',
               ]"
             >
-              <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+              <div
+                class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors"
+              >
                 <label class="swap swap-rotate cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    aria-label="Toggle theme" 
-                    :checked="isDarkTheme()" 
-                    @change="toggleTheme" 
-                  />
-                  <SunIcon class="swap-on w-4 h-4 text-warning"></SunIcon>
-                  <MoonIcon class="swap-off w-4 h-4 text-base-content"/>
+                  <input
+                    type="checkbox"
+                    aria-label="Toggle theme"
+                    :checked="isDarkTheme()"
+                    @change="toggleTheme"
+                  >
+                  <SunIcon class="swap-on w-4 h-4 text-warning" />
+                  <MoonIcon class="swap-off w-4 h-4 text-base-content" />
                 </label>
               </div>
-              <span class="font-medium">{{ t('drawer-content.app.theme') }}</span>
+              <span class="font-medium">{{
+                t("drawer-content.app.theme")
+              }}</span>
             </button>
           </div>
         </div>
@@ -344,12 +384,14 @@ function toggleLanguageMenu() {
     </nav>
 
     <!-- Footer avec bouton logout moderne - Footer fixe -->
-    <div class="p-6 border-t border-base-300 bg-base-100/50 backdrop-blur-sm flex-shrink-0 mb-20">
+    <div
+      class="p-6 border-t border-base-300 bg-base-100/50 backdrop-blur-sm flex-shrink-0 mb-20"
+    >
       <button
-        @click="handleLogout"
         class="btn btn-primary w-full rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
+        @click="handleLogout"
       >
-        {{ t('drawer-content.logout') }}
+        {{ t("drawer-content.logout") }}
       </button>
     </div>
   </div>

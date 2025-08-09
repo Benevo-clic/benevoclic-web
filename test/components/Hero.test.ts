@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { mount } from "@vue/test-utils";
+import { nextTick } from "vue";
 
 // Mock component pour tester le Hero
 const MockHero = {
@@ -46,200 +46,202 @@ const MockHero = {
   props: {
     startSearching: {
       type: Boolean,
-      default: false
-    }
-  }
-}
+      default: false,
+    },
+  },
+};
 
-describe('Hero', () => {
+describe("Hero", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  describe('Rendu de base', () => {
-    it('should render hero section when not searching', () => {
+  describe("Rendu de base", () => {
+    it("should render hero section when not searching", () => {
       const wrapper = mount(MockHero, {
         props: {
-          startSearching: false
-        }
-      })
+          startSearching: false,
+        },
+      });
 
-      const heroSection = wrapper.find('#hero-section')
-      expect(heroSection.exists()).toBe(true)
-    })
+      const heroSection = wrapper.find("#hero-section");
+      expect(heroSection.exists()).toBe(true);
+    });
 
-    it('should not render hero section when searching', () => {
+    it("should not render hero section when searching", () => {
       const wrapper = mount(MockHero, {
         props: {
-          startSearching: true
-        }
-      })
+          startSearching: true,
+        },
+      });
 
-      const heroSection = wrapper.find('#hero-section')
-      expect(heroSection.exists()).toBe(false)
-    })
+      const heroSection = wrapper.find("#hero-section");
+      expect(heroSection.exists()).toBe(false);
+    });
 
-    it('should display main heading', () => {
-      const wrapper = mount(MockHero)
+    it("should display main heading", () => {
+      const wrapper = mount(MockHero);
 
-      const heading = wrapper.find('h1')
-      expect(heading.exists()).toBe(true)
-      expect(heading.text()).toContain('Faites la différence avec')
-      expect(heading.text()).toContain('Benevoclic')
-    })
+      const heading = wrapper.find("h1");
+      expect(heading.exists()).toBe(true);
+      expect(heading.text()).toContain("Faites la différence avec");
+      expect(heading.text()).toContain("Benevoclic");
+    });
 
-    it('should display description text', () => {
-      const wrapper = mount(MockHero)
+    it("should display description text", () => {
+      const wrapper = mount(MockHero);
 
-      const description = wrapper.find('p')
-      expect(description.exists()).toBe(true)
-      expect(description.text()).toContain('Découvrez des événements et missions')
-    })
-  })
+      const description = wrapper.find("p");
+      expect(description.exists()).toBe(true);
+      expect(description.text()).toContain(
+        "Découvrez des événements et missions",
+      );
+    });
+  });
 
-  describe('Boutons d\'action', () => {
-    it('should display discover events button', () => {
-      const wrapper = mount(MockHero)
+  describe("Boutons d'action", () => {
+    it("should display discover events button", () => {
+      const wrapper = mount(MockHero);
 
       // Vérifier que le conteneur des boutons existe
-      const buttonContainer = wrapper.find('.flex.flex-wrap.gap-4')
-      expect(buttonContainer.exists()).toBe(true)
+      const buttonContainer = wrapper.find(".flex.flex-wrap.gap-4");
+      expect(buttonContainer.exists()).toBe(true);
 
       // Vérifier que le texte du bouton est présent dans le template
-      expect(wrapper.text()).toContain('Découvrir les événements')
-      
+      expect(wrapper.text()).toContain("Découvrir les événements");
+
       // Vérifier les classes CSS des boutons
-      const buttons = wrapper.findAll('.btn')
+      const buttons = wrapper.findAll(".btn");
       if (buttons.length > 0) {
-        buttons.forEach(button => {
-          expect(button.classes()).toContain('btn')
-        })
+        buttons.forEach((button) => {
+          expect(button.classes()).toContain("btn");
+        });
       }
-    })
+    });
 
-    it('should display learn more button', () => {
-      const wrapper = mount(MockHero)
+    it("should display learn more button", () => {
+      const wrapper = mount(MockHero);
 
-      const learnMoreButton = wrapper.find('button')
-      expect(learnMoreButton.exists()).toBe(true)
-      expect(learnMoreButton.text()).toContain('En savoir plus')
-      expect(learnMoreButton.classes()).toContain('btn-outline')
-    })
-  })
+      const learnMoreButton = wrapper.find("button");
+      expect(learnMoreButton.exists()).toBe(true);
+      expect(learnMoreButton.text()).toContain("En savoir plus");
+      expect(learnMoreButton.classes()).toContain("btn-outline");
+    });
+  });
 
-  describe('Image et contenu visuel', () => {
-    it('should display hero image', () => {
-      const wrapper = mount(MockHero)
+  describe("Image et contenu visuel", () => {
+    it("should display hero image", () => {
+      const wrapper = mount(MockHero);
 
-      const image = wrapper.find('img[alt="Bénévoles en action"]')
-      expect(image.exists()).toBe(true)
-      expect(image.attributes('src')).toBe('/images/volunteer-info.png')
-    })
+      const image = wrapper.find('img[alt="Bénévoles en action"]');
+      expect(image.exists()).toBe(true);
+      expect(image.attributes("src")).toBe("/images/volunteer-info.png");
+    });
 
-    it('should have proper image styling', () => {
-      const wrapper = mount(MockHero)
+    it("should have proper image styling", () => {
+      const wrapper = mount(MockHero);
 
-      const image = wrapper.find('img[alt="Bénévoles en action"]')
-      expect(image.classes()).toContain('rounded-xl')
-      expect(image.classes()).toContain('shadow-xl')
-    })
-  })
+      const image = wrapper.find('img[alt="Bénévoles en action"]');
+      expect(image.classes()).toContain("rounded-xl");
+      expect(image.classes()).toContain("shadow-xl");
+    });
+  });
 
-  describe('Styles et classes CSS', () => {
-    it('should have proper hero container styling', () => {
-      const wrapper = mount(MockHero)
+  describe("Styles et classes CSS", () => {
+    it("should have proper hero container styling", () => {
+      const wrapper = mount(MockHero);
 
-      const heroSection = wrapper.find('#hero-section')
-      expect(heroSection.classes()).toContain('hero')
-      expect(heroSection.classes()).toContain('min-h-[70vh]')
-      expect(heroSection.classes()).toContain('bg-gradient-to-br')
-    })
+      const heroSection = wrapper.find("#hero-section");
+      expect(heroSection.classes()).toContain("hero");
+      expect(heroSection.classes()).toContain("min-h-[70vh]");
+      expect(heroSection.classes()).toContain("bg-gradient-to-br");
+    });
 
-    it('should have proper grid layout', () => {
-      const wrapper = mount(MockHero)
+    it("should have proper grid layout", () => {
+      const wrapper = mount(MockHero);
 
-      const grid = wrapper.find('.grid')
-      expect(grid.classes()).toContain('grid-cols-1')
-      expect(grid.classes()).toContain('lg:grid-cols-2')
-    })
+      const grid = wrapper.find(".grid");
+      expect(grid.classes()).toContain("grid-cols-1");
+      expect(grid.classes()).toContain("lg:grid-cols-2");
+    });
 
-    it('should have proper button styling', () => {
-      const wrapper = mount(MockHero)
+    it("should have proper button styling", () => {
+      const wrapper = mount(MockHero);
 
-      const buttons = wrapper.findAll('.btn')
-      buttons.forEach(button => {
-        expect(button.classes()).toContain('btn')
-      })
-    })
-  })
+      const buttons = wrapper.findAll(".btn");
+      buttons.forEach((button) => {
+        expect(button.classes()).toContain("btn");
+      });
+    });
+  });
 
-  describe('Accessibilité', () => {
-    it('should have proper heading structure', () => {
-      const wrapper = mount(MockHero)
+  describe("Accessibilité", () => {
+    it("should have proper heading structure", () => {
+      const wrapper = mount(MockHero);
 
-      const heading = wrapper.find('h1')
-      expect(heading.exists()).toBe(true)
-      expect(heading.text()).toBeTruthy()
-    })
+      const heading = wrapper.find("h1");
+      expect(heading.exists()).toBe(true);
+      expect(heading.text()).toBeTruthy();
+    });
 
-    it('should have proper image alt text', () => {
-      const wrapper = mount(MockHero)
+    it("should have proper image alt text", () => {
+      const wrapper = mount(MockHero);
 
-      const image = wrapper.find('img')
-      expect(image.attributes('alt')).toBe('Bénévoles en action')
-    })
+      const image = wrapper.find("img");
+      expect(image.attributes("alt")).toBe("Bénévoles en action");
+    });
 
-    it('should have proper link attributes', () => {
-      const wrapper = mount(MockHero)
+    it("should have proper link attributes", () => {
+      const wrapper = mount(MockHero);
 
       // Vérifier que le conteneur des liens existe
-      const linkContainer = wrapper.find('.flex.flex-wrap.gap-4')
-      expect(linkContainer.exists()).toBe(true)
+      const linkContainer = wrapper.find(".flex.flex-wrap.gap-4");
+      expect(linkContainer.exists()).toBe(true);
 
       // Vérifier que le texte du bouton est présent
-      expect(wrapper.text()).toContain('Découvrir les événements')
-    })
-  })
+      expect(wrapper.text()).toContain("Découvrir les événements");
+    });
+  });
 
-  describe('Responsive design', () => {
-    it('should have responsive text sizing', () => {
-      const wrapper = mount(MockHero)
+  describe("Responsive design", () => {
+    it("should have responsive text sizing", () => {
+      const wrapper = mount(MockHero);
 
-      const heading = wrapper.find('h1')
-      expect(heading.classes()).toContain('text-4xl')
-      expect(heading.classes()).toContain('md:text-5xl')
-    })
+      const heading = wrapper.find("h1");
+      expect(heading.classes()).toContain("text-4xl");
+      expect(heading.classes()).toContain("md:text-5xl");
+    });
 
-    it('should have responsive grid layout', () => {
-      const wrapper = mount(MockHero)
+    it("should have responsive grid layout", () => {
+      const wrapper = mount(MockHero);
 
-      const grid = wrapper.find('.grid')
-      expect(grid.classes()).toContain('grid-cols-1')
-      expect(grid.classes()).toContain('lg:grid-cols-2')
-    })
-  })
+      const grid = wrapper.find(".grid");
+      expect(grid.classes()).toContain("grid-cols-1");
+      expect(grid.classes()).toContain("lg:grid-cols-2");
+    });
+  });
 
-  describe('Props et états', () => {
-    it('should handle startSearching prop correctly', () => {
+  describe("Props et états", () => {
+    it("should handle startSearching prop correctly", () => {
       const wrapper = mount(MockHero, {
         props: {
-          startSearching: false
-        }
-      })
+          startSearching: false,
+        },
+      });
 
-      expect(wrapper.vm.startSearching).toBe(false)
-      expect(wrapper.find('#hero-section').exists()).toBe(true)
-    })
+      expect(wrapper.vm.startSearching).toBe(false);
+      expect(wrapper.find("#hero-section").exists()).toBe(true);
+    });
 
-    it('should hide section when startSearching is true', () => {
+    it("should hide section when startSearching is true", () => {
       const wrapper = mount(MockHero, {
         props: {
-          startSearching: true
-        }
-      })
+          startSearching: true,
+        },
+      });
 
-      expect(wrapper.vm.startSearching).toBe(true)
-      expect(wrapper.find('#hero-section').exists()).toBe(false)
-    })
-  })
-}) 
+      expect(wrapper.vm.startSearching).toBe(true);
+      expect(wrapper.find("#hero-section").exists()).toBe(false);
+    });
+  });
+});

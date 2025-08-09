@@ -113,47 +113,47 @@ npm test -- --testNamePattern="YourTestName"
 Here's an example of a component test for a language selector component:
 
 ```typescript
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
-import LanguageComponent from '../../components/header/utils/components/LanguageComponent.vue'
+import { describe, it, expect } from "vitest";
+import { mount } from "@vue/test-utils";
+import LanguageComponent from "../../components/header/utils/components/LanguageComponent.vue";
 
-describe('LanguageComponent', () => {
-  it('should not render when showLanguageMenu is false', () => {
+describe("LanguageComponent", () => {
+  it("should not render when showLanguageMenu is false", () => {
     const wrapper = mount(LanguageComponent, {
       props: {
-        showLanguageMenu: false
-      }
-    })
+        showLanguageMenu: false,
+      },
+    });
 
-    expect(wrapper.find('.dropdown-content').exists()).toBe(false)
-  })
+    expect(wrapper.find(".dropdown-content").exists()).toBe(false);
+  });
 
-  it('should render when showLanguageMenu is true', () => {
+  it("should render when showLanguageMenu is true", () => {
     const wrapper = mount(LanguageComponent, {
       props: {
-        showLanguageMenu: true
-      }
-    })
+        showLanguageMenu: true,
+      },
+    });
 
-    expect(wrapper.find('.dropdown-content').exists()).toBe(true)
-    expect(wrapper.findAll('li').length).toBe(3) // 3 languages
-  })
+    expect(wrapper.find(".dropdown-content").exists()).toBe(true);
+    expect(wrapper.findAll("li").length).toBe(3); // 3 languages
+  });
 
-  it('should emit changeLanguage event when a language is selected', async () => {
+  it("should emit changeLanguage event when a language is selected", async () => {
     const wrapper = mount(LanguageComponent, {
       props: {
-        showLanguageMenu: true
-      }
-    })
+        showLanguageMenu: true,
+      },
+    });
 
     // Click on the French language option
-    await wrapper.findAll('button')[0].trigger('click')
+    await wrapper.findAll("button")[0].trigger("click");
 
     // Check that the changeLanguage event was emitted with the correct parameters
-    expect(wrapper.emitted('changeLanguage')).toBeTruthy()
-    expect(wrapper.emitted('changeLanguage')![0]).toEqual(['fr', '🇫🇷'])
-  })
-})
+    expect(wrapper.emitted("changeLanguage")).toBeTruthy();
+    expect(wrapper.emitted("changeLanguage")![0]).toEqual(["fr", "🇫🇷"]);
+  });
+});
 ```
 
 #### Test Setup
@@ -161,11 +161,11 @@ describe('LanguageComponent', () => {
 Global test setup can be added to `test/setup.ts`:
 
 ```typescript
-import { beforeAll } from 'vitest'
+import { beforeAll } from "vitest";
 
 beforeAll(() => {
   // Global setup like mocking fetch, localStorage, etc.
-})
+});
 ```
 
 ## Development Guidelines
@@ -243,6 +243,7 @@ This section outlines the GDPR compliance measures implemented in the Benevoclic
 ## GDPR Overview
 
 Benevoclic collects and processes personal data from users, including:
+
 - Email addresses
 - Names
 - Location data
@@ -255,6 +256,7 @@ To comply with GDPR regulations, we've implemented several measures to ensure us
 ### Mentions Légales (Legal Notices)
 
 Located at `/mentions-legales`, this page contains:
+
 - Project name and responsible party
 - Hosting information
 - Contact details
@@ -264,6 +266,7 @@ Located at `/mentions-legales`, this page contains:
 ### Politique de Confidentialité (Privacy Policy)
 
 Located at `/confidentialite`, this page details:
+
 - What data we collect
 - Why we collect it
 - Where it's stored
@@ -312,7 +315,11 @@ The component manages four categories of cookies:
 Users can access cookie settings at any time via a link in the footer. This is implemented in `layouts/footer.vue`:
 
 ```vue
-<a href="#" @click.prevent="openCookieSettings" class="link link-hover">Paramètres des cookies</a>
+<a
+  href="#"
+  @click.prevent="openCookieSettings"
+  class="link link-hover"
+>Paramètres des cookies</a>
 ```
 
 ## Security Headers
@@ -327,6 +334,7 @@ Security headers have been implemented in `nuxt.config.ts` to enhance security a
 - **Permissions-Policy**: Controls which browser features can be used by the page
 
 These headers provide protection against various security vulnerabilities, including:
+
 - Clickjacking attacks
 - MIME type sniffing
 - Cross-site scripting (XSS)

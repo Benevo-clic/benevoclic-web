@@ -1,7 +1,7 @@
-declare module '#app' {
+declare module "#app" {
   interface MiddlewareKey {
-    'guest': NavigationGuard
+    guest: NavigationGuard;
   }
 }
 
-export {} 
+export {};

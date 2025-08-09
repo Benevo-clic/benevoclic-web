@@ -1,23 +1,29 @@
 <template>
-  <div class="bg-white rounded-lg shadow p-4 flex flex-col gap-2" role="region" aria-labelledby="objective-title">
-    <div id="objective-title" class="font-semibold">{{ title }}</div>
-    <div 
-      class="w-full bg-gray-200 rounded h-3" 
-      role="progressbar" 
-      :aria-valuenow="percent" 
-      :aria-valuemin="0" 
+  <div
+    class="bg-white rounded-lg shadow p-4 flex flex-col gap-2"
+    role="region"
+    aria-labelledby="objective-title"
+  >
+    <div id="objective-title" class="font-semibold">
+      {{ title }}
+    </div>
+    <div
+      class="w-full bg-gray-200 rounded h-3"
+      role="progressbar"
+      :aria-valuenow="percent"
+      :aria-valuemin="0"
       :aria-valuemax="100"
       :aria-label="`Progression de ${title}`"
       :aria-describedby="`progress-description-${uniqueId}`"
     >
-      <div 
-        class="bg-blue-500 h-3 rounded transition-all duration-300" 
+      <div
+        class="bg-blue-500 h-3 rounded transition-all duration-300"
         :style="{ width: percent + '%' }"
         :aria-label="`${percent.toFixed(1)}% complété`"
-      ></div>
+      />
     </div>
-    <div 
-      :id="`progress-description-${uniqueId}`" 
+    <div
+      :id="`progress-description-${uniqueId}`"
       class="text-xs text-gray-500"
       aria-live="polite"
     >
@@ -29,21 +35,18 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const props = defineProps<{ title: string, covered: number, planned: number }>()
+const props = defineProps<{
+  title: string;
+  covered: number;
+  planned: number;
+}>()
 
 // Generate unique ID for accessibility
 const uniqueId = Math.random().toString(36).substr(2, 9)
 
-const percent = computed(() => props.planned ? (props.covered / props.planned) * 100 : 0)
-
-// Computed properties for better accessibility
-const progressStatus = computed(() => {
-  if (percent.value >= 100) return 'Objectif atteint'
-  if (percent.value >= 75) return 'Objectif presque atteint'
-  if (percent.value >= 50) return 'Objectif à mi-chemin'
-  if (percent.value >= 25) return 'Objectif en cours'
-  return 'Objectif à commencer'
-})
+const percent = computed(() =>
+  props.planned ? (props.covered / props.planned) * 100 : 0
+)
 </script>
 
 <style scoped>
@@ -63,7 +66,7 @@ const progressStatus = computed(() => {
   .bg-gray-200 {
     border: 1px solid currentColor;
   }
-  
+
   .bg-blue-500 {
     border: 1px solid currentColor;
   }
@@ -82,4 +85,4 @@ const progressStatus = computed(() => {
     background-color: #000 !important;
   }
 }
-</style> 
+</style>

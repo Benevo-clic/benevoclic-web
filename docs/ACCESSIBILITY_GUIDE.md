@@ -1,6 +1,7 @@
 # Guide d'Accessibilité - Benevoclic
 
 ## 🎯 Objectifs
+
 - Score d'accessibilité minimum : 90/100
 - Conformité WCAG 2.1 AA
 - Support complet des lecteurs d'écran
@@ -8,34 +9,40 @@
 ## 📋 Checklist d'Accessibilité
 
 ### ✅ Structure HTML
+
 - [ ] Attribut lang="fr" sur la balise html
 - [ ] Titre h1 principal sur chaque page
 - [ ] Structure de titres logique (h1 → h2 → h3)
 - [ ] Éléments sémantiques (main, nav, section, article)
 
 ### ✅ Images
+
 - [ ] Attribut alt descriptif sur toutes les images
 - [ ] Images décoratives avec alt=""
 - [ ] Images complexes avec aria-describedby
 
 ### ✅ Formulaires
+
 - [ ] Labels associés à tous les champs
 - [ ] Messages d'erreur avec aria-describedby
 - [ ] Champs requis avec aria-required
 - [ ] Validation en temps réel
 
 ### ✅ Navigation
+
 - [ ] Skip links pour passer la navigation
 - [ ] Navigation au clavier fonctionnelle
 - [ ] Ordre de tabulation logique
 - [ ] Focus visible sur tous les éléments
 
 ### ✅ Contraste et Couleurs
+
 - [ ] Ratio de contraste minimum 4.5:1
 - [ ] Mode contraste élevé disponible
 - [ ] Informations non transmises uniquement par la couleur
 
 ### ✅ Lecteurs d'écran
+
 - [ ] Attributs ARIA appropriés
 - [ ] Annonces dynamiques avec aria-live
 - [ ] Rôles sémantiques corrects
@@ -44,6 +51,7 @@
 ## 🛠️ Outils de Test
 
 ### Tests Automatiques
+
 ```bash
 # Test d'accessibilité
 node scripts/test-a11y.js
@@ -53,6 +61,7 @@ node scripts/fix-a11y.js
 ```
 
 ### Tests Manuels
+
 1. **Navigation au clavier** : Tab, Shift+Tab, Entrée, Espace
 2. **Lecteur d'écran** : NVDA, JAWS, VoiceOver
 3. **Contraste** : Outils de vérification de contraste
@@ -67,6 +76,7 @@ node scripts/fix-a11y.js
 ## 🔧 Composants Accessibles
 
 ### AccessibleTitle
+
 ```vue
 <AccessibleTitle level="1" class="text-2xl">
   Titre principal
@@ -74,9 +84,10 @@ node scripts/fix-a11y.js
 ```
 
 ### AccessibleButton
+
 ```vue
-<AccessibleButton 
-  variant="primary" 
+<AccessibleButton
+  variant="primary"
   aria-label="Action principale"
   @click="handleClick"
 >
@@ -85,9 +96,10 @@ node scripts/fix-a11y.js
 ```
 
 ### AccessibleImage
+
 ```vue
-<AccessibleImage 
-  src="/image.jpg" 
+<AccessibleImage
+  src="/image.jpg"
   alt="Description de l'image"
   width="300"
   height="200"
@@ -95,11 +107,9 @@ node scripts/fix-a11y.js
 ```
 
 ### AccessibleForm
+
 ```vue
-<AccessibleForm 
-  aria-label="Formulaire de contact"
-  @submit="handleSubmit"
->
+<AccessibleForm aria-label="Formulaire de contact" @submit="handleSubmit">
   <!-- Champs du formulaire -->
 </AccessibleForm>
 ```

@@ -1,7 +1,15 @@
 <script setup lang="ts">
-import { ChevronDown, Earth, MapPin, Navigation, AlertCircle, Search, X } from "lucide-vue-next";
-import { ref, watch, onMounted, onUnmounted, computed } from "vue";
-import { useUserLocation } from "~/composables/useUserLocation";
+import {
+  ChevronDown,
+  Earth,
+  MapPin,
+  Navigation,
+  AlertCircle,
+  Search,
+  X
+} from 'lucide-vue-next'
+import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
+import { useUserLocation } from '~/composables/useUserLocation'
 
 const showCityMenu = ref(false)
 const showLanguageMenu = ref(false)
@@ -10,19 +18,22 @@ const searchQuery = ref('')
 const searchResults = ref<any[]>([])
 const isSearching = ref(false)
 
-const { userLocation, isLoading, error, getUserLocation, clearStoredLocation } = useUserLocation()
+const { userLocation, isLoading, error, getUserLocation, clearStoredLocation } =
+  useUserLocation()
 
 const defaultCities = [
-  "Paris, France",
-  "Lyon, France",
-  "Marseille, France",
-  "Toulouse, France"
+  'Paris, France',
+  'Lyon, France',
+  'Marseille, France',
+  'Toulouse, France'
 ]
 
 const currentCity = ref(defaultCities[0])
 
 const props = defineProps<{ flag: string }>()
-const emit = defineEmits<{ (e: 'toggle-language-menu', show: boolean): void }>()
+const emit = defineEmits<{
+  (e: 'toggle-language-menu', show: boolean): void;
+}>()
 
 // Recherche de villes françaises via l'API Etalab
 const searchFrenchCities = async (query: string) => {
@@ -37,7 +48,7 @@ const searchFrenchCities = async (query: string) => {
       `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&country=France&limit=10`
     )
     const data = await response.json()
-    
+
     searchResults.value = data.features
       .filter((feature: any) => feature.properties.type === 'municipality')
       .map((feature: any) => ({
@@ -73,9 +84,10 @@ const selectSearchedCity = (city: any) => {
   searchResults.value = []
   showSearch.value = false
   showCityMenu.value = false
-  
+
   // Afficher les coordonnées dans la console
-  console.log('Ville sélectionnée:', {    nom: city.city,
+  console.log('Ville sélectionnée:', {
+    nom: city.city,
     codePostal: city.postcode,
     nomComplet: city.name,
     coordonnées: {
@@ -93,17 +105,19 @@ const toggleSearch = () => {
   }
 }
 
-function selectCity(city: string) {
+function selectCity (city: string) {
   currentCity.value = city
   showCityMenu.value = false
-  
+
   // Afficher les coordonnées pour les villes par défaut
   console.log('Ville par défaut sélectionnée:', city)
-  
+
   // Optionnel : Récupérer les coordonnées via géocodage pour les villes par défaut
-  fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(city)}&country=France&limit=1`)
+  fetch(
+    `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(city)}&country=France&limit=1`
+  )
     .then(response => response.json())
-    .then(data => {
+    .then((data) => {
       if (data.features && data.features.length > 0) {
         const feature = data.features[0]
         console.log('Coordonnées de la ville par défaut:', {
@@ -115,11 +129,13 @@ function selectCity(city: string) {
         })
       }
     })
-    .catch(err => console.error('Erreur lors de la récupération des coordonnées:', err))
+    .catch(err =>
+      console.error('Erreur lors de la récupération des coordonnées:', err)
+    )
 }
 
-function toggleLanguageMenu() {
-  showLanguageMenu.value = (!showLanguageMenu.value && !showCityMenu.value)
+function toggleLanguageMenu () {
+  showLanguageMenu.value = !showLanguageMenu.value && !showCityMenu.value
   emit('toggle-language-menu', showLanguageMenu.value)
 }
 
@@ -170,13 +186,20 @@ onUnmounted(() => {
     <!-- Sélecteur de ville/géolocalisation -->
     <div class="relative">
       <button
-        @click="showCityMenu = (!showCityMenu && !showLanguageMenu)"
         class="btn btn-neutral-content btn-md px-0 flex items-center gap-1"
+        @click="showCityMenu = !showCityMenu && !showLanguageMenu"
       >
-      <MapPin class="text-base-content w-6 h-6" />
-      <span class="text-sm text-base-content">{{ currentCity }}</span>
-      <ChevronDown :class="showCityMenu ? 'rotate-180 transition-transform' : 'transition-transform'" class="w-4 h-4 text-base-content" />
-    </button>
+        <MapPin class="text-base-content w-6 h-6" />
+        <span class="text-sm text-base-content">{{ currentCity }}</span>
+        <ChevronDown
+          :class="
+            showCityMenu
+              ? 'rotate-180 transition-transform'
+              : 'transition-transform'
+          "
+          class="w-4 h-4 text-base-content"
+        />
+      </button>
       <!-- Menu déroulant -->
       <div
         v-if="showCityMenu && !showLanguageMenu"
@@ -184,43 +207,69 @@ onUnmounted(() => {
       >
         <!-- Barre de recherche -->
         <div class="mb-3">
-            <div class="relative">
+          <div class="relative">
             <input
               v-model="searchQuery"
               type="text"
               placeholder="Rechercher une ville..."
               class="input input-sm w-full pr-8"
+              aria-label="Champ de saisie"
               @focus="showSearch = true"
-            aria-label="Champ de saisie">
-            <Search class="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            >
+            <Search
+              class="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
+            />
           </div>
-          
+
           <!-- Résultats de recherche -->
-          <div v-if="showSearch && searchQuery" class="mt-2 max-h-48 overflow-y-auto">
-            <div v-if="isSearching" class="text-center py-2 text-sm text-gray-500">Recherche en cours...</div>
+          <div
+            v-if="showSearch && searchQuery"
+            class="mt-2 max-h-48 overflow-y-auto"
+          >
+            <div
+              v-if="isSearching"
+              class="text-center py-2 text-sm text-gray-500"
+            >
+              Recherche en cours...
+            </div>
             <div v-else-if="searchResults.length > 0" class="space-y-1">
               <button
                 v-for="city in searchResults"
                 :key="`${city.city}-${city.postcode}`"
-                @click="selectSearchedCity(city)"
                 class="w-full text-left p-2 hover:bg-gray-100 rounded text-sm"
+                @click="selectSearchedCity(city)"
               >
-                <div class="font-medium">{{ city.city }}</div>
-                <div class="text-xs text-gray-500">{{ city.postcode }} - {{ city.name }}</div>
+                <div class="font-medium">
+                  {{ city.city }}
+                </div>
+                <div class="text-xs text-gray-500">
+                  {{ city.postcode }} - {{ city.name }}
+                </div>
               </button>
             </div>
-            <div v-else-if="searchQuery.length >= 2" class="text-center py-2 text-sm text-gray-500">Aucune ville trouvée</div>
+            <div
+              v-else-if="searchQuery.length >= 2"
+              class="text-center py-2 text-sm text-gray-500"
+            >
+              Aucune ville trouvée
+            </div>
           </div>
         </div>
 
         <!-- Bouton géolocalisation -->
         <div class="mb-2 pb-2 border-b border-gray-200">
           <button
-            @click="handleGetLocation"
             :disabled="isLoading"
-            :class="['w-full flex items-center gap-2 p-2 rounded hover:bg-gray-100', userLocation ? 'bg-blue-50 text-blue-700' : '']"
+            :class="[
+              'w-full flex items-center gap-2 p-2 rounded hover:bg-gray-100',
+              userLocation ? 'bg-blue-50 text-blue-700' : '',
+            ]"
+            @click="handleGetLocation"
           >
-            <Navigation class="w-4 h-4" :class="userLocation ? 'text-blue-700' : 'text-blue-600'" />
+            <Navigation
+              class="w-4 h-4"
+              :class="userLocation ? 'text-blue-700' : 'text-blue-600'"
+            />
             <span class="text-sm">
               <template v-if="isLoading">Localisation...</template>
               <template v-else-if="userLocation">Ma position définie</template>
@@ -231,15 +280,20 @@ onUnmounted(() => {
 
         <!-- Villes par défaut -->
         <div class="mb-2">
-          <div class="text-xs font-medium text-gray-600 mb-1">Villes populaires</div>
-      <ul class="menu menu-compact">
+          <div class="text-xs font-medium text-gray-600 mb-1">
+            Villes populaires
+          </div>
+          <ul class="menu menu-compact">
             <li v-for="city in defaultCities" :key="city">
-              <button @click="selectCity(city)" class="w-full text-left p-2 hover:bg-gray-100">
+              <button
+                class="w-full text-left p-2 hover:bg-gray-100"
+                @click="selectCity(city)"
+              >
                 {{ city }}
               </button>
-        </li>
-      </ul>
-    </div>
+            </li>
+          </ul>
+        </div>
 
         <!-- Affichage position utilisateur -->
         <div v-if="userLocation" class="mt-2 pt-2 border-t border-gray-200">
@@ -247,12 +301,17 @@ onUnmounted(() => {
             <div class="flex items-center gap-2">
               <Navigation class="w-4 h-4 text-blue-700" />
               <span class="text-xs text-blue-700">
-                {{ userLocation.city || (userLocation.latitude.toFixed(4) + ', ' + userLocation.longitude.toFixed(4)) }}
+                {{
+                  userLocation.city ||
+                    userLocation.latitude.toFixed(4) +
+                    ", " +
+                    userLocation.longitude.toFixed(4)
+                }}
               </span>
             </div>
             <button
-              @click="handleClearLocation"
               class="text-xs text-blue-600 hover:text-blue-800 underline"
+              @click="handleClearLocation"
             >
               Effacer
             </button>
@@ -272,15 +331,15 @@ onUnmounted(() => {
     <!-- Bouton de langue -->
     <div class="indicator hidden sm:flex">
       <button
-        @click="toggleLanguageMenu"
         class="btn btn-neutral-content btn-md ml-1 px-2 flex items-center gap-1"
         :class="{ 'bg-blue-100': showLanguageMenu }"
+        @click="toggleLanguageMenu"
       >
         <span class="indicator-item text-base-content mt-2 mr-2">
           {{ props.flag }}
-      </span>
+        </span>
         <Earth class="text-base-content w-6 h-6" />
-    </button>
+      </button>
     </div>
   </div>
 </template>

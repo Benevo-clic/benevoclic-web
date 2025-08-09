@@ -1,6 +1,6 @@
 <!--
   Composant OptimizedImage - Image optimisée avec accessibilité
-  
+
   Utilisation:
   <OptimizedImage
     src="/path/to/image.jpg"
@@ -15,7 +15,7 @@
     @error="onImageError"
     @click="onImageClick"
   />
-  
+
   Props:
   - src: URL de l'image
   - alt: Texte alternatif (obligatoire)
@@ -30,18 +30,14 @@
   - sizes: Attribut sizes pour les images responsives
   - srcset: Attribut srcset pour les images responsives
   - clickable: Rendre l'image cliquable
-  
-  Events:
+
+  Announcements:
   - load: Émis quand l'image est chargée
   - error: Émis en cas d'erreur de chargement
   - click: Émis quand l'image est cliquée (si clickable=true)
 -->
 <template>
-  <div 
-    class="image-container" 
-    :class="containerClass"
-    :style="containerStyle"
-  >
+  <div class="image-container" :class="containerClass" :style="containerStyle">
     <img
       v-if="src"
       :src="src"
@@ -56,16 +52,28 @@
       @load="onImageLoad"
       @error="onImageError"
       @click="onImageClick"
-    />
-    <div 
-      v-else 
+    >
+    <div
+      v-else
       class="placeholder"
       :class="placeholderClass"
       :aria-label="placeholderAriaLabel"
     >
       <slot name="placeholder">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+          />
         </svg>
       </slot>
     </div>
@@ -74,20 +82,20 @@
 
 <script setup lang="ts">
 interface Props {
-  src?: string
-  alt: string
-  width?: number
-  height?: number
-  loading?: 'lazy' | 'eager'
-  decoding?: 'sync' | 'async' | 'auto'
-  aspectRatio?: string
-  containerClass?: string
-  imageClass?: string
-  placeholderClass?: string
-  placeholderAriaLabel?: string
-  sizes?: string
-  srcset?: string
-  clickable?: boolean
+  src?: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  loading?: 'lazy' | 'eager';
+  decoding?: 'sync' | 'async' | 'auto';
+  aspectRatio?: string;
+  containerClass?: string;
+  imageClass?: string;
+  placeholderClass?: string;
+  placeholderAriaLabel?: string;
+  sizes?: string;
+  srcset?: string;
+  clickable?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -101,34 +109,34 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-  load: [event: Event]
-  error: [event: Event]
-  click: [event: MouseEvent]
+  load: [event: Event];
+  error: [event: Event];
+  click: [event: MouseEvent];
 }>()
 
 const containerStyle = computed(() => {
   const styles: Record<string, string> = {}
-  
+
   if (props.aspectRatio) {
     styles.aspectRatio = props.aspectRatio
   }
-  
+
   if (props.clickable) {
     styles.cursor = 'pointer'
   }
-  
+
   return styles
 })
 
-function onImageLoad(event: Event) {
+function onImageLoad (event: Event) {
   emit('load', event)
 }
 
-function onImageError(event: Event) {
+function onImageError (event: Event) {
   emit('error', event)
 }
 
-function onImageClick(event: MouseEvent) {
+function onImageClick (event: MouseEvent) {
   if (props.clickable) {
     emit('click', event)
   }
@@ -145,7 +153,9 @@ function onImageClick(event: MouseEvent) {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .image-container img:hover {
@@ -173,9 +183,9 @@ function onImageClick(event: MouseEvent) {
   .image-container img {
     transition: none;
   }
-  
+
   .image-container img:hover {
     transform: none;
   }
 }
-</style> 
+</style>

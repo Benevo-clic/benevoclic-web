@@ -18,6 +18,7 @@ Ce document détaille les améliorations d'accessibilité apportées à l'applic
 ### 1. Structure HTML Sémantique
 
 #### Layouts Améliorés
+
 - **`layouts/app.vue`** :
   - Ajout de `role="application"` et `aria-label`
   - Remplacement des `div` par `<aside>` et `<main>`
@@ -37,6 +38,7 @@ Ce document détaille les améliorations d'accessibilité apportées à l'applic
 ### 2. Composant Header Accessible
 
 #### `components/header/Header.vue`
+
 - **Modal de connexion** :
   - Ajout de `role="dialog"`, `aria-labelledby`, `aria-describedby`
   - Bouton de fermeture avec `aria-label`
@@ -51,6 +53,7 @@ Ce document détaille les améliorations d'accessibilité apportées à l'applic
 ### 3. Formulaires Accessibles
 
 #### Composants de Formulaire Améliorés
+
 - **`components/register/volunteer/form/BaseFormField.vue`** :
   - Génération d'IDs uniques pour lier labels et inputs
   - Ajout de `aria-invalid` et `aria-describedby`
@@ -67,6 +70,7 @@ Ce document détaille les améliorations d'accessibilité apportées à l'applic
 ### 4. Navigation Clavier
 
 #### Composant `AccessibleNavigation.vue`
+
 - **Liens de saut** pour navigation rapide :
   - "Aller au contenu principal"
   - "Aller à la navigation"
@@ -77,6 +81,7 @@ Ce document détaille les améliorations d'accessibilité apportées à l'applic
 ### 5. Styles d'Accessibilité
 
 #### `assets/css/accessibility.scss`
+
 - **Focus visible** : outline bleu avec offset
 - **Contraste amélioré** pour les éléments de navigation
 - **Classe `.sr-only`** pour éléments masqués visuellement
@@ -89,6 +94,7 @@ Ce document détaille les améliorations d'accessibilité apportées à l'applic
 ## 🧪 Tests et Audit
 
 ### Configuration Lighthouse
+
 - **`lighthouserc.a11y.js`** configuré pour :
   - Score minimum de 90/100
   - Tests sur `http://localhost:5482`
@@ -96,6 +102,7 @@ Ce document détaille les améliorations d'accessibilité apportées à l'applic
   - Règles d'accessibilité strictes
 
 ### Scripts d'Audit
+
 ```bash
 # Audit d'accessibilité manuel
 npm run a11y:audit
@@ -110,6 +117,7 @@ npm run audit:all
 ## 📊 Métriques d'Accessibilité
 
 ### Avant les Améliorations
+
 - ❌ Structure HTML non sémantique
 - ❌ Focus invisible ou absent
 - ❌ Labels non liés aux inputs
@@ -117,6 +125,7 @@ npm run audit:all
 - ❌ Navigation clavier limitée
 
 ### Après les Améliorations
+
 - ✅ **Structure sémantique** complète
 - ✅ **Focus visible** sur tous les éléments interactifs
 - ✅ **Labels liés** à tous les inputs
@@ -128,28 +137,33 @@ npm run audit:all
 ## 🎨 Bonnes Pratiques Appliquées
 
 ### 1. Structure Sémantique
+
 - Utilisation de `<header>`, `<main>`, `<footer>`, `<nav>`, `<aside>`
 - Rôles ARIA appropriés (`banner`, `main`, `contentinfo`, `navigation`)
 - Hiérarchie de titres cohérente
 
 ### 2. Navigation Clavier
+
 - Ordre de tabulation logique
 - Focus visible avec styles distinctifs
 - Liens de saut pour navigation rapide
 - Gestion des états `aria-expanded`
 
 ### 3. Formulaires
+
 - Labels explicites liés aux inputs
 - Messages d'erreur avec `role="alert"`
 - Attributs `aria-invalid` et `aria-describedby`
 - Validation en temps réel
 
 ### 4. Images et Médias
+
 - Alt descriptifs pour toutes les images
 - `aria-hidden="true"` pour les icônes décoratives
 - Support des légendes pour les vidéos
 
 ### 5. Contraste et Lisibilité
+
 - Contraste suffisant (minimum 4.5:1)
 - Taille de police lisible
 - Espacement approprié
@@ -157,6 +171,7 @@ npm run audit:all
 ## 🚀 Utilisation
 
 ### Développement
+
 ```bash
 # Démarrer l'application
 npm run start
@@ -166,6 +181,7 @@ npm run a11y:audit
 ```
 
 ### Production
+
 ```bash
 # Build et audit complet
 npm run build
@@ -181,12 +197,14 @@ npm run audit:all
 ## 🔄 Maintenance
 
 ### Vérifications Régulières
+
 1. **Audit mensuel** avec Lighthouse
 2. **Tests de navigation clavier** sur nouvelles fonctionnalités
 3. **Vérification des contrastes** lors des changements de design
 4. **Tests avec lecteurs d'écran** (NVDA, JAWS, VoiceOver)
 
 ### Intégration Continue
+
 - Audit automatique dans le pipeline CI/CD
 - Tests d'accessibilité dans les tests unitaires
 - Documentation des nouvelles fonctionnalités
@@ -195,4 +213,4 @@ npm run audit:all
 
 **Dernière mise à jour** : 27 juillet 2025  
 **Version** : 1.0  
-**Statut** : ✅ Complété 
+**Statut** : ✅ Complété

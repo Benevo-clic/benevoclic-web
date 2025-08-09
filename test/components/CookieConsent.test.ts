@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { defineComponent, ref } from 'vue'
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { mount } from "@vue/test-utils";
+import { defineComponent, ref } from "vue";
 
 // Composant de test simple pour CookieConsent
 const MockCookieConsent = defineComponent({
@@ -30,264 +30,266 @@ const MockCookieConsent = defineComponent({
     </div>
   `,
   setup(props, { emit }) {
-    const showBanner = ref(true)
-    const showDetailedPreferences = ref(false)
-    
+    const showBanner = ref(true);
+    const showDetailedPreferences = ref(false);
+
     const acceptAll = () => {
-      showBanner.value = false
-      emit('cookies-accepted')
-    }
-    
+      showBanner.value = false;
+      emit("cookies-accepted");
+    };
+
     const rejectAll = () => {
-      showBanner.value = false
-      emit('cookies-rejected')
-    }
-    
+      showBanner.value = false;
+      emit("cookies-rejected");
+    };
+
     const openSettings = () => {
-      showDetailedPreferences.value = true
-    }
-    
+      showDetailedPreferences.value = true;
+    };
+
     const toggleAnalytics = () => {
-      emit('analytics-toggled')
-    }
-    
+      emit("analytics-toggled");
+    };
+
     return {
       showBanner,
       showDetailedPreferences,
       acceptAll,
       rejectAll,
       openSettings,
-      toggleAnalytics
-    }
-  }
-})
+      toggleAnalytics,
+    };
+  },
+});
 
-describe('CookieConsent', () => {
+describe("CookieConsent", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  it('should render cookie consent banner when not accepted', () => {
+  it("should render cookie consent banner when not accepted", () => {
     const wrapper = mount(MockCookieConsent, {
       global: {
         stubs: {
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
+          ClientOnly: {
+            template: "<div><slot /></div>",
+          },
+        },
+      },
+    });
 
-    expect(wrapper.exists()).toBe(true)
-    expect(wrapper.text()).toContain('Gestion des cookies')
-    expect(wrapper.text()).toContain('cookies') // Changé de 'Cookies' à 'cookies'
-  })
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.text()).toContain("Gestion des cookies");
+    expect(wrapper.text()).toContain("cookies"); // Changé de 'Cookies' à 'cookies'
+  });
 
-  it('should not render when cookies are already accepted', () => {
+  it("should not render when cookies are already accepted", () => {
     const wrapper = mount(MockCookieConsent, {
       setup() {
         return {
           showBanner: ref(false),
-          showDetailedPreferences: ref(false)
-        }
+          showDetailedPreferences: ref(false),
+        };
       },
       global: {
         stubs: {
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
+          ClientOnly: {
+            template: "<div><slot /></div>",
+          },
+        },
+      },
+    });
 
-    expect(wrapper.find('[data-testid="cookie-banner"]').exists()).toBe(false)
-  })
+    expect(wrapper.find('[data-testid="cookie-banner"]').exists()).toBe(false);
+  });
 
-  it('should call acceptAllCookies when accept button is clicked', async () => {
+  it("should call acceptAllCookies when accept button is clicked", async () => {
     const wrapper = mount(MockCookieConsent, {
       global: {
         stubs: {
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
+          ClientOnly: {
+            template: "<div><slot /></div>",
+          },
+        },
+      },
+    });
 
-    const acceptButton = wrapper.find('[data-testid="accept-cookies"]')
-    expect(acceptButton.exists()).toBe(true)
-    
-    await acceptButton.trigger('click')
-    expect(wrapper.emitted('cookies-accepted')).toBeTruthy()
-  })
+    const acceptButton = wrapper.find('[data-testid="accept-cookies"]');
+    expect(acceptButton.exists()).toBe(true);
 
-  it('should call rejectAllCookies when reject button is clicked', async () => {
+    await acceptButton.trigger("click");
+    expect(wrapper.emitted("cookies-accepted")).toBeTruthy();
+  });
+
+  it("should call rejectAllCookies when reject button is clicked", async () => {
     const wrapper = mount(MockCookieConsent, {
       global: {
         stubs: {
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
+          ClientOnly: {
+            template: "<div><slot /></div>",
+          },
+        },
+      },
+    });
 
-    const rejectButton = wrapper.find('[data-testid="reject-cookies"]')
-    expect(rejectButton.exists()).toBe(true)
-    
-    await rejectButton.trigger('click')
-    expect(wrapper.emitted('cookies-rejected')).toBeTruthy()
-  })
+    const rejectButton = wrapper.find('[data-testid="reject-cookies"]');
+    expect(rejectButton.exists()).toBe(true);
 
-  it('should show detailed preferences when settings button is clicked', async () => {
+    await rejectButton.trigger("click");
+    expect(wrapper.emitted("cookies-rejected")).toBeTruthy();
+  });
+
+  it("should show detailed preferences when settings button is clicked", async () => {
     const wrapper = mount(MockCookieConsent, {
       global: {
         stubs: {
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
+          ClientOnly: {
+            template: "<div><slot /></div>",
+          },
+        },
+      },
+    });
 
-    const settingsButton = wrapper.find('[data-testid="cookie-settings"]')
-    expect(settingsButton.exists()).toBe(true)
-    
-    await settingsButton.trigger('click')
-    expect(wrapper.vm.showDetailedPreferences).toBe(true)
-  })
+    const settingsButton = wrapper.find('[data-testid="cookie-settings"]');
+    expect(settingsButton.exists()).toBe(true);
 
-  it('should display correct cookie categories', () => {
+    await settingsButton.trigger("click");
+    expect(wrapper.vm.showDetailedPreferences).toBe(true);
+  });
+
+  it("should display correct cookie categories", () => {
     const wrapper = mount(MockCookieConsent, {
       global: {
         stubs: {
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
+          ClientOnly: {
+            template: "<div><slot /></div>",
+          },
+        },
+      },
+    });
 
-    expect(wrapper.text()).toContain('Nécessaires')
-    expect(wrapper.text()).toContain('Analytics')
-    expect(wrapper.text()).toContain('Personnalisation')
-  })
+    expect(wrapper.text()).toContain("Nécessaires");
+    expect(wrapper.text()).toContain("Analytics");
+    expect(wrapper.text()).toContain("Personnalisation");
+  });
 
-  it('should handle individual cookie category toggles', async () => {
+  it("should handle individual cookie category toggles", async () => {
     const wrapper = mount(MockCookieConsent, {
       setup() {
-        const showBanner = ref(true)
-        const showDetailedPreferences = ref(true)
-        
-        const acceptAll = () => {}
-        const rejectAll = () => {}
-        const openSettings = () => {}
-        const toggleAnalytics = () => {}
-        
+        const showBanner = ref(true);
+        const showDetailedPreferences = ref(true);
+
+        const acceptAll = () => {};
+        const rejectAll = () => {};
+        const openSettings = () => {};
+        const toggleAnalytics = () => {};
+
         return {
           showBanner,
           showDetailedPreferences,
           acceptAll,
           rejectAll,
           openSettings,
-          toggleAnalytics
-        }
+          toggleAnalytics,
+        };
       },
       global: {
         stubs: {
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
+          ClientOnly: {
+            template: "<div><slot /></div>",
+          },
+        },
+      },
+    });
 
-    const analyticsToggle = wrapper.find('[data-testid="analytics-toggle"] input')
-    expect(analyticsToggle.exists()).toBe(true)
-    
+    const analyticsToggle = wrapper.find(
+      '[data-testid="analytics-toggle"] input',
+    );
+    expect(analyticsToggle.exists()).toBe(true);
+
     // Simuler le clic sur le toggle
-    await analyticsToggle.trigger('change')
+    await analyticsToggle.trigger("change");
     // Vérifier que le toggle existe et est fonctionnel
-    expect(analyticsToggle.exists()).toBe(true)
-  })
+    expect(analyticsToggle.exists()).toBe(true);
+  });
 
-  it('should be accessible with keyboard navigation', () => {
+  it("should be accessible with keyboard navigation", () => {
     const wrapper = mount(MockCookieConsent, {
       global: {
         stubs: {
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
+          ClientOnly: {
+            template: "<div><slot /></div>",
+          },
+        },
+      },
+    });
 
     // Vérifier que les boutons sont focusables
-    const focusableElements = wrapper.findAll('button, [tabindex]')
-    expect(focusableElements.length).toBeGreaterThan(0)
-  })
+    const focusableElements = wrapper.findAll("button, [tabindex]");
+    expect(focusableElements.length).toBeGreaterThan(0);
+  });
 
-  it('should have proper ARIA attributes', () => {
+  it("should have proper ARIA attributes", () => {
     const wrapper = mount(MockCookieConsent, {
       global: {
         stubs: {
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
+          ClientOnly: {
+            template: "<div><slot /></div>",
+          },
+        },
+      },
+    });
 
-    const banner = wrapper.find('[data-testid="cookie-banner"]')
-    expect(banner.exists()).toBe(true)
-  })
+    const banner = wrapper.find('[data-testid="cookie-banner"]');
+    expect(banner.exists()).toBe(true);
+  });
 
-  it('should close banner after accepting cookies', async () => {
+  it("should close banner after accepting cookies", async () => {
     const wrapper = mount(MockCookieConsent, {
       global: {
         stubs: {
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
+          ClientOnly: {
+            template: "<div><slot /></div>",
+          },
+        },
+      },
+    });
 
-    const acceptButton = wrapper.find('[data-testid="accept-cookies"]')
-    expect(acceptButton.exists()).toBe(true)
-    
-    await acceptButton.trigger('click')
-    expect(wrapper.vm.showBanner).toBe(false)
-  })
+    const acceptButton = wrapper.find('[data-testid="accept-cookies"]');
+    expect(acceptButton.exists()).toBe(true);
 
-  it('should handle banner visibility correctly', () => {
+    await acceptButton.trigger("click");
+    expect(wrapper.vm.showBanner).toBe(false);
+  });
+
+  it("should handle banner visibility correctly", () => {
     const wrapper = mount(MockCookieConsent, {
       global: {
         stubs: {
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
+          ClientOnly: {
+            template: "<div><slot /></div>",
+          },
+        },
+      },
+    });
 
-    const banner = wrapper.find('[data-testid="cookie-banner"]')
-    expect(banner.exists()).toBe(true)
-    expect(banner.isVisible()).toBe(true)
-  })
+    const banner = wrapper.find('[data-testid="cookie-banner"]');
+    expect(banner.exists()).toBe(true);
+    expect(banner.isVisible()).toBe(true);
+  });
 
-  it('should have proper cookie consent text', () => {
+  it("should have proper cookie consent text", () => {
     const wrapper = mount(MockCookieConsent, {
       global: {
         stubs: {
-          'ClientOnly': {
-            template: '<div><slot /></div>'
-          }
-        }
-      }
-    })
+          ClientOnly: {
+            template: "<div><slot /></div>",
+          },
+        },
+      },
+    });
 
-    expect(wrapper.text()).toContain('Gestion des cookies')
-    expect(wrapper.text()).toContain('améliorer votre expérience')
-  })
-}) 
+    expect(wrapper.text()).toContain("Gestion des cookies");
+    expect(wrapper.text()).toContain("améliorer votre expérience");
+  });
+});

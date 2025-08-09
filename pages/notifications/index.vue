@@ -3,19 +3,28 @@
     <div class="container mx-auto px-4 py-6 max-w-7xl">
       <!-- Header de la page -->
       <div class="mb-8">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div
+          class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+        >
           <div>
-            <h1 class="text-3xl font-bold text-base-content">{{ $t('notifications.title') }}</h1>
-            <p class="text-base-content/70 mt-2">{{ $t('notifications.description') }}</p>
+            <h1 class="text-3xl font-bold text-base-content">
+              {{ t("notifications.title") }}
+            </h1>
+            <p class="text-base-content/70 mt-2">
+              {{ t("notifications.description") }}
+            </p>
           </div>
           <div class="flex gap-2">
-            <button 
-              @click="refreshNotifications"
+            <button
               class="btn btn-outline btn-sm"
               :disabled="isLoading"
+              @click="refreshNotifications"
             >
-              <RefreshCw class="w-4 h-4 mr-2" :class="{ 'animate-spin': isLoading }" />
-              {{ $t('notifications.refresh') }}
+              <RefreshCw
+                class="w-4 h-4 mr-2"
+                :class="{ 'animate-spin': isLoading }"
+              />
+              {{ t("notifications.refresh") }}
             </button>
           </div>
         </div>
@@ -28,107 +37,148 @@
           <NotificationsStats :notifications="notifications" />
 
           <!-- Paramètres de notifications -->
-          <div class="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6">
-            <h3 class="text-lg font-semibold text-base-content mb-4">{{ $t('notifications.settings.title') }}</h3>
+          <div
+            class="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6"
+          >
+            <h3 class="text-lg font-semibold text-base-content mb-4">
+              {{ t("notifications.settings.title") }}
+            </h3>
             <div class="space-y-4">
               <div class="form-control">
                 <label class="label cursor-pointer justify-between">
                   <div>
-                    <span class="label-text font-medium">{{ $t('notifications.settings.email') }}</span>
-                    <p class="text-xs text-base-content/70">{{ $t('notifications.settings.email_description') }}</p>
+                    <span class="label-text font-medium">{{
+                      t("notifications.settings.email")
+                    }}</span>
+                    <p class="text-xs text-base-content/70">
+                      {{ t("notifications.settings.email_description") }}
+                    </p>
                   </div>
-                  <input 
-                    type="checkbox" 
-                    v-model="settings.email" 
-                    class="toggle toggle-primary" 
+                  <input
+                    v-model="settings.email"
+                    type="checkbox"
+                    class="toggle toggle-primary"
+                    aria-label="Champ de saisie"
                     @change="saveSettings"
-                  aria-label="Champ de saisie">
+                  >
                 </label>
               </div>
 
               <div class="form-control">
                 <label class="label cursor-pointer justify-between">
                   <div>
-                    <span class="label-text font-medium">{{ $t('notifications.settings.push') }}</span>
-                    <p class="text-xs text-base-content/70">{{ $t('notifications.settings.push_description') }}</p>
+                    <span class="label-text font-medium">{{
+                      t("notifications.settings.push")
+                    }}</span>
+                    <p class="text-xs text-base-content/70">
+                      {{ t("notifications.settings.push_description") }}
+                    </p>
                   </div>
-                  <input 
-                    type="checkbox" 
-                    v-model="settings.push" 
-                    class="toggle toggle-primary" 
+                  <input
+                    v-model="settings.push"
+                    type="checkbox"
+                    class="toggle toggle-primary"
+                    aria-label="Champ de saisie"
                     @change="saveSettings"
-                  aria-label="Champ de saisie">
+                  >
                 </label>
               </div>
 
               <div class="form-control">
                 <label class="label cursor-pointer justify-between">
                   <div>
-                    <span class="label-text font-medium">{{ $t('notifications.settings.mission_updates') }}</span>
-                    <p class="text-xs text-base-content/70">{{ $t('notifications.settings.mission_updates_description') }}</p>
+                    <span class="label-text font-medium">{{
+                      t("notifications.settings.mission_updates")
+                    }}</span>
+                    <p class="text-xs text-base-content/70">
+                      {{
+                        t("notifications.settings.mission_updates_description")
+                      }}
+                    </p>
                   </div>
-                  <input 
-                    type="checkbox" 
-                    v-model="settings.missionUpdates" 
-                    class="toggle toggle-primary" 
+                  <input
+                    v-model="settings.missionUpdates"
+                    type="checkbox"
+                    class="toggle toggle-primary"
+                    aria-label="Champ de saisie"
                     @change="saveSettings"
-                  aria-label="Champ de saisie">
+                  >
                 </label>
               </div>
 
               <div class="form-control">
                 <label class="label cursor-pointer justify-between">
                   <div>
-                    <span class="label-text font-medium">{{ $t('notifications.settings.messages') }}</span>
-                    <p class="text-xs text-base-content/70">{{ $t('notifications.settings.messages_description') }}</p>
+                    <span class="label-text font-medium">{{
+                      t("notifications.settings.messages")
+                    }}</span>
+                    <p class="text-xs text-base-content/70">
+                      {{ t("notifications.settings.messages_description") }}
+                    </p>
                   </div>
-                  <input 
-                    type="checkbox" 
-                    v-model="settings.messages" 
-                    class="toggle toggle-primary" 
+                  <input
+                    v-model="settings.messages"
+                    type="checkbox"
+                    class="toggle toggle-primary"
+                    aria-label="Champ de saisie"
                     @change="saveSettings"
-                  aria-label="Champ de saisie">
+                  >
                 </label>
               </div>
 
               <div class="form-control">
                 <label class="label cursor-pointer justify-between">
                   <div>
-                    <span class="label-text font-medium">{{ $t('notifications.settings.achievements') }}</span>
-                    <p class="text-xs text-base-content/70">{{ $t('notifications.settings.achievements_description') }}</p>
+                    <span class="label-text font-medium">{{
+                      t("notifications.settings.achievements")
+                    }}</span>
+                    <p class="text-xs text-base-content/70">
+                      {{
+                        t("notifications.settings.achievements_description")
+                      }}
+                    </p>
                   </div>
-                  <input 
-                    type="checkbox" 
-                    v-model="settings.achievements" 
-                    class="toggle toggle-primary" 
+                  <input
+                    v-model="settings.achievements"
+                    type="checkbox"
+                    class="toggle toggle-primary"
+                    aria-label="Champ de saisie"
                     @change="saveSettings"
-                  aria-label="Champ de saisie">
+                  >
                 </label>
               </div>
             </div>
 
             <div class="mt-6 pt-4 border-t border-base-300">
-              <button 
-                @click="saveSettings"
+              <button
                 class="btn btn-primary btn-sm w-full"
                 :disabled="isSaving"
+                @click="saveSettings"
               >
                 <Save class="w-4 h-4 mr-2" />
-                {{ isSaving ? $t('notifications.settings.saving') : $t('notifications.settings.save') }}
+                {{
+                  isSaving
+                    ? t("notifications.settings.saving")
+                    : t("notifications.settings.save")
+                }}
               </button>
             </div>
           </div>
 
           <!-- Filtres rapides -->
-          <div class="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6">
-            <h3 class="text-lg font-semibold text-base-content mb-4">{{ $t('notifications.quick_filters') }}</h3>
+          <div
+            class="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6"
+          >
+            <h3 class="text-lg font-semibold text-base-content mb-4">
+              {{ t("notifications.quick_filters") }}
+            </h3>
             <div class="space-y-2">
-              <button 
-                v-for="filter in quickFilters" 
+              <button
+                v-for="filter in quickFilters"
                 :key="filter.value"
-                @click="applyQuickFilter(filter.value)"
                 class="btn btn-outline btn-sm w-full justify-start"
                 :class="activeQuickFilter === filter.value ? 'btn-primary' : ''"
+                @click="applyQuickFilter(filter.value)"
               >
                 <component :is="filter.icon" class="w-4 h-4 mr-2" />
                 {{ filter.label }}
@@ -139,9 +189,9 @@
 
         <!-- Contenu principal -->
         <div class="lg:col-span-3">
-          <NotificationsList 
-            @update="handleNotificationsUpdate" 
+          <NotificationsList
             :key="refreshKey"
+            @update="handleNotificationsUpdate"
           />
         </div>
       </div>
@@ -150,15 +200,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { 
-  RefreshCw, 
-  Save, 
-  Bell, 
-  MessageSquare, 
-  Calendar, 
-  Award, 
-  AlertCircle, 
+import { ref , onMounted } from 'vue'
+import {
+  RefreshCw,
+  Save,
+  Bell,
+  MessageSquare,
+  Calendar,
+  Award,
+  AlertCircle,
   MapPin,
   Clock,
   Star
@@ -205,8 +255,9 @@ const notifications = ref([
   {
     id: 1,
     type: 'message',
-    title: 'Nouveau message de l\'association Ocean Conservation',
-    message: 'Vous avez reçu un message concernant votre participation à l\'événement de nettoyage de plage.',
+    title: "Nouveau message de l'association Ocean Conservation",
+    message:
+      "Vous avez reçu un message concernant votre participation à l'événement de nettoyage de plage.",
     date: '2024-01-15T14:30:00',
     read: false,
     actionUrl: '/messages/1',
@@ -215,18 +266,20 @@ const notifications = ref([
   {
     id: 2,
     type: 'event',
-    title: 'Rappel d\'événement',
-    message: 'L\'événement "Distribution alimentaire" commence demain à 9h00. N\'oubliez pas vos gants !',
+    title: "Rappel d'événement",
+    message:
+      "L'événement \"Distribution alimentaire\" commence demain à 9h00. N'oubliez pas vos gants !",
     date: '2024-01-14T09:15:00',
     read: false,
     actionUrl: '/volunteer/activity/participations',
-    actionText: 'Voir l\'événement'
+    actionText: "Voir l'événement"
   },
   {
     id: 3,
     type: 'achievement',
     title: 'Réalisation débloquée !',
-    message: 'Félicitations ! Vous avez complété 5 missions. Continuez comme ça !',
+    message:
+      'Félicitations ! Vous avez complété 5 missions. Continuez comme ça !',
     date: '2024-01-10T16:45:00',
     read: true,
     actionUrl: '/volunteer/account/profile',
@@ -236,17 +289,19 @@ const notifications = ref([
     id: 4,
     type: 'alert',
     title: 'Événement annulé',
-    message: 'L\'événement "Plantation d\'arbres" a été annulé en raison des conditions météorologiques.',
+    message:
+      "L'événement \"Plantation d'arbres\" a été annulé en raison des conditions météorologiques.",
     date: '2024-01-05T11:20:00',
     read: true,
     actionUrl: '/volunteer/activity/missions',
-    actionText: 'Trouver d\'autres missions'
+    actionText: "Trouver d'autres missions"
   },
   {
     id: 5,
     type: 'mission',
     title: 'Nouvelle mission disponible',
-    message: 'Une nouvelle mission "Sensibilisation environnementale" est disponible dans votre région.',
+    message:
+      'Une nouvelle mission "Sensibilisation environnementale" est disponible dans votre région.',
     date: '2024-01-03T08:30:00',
     read: false,
     actionUrl: '/volunteer/activity/missions',
@@ -255,10 +310,10 @@ const notifications = ref([
 ])
 
 // Methods
-function refreshNotifications() {
+function refreshNotifications () {
   isLoading.value = true
   refreshKey.value++
-  
+
   // Simuler un rafraîchissement
   setTimeout(() => {
     isLoading.value = false
@@ -266,9 +321,9 @@ function refreshNotifications() {
   }, 1000)
 }
 
-function saveSettings() {
+function saveSettings () {
   isSaving.value = true
-  
+
   // Simuler une sauvegarde
   setTimeout(() => {
     isSaving.value = false
@@ -277,12 +332,12 @@ function saveSettings() {
   }, 1000)
 }
 
-function handleNotificationsUpdate(updatedNotifications: any[]) {
+function handleNotificationsUpdate (updatedNotifications: any[]) {
   // Mettre à jour les notifications
   notifications.value = updatedNotifications
 }
 
-function applyQuickFilter(filter: string) {
+function applyQuickFilter (filter: string) {
   activeQuickFilter.value = filter
   // Ici, vous pourriez passer le filtre au composant NotificationsList
   console.log('Filtre appliqué:', filter)

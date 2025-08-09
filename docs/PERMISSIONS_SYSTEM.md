@@ -15,66 +15,63 @@ Ce système permet de gérer les autorisations d'accès aux ressources de l'appl
 
 ### Types de cookies et permissions
 
-| Type de cookie | Permission | Description |
-|----------------|------------|-------------|
-| `essential` | `canAuthenticate` | Authentification et sécurité |
-| `personalization` | `canUseLocation` | Géolocalisation |
-| `personalization` | `canUsePersonalData` | Données personnelles |
-| `analytics` | `canUseAnalytics` | Analytics et statistiques |
-| `thirdParty` | `canUseThirdParty` | Services tiers |
+| Type de cookie    | Permission           | Description                  |
+| ----------------- | -------------------- | ---------------------------- |
+| `essential`       | `canAuthenticate`    | Authentification et sécurité |
+| `personalization` | `canUseLocation`     | Géolocalisation              |
+| `personalization` | `canUsePersonalData` | Données personnelles         |
+| `analytics`       | `canUseAnalytics`    | Analytics et statistiques    |
+| `thirdParty`      | `canUseThirdParty`   | Services tiers               |
 
 ## Utilisation
 
 ### Vérifier les permissions
 
 ```typescript
-import { usePermissions } from '~/composables/usePermissions'
+import { usePermissions } from "~/composables/usePermissions";
 
-const { hasPermission, permissions } = usePermissions()
+const { hasPermission, permissions } = usePermissions();
 
 // Vérifier une permission spécifique
-if (hasPermission('canUseLocation')) {
+if (hasPermission("canUseLocation")) {
   // Utiliser la géolocalisation
 }
 
 // Accéder à toutes les permissions
-console.log(permissions.value)
+console.log(permissions.value);
 ```
 
 ### Gérer les préférences de cookies
 
 ```typescript
-const { 
-  acceptAllCookies, 
-  rejectNonEssentialCookies, 
-  saveCookiePreferences 
-} = usePermissions()
+const { acceptAllCookies, rejectNonEssentialCookies, saveCookiePreferences } =
+  usePermissions();
 
 // Accepter tous les cookies
-acceptAllCookies()
+acceptAllCookies();
 
 // Refuser les cookies non essentiels
-rejectNonEssentialCookies()
+rejectNonEssentialCookies();
 
 // Personnaliser les préférences
 saveCookiePreferences({
   essential: true,
   analytics: false,
   personalization: true,
-  thirdParty: false
-})
+  thirdParty: false,
+});
 ```
 
 ### Géolocalisation sécurisée
 
 ```typescript
-import { useUserLocation } from '~/composables/useUserLocation'
+import { useUserLocation } from "~/composables/useUserLocation";
 
-const { getUserLocation, isLocationAllowed } = useUserLocation()
+const { getUserLocation, isLocationAllowed } = useUserLocation();
 
 // Vérifier si la géolocalisation est autorisée
 if (isLocationAllowed()) {
-  const location = await getUserLocation()
+  const location = await getUserLocation();
 }
 ```
 
@@ -99,6 +96,7 @@ Le système vérifie automatiquement les permissions avant d'autoriser la connex
 ### 3. Interception automatique
 
 Le plugin intercepte automatiquement :
+
 - `navigator.geolocation.getCurrentPosition()`
 - `localStorage.setItem()` et `localStorage.getItem()`
 - Tentatives d'authentification
@@ -123,17 +121,17 @@ Le plugin intercepte automatiquement :
 </template>
 
 <script setup>
-import { usePermissions } from '~/composables/usePermissions'
+import { usePermissions } from "~/composables/usePermissions";
 
-const { hasPermission } = usePermissions()
+const { hasPermission } = usePermissions();
 
 const handleLogin = async () => {
-  if (!hasPermission('canAuthenticate')) {
-    showCookieAlert.value = true
-    return
+  if (!hasPermission("canAuthenticate")) {
+    showCookieAlert.value = true;
+    return;
   }
   // Procéder à la connexion
-}
+};
 </script>
 ```
 
@@ -143,16 +141,18 @@ const handleLogin = async () => {
 <template>
   <div v-if="!canUseLocation" class="alert alert-warning">
     <h4>Géolocalisation désactivée</h4>
-    <p>Acceptez les cookies de personnalisation pour utiliser votre position.</p>
+    <p>
+      Acceptez les cookies de personnalisation pour utiliser votre position.
+    </p>
     <button @click="openCookieSettings">Paramétrer les cookies</button>
   </div>
 </template>
 
 <script setup>
-import { usePermissions } from '~/composables/usePermissions'
+import { usePermissions } from "~/composables/usePermissions";
 
-const { hasPermission } = usePermissions()
-const canUseLocation = computed(() => hasPermission('canUseLocation'))
+const { hasPermission } = usePermissions();
+const canUseLocation = computed(() => hasPermission("canUseLocation"));
 </script>
 ```
 
@@ -162,19 +162,19 @@ Le système émet des événements pour la communication entre composants :
 
 ```javascript
 // Écouter les changements de permissions
-window.addEventListener('cookiePreferencesUpdated', (event) => {
-  const preferences = event.detail
+window.addEventListener("cookiePreferencesUpdated", (event) => {
+  const preferences = event.detail;
   // Réagir aux changements
-})
+});
 
 // Écouter les refus de permissions
-window.addEventListener('permissionDenied', (event) => {
-  const { type, permission, message } = event.detail
+window.addEventListener("permissionDenied", (event) => {
+  const { type, permission, message } = event.detail;
   // Afficher une alerte appropriée
-})
+});
 
 // Ouvrir les paramètres de cookies
-window.dispatchEvent(new CustomEvent('openCookieSettings'))
+window.dispatchEvent(new CustomEvent("openCookieSettings"));
 ```
 
 ## Configuration
@@ -189,8 +189,8 @@ const permissions = computed<PermissionState>(() => ({
   canUseLocation: cookiePreferences.value.personalization,
   canUsePersonalData: cookiePreferences.value.personalization,
   canUseAnalytics: cookiePreferences.value.analytics,
-  canUseThirdParty: cookiePreferences.value.thirdParty
-}))
+  canUseThirdParty: cookiePreferences.value.thirdParty,
+}));
 ```
 
 ### Ajouter de nouveaux types de cookies
@@ -205,18 +205,19 @@ const permissions = computed<PermissionState>(() => ({
 ### Tester les permissions
 
 ```typescript
-import { usePermissions } from '~/composables/usePermissions'
+import { usePermissions } from "~/composables/usePermissions";
 
-const { hasPermission, acceptAllCookies, rejectNonEssentialCookies } = usePermissions()
+const { hasPermission, acceptAllCookies, rejectNonEssentialCookies } =
+  usePermissions();
 
 // Test avec tous les cookies acceptés
-acceptAllCookies()
-expect(hasPermission('canUseLocation')).toBe(true)
+acceptAllCookies();
+expect(hasPermission("canUseLocation")).toBe(true);
 
 // Test avec cookies essentiels seulement
-rejectNonEssentialCookies()
-expect(hasPermission('canUseLocation')).toBe(false)
-expect(hasPermission('canAuthenticate')).toBe(true)
+rejectNonEssentialCookies();
+expect(hasPermission("canUseLocation")).toBe(false);
+expect(hasPermission("canAuthenticate")).toBe(true);
 ```
 
 ## Bonnes pratiques
@@ -230,8 +231,9 @@ expect(hasPermission('canAuthenticate')).toBe(true)
 ## Conformité RGPD
 
 Ce système aide à respecter le RGPD en :
+
 - Obtenant un consentement explicite
 - Permettant un contrôle granulaire
 - Informant clairement de l'usage des données
 - Facilitant la révocation du consentement
-- Minimisant la collecte de données 
+- Minimisant la collecte de données

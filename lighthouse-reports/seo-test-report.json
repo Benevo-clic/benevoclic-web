@@ -106,9 +106,7 @@
     "name": "Collecte alimentaire solidaire",
     "startDate": "2024-02-20T14:00:00.000Z",
     "description": "Un événement de test pour vérifier le SEO et les métadonnées. Cet événement aura lieu dans le centre-ville et réunira des bénévoles passionnés pour une cause importante.",
-    "image": [
-      "https://example.com/event-image.jpg"
-    ],
+    "image": ["https://example.com/event-image.jpg"],
     "url": "https://www.benevoclic.fr/volunteer/events/announcement/test-event-123",
     "location": {
       "@type": "Place",
