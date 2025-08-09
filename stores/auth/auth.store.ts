@@ -192,7 +192,7 @@ export const useAuthStore = defineStore('auth', {
             case RoleUser.ASSOCIATION:
               return window.location.href = '/association/dashboard'
             case RoleUser.ADMIN:
-                return window.location.href = '/admin/dashboard'
+                return window.location.href = '/admin'
             default:
               return window.location.href = '/'
           }
