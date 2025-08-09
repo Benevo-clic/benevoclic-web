@@ -1,365 +1,430 @@
-import type {AssociationVolunteerFollow, VolunteerInfo} from "~/common/interface/volunteer.interface";
-import type {CreateVolunteerDto} from "~/common/interface/register.interface";
-import {useUserStore} from "~/stores/user/user.store";
-import {defineStore} from 'pinia'
-import type {AssociationInfo} from "~/common/interface/association.interface";
-import {RoleUser} from "~/common/enums/role.enum";
-import {useCookie} from "#app";
-import {useAuthStore} from '@/stores/auth/auth.store';
-import type {Announcement} from "~/common/interface/event.interface";
-
+import { defineStore } from 'pinia'
+import { useCookie } from '#app'
+import type {
+  AssociationVolunteerFollow,
+  VolunteerInfo
+} from '~/common/interface/volunteer.interface'
+import type { CreateVolunteerDto } from '~/common/interface/register.interface'
+import { useUserStore } from '~/stores/user/user.store'
+import type { AssociationInfo } from '~/common/interface/association.interface'
+import { RoleUser } from '~/common/enums/role.enum'
+import { useAuthStore } from '@/stores/auth/auth.store'
+import type { Announcement } from '~/common/interface/event.interface'
 
 export const useVolunteerAuthStore = defineStore('volunteerAuth', {
-    state: () => ({
-        volunteer: null as VolunteerInfo | null,
-        associationsFollowingList: null as AssociationVolunteerFollow[] | null,
-        loading: false,
-        error: null as string | null,
-        _volunteerCache: new Map<string, VolunteerInfo>(),
-        _lastFetch: 0,
-        _cacheExpiry: 5 * 60 * 1000, // 5 minutes
-    }),
+  state: () => ({
+    volunteer: null as VolunteerInfo | null,
+    associationsFollowingList: null as AssociationVolunteerFollow[] | null,
+    loading: false,
+    error: null as string | null,
+    _volunteerCache: new Map<string, VolunteerInfo>(),
+    _lastFetch: 0,
+    _cacheExpiry: 5 * 60 * 1000 // 5 minutes
+  }),
 
-    getters: {
-        getVolunteer: (state) => state.volunteer,
-        isExist: (state) => state.volunteer !== null,
-        getAssociationsFollowingList: (state) => state.associationsFollowingList,
-        isCacheValid: (state) => {
-            return Date.now() - state._lastFetch < state._cacheExpiry;
-        }
+  getters: {
+    getVolunteer: state => state.volunteer,
+    isExist: state => state.volunteer !== null,
+    getAssociationsFollowingList: state => state.associationsFollowingList,
+    isCacheValid: (state) => {
+      return Date.now() - state._lastFetch < state._cacheExpiry
+    }
+  },
+
+  actions: {
+    _updateCache (volunteer: VolunteerInfo) {
+      if (volunteer?.volunteerId) {
+        this._volunteerCache.set(volunteer.volunteerId, volunteer)
+      }
+      this._lastFetch = Date.now()
     },
 
-    actions:{
+    clearCache () {
+      this._volunteerCache.clear()
+      this._lastFetch = 0
+    },
 
-        _updateCache(volunteer: VolunteerInfo) {
-            if (volunteer?.volunteerId) {
-                this._volunteerCache.set(volunteer.volunteerId, volunteer);
+    async getVolunteerInfo () {
+      const user = useUserStore().getUser
+      if (
+        !!(user?.userId && user?.role !== RoleUser.VOLUNTEER) ||
+        !useCookie('isConnected').value
+      ) {
+        return null
+      }
+
+      if (this.isCacheValid && this.volunteer) {
+        return this.volunteer
+      }
+
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch<VolunteerInfo>(
+          `/api/volunteer/${user?.userId}`,
+          {
+            method: 'GET',
+            credentials: 'include'
+          }
+        )
+        if (response) {
+          this.volunteer = response
+          this._updateCache(response)
+        }
+        return response as VolunteerInfo
+      } catch (err: any) {
+        this.error = err?.message || 'Erreur de récupération des informations'
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+    async registerVolunteer (payload: CreateVolunteerDto) {
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch<VolunteerInfo>('/api/volunteer', {
+          method: 'POST',
+          credentials: 'include',
+          body: payload
+        })
+
+        if (response) {
+          this.volunteer = response
+          this._updateCache(response)
+        }
+        useAuthStore().resetCookies()
+      } catch (err: any) {
+        this.error = err?.message || "Erreur d'inscription"
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async getNumberOfVolunteers (): Promise<number> {
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch<{ nbVolunteer: number }>(
+          '/api/volunteer/nb-volunteer',
+          {
+            method: 'GET',
+            credentials: 'include'
+          }
+        )
+
+        return response.nbVolunteer
+      } catch (err: any) {
+        this.error =
+          err?.message || 'Erreur de récupération du nombre de bénévoles'
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async updateVolunteer (
+      payload: Partial<VolunteerInfo>,
+      id: string | null = null
+    ) {
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch<VolunteerInfo>(
+          `/api/volunteer/${id || this.volunteer?.volunteerId}`,
+          {
+            method: 'PATCH',
+            credentials: 'include',
+            body: payload
+          }
+        )
+
+        if (response) {
+          this.volunteer = response
+          this._updateCache(response)
+        }
+
+        return response as VolunteerInfo
+      } catch (err: any) {
+        this.error = err?.message || 'Erreur de mise à jour des informations'
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+    async getAssociationToWaitingList () {
+      const user = useUserStore().getUser
+
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch(
+          `/api/association/waiting/by-volunteer/${user?.userId}`,
+          {
+            method: 'GET',
+            credentials: 'include'
+          }
+        )
+        await this.getVolunteerInfo()
+        return response as VolunteerInfo[]
+      } catch (err: any) {
+        this.error = err?.message || 'Erreur de récupération des associations'
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+    async removeVolunteerFromWaitingListAssociation (associationId: string) {
+      const user = useUserStore().getUser
+
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch(
+          `/api/association/volunteer-waiting/remove/${associationId}/${user?.userId}`,
+          {
+            method: 'PATCH',
+            credentials: 'include'
+          }
+        )
+
+        await this.getVolunteerInfo()
+        return response as { message: string }
+      } catch (err: any) {
+        this.error =
+          err?.message || "Erreur de suppression de la liste d'attente"
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+    async addVolunteerToWaitingListAssociation (
+      associationId: string,
+      volunteer: { volunteerId: string; volunteerName: string }
+    ) {
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch(
+          `/api/association/volunteer-waiting/register/${associationId}`,
+          {
+            method: 'PATCH',
+            credentials: 'include',
+            body: volunteer,
+            headers: {
+              'Content-Type': 'application/json'
             }
-            this._lastFetch = Date.now();
-        },
+          }
+        )
 
-        clearCache() {
-            this._volunteerCache.clear();
-            this._lastFetch = 0;
-        },
+        console.log(
+          'Response from addVolunteerToWaitingListAssociation:',
+          response
+        )
 
-        async getVolunteerInfo() {
-            const user = useUserStore().getUser
-            if (!!(user?.userId && user?.role !== RoleUser.VOLUNTEER) || !Boolean(useCookie("isConnected").value)) {
-                return null
-            }
+        await this.getVolunteerInfo()
+        return response
+      } catch (err: any) {
+        this.error = err?.message || "Erreur d'ajout à la liste d'attente"
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+    async getAllAssociationsFollowingList (volunteerId: string) {
+      if (this.associationsFollowingList !== null) {
+        return this.associationsFollowingList
+      }
+      this.loading = true
+      this.error = null
+      try {
+        const data = await $fetch<AssociationVolunteerFollow[]>(
+          `/api/association/volunteer-list/${volunteerId}`,
+          {
+            method: 'GET',
+            credentials: 'include'
+          }
+        )
+        this.associationsFollowingList = data
+        return data
+      } catch (err: any) {
+        this.error =
+          err?.message ||
+          "Erreur de récupération des associations du bénévole depuis la liste d'attente"
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+    async removeVolunteerFromAssociation (
+      associationId: string,
+      volunteerId: string
+    ) {
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch(
+          `/api/association/volunteer/remove/${associationId}/${volunteerId}`,
+          {
+            method: 'PATCH',
+            credentials: 'include'
+          }
+        )
 
-            if (this.isCacheValid && this.volunteer) {
-                return this.volunteer;
-            }
+        if (response) {
+          this.clearCache()
+          this.associationsFollowingList = (
+            this.associationsFollowingList ?? []
+          ).filter(
+            association => association.associationId !== associationId
+          )
+        }
 
-            this.loading = true
-            this.error = null
-            try {
-                const response = await $fetch<VolunteerInfo>(`/api/volunteer/${user?.userId}`, {
-                    method: 'GET',
-                    credentials: 'include',
-                })
-                if(response) {
-                    this.volunteer = response
-                    this._updateCache(response);
-                }
-                return response as VolunteerInfo
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur de récupération des informations'
-                throw err
-            } finally {
-                this.loading = false
-            }
+        return response as AssociationInfo
+      } catch (err: any) {
+        this.error =
+          err?.message || "Erreur de suppression du bénévole de l'association"
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+    async getAllAssociationsToWaitingList (volunteerId: string) {
+      this.loading = true
+      this.error = null
+      try {
+        return await $fetch<AssociationVolunteerFollow[]>(
+          `/api/association/volunteer-waiting-list/all/${volunteerId}`,
+          {
+            method: 'GET',
+            credentials: 'include'
+          }
+        )
+      } catch (err: any) {
+        this.error =
+          err?.message || 'Erreur de récupération des associations en attente'
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+    async getAssociations () {
+      const user = useUserStore().getUser
 
-        },
-        async registerVolunteer(payload: CreateVolunteerDto) {
-            this.loading = true
-            this.error = null
-            try {
-                const response = await $fetch<VolunteerInfo>('/api/volunteer', {
-                    method: 'POST',
-                    credentials: 'include',
-                    body: payload,
-                })
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch(
+          `/api/association/by-volunteer/${user?.userId}`,
+          {
+            method: 'GET',
+            credentials: 'include'
+          }
+        )
 
-                if(response) {
-                    this.volunteer = response
-                    this._updateCache(response);
-                }
-                useAuthStore().resetCookies()
+        await this.getVolunteerInfo()
+        return response as VolunteerInfo[]
+      } catch (err: any) {
+        this.error = err?.message || 'Erreur de récupération des bénévoles'
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
 
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur d\'inscription'
-                throw err
-            } finally {
-                this.loading = false
-            }
+    async getVolunteerAnnouncements (
+      volunteerId: string
+    ): Promise<Announcement[]> {
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch<Announcement[]>(
+          `/api/announcements/volunteer/${volunteerId}`,
+          {
+            method: 'GET',
+            credentials: 'include'
+          }
+        )
 
-        },
+        return response as Announcement[]
+      } catch (err: any) {
+        this.error =
+          err?.message || 'Erreur de récupération des annonces du bénévole'
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
 
-        async getNumberOfVolunteers(): Promise<number> {
-            this.loading = true
-            this.error = null
-            try {
-                const response = await $fetch<{ nbVolunteer: number }>('/api/volunteer/nb-volunteer', {
-                    method: 'GET',
-                    credentials: 'include',
-                })
+    async getParticipantAnnouncement (volunteerId: string) {
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch(
+          `/api/announcements/participant/${volunteerId}`,
+          {
+            method: 'GET',
+            credentials: 'include'
+          }
+        )
 
-                return response.nbVolunteer
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur de récupération du nombre de bénévoles'
-                throw err
-            } finally {
-                this.loading = false
-            }
-        },
+        return response as Announcement[]
+      } catch (err: any) {
+        this.error =
+          err?.message || 'Erreur de récupération des annonces du participant'
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+    async getPastVolunteerAnnouncement (volunteerId: string) {
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch(
+          `/api/announcements/participant/past/${volunteerId}`,
+          {
+            method: 'GET',
+            credentials: 'include'
+          }
+        )
 
-        async updateVolunteer(payload: Partial<VolunteerInfo>, id: string | null = null) {
-            this.loading = true
-            this.error = null
-            try {
-                const response = await $fetch<VolunteerInfo>(`/api/volunteer/${id || this.volunteer?.volunteerId}`, {
-                    method: 'PATCH',
-                    credentials: 'include',
-                    body: payload,
-                })
+        return response as Announcement[]
+      } catch (err: any) {
+        this.error =
+          err?.message ||
+          'Erreur de récupération des annonces passées du bénévole'
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
 
-                if(response) {
-                    this.volunteer = response
-                    this._updateCache(response);
-                }
+    async removeVolunteer () {
+      this.loading = true
+      this.error = null
+      try {
+        const data = await $fetch(
+          `/api/volunteer/${this.volunteer?.volunteerId}`,
+          {
+            method: 'DELETE',
+            credentials: 'include'
+          }
+        )
 
-                return response as VolunteerInfo
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur de mise à jour des informations'
-                throw err
-            } finally {
-                this.loading = false
-            }
-        },
-        async getAssociationToWaitingList() {
-            const user = useUserStore().getUser
+        if (this.volunteer?.volunteerId) {
+          this._volunteerCache.delete(this.volunteer.volunteerId)
+        }
+        this.volunteer = null
 
-            this.loading = true
-            this.error = null
-            try {
-                const response = await $fetch(`/api/association/waiting/by-volunteer/${user?.userId}`, {
-                    method: 'GET',
-                    credentials: 'include',
-                })
-                await this.getVolunteerInfo();
-                return response as VolunteerInfo[]
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur de récupération des associations'
-                throw err
-            } finally {
-                this.loading = false
-            }
-        },
-        async removeVolunteerFromWaitingListAssociation(associationId: string) {
-            const user = useUserStore().getUser
-
-            this.loading = true
-            this.error = null
-            try {
-                const response = await $fetch(`/api/association/volunteer-waiting/remove/${associationId}/${user?.userId}`, {
-                    method: 'PATCH',
-                    credentials: 'include',
-                })
-
-                await this.getVolunteerInfo();
-                return response as { message: string }
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur de suppression de la liste d\'attente'
-                throw err
-            } finally {
-                this.loading = false
-            }
-        },
-        async  addVolunteerToWaitingListAssociation(associationId: string,volunteer: {volunteerId: string, volunteerName: string}) {
-            this.loading = true
-            this.error = null
-            try {
-
-                const response = await $fetch(`/api/association/volunteer-waiting/register/${associationId}`, {
-                    method: 'PATCH',
-                    credentials: 'include',
-                    body: volunteer,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-
-                console.log('Response from addVolunteerToWaitingListAssociation:', response);
-
-                await this.getVolunteerInfo();
-                return response
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur d\'ajout à la liste d\'attente'
-                throw err
-            } finally {
-                this.loading = false
-            }
-        },
-        async getAllAssociationsFollowingList(volunteerId: string) {
-            if (this.associationsFollowingList !== null) {
-                return this.associationsFollowingList
-            }
-            this.loading = true
-            this.error = null
-            try {
-                const data = await $fetch<AssociationVolunteerFollow[]>(`/api/association/volunteer-list/${volunteerId}`, {
-                    method: 'GET',
-                    credentials: 'include',
-                });
-                this.associationsFollowingList = data
-                return data
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur de récupération des associations du bénévole depuis la liste d\'attente'
-                throw err
-            } finally {
-                this.loading = false
-            }
-        },
-        async removeVolunteerFromAssociation(associationId: string, volunteerId: string) {
-            this.loading = true
-            this.error = null
-            try {
-                const response = await $fetch(`/api/association/volunteer/remove/${associationId}/${volunteerId}`, {
-                    method: 'PATCH',
-                    credentials: 'include',
-                })
-
-                if(response) {
-                    this.clearCache()
-                    this.associationsFollowingList = (this.associationsFollowingList ?? []).filter(
-                        (association) => association.associationId !== associationId
-                    );
-                }
-
-                return response as AssociationInfo
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur de suppression du bénévole de l\'association'
-                throw err
-            } finally {
-                this.loading = false
-            }
-        },
-        async getAllAssociationsToWaitingList(volunteerId: string) {
-            this.loading = true
-            this.error = null
-            try {
-                return await $fetch<AssociationVolunteerFollow[]>(`/api/association/volunteer-waiting-list/all/${volunteerId}`, {
-                    method: 'GET',
-                    credentials: 'include',
-                });
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur de récupération des associations en attente'
-                throw err
-            } finally {
-                this.loading = false
-            }
-
-        },
-        async getAssociations() {
-            const user = useUserStore().getUser
-
-            this.loading = true
-            this.error = null
-            try {
-                const response = await $fetch(`/api/association/by-volunteer/${user?.userId}`, {
-                    method: 'GET',
-                    credentials: 'include',
-                })
-
-                await this.getVolunteerInfo();
-                return response as VolunteerInfo[]
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur de récupération des bénévoles'
-                throw err
-            } finally {
-                this.loading = false
-            }
-        },
-
-        async getVolunteerAnnouncements(volunteerId: string): Promise<Announcement[]> {
-            this.loading = true
-            this.error = null
-            try {
-                const response = await $fetch<Announcement[]>(`/api/announcements/volunteer/${volunteerId}`, {
-                    method: 'GET',
-                    credentials: 'include',
-                })
-
-                return response as Announcement[]
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur de récupération des annonces du bénévole'
-                throw err
-            } finally {
-                this.loading = false
-            }
-        },
-
-        async getParticipantAnnouncement(volunteerId: string) {
-            this.loading = true
-            this.error = null
-            try {
-                const response = await $fetch(`/api/announcements/participant/${volunteerId}`, {
-                    method: 'GET',
-                    credentials: 'include',
-                })
-
-                return response as Announcement[]
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur de récupération des annonces du participant'
-                throw err
-            } finally {
-                this.loading = false
-            }
-        },
-        async getPastVolunteerAnnouncement(volunteerId: string) {
-            this.loading = true
-            this.error = null
-            try {
-                const response = await $fetch(`/api/announcements/participant/past/${volunteerId}`, {
-                    method: 'GET',
-                    credentials: 'include',
-                })
-
-                return response as Announcement[]
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur de récupération des annonces passées du bénévole'
-                throw err
-            } finally {
-                this.loading = false
-            }
-        },
-
-        async removeVolunteer() {
-            this.loading = true
-            this.error = null
-            try {
-                const data =  await $fetch(`/api/volunteer/${this.volunteer?.volunteerId}`, {
-                    method: 'DELETE',
-                    credentials: 'include',
-                })
-
-                if (this.volunteer?.volunteerId) {
-                    this._volunteerCache.delete(this.volunteer.volunteerId);
-                }
-                this.volunteer = null;
-
-                return data as { message: string }
-
-            } catch (err: any) {
-                this.error = err?.message || 'Erreur de suppression du bénévole'
-                throw err
-            } finally {
-                this.loading = false
-            }
-        },
-
+        return data as { message: string }
+      } catch (err: any) {
+        this.error = err?.message || 'Erreur de suppression du bénévole'
+        throw err
+      } finally {
+        this.loading = false
+      }
     }
+  }
 })
