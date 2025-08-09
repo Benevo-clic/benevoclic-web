@@ -1,74 +1,74 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { mount } from "@vue/test-utils";
 
 // Mock des icônes
 const MockUserRound = {
-  template: '<div class="user-round-icon">UserRound</div>'
-}
+  template: '<div class="user-round-icon">UserRound</div>',
+};
 
 const MockMail = {
-  template: '<div class="mail-icon">Mail</div>'
-}
+  template: '<div class="mail-icon">Mail</div>',
+};
 
 const MockPhone = {
-  template: '<div class="phone-icon">Phone</div>'
-}
+  template: '<div class="phone-icon">Phone</div>',
+};
 
 const MockGlobe = {
-  template: '<div class="globe-icon">Globe</div>'
-}
+  template: '<div class="globe-icon">Globe</div>',
+};
 
 const MockMapPin = {
-  template: '<div class="map-pin-icon">MapPin</div>'
-}
+  template: '<div class="map-pin-icon">MapPin</div>',
+};
 
 const MockErrorPopup = {
   template: '<div class="error-popup">Error Popup</div>',
-  props: ['showErrorModal', 'errorType'],
-  emits: ['reload', 'goHome']
-}
+  props: ["showErrorModal", "errorType"],
+  emits: ["reload", "goHome"],
+};
 
 // Mock des composables
 const mockAuth = {
   user: {
     value: {
-      email: 'test@association.com'
-    }
-  }
-}
+      email: "test@association.com",
+    },
+  },
+};
 
 const mockUser = {
-  associationName: 'Association Test',
-  type: 'ONG',
-  bio: 'Une association de test pour les bénévoles',
+  associationName: "Association Test",
+  type: "ONG",
+  bio: "Une association de test pour les bénévoles",
   volunteers: [
-    { id: 'v1', name: 'Bénévole 1' },
-    { id: 'v2', name: 'Bénévole 2' }
+    { id: "v1", name: "Bénévole 1" },
+    { id: "v2", name: "Bénévole 2" },
   ],
-  phone: '0123456789',
-  country: 'France',
-  city: 'Paris',
-  postalCode: '75001',
-  profileImageUrl: null
-}
+  phone: "0123456789",
+  country: "France",
+  city: "Paris",
+  postalCode: "75001",
+  profileImageUrl: null,
+};
 
 // Mock des modules
-vi.mock('lucide-vue-next', () => ({
+vi.mock("lucide-vue-next", () => ({
   UserRound: MockUserRound,
   Mail: MockMail,
   Phone: MockPhone,
   Globe: MockGlobe,
-  MapPin: MockMapPin
-}))
+  MapPin: MockMapPin,
+}));
 
-vi.mock('~/components/utils/ErrorPopup.vue', () => MockErrorPopup)
+vi.mock("~/components/utils/ErrorPopup.vue", () => MockErrorPopup);
 
 // Mock de NuxtLink
 const MockNuxtLink = {
-  template: '<a><slot /></a>',
-  props: ['to']
-}
+  template: "<a><slot /></a>",
+  props: ["to"],
+};
 
 // Composant mock pour le test
 const MockAssociationProfile = {
@@ -177,7 +177,7 @@ const MockAssociationProfile = {
     Globe: MockGlobe,
     MapPin: MockMapPin,
     ErrorPopup: MockErrorPopup,
-    NuxtLink: MockNuxtLink
+    NuxtLink: MockNuxtLink,
   },
   data() {
     return {
@@ -185,10 +185,10 @@ const MockAssociationProfile = {
       user: mockUser,
       profileImageUrl: null,
       nbAnnouncements: 5,
-      creationDate: '2024',
+      creationDate: "2024",
       showErrorModal: false,
-      errorType: null
-    }
+      errorType: null,
+    };
   },
   methods: {
     handleReload() {
@@ -196,365 +196,371 @@ const MockAssociationProfile = {
     },
     handleGoHome() {
       // Mock method
-    }
-  }
-}
+    },
+  },
+};
 
-describe('AssociationProfile', () => {
+describe("AssociationProfile", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  describe('Rendu de base', () => {
-    it('should render the main container', () => {
-      const wrapper = mount(MockAssociationProfile)
-      expect(wrapper.find('.max-w-3xl.mx-auto').exists()).toBe(true)
-    })
+  describe("Rendu de base", () => {
+    it("should render the main container", () => {
+      const wrapper = mount(MockAssociationProfile);
+      expect(wrapper.find(".max-w-3xl.mx-auto").exists()).toBe(true);
+    });
 
-    it('should render the header section', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const header = wrapper.find('.flex.flex-col.items-center')
-      expect(header.exists()).toBe(true)
-    })
-  })
+    it("should render the header section", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const header = wrapper.find(".flex.flex-col.items-center");
+      expect(header.exists()).toBe(true);
+    });
+  });
 
-  describe('Profile Header', () => {
-    it('should render the profile image container', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const imageContainer = wrapper.find('.w-32.h-32.rounded-full')
-      expect(imageContainer.exists()).toBe(true)
-    })
+  describe("Profile Header", () => {
+    it("should render the profile image container", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const imageContainer = wrapper.find(".w-32.h-32.rounded-full");
+      expect(imageContainer.exists()).toBe(true);
+    });
 
-    it('should render the association name', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const name = wrapper.find('h1')
-      expect(name.exists()).toBe(true)
-      expect(name.text()).toBe('Association Test')
-    })
+    it("should render the association name", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const name = wrapper.find("h1");
+      expect(name.exists()).toBe(true);
+      expect(name.text()).toBe("Association Test");
+    });
 
-    it('should render the association type badge', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const badge = wrapper.find('.badge.badge-outline')
-      expect(badge.exists()).toBe(true)
-      expect(badge.text()).toBe('ONG')
-    })
+    it("should render the association type badge", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const badge = wrapper.find(".badge.badge-outline");
+      expect(badge.exists()).toBe(true);
+      expect(badge.text()).toBe("ONG");
+    });
 
-    it('should render the association bio', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const bio = wrapper.find('p')
-      expect(bio.exists()).toBe(true)
-      expect(bio.text()).toContain('Une association de test')
-    })
+    it("should render the association bio", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const bio = wrapper.find("p");
+      expect(bio.exists()).toBe(true);
+      expect(bio.text()).toContain("Une association de test");
+    });
 
-    it('should render action buttons', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const buttons = wrapper.findAll('.btn')
-      expect(buttons.length).toBeGreaterThanOrEqual(2)
-    })
+    it("should render action buttons", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const buttons = wrapper.findAll(".btn");
+      expect(buttons.length).toBeGreaterThanOrEqual(2);
+    });
 
-    it('should render edit profile button', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const editButton = wrapper.find('.btn-outline.btn-primary')
-      expect(editButton.exists()).toBe(true)
-      expect(editButton.text()).toBe('Éditer le profil')
-    })
+    it("should render edit profile button", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const editButton = wrapper.find(".btn-outline.btn-primary");
+      expect(editButton.exists()).toBe(true);
+      expect(editButton.text()).toBe("Éditer le profil");
+    });
 
-    it('should render share button', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const shareButton = wrapper.find('.btn-outline.btn-secondary')
-      expect(shareButton.exists()).toBe(true)
-      expect(shareButton.text()).toBe('Partager')
-    })
-  })
+    it("should render share button", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const shareButton = wrapper.find(".btn-outline.btn-secondary");
+      expect(shareButton.exists()).toBe(true);
+      expect(shareButton.text()).toBe("Partager");
+    });
+  });
 
-  describe('Statistics Section', () => {
-    it('should render the statistics grid', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const statsGrid = wrapper.find('.grid.grid-cols-2.md\\:grid-cols-4')
-      expect(statsGrid.exists()).toBe(true)
-    })
+  describe("Statistics Section", () => {
+    it("should render the statistics grid", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const statsGrid = wrapper.find(".grid.grid-cols-2.md\\:grid-cols-4");
+      expect(statsGrid.exists()).toBe(true);
+    });
 
-    it('should display volunteers count', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const volunteersText = wrapper.text()
-      expect(volunteersText).toContain('Bénévoles')
-    })
+    it("should display volunteers count", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const volunteersText = wrapper.text();
+      expect(volunteersText).toContain("Bénévoles");
+    });
 
-    it('should display announcements count', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const announcementsText = wrapper.text()
-      expect(announcementsText).toContain('Annonces créées')
-    })
+    it("should display announcements count", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const announcementsText = wrapper.text();
+      expect(announcementsText).toContain("Annonces créées");
+    });
 
-    it('should display creation date', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const creationText = wrapper.text()
-      expect(creationText).toContain('Créée le')
-    })
+    it("should display creation date", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const creationText = wrapper.text();
+      expect(creationText).toContain("Créée le");
+    });
 
-    it('should display city', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const cityText = wrapper.text()
-      expect(cityText).toContain('Paris')
-    })
-  })
+    it("should display city", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const cityText = wrapper.text();
+      expect(cityText).toContain("Paris");
+    });
+  });
 
-  describe('Contact Information', () => {
-    it('should render contact section', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const contactSection = wrapper.find('.bg-base-100.rounded-xl.shadow.p-6')
-      expect(contactSection.exists()).toBe(true)
-    })
+  describe("Contact Information", () => {
+    it("should render contact section", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const contactSection = wrapper.find(".bg-base-100.rounded-xl.shadow.p-6");
+      expect(contactSection.exists()).toBe(true);
+    });
 
-    it('should display email information', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const emailText = wrapper.text()
-      expect(emailText).toContain('test@association.com')
-    })
+    it("should display email information", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const emailText = wrapper.text();
+      expect(emailText).toContain("test@association.com");
+    });
 
-    it('should display phone information', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const phoneText = wrapper.text()
-      expect(phoneText).toContain('0123456789')
-    })
+    it("should display phone information", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const phoneText = wrapper.text();
+      expect(phoneText).toContain("0123456789");
+    });
 
-    it('should render contact icons', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const mailIcon = wrapper.find('.mail-icon')
-      const phoneIcon = wrapper.find('.phone-icon')
-      expect(mailIcon.exists()).toBe(true)
-      expect(phoneIcon.exists()).toBe(true)
-    })
-  })
+    it("should render contact icons", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const mailIcon = wrapper.find(".mail-icon");
+      const phoneIcon = wrapper.find(".phone-icon");
+      expect(mailIcon.exists()).toBe(true);
+      expect(phoneIcon.exists()).toBe(true);
+    });
+  });
 
-  describe('Location Information', () => {
-    it('should render location section', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const locationSections = wrapper.findAll('.bg-base-100.rounded-xl.shadow.p-6')
-      expect(locationSections.length).toBeGreaterThanOrEqual(2)
-    })
+  describe("Location Information", () => {
+    it("should render location section", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const locationSections = wrapper.findAll(
+        ".bg-base-100.rounded-xl.shadow.p-6",
+      );
+      expect(locationSections.length).toBeGreaterThanOrEqual(2);
+    });
 
-    it('should display country information', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const countryText = wrapper.text()
-      expect(countryText).toContain('France')
-    })
+    it("should display country information", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const countryText = wrapper.text();
+      expect(countryText).toContain("France");
+    });
 
-    it('should display city information', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const cityText = wrapper.text()
-      expect(cityText).toContain('Paris')
-    })
+    it("should display city information", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const cityText = wrapper.text();
+      expect(cityText).toContain("Paris");
+    });
 
-    it('should display postal code information', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const postalText = wrapper.text()
-      expect(postalText).toContain('75001')
-    })
+    it("should display postal code information", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const postalText = wrapper.text();
+      expect(postalText).toContain("75001");
+    });
 
-    it('should render location icons', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const globeIcon = wrapper.find('.globe-icon')
-      const mapPinIcon = wrapper.find('.map-pin-icon')
-      expect(globeIcon.exists()).toBe(true)
-      expect(mapPinIcon.exists()).toBe(true)
-    })
-  })
+    it("should render location icons", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const globeIcon = wrapper.find(".globe-icon");
+      const mapPinIcon = wrapper.find(".map-pin-icon");
+      expect(globeIcon.exists()).toBe(true);
+      expect(mapPinIcon.exists()).toBe(true);
+    });
+  });
 
-  describe('Social Networks Section', () => {
-    it('should render social networks section', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const socialSection = wrapper.find('.bg-base-100.rounded-xl.shadow.p-6.flex.flex-col.items-center')
-      expect(socialSection.exists()).toBe(true)
-    })
+  describe("Social Networks Section", () => {
+    it("should render social networks section", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const socialSection = wrapper.find(
+        ".bg-base-100.rounded-xl.shadow.p-6.flex.flex-col.items-center",
+      );
+      expect(socialSection.exists()).toBe(true);
+    });
 
-    it('should display social networks title', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const titles = wrapper.findAll('h3')
-      const socialTitle = titles.find(title => title.text() === 'Réseaux sociaux')
-      expect(socialTitle).toBeDefined()
-    })
+    it("should display social networks title", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const titles = wrapper.findAll("h3");
+      const socialTitle = titles.find(
+        (title) => title.text() === "Réseaux sociaux",
+      );
+      expect(socialTitle).toBeDefined();
+    });
 
-    it('should display no website message', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const message = wrapper.find('.text-base-content\\/60')
-      expect(message.exists()).toBe(true)
-      expect(message.text()).toBe('Aucun site web renseigné')
-    })
-  })
+    it("should display no website message", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const message = wrapper.find(".text-base-content\\/60");
+      expect(message.exists()).toBe(true);
+      expect(message.text()).toBe("Aucun site web renseigné");
+    });
+  });
 
-  describe('Navigation Links', () => {
-    it('should render volunteers link', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const volunteersLink = wrapper.find('a')
-      expect(volunteersLink.exists()).toBe(true)
-    })
+  describe("Navigation Links", () => {
+    it("should render volunteers link", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const volunteersLink = wrapper.find("a");
+      expect(volunteersLink.exists()).toBe(true);
+    });
 
-    it('should render manage announcements link', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const announcementsLink = wrapper.find('a')
-      expect(announcementsLink.exists()).toBe(true)
-    })
+    it("should render manage announcements link", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const announcementsLink = wrapper.find("a");
+      expect(announcementsLink.exists()).toBe(true);
+    });
 
-    it('should render edit profile link', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const editLink = wrapper.find('a')
-      expect(editLink.exists()).toBe(true)
-    })
-  })
+    it("should render edit profile link", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const editLink = wrapper.find("a");
+      expect(editLink.exists()).toBe(true);
+    });
+  });
 
-  describe('Error Handling', () => {
-    it('should render error popup component', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const errorPopup = wrapper.find('.error-popup')
-      expect(errorPopup.exists()).toBe(true)
-    })
-  })
+  describe("Error Handling", () => {
+    it("should render error popup component", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const errorPopup = wrapper.find(".error-popup");
+      expect(errorPopup.exists()).toBe(true);
+    });
+  });
 
-  describe('Responsive Design', () => {
-    it('should have responsive grid classes', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const statsGrid = wrapper.find('.grid.grid-cols-2.md\\:grid-cols-4')
-      expect(statsGrid.exists()).toBe(true)
-    })
+  describe("Responsive Design", () => {
+    it("should have responsive grid classes", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const statsGrid = wrapper.find(".grid.grid-cols-2.md\\:grid-cols-4");
+      expect(statsGrid.exists()).toBe(true);
+    });
 
-    it('should have responsive container classes', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const container = wrapper.find('.max-w-3xl.mx-auto.px-4')
-      expect(container.exists()).toBe(true)
-    })
-  })
+    it("should have responsive container classes", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const container = wrapper.find(".max-w-3xl.mx-auto.px-4");
+      expect(container.exists()).toBe(true);
+    });
+  });
 
-  describe('Accessibility', () => {
-    it('should have proper heading structure', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const headings = wrapper.findAll('h1, h3')
-      expect(headings.length).toBeGreaterThan(0)
-    })
+  describe("Accessibility", () => {
+    it("should have proper heading structure", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const headings = wrapper.findAll("h1, h3");
+      expect(headings.length).toBeGreaterThan(0);
+    });
 
-    it('should have proper alt text for images', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const images = wrapper.findAll('img')
-      images.forEach(img => {
-        expect(img.attributes('alt')).toBeDefined()
-      })
-    })
-  })
+    it("should have proper alt text for images", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const images = wrapper.findAll("img");
+      images.forEach((img) => {
+        expect(img.attributes("alt")).toBeDefined();
+      });
+    });
+  });
 
-  describe('Profile Image Handling', () => {
-    it('should show user icon when no profile image', () => {
+  describe("Profile Image Handling", () => {
+    it("should show user icon when no profile image", () => {
       const wrapper = mount(MockAssociationProfile, {
         data() {
           return {
             ...mockUser,
-            profileImageUrl: null
-          }
-        }
-      })
-      const userIcon = wrapper.find('.user-round-icon')
-      expect(userIcon.exists()).toBe(true)
-    })
+            profileImageUrl: null,
+          };
+        },
+      });
+      const userIcon = wrapper.find(".user-round-icon");
+      expect(userIcon.exists()).toBe(true);
+    });
 
-    it('should show profile image when available', () => {
+    it("should show profile image when available", () => {
       const wrapper = mount(MockAssociationProfile, {
         data() {
           return {
             ...mockUser,
-            profileImageUrl: '/test-image.jpg'
-          }
-        }
-      })
-      const profileImage = wrapper.find('img[src="/test-image.jpg"]')
-      expect(profileImage.exists()).toBe(true)
-    })
-  })
+            profileImageUrl: "/test-image.jpg",
+          };
+        },
+      });
+      const profileImage = wrapper.find('img[src="/test-image.jpg"]');
+      expect(profileImage.exists()).toBe(true);
+    });
+  });
 
-  describe('Data Validation and Edge Cases', () => {
-    it('should handle missing association name gracefully', () => {
+  describe("Data Validation and Edge Cases", () => {
+    it("should handle missing association name gracefully", () => {
       const wrapper = mount(MockAssociationProfile, {
         data() {
           return {
             auth: mockAuth,
             user: {
               ...mockUser,
-              associationName: null
+              associationName: null,
             },
             profileImageUrl: null,
             nbAnnouncements: 5,
-            creationDate: '2024',
+            creationDate: "2024",
             showErrorModal: false,
-            errorType: null
-          }
-        }
-      })
-      const name = wrapper.find('h1')
-      expect(name.text()).toBe('')
-    })
+            errorType: null,
+          };
+        },
+      });
+      const name = wrapper.find("h1");
+      expect(name.text()).toBe("");
+    });
 
-    it('should handle missing association type gracefully', () => {
+    it("should handle missing association type gracefully", () => {
       const wrapper = mount(MockAssociationProfile, {
         data() {
           return {
             auth: mockAuth,
             user: {
               ...mockUser,
-              type: null
+              type: null,
             },
             profileImageUrl: null,
             nbAnnouncements: 5,
-            creationDate: '2024',
+            creationDate: "2024",
             showErrorModal: false,
-            errorType: null
-          }
-        }
-      })
-      const badge = wrapper.find('.badge.badge-outline')
-      expect(badge.text()).toBe('Type non fourni')
-    })
+            errorType: null,
+          };
+        },
+      });
+      const badge = wrapper.find(".badge.badge-outline");
+      expect(badge.text()).toBe("Type non fourni");
+    });
 
-    it('should handle missing bio gracefully', () => {
+    it("should handle missing bio gracefully", () => {
       const wrapper = mount(MockAssociationProfile, {
         data() {
           return {
             auth: mockAuth,
             user: {
               ...mockUser,
-              bio: null
+              bio: null,
             },
             profileImageUrl: null,
             nbAnnouncements: 5,
-            creationDate: '2024',
+            creationDate: "2024",
             showErrorModal: false,
-            errorType: null
-          }
-        }
-      })
-      const bio = wrapper.find('p')
-      expect(bio.text()).toBe('Aucune description.')
-    })
+            errorType: null,
+          };
+        },
+      });
+      const bio = wrapper.find("p");
+      expect(bio.text()).toBe("Aucune description.");
+    });
 
-    it('should handle missing volunteers array gracefully', () => {
+    it("should handle missing volunteers array gracefully", () => {
       const wrapper = mount(MockAssociationProfile, {
         data() {
           return {
             auth: mockAuth,
             user: {
               ...mockUser,
-              volunteers: null
+              volunteers: null,
             },
             profileImageUrl: null,
             nbAnnouncements: 5,
-            creationDate: '2024',
+            creationDate: "2024",
             showErrorModal: false,
-            errorType: null
-          }
-        }
-      })
-      const volunteersText = wrapper.text()
-      expect(volunteersText).toContain('0')
-    })
+            errorType: null,
+          };
+        },
+      });
+      const volunteersText = wrapper.text();
+      expect(volunteersText).toContain("0");
+    });
 
-    it('should handle missing contact information gracefully', () => {
+    it("should handle missing contact information gracefully", () => {
       const wrapper = mount(MockAssociationProfile, {
         data() {
           return {
@@ -564,143 +570,145 @@ describe('AssociationProfile', () => {
               phone: null,
               country: null,
               city: null,
-              postalCode: null
+              postalCode: null,
             },
             profileImageUrl: null,
             nbAnnouncements: 5,
-            creationDate: '2024',
+            creationDate: "2024",
             showErrorModal: false,
-            errorType: null
-          }
-        }
-      })
-      const phoneText = wrapper.text()
-      expect(phoneText).toContain('Non renseigné')
-    })
-  })
+            errorType: null,
+          };
+        },
+      });
+      const phoneText = wrapper.text();
+      expect(phoneText).toContain("Non renseigné");
+    });
+  });
 
-  describe('Component Integration', () => {
-    it('should properly integrate all icon components', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const icons = wrapper.findAll('.user-round-icon, .mail-icon, .phone-icon, .globe-icon, .map-pin-icon')
-      expect(icons.length).toBeGreaterThan(0)
-    })
+  describe("Component Integration", () => {
+    it("should properly integrate all icon components", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const icons = wrapper.findAll(
+        ".user-round-icon, .mail-icon, .phone-icon, .globe-icon, .map-pin-icon",
+      );
+      expect(icons.length).toBeGreaterThan(0);
+    });
 
-    it('should properly integrate NuxtLink components', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const links = wrapper.findAll('a')
-      expect(links.length).toBeGreaterThan(0)
-    })
+    it("should properly integrate NuxtLink components", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const links = wrapper.findAll("a");
+      expect(links.length).toBeGreaterThan(0);
+    });
 
-    it('should properly integrate ErrorPopup component', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const errorPopup = wrapper.findComponent(MockErrorPopup)
-      expect(errorPopup.exists()).toBe(true)
-    })
-  })
+    it("should properly integrate ErrorPopup component", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const errorPopup = wrapper.findComponent(MockErrorPopup);
+      expect(errorPopup.exists()).toBe(true);
+    });
+  });
 
-  describe('Event Handling', () => {
-    it('should handle reload event from error popup', async () => {
-      const wrapper = mount(MockAssociationProfile)
-      const errorPopup = wrapper.findComponent(MockErrorPopup)
-      await errorPopup.vm.$emit('reload')
+  describe("Event Handling", () => {
+    it("should handle reload event from error popup", async () => {
+      const wrapper = mount(MockAssociationProfile);
+      const errorPopup = wrapper.findComponent(MockErrorPopup);
+      await errorPopup.vm.$emit("reload");
       // Verify the event was handled (mock method would be called)
-    })
+    });
 
-    it('should handle goHome event from error popup', async () => {
-      const wrapper = mount(MockAssociationProfile)
-      const errorPopup = wrapper.findComponent(MockErrorPopup)
-      await errorPopup.vm.$emit('goHome')
+    it("should handle goHome event from error popup", async () => {
+      const wrapper = mount(MockAssociationProfile);
+      const errorPopup = wrapper.findComponent(MockErrorPopup);
+      await errorPopup.vm.$emit("goHome");
       // Verify the event was handled (mock method would be called)
-    })
-  })
+    });
+  });
 
-  describe('Dynamic Content Updates', () => {
-    it('should update statistics when data changes', async () => {
-      const wrapper = mount(MockAssociationProfile)
-      
+  describe("Dynamic Content Updates", () => {
+    it("should update statistics when data changes", async () => {
+      const wrapper = mount(MockAssociationProfile);
+
       // Update the volunteers count in the component data
       await wrapper.setData({
         user: {
           ...mockUser,
           volunteers: [
-            { id: 'v1', name: 'Bénévole 1' },
-            { id: 'v2', name: 'Bénévole 2' },
-            { id: 'v3', name: 'Bénévole 3' }
-          ]
-        }
-      })
-      
+            { id: "v1", name: "Bénévole 1" },
+            { id: "v2", name: "Bénévole 2" },
+            { id: "v3", name: "Bénévole 3" },
+          ],
+        },
+      });
+
       // Force a re-render
-      await wrapper.vm.$nextTick()
-      
+      await wrapper.vm.$nextTick();
+
       // Check that the volunteers count is updated in the text
-      const volunteersText = wrapper.text()
-      expect(volunteersText).toContain('3')
-    })
+      const volunteersText = wrapper.text();
+      expect(volunteersText).toContain("3");
+    });
 
-    it('should update announcements count when data changes', async () => {
-      const wrapper = mount(MockAssociationProfile)
+    it("should update announcements count when data changes", async () => {
+      const wrapper = mount(MockAssociationProfile);
       await wrapper.setData({
-        nbAnnouncements: 10
-      })
-      
-      // Force a re-render
-      await wrapper.vm.$nextTick()
-      
-      const announcementsText = wrapper.text()
-      expect(announcementsText).toContain('10')
-    })
-  })
+        nbAnnouncements: 10,
+      });
 
-  describe('Error State Management', () => {
-    it('should show error modal when showErrorModal is true', () => {
+      // Force a re-render
+      await wrapper.vm.$nextTick();
+
+      const announcementsText = wrapper.text();
+      expect(announcementsText).toContain("10");
+    });
+  });
+
+  describe("Error State Management", () => {
+    it("should show error modal when showErrorModal is true", () => {
       const wrapper = mount(MockAssociationProfile, {
         data() {
           return {
             showErrorModal: true,
-            errorType: 'network'
-          }
-        }
-      })
-      const errorPopup = wrapper.findComponent(MockErrorPopup)
-      expect(errorPopup.props('showErrorModal')).toBe(true)
-      expect(errorPopup.props('errorType')).toBe('network')
-    })
+            errorType: "network",
+          };
+        },
+      });
+      const errorPopup = wrapper.findComponent(MockErrorPopup);
+      expect(errorPopup.props("showErrorModal")).toBe(true);
+      expect(errorPopup.props("errorType")).toBe("network");
+    });
 
-    it('should hide error modal when showErrorModal is false', () => {
+    it("should hide error modal when showErrorModal is false", () => {
       const wrapper = mount(MockAssociationProfile, {
         data() {
           return {
             showErrorModal: false,
-            errorType: null
-          }
-        }
-      })
-      const errorPopup = wrapper.findComponent(MockErrorPopup)
-      expect(errorPopup.props('showErrorModal')).toBe(false)
-    })
-  })
+            errorType: null,
+          };
+        },
+      });
+      const errorPopup = wrapper.findComponent(MockErrorPopup);
+      expect(errorPopup.props("showErrorModal")).toBe(false);
+    });
+  });
 
-  describe('Performance and Optimization', () => {
-    it('should use proper CSS classes for styling', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const container = wrapper.find('.max-w-3xl.mx-auto.px-4')
-      expect(container.exists()).toBe(true)
-    })
+  describe("Performance and Optimization", () => {
+    it("should use proper CSS classes for styling", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const container = wrapper.find(".max-w-3xl.mx-auto.px-4");
+      expect(container.exists()).toBe(true);
+    });
 
-    it('should have proper semantic HTML structure', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const headings = wrapper.findAll('h1, h3')
-      expect(headings.length).toBeGreaterThan(0)
-    })
+    it("should have proper semantic HTML structure", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const headings = wrapper.findAll("h1, h3");
+      expect(headings.length).toBeGreaterThan(0);
+    });
 
-    it('should have proper ARIA attributes for accessibility', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const images = wrapper.findAll('img')
-      images.forEach(img => {
-        expect(img.attributes('alt')).toBeDefined()
-      })
-    })
-  })
-}) 
+    it("should have proper ARIA attributes for accessibility", () => {
+      const wrapper = mount(MockAssociationProfile);
+      const images = wrapper.findAll("img");
+      images.forEach((img) => {
+        expect(img.attributes("alt")).toBeDefined();
+      });
+    });
+  });
+});

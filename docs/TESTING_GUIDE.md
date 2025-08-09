@@ -5,12 +5,14 @@ Ce document décrit la stratégie de tests unitaires pour le projet Benevoclic W
 ## 📋 Vue d'ensemble
 
 ### Objectifs des tests
+
 - **Validation fonctionnelle** : Vérifier que les composants fonctionnent correctement
 - **Prévention des régressions** : Détecter les bugs avant qu'ils n'atteignent la production
 - **Documentation vivante** : Les tests servent de documentation du comportement attendu
 - **Refactoring sécurisé** : Permettre les modifications de code en toute confiance
 
 ### Couverture de tests
+
 - **Composants Vue** : Tests unitaires pour tous les composants principaux
 - **Logique métier** : Tests des fonctions utilitaires et des stores
 - **Accessibilité** : Tests des fonctionnalités d'accessibilité
@@ -19,6 +21,7 @@ Ce document décrit la stratégie de tests unitaires pour le projet Benevoclic W
 ## 🧪 Structure des tests
 
 ### Organisation des fichiers
+
 ```
 test/
 ├── components/           # Tests des composants Vue
@@ -36,6 +39,7 @@ test/
 ### Composants testés
 
 #### 1. VolunteerAnnouncementCard
+
 - ✅ Rendu correct des données d'annonce
 - ✅ Affichage du nombre de volontaires
 - ✅ Gestion des tags et badges
@@ -44,12 +48,14 @@ test/
 - ✅ Gestion des données manquantes
 
 #### 2. NoConnectedAnnouncementCard
+
 - ✅ Rendu pour utilisateurs non connectés
 - ✅ Affichage des informations essentielles
 - ✅ Gestion des cas d'erreur
 - ✅ Accessibilité
 
 #### 3. Header
+
 - ✅ Navigation responsive
 - ✅ Gestion de l'authentification
 - ✅ Menu mobile
@@ -57,12 +63,14 @@ test/
 - ✅ Navigation au clavier
 
 #### 4. CookieConsent
+
 - ✅ Affichage de la bannière
 - ✅ Gestion des préférences
 - ✅ Boutons d'action
 - ✅ Accessibilité ARIA
 
 #### 5. MultiMarkerMap
+
 - ✅ Initialisation de la carte
 - ✅ Ajout de marqueurs
 - ✅ Événements de clic
@@ -70,6 +78,7 @@ test/
 - ✅ Gestion des coordonnées invalides
 
 #### 6. Login
+
 - ✅ Validation des formulaires
 - ✅ Gestion des erreurs
 - ✅ États de chargement
@@ -77,6 +86,7 @@ test/
 - ✅ Accessibilité
 
 #### 7. VolunteerEventFilters
+
 - ✅ Filtres de recherche
 - ✅ Sélection de dates
 - ✅ Géolocalisation
@@ -107,18 +117,20 @@ npm run test:a11y
 ### Configuration des tests
 
 #### Vitest (Configuration principale)
+
 ```typescript
 // vitest.config.ts
 export default defineConfig({
   test: {
-    environment: 'happy-dom',
+    environment: "happy-dom",
     globals: true,
-    setupFiles: ['./test/setup.ts']
-  }
-})
+    setupFiles: ["./test/setup.ts"],
+  },
+});
 ```
 
 #### Couverture de code
+
 ```typescript
 // vitest.config.coverage.ts
 coverage: {
@@ -138,6 +150,7 @@ coverage: {
 ## 📊 Métriques de qualité
 
 ### Seuils de couverture
+
 - **Branches** : 70%
 - **Fonctions** : 70%
 - **Lignes** : 70%
@@ -145,50 +158,52 @@ coverage: {
 
 ### Types de tests par composant
 
-| Composant | Tests unitaires | Tests d'intégration | Tests d'accessibilité |
-|-----------|----------------|-------------------|---------------------|
-| VolunteerAnnouncementCard | ✅ 8 tests | ✅ 2 tests | ✅ 3 tests |
-| NoConnectedAnnouncementCard | ✅ 6 tests | ✅ 1 test | ✅ 2 tests |
-| Header | ✅ 8 tests | ✅ 2 tests | ✅ 4 tests |
-| CookieConsent | ✅ 10 tests | ✅ 2 tests | ✅ 3 tests |
-| MultiMarkerMap | ✅ 12 tests | ✅ 3 tests | ✅ 2 tests |
-| Login | ✅ 12 tests | ✅ 3 tests | ✅ 4 tests |
-| VolunteerEventFilters | ✅ 15 tests | ✅ 4 tests | ✅ 3 tests |
+| Composant                   | Tests unitaires | Tests d'intégration | Tests d'accessibilité |
+| --------------------------- | --------------- | ------------------- | --------------------- |
+| VolunteerAnnouncementCard   | ✅ 8 tests      | ✅ 2 tests          | ✅ 3 tests            |
+| NoConnectedAnnouncementCard | ✅ 6 tests      | ✅ 1 test           | ✅ 2 tests            |
+| Header                      | ✅ 8 tests      | ✅ 2 tests          | ✅ 4 tests            |
+| CookieConsent               | ✅ 10 tests     | ✅ 2 tests          | ✅ 3 tests            |
+| MultiMarkerMap              | ✅ 12 tests     | ✅ 3 tests          | ✅ 2 tests            |
+| Login                       | ✅ 12 tests     | ✅ 3 tests          | ✅ 4 tests            |
+| VolunteerEventFilters       | ✅ 15 tests     | ✅ 4 tests          | ✅ 3 tests            |
 
 **Total** : 71 tests unitaires, 17 tests d'intégration, 21 tests d'accessibilité
 
 ## 🔧 Bonnes pratiques
 
 ### Structure d'un test
+
 ```typescript
-describe('NomDuComposant', () => {
+describe("NomDuComposant", () => {
   // Configuration
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
   // Tests de rendu
-  it('should render correctly', () => {
-    const wrapper = mount(Component)
-    expect(wrapper.exists()).toBe(true)
-  })
+  it("should render correctly", () => {
+    const wrapper = mount(Component);
+    expect(wrapper.exists()).toBe(true);
+  });
 
   // Tests d'interaction
-  it('should handle user interaction', async () => {
-    const wrapper = mount(Component)
-    await wrapper.find('button').trigger('click')
-    expect(wrapper.emitted('event')).toBeTruthy()
-  })
+  it("should handle user interaction", async () => {
+    const wrapper = mount(Component);
+    await wrapper.find("button").trigger("click");
+    expect(wrapper.emitted("event")).toBeTruthy();
+  });
 
   // Tests d'accessibilité
-  it('should be accessible', () => {
-    const wrapper = mount(Component)
-    expect(wrapper.find('[role="button"]').exists()).toBe(true)
-  })
-})
+  it("should be accessible", () => {
+    const wrapper = mount(Component);
+    expect(wrapper.find('[role="button"]').exists()).toBe(true);
+  });
+});
 ```
 
 ### Mocks et stubs
+
 ```typescript
 // Mock des composables
 vi.mock('~/composables/useAuth', () => ({
@@ -211,17 +226,19 @@ global: {
 ```
 
 ### Tests d'accessibilité
+
 ```typescript
-it('should have proper ARIA attributes', () => {
-  const wrapper = mount(Component)
-  expect(wrapper.find('[role="button"]').exists()).toBe(true)
-  expect(wrapper.find('[aria-label]').exists()).toBe(true)
-})
+it("should have proper ARIA attributes", () => {
+  const wrapper = mount(Component);
+  expect(wrapper.find('[role="button"]').exists()).toBe(true);
+  expect(wrapper.find("[aria-label]").exists()).toBe(true);
+});
 ```
 
 ## 📈 Rapports et métriques
 
 ### Génération de rapports
+
 ```bash
 # Rapport HTML de couverture
 npm run test:coverage
@@ -231,6 +248,7 @@ npm run test:all
 ```
 
 ### Métriques importantes
+
 - **Taux de réussite** : > 95%
 - **Couverture de code** : > 70%
 - **Temps d'exécution** : < 30 secondes
@@ -241,12 +259,14 @@ npm run test:all
 ### Problèmes courants
 
 #### 1. Erreurs de mock
+
 ```bash
 # Solution : Vérifier les imports
 vi.mock('~/composables/useAuth')
 ```
 
 #### 2. Erreurs de composants Nuxt
+
 ```bash
 # Solution : Ajouter les stubs appropriés
 stubs: {
@@ -256,12 +276,14 @@ stubs: {
 ```
 
 #### 3. Erreurs de timing
+
 ```bash
 # Solution : Utiliser await pour les événements asynchrones
 await wrapper.find('button').trigger('click')
 ```
 
 ### Debug des tests
+
 ```bash
 # Mode debug
 npm test -- --reporter=verbose
@@ -273,6 +295,7 @@ npm test -- VolunteerAnnouncementCard
 ## 🔄 Intégration continue
 
 ### GitHub Actions
+
 ```yaml
 # .github/workflows/test.yml
 - name: Run tests
@@ -283,6 +306,7 @@ npm test -- VolunteerAnnouncementCard
 ```
 
 ### Pré-commit hooks
+
 ```json
 // package.json
 "husky": {
@@ -306,4 +330,4 @@ npm test -- VolunteerAnnouncementCard
 - [ ] Tests de sécurité
 - [ ] Tests de compatibilité navigateur
 - [ ] Tests de charge
-- [ ] Tests de régression visuelle 
+- [ ] Tests de régression visuelle

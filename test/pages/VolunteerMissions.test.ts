@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { describe, it, expect } from "vitest";
+import { mount } from "@vue/test-utils";
 
 const MockVolunteerMissions = {
   template: `
@@ -92,96 +92,104 @@ const MockVolunteerMissions = {
         </div>
       </div>
     </div>
-  `
-}
+  `,
+};
 
-describe('VolunteerMissions', () => {
-  it('should render the main container', () => {
-    const wrapper = mount(MockVolunteerMissions)
-    expect(wrapper.find('.min-h-screen.bg-gradient-to-br').exists()).toBe(true)
-  })
+describe("VolunteerMissions", () => {
+  it("should render the main container", () => {
+    const wrapper = mount(MockVolunteerMissions);
+    expect(wrapper.find(".min-h-screen.bg-gradient-to-br").exists()).toBe(true);
+  });
 
-  it('should render the header section', () => {
-    const wrapper = mount(MockVolunteerMissions)
-    const header = wrapper.find('.mb-8')
-    expect(header.exists()).toBe(true)
-    expect(header.find('h1').text()).toBe('Mes missions')
-    expect(header.find('p').text()).toBe('Gérez vos missions et participations')
-  })
+  it("should render the header section", () => {
+    const wrapper = mount(MockVolunteerMissions);
+    const header = wrapper.find(".mb-8");
+    expect(header.exists()).toBe(true);
+    expect(header.find("h1").text()).toBe("Mes missions");
+    expect(header.find("p").text()).toBe(
+      "Gérez vos missions et participations",
+    );
+  });
 
-  it('should render the filter and search section', () => {
-    const wrapper = mount(MockVolunteerMissions)
-    const filterSection = wrapper.find('.bg-base-100.rounded-2xl.shadow-lg.p-6.mb-8')
-    expect(filterSection.exists()).toBe(true)
-    expect(filterSection.find('input[type="text"]').exists()).toBe(true)
-    expect(filterSection.find('select').exists()).toBe(true)
-  })
+  it("should render the filter and search section", () => {
+    const wrapper = mount(MockVolunteerMissions);
+    const filterSection = wrapper.find(
+      ".bg-base-100.rounded-2xl.shadow-lg.p-6.mb-8",
+    );
+    expect(filterSection.exists()).toBe(true);
+    expect(filterSection.find('input[type="text"]').exists()).toBe(true);
+    expect(filterSection.find("select").exists()).toBe(true);
+  });
 
-  it('should render search input with proper attributes', () => {
-    const wrapper = mount(MockVolunteerMissions)
-    const searchInput = wrapper.find('input[type="text"]')
-    expect(searchInput.exists()).toBe(true)
-    expect(searchInput.attributes('placeholder')).toBe('Rechercher des missions...')
-    expect(searchInput.attributes('aria-label')).toBe('Champ de saisie')
-  })
+  it("should render search input with proper attributes", () => {
+    const wrapper = mount(MockVolunteerMissions);
+    const searchInput = wrapper.find('input[type="text"]');
+    expect(searchInput.exists()).toBe(true);
+    expect(searchInput.attributes("placeholder")).toBe(
+      "Rechercher des missions...",
+    );
+    expect(searchInput.attributes("aria-label")).toBe("Champ de saisie");
+  });
 
-  it('should render filter dropdown with options', () => {
-    const wrapper = mount(MockVolunteerMissions)
-    const filterSelect = wrapper.find('select')
-    expect(filterSelect.exists()).toBe(true)
-    expect(filterSelect.attributes('aria-label')).toBe('Sélection')
-    
-    const options = filterSelect.findAll('option')
-    expect(options.length).toBe(3)
-    expect(options[0].text()).toBe('Toutes les missions')
-    expect(options[1].text()).toBe('Participe')
-    expect(options[2].text()).toBe('En attente')
-  })
+  it("should render filter dropdown with options", () => {
+    const wrapper = mount(MockVolunteerMissions);
+    const filterSelect = wrapper.find("select");
+    expect(filterSelect.exists()).toBe(true);
+    expect(filterSelect.attributes("aria-label")).toBe("Sélection");
 
-  it('should render mission cards', () => {
-    const wrapper = mount(MockVolunteerMissions)
-    const cards = wrapper.findAll('.group.bg-base-100.rounded-2xl')
-    expect(cards.length).toBe(2)
-  })
+    const options = filterSelect.findAll("option");
+    expect(options.length).toBe(3);
+    expect(options[0].text()).toBe("Toutes les missions");
+    expect(options[1].text()).toBe("Participe");
+    expect(options[2].text()).toBe("En attente");
+  });
 
-  it('should render mission cards with proper structure', () => {
-    const wrapper = mount(MockVolunteerMissions)
-    const cards = wrapper.findAll('.group.bg-base-100.rounded-2xl')
-    
-    cards.forEach(card => {
-      expect(card.find('h2').exists()).toBe(true)
-      expect(card.find('.badge').exists()).toBe(true)
-      expect(card.find('.space-y-3').exists()).toBe(true)
-    })
-  })
+  it("should render mission cards", () => {
+    const wrapper = mount(MockVolunteerMissions);
+    const cards = wrapper.findAll(".group.bg-base-100.rounded-2xl");
+    expect(cards.length).toBe(2);
+  });
 
-  it('should render status badges with different states', () => {
-    const wrapper = mount(MockVolunteerMissions)
-    const badges = wrapper.findAll('.badge')
-    expect(badges.length).toBe(2)
-    
-    expect(badges[0].text()).toBe('Participe')
-    expect(badges[0].classes()).toContain('badge-success')
-    
-    expect(badges[1].text()).toBe('En attente')
-    expect(badges[1].classes()).toContain('badge-warning')
-  })
+  it("should render mission cards with proper structure", () => {
+    const wrapper = mount(MockVolunteerMissions);
+    const cards = wrapper.findAll(".group.bg-base-100.rounded-2xl");
 
-  it('should have proper card styling and hover effects', () => {
-    const wrapper = mount(MockVolunteerMissions)
-    const cards = wrapper.findAll('.group.bg-base-100.rounded-2xl')
-    
-    cards.forEach(card => {
-      expect(card.classes()).toContain('shadow-lg')
-      expect(card.classes()).toContain('hover:shadow-2xl')
-      expect(card.classes()).toContain('transition-all')
-      expect(card.classes()).toContain('duration-500')
-    })
-  })
+    cards.forEach((card) => {
+      expect(card.find("h2").exists()).toBe(true);
+      expect(card.find(".badge").exists()).toBe(true);
+      expect(card.find(".space-y-3").exists()).toBe(true);
+    });
+  });
 
-  it('should render mission details with icons', () => {
-    const wrapper = mount(MockVolunteerMissions)
-    const iconContainers = wrapper.findAll('.flex.items-center.justify-center.w-8.h-8.bg-primary\\/10.rounded-lg')
-    expect(iconContainers.length).toBe(2)
-  })
-}) 
+  it("should render status badges with different states", () => {
+    const wrapper = mount(MockVolunteerMissions);
+    const badges = wrapper.findAll(".badge");
+    expect(badges.length).toBe(2);
+
+    expect(badges[0].text()).toBe("Participe");
+    expect(badges[0].classes()).toContain("badge-success");
+
+    expect(badges[1].text()).toBe("En attente");
+    expect(badges[1].classes()).toContain("badge-warning");
+  });
+
+  it("should have proper card styling and hover effects", () => {
+    const wrapper = mount(MockVolunteerMissions);
+    const cards = wrapper.findAll(".group.bg-base-100.rounded-2xl");
+
+    cards.forEach((card) => {
+      expect(card.classes()).toContain("shadow-lg");
+      expect(card.classes()).toContain("hover:shadow-2xl");
+      expect(card.classes()).toContain("transition-all");
+      expect(card.classes()).toContain("duration-500");
+    });
+  });
+
+  it("should render mission details with icons", () => {
+    const wrapper = mount(MockVolunteerMissions);
+    const iconContainers = wrapper.findAll(
+      ".flex.items-center.justify-center.w-8.h-8.bg-primary\\/10.rounded-lg",
+    );
+    expect(iconContainers.length).toBe(2);
+  });
+});

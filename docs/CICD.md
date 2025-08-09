@@ -17,6 +17,7 @@ Ce document décrit le processus de CI/CD (Intégration Continue / Déploiement 
 Le pipeline CI/CD de Benevoclic Web est conçu pour automatiser les processus de test, de build et de déploiement de l'application. Il utilise GitHub Actions pour l'orchestration, Docker pour la conteneurisation, et DockerHub comme registre d'images.
 
 Le processus complet comprend :
+
 - Vérification de la qualité du code (linting, type checking)
 - Exécution des tests automatisés
 - Construction d'images Docker
@@ -30,6 +31,7 @@ Le processus complet comprend :
 Ce workflow s'exécute automatiquement à chaque push sur les branches `main` et `develop`, ainsi que pour les pull requests vers ces branches.
 
 **Étapes :**
+
 1. Lint et tests
    - Checkout du code
    - Installation des dépendances
@@ -48,6 +50,7 @@ Ce workflow s'exécute automatiquement à chaque push sur les branches `main` et
 Ce workflow est déclenché manuellement et permet de construire et publier une image Docker avec une version spécifique.
 
 **Étapes :**
+
 1. Checkout du code
 2. Installation des dépendances
 3. Exécution des tests et vérifications
@@ -58,6 +61,7 @@ Ce workflow est déclenché manuellement et permet de construire et publier une 
 Ce workflow est déclenché manuellement et permet de déployer une version spécifique de l'application sur le VPS OVH.
 
 **Étapes :**
+
 1. Connexion SSH au VPS
 2. Génération du fichier docker-compose.yml
 3. Arrêt des conteneurs existants
@@ -97,6 +101,7 @@ Le processus de build Docker utilise une approche multi-stage pour optimiser la 
 ### Vérification du déploiement
 
 Pour vérifier que le déploiement s'est bien déroulé :
+
 1. Connectez-vous au VPS via SSH
 2. Exécutez `docker ps` pour vérifier que le conteneur est en cours d'exécution
 3. Vérifiez les logs avec `docker logs benevoclic-web`

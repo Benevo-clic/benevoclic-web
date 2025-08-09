@@ -11,11 +11,13 @@ Votre site avait un **CLS de 0.21**, ce qui est au-dessus du seuil recommandé d
 **Problème** : Les images sans dimensions causent des décalages lors du chargement.
 
 **Solutions appliquées** :
+
 - Ajout d'attributs `width` et `height` à toutes les images
 - Utilisation de `loading="lazy"` pour les images non critiques
 - Dimensions fixes pour les logos, avatars et images de couverture
 
 **Fichiers modifiés** :
+
 - `components/header/Header.vue` : Logo principal (56x56px)
 - `layouts/footer.vue` : Logo footer (32x32px)
 - `components/event/volunteer/VolunteerAnnouncementCard.vue` : Images d'événements (400x144px)
@@ -26,6 +28,7 @@ Votre site avait un **CLS de 0.21**, ce qui est au-dessus du seuil recommandé d
 **Création** : `components/utils/OptimizedImage.vue`
 
 **Fonctionnalités** :
+
 - Gestion automatique des placeholders
 - Support des aspect-ratio CSS
 - Chargement lazy par défaut
@@ -37,6 +40,7 @@ Votre site avait un **CLS de 0.21**, ce qui est au-dessus du seuil recommandé d
 **Ajout** : Styles dans `assets/css/accessibility.scss`
 
 **Améliorations** :
+
 - Hauteurs minimales pour tous les composants
 - Aspect-ratio containers pour les images
 - Espace réservé pour les cartes, avatars, boutons
@@ -45,6 +49,7 @@ Votre site avait un **CLS de 0.21**, ce qui est au-dessus du seuil recommandé d
 ### **4. Optimisation des Polices** ✅
 
 **Configuration Google Fonts** dans `nuxt.config.ts` :
+
 - `display: 'swap'` pour éviter les CLS
 - `prefetch: true` pour précharger
 - `preconnect: true` pour les connexions
@@ -53,6 +58,7 @@ Votre site avait un **CLS de 0.21**, ce qui est au-dessus du seuil recommandé d
 ### **5. Preload des Ressources Critiques** ✅
 
 **Ajout** dans `nuxt.config.ts` :
+
 - Preload des polices Inter et Poppins
 - Preload du logo principal
 - Optimisation du chargement des ressources
@@ -62,6 +68,7 @@ Votre site avait un **CLS de 0.21**, ce qui est au-dessus du seuil recommandé d
 **Création** : `scripts/test-cls.js`
 
 **Fonctionnalités** :
+
 - Test automatique du CLS avec Lighthouse
 - Rapport détaillé des métriques
 - Identification des éléments problématiques
@@ -70,6 +77,7 @@ Votre site avait un **CLS de 0.21**, ce qui est au-dessus du seuil recommandé d
 ## 🧪 Tests et Métriques
 
 ### **Script de Test**
+
 ```bash
 # Tester le CLS
 npm run test:cls
@@ -79,6 +87,7 @@ npm run audit:a11y
 ```
 
 ### **Métriques Cibles**
+
 - **CLS** : ≤ 0.1 (actuellement 0.21 → objectif < 0.1)
 - **LCP** : ≤ 2.5s (actuellement 0.17s ✅)
 - **FCP** : ≤ 1.8s
@@ -86,6 +95,7 @@ npm run audit:a11y
 ## 📊 Améliorations Techniques
 
 ### **Avant les Améliorations**
+
 - ❌ Images sans dimensions définies
 - ❌ Polices sans font-display: swap
 - ❌ Pas de preload des ressources critiques
@@ -93,6 +103,7 @@ npm run audit:a11y
 - ❌ CLS de 0.21 (trop élevé)
 
 ### **Après les Améliorations**
+
 - ✅ Toutes les images ont des dimensions
 - ✅ Polices optimisées avec font-display: swap
 - ✅ Preload des ressources critiques
@@ -102,6 +113,7 @@ npm run audit:a11y
 ## 🔧 Utilisation
 
 ### **Composant OptimizedImage**
+
 ```vue
 <template>
   <OptimizedImage
@@ -116,35 +128,49 @@ npm run audit:a11y
 ```
 
 ### **Styles CSS Anti-CLS**
+
 ```css
 /* Aspect ratio containers */
-.aspect-video { aspect-ratio: 16 / 9; }
-.aspect-square { aspect-ratio: 1 / 1; }
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
 
 /* Hauteurs minimales */
-.card { min-height: 200px; }
-.avatar { min-width: 48px; min-height: 48px; }
+.card {
+  min-height: 200px;
+}
+.avatar {
+  min-width: 48px;
+  min-height: 48px;
+}
 ```
 
 ## 🎨 Bonnes Pratiques Appliquées
 
 ### **1. Images**
+
 - Dimensions explicites (width/height)
 - Loading lazy pour les images non critiques
 - Placeholders pendant le chargement
 - Aspect-ratio CSS pour réserver l'espace
 
 ### **2. Polices**
+
 - font-display: swap
 - Preload des polices critiques
 - Fallback fonts appropriées
 
 ### **3. Layout**
+
 - Hauteurs minimales pour tous les composants
 - Espace réservé pour les éléments dynamiques
 - Transitions fluides
 
 ### **4. Performance**
+
 - Preload des ressources critiques
 - Optimisation du chargement
 - Cache approprié
@@ -168,12 +194,14 @@ Après ces améliorations, votre CLS devrait passer de **0.21 à moins de 0.1**,
 ## 🔄 Maintenance
 
 ### **Vérifications Régulières**
+
 1. **Test mensuel** du CLS avec `npm run test:cls`
 2. **Audit Lighthouse** après chaque déploiement
 3. **Vérification** des nouvelles images ajoutées
 4. **Test** sur différents appareils et connexions
 
 ### **Intégration Continue**
+
 - Test automatique du CLS dans le pipeline CI/CD
 - Validation des nouvelles images avec dimensions
 - Monitoring des Core Web Vitals
@@ -182,4 +210,4 @@ Après ces améliorations, votre CLS devrait passer de **0.21 à moins de 0.1**,
 
 **Dernière mise à jour** : 27 juillet 2025  
 **Version** : 1.0  
-**Statut** : ✅ Implémenté 
+**Statut** : ✅ Implémenté

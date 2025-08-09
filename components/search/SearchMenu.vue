@@ -1,12 +1,21 @@
 <template>
-  <div class="bg-base-100 rounded-lg shadow-md p-4" role="region" aria-labelledby="search-menu-title">
-    <h2 id="search-menu-title" class="text-xl font-semibold mb-4 text-base-content">Search</h2>
+  <div
+    class="bg-base-100 rounded-lg shadow-md p-4"
+    role="region"
+    aria-labelledby="search-menu-title"
+  >
+    <h2
+      id="search-menu-title"
+      class="text-xl font-semibold mb-4 text-base-content"
+    >
+      Search
+    </h2>
     <nav role="navigation" aria-label="Menu de recherche">
       <ul class="menu menu-vertical w-full" role="menu">
         <li role="none">
-          <NuxtLink 
-            to="/search" 
-            class="flex items-center gap-2 p-2 rounded hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+          <NuxtLink
+            to="/search"
+            class="flex items-center gap-2 p-2 rounded hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             role="menuitem"
             aria-label="Rechercher des missions et associations"
           >
@@ -15,9 +24,9 @@
           </NuxtLink>
         </li>
         <li role="none">
-          <NuxtLink 
-            to="/search/history" 
-            class="flex items-center gap-2 p-2 rounded hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+          <NuxtLink
+            to="/search/history"
+            class="flex items-center gap-2 p-2 rounded hover:bg-base-200 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             role="menuitem"
             aria-label="Voir l'historique des recherches"
           >

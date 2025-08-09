@@ -6,42 +6,93 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-base-100 rounded-xl shadow-lg p-6">
           <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            <div
+              class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-primary"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
               </svg>
             </div>
             <div>
-              <p class="text-2xl font-bold text-base-content">{{ stats.totalReports }}</p>
-              <p class="text-base-content/70">Tickets de support</p>
+              <p class="text-2xl font-bold text-base-content">
+                {{ stats.totalReports }}
+              </p>
+              <p class="text-base-content/70">
+                Tickets de support
+              </p>
             </div>
           </div>
         </div>
 
         <div class="bg-base-100 rounded-xl shadow-lg p-6">
           <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-warning/10 rounded-xl flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div
+              class="w-12 h-12 bg-warning/10 rounded-xl flex items-center justify-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-warning"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <div>
-              <p class="text-2xl font-bold text-base-content">{{ stats.pendingReports }}</p>
-              <p class="text-base-content/70">En attente</p>
+              <p class="text-2xl font-bold text-base-content">
+                {{ stats.pendingReports }}
+              </p>
+              <p class="text-base-content/70">
+                En attente
+              </p>
             </div>
           </div>
         </div>
 
         <div class="bg-base-100 rounded-xl shadow-lg p-6">
           <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div
+              class="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-success"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <div>
-              <p class="text-2xl font-bold text-base-content">{{ stats.resolvedReports }}</p>
-              <p class="text-base-content/70">Résolus</p>
+              <p class="text-2xl font-bold text-base-content">
+                {{ stats.resolvedReports }}
+              </p>
+              <p class="text-base-content/70">
+                Résolus
+              </p>
             </div>
           </div>
         </div>
@@ -49,39 +100,79 @@
 
       <div class="bg-base-100 rounded-xl shadow-lg p-6">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-bold text-base-content">Tickets de support</h2>
-          <button @click="refreshReports" class="btn btn-primary btn-sm" :disabled="loading">
-            <span v-if="loading" class="loading loading-spinner loading-sm"></span>
+          <h2 class="text-xl font-bold text-base-content">
+            Tickets de support
+          </h2>
+          <button
+            class="btn btn-primary btn-sm"
+            :disabled="loading"
+            @click="refreshReports"
+          >
+            <span v-if="loading" class="loading loading-spinner loading-sm" />
             Actualiser
           </button>
         </div>
 
         <div class="flex gap-4 mb-6">
-          <select v-model="filter.status" class="select select-bordered select-sm">
-            <option value="">Tous les statuts</option>
-            <option value="PENDING">En attente</option>
-            <option value="IN_PROGRESS">En cours</option>
-            <option value="RESOLVED">Résolu</option>
-            <option value="REJECTED">Rejeté</option>
+          <select
+            v-model="filter.status"
+            class="select select-bordered select-sm"
+          >
+            <option value="">
+              Tous les statuts
+            </option>
+            <option value="PENDING">
+              En attente
+            </option>
+            <option value="IN_PROGRESS">
+              En cours
+            </option>
+            <option value="RESOLVED">
+              Résolu
+            </option>
+            <option value="REJECTED">
+              Rejeté
+            </option>
           </select>
 
-          <select v-model="filter.type" class="select select-bordered select-sm">
-            <option value="">Tous les types</option>
-            <option value="ANNOUNCEMENT">Annonce</option>
-            <option value="TECHNICAL">Technique</option>
-            <option value="USER_FEEDBACK">Feedback</option>
-            <option value="OTHER">Autre</option>
+          <select
+            v-model="filter.type"
+            class="select select-bordered select-sm"
+          >
+            <option value="">
+              Tous les types
+            </option>
+            <option value="ANNOUNCEMENT">
+              Annonce
+            </option>
+            <option value="TECHNICAL">
+              Technique
+            </option>
+            <option value="USER_FEEDBACK">
+              Feedback
+            </option>
+            <option value="OTHER">
+              Autre
+            </option>
           </select>
 
           <div class="flex items-center gap-2 ml-auto">
             <input
               v-model.trim="searchId"
-              @keyup.enter="searchById"
               class="input input-bordered input-sm"
               placeholder="Rechercher par ID"
-            />
-            <button class="btn btn-sm" @click="searchById" :disabled="loading">Chercher</button>
-            <button class="btn btn-outline btn-sm" @click="resetSearch" :disabled="loading">Réinitialiser</button>
+              @keyup.enter="searchById"
+            >
+            <button class="btn btn-sm" :disabled="loading" @click="searchById">
+              Chercher
+            </button>
+            <button
+              class="btn btn-outline btn-sm"
+              :disabled="loading"
+              @click="resetSearch"
+            >
+              Réinitialiser
+            </button>
           </div>
         </div>
 
@@ -100,16 +191,30 @@
             </thead>
             <tbody>
               <tr v-for="report in filteredReports" :key="report._id">
-                <td class="font-mono text-sm">{{ report._id?.slice(-8) }}</td>
-                <td><span class="badge badge-outline">{{ report.type }}</span></td>
-                <td>{{ report.category }}</td>
-                <td class="max-w-xs truncate">{{ report.description }}</td>
+                <td class="font-mono text-sm">
+                  {{ report._id?.slice(-8) }}
+                </td>
                 <td>
-                  <span class="badge" :class="getStatusBadgeClass(report.status)">{{ report.status }}</span>
+                  <span class="badge badge-outline">{{ report.type }}</span>
+                </td>
+                <td>{{ report.category }}</td>
+                <td class="max-w-xs truncate">
+                  {{ report.description }}
+                </td>
+                <td>
+                  <span
+                    class="badge"
+                    :class="getStatusBadgeClass(report.status)"
+                  >{{ report.status }}</span>
                 </td>
                 <td>{{ formatDate(report.createdAt) }}</td>
                 <td>
-                  <button @click="viewReport(report)" class="btn btn-sm btn-primary">Voir</button>
+                  <button
+                    class="btn btn-sm btn-primary"
+                    @click="viewReport(report)"
+                  >
+                    Voir
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -117,61 +222,127 @@
         </div>
 
         <div v-if="filteredReports.length === 0" class="text-center py-8">
-          <div class="w-16 h-16 bg-base-300 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-base-content/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          <div
+            class="w-16 h-16 bg-base-300 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8 text-base-content/60"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
             </svg>
           </div>
-          <p class="text-base-content/60">{{ noResultMsg || 'Aucun ticket trouvé' }}</p>
+          <p class="text-base-content/60">
+            {{ noResultMsg || "Aucun ticket trouvé" }}
+          </p>
         </div>
       </div>
 
       <div v-if="selectedReport" class="modal modal-open">
         <div class="modal-box max-w-4xl">
           <div class="flex items-center justify-between mb-6">
-            <h3 class="text-xl font-bold text-base-content">Ticket #{{ selectedReport._id?.slice(-8) }}</h3>
-            <button @click="selectedReport = null" class="btn btn-sm btn-circle btn-ghost">✕</button>
+            <h3 class="text-xl font-bold text-base-content">
+              Ticket #{{ selectedReport._id?.slice(-8) }}
+            </h3>
+            <button
+              class="btn btn-sm btn-circle btn-ghost"
+              @click="selectedReport = null"
+            >
+              ✕
+            </button>
           </div>
 
           <div class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h4 class="font-semibold mb-2">Informations</h4>
+                <h4 class="font-semibold mb-2">
+                  Informations
+                </h4>
                 <div class="space-y-2 text-sm">
                   <div><strong>Type:</strong> {{ selectedReport.type }}</div>
-                  <div><strong>Catégorie:</strong> {{ selectedReport.category }}</div>
-                  <div><strong>Statut:</strong>
-                    <span class="badge ml-2" :class="getStatusBadgeClass(selectedReport.status)">
+                  <div>
+                    <strong>Catégorie:</strong> {{ selectedReport.category }}
+                  </div>
+                  <div>
+                    <strong>Statut:</strong>
+                    <span
+                      class="badge ml-2"
+                      :class="getStatusBadgeClass(selectedReport.status)"
+                    >
                       {{ selectedReport.status }}
                     </span>
                   </div>
-                  <div><strong>Date:</strong> {{ formatDate(selectedReport.createdAt) }}</div>
+                  <div>
+                    <strong>Date:</strong>
+                    {{ formatDate(selectedReport.createdAt) }}
+                  </div>
                 </div>
               </div>
 
               <div>
-                <h4 class="font-semibold mb-2">Utilisateur</h4>
+                <h4 class="font-semibold mb-2">
+                  Utilisateur
+                </h4>
                 <div class="space-y-2 text-sm">
-                  <div><strong>Email:</strong> {{ selectedReport.userEmail || 'Non renseigné' }}</div>
-                  <div><strong>Page:</strong> {{ selectedReport.pageUrl || 'Non renseigné' }}</div>
-                  <div><strong>Navigateur:</strong> {{ selectedReport.browserInfo || 'Non renseigné' }}</div>
+                  <div>
+                    <strong>Email:</strong>
+                    {{ selectedReport.userEmail || "Non renseigné" }}
+                  </div>
+                  <div>
+                    <strong>Page:</strong>
+                    {{ selectedReport.pageUrl || "Non renseigné" }}
+                  </div>
+                  <div>
+                    <strong>Navigateur:</strong>
+                    {{ selectedReport.browserInfo || "Non renseigné" }}
+                  </div>
                 </div>
               </div>
             </div>
 
             <div>
-              <h4 class="font-semibold mb-2">Description</h4>
-              <div class="bg-base-200 rounded-lg p-4">{{ selectedReport.description }}</div>
+              <h4 class="font-semibold mb-2">
+                Description
+              </h4>
+              <div class="bg-base-200 rounded-lg p-4">
+                {{ selectedReport.description }}
+              </div>
             </div>
 
             <div class="flex gap-2">
-              <button @click="updateStatus(selectedReport._id, 'IN_PROGRESS')" class="btn btn-warning btn-sm" :disabled="selectedReport.status === 'IN_PROGRESS'">Marquer en cours</button>
-              <button @click="updateStatus(selectedReport._id, 'RESOLVED')" class="btn btn-success btn-sm" :disabled="selectedReport.status === 'RESOLVED'">Marquer résolu</button>
-              <button @click="updateStatus(selectedReport._id, 'REJECTED')" class="btn btn-neutral btn-sm" :disabled="selectedReport.status === 'REJECTED'">Rejeter</button>
+              <button
+                class="btn btn-warning btn-sm"
+                :disabled="selectedReport.status === 'IN_PROGRESS'"
+                @click="updateStatus(selectedReport._id, 'IN_PROGRESS')"
+              >
+                Marquer en cours
+              </button>
+              <button
+                class="btn btn-success btn-sm"
+                :disabled="selectedReport.status === 'RESOLVED'"
+                @click="updateStatus(selectedReport._id, 'RESOLVED')"
+              >
+                Marquer résolu
+              </button>
+              <button
+                class="btn btn-neutral btn-sm"
+                :disabled="selectedReport.status === 'REJECTED'"
+                @click="updateStatus(selectedReport._id, 'REJECTED')"
+              >
+                Rejeter
+              </button>
             </div>
           </div>
         </div>
-        <div class="modal-backdrop" @click="selectedReport = null"></div>
+        <div class="modal-backdrop" @click="selectedReport = null" />
       </div>
     </div>
   </div>
@@ -191,43 +362,59 @@ const reports = computed<SupportReport[]>(() => admin.reports.value)
 const selectedReport = ref<SupportReport | null>(null)
 const stats = ref({ totalReports: 0, pendingReports: 0, resolvedReports: 0 })
 
-const filter = ref<{ status: SupportReport['status'] | ''; type: SupportReport['type'] | '' }>({ status: '', type: '' })
+const filter = ref<{
+  status: SupportReport['status'] | '';
+  type: SupportReport['type'] | '';
+}>({ status: '', type: '' })
 const searchId = ref('')
 const noResultMsg = ref<string>('')
 
 const filteredReports = computed<SupportReport[]>(() => {
   let list = displayed.value
-  if (filter.value.status) list = list.filter(r => r.status === filter.value.status)
-  if (filter.value.type) list = list.filter(r => r.type === filter.value.type)
+  if (filter.value.status) {
+    list = list.filter(r => r.status === filter.value.status)
+  }
+  if (filter.value.type) {
+    list = list.filter(r => r.type === filter.value.type)
+  }
   return list
 })
 
-async function loadReports() {
+async function loadReports () {
   await admin.fetchReports()
   displayed.value = reports.value
   noResultMsg.value = ''
   updateStats()
 }
 
-function updateStats() {
+function updateStats () {
   stats.value.totalReports = filteredReports.value.length
-  stats.value.pendingReports = filteredReports.value.filter(r => r.status === 'PENDING').length
-  stats.value.resolvedReports = filteredReports.value.filter(r => r.status === 'RESOLVED').length
+  stats.value.pendingReports = filteredReports.value.filter(
+    r => r.status === 'PENDING'
+  ).length
+  stats.value.resolvedReports = filteredReports.value.filter(
+    r => r.status === 'RESOLVED'
+  ).length
 }
 
-function refreshReports() {
-  void loadReports()
+async function refreshReports () {
+  await loadReports()
 }
 
-function viewReport(report: SupportReport) {
+function viewReport (report: SupportReport) {
   selectedReport.value = report
 }
 
-async function updateStatus(reportId: string, newStatus: SupportReport['status']) {
+async function updateStatus (
+  reportId: string,
+  newStatus: SupportReport['status']
+) {
   try {
     await admin.updateReportStatus(reportId, newStatus)
     const row = displayed.value.find(r => r._id === reportId)
-    if (row) row.status = newStatus
+    if (row) {
+      row.status = newStatus
+    }
     if (selectedReport.value && selectedReport.value._id === reportId) {
       selectedReport.value.status = newStatus
     }
@@ -237,7 +424,7 @@ async function updateStatus(reportId: string, newStatus: SupportReport['status']
   }
 }
 
-async function searchById() {
+async function searchById () {
   try {
     if (!searchId.value) {
       await loadReports()
@@ -257,14 +444,14 @@ async function searchById() {
   }
 }
 
-function resetSearch() {
+function resetSearch () {
   searchId.value = ''
   noResultMsg.value = ''
   displayed.value = reports.value
   updateStats()
 }
 
-function getStatusBadgeClass(status: SupportReport['status']) {
+function getStatusBadgeClass (status: SupportReport['status']) {
   switch (status) {
     case 'PENDING':
       return 'badge-warning'
@@ -279,15 +466,21 @@ function getStatusBadgeClass(status: SupportReport['status']) {
   }
 }
 
-function formatDate(dateString?: string) {
-  if (!dateString) return 'N/A'
+function formatDate (dateString?: string) {
+  if (!dateString) {
+    return 'N/A'
+  }
   return new Date(dateString).toLocaleDateString('fr-FR', {
-    year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
   })
 }
 
-onMounted(() => {
-  void loadReports()
+onMounted(async () => {
+  await loadReports()
 })
 
 definePageMeta({
@@ -296,7 +489,26 @@ definePageMeta({
 </script>
 
 <style scoped>
-.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); }
-.modal { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; }
-.modal-box { background: var(--fallback-b1,oklch(var(--b1)/1)); border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1); max-height: 90vh; overflow-y: auto; }
-</style> 
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-box {
+  background: var(--fallback-b1, oklch(var(--b1) / 1));
+  border-radius: 0.5rem;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+</style>

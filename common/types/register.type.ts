@@ -1,18 +1,18 @@
-import type {RoleUser} from "~/common/enums/role.enum";
+import type { RoleUser } from '~/common/enums/role.enum'
 
-export type RegisterPayload =  {
-    email: string,
-    password: string,
-    role: RoleUser
-}
+export type RegisterPayload = {
+  email: string;
+  password: string;
+  role: RoleUser;
+};
 
 export type RegisterEmailVerifiedPayload = {
-    email: string,
-    role: RoleUser,
-}
+  email: string;
+  role: RoleUser;
+};
 
 export type RegisterEmailVerifiedResponse = {
-    idToken: string
-    refreshToken: string
-    expiresIn: string
-}
+  idToken: string;
+  refreshToken: string;
+  expiresIn: string;
+};

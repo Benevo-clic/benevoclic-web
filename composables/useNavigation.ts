@@ -2,7 +2,7 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { useUserStore } from '~/stores/user/user.store'
 import { RoleUser } from '~/common/enums/role.enum'
 
-export function useNavigation() {
+export function useNavigation () {
   const userStore = useUserStore()
 
   // Configuration des routes par rôle (même que dans le middleware)
@@ -47,14 +47,11 @@ export function useNavigation() {
       '/association/events/association/requests',
       '/association/events/announcement'
     ],
-    admin: [
-      '/admin',
-      '/dashboard'
-    ]
+    admin: ['/admin', '/dashboard']
   }
 
   const isRouteAccessible = (path: string): boolean => {
-    if (!useCookie("isConnected").value) {
+    if (!useCookie('isConnected').value) {
       return ROUTE_CONFIG.public.includes(path)
     }
 
@@ -69,9 +66,11 @@ export function useNavigation() {
       case RoleUser.ASSOCIATION:
         return ROUTE_CONFIG.association.some(route => path.startsWith(route))
       case RoleUser.ADMIN:
-        return ROUTE_CONFIG.admin.some(route => path.startsWith(route)) ||
-               ROUTE_CONFIG.volunteer.some(route => path.startsWith(route)) ||
-               ROUTE_CONFIG.association.some(route => path.startsWith(route))
+        return (
+          ROUTE_CONFIG.admin.some(route => path.startsWith(route)) ||
+          ROUTE_CONFIG.volunteer.some(route => path.startsWith(route)) ||
+          ROUTE_CONFIG.association.some(route => path.startsWith(route))
+        )
       default:
         return false
     }
@@ -79,7 +78,7 @@ export function useNavigation() {
 
   // Obtenir la page d'accueil selon le rôle
   const getHomePageForRole = (): string => {
-    if (!useCookie("isConnected").value) {
+    if (!useCookie('isConnected').value) {
       return '/'
     }
 
@@ -101,10 +100,12 @@ export function useNavigation() {
     const authStore = useAuthStore()
     // Vérifier si l'utilisateur est connecté
     if (!authStore.isConnected) {
-      console.log(`🔍 Utilisateur non connecté, redirection vers la page de connexion`)
+      console.log(
+        '🔍 Utilisateur non connecté, redirection vers la page de connexion'
+      )
       return navigateTo('/')
     }
-    if (!useCookie("isConnected").value) {
+    if (!useCookie('isConnected').value) {
       if (!ROUTE_CONFIG.public.includes(path)) {
         return navigateTo('/')
       }
@@ -139,7 +140,7 @@ export function useNavigation() {
 
   // Naviguer vers le dashboard selon le rôle
   const navigateToDashboard = () => {
-    if (!useCookie("isConnected").value) {
+    if (!useCookie('isConnected').value) {
       return navigateTo('/')
     }
 
@@ -158,7 +159,7 @@ export function useNavigation() {
 
   // Obtenir les routes accessibles pour le rôle actuel
   const getAccessibleRoutes = () => {
-    if (!useCookie("isConnected").value) {
+    if (!useCookie('isConnected').value) {
       return ROUTE_CONFIG.public
     }
 
@@ -185,13 +186,13 @@ export function useNavigation() {
     navigateToRoute,
     navigateToHome,
     navigateToDashboard,
-    
+
     // Fonctions de vérification
     isRouteAccessible,
     getHomePageForRole,
     getAccessibleRoutes,
-    
+
     // Configuration des routes
     ROUTE_CONFIG
   }
-} 
+}

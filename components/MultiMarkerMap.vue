@@ -5,48 +5,58 @@
       <button
         v-if="expandedCity"
         class="refresh-btn"
-        @click="resetToCities"
         title="Afficher toutes les villes"
+        @click="resetToCities"
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="23 4 23 10 17 10"></polyline>
-          <polyline points="1 20 1 14 7 14"></polyline>
-          <path d="M3.51 9a9 9 0 0114.13-3.36L23 10"></path>
-          <path d="M20.49 15A9 9 0 015.87 18.36L1 14"></path>
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="23 4 23 10 17 10" />
+          <polyline points="1 20 1 14 7 14" />
+          <path d="M3.51 9a9 9 0 0114.13-3.36L23 10" />
+          <path d="M20.49 15A9 9 0 015.87 18.36L1 14" />
         </svg>
       </button>
       <!-- Contrôles de zoom personnalisés -->
       <div class="zoom-controls">
-        <button 
-          @click="zoomIn" 
-          class="zoom-btn zoom-in"
-          title="Zoomer"
-        >
+        <button class="zoom-btn zoom-in" title="Zoomer" @click="zoomIn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
           </svg>
         </button>
-        <button 
-          @click="zoomOut" 
-          class="zoom-btn zoom-out"
-          title="Dézoomer"
-        >
+        <button class="zoom-btn zoom-out" title="Dézoomer" @click="zoomOut">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19 13H5v-2h14v2z"/>
+            <path d="M19 13H5v-2h14v2z" />
           </svg>
         </button>
         <!-- Bouton pour basculer vers les tuiles alternatives -->
-        <button 
+        <button
           v-if="tileErrorCount > 0"
-          @click="switchToAlternativeTiles" 
           class="zoom-btn tile-switch"
           title="Changer de source de carte"
+          @click="switchToAlternativeTiles"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-            <path d="M21 3v5h-5"></path>
-            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-            <path d="M3 21v-5h5"></path>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+            <path d="M21 3v5h-5" />
+            <path
+              d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"
+            />
+            <path d="M3 21v-5h5" />
           </svg>
         </button>
       </div>
@@ -59,15 +69,15 @@ import { ref, onMounted, onUnmounted, watch } from 'vue'
 import type { LocationGeoJson } from '~/common/interface/event.interface'
 
 const props = defineProps<{
-  locations: LocationGeoJson[],
+  locations: LocationGeoJson[];
   eventsData: {
-    name: string,
-    description: string,
-    date: string,
-    location: string,
-    coordinates: [number, number],
-    id: string
-  }[]
+    name: string;
+    description: string;
+    date: string;
+    location: string;
+    coordinates: [number, number];
+    id: string;
+  }[];
 }>()
 
 const { $maplibregl } = useNuxtApp()
@@ -80,11 +90,11 @@ const maxTileErrors = 5
 const hasSwitchedTiles = ref(false)
 
 const zoomIn = () => {
-  if (map.value) map.value.zoomIn()
+  if (map.value) { map.value.zoomIn() }
 }
 
 const zoomOut = () => {
-  if (map.value) map.value.zoomOut()
+  if (map.value) { map.value.zoomOut() }
 }
 
 const clearMarkers = () => {
@@ -93,17 +103,23 @@ const clearMarkers = () => {
 }
 
 const addCityMarkers = () => {
-  if (!map.value) return
+  if (!map.value) { return }
   clearMarkers()
   const eventsCountByCity: Record<string, number> = {}
   const cityCoords: Record<string, [number, number]> = {}
-  props.eventsData.forEach(event => {
-    eventsCountByCity[event.location] = (eventsCountByCity[event.location] || 0) + 1
-    if (!cityCoords[event.location]) cityCoords[event.location] = event.coordinates
+  props.eventsData.forEach((event) => {
+    eventsCountByCity[event.location] =
+      (eventsCountByCity[event.location] || 0) + 1
+    if (!cityCoords[event.location]) { cityCoords[event.location] = event.coordinates }
   })
   Object.entries(eventsCountByCity).forEach(([city, count]) => {
-    const popup = new $maplibregl.Popup({ offset: 25 }).setText(`${city} (${count} événement${count > 1 ? 's' : ''}) - Cliquez pour voir les détails`)
-    const marker = new $maplibregl.Marker({ color: '#3b82f6', scale: count > 1 ? 1.2 : 0.9 })
+    const popup = new $maplibregl.Popup({ offset: 25 }).setText(
+      `${city} (${count} événement${count > 1 ? 's' : ''}) - Cliquez pour voir les détails`
+    )
+    const marker = new $maplibregl.Marker({
+      color: '#3b82f6',
+      scale: count > 1 ? 1.2 : 0.9
+    })
       .setLngLat(cityCoords[city])
       .setPopup(popup)
       .addTo(map.value)
@@ -142,13 +158,17 @@ const addCityMarkers = () => {
 }
 
 const addEventMarkers = (city: string) => {
-  if (!map.value) return
+  if (!map.value) { return }
   clearMarkers()
-  const cityEvents = props.eventsData.filter(event => event.location === city)
+  const cityEvents = props.eventsData.filter(
+    event => event.location === city
+  )
   const cityCount = cityEvents.length
   cityEvents.forEach((event, index) => {
-    const truncatedDescription = event.description.split(' ').slice(0, 10).join(' ') + (event.description.split(' ').length > 10 ? '...' : '')
-    
+    const truncatedDescription =
+      event.description.split(' ').slice(0, 10).join(' ') +
+      (event.description.split(' ').length > 10 ? '...' : '')
+
     const popupContent = `
       <div style=\"padding: 8px; max-width: 250px;\">
         <h3 style=\"margin: 0 0 8px 0; font-weight: bold; color: #1f2937;\">${event.name}</h3>
@@ -157,7 +177,10 @@ const addEventMarkers = (city: string) => {
         <p style=\"margin: 0; color: #3b82f6; font-size: 12px;\">📍 ${event.location}</p>
       </div>
     `
-    const popup = new $maplibregl.Popup({ offset: 25, maxWidth: '300px' }).setHTML(popupContent)
+    const popup = new $maplibregl.Popup({
+      offset: 25,
+      maxWidth: '300px'
+    }).setHTML(popupContent)
     const marker = new $maplibregl.Marker({ color: '#10b981', scale: 0.8 })
       .setLngLat(event.coordinates)
       .setPopup(popup)
@@ -218,8 +241,8 @@ const resetToCities = () => {
 }
 
 const initMap = () => {
-  if (!mapContainer.value) return
-  
+  if (!mapContainer.value) { return }
+
   try {
     // Configuration MapLibre avec gestion des workers
     const mapConfig = {
@@ -227,7 +250,7 @@ const initMap = () => {
       style: {
         version: 8,
         sources: {
-          'osm': {
+          osm: {
             type: 'raster',
             tiles: [
               'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -261,10 +284,10 @@ const initMap = () => {
       transformRequest: (url: string, resourceType: string) => {
         if (resourceType === 'Tile' && url.includes('openstreetmap.org')) {
           return {
-            url: url,
+            url,
             headers: {
               'User-Agent': 'BeneVoclic/1.0',
-              'Accept': 'image/png,image/webp,*/*',
+              Accept: 'image/png,image/webp,*/*',
               'Accept-Language': 'fr-FR,fr;q=0.9,en;q=0.8'
             }
           }
@@ -274,11 +297,11 @@ const initMap = () => {
     }
 
     map.value = new $maplibregl.Map(mapConfig)
-    
+
     // Gestion des erreurs de la carte
     map.value.on('error', (e: any) => {
       console.warn('MapLibre error:', e)
-      
+
       // Si c'est une erreur de worker, essayer de réinitialiser sans workers
       if (e.error && e.error.message && e.error.message.includes('Worker')) {
         console.log('Attempting to reinitialize map without workers...')
@@ -289,15 +312,24 @@ const initMap = () => {
         mapConfig.workerClass = null
         map.value = new $maplibregl.Map(mapConfig)
       }
-      
+
       // Si c'est une erreur de tuile, compter et basculer si nécessaire
-      if (e.error && e.error.message && e.error.message.includes('Failed to fetch') && e.tile) {
+      if (
+        e.error &&
+        e.error.message &&
+        e.error.message.includes('Failed to fetch') &&
+        e.tile
+      ) {
         tileErrorCount.value++
-        console.log(`Tile loading error (${tileErrorCount.value}/${maxTileErrors})`)
-        
+        console.log(
+          `Tile loading error (${tileErrorCount.value}/${maxTileErrors})`
+        )
+
         // Si trop d'erreurs et qu'on n'a pas encore basculé, essayer les tuiles alternatives
         if (tileErrorCount.value >= maxTileErrors && !hasSwitchedTiles.value) {
-          console.log('Too many tile errors, switching to alternative tile source...')
+          console.log(
+            'Too many tile errors, switching to alternative tile source...'
+          )
           hasSwitchedTiles.value = true
           switchToAlternativeTiles()
         }
@@ -308,10 +340,11 @@ const initMap = () => {
     map.value.on('sourcedataerror', (e: any) => {
       console.warn('Source data error:', e)
       if (e.sourceId === 'osm') {
-        console.log('OpenStreetMap source error, tiles may not be loading properly')
+        console.log(
+          'OpenStreetMap source error, tiles may not be loading properly'
+        )
       }
     })
-
   } catch (error) {
     console.error('Error initializing map:', error)
     // Fallback: afficher un message d'erreur à l'utilisateur
@@ -335,14 +368,14 @@ const initMap = () => {
 
 // Fonction pour basculer vers une source de tuiles alternative
 const switchToAlternativeTiles = () => {
-  if (!map.value) return
-  
+  if (!map.value) { return }
+
   try {
     // Supprimer la source existante
     if (map.value.getSource('osm')) {
       map.value.removeSource('osm')
     }
-    
+
     // Ajouter une nouvelle source avec des tuiles alternatives
     map.value.addSource('osm', {
       type: 'raster',
@@ -353,7 +386,7 @@ const switchToAlternativeTiles = () => {
       tileSize: 256,
       attribution: '© CartoDB, © Thunderforest'
     })
-    
+
     console.log('Switched to alternative tile source')
   } catch (error) {
     console.error('Error switching to alternative tiles:', error)
@@ -367,7 +400,7 @@ const goToDetails = (announcementId: string) => {
 onMounted(() => {
   try {
     initMap()
-    
+
     // Attendre que la carte soit chargée avant d'ajouter les marqueurs
     if (map.value) {
       map.value.on('load', () => {
@@ -377,11 +410,11 @@ onMounted(() => {
           console.error('Error adding city markers:', error)
         }
       })
-      
+
       // Gestion des clics sur la carte
       map.value.on('click', (e: any) => {
         try {
-          if (expandedCity.value) resetToCities()
+          if (expandedCity.value) { resetToCities() }
         } catch (error) {
           console.error('Error handling map click:', error)
         }
@@ -425,7 +458,7 @@ watch(
 
 onUnmounted(() => {
   clearMarkers()
-  if (map.value) map.value.remove()
+  if (map.value) { map.value.remove() }
 })
 </script>
 
@@ -458,7 +491,9 @@ onUnmounted(() => {
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.08);
   color: #3b82f6;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
 }
 .refresh-btn:hover {
   background: #eff6ff;
@@ -510,4 +545,4 @@ onUnmounted(() => {
   border-color: #d97706;
   color: #b45309;
 }
-</style> 
+</style>

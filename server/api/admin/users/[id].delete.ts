@@ -10,16 +10,19 @@ export default defineEventHandler(async (event) => {
 
   try {
     const response = await axios.delete(url, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` }
     })
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, "Erreur lors de la suppression de l'utilisateur")
+      ApiError.handleAxios(
+        error,
+        "Erreur lors de la suppression de l'utilisateur"
+      )
     }
     throw createError({
       statusCode: error?.response?.status || 500,
-      statusMessage: "Erreur lors de la suppression de l'utilisateur",
+      statusMessage: "Erreur lors de la suppression de l'utilisateur"
     })
   }
 })

@@ -10,8 +10,14 @@ import { computed } from 'vue'
 
 // Props pour les données structurées
 interface Props {
-  type?: 'organization' | 'website' | 'webpage' | 'breadcrumb' | 'event' | 'person'
-  data?: Record<string, any>
+  type?:
+    | 'organization'
+    | 'website'
+    | 'webpage'
+    | 'breadcrumb'
+    | 'event'
+    | 'person';
+  data?: Record<string, any>;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -34,15 +40,18 @@ const structuredData = computed(() => {
         '@type': 'Organization',
         name: props.data.name || 'Benevoclic',
         url: props.data.url || 'https://www.benevoclic.fr',
-        logo: props.data.logo || 'https://www.benevoclic.fr/logo_benevoclic.png',
-        description: props.data.description || 'Plateforme de bénévolat connectant associations et volontaires',
+        logo:
+          props.data.logo || 'https://www.benevoclic.fr/logo_benevoclic.png',
+        description:
+          props.data.description ||
+          'Plateforme de bénévolat connectant associations et volontaires',
         sameAs: [
           'https://www.facebook.com/benevoclic',
           'https://twitter.com/benevoclic',
           'https://www.linkedin.com/company/benevoclic'
         ]
       }
-    
+
     case 'website':
       return {
         ...baseData,
@@ -56,14 +65,15 @@ const structuredData = computed(() => {
           'query-input': 'required name=search_term_string'
         }
       }
-    
+
     case 'webpage':
       return {
         ...baseData,
         '@type': 'WebPage',
         name: props.data.name || 'Page Benevoclic',
         url: props.data.url || 'https://www.benevoclic.fr',
-        description: props.data.description || 'Page de la plateforme Benevoclic',
+        description:
+          props.data.description || 'Page de la plateforme Benevoclic',
         breadcrumb: props.data.breadcrumb || {
           '@type': 'BreadcrumbList',
           itemListElement: [
@@ -76,7 +86,7 @@ const structuredData = computed(() => {
           ]
         }
       }
-    
+
     case 'breadcrumb':
       return {
         ...baseData,
@@ -90,7 +100,7 @@ const structuredData = computed(() => {
           }
         ]
       }
-    
+
     case 'event':
       return {
         ...baseData,
@@ -101,7 +111,7 @@ const structuredData = computed(() => {
         endDate: props.data.endDate,
         location: props.data.location || {
           '@type': 'Place',
-          name: 'Lieu de l\'événement',
+          name: "Lieu de l'événement",
           address: {
             '@type': 'PostalAddress',
             streetAddress: props.data.address?.street || '',
@@ -121,7 +131,7 @@ const structuredData = computed(() => {
           availability: 'https://schema.org/InStock'
         }
       }
-    
+
     case 'person':
       return {
         ...baseData,
@@ -135,14 +145,12 @@ const structuredData = computed(() => {
           name: 'Benevoclic'
         }
       }
-    
+
     default:
       return baseData
   }
 })
 
 // Injection des données structurées
-useSchemaOrg([
-  structuredData.value
-])
-</script> 
+useSchemaOrg([structuredData.value])
+</script>

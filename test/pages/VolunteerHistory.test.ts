@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { describe, it, expect } from "vitest";
+import { mount } from "@vue/test-utils";
 
 const MockVolunteerHistory = {
   template: `
@@ -102,121 +102,135 @@ const MockVolunteerHistory = {
         </div>
       </div>
     </div>
-  `
-}
+  `,
+};
 
-describe('VolunteerHistory', () => {
-  it('should render the main container', () => {
-    const wrapper = mount(MockVolunteerHistory)
-    expect(wrapper.find('.min-h-screen.bg-gradient-to-br').exists()).toBe(true)
-  })
+describe("VolunteerHistory", () => {
+  it("should render the main container", () => {
+    const wrapper = mount(MockVolunteerHistory);
+    expect(wrapper.find(".min-h-screen.bg-gradient-to-br").exists()).toBe(true);
+  });
 
-  it('should render the header section', () => {
-    const wrapper = mount(MockVolunteerHistory)
-    const header = wrapper.find('.mb-8')
-    expect(header.exists()).toBe(true)
-    expect(header.find('h1').text()).toBe('Historique')
-    expect(header.find('p').text()).toBe('Retrouvez ici toutes vos missions et participations passées')
-  })
+  it("should render the header section", () => {
+    const wrapper = mount(MockVolunteerHistory);
+    const header = wrapper.find(".mb-8");
+    expect(header.exists()).toBe(true);
+    expect(header.find("h1").text()).toBe("Historique");
+    expect(header.find("p").text()).toBe(
+      "Retrouvez ici toutes vos missions et participations passées",
+    );
+  });
 
-  it('should render the filter and search section', () => {
-    const wrapper = mount(MockVolunteerHistory)
-    const filterSection = wrapper.find('.bg-base-100.rounded-2xl.shadow-lg.p-6.mb-8')
-    expect(filterSection.exists()).toBe(true)
-    expect(filterSection.find('input[type="text"]').exists()).toBe(true)
-    expect(filterSection.find('select').exists()).toBe(true)
-  })
+  it("should render the filter and search section", () => {
+    const wrapper = mount(MockVolunteerHistory);
+    const filterSection = wrapper.find(
+      ".bg-base-100.rounded-2xl.shadow-lg.p-6.mb-8",
+    );
+    expect(filterSection.exists()).toBe(true);
+    expect(filterSection.find('input[type="text"]').exists()).toBe(true);
+    expect(filterSection.find("select").exists()).toBe(true);
+  });
 
-  it('should render search input with proper attributes', () => {
-    const wrapper = mount(MockVolunteerHistory)
-    const searchInput = wrapper.find('input[type="text"]')
-    expect(searchInput.exists()).toBe(true)
-    expect(searchInput.attributes('placeholder')).toBe('Rechercher dans l&#39;historique...')
-    expect(searchInput.attributes('aria-label')).toBe('Champ de saisie')
-  })
+  it("should render search input with proper attributes", () => {
+    const wrapper = mount(MockVolunteerHistory);
+    const searchInput = wrapper.find('input[type="text"]');
+    expect(searchInput.exists()).toBe(true);
+    expect(searchInput.attributes("placeholder")).toBe(
+      "Rechercher dans l&#39;historique...",
+    );
+    expect(searchInput.attributes("aria-label")).toBe("Champ de saisie");
+  });
 
-  it('should render filter dropdown with options', () => {
-    const wrapper = mount(MockVolunteerHistory)
-    const filterSelect = wrapper.find('select')
-    expect(filterSelect.exists()).toBe(true)
-    expect(filterSelect.attributes('aria-label')).toBe('Sélection')
-    
-    const options = filterSelect.findAll('option')
-    expect(options.length).toBe(3)
-    expect(options[0].text()).toBe('Toutes les activités')
-    expect(options[1].text()).toBe('Missions')
-    expect(options[2].text()).toBe('Participations')
-  })
+  it("should render filter dropdown with options", () => {
+    const wrapper = mount(MockVolunteerHistory);
+    const filterSelect = wrapper.find("select");
+    expect(filterSelect.exists()).toBe(true);
+    expect(filterSelect.attributes("aria-label")).toBe("Sélection");
 
-  it('should render timeline structure', () => {
-    const wrapper = mount(MockVolunteerHistory)
-    const timeline = wrapper.find('.flex.justify-center')
-    expect(timeline.exists()).toBe(true)
-    expect(timeline.find('.w-full.md\\:w-4\\/5').exists()).toBe(true)
-  })
+    const options = filterSelect.findAll("option");
+    expect(options.length).toBe(3);
+    expect(options[0].text()).toBe("Toutes les activités");
+    expect(options[1].text()).toBe("Missions");
+    expect(options[2].text()).toBe("Participations");
+  });
 
-  it('should render timeline line', () => {
-    const wrapper = mount(MockVolunteerHistory)
-    const timelineLine = wrapper.find('.absolute.left-6.top-0.bottom-0.w-0\\.5.bg-base-300')
-    expect(timelineLine.exists()).toBe(true)
-  })
+  it("should render timeline structure", () => {
+    const wrapper = mount(MockVolunteerHistory);
+    const timeline = wrapper.find(".flex.justify-center");
+    expect(timeline.exists()).toBe(true);
+    expect(timeline.find(".w-full.md\\:w-4\\/5").exists()).toBe(true);
+  });
 
-  it('should render timeline items', () => {
-    const wrapper = mount(MockVolunteerHistory)
-    const timelineItems = wrapper.findAll('.relative.flex.items-start.group')
-    expect(timelineItems.length).toBe(2)
-  })
+  it("should render timeline line", () => {
+    const wrapper = mount(MockVolunteerHistory);
+    const timelineLine = wrapper.find(
+      ".absolute.left-6.top-0.bottom-0.w-0\\.5.bg-base-300",
+    );
+    expect(timelineLine.exists()).toBe(true);
+  });
 
-  it('should render timeline dots with periods', () => {
-    const wrapper = mount(MockVolunteerHistory)
-    const dots = wrapper.findAll('.w-16.h-16.rounded-full.bg-base-100.border-4.border-primary')
-    expect(dots.length).toBe(2)
-    
-    const periods = wrapper.findAll('.text-xs.text-primary.font-bold.text-center.leading-tight')
-    expect(periods.length).toBe(2)
-    expect(periods[0].text()).toBe('Jan 2024')
-    expect(periods[1].text()).toBe('Déc 2023')
-  })
+  it("should render timeline items", () => {
+    const wrapper = mount(MockVolunteerHistory);
+    const timelineItems = wrapper.findAll(".relative.flex.items-start.group");
+    expect(timelineItems.length).toBe(2);
+  });
 
-  it('should render timeline cards with proper structure', () => {
-    const wrapper = mount(MockVolunteerHistory)
-    const timelineCards = wrapper.findAll('.ml-6.flex-1 .bg-base-100.rounded-2xl.shadow-lg.border.border-base-300.p-6')
-    expect(timelineCards.length).toBe(2)
-    
-    timelineCards.forEach(card => {
-      expect(card.find('h3').exists()).toBe(true)
-      expect(card.find('p').exists()).toBe(true)
-      expect(card.find('.btn').exists()).toBe(true)
-    })
-  })
+  it("should render timeline dots with periods", () => {
+    const wrapper = mount(MockVolunteerHistory);
+    const dots = wrapper.findAll(
+      ".w-16.h-16.rounded-full.bg-base-100.border-4.border-primary",
+    );
+    expect(dots.length).toBe(2);
 
-  it('should render timeline cards with dates', () => {
-    const wrapper = mount(MockVolunteerHistory)
-    const dates = wrapper.findAll('.text-sm.text-base-content.opacity-70')
-    expect(dates.length).toBe(2)
-    expect(dates[0].text()).toBe('15 Jan 2024')
-    expect(dates[1].text()).toBe('20 Déc 2023')
-  })
+    const periods = wrapper.findAll(
+      ".text-xs.text-primary.font-bold.text-center.leading-tight",
+    );
+    expect(periods.length).toBe(2);
+    expect(periods[0].text()).toBe("Jan 2024");
+    expect(periods[1].text()).toBe("Déc 2023");
+  });
 
-  it('should render detail buttons with icons', () => {
-    const wrapper = mount(MockVolunteerHistory)
-    const buttons = wrapper.findAll('.btn.btn-primary.btn-sm')
-    expect(buttons.length).toBe(2)
-    
-    buttons.forEach(button => {
-      expect(button.text()).toContain('Détail')
-      expect(button.find('svg').exists()).toBe(true)
-    })
-  })
+  it("should render timeline cards with proper structure", () => {
+    const wrapper = mount(MockVolunteerHistory);
+    const timelineCards = wrapper.findAll(
+      ".ml-6.flex-1 .bg-base-100.rounded-2xl.shadow-lg.border.border-base-300.p-6",
+    );
+    expect(timelineCards.length).toBe(2);
 
-  it('should have proper timeline styling', () => {
-    const wrapper = mount(MockVolunteerHistory)
-    const timelineContainer = wrapper.find('.w-full.md\\:w-4\\/5')
-    expect(timelineContainer.exists()).toBe(true)
-    
-    const timelineItems = wrapper.findAll('.relative.flex.items-start.group')
-    timelineItems.forEach(item => {
-      expect(item.find('.ml-6.flex-1').exists()).toBe(true)
-    })
-  })
-}) 
+    timelineCards.forEach((card) => {
+      expect(card.find("h3").exists()).toBe(true);
+      expect(card.find("p").exists()).toBe(true);
+      expect(card.find(".btn").exists()).toBe(true);
+    });
+  });
+
+  it("should render timeline cards with dates", () => {
+    const wrapper = mount(MockVolunteerHistory);
+    const dates = wrapper.findAll(".text-sm.text-base-content.opacity-70");
+    expect(dates.length).toBe(2);
+    expect(dates[0].text()).toBe("15 Jan 2024");
+    expect(dates[1].text()).toBe("20 Déc 2023");
+  });
+
+  it("should render detail buttons with icons", () => {
+    const wrapper = mount(MockVolunteerHistory);
+    const buttons = wrapper.findAll(".btn.btn-primary.btn-sm");
+    expect(buttons.length).toBe(2);
+
+    buttons.forEach((button) => {
+      expect(button.text()).toContain("Détail");
+      expect(button.find("svg").exists()).toBe(true);
+    });
+  });
+
+  it("should have proper timeline styling", () => {
+    const wrapper = mount(MockVolunteerHistory);
+    const timelineContainer = wrapper.find(".w-full.md\\:w-4\\/5");
+    expect(timelineContainer.exists()).toBe(true);
+
+    const timelineItems = wrapper.findAll(".relative.flex.items-start.group");
+    timelineItems.forEach((item) => {
+      expect(item.find(".ml-6.flex-1").exists()).toBe(true);
+    });
+  });
+});

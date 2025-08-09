@@ -1,15 +1,14 @@
-
 import { defineNuxtRouteMiddleware, navigateTo } from '#app'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useUserStore } from '~/stores/user/user.store'
 import { RoleUser } from '~/common/enums/role.enum'
 
-function getPathWithoutLocale(path: string): string {
+function getPathWithoutLocale (path: string): string {
   return path.replace(/^\/(en|es)\//, '/')
 }
 
 // Fonction pour obtenir la locale depuis le chemin
-function getLocaleFromPath(path: string): string {
+function getLocaleFromPath (path: string): string {
   const match = path.match(/^\/(en|es)\//)
   return match ? match[1] : 'fr'
 }
@@ -32,7 +31,7 @@ const BASE_ROUTE_CONFIG = {
     '/search/history',
     '/notifications',
     '/mentions-legales',
-    '/confidentialite',
+    '/confidentialite'
   ],
 
   // Routes pour les volontaires
@@ -49,7 +48,7 @@ const BASE_ROUTE_CONFIG = {
     '/volunteer/activity/missions',
     '/volunteer/activity/participations',
     '/volunteer/events',
-    '/volunteer/events/announcement',
+    '/volunteer/events/announcement'
   ],
 
   // Routes pour les associations
@@ -67,18 +66,15 @@ const BASE_ROUTE_CONFIG = {
     '/association/events/association',
     '/association/events/association/manage',
     '/association/events/association/requests',
-    '/association/events/announcement',
+    '/association/events/announcement'
   ],
 
   // Routes pour les admins (si nécessaire)
-  admin: [
-    '/admin',
-    '/dashboard'
-  ]
+  admin: ['/admin', '/dashboard']
 }
 
 // Fonction pour vérifier si une route est accessible pour un rôle
-function isRouteAccessible(path: string, role: RoleUser | null): boolean {
+function isRouteAccessible (path: string, role: RoleUser | null): boolean {
   const pathWithoutLocale = getPathWithoutLocale(path)
 
   // Routes publiques toujours accessibles
@@ -87,7 +83,10 @@ function isRouteAccessible(path: string, role: RoleUser | null): boolean {
   }
 
   // Vérifier les routes dynamiques publiques (comme /announcement/[id] ou /annoucement/[id])
-  if (pathWithoutLocale.startsWith('/announcement/') || pathWithoutLocale.startsWith('/annoucement/')) {
+  if (
+    pathWithoutLocale.startsWith('/announcement/') ||
+    pathWithoutLocale.startsWith('/annoucement/')
+  ) {
     return true
   }
 
@@ -99,20 +98,32 @@ function isRouteAccessible(path: string, role: RoleUser | null): boolean {
   // Vérifier selon le rôle
   switch (role) {
     case RoleUser.VOLUNTEER:
-      return BASE_ROUTE_CONFIG.volunteer.some(route => pathWithoutLocale.startsWith(route))
+      return BASE_ROUTE_CONFIG.volunteer.some(route =>
+        pathWithoutLocale.startsWith(route)
+      )
     case RoleUser.ASSOCIATION:
-      return BASE_ROUTE_CONFIG.association.some(route => pathWithoutLocale.startsWith(route))
+      return BASE_ROUTE_CONFIG.association.some(route =>
+        pathWithoutLocale.startsWith(route)
+      )
     case RoleUser.ADMIN:
-      return BASE_ROUTE_CONFIG.admin.some(route => pathWithoutLocale.startsWith(route)) ||
-             BASE_ROUTE_CONFIG.volunteer.some(route => pathWithoutLocale.startsWith(route)) ||
-             BASE_ROUTE_CONFIG.association.some(route => pathWithoutLocale.startsWith(route))
+      return (
+        BASE_ROUTE_CONFIG.admin.some(route =>
+          pathWithoutLocale.startsWith(route)
+        ) ||
+        BASE_ROUTE_CONFIG.volunteer.some(route =>
+          pathWithoutLocale.startsWith(route)
+        ) ||
+        BASE_ROUTE_CONFIG.association.some(route =>
+          pathWithoutLocale.startsWith(route)
+        )
+      )
     default:
       return false
   }
 }
 
 // Fonction pour obtenir la page d'accueil selon le rôle et la langue
-function getHomePageForRole(role: RoleUser | null, locale?: string): string {
+function getHomePageForRole (role: RoleUser | null, locale?: string): string {
   const basePath = (() => {
     switch (role) {
       case RoleUser.VOLUNTEER:
@@ -157,10 +168,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
       if (firebase && firebase.auth) {
         const currentUser = firebase.auth.currentUser
-        if (
-            currentUser &&
-            !currentUser.emailVerified
-        ) {
+        if (currentUser && !currentUser.emailVerified) {
           if (to.path !== '/auth/VerifyEmailPage') {
             return navigateTo('/auth/VerifyEmailPage')
           }
@@ -179,27 +187,30 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const authStore = useAuthStore()
   const userStore = useUserStore()
 
-  if (!useCookie("isConnected").value) {
+  if (!useCookie('isConnected').value) {
     await authStore.initAuth()
   }
 
-
-  if (!useCookie("isConnected").value) {
+  if (!useCookie('isConnected').value) {
     const pathWithoutLocale = getPathWithoutLocale(to.path)
-    
+
     if (BASE_ROUTE_CONFIG.public.includes(pathWithoutLocale)) {
       return
     }
-    
-    if (pathWithoutLocale.startsWith('/announcement/') || pathWithoutLocale.startsWith('/annoucement/')) {
+
+    if (
+      pathWithoutLocale.startsWith('/announcement/') ||
+      pathWithoutLocale.startsWith('/annoucement/')
+    ) {
       return
     }
-    
+
     // Si c'est une route de transition, rediriger vers login
-    if ([
-      '/auth/registerVolunteer',
-      '/auth/registerAssociation'
-    ].includes(pathWithoutLocale)) {
+    if (
+      ['/auth/registerVolunteer', '/auth/registerAssociation'].includes(
+        pathWithoutLocale
+      )
+    ) {
       return navigateTo('/')
     }
 
@@ -217,13 +228,20 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   const userRole = userStore.getRole || null
 
-  if (!authStore.isAuthenticated && ['/'].includes(getPathWithoutLocale(to.path))) {
+  if (
+    !authStore.isAuthenticated &&
+    ['/'].includes(getPathWithoutLocale(to.path))
+  ) {
     const locale = getLocaleFromPath(to.path)
     return navigateTo(getHomePageForRole(userRole, locale))
   }
 
   // Gestion explicite des routes de transition
-  if (['/auth/registerVolunteer', '/auth/registerAssociation'].includes(getPathWithoutLocale(to.path))) {
+  if (
+    ['/auth/registerVolunteer', '/auth/registerAssociation'].includes(
+      getPathWithoutLocale(to.path)
+    )
+  ) {
     if (userStore.user && userStore.user.isCompleted) {
       const locale = getLocaleFromPath(to.path)
       return navigateTo(getHomePageForRole(userRole, locale))
@@ -242,13 +260,19 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     switch (userRole) {
       case RoleUser.VOLUNTEER:
         if (getPathWithoutLocale(to.path) !== '/auth/registerVolunteer') {
-          const registerPath = locale !== 'fr' ? `/${locale}/auth/registerVolunteer` : '/auth/registerVolunteer'
+          const registerPath =
+            locale !== 'fr'
+              ? `/${locale}/auth/registerVolunteer`
+              : '/auth/registerVolunteer'
           return navigateTo(registerPath)
         }
         break
       case RoleUser.ASSOCIATION:
         if (getPathWithoutLocale(to.path) !== '/auth/registerAssociation') {
-          const registerPath = locale !== 'fr' ? `/${locale}/auth/registerAssociation` : '/auth/registerAssociation'
+          const registerPath =
+            locale !== 'fr'
+              ? `/${locale}/auth/registerAssociation`
+              : '/auth/registerAssociation'
           return navigateTo(registerPath)
         }
         break
@@ -257,10 +281,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
 
   if (!isRouteAccessible(to.path, userRole)) {
-
     const locale = getLocaleFromPath(to.path)
     const homePage = getHomePageForRole(userRole, locale)
     return navigateTo(homePage)
   }
-
 })

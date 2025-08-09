@@ -1,6 +1,6 @@
 <template>
-  <div >
-    <HeaderAuth/>
+  <div>
+    <HeaderAuth />
     <main class="bg-base-200 min-h-screen">
       <slot />
     </main>

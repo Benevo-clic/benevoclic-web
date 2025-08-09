@@ -1,116 +1,122 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { mount } from "@vue/test-utils";
 
 // Mock des composants
 const MockDateRangePicker = {
   template: '<div class="date-range-picker">Date Range Picker</div>',
-  props: ['modelValue'],
-  emits: ['update:modelValue']
-}
+  props: ["modelValue"],
+  emits: ["update:modelValue"],
+};
 
 const MockTimeSeriesChart = {
   template: '<div class="time-series-chart">Time Series Chart</div>',
-  props: ['data', 'type']
-}
+  props: ["data", "type"],
+};
 
 const MockPieChart = {
   template: '<div class="pie-chart">Pie Chart</div>',
-  props: ['data']
-}
+  props: ["data"],
+};
 
 const MockObjectiveProgress = {
   template: '<div class="objective-progress">Objective Progress</div>',
-  props: ['objectives']
-}
+  props: ["objectives"],
+};
 
 const MockErrorPopup = {
   template: '<div class="error-popup">Error Popup</div>',
-  props: ['show', 'errorType']
-}
+  props: ["show", "errorType"],
+};
 
 // Mock des composables
 const mockUseUser = {
-  getUserId: 'user123',
-  initializeUser: vi.fn()
-}
+  getUserId: "user123",
+  initializeUser: vi.fn(),
+};
 
 const mockUseAnnouncement = {
-  fetchAnnouncements: vi.fn()
-}
+  fetchAnnouncements: vi.fn(),
+};
 
 const mockUseNavigation = {
-  navigateToRoute: vi.fn()
-}
+  navigateToRoute: vi.fn(),
+};
 
 // Mock des données
 const mockEvents = [
   {
-    id: '1',
-    nameEvent: 'Événement Test 1',
-    datePublication: '2024-06-01',
+    id: "1",
+    nameEvent: "Événement Test 1",
+    datePublication: "2024-06-01",
     nbParticipants: 10,
     maxParticipants: 20,
     nbVolunteers: 5,
     participants: [],
-    volunteers: []
+    volunteers: [],
   },
   {
-    id: '2',
-    nameEvent: 'Événement Test 2',
-    datePublication: '2024-06-15',
+    id: "2",
+    nameEvent: "Événement Test 2",
+    datePublication: "2024-06-15",
     nbParticipants: 15,
     maxParticipants: 25,
     nbVolunteers: 8,
     participants: [],
-    volunteers: []
-  }
-]
+    volunteers: [],
+  },
+];
 
 const mockAssociations = [
   {
-    id: '1',
-    name: 'Association Test',
-    volunteers: [
-      { id: 'v1' },
-      { id: 'v2' }
-    ]
-  }
-]
+    id: "1",
+    name: "Association Test",
+    volunteers: [{ id: "v1" }, { id: "v2" }],
+  },
+];
 
 // Mock des modules
-vi.mock('~/components/dashboard/DateRangePicker.vue', () => MockDateRangePicker)
+vi.mock(
+  "~/components/dashboard/DateRangePicker.vue",
+  () => MockDateRangePicker,
+);
 
-vi.mock('~/components/dashboard/TimeSeriesChart.vue', () => MockTimeSeriesChart)
+vi.mock(
+  "~/components/dashboard/TimeSeriesChart.vue",
+  () => MockTimeSeriesChart,
+);
 
-vi.mock('~/components/dashboard/PieChart.vue', () => MockPieChart)
+vi.mock("~/components/dashboard/PieChart.vue", () => MockPieChart);
 
-vi.mock('~/components/dashboard/ObjectiveProgress.vue', () => MockObjectiveProgress)
+vi.mock(
+  "~/components/dashboard/ObjectiveProgress.vue",
+  () => MockObjectiveProgress,
+);
 
-vi.mock('~/components/utils/ErrorPopup.vue', () => MockErrorPopup)
+vi.mock("~/components/utils/ErrorPopup.vue", () => MockErrorPopup);
 
-vi.mock('~/composables/auth/useUser', () => ({
-  useUser: () => mockUseUser
-}))
+vi.mock("~/composables/auth/useUser", () => ({
+  useUser: () => mockUseUser,
+}));
 
-vi.mock('~/composables/useAnnouncement', () => ({
-  useAnnouncement: () => mockUseAnnouncement
-}))
+vi.mock("~/composables/useAnnouncement", () => ({
+  useAnnouncement: () => mockUseAnnouncement,
+}));
 
-vi.mock('~/composables/useNavigation', () => ({
-  useNavigation: () => mockUseNavigation
-}))
+vi.mock("~/composables/useNavigation", () => ({
+  useNavigation: () => mockUseNavigation,
+}));
 
-vi.mock('~/mock/mockEvents', () => ({
-  mockEvents
-}))
+vi.mock("~/mock/mockEvents", () => ({
+  mockEvents,
+}));
 
-vi.mock('~/mock/mockAssociations', () => ({
-  mockAssociations
-}))
+vi.mock("~/mock/mockAssociations", () => ({
+  mockAssociations,
+}));
 
 // Mock de definePageMeta
-global.definePageMeta = vi.fn()
+global.definePageMeta = vi.fn();
 
 // Composant mock pour le test
 const MockAssociationDashboard = {
@@ -244,13 +250,13 @@ const MockAssociationDashboard = {
     TimeSeriesChart: MockTimeSeriesChart,
     PieChart: MockPieChart,
     ObjectiveProgress: MockObjectiveProgress,
-    ErrorPopup: MockErrorPopup
+    ErrorPopup: MockErrorPopup,
   },
   data() {
     return {
       isLoading: false,
-      dateRange: { from: '2024-06-01', to: '2024-06-30' },
-      chartType: 'bar',
+      dateRange: { from: "2024-06-01", to: "2024-06-30" },
+      chartType: "bar",
       showErrorModal: false,
       errorType: null,
       totalAnnouncements: 2,
@@ -258,222 +264,230 @@ const MockAssociationDashboard = {
       totalParticipants: 25,
       engagementRate: 7,
       announcementsSeries: {
-        labels: ['2024-06-01', '2024-06-15'],
-        data: [1, 1]
+        labels: ["2024-06-01", "2024-06-15"],
+        data: [1, 1],
       },
       pieData: {
         volunteers: 2,
-        participants: 25
+        participants: 25,
       },
       objectives: [
         {
-          id: '1',
-          title: 'Événement Test 1',
+          id: "1",
+          title: "Événement Test 1",
           covered: 10,
-          planned: 20
+          planned: 20,
         },
         {
-          id: '2',
-          title: 'Événement Test 2',
+          id: "2",
+          title: "Événement Test 2",
           covered: 15,
-          planned: 25
-        }
-      ]
-    }
-  }
-}
+          planned: 25,
+        },
+      ],
+    };
+  },
+};
 
-describe('AssociationDashboard', () => {
+describe("AssociationDashboard", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  describe('Rendu de base', () => {
-    it('should render the main container', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      expect(wrapper.find('.min-h-screen').exists()).toBe(true)
-      expect(wrapper.find('.container.mx-auto').exists()).toBe(true)
-    })
+  describe("Rendu de base", () => {
+    it("should render the main container", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      expect(wrapper.find(".min-h-screen").exists()).toBe(true);
+      expect(wrapper.find(".container.mx-auto").exists()).toBe(true);
+    });
 
-    it('should render the header section', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const header = wrapper.find('h1')
-      expect(header.exists()).toBe(true)
-      expect(header.text()).toBe('Tableau de bord')
-    })
+    it("should render the header section", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const header = wrapper.find("h1");
+      expect(header.exists()).toBe(true);
+      expect(header.text()).toBe("Tableau de bord");
+    });
 
-    it('should render the description', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const description = wrapper.find('p')
-      expect(description.exists()).toBe(true)
-      expect(description.text()).toContain('Analysez vos performances')
-    })
-  })
+    it("should render the description", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const description = wrapper.find("p");
+      expect(description.exists()).toBe(true);
+      expect(description.text()).toContain("Analysez vos performances");
+    });
+  });
 
-  describe('Date Range Picker', () => {
-    it('should render the date range picker section', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const dateSection = wrapper.find('.bg-base-100.rounded-xl')
-      expect(dateSection.exists()).toBe(true)
-    })
+  describe("Date Range Picker", () => {
+    it("should render the date range picker section", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const dateSection = wrapper.find(".bg-base-100.rounded-xl");
+      expect(dateSection.exists()).toBe(true);
+    });
 
-    it('should render the date range picker title', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const title = wrapper.find('h2')
-      expect(title.exists()).toBe(true)
-      expect(title.text()).toBe('Période d\'analyse')
-    })
+    it("should render the date range picker title", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const title = wrapper.find("h2");
+      expect(title.exists()).toBe(true);
+      expect(title.text()).toBe("Période d'analyse");
+    });
 
-    it('should render the date range picker component', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const datePicker = wrapper.find('.date-range-picker')
-      expect(datePicker.exists()).toBe(true)
-    })
-  })
+    it("should render the date range picker component", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const datePicker = wrapper.find(".date-range-picker");
+      expect(datePicker.exists()).toBe(true);
+    });
+  });
 
-  describe('Key Metrics Cards', () => {
-    it('should render all four metric cards', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const cards = wrapper.findAll('.bg-base-100.rounded-xl')
-      expect(cards.length).toBeGreaterThanOrEqual(4)
-    })
+  describe("Key Metrics Cards", () => {
+    it("should render all four metric cards", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const cards = wrapper.findAll(".bg-base-100.rounded-xl");
+      expect(cards.length).toBeGreaterThanOrEqual(4);
+    });
 
-    it('should display total announcements', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const announcementsCard = wrapper.findAll('.text-2xl.font-bold').find(el => el.text() === '2')
-      expect(announcementsCard).toBeDefined()
-    })
+    it("should display total announcements", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const announcementsCard = wrapper
+        .findAll(".text-2xl.font-bold")
+        .find((el) => el.text() === "2");
+      expect(announcementsCard).toBeDefined();
+    });
 
-    it('should display total volunteers', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const volunteersText = wrapper.text()
-      expect(volunteersText).toContain('Bénévoles')
-    })
+    it("should display total volunteers", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const volunteersText = wrapper.text();
+      expect(volunteersText).toContain("Bénévoles");
+    });
 
-    it('should display total participants', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const participantsText = wrapper.text()
-      expect(participantsText).toContain('Participants')
-    })
+    it("should display total participants", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const participantsText = wrapper.text();
+      expect(participantsText).toContain("Participants");
+    });
 
-    it('should display engagement rate', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const engagementText = wrapper.text()
-      expect(engagementText).toContain('7%')
-    })
-  })
+    it("should display engagement rate", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const engagementText = wrapper.text();
+      expect(engagementText).toContain("7%");
+    });
+  });
 
-  describe('Charts Section', () => {
-    it('should render the charts section', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const chartsSection = wrapper.find('.grid.grid-cols-1.lg\\:grid-cols-2')
-      expect(chartsSection.exists()).toBe(true)
-    })
+  describe("Charts Section", () => {
+    it("should render the charts section", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const chartsSection = wrapper.find(".grid.grid-cols-1.lg\\:grid-cols-2");
+      expect(chartsSection.exists()).toBe(true);
+    });
 
-    it('should render the time series chart', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const timeSeriesChart = wrapper.find('.time-series-chart')
-      expect(timeSeriesChart.exists()).toBe(true)
-    })
+    it("should render the time series chart", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const timeSeriesChart = wrapper.find(".time-series-chart");
+      expect(timeSeriesChart.exists()).toBe(true);
+    });
 
-    it('should render the pie chart', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const pieChart = wrapper.find('.pie-chart')
-      expect(pieChart.exists()).toBe(true)
-    })
+    it("should render the pie chart", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const pieChart = wrapper.find(".pie-chart");
+      expect(pieChart.exists()).toBe(true);
+    });
 
-    it('should display chart titles', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const titles = wrapper.findAll('h3')
-      expect(titles.length).toBeGreaterThanOrEqual(2)
-      expect(titles[0].text()).toBe('Évolution des annonces')
-      expect(titles[1].text()).toBe('Répartition bénévoles/participants')
-    })
-  })
+    it("should display chart titles", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const titles = wrapper.findAll("h3");
+      expect(titles.length).toBeGreaterThanOrEqual(2);
+      expect(titles[0].text()).toBe("Évolution des annonces");
+      expect(titles[1].text()).toBe("Répartition bénévoles/participants");
+    });
+  });
 
-  describe('Objectives Section', () => {
-    it('should render the objectives section', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const objectivesSection = wrapper.find('.bg-base-100.rounded-xl.shadow-lg.p-4')
-      expect(objectivesSection.exists()).toBe(true)
-    })
+  describe("Objectives Section", () => {
+    it("should render the objectives section", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const objectivesSection = wrapper.find(
+        ".bg-base-100.rounded-xl.shadow-lg.p-4",
+      );
+      expect(objectivesSection.exists()).toBe(true);
+    });
 
-    it('should render the objectives title', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const titles = wrapper.findAll('h3')
-      const objectivesTitle = titles.find(title => title.text() === 'Progression des objectifs')
-      expect(objectivesTitle).toBeDefined()
-    })
+    it("should render the objectives title", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const titles = wrapper.findAll("h3");
+      const objectivesTitle = titles.find(
+        (title) => title.text() === "Progression des objectifs",
+      );
+      expect(objectivesTitle).toBeDefined();
+    });
 
-    it('should render the objective progress component', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const objectiveProgress = wrapper.find('.objective-progress')
-      expect(objectiveProgress.exists()).toBe(true)
-    })
-  })
+    it("should render the objective progress component", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const objectiveProgress = wrapper.find(".objective-progress");
+      expect(objectiveProgress.exists()).toBe(true);
+    });
+  });
 
-  describe('Loading State', () => {
-    it('should show loading overlay when isLoading is true', () => {
+  describe("Loading State", () => {
+    it("should show loading overlay when isLoading is true", () => {
       const wrapper = mount(MockAssociationDashboard, {
         data() {
           return {
-            isLoading: true
-          }
-        }
-      })
-      const loadingOverlay = wrapper.find('.fixed.inset-0')
-      expect(loadingOverlay.exists()).toBe(true)
-    })
+            isLoading: true,
+          };
+        },
+      });
+      const loadingOverlay = wrapper.find(".fixed.inset-0");
+      expect(loadingOverlay.exists()).toBe(true);
+    });
 
-    it('should not show loading overlay when isLoading is false', () => {
+    it("should not show loading overlay when isLoading is false", () => {
       const wrapper = mount(MockAssociationDashboard, {
         data() {
           return {
-            isLoading: false
-          }
-        }
-      })
-      const loadingOverlay = wrapper.find('.fixed.inset-0')
-      expect(loadingOverlay.exists()).toBe(false)
-    })
-  })
+            isLoading: false,
+          };
+        },
+      });
+      const loadingOverlay = wrapper.find(".fixed.inset-0");
+      expect(loadingOverlay.exists()).toBe(false);
+    });
+  });
 
-  describe('Error Handling', () => {
-    it('should render error popup component', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const errorPopup = wrapper.find('.error-popup')
-      expect(errorPopup.exists()).toBe(true)
-    })
-  })
+  describe("Error Handling", () => {
+    it("should render error popup component", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const errorPopup = wrapper.find(".error-popup");
+      expect(errorPopup.exists()).toBe(true);
+    });
+  });
 
-  describe('Responsive Design', () => {
-    it('should have responsive container classes', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const container = wrapper.find('.container.mx-auto')
-      expect(container.classes()).toContain('px-3')
-      expect(container.classes()).toContain('sm:px-4')
-    })
+  describe("Responsive Design", () => {
+    it("should have responsive container classes", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const container = wrapper.find(".container.mx-auto");
+      expect(container.classes()).toContain("px-3");
+      expect(container.classes()).toContain("sm:px-4");
+    });
 
-    it('should have responsive grid classes', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const grid = wrapper.find('.grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4')
-      expect(grid.exists()).toBe(true)
-    })
-  })
+    it("should have responsive grid classes", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const grid = wrapper.find(
+        ".grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4",
+      );
+      expect(grid.exists()).toBe(true);
+    });
+  });
 
-  describe('Accessibility', () => {
-    it('should have proper heading structure', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const headings = wrapper.findAll('h1, h2, h3')
-      expect(headings.length).toBeGreaterThan(0)
-    })
+  describe("Accessibility", () => {
+    it("should have proper heading structure", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const headings = wrapper.findAll("h1, h2, h3");
+      expect(headings.length).toBeGreaterThan(0);
+    });
 
-    it('should have proper alt text for images', () => {
-      const wrapper = mount(MockAssociationDashboard)
-      const images = wrapper.findAll('img')
-      images.forEach(img => {
-        expect(img.attributes('alt')).toBeDefined()
-      })
-    })
-  })
-}) 
+    it("should have proper alt text for images", () => {
+      const wrapper = mount(MockAssociationDashboard);
+      const images = wrapper.findAll("img");
+      images.forEach((img) => {
+        expect(img.attributes("alt")).toBeDefined();
+      });
+    });
+  });
+});

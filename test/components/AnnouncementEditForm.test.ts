@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { mount } from "@vue/test-utils";
+import { nextTick } from "vue";
 
 // Mock component pour tester le formulaire d'édition d'annonce
 const MockAnnouncementEditForm = {
@@ -116,439 +116,466 @@ const MockAnnouncementEditForm = {
   props: {
     announcement: {
       type: Object,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
       form: {
-        nameEvent: '',
-        description: '',
-        dateEvent: '',
-        hoursEvent: '',
+        nameEvent: "",
+        description: "",
+        dateEvent: "",
+        hoursEvent: "",
         tags: [],
-        addressAnnouncement: { address: '', city: '', postalCode: '', country: '' },
-        locationAnnouncement: { type: 'Point', coordinates: [0, 0] },
-        status: 'INACTIVE',
+        addressAnnouncement: {
+          address: "",
+          city: "",
+          postalCode: "",
+          country: "",
+        },
+        locationAnnouncement: { type: "Point", coordinates: [0, 0] },
+        status: "INACTIVE",
         maxParticipants: 0,
         maxVolunteers: 0,
       },
-      tagsInput: '',
+      tagsInput: "",
       coverPhotoPreview: null,
       statusOptions: [
-        { label: 'ACTIVE', value: 'ACTIVE' },
-        { label: 'INACTIVE', value: 'INACTIVE' },
-        { label: 'COMPLETED', value: 'COMPLETED' }
-      ]
-    }
+        { label: "ACTIVE", value: "ACTIVE" },
+        { label: "INACTIVE", value: "INACTIVE" },
+        { label: "COMPLETED", value: "COMPLETED" },
+      ],
+    };
   },
   computed: {
     minParticipants() {
-      return this.announcement?.nbParticipants ?? 0
+      return this.announcement?.nbParticipants ?? 0;
     },
     minVolunteers() {
-      return this.announcement?.nbVolunteers ?? 0
+      return this.announcement?.nbVolunteers ?? 0;
     },
     maxParticipantsError() {
-      return this.form.maxParticipants !== undefined && this.form.maxParticipants < this.minParticipants
+      return (
+        this.form.maxParticipants !== undefined &&
+        this.form.maxParticipants < this.minParticipants
+      );
     },
     maxVolunteersError() {
-      return this.form.maxVolunteers !== undefined && this.form.maxVolunteers < this.minVolunteers
+      return (
+        this.form.maxVolunteers !== undefined &&
+        this.form.maxVolunteers < this.minVolunteers
+      );
     },
     isFormInvalid() {
-      return this.maxParticipantsError || this.maxVolunteersError
-    }
+      return this.maxParticipantsError || this.maxVolunteersError;
+    },
   },
   methods: {
     triggerFileInput() {
-      this.$refs.fileInput.click()
+      this.$refs.fileInput.click();
     },
     handleFileChange(event) {
-      const file = event.target.files?.[0]
+      const file = event.target.files?.[0];
       if (file) {
-        const reader = new FileReader()
+        const reader = new FileReader();
         reader.onload = () => {
-          this.coverPhotoPreview = reader.result
-        }
-        reader.readAsDataURL(file)
+          this.coverPhotoPreview = reader.result;
+        };
+        reader.readAsDataURL(file);
       }
     },
     removeCoverPhoto() {
-      this.coverPhotoPreview = null
+      this.coverPhotoPreview = null;
       if (this.$refs.fileInput) {
-        this.$refs.fileInput.value = ''
+        this.$refs.fileInput.value = "";
       }
     },
     save() {
-      this.form.tags = this.tagsInput.split(',').map(t => t.trim()).filter(Boolean)
-      this.$emit('saved', this.form)
-    }
+      this.form.tags = this.tagsInput
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+      this.$emit("saved", this.form);
+    },
   },
-  emits: ['close', 'saved'],
+  emits: ["close", "saved"],
   watch: {
     announcement: {
       handler(newAnnouncement) {
         if (newAnnouncement) {
-          this.form = { ...newAnnouncement }
-          this.tagsInput = newAnnouncement.tags ? newAnnouncement.tags.join(', ') : ''
-          this.coverPhotoPreview = newAnnouncement.announcementImage || null
+          this.form = { ...newAnnouncement };
+          this.tagsInput = newAnnouncement.tags
+            ? newAnnouncement.tags.join(", ")
+            : "";
+          this.coverPhotoPreview = newAnnouncement.announcementImage || null;
         } else {
           this.form = {
-            nameEvent: '',
-            description: '',
-            dateEvent: '',
-            hoursEvent: '',
+            nameEvent: "",
+            description: "",
+            dateEvent: "",
+            hoursEvent: "",
             tags: [],
-            addressAnnouncement: { address: '', city: '', postalCode: '', country: '' },
-            locationAnnouncement: { type: 'Point', coordinates: [0, 0] },
-            status: 'INACTIVE',
+            addressAnnouncement: {
+              address: "",
+              city: "",
+              postalCode: "",
+              country: "",
+            },
+            locationAnnouncement: { type: "Point", coordinates: [0, 0] },
+            status: "INACTIVE",
             maxParticipants: 0,
             maxVolunteers: 0,
-          }
-          this.tagsInput = ''
-          this.coverPhotoPreview = null
+          };
+          this.tagsInput = "";
+          this.coverPhotoPreview = null;
         }
       },
-      immediate: true
-    }
-  }
-}
-
-describe('AnnouncementEditForm', () => {
-  const mockAnnouncement = {
-    _id: 'ann-123',
-    nameEvent: 'Test Event',
-    description: 'Test description',
-    dateEvent: '2024-12-25',
-    hoursEvent: '14:30',
-    tags: ['Tag1', 'Tag2'],
-    addressAnnouncement: {
-      address: '123 Test Street',
-      city: 'Paris',
-      postalCode: '75001',
-      country: 'France'
+      immediate: true,
     },
-    status: 'ACTIVE',
+  },
+};
+
+describe("AnnouncementEditForm", () => {
+  const mockAnnouncement = {
+    _id: "ann-123",
+    nameEvent: "Test Event",
+    description: "Test description",
+    dateEvent: "2024-12-25",
+    hoursEvent: "14:30",
+    tags: ["Tag1", "Tag2"],
+    addressAnnouncement: {
+      address: "123 Test Street",
+      city: "Paris",
+      postalCode: "75001",
+      country: "France",
+    },
+    status: "ACTIVE",
     maxParticipants: 50,
     maxVolunteers: 10,
     nbParticipants: 5,
     nbVolunteers: 2,
-    announcementImage: 'data:image/jpeg;base64,test-image'
-  }
+    announcementImage: "data:image/jpeg;base64,test-image",
+  };
 
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
-  describe('Rendu de base', () => {
-    it('should render form component', () => {
+  describe("Rendu de base", () => {
+    it("should render form component", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: null
-        }
-      })
+          announcement: null,
+        },
+      });
 
-      expect(wrapper.exists()).toBe(true)
-      expect(wrapper.find('h2').text()).toBe('Créer une annonce')
-    })
+      expect(wrapper.exists()).toBe(true);
+      expect(wrapper.find("h2").text()).toBe("Créer une annonce");
+    });
 
     it('should display "Modifier" title when editing existing announcement', () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: mockAnnouncement
-        }
-      })
+          announcement: mockAnnouncement,
+        },
+      });
 
-      expect(wrapper.find('h2').text()).toBe('Modifier une annonce')
-    })
+      expect(wrapper.find("h2").text()).toBe("Modifier une annonce");
+    });
 
-    it('should display close button', () => {
+    it("should display close button", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: null
-        }
-      })
+          announcement: null,
+        },
+      });
 
-      const buttons = wrapper.findAll('button')
-      const closeBtn = buttons.find(btn => btn.text().includes('✕'))
-      expect(closeBtn).toBeTruthy()
-    })
-  })
+      const buttons = wrapper.findAll("button");
+      const closeBtn = buttons.find((btn) => btn.text().includes("✕"));
+      expect(closeBtn).toBeTruthy();
+    });
+  });
 
-  describe('Champs du formulaire', () => {
-    it('should display all form fields', () => {
+  describe("Champs du formulaire", () => {
+    it("should display all form fields", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: null
-        }
-      })
+          announcement: null,
+        },
+      });
 
-      expect(wrapper.find('input[aria-label="Champ de saisie"]').exists()).toBe(true) // Titre
-      expect(wrapper.find('textarea[aria-label="Zone de texte"]').exists()).toBe(true) // Description
-      expect(wrapper.find('input[type="date"]').exists()).toBe(true) // Date
-      expect(wrapper.find('input[type="time"]').exists()).toBe(true) // Heure
-      expect(wrapper.find('input[type="number"]').exists()).toBe(true) // Nombre max participants
-      expect(wrapper.find('select').exists()).toBe(true) // Statut
-    })
+      expect(wrapper.find('input[aria-label="Champ de saisie"]').exists()).toBe(
+        true,
+      ); // Titre
+      expect(
+        wrapper.find('textarea[aria-label="Zone de texte"]').exists(),
+      ).toBe(true); // Description
+      expect(wrapper.find('input[type="date"]').exists()).toBe(true); // Date
+      expect(wrapper.find('input[type="time"]').exists()).toBe(true); // Heure
+      expect(wrapper.find('input[type="number"]').exists()).toBe(true); // Nombre max participants
+      expect(wrapper.find("select").exists()).toBe(true); // Statut
+    });
 
-    it('should populate form fields when editing', () => {
+    it("should populate form fields when editing", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: mockAnnouncement
-        }
-      })
+          announcement: mockAnnouncement,
+        },
+      });
 
-      expect(wrapper.vm.form.nameEvent).toBe('Test Event')
-      expect(wrapper.vm.form.description).toBe('Test description')
-      expect(wrapper.vm.form.dateEvent).toBe('2024-12-25')
-      expect(wrapper.vm.form.hoursEvent).toBe('14:30')
-      expect(wrapper.vm.form.maxParticipants).toBe(50)
-      expect(wrapper.vm.form.maxVolunteers).toBe(10)
-    })
+      expect(wrapper.vm.form.nameEvent).toBe("Test Event");
+      expect(wrapper.vm.form.description).toBe("Test description");
+      expect(wrapper.vm.form.dateEvent).toBe("2024-12-25");
+      expect(wrapper.vm.form.hoursEvent).toBe("14:30");
+      expect(wrapper.vm.form.maxParticipants).toBe(50);
+      expect(wrapper.vm.form.maxVolunteers).toBe(10);
+    });
 
-    it('should handle tags input correctly', () => {
+    it("should handle tags input correctly", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: mockAnnouncement
-        }
-      })
+          announcement: mockAnnouncement,
+        },
+      });
 
-      expect(wrapper.vm.tagsInput).toBe('Tag1, Tag2')
-    })
-  })
+      expect(wrapper.vm.tagsInput).toBe("Tag1, Tag2");
+    });
+  });
 
-  describe('Upload d\'image', () => {
-    it('should display upload zone when no image', () => {
+  describe("Upload d'image", () => {
+    it("should display upload zone when no image", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: null
-        }
-      })
+          announcement: null,
+        },
+      });
 
-      expect(wrapper.find('.text-center').exists()).toBe(true)
-      expect(wrapper.text()).toContain('Cliquez pour ajouter une photo de couverture')
-    })
+      expect(wrapper.find(".text-center").exists()).toBe(true);
+      expect(wrapper.text()).toContain(
+        "Cliquez pour ajouter une photo de couverture",
+      );
+    });
 
-    it('should display image preview when image is set', () => {
+    it("should display image preview when image is set", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: mockAnnouncement
-        }
-      })
+          announcement: mockAnnouncement,
+        },
+      });
 
-      const img = wrapper.find('img[alt="Cover preview"]')
-      expect(img.exists()).toBe(true)
-      expect(img.attributes('src')).toBe('data:image/jpeg;base64,test-image')
-    })
+      const img = wrapper.find('img[alt="Cover preview"]');
+      expect(img.exists()).toBe(true);
+      expect(img.attributes("src")).toBe("data:image/jpeg;base64,test-image");
+    });
 
-    it('should display remove button when image is present', () => {
+    it("should display remove button when image is present", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: mockAnnouncement
-        }
-      })
+          announcement: mockAnnouncement,
+        },
+      });
 
-      const removeBtn = wrapper.find('button.btn-circle')
-      expect(removeBtn.exists()).toBe(true)
-    })
+      const removeBtn = wrapper.find("button.btn-circle");
+      expect(removeBtn.exists()).toBe(true);
+    });
 
-    it('should handle file input change', async () => {
+    it("should handle file input change", async () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: null
-        }
-      })
+          announcement: null,
+        },
+      });
 
-      const file = new File(['test'], 'test.jpg', { type: 'image/jpeg' })
-      const input = wrapper.find('input[type="file"]')
-      
+      const file = new File(["test"], "test.jpg", { type: "image/jpeg" });
+      const input = wrapper.find('input[type="file"]');
+
       // Simuler directement le changement de fichier
-      wrapper.vm.handleFileChange({ target: { files: [file] } })
-      
-      // Simuler le FileReader de manière synchrone
-      wrapper.vm.coverPhotoPreview = 'data:image/jpeg;base64,test-preview'
-      await nextTick()
-      expect(wrapper.vm.coverPhotoPreview).toBeTruthy()
-    })
-  })
+      wrapper.vm.handleFileChange({ target: { files: [file] } });
 
-  describe('Validation des champs', () => {
-    it('should show error for maxParticipants below minimum', () => {
+      // Simuler le FileReader de manière synchrone
+      wrapper.vm.coverPhotoPreview = "data:image/jpeg;base64,test-preview";
+      await nextTick();
+      expect(wrapper.vm.coverPhotoPreview).toBeTruthy();
+    });
+  });
+
+  describe("Validation des champs", () => {
+    it("should show error for maxParticipants below minimum", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: mockAnnouncement
-        }
-      })
+          announcement: mockAnnouncement,
+        },
+      });
 
       // Définir maxParticipants en dessous du minimum
-      wrapper.vm.form.maxParticipants = 3 // moins que nbParticipants (5)
-      
-      expect(wrapper.vm.maxParticipantsError).toBe(true)
-      expect(wrapper.vm.maxParticipantsError).toBe(true)
-    })
+      wrapper.vm.form.maxParticipants = 3; // moins que nbParticipants (5)
 
-    it('should show error for maxVolunteers below minimum', () => {
+      expect(wrapper.vm.maxParticipantsError).toBe(true);
+      expect(wrapper.vm.maxParticipantsError).toBe(true);
+    });
+
+    it("should show error for maxVolunteers below minimum", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: mockAnnouncement
-        }
-      })
+          announcement: mockAnnouncement,
+        },
+      });
 
       // Définir maxVolunteers en dessous du minimum
-      wrapper.vm.form.maxVolunteers = 1 // moins que nbVolunteers (2)
-      
-      expect(wrapper.vm.maxVolunteersError).toBe(true)
-    })
+      wrapper.vm.form.maxVolunteers = 1; // moins que nbVolunteers (2)
 
-    it('should disable submit button when form is invalid', () => {
+      expect(wrapper.vm.maxVolunteersError).toBe(true);
+    });
+
+    it("should disable submit button when form is invalid", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: mockAnnouncement
-        }
-      })
+          announcement: mockAnnouncement,
+        },
+      });
 
-      wrapper.vm.form.maxParticipants = 3
-      
-      const submitBtn = wrapper.find('button[type="submit"]')
+      wrapper.vm.form.maxParticipants = 3;
+
+      const submitBtn = wrapper.find('button[type="submit"]');
       // Vérifier que le bouton est désactivé quand le formulaire est invalide
-      expect(wrapper.vm.isFormInvalid).toBe(true)
-    })
-  })
+      expect(wrapper.vm.isFormInvalid).toBe(true);
+    });
+  });
 
-  describe('Événements', () => {
-    it('should emit close event when close button is clicked', async () => {
+  describe("Événements", () => {
+    it("should emit close event when close button is clicked", async () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: null
-        }
-      })
+          announcement: null,
+        },
+      });
 
-      const buttons = wrapper.findAll('button')
-      const closeBtn = buttons.find(btn => btn.text().includes('✕'))
-      await closeBtn.trigger('click')
+      const buttons = wrapper.findAll("button");
+      const closeBtn = buttons.find((btn) => btn.text().includes("✕"));
+      await closeBtn.trigger("click");
 
-      expect(wrapper.emitted('close')).toBeTruthy()
-    })
+      expect(wrapper.emitted("close")).toBeTruthy();
+    });
 
-    it('should emit close event when cancel button is clicked', async () => {
+    it("should emit close event when cancel button is clicked", async () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: null
-        }
-      })
+          announcement: null,
+        },
+      });
 
-      const buttons = wrapper.findAll('button')
-      const cancelBtn = buttons.find(btn => btn.text().includes('Annuler'))
-      await cancelBtn.trigger('click')
+      const buttons = wrapper.findAll("button");
+      const cancelBtn = buttons.find((btn) => btn.text().includes("Annuler"));
+      await cancelBtn.trigger("click");
 
-      expect(wrapper.emitted('close')).toBeTruthy()
-    })
+      expect(wrapper.emitted("close")).toBeTruthy();
+    });
 
-    it('should emit saved event when form is submitted', async () => {
+    it("should emit saved event when form is submitted", async () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: null
-        }
-      })
+          announcement: null,
+        },
+      });
 
       // Remplir le formulaire
-      wrapper.vm.form.nameEvent = 'New Event'
-      wrapper.vm.form.description = 'New description'
-      wrapper.vm.form.dateEvent = '2024-12-26'
-      wrapper.vm.form.hoursEvent = '15:00'
-      wrapper.vm.form.maxParticipants = 100
-      wrapper.vm.form.maxVolunteers = 20
+      wrapper.vm.form.nameEvent = "New Event";
+      wrapper.vm.form.description = "New description";
+      wrapper.vm.form.dateEvent = "2024-12-26";
+      wrapper.vm.form.hoursEvent = "15:00";
+      wrapper.vm.form.maxParticipants = 100;
+      wrapper.vm.form.maxVolunteers = 20;
 
-      await wrapper.find('form').trigger('submit')
+      await wrapper.find("form").trigger("submit");
 
-      expect(wrapper.emitted('saved')).toBeTruthy()
-      expect(wrapper.emitted('saved')?.[0]).toEqual([wrapper.vm.form])
-    })
-  })
+      expect(wrapper.emitted("saved")).toBeTruthy();
+      expect(wrapper.emitted("saved")?.[0]).toEqual([wrapper.vm.form]);
+    });
+  });
 
-  describe('Gestion des tags', () => {
-    it('should parse tags from input string', async () => {
+  describe("Gestion des tags", () => {
+    it("should parse tags from input string", async () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: null
-        }
-      })
+          announcement: null,
+        },
+      });
 
-      wrapper.vm.tagsInput = 'Tag1, Tag2, Tag3'
-      
-      await wrapper.find('form').trigger('submit')
+      wrapper.vm.tagsInput = "Tag1, Tag2, Tag3";
 
-      expect(wrapper.vm.form.tags).toEqual(['Tag1', 'Tag2', 'Tag3'])
-    })
+      await wrapper.find("form").trigger("submit");
 
-    it('should filter empty tags', async () => {
+      expect(wrapper.vm.form.tags).toEqual(["Tag1", "Tag2", "Tag3"]);
+    });
+
+    it("should filter empty tags", async () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: null
-        }
-      })
+          announcement: null,
+        },
+      });
 
-      wrapper.vm.tagsInput = 'Tag1, , Tag2,   , Tag3'
-      
-      await wrapper.find('form').trigger('submit')
+      wrapper.vm.tagsInput = "Tag1, , Tag2,   , Tag3";
 
-      expect(wrapper.vm.form.tags).toEqual(['Tag1', 'Tag2', 'Tag3'])
-    })
-  })
+      await wrapper.find("form").trigger("submit");
 
-  describe('Accessibilité', () => {
-    it('should have proper aria labels', () => {
+      expect(wrapper.vm.form.tags).toEqual(["Tag1", "Tag2", "Tag3"]);
+    });
+  });
+
+  describe("Accessibilité", () => {
+    it("should have proper aria labels", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: null
-        }
-      })
+          announcement: null,
+        },
+      });
 
-      const inputs = wrapper.findAll('input[aria-label]')
-      const textareas = wrapper.findAll('textarea[aria-label]')
-      const selects = wrapper.findAll('select[aria-label]')
+      const inputs = wrapper.findAll("input[aria-label]");
+      const textareas = wrapper.findAll("textarea[aria-label]");
+      const selects = wrapper.findAll("select[aria-label]");
 
-      expect(inputs.length).toBeGreaterThan(0)
-      expect(textareas.length).toBeGreaterThan(0)
-      expect(selects.length).toBeGreaterThan(0)
-    })
+      expect(inputs.length).toBeGreaterThan(0);
+      expect(textareas.length).toBeGreaterThan(0);
+      expect(selects.length).toBeGreaterThan(0);
+    });
 
-    it('should have proper form structure', () => {
+    it("should have proper form structure", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: null
-        }
-      })
+          announcement: null,
+        },
+      });
 
-      expect(wrapper.find('form').exists()).toBe(true)
-      expect(wrapper.find('h2').exists()).toBe(true)
-    })
-  })
+      expect(wrapper.find("form").exists()).toBe(true);
+      expect(wrapper.find("h2").exists()).toBe(true);
+    });
+  });
 
-  describe('Styles et classes CSS', () => {
-    it('should have proper modal styling', () => {
+  describe("Styles et classes CSS", () => {
+    it("should have proper modal styling", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: null
-        }
-      })
+          announcement: null,
+        },
+      });
 
-      expect(wrapper.find('.fixed').exists()).toBe(true)
-      expect(wrapper.find('.bg-black').exists()).toBe(true)
-      expect(wrapper.find('.bg-opacity-40').exists()).toBe(true)
-      expect(wrapper.find('.z-50').exists()).toBe(true)
-    })
+      expect(wrapper.find(".fixed").exists()).toBe(true);
+      expect(wrapper.find(".bg-black").exists()).toBe(true);
+      expect(wrapper.find(".bg-opacity-40").exists()).toBe(true);
+      expect(wrapper.find(".z-50").exists()).toBe(true);
+    });
 
-    it('should have proper form styling', () => {
+    it("should have proper form styling", () => {
       const wrapper = mount(MockAnnouncementEditForm, {
         props: {
-          announcement: null
-        }
-      })
+          announcement: null,
+        },
+      });
 
-      expect(wrapper.find('.bg-white').exists()).toBe(true)
-      expect(wrapper.find('.rounded-lg').exists()).toBe(true)
-      expect(wrapper.find('.shadow-lg').exists()).toBe(true)
-    })
-  })
-}) 
+      expect(wrapper.find(".bg-white").exists()).toBe(true);
+      expect(wrapper.find(".rounded-lg").exists()).toBe(true);
+      expect(wrapper.find(".shadow-lg").exists()).toBe(true);
+    });
+  });
+});

@@ -4,7 +4,7 @@ import { useHead } from '#imports'
 const theme = ref<'light' | 'dark'>('light')
 let initialized = false
 
-export function useTheme() {
+export function useTheme () {
   const toggleTheme = () => {
     theme.value = theme.value === 'light' ? 'dark' : 'light'
     localStorage.setItem('theme', theme.value)
@@ -22,11 +22,17 @@ export function useTheme() {
 
   onMounted(() => {
     if (!initialized) {
-      const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
+      const savedTheme = localStorage.getItem('theme') as
+        | 'light'
+        | 'dark'
+        | null
 
       if (savedTheme) {
         theme.value = savedTheme
-      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      } else if (
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+      ) {
         theme.value = 'dark'
       }
 

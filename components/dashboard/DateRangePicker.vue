@@ -1,54 +1,71 @@
 <template>
-  <div 
-    class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto" 
-    role="group" 
+  <div
+    class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto"
+    role="group"
     aria-labelledby="date-range-label"
   >
-    <label id="date-range-label" class="sr-only">Sélectionner une période</label>
-    
-    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1 sm:flex-none">
+    <label
+      id="date-range-label"
+      class="sr-only"
+    >Sélectionner une période</label>
+
+    <div
+      class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1 sm:flex-none"
+    >
       <div class="form-control">
-        <label :for="fromInputId" class="label label-text sr-only">Date de début</label>
-        <input 
+        <label
+          :for="fromInputId"
+          class="label label-text sr-only"
+        >Date de début</label>
+        <input
           :id="fromInputId"
-          type="date" 
-          v-model="from" 
-          class="input input-sm border rounded flex-1 sm:w-auto min-w-0 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+          v-model="from"
+          type="date"
+          class="input input-sm border rounded flex-1 sm:w-auto min-w-0 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
           :aria-describedby="fromDescriptionId"
           @keydown="handleKeydown"
-        />
-        <div :id="fromDescriptionId" class="sr-only">Sélectionnez la date de début</div>
+        >
+        <div :id="fromDescriptionId" class="sr-only">
+          Sélectionnez la date de début
+        </div>
       </div>
-      
-      <span class="hidden sm:inline text-base-content opacity-70" aria-hidden="true">—</span>
-      
+
+      <span
+        class="hidden sm:inline text-base-content opacity-70"
+        aria-hidden="true"
+      >—</span>
       <div class="form-control">
-        <label :for="toInputId" class="label label-text sr-only">Date de fin</label>
-        <input 
+        <label
+          :for="toInputId"
+          class="label label-text sr-only"
+        >Date de fin</label>
+        <input
           :id="toInputId"
-          type="date" 
-          v-model="to" 
-          class="input input-sm border rounded flex-1 sm:w-auto min-w-0 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
+          v-model="to"
+          type="date"
+          class="input input-sm border rounded flex-1 sm:w-auto min-w-0 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
           :aria-describedby="toDescriptionId"
           @keydown="handleKeydown"
-        />
-        <div :id="toDescriptionId" class="sr-only">Sélectionnez la date de fin</div>
+        >
+        <div :id="toDescriptionId" class="sr-only">
+          Sélectionnez la date de fin
+        </div>
       </div>
     </div>
-    
-    <button 
-      class="btn btn-sm btn-primary w-full sm:w-auto sm:ml-2 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none" 
-      @click="emitRange"
-      @keyup.enter="emitRange"
-      @keyup.space.prevent="emitRange"
+
+    <button
+      class="btn btn-sm btn-primary w-full sm:w-auto sm:ml-2 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
       aria-label="Appliquer le filtre de dates"
       :disabled="!isValidRange"
       :aria-describedby="!isValidRange ? 'range-error' : undefined"
+      @click="emitRange"
+      @keyup.enter="emitRange"
+      @keyup.space.prevent="emitRange"
     >
       Filtrer
     </button>
-    
-    <div id="range-error" class="sr-only" v-if="!isValidRange">
+
+    <div v-if="!isValidRange" id="range-error" class="sr-only">
       La date de fin doit être postérieure à la date de début
     </div>
   </div>
@@ -57,7 +74,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 
-const props = defineProps<{ modelValue: { from: string, to: string } }>()
+const props = defineProps<{ modelValue: { from: string; to: string } }>()
 const emit = defineEmits(['update:modelValue', 'change'])
 
 // Generate unique IDs for accessibility
@@ -71,7 +88,9 @@ const to = ref(props.modelValue.to)
 
 // Validation de la plage de dates
 const isValidRange = computed(() => {
-  if (!from.value || !to.value) return true // Permettre la sélection partielle
+  if (!from.value || !to.value) {
+    return true
+  } // Permettre la sélection partielle
   return new Date(from.value) <= new Date(to.value)
 })
 
@@ -81,14 +100,14 @@ watch([from, to], () => {
   }
 })
 
-function emitRange() { 
+function emitRange () {
   if (isValidRange.value) {
     emit('change', { from: from.value, to: to.value })
   }
 }
 
 // Gestion de la navigation clavier
-function handleKeydown(event: KeyboardEvent) {
+function handleKeydown (event: KeyboardEvent) {
   if (event.key === 'Enter') {
     event.preventDefault()
     emitRange()
@@ -108,7 +127,7 @@ function handleKeydown(event: KeyboardEvent) {
   .input {
     border-width: 2px;
   }
-  
+
   .btn {
     border-width: 2px;
   }
@@ -119,7 +138,7 @@ function handleKeydown(event: KeyboardEvent) {
   .input {
     transition: none;
   }
-  
+
   .btn {
     transition: none;
   }
@@ -131,7 +150,7 @@ function handleKeydown(event: KeyboardEvent) {
     font-size: 0.875rem;
     padding: 0.5rem;
   }
-  
+
   .btn {
     font-size: 0.875rem;
     padding: 0.5rem 1rem;
@@ -155,4 +174,4 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-size: 16px; /* Prevents zoom on iOS */
   }
 }
-</style> 
+</style>

@@ -30738,9 +30738,7 @@
     }
   },
   "configSettings": {
-    "output": [
-      "json"
-    ],
+    "output": ["json"],
     "maxWaitForFcp": 30000,
     "maxWaitForLoad": 45000,
     "formFactor": "mobile",
@@ -30773,19 +30771,13 @@
     "extraHeaders": null,
     "precomputedLanternData": null,
     "onlyAudits": null,
-    "onlyCategories": [
-      "performance"
-    ],
+    "onlyCategories": ["performance"],
     "skipAudits": null
   },
   "categories": {
     "performance": {
       "title": "Performance",
-      "supportedModes": [
-        "navigation",
-        "timespan",
-        "snapshot"
-      ],
+      "supportedModes": ["navigation", "timespan", "snapshot"],
       "auditRefs": [
         {
           "id": "first-contentful-paint",
@@ -34382,9 +34374,7 @@
           "path": "runWarnings[0]"
         }
       ],
-      "lighthouse-core/audits/viewport.js | title": [
-        "audits.viewport.title"
-      ],
+      "lighthouse-core/audits/viewport.js | title": ["audits.viewport.title"],
       "lighthouse-core/audits/viewport.js | description": [
         "audits.viewport.description"
       ],
@@ -34592,9 +34582,7 @@
           "path": "audits[critical-request-chains].displayValue"
         }
       ],
-      "lighthouse-core/audits/redirects.js | title": [
-        "audits.redirects.title"
-      ],
+      "lighthouse-core/audits/redirects.js | title": ["audits.redirects.title"],
       "lighthouse-core/audits/redirects.js | description": [
         "audits.redirects.description"
       ],

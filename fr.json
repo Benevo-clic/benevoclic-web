@@ -28,7 +28,6 @@
       "back_to_login": "Retour à la connexion",
       "instructions": "1. Vérifiez votre boîte de réception",
       "click_link": "2. Cliquez sur le lien de vérification dans l'email"
-      
     },
     "logout": "Déconnexion",
     "register": {
@@ -100,10 +99,9 @@
     "placeholder_email": "Entrez votre e-mail",
     "placeholder_password": "Au moins 8 caractères",
     "forgot_password": "Mot de passe oublié ?",
-"forgot_password_sent": "Un email de réinitialisation a été envoyé à votre adresse.",
-"forgot_password_error": "Erreur lors de l'envoi de l'email de réinitialisation.",
-"forgot_password_enter_email": "Veuillez entrer votre adresse email pour réinitialiser votre mot de passe."
-
+    "forgot_password_sent": "Un email de réinitialisation a été envoyé à votre adresse.",
+    "forgot_password_error": "Erreur lors de l'envoi de l'email de réinitialisation.",
+    "forgot_password_enter_email": "Veuillez entrer votre adresse email pour réinitialiser votre mot de passe."
   },
   "drawer-content": {
     "account": {
@@ -136,16 +134,16 @@
       }
     },
     "activity": {
-        "title": "Activités",
-        "my_missions": "Mes missions",
-        "my_participations": "Mes participations",
-        "my_favorites": "Mes favoris",
-        "history": "Historique",
+      "title": "Activités",
+      "my_missions": "Mes missions",
+      "my_participations": "Mes participations",
+      "my_favorites": "Mes favoris",
+      "history": "Historique",
       "new-event": "Nouvel événement",
       "requests": "Mes demandes",
       "upcoming-event": "Événements à venir",
       "manage-event": "Gérer les événements",
-        "dashboard": "Tableau de bord"
+      "dashboard": "Tableau de bord"
     },
     "notifications_support": {
       "title": "Notifications & Support",

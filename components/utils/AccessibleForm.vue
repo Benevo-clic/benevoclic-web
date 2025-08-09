@@ -18,17 +18,17 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   ariaLabel: 'Formulaire'
-});
+})
 
 const emit = defineEmits<{
   submit: [event: Event];
-}>();
+}>()
 
-const formClass = computed(() => props.class || '');
+const formClass = computed(() => props.class || '')
 
 const handleSubmit = (event: Event) => {
-  emit('submit', event);
-};
+  emit('submit', event)
+}
 </script>
 
 <style scoped>

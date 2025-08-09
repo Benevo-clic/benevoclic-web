@@ -16,17 +16,22 @@
     <!-- Conteneur principal des filtres -->
     <div class="w-full">
       <!-- Desktop -->
-      <div class="hidden md:flex flex-wrap gap-3 items-center justify-center w-full max-w-full">
+      <div
+        class="hidden md:flex flex-wrap gap-3 items-center justify-center w-full max-w-full"
+      >
         <!-- Recherche -->
         <div class="relative">
-          <input 
-            v-model="filters.nameEvent" 
-            type="text" 
-            placeholder="Rechercher un événement..." 
+          <input
+            v-model="filters.nameEvent"
+            type="text"
+            placeholder="Rechercher un événement..."
             class="input input-bordered input-sm w-64 pr-10"
+            aria-label="Champ de saisie"
             @input="applyFilters"
-          aria-label="Champ de saisie">
-          <Search class="w-4 h-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-base-content/50" />
+          >
+          <Search
+            class="w-4 h-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-base-content/50"
+          />
         </div>
 
         <!-- Statut -->
@@ -40,14 +45,17 @@
             Statut
             <ChevronRight class="w-3 h-3" />
           </button>
-          <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
+          <ul
+            class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50"
+          >
             <li v-for="statusOption in statusOptions" :key="statusOption.value">
               <a @click.stop="applyStatus(statusOption.value)">
                 <input
                   type="checkbox"
                   :checked="filters.status === statusOption.value"
                   class="checkbox checkbox-xs mr-2"
-                aria-label="Champ de saisie">
+                  aria-label="Champ de saisie"
+                >
                 {{ statusOption.label }}
               </a>
             </li>
@@ -57,9 +65,9 @@
         <!-- Tags -->
         <div class="relative inline-block text-left">
           <button
-            @click="toggleTagsDropdown"
             class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
             :class="selectedTags.length > 0 ? 'btn-accent' : 'btn-outline'"
+            @click="toggleTagsDropdown"
           >
             <Tag class="w-4 h-4" />
             <span>Tags</span>
@@ -74,12 +82,20 @@
             <ul class="menu p-2 text-sm">
               <li v-for="tag in availableTags" :key="tag">
                 <a @click.stop="toggleTag(tag)">
-                  <input type="checkbox" :checked="selectedTags.includes(tag)" class="checkbox checkbox-xs mr-2" aria-label="Champ de saisie">
+                  <input
+                    type="checkbox"
+                    :checked="selectedTags.includes(tag)"
+                    class="checkbox checkbox-xs mr-2"
+                    aria-label="Champ de saisie"
+                  >
                   {{ tag }}
                 </a>
               </li>
               <li v-if="!showCustomTagInput">
-                <button @click.stop="openCustomTagInput" class="text-primary font-semibold cursor-pointer">
+                <button
+                  class="text-primary font-semibold cursor-pointer"
+                  @click.stop="openCustomTagInput"
+                >
                   <Plus class="w-4 h-4 mr-2" />
                   <span>Ajouter un tag...</span>
                 </button>
@@ -87,14 +103,23 @@
               <li v-else>
                 <div class="flex items-center gap-2 mt-2">
                   <input
+                    ref="customTagInputRef"
                     v-model="customTag"
-                    @keydown.enter.prevent="addCustomTag"
                     type="text"
                     class="input input-sm input-bordered w-full"
                     placeholder="Nouveau tag…"
-                    ref="customTagInputRef"
-                  aria-label="Champ de saisie">
-                  <button class="btn btn-sm btn-ghost" @click="cancelCustomTagInput" title="Annuler" type="button" aria-label="Fermer" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>✕</button>
+                    aria-label="Champ de saisie"
+                    @keydown.enter.prevent="addCustomTag"
+                  >
+                  <button
+                    class="btn btn-sm btn-ghost"
+                    title="Annuler"
+                    type="button"
+                    aria-label="Fermer"
+                    @click="cancelCustomTagInput"
+                  >
+                    ✕
+                  </button>
                 </div>
               </li>
             </ul>
@@ -122,14 +147,17 @@
             Événements
             <ChevronRight class="w-3 h-3" />
           </button>
-          <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
+          <ul
+            class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50"
+          >
             <li>
               <a @click.stop="applyEventStatus('NOW' as const)">
                 <input
                   type="checkbox"
                   :checked="filters.stateEvent === 'NOW'"
                   class="checkbox checkbox-xs mr-2"
-                aria-label="Champ de saisie">
+                  aria-label="Champ de saisie"
+                >
                 En cours
               </a>
             </li>
@@ -139,7 +167,8 @@
                   type="checkbox"
                   :checked="filters.stateEvent === 'PAST'"
                   class="checkbox checkbox-xs mr-2"
-                aria-label="Champ de saisie">
+                  aria-label="Champ de saisie"
+                >
                 Passés
               </a>
             </li>
@@ -149,7 +178,8 @@
                   type="checkbox"
                   :checked="filters.stateEvent === 'UPCOMING'"
                   class="checkbox checkbox-xs mr-2"
-                aria-label="Champ de saisie">
+                  aria-label="Champ de saisie"
+                >
                 À venir
               </a>
             </li>
@@ -171,13 +201,20 @@
       <!-- Drawer Mobile -->
       <div v-if="mobileFiltersOpen" class="fixed inset-0 z-50 md:hidden">
         <!-- Overlay -->
-        <div class="absolute inset-0 bg-black/50" @click="closeMobileFilters"></div>
-        
+        <div
+          class="absolute inset-0 bg-black/50"
+          @click="closeMobileFilters"
+        />
+
         <!-- Drawer -->
-        <div class="absolute right-0 top-0 h-full w-80 bg-base-100 shadow-xl p-4 overflow-y-auto">
+        <div
+          class="absolute right-0 top-0 h-full w-80 bg-base-100 shadow-xl p-4 overflow-y-auto"
+        >
           <div class="flex justify-between items-center mb-6">
-            <h3 class="text-lg font-bold">Filtres</h3>
-            <button @click="closeMobileFilters" class="btn btn-ghost btn-sm">
+            <h3 class="text-lg font-bold">
+              Filtres
+            </h3>
+            <button class="btn btn-ghost btn-sm" @click="closeMobileFilters">
               <X class="w-5 h-5" />
             </button>
           </div>
@@ -190,14 +227,17 @@
                 <span class="label-text font-medium">Recherche</span>
               </label>
               <div class="relative">
-                <input 
-                  v-model="filters.nameEvent" 
-                  type="text" 
-                  placeholder="Rechercher un événement..." 
+                <input
+                  v-model="filters.nameEvent"
+                  type="text"
+                  placeholder="Rechercher un événement..."
                   class="input input-bordered w-full pr-10"
+                  aria-label="Champ de saisie"
                   @input="applyFilters"
-                aria-label="Champ de saisie">
-                <Search class="w-4 h-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-base-content/50" />
+                >
+                <Search
+                  class="w-4 h-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-base-content/50"
+                />
               </div>
             </div>
 
@@ -210,11 +250,15 @@
                 <button
                   :class="[
                     'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                    showStatusMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+                    showStatusMenu
+                      ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+                      : 'hover:bg-base-200 hover:shadow-sm',
                   ]"
                   @click="toggleStatusMenu"
                 >
-                  <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+                  <div
+                    class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors"
+                  >
                     <CircleDot class="w-4 h-4" />
                   </div>
                   <span class="font-medium">
@@ -222,22 +266,31 @@
                   </span>
                 </button>
                 <!-- Dropdown Status -->
-                <div v-if="showStatusMenu" class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48">
+                <div
+                  v-if="showStatusMenu"
+                  class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48"
+                >
                   <div class="p-2 space-y-1">
                     <button
                       v-for="statusOption in statusOptions"
                       :key="statusOption.value"
                       :class="[
                         'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
-                        filters.status === statusOption.value ? 'bg-primary/20 text-primary' : 'hover:bg-base-200'
+                        filters.status === statusOption.value
+                          ? 'bg-primary/20 text-primary'
+                          : 'hover:bg-base-200',
                       ]"
-                      @click="applyStatus(statusOption.value); showStatusMenu = false"
+                      @click="
+                        applyStatus(statusOption.value);
+                        showStatusMenu = false;
+                      "
                     >
                       <input
                         type="radio"
                         :checked="filters.status === statusOption.value"
                         class="radio radio-sm radio-primary"
-                      aria-label="Champ de saisie">
+                        aria-label="Champ de saisie"
+                      >
                       <span class="text-sm">{{ statusOption.label }}</span>
                     </button>
                   </div>
@@ -254,11 +307,15 @@
                 <button
                   :class="[
                     'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                    showTagsMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+                    showTagsMenu
+                      ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+                      : 'hover:bg-base-200 hover:shadow-sm',
                   ]"
                   @click="toggleTagsMenu"
                 >
-                  <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+                  <div
+                    class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors"
+                  >
                     <Tag class="w-4 h-4" />
                   </div>
                   <span class="font-medium">
@@ -266,14 +323,19 @@
                   </span>
                 </button>
                 <!-- Dropdown Tags -->
-                <div v-if="showTagsMenu" class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48 max-h-64 overflow-y-auto">
+                <div
+                  v-if="showTagsMenu"
+                  class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48 max-h-64 overflow-y-auto"
+                >
                   <div class="p-2 space-y-1">
                     <button
                       v-for="tag in availableTags"
                       :key="tag"
                       :class="[
                         'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
-                        selectedTags.includes(tag) ? 'bg-primary/20 text-primary' : 'hover:bg-base-200'
+                        selectedTags.includes(tag)
+                          ? 'bg-primary/20 text-primary'
+                          : 'hover:bg-base-200',
                       ]"
                       @click="toggleTag(tag)"
                     >
@@ -281,16 +343,17 @@
                         type="checkbox"
                         :checked="selectedTags.includes(tag)"
                         class="checkbox checkbox-sm checkbox-primary"
-                      aria-label="Champ de saisie">
+                        aria-label="Champ de saisie"
+                      >
                       <span class="text-sm">{{ tag }}</span>
                     </button>
-                    
+
                     <!-- Ajout de tag personnalisé -->
                     <div class="border-t border-base-300 pt-2 mt-2">
                       <div v-if="!showCustomTagInput">
                         <button
-                          @click="openCustomTagInput"
                           class="flex items-center gap-3 p-2 rounded-lg w-full text-left text-primary hover:bg-primary/10 transition-colors"
+                          @click="openCustomTagInput"
                         >
                           <Plus class="w-4 h-4" />
                           <span class="text-sm font-medium">Ajouter un tag...</span>
@@ -298,15 +361,30 @@
                       </div>
                       <div v-else class="flex items-center gap-2 p-2">
                         <input
+                          ref="customTagInputRef"
                           v-model="customTag"
-                          @keydown.enter.prevent="addCustomTag"
                           type="text"
                           class="input input-sm input-bordered flex-1"
                           placeholder="Nouveau tag…"
-                          ref="customTagInputRef"
-                        aria-label="Champ de saisie">
-                        <button class="btn btn-sm btn-primary" @click="addCustomTag" type="button" aria-label="Ajouter" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>+</button>
-                        <button class="btn btn-sm btn-ghost" @click="cancelCustomTagInput" type="button" aria-label="Fermer" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>✕</button>
+                          aria-label="Champ de saisie"
+                          @keydown.enter.prevent="addCustomTag"
+                        >
+                        <button
+                          class="btn btn-sm btn-primary"
+                          type="button"
+                          aria-label="Ajouter"
+                          @click="addCustomTag"
+                        >
+                          +
+                        </button>
+                        <button
+                          class="btn btn-sm btn-ghost"
+                          type="button"
+                          aria-label="Fermer"
+                          @click="cancelCustomTagInput"
+                        >
+                          ✕
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -320,8 +398,11 @@
                 <span class="label-text font-medium">Filtres avancés</span>
               </label>
               <button
-                @click="showAdvancedFilters = true; closeMobileFilters()"
                 class="btn btn-outline w-full"
+                @click="
+                  showAdvancedFilters = true;
+                  closeMobileFilters();
+                "
               >
                 <SlidersHorizontal class="w-4 h-4 mr-2" />
                 Configurer les filtres avancés
@@ -337,34 +418,49 @@
                 <button
                   :class="[
                     'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                    showEventsMenu ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm' : 'hover:bg-base-200 hover:shadow-sm'
+                    showEventsMenu
+                      ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
+                      : 'hover:bg-base-200 hover:shadow-sm',
                   ]"
                   @click="toggleEventsMenu"
                 >
-                  <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
+                  <div
+                    class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors"
+                  >
                     <Clock class="w-4 h-4" />
                   </div>
                   <span class="font-medium">
                     {{ getEventsLabel() }}
                   </span>
                 </button>
-                <!-- Dropdown Events -->
-                <div v-if="showEventsMenu" class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48">
+                <!-- Dropdown Announcements -->
+                <div
+                  v-if="showEventsMenu"
+                  class="absolute left-0 mt-2 z-20 bg-base-100 rounded-xl shadow-lg border border-base-300 min-w-48"
+                >
                   <div class="p-2 space-y-1">
                     <button
                       v-for="eventOption in eventOptions"
                       :key="eventOption.value"
                       :class="[
                         'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
-                        filters.stateEvent === eventOption.value ? 'bg-primary/20 text-primary' : 'hover:bg-base-200'
+                        filters.stateEvent === eventOption.value
+                          ? 'bg-primary/20 text-primary'
+                          : 'hover:bg-base-200',
                       ]"
-                      @click="applyEventStatus(eventOption.value as 'NOW' | 'PAST' | 'UPCOMING'); showEventsMenu = false"
+                      @click="
+                        applyEventStatus(
+                          eventOption.value as 'NOW' | 'PAST' | 'UPCOMING',
+                        );
+                        showEventsMenu = false;
+                      "
                     >
                       <input
                         type="radio"
                         :checked="filters.stateEvent === eventOption.value"
                         class="radio radio-sm radio-primary"
-                      aria-label="Champ de saisie">
+                        aria-label="Champ de saisie"
+                      >
                       <span class="text-sm">{{ eventOption.label }}</span>
                     </button>
                   </div>
@@ -374,14 +470,20 @@
 
             <!-- Actions -->
             <div class="flex gap-2 pt-4 border-t border-base-300">
-              <button 
-                @click="resetFilters" 
+              <button
                 class="btn btn-ghost flex-1"
-               type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Réinitialiser</button>
-              <button 
-                @click="closeMobileFilters" 
+                type="button"
+                @click="resetFilters"
+              >
+                Réinitialiser
+              </button>
+              <button
                 class="btn btn-primary flex-1"
-               type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Appliquer</button>
+                type="button"
+                @click="closeMobileFilters"
+              >
+                Appliquer
+              </button>
             </div>
           </div>
         </div>
@@ -401,18 +503,29 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
-import { Search, CircleDot, Tag, ChevronRight, SlidersHorizontal, Plus, X, Clock } from 'lucide-vue-next'
+import {
+  Search,
+  CircleDot,
+  Tag,
+  ChevronRight,
+  SlidersHorizontal,
+  Plus,
+  X,
+  Clock
+} from 'lucide-vue-next'
 import FilterActive from '~/components/event/volunteer/utils/FilterActive.vue'
 import AdvancedFilters from '~/components/event/volunteer/utils/AdvancedFilters.vue'
 import type {
   FilterAnnouncement,
   AnnouncementStatus,
-  FilterAssociationAnnouncement, AnnouncementState
+  FilterAssociationAnnouncement,
+  AnnouncementState
 } from '~/common/interface/filter.interface'
 
 // Props et emits
+// eslint-disable-next-line func-call-spacing
 const emit = defineEmits<{
-  (e: 'update:filters', filters: FilterAnnouncement): void
+  (e: 'update:filters', filters: FilterAnnouncement): void;
 }>()
 
 // Réactifs
@@ -451,8 +564,18 @@ const statusOptions = ref([
 ])
 
 const availableTags = ref([
-  'Urgent', 'Bénévolat', 'Formation', 'Événement', 'Collecte', 'Sensibilisation',
-  'Humanitaire', 'Environnement', 'Sport', 'Culture', 'Éducation', 'Santé'
+  'Urgent',
+  'Bénévolat',
+  'Formation',
+  'Événement',
+  'Collecte',
+  'Sensibilisation',
+  'Humanitaire',
+  'Environnement',
+  'Sport',
+  'Culture',
+  'Éducation',
+  'Santé'
 ])
 
 const eventOptions = ref([
@@ -471,7 +594,8 @@ const tempAdvancedFilters = ref<Partial<FilterAssociationAnnouncement>>({
 
 // Computed
 const hasActiveFilters = computed(() => {
-  return filters.value.nameEvent ||
+  return (
+    filters.value.nameEvent ||
     filters.value.status ||
     selectedTags.value.length > 0 ||
     filters.value.dateEventFrom ||
@@ -479,18 +603,22 @@ const hasActiveFilters = computed(() => {
     filters.value.hoursEventFrom ||
     filters.value.hoursEventTo ||
     filters.value.stateEvent
+  )
 })
 
 const hasAdvancedFilters = computed(() => {
-  return filters.value.dateEventFrom ||
+  return (
+    filters.value.dateEventFrom ||
     filters.value.dateEventTo ||
     filters.value.hoursEventFrom ||
     filters.value.hoursEventTo
+  )
 })
 
 // Méthodes
 const applyFilters = () => {
-  filters.value.tags = selectedTags.value.length > 0 ? selectedTags.value : undefined
+  filters.value.tags =
+    selectedTags.value.length > 0 ? selectedTags.value : undefined
   emit('update:filters', { ...filters.value })
 }
 
@@ -526,23 +654,24 @@ const cancelCustomTagInput = () => {
 
 const addCustomTag = () => {
   const tag = customTag.value.trim()
-  if (!tag) return
-  
+  if (!tag) { return }
+
   if (!availableTags.value.includes(tag)) {
     availableTags.value.push(tag)
   }
-  
+
   if (!selectedTags.value.includes(tag)) {
     selectedTags.value.push(tag)
   }
-  
+
   customTag.value = ''
   showCustomTagInput.value = false
   applyFilters()
 }
 
 const applyEventStatus = (status: AnnouncementState) => {
-  filters.value.stateEvent = filters.value.stateEvent === status ? undefined : status
+  filters.value.stateEvent =
+    filters.value.stateEvent === status ? undefined : status
   applyFilters()
 }
 
@@ -569,7 +698,9 @@ const toggleEventsMenu = () => {
 
 // Labels
 const getStatusLabel = () => {
-  const statusOption = statusOptions.value.find(s => s.value === filters.value.status)
+  const statusOption = statusOptions.value.find(
+    s => s.value === filters.value.status
+  )
   return statusOption ? statusOption.label : 'Statut'
 }
 
@@ -584,7 +715,9 @@ const getTagsLabel = () => {
 }
 
 const getEventsLabel = () => {
-  const eventOption = eventOptions.value.find(e => e.value === filters.value.stateEvent)
+  const eventOption = eventOptions.value.find(
+    e => e.value === filters.value.stateEvent
+  )
   return eventOption ? eventOption.label : 'Événements'
 }
 
@@ -593,19 +726,25 @@ const closeAdvancedFilters = () => {
   showAdvancedFilters.value = false
 }
 
-const applyFiltersAdvanced = (advancedFilters: Partial<FilterAssociationAnnouncement>) => {
-  filters.value.dateEventFrom = advancedFilters.dateEventFrom || filters.value.dateEventFrom
-  filters.value.dateEventTo = advancedFilters.dateEventTo || filters.value.dateEventTo
-  filters.value.hoursEventFrom = advancedFilters.hoursEventFrom || filters.value.hoursEventFrom
-  filters.value.hoursEventTo = advancedFilters.hoursEventTo || filters.value.hoursEventTo
-  
+const applyFiltersAdvanced = (
+  advancedFilters: Partial<FilterAssociationAnnouncement>
+) => {
+  filters.value.dateEventFrom =
+    advancedFilters.dateEventFrom || filters.value.dateEventFrom
+  filters.value.dateEventTo =
+    advancedFilters.dateEventTo || filters.value.dateEventTo
+  filters.value.hoursEventFrom =
+    advancedFilters.hoursEventFrom || filters.value.hoursEventFrom
+  filters.value.hoursEventTo =
+    advancedFilters.hoursEventTo || filters.value.hoursEventTo
+
   tempAdvancedFilters.value = {
     dateEventFrom: undefined,
     dateEventTo: undefined,
     hoursEventFrom: undefined,
     hoursEventTo: undefined
   }
-  
+
   applyFilters()
 }
 
@@ -696,4 +835,4 @@ watch(showCustomTagInput, (val) => {
 .overflow-x-hidden {
   overflow-x: hidden;
 }
-</style> 
+</style>

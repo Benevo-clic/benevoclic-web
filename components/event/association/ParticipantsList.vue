@@ -1,12 +1,22 @@
 <template>
   <div>
-    <h3 class="text-lg font-bold mb-4">Participants</h3>
-    <div v-if="props.participants && props.participants.length" class="space-y-3">
+    <h3 class="text-lg font-bold mb-4">
+      Participants
+    </h3>
+    <div
+      v-if="props.participants && props.participants.length"
+      class="space-y-3"
+    >
       <!-- Optimisation avec v-memo basé sur les propriétés importantes -->
       <ParticipantOrVolunteerCard
         v-for="participant in props.participants"
         :key="participant.id"
-        v-memo="[participant.id, participant.name, participant.status, participant.isPresent]"
+        v-memo="[
+          participant.id,
+          participant.name,
+          participant.status,
+          participant.isPresent,
+        ]"
         :participant="mapVolunteerToParticipant(participant)"
         :is-volunteer="false"
         @right-action="handleRightAction"
@@ -16,18 +26,31 @@
     <div v-else class="text-center py-8 text-base-content/60">
       <div class="avatar placeholder mb-3">
         <div class="bg-base-300 text-base-content rounded-full w-16">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+            />
           </svg>
         </div>
       </div>
-      <p class="text-sm font-medium">Aucun participant pour cette annonce</p>
+      <p class="text-sm font-medium">
+        Aucun participant pour cette annonce
+      </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import ParticipantOrVolunteerCard from "./ParticipantOrVolunteerCard.vue";
+import ParticipantOrVolunteerCard from './ParticipantOrVolunteerCard.vue'
 
 interface Participant {
   id: string;
@@ -43,29 +66,29 @@ interface mapVolunteer {
   isPresent?: boolean;
 }
 
-function mapVolunteerToParticipant(volunteer: Participant): mapVolunteer {
+function mapVolunteerToParticipant (volunteer: Participant): mapVolunteer {
   return {
     volunteerId: volunteer.id,
     volunteerName: volunteer.name,
     status: volunteer.status,
     isPresent: volunteer.isPresent
-  };
+  }
 }
 
 const props = defineProps<{
   participants: Participant[] | undefined;
-}>();
+}>()
 
 const emit = defineEmits<{
   rightAction: [participant: string];
   presenceAction: [participant: string, isPresent: boolean];
-}>();
+}>()
 
-function handleRightAction(id: string) {
-  emit('rightAction', id);
+function handleRightAction (id: string) {
+  emit('rightAction', id)
 }
 
-function handlePresenceAction(id: string, isPresent: boolean) {
-  emit('presenceAction', id, isPresent);
+function handlePresenceAction (id: string, isPresent: boolean) {
+  emit('presenceAction', id, isPresent)
 }
-</script> 
+</script>

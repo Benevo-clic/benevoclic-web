@@ -1,15 +1,10 @@
-import {defineNuxtRouteMiddleware, navigateTo, useCookie} from '#app'
+import { defineNuxtRouteMiddleware, navigateTo, useCookie } from '#app'
 import { RoleUser } from '~/common/enums/role.enum'
-import {useUserStore} from "~/stores/user/user.store";
-import {useAuthStore} from "~/stores/auth/auth.store";
-
+import { useUserStore } from '~/stores/user/user.store'
+import { useAuthStore } from '~/stores/auth/auth.store'
 
 const BASE_ROUTE_CONFIG = {
-  public: [
-    '/admin/login',
-    '/admin/register',
-    '/admin/verification',
-  ],
+  public: ['/admin/login', '/admin/register', '/admin/verification'],
 
   admin: [
     '/admin',
@@ -18,8 +13,8 @@ const BASE_ROUTE_CONFIG = {
     '/admin/associations',
     '/admin/volunteers',
     '/admin/events',
-    '/admin/analytics',
-  ],
+    '/admin/analytics'
+  ]
 }
 
 export default defineNuxtRouteMiddleware(async (to) => {
@@ -35,9 +30,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   const isConnectedRaw = useCookie<any>('isConnected').value
-  const isConnected = (isConnectedRaw === 'true') || (isConnectedRaw === true) || authStore.isConnected === true
+  const isConnected =
+    isConnectedRaw === 'true' ||
+    isConnectedRaw === true ||
+    authStore.isConnected === true
   const isPublicAdminRoute = BASE_ROUTE_CONFIG.public.includes(to.path)
-
 
   if (!isConnected) {
     if (!isPublicAdminRoute) {
@@ -47,7 +44,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
     return
   }
-
 
   if (!userStore.user) {
     try {
@@ -87,8 +83,5 @@ export default defineNuxtRouteMiddleware(async (to) => {
     if (to.path !== '/admin') {
       return navigateTo('/admin')
     }
-    return
   }
-
-  return
 })

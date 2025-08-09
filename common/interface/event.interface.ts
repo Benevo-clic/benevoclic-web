@@ -1,4 +1,4 @@
-import { EventStatus } from '../enums/event.enum';
+import { EventStatus } from '../enums/event.enum'
 
 export interface Image {
   url: string;
@@ -6,9 +6,9 @@ export interface Image {
 }
 
 export type InfoVolunteer = {
-    id: string;
-    name: string;
-    isPresent?: boolean;
+  id: string;
+  name: string;
+  isPresent?: boolean;
 };
 
 export interface Location {
@@ -19,8 +19,8 @@ export interface Location {
 }
 
 export type LocationGeoJson = {
-    type: 'Point';
-    coordinates: [number, number];
+  type: 'Point';
+  coordinates: [number, number];
 };
 
 export interface Announcement {
@@ -49,22 +49,22 @@ export interface Announcement {
 }
 
 export interface CreateAnnouncementDto {
-    description: string;
-    datePublication: string;
-    dateEvent: string;
-    hoursEvent: string;
-    nameEvent: string;
-    tags?: string[];
-    associationId: string;
-    associationName: string;
-    addressAnnouncement?: Location;
-    locationAnnouncement?: LocationGeoJson;
-    maxParticipants: number;
-    status: EventStatus;
-    maxVolunteers: number;
+  description: string;
+  datePublication: string;
+  dateEvent: string;
+  hoursEvent: string;
+  nameEvent: string;
+  tags?: string[];
+  associationId: string;
+  associationName: string;
+  addressAnnouncement?: Location;
+  locationAnnouncement?: LocationGeoJson;
+  maxParticipants: number;
+  status: EventStatus;
+  maxVolunteers: number;
 }
 
-export interface FavoritesAnnouncement{
-    volunteerId: string;
-    announcementId: string;
+export interface FavoritesAnnouncement {
+  volunteerId: string;
+  announcementId: string;
 }

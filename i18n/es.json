@@ -14,7 +14,7 @@
         "invalid_credentials": "Tu correo electrónico o contraseña son incorrectos.",
         "account_locked": "Tu cuenta está bloqueada. Por favor, contacta con el soporte."
       },
-      "siret":{
+      "siret": {
         "title": "Número SIRET requerido",
         "description": "Por favor, proporciona tu número SIRET para continuar.",
         "placeholder": "Introduce tu número SIRET",
@@ -22,7 +22,7 @@
           "invalid_format": "El número SIRET debe contener 14 dígitos.",
           "not_found": "No se encontró ninguna asociación con este número SIRET."
         },
-        "success": "Número SIRET verificado correctamente",
+        "success": "Número SIRET verificado correctamente"
       }
     },
     "verification": {
@@ -44,12 +44,12 @@
       "title": "Registrarse",
       "association_status_true": "Soy una asociación",
       "association_status_false": "No soy una asociación",
-        "association_siret_status": "Por favor, introduce tu número SIRET",
-        "association_siret_status_description": "El número SIRET es un identificador único para empresas en Francia.",
-        "association_siret_status_placeholder": "Introduce tu SIRET",
-        "association_siret_status_error": "El número SIRET debe contener 14 dígitos.",
-        "association_siret_status_error_description": "Por favor, verifica que el número SIRET sea correcto.",
-        "association_siret_status_good": "Número SIRET válido",
+      "association_siret_status": "Por favor, introduce tu número SIRET",
+      "association_siret_status_description": "El número SIRET es un identificador único para empresas en Francia.",
+      "association_siret_status_placeholder": "Introduce tu SIRET",
+      "association_siret_status_error": "El número SIRET debe contener 14 dígitos.",
+      "association_siret_status_error_description": "Por favor, verifica que el número SIRET sea correcto.",
+      "association_siret_status_good": "Número SIRET válido",
       "description": "Regístrate gratis para unirte a la comunidad y actuar por las causas que te importan.",
       "already_have_account": "¿Ya tienes una cuenta?",
       "login": "Iniciar sesión",
@@ -109,9 +109,9 @@
     "placeholder_email": "Introduce tu correo electrónico",
     "placeholder_password": "Al menos 8 caracteres",
     "forgot_password": "¿Olvidaste tu contraseña?",
-"forgot_password_sent": "Se ha enviado un correo de restablecimiento de contraseña a tu dirección.",
-"forgot_password_error": "Error al enviar el correo de restablecimiento de contraseña.",
-"forgot_password_enter_email": "Por favor, introduce tu dirección de correo electrónico para restablecer tu contraseña."
+    "forgot_password_sent": "Se ha enviado un correo de restablecimiento de contraseña a tu dirección.",
+    "forgot_password_error": "Error al enviar el correo de restablecimiento de contraseña.",
+    "forgot_password_enter_email": "Por favor, introduce tu dirección de correo electrónico para restablecer tu contraseña."
   },
   "drawer-content": {
     "account": {
@@ -252,7 +252,6 @@
       "confirm": "Sí, eliminar",
       "cancel": "Cancelar"
     }
-
   },
   "help": {
     "title": "Centro de Ayuda",

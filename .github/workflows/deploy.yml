@@ -1,16 +1,22 @@
-name: Deploy to OVH VPS
+name: Deploy Web to OVH VPS
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Deploy to DockerHub"]
+    types: [completed]
+    branches: [main]
 
 jobs:
-  deploy-to-ovh:
+  deploy-web:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Deploy to Production
+      - name: Deploy Web via Docker Compose
         uses: appleboy/ssh-action@v1.0.3
         env:
-          # Variables d'environnement de l'application
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
           API_SIRENE_URL: ${{ secrets.API_SIRENE_URL }}
           API_KEY: ${{ secrets.API_KEY }}
@@ -36,63 +42,59 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.OVH_SSH_KEY }}
           port: 22
-          envs: API_BASE_URL,API_SIRENE_URL,API_KEY,API_SIRENE_KEY,STORAGE_BUCKET,MESSAGING_SENDER_ID,APP_ID,MEASUREMENT_ID,PORT,NODE_ENV,API_TIMEOUT,API_RETRY_COUNT,GOOGLE_CALLBACK_URL,FIREBASE_API_KEY,FIREBASE_AUTH_DOMAIN,FIREBASE_PROJECT_ID,FIREBASE_STORAGE_BUCKET,FIREBASE_MESSAGING_SENDER_ID,FIREBASE_APP_ID,FIREBASE_MEASUREMENT_ID
+          envs: DOCKERHUB_USERNAME,DOCKERHUB_TOKEN,API_BASE_URL,API_SIRENE_URL,API_KEY,API_SIRENE_KEY,STORAGE_BUCKET,MESSAGING_SENDER_ID,APP_ID,MEASUREMENT_ID,PORT,NODE_ENV,API_TIMEOUT,API_RETRY_COUNT,GOOGLE_CALLBACK_URL,FIREBASE_API_KEY,FIREBASE_AUTH_DOMAIN,FIREBASE_PROJECT_ID,FIREBASE_STORAGE_BUCKET,FIREBASE_MESSAGING_SENDER_ID,FIREBASE_APP_ID,FIREBASE_MEASUREMENT_ID
           script: |
             set -e
+            echo "🚀 Déploiement Web Benevoclic (Docker Compose)"
 
-            # Créer le répertoire si nécessaire
             mkdir -p ~/benevoclicWeb
+            cd ~/benevoclicWeb
 
-            # Générer le fichier docker-compose.yml
-            cat > ~/benevoclicWeb/docker-compose.yml << EOL
+            cat > docker-compose.web.yml << 'EOL'
             services:
-              app:
-                image: ${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-web:latest
+              web:
+                image: ${DOCKERHUB_USERNAME}/benevoclic-web:latest
                 container_name: benevoclic-web
                 restart: always
-                ports:
-                  - "\${PORT}:\${PORT}"
+                ports: ["${PORT}:${PORT}"]
                 environment:
-                  API_BASE_URL: \${API_BASE_URL}
-                  API_SIRENE_URL: \${API_SIRENE_URL}
-                  API_KEY: \${API_KEY}
-                  API_SIRENE_KEY: \${API_SIRENE_KEY}
-                  STORAGE_BUCKET: \${STORAGE_BUCKET}
-                  MESSAGING_SENDER_ID: \${MESSAGING_SENDER_ID}
-                  APP_ID: \${APP_ID}
-                  MEASUREMENT_ID: \${MEASUREMENT_ID}
-                  PORT: \${PORT}
-                  NODE_ENV: \${NODE_ENV}
-                  API_TIMEOUT: \${API_TIMEOUT}
-                  API_RETRY_COUNT: \${API_RETRY_COUNT}
-                  GOOGLE_CALLBACK_URL: \${GOOGLE_CALLBACK_URL}
-                  FIREBASE_API_KEY: \${FIREBASE_API_KEY}
-                  FIREBASE_AUTH_DOMAIN: \${FIREBASE_AUTH_DOMAIN}
-                  FIREBASE_PROJECT_ID: \${FIREBASE_PROJECT_ID}
-                  FIREBASE_STORAGE_BUCKET: \${FIREBASE_STORAGE_BUCKET}
-                  FIREBASE_MESSAGING_SENDER_ID: \${FIREBASE_MESSAGING_SENDER_ID}
-                  FIREBASE_APP_ID: \${FIREBASE_APP_ID}
-                  FIREBASE_MEASUREMENT_ID: \${FIREBASE_MEASUREMENT_ID}
-                healthcheck:
-                  test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:\${PORT}/"]
-                  interval: 30s
-                  timeout: 3s
-                  retries: 3
-                  start_period: 10s
+                  NODE_ENV: ${NODE_ENV}
+                  PORT: ${PORT}
+                  API_BASE_URL: ${API_BASE_URL}
+                  API_SIRENE_URL: ${API_SIRENE_URL}
+                  API_KEY: ${API_KEY}
+                  API_SIRENE_KEY: ${API_SIRENE_KEY}
+                  STORAGE_BUCKET: ${STORAGE_BUCKET}
+                  MESSAGING_SENDER_ID: ${MESSAGING_SENDER_ID}
+                  APP_ID: ${APP_ID}
+                  MEASUREMENT_ID: ${MEASUREMENT_ID}
+                  API_TIMEOUT: ${API_TIMEOUT}
+                  API_RETRY_COUNT: ${API_RETRY_COUNT}
+                  GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL}
+                  FIREBASE_API_KEY: ${FIREBASE_API_KEY}
+                  FIREBASE_AUTH_DOMAIN: ${FIREBASE_AUTH_DOMAIN}
+                  FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+                  FIREBASE_STORAGE_BUCKET: ${FIREBASE_STORAGE_BUCKET}
+                  FIREBASE_MESSAGING_SENDER_ID: ${FIREBASE_MESSAGING_SENDER_ID}
+                  FIREBASE_APP_ID: ${FIREBASE_APP_ID}
+                  FIREBASE_MEASUREMENT_ID: ${FIREBASE_MEASUREMENT_ID}
+            networks:
+              benevoclic-network:
+                external: true
             EOL
 
-            # Déployer l'application
-            cd ~/benevoclicWeb
-            echo "Arrêt des conteneurs existants..."
-            docker compose down || true
 
-            echo "Suppression de l'image précédente..."
-            docker image rm ${{ secrets.DOCKERHUB_USERNAME }}/benevoclic-web:latest || true
+            echo "🛑 Arrêt du service web"
+            docker compose -f docker-compose.web.yml down || true
 
-            echo "Téléchargement de la nouvelle image..."
-            docker compose pull
 
-            echo "Démarrage des nouveaux conteneurs..."
-            docker compose up -d
+            echo "📥 Pull image"
+            docker compose -f docker-compose.web.yml pull
 
-            echo "✅ Déploiement terminé avec succès !"
+            echo "🚀 Démarrage"
+            docker compose -f docker-compose.web.yml up -d
+
+            echo "⏳ Attente"
+            sleep 10
+
+            echo "✅ OK"

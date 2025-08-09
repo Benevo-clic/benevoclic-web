@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Mock du store
 const mockAnnouncementStore = {
@@ -17,12 +17,12 @@ const mockAnnouncementStore = {
   filterAssociationAnnouncements: vi.fn(),
   updatePresenceVolunteer: vi.fn(),
   updatePresenceParticipant: vi.fn(),
-  getCurrentFilter: { status: 'active', type: 'event' },
+  getCurrentFilter: { status: "active", type: "event" },
   setCurrentFilter: vi.fn(),
   patchCurrentFilter: vi.fn(),
   removeAnnouncement: vi.fn(),
-  getAnnouncements: [{ id: '1', title: 'Test Announcement' }],
-  getCurrentAnnouncement: { id: '1', title: 'Current Announcement' },
+  getAnnouncements: [{ id: "1", title: "Test Announcement" }],
+  getCurrentAnnouncement: { id: "1", title: "Current Announcement" },
   fetchAllAnnouncements: vi.fn(),
   fetchAnnouncements: vi.fn(),
   fetchAnnouncementById: vi.fn(),
@@ -30,25 +30,25 @@ const mockAnnouncementStore = {
   error: null,
   clearCache: vi.fn(),
   invalidateCache: vi.fn(),
-  isCacheValid: true
-}
+  isCacheValid: true,
+};
 
 // Mock des modules Vue
 const mockComputed = vi.fn((getter) => ({
-  value: getter()
-}))
+  value: getter(),
+}));
 
 // Mock des modules
-vi.mock('../../stores/announcement.store', () => ({
-  useAnnouncementStore: () => mockAnnouncementStore
-}))
+vi.mock("../../stores/announcement.store", () => ({
+  useAnnouncementStore: () => mockAnnouncementStore,
+}));
 
 // Mock globaux
-global.computed = mockComputed
+global.computed = mockComputed;
 
 // Fonction mock pour useAnnouncement
 const useAnnouncement = () => {
-  const announcementStore = mockAnnouncementStore
+  const announcementStore = mockAnnouncementStore;
 
   return {
     addParticipant: announcementStore.addParticipant,
@@ -62,7 +62,8 @@ const useAnnouncement = () => {
     updateAnnouncement: announcementStore.updateAnnouncement,
     updateStatus: announcementStore.updateStatus,
     filterAnnouncement: announcementStore.filterAnnouncement,
-    filterAssociationAnnouncementByAssociationId: announcementStore.filterAssociationAnnouncements,
+    filterAssociationAnnouncementByAssociationId:
+      announcementStore.filterAssociationAnnouncements,
     updatePresentVolunteer: announcementStore.updatePresenceVolunteer,
     updatePresentParticipant: announcementStore.updatePresenceParticipant,
     getCurrentFilter: mockComputed(() => announcementStore.getCurrentFilter),
@@ -70,7 +71,9 @@ const useAnnouncement = () => {
     patchCurrentFilter: announcementStore.patchCurrentFilter,
     removeAnnouncement: announcementStore.removeAnnouncement,
     getAnnouncements: mockComputed(() => announcementStore.getAnnouncements),
-    getCurrentAnnouncement: mockComputed(() => announcementStore.getCurrentAnnouncement),
+    getCurrentAnnouncement: mockComputed(
+      () => announcementStore.getCurrentAnnouncement,
+    ),
     fetchAllAnnouncements: announcementStore.fetchAllAnnouncements,
     fetchAnnouncements: announcementStore.fetchAnnouncements,
     fetchAnnouncementById: announcementStore.fetchAnnouncementById,
@@ -78,298 +81,384 @@ const useAnnouncement = () => {
     error: mockComputed(() => announcementStore.error),
     clearCache: announcementStore.clearCache,
     invalidateCache: announcementStore.invalidateCache,
-    isCacheValid: mockComputed(() => announcementStore.isCacheValid)
-  }
-}
+    isCacheValid: mockComputed(() => announcementStore.isCacheValid),
+  };
+};
 
-describe('useAnnouncement', () => {
+describe("useAnnouncement", () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    vi.clearAllMocks();
     mockComputed.mockImplementation((getter) => ({
-      value: getter()
-    }))
-  })
+      value: getter(),
+    }));
+  });
+
+  describe("Méthodes de participation", () => {
+    it("should call addParticipant", async () => {
+      const announcement = useAnnouncement();
+      const participantData = {
+        userId: "user1",
+        announcementId: "announcement1",
+      };
+
+      await announcement.addParticipant(participantData);
+
+      expect(mockAnnouncementStore.addParticipant).toHaveBeenCalledWith(
+        participantData,
+      );
+    });
+
+    it("should call removeParticipant", async () => {
+      const announcement = useAnnouncement();
+      const participantData = {
+        userId: "user1",
+        announcementId: "announcement1",
+      };
+
+      await announcement.removeParticipant(participantData);
+
+      expect(mockAnnouncementStore.removeParticipant).toHaveBeenCalledWith(
+        participantData,
+      );
+    });
+
+    it("should call updatePresentParticipant", async () => {
+      const announcement = useAnnouncement();
+      const presenceData = {
+        userId: "user1",
+        announcementId: "announcement1",
+        present: true,
+      };
+
+      await announcement.updatePresentParticipant(presenceData);
+
+      expect(
+        mockAnnouncementStore.updatePresenceParticipant,
+      ).toHaveBeenCalledWith(presenceData);
+    });
+  });
+
+  describe("Méthodes de bénévolat", () => {
+    it("should call addVolunteer", async () => {
+      const announcement = useAnnouncement();
+      const volunteerData = {
+        volunteerId: "volunteer1",
+        announcementId: "announcement1",
+      };
+
+      await announcement.addVolunteer(volunteerData);
+
+      expect(mockAnnouncementStore.addVolunteer).toHaveBeenCalledWith(
+        volunteerData,
+      );
+    });
+
+    it("should call addVolunteerWaiting", async () => {
+      const announcement = useAnnouncement();
+      const volunteerData = {
+        volunteerId: "volunteer1",
+        announcementId: "announcement1",
+      };
+
+      await announcement.addVolunteerWaiting(volunteerData);
+
+      expect(mockAnnouncementStore.addVolunteerWaiting).toHaveBeenCalledWith(
+        volunteerData,
+      );
+    });
+
+    it("should call removeVolunteer", async () => {
+      const announcement = useAnnouncement();
+      const volunteerData = {
+        volunteerId: "volunteer1",
+        announcementId: "announcement1",
+      };
+
+      await announcement.removeVolunteer(volunteerData);
+
+      expect(mockAnnouncementStore.removeVolunteer).toHaveBeenCalledWith(
+        volunteerData,
+      );
+    });
+
+    it("should call removeVolunteerWaiting", async () => {
+      const announcement = useAnnouncement();
+      const volunteerData = {
+        volunteerId: "volunteer1",
+        announcementId: "announcement1",
+      };
+
+      await announcement.removeVolunteerWaiting(volunteerData);
+
+      expect(mockAnnouncementStore.removeVolunteerWaiting).toHaveBeenCalledWith(
+        volunteerData,
+      );
+    });
+
+    it("should call updatePresentVolunteer", async () => {
+      const announcement = useAnnouncement();
+      const presenceData = {
+        volunteerId: "volunteer1",
+        announcementId: "announcement1",
+        present: true,
+      };
+
+      await announcement.updatePresentVolunteer(presenceData);
+
+      expect(
+        mockAnnouncementStore.updatePresenceVolunteer,
+      ).toHaveBeenCalledWith(presenceData);
+    });
+  });
+
+  describe("Méthodes de gestion des annonces", () => {
+    it("should call createAnnouncement", async () => {
+      const announcement = useAnnouncement();
+      const announcementData = {
+        title: "Test",
+        description: "Test description",
+      };
+
+      await announcement.createAnnouncement(announcementData);
+
+      expect(mockAnnouncementStore.createAnnouncement).toHaveBeenCalledWith(
+        announcementData,
+      );
+    });
+
+    it("should call updateAnnouncement", async () => {
+      const announcement = useAnnouncement();
+      const announcementData = { id: "1", title: "Updated Test" };
+
+      await announcement.updateAnnouncement(announcementData);
+
+      expect(mockAnnouncementStore.updateAnnouncement).toHaveBeenCalledWith(
+        announcementData,
+      );
+    });
+
+    it("should call removeAnnouncement", async () => {
+      const announcement = useAnnouncement();
+      const announcementId = "announcement1";
+
+      await announcement.removeAnnouncement(announcementId);
+
+      expect(mockAnnouncementStore.removeAnnouncement).toHaveBeenCalledWith(
+        announcementId,
+      );
+    });
+
+    it("should call updateStatus", async () => {
+      const announcement = useAnnouncement();
+      const statusData = { announcementId: "announcement1", status: "active" };
+
+      await announcement.updateStatus(statusData);
+
+      expect(mockAnnouncementStore.updateStatus).toHaveBeenCalledWith(
+        statusData,
+      );
+    });
+
+    it("should call uploadImageCover", async () => {
+      const announcement = useAnnouncement();
+      const imageData = {
+        announcementId: "announcement1",
+        file: new File([""], "test.jpg"),
+      };
 
-  describe('Méthodes de participation', () => {
-    it('should call addParticipant', async () => {
-      const announcement = useAnnouncement()
-      const participantData = { userId: 'user1', announcementId: 'announcement1' }
+      await announcement.uploadImageCover(imageData);
 
-      await announcement.addParticipant(participantData)
+      expect(mockAnnouncementStore.uploadImageCover).toHaveBeenCalledWith(
+        imageData,
+      );
+    });
+  });
 
-      expect(mockAnnouncementStore.addParticipant).toHaveBeenCalledWith(participantData)
-    })
+  describe("Méthodes de filtrage", () => {
+    it("should call filterAnnouncement", async () => {
+      const announcement = useAnnouncement();
+      const filterData = { status: "active", type: "event" };
 
-    it('should call removeParticipant', async () => {
-      const announcement = useAnnouncement()
-      const participantData = { userId: 'user1', announcementId: 'announcement1' }
+      await announcement.filterAnnouncement(filterData);
 
-      await announcement.removeParticipant(participantData)
+      expect(mockAnnouncementStore.filterAnnouncement).toHaveBeenCalledWith(
+        filterData,
+      );
+    });
 
-      expect(mockAnnouncementStore.removeParticipant).toHaveBeenCalledWith(participantData)
-    })
+    it("should call filterAssociationAnnouncementByAssociationId", async () => {
+      const announcement = useAnnouncement();
+      const filterData = { associationId: "association1" };
 
-    it('should call updatePresentParticipant', async () => {
-      const announcement = useAnnouncement()
-      const presenceData = { userId: 'user1', announcementId: 'announcement1', present: true }
+      await announcement.filterAssociationAnnouncementByAssociationId(
+        filterData,
+      );
 
-      await announcement.updatePresentParticipant(presenceData)
+      expect(
+        mockAnnouncementStore.filterAssociationAnnouncements,
+      ).toHaveBeenCalledWith(filterData);
+    });
+
+    it("should call setCurrentFilter", async () => {
+      const announcement = useAnnouncement();
+      const filter = { status: "active", type: "event" };
 
-      expect(mockAnnouncementStore.updatePresenceParticipant).toHaveBeenCalledWith(presenceData)
-    })
-  })
+      announcement.setCurrentFilter(filter);
 
-  describe('Méthodes de bénévolat', () => {
-    it('should call addVolunteer', async () => {
-      const announcement = useAnnouncement()
-      const volunteerData = { volunteerId: 'volunteer1', announcementId: 'announcement1' }
+      expect(mockAnnouncementStore.setCurrentFilter).toHaveBeenCalledWith(
+        filter,
+      );
+    });
 
-      await announcement.addVolunteer(volunteerData)
+    it("should call patchCurrentFilter", async () => {
+      const announcement = useAnnouncement();
+      const filterPatch = { status: "inactive" };
 
-      expect(mockAnnouncementStore.addVolunteer).toHaveBeenCalledWith(volunteerData)
-    })
+      announcement.patchCurrentFilter(filterPatch);
 
-    it('should call addVolunteerWaiting', async () => {
-      const announcement = useAnnouncement()
-      const volunteerData = { volunteerId: 'volunteer1', announcementId: 'announcement1' }
+      expect(mockAnnouncementStore.patchCurrentFilter).toHaveBeenCalledWith(
+        filterPatch,
+      );
+    });
+  });
 
-      await announcement.addVolunteerWaiting(volunteerData)
+  describe("Méthodes de récupération", () => {
+    it("should call fetchAllAnnouncements", async () => {
+      const announcement = useAnnouncement();
 
-      expect(mockAnnouncementStore.addVolunteerWaiting).toHaveBeenCalledWith(volunteerData)
-    })
+      await announcement.fetchAllAnnouncements();
 
-    it('should call removeVolunteer', async () => {
-      const announcement = useAnnouncement()
-      const volunteerData = { volunteerId: 'volunteer1', announcementId: 'announcement1' }
+      expect(mockAnnouncementStore.fetchAllAnnouncements).toHaveBeenCalled();
+    });
 
-      await announcement.removeVolunteer(volunteerData)
+    it("should call fetchAnnouncements", async () => {
+      const announcement = useAnnouncement();
+      const params = { page: 1, limit: 10 };
 
-      expect(mockAnnouncementStore.removeVolunteer).toHaveBeenCalledWith(volunteerData)
-    })
+      await announcement.fetchAnnouncements(params);
 
-    it('should call removeVolunteerWaiting', async () => {
-      const announcement = useAnnouncement()
-      const volunteerData = { volunteerId: 'volunteer1', announcementId: 'announcement1' }
+      expect(mockAnnouncementStore.fetchAnnouncements).toHaveBeenCalledWith(
+        params,
+      );
+    });
 
-      await announcement.removeVolunteerWaiting(volunteerData)
+    it("should call fetchAnnouncementById", async () => {
+      const announcement = useAnnouncement();
+      const announcementId = "announcement1";
 
-      expect(mockAnnouncementStore.removeVolunteerWaiting).toHaveBeenCalledWith(volunteerData)
-    })
+      await announcement.fetchAnnouncementById(announcementId);
 
-    it('should call updatePresentVolunteer', async () => {
-      const announcement = useAnnouncement()
-      const presenceData = { volunteerId: 'volunteer1', announcementId: 'announcement1', present: true }
+      expect(mockAnnouncementStore.fetchAnnouncementById).toHaveBeenCalledWith(
+        announcementId,
+      );
+    });
+  });
 
-      await announcement.updatePresentVolunteer(presenceData)
+  describe("Méthodes de cache", () => {
+    it("should call clearCache", async () => {
+      const announcement = useAnnouncement();
 
-      expect(mockAnnouncementStore.updatePresenceVolunteer).toHaveBeenCalledWith(presenceData)
-    })
-  })
+      announcement.clearCache();
 
-  describe('Méthodes de gestion des annonces', () => {
-    it('should call createAnnouncement', async () => {
-      const announcement = useAnnouncement()
-      const announcementData = { title: 'Test', description: 'Test description' }
-
-      await announcement.createAnnouncement(announcementData)
-
-      expect(mockAnnouncementStore.createAnnouncement).toHaveBeenCalledWith(announcementData)
-    })
-
-    it('should call updateAnnouncement', async () => {
-      const announcement = useAnnouncement()
-      const announcementData = { id: '1', title: 'Updated Test' }
-
-      await announcement.updateAnnouncement(announcementData)
-
-      expect(mockAnnouncementStore.updateAnnouncement).toHaveBeenCalledWith(announcementData)
-    })
-
-    it('should call removeAnnouncement', async () => {
-      const announcement = useAnnouncement()
-      const announcementId = 'announcement1'
-
-      await announcement.removeAnnouncement(announcementId)
-
-      expect(mockAnnouncementStore.removeAnnouncement).toHaveBeenCalledWith(announcementId)
-    })
-
-    it('should call updateStatus', async () => {
-      const announcement = useAnnouncement()
-      const statusData = { announcementId: 'announcement1', status: 'active' }
-
-      await announcement.updateStatus(statusData)
-
-      expect(mockAnnouncementStore.updateStatus).toHaveBeenCalledWith(statusData)
-    })
-
-    it('should call uploadImageCover', async () => {
-      const announcement = useAnnouncement()
-      const imageData = { announcementId: 'announcement1', file: new File([''], 'test.jpg') }
-
-      await announcement.uploadImageCover(imageData)
-
-      expect(mockAnnouncementStore.uploadImageCover).toHaveBeenCalledWith(imageData)
-    })
-  })
-
-  describe('Méthodes de filtrage', () => {
-    it('should call filterAnnouncement', async () => {
-      const announcement = useAnnouncement()
-      const filterData = { status: 'active', type: 'event' }
-
-      await announcement.filterAnnouncement(filterData)
-
-      expect(mockAnnouncementStore.filterAnnouncement).toHaveBeenCalledWith(filterData)
-    })
-
-    it('should call filterAssociationAnnouncementByAssociationId', async () => {
-      const announcement = useAnnouncement()
-      const filterData = { associationId: 'association1' }
-
-      await announcement.filterAssociationAnnouncementByAssociationId(filterData)
-
-      expect(mockAnnouncementStore.filterAssociationAnnouncements).toHaveBeenCalledWith(filterData)
-    })
-
-    it('should call setCurrentFilter', async () => {
-      const announcement = useAnnouncement()
-      const filter = { status: 'active', type: 'event' }
-
-      announcement.setCurrentFilter(filter)
-
-      expect(mockAnnouncementStore.setCurrentFilter).toHaveBeenCalledWith(filter)
-    })
-
-    it('should call patchCurrentFilter', async () => {
-      const announcement = useAnnouncement()
-      const filterPatch = { status: 'inactive' }
-
-      announcement.patchCurrentFilter(filterPatch)
-
-      expect(mockAnnouncementStore.patchCurrentFilter).toHaveBeenCalledWith(filterPatch)
-    })
-  })
-
-  describe('Méthodes de récupération', () => {
-    it('should call fetchAllAnnouncements', async () => {
-      const announcement = useAnnouncement()
-
-      await announcement.fetchAllAnnouncements()
-
-      expect(mockAnnouncementStore.fetchAllAnnouncements).toHaveBeenCalled()
-    })
-
-    it('should call fetchAnnouncements', async () => {
-      const announcement = useAnnouncement()
-      const params = { page: 1, limit: 10 }
-
-      await announcement.fetchAnnouncements(params)
-
-      expect(mockAnnouncementStore.fetchAnnouncements).toHaveBeenCalledWith(params)
-    })
-
-    it('should call fetchAnnouncementById', async () => {
-      const announcement = useAnnouncement()
-      const announcementId = 'announcement1'
-
-      await announcement.fetchAnnouncementById(announcementId)
-
-      expect(mockAnnouncementStore.fetchAnnouncementById).toHaveBeenCalledWith(announcementId)
-    })
-  })
-
-  describe('Méthodes de cache', () => {
-    it('should call clearCache', async () => {
-      const announcement = useAnnouncement()
-
-      announcement.clearCache()
-
-      expect(mockAnnouncementStore.clearCache).toHaveBeenCalled()
-    })
-
-    it('should call invalidateCache', async () => {
-      const announcement = useAnnouncement()
-
-      announcement.invalidateCache()
-
-      expect(mockAnnouncementStore.invalidateCache).toHaveBeenCalled()
-    })
-  })
-
-  describe('Propriétés réactives', () => {
-    it('should return getCurrentFilter', () => {
-      const announcement = useAnnouncement()
-
-      expect(announcement.getCurrentFilter.value).toEqual({ status: 'active', type: 'event' })
-    })
-
-    it('should return getAnnouncements', () => {
-      const announcement = useAnnouncement()
-
-      expect(announcement.getAnnouncements.value).toEqual([{ id: '1', title: 'Test Announcement' }])
-    })
-
-    it('should return getCurrentAnnouncement', () => {
-      const announcement = useAnnouncement()
-
-      expect(announcement.getCurrentAnnouncement.value).toEqual({ id: '1', title: 'Current Announcement' })
-    })
-
-    it('should return loading state', () => {
-      const announcement = useAnnouncement()
-
-      expect(announcement.loading.value).toBe(false)
-    })
-
-    it('should return error state', () => {
-      const announcement = useAnnouncement()
-
-      expect(announcement.error.value).toBe(null)
-    })
-
-    it('should return cache validity', () => {
-      const announcement = useAnnouncement()
-
-      expect(announcement.isCacheValid.value).toBe(true)
-    })
-  })
-
-  describe('Gestion des erreurs', () => {
-    it('should handle store errors', () => {
-      mockAnnouncementStore.error = 'Test error'
-      
-      const announcement = useAnnouncement()
-
-      expect(announcement.error.value).toBe('Test error')
-    })
-
-    it('should handle loading states', () => {
-      mockAnnouncementStore.loading = true
-      
-      const announcement = useAnnouncement()
-
-      expect(announcement.loading.value).toBe(true)
-    })
-  })
-
-  describe('Intégration avec le store', () => {
-    it('should use announcement store for all methods', () => {
-      const announcement = useAnnouncement()
-
-      expect(announcement.addParticipant).toBe(mockAnnouncementStore.addParticipant)
-      expect(announcement.createAnnouncement).toBe(mockAnnouncementStore.createAnnouncement)
-      expect(announcement.fetchAllAnnouncements).toBe(mockAnnouncementStore.fetchAllAnnouncements)
-      expect(announcement.clearCache).toBe(mockAnnouncementStore.clearCache)
-    })
-
-    it('should have reactive computed properties', () => {
-      const announcement = useAnnouncement()
-
-      expect(announcement.getCurrentFilter.value).toBeDefined()
-      expect(announcement.getAnnouncements.value).toBeDefined()
-      expect(announcement.loading.value).toBeDefined()
-      expect(announcement.error.value).toBeDefined()
-    })
-  })
-}) 
+      expect(mockAnnouncementStore.clearCache).toHaveBeenCalled();
+    });
+
+    it("should call invalidateCache", async () => {
+      const announcement = useAnnouncement();
+
+      announcement.invalidateCache();
+
+      expect(mockAnnouncementStore.invalidateCache).toHaveBeenCalled();
+    });
+  });
+
+  describe("Propriétés réactives", () => {
+    it("should return getCurrentFilter", () => {
+      const announcement = useAnnouncement();
+
+      expect(announcement.getCurrentFilter.value).toEqual({
+        status: "active",
+        type: "event",
+      });
+    });
+
+    it("should return getAnnouncements", () => {
+      const announcement = useAnnouncement();
+
+      expect(announcement.getAnnouncements.value).toEqual([
+        { id: "1", title: "Test Announcement" },
+      ]);
+    });
+
+    it("should return getCurrentAnnouncement", () => {
+      const announcement = useAnnouncement();
+
+      expect(announcement.getCurrentAnnouncement.value).toEqual({
+        id: "1",
+        title: "Current Announcement",
+      });
+    });
+
+    it("should return loading state", () => {
+      const announcement = useAnnouncement();
+
+      expect(announcement.loading.value).toBe(false);
+    });
+
+    it("should return error state", () => {
+      const announcement = useAnnouncement();
+
+      expect(announcement.error.value).toBe(null);
+    });
+
+    it("should return cache validity", () => {
+      const announcement = useAnnouncement();
+
+      expect(announcement.isCacheValid.value).toBe(true);
+    });
+  });
+
+  describe("Gestion des erreurs", () => {
+    it("should handle store errors", () => {
+      mockAnnouncementStore.error = "Test error";
+
+      const announcement = useAnnouncement();
+
+      expect(announcement.error.value).toBe("Test error");
+    });
+
+    it("should handle loading states", () => {
+      mockAnnouncementStore.loading = true;
+
+      const announcement = useAnnouncement();
+
+      expect(announcement.loading.value).toBe(true);
+    });
+  });
+
+  describe("Intégration avec le store", () => {
+    it("should use announcement store for all methods", () => {
+      const announcement = useAnnouncement();
+
+      expect(announcement.addParticipant).toBe(
+        mockAnnouncementStore.addParticipant,
+      );
+      expect(announcement.createAnnouncement).toBe(
+        mockAnnouncementStore.createAnnouncement,
+      );
+      expect(announcement.fetchAllAnnouncements).toBe(
+        mockAnnouncementStore.fetchAllAnnouncements,
+      );
+      expect(announcement.clearCache).toBe(mockAnnouncementStore.clearCache);
+    });
+
+    it("should have reactive computed properties", () => {
+      const announcement = useAnnouncement();
+
+      expect(announcement.getCurrentFilter.value).toBeDefined();
+      expect(announcement.getAnnouncements.value).toBeDefined();
+      expect(announcement.loading.value).toBeDefined();
+      expect(announcement.error.value).toBeDefined();
+    });
+  });
+});

@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { describe, it, expect } from "vitest";
+import { mount } from "@vue/test-utils";
 
 const MockIndex = {
   template: `
@@ -109,84 +109,94 @@ const MockIndex = {
         </section>
       </main>
     </div>
-  `
-}
+  `,
+};
 
-describe('Index', () => {
-  it('should render the main container and skip link', () => {
-    const wrapper = mount(MockIndex)
-    expect(wrapper.find('.volunteer-home').exists()).toBe(true)
-    expect(wrapper.find('main#main-content').exists()).toBe(true)
-    expect(wrapper.find('a[href="#main-content"]').exists()).toBe(true)
-    expect(wrapper.find('a[href="#main-content"]').attributes('aria-label')).toBe('Passer au contenu principal')
-  })
+describe("Index", () => {
+  it("should render the main container and skip link", () => {
+    const wrapper = mount(MockIndex);
+    expect(wrapper.find(".volunteer-home").exists()).toBe(true);
+    expect(wrapper.find("main#main-content").exists()).toBe(true);
+    expect(wrapper.find('a[href="#main-content"]').exists()).toBe(true);
+    expect(
+      wrapper.find('a[href="#main-content"]').attributes("aria-label"),
+    ).toBe("Passer au contenu principal");
+  });
 
-  it('should render the hero section', () => {
-    const wrapper = mount(MockIndex)
-    expect(wrapper.find('.hero-section').exists()).toBe(true)
-    expect(wrapper.find('.hero-section h1').text()).toBe('Benevoclic')
-  })
+  it("should render the hero section", () => {
+    const wrapper = mount(MockIndex);
+    expect(wrapper.find(".hero-section").exists()).toBe(true);
+    expect(wrapper.find(".hero-section h1").text()).toBe("Benevoclic");
+  });
 
-  it('should render the search section with all elements', () => {
-    const wrapper = mount(MockIndex)
-    const searchSection = wrapper.find('#search-section')
-    expect(searchSection.exists()).toBe(true)
-    expect(searchSection.find('h2').text()).toBe('Trouvez l\'événement qui vous correspond')
-    expect(searchSection.find('input[type="text"]').exists()).toBe(true)
-    expect(searchSection.find('input[type="text"]').attributes('placeholder')).toBe('Rechercher par nom d\'événement, description, nom d\'association...')
-    expect(searchSection.find('.btn-primary').exists()).toBe(true)
-    expect(searchSection.find('.btn-outline').exists()).toBe(true)
-  })
+  it("should render the search section with all elements", () => {
+    const wrapper = mount(MockIndex);
+    const searchSection = wrapper.find("#search-section");
+    expect(searchSection.exists()).toBe(true);
+    expect(searchSection.find("h2").text()).toBe(
+      "Trouvez l'événement qui vous correspond",
+    );
+    expect(searchSection.find('input[type="text"]').exists()).toBe(true);
+    expect(
+      searchSection.find('input[type="text"]').attributes("placeholder"),
+    ).toBe("Rechercher par nom d'événement, description, nom d'association...");
+    expect(searchSection.find(".btn-primary").exists()).toBe(true);
+    expect(searchSection.find(".btn-outline").exists()).toBe(true);
+  });
 
-  it('should render the stats section with counters', () => {
-    const wrapper = mount(MockIndex)
-    const statsSection = wrapper.find('#stats-section')
-    expect(statsSection.exists()).toBe(true)
-    expect(statsSection.find('h2').text()).toBe('Nos chiffres')
-    
-    const counters = statsSection.findAll('.text-4xl.font-bold.text-primary')
-    expect(counters.length).toBe(3)
-    expect(counters[0].text()).toBe('150')
-    expect(counters[1].text()).toBe('25')
-    expect(counters[2].text()).toBe('500')
-  })
+  it("should render the stats section with counters", () => {
+    const wrapper = mount(MockIndex);
+    const statsSection = wrapper.find("#stats-section");
+    expect(statsSection.exists()).toBe(true);
+    expect(statsSection.find("h2").text()).toBe("Nos chiffres");
 
-  it('should render all main sections', () => {
-    const wrapper = mount(MockIndex)
+    const counters = statsSection.findAll(".text-4xl.font-bold.text-primary");
+    expect(counters.length).toBe(3);
+    expect(counters[0].text()).toBe("150");
+    expect(counters[1].text()).toBe("25");
+    expect(counters[2].text()).toBe("500");
+  });
+
+  it("should render all main sections", () => {
+    const wrapper = mount(MockIndex);
     const sections = [
-      '#search-section',
-      '#stats-section', 
-      '#events-section',
-      '#benefits-section',
-      '#how-it-works-section',
-      '#cta-section'
-    ]
-    
-    sections.forEach(sectionId => {
-      expect(wrapper.find(sectionId).exists()).toBe(true)
-    })
-  })
+      "#search-section",
+      "#stats-section",
+      "#events-section",
+      "#benefits-section",
+      "#how-it-works-section",
+      "#cta-section",
+    ];
 
-  it('should have proper accessibility attributes', () => {
-    const wrapper = mount(MockIndex)
-    expect(wrapper.find('main').attributes('role')).toBe('main')
-    expect(wrapper.find('main').attributes('aria-label')).toBe('Page d\'accueil Bénévole')
-  })
+    sections.forEach((sectionId) => {
+      expect(wrapper.find(sectionId).exists()).toBe(true);
+    });
+  });
 
-  it('should have search functionality elements', () => {
-    const wrapper = mount(MockIndex)
-    const searchInput = wrapper.find('input[type="text"]')
-    expect(searchInput.exists()).toBe(true)
-    expect(searchInput.classes()).toContain('input')
-    expect(searchInput.classes()).toContain('input-bordered')
-  })
+  it("should have proper accessibility attributes", () => {
+    const wrapper = mount(MockIndex);
+    expect(wrapper.find("main").attributes("role")).toBe("main");
+    expect(wrapper.find("main").attributes("aria-label")).toBe(
+      "Page d'accueil Bénévole",
+    );
+  });
 
-  it('should have CTA section with call to action', () => {
-    const wrapper = mount(MockIndex)
-    const ctaSection = wrapper.find('#cta-section')
-    expect(ctaSection.exists()).toBe(true)
-    expect(ctaSection.find('h2').text()).toBe('Prêt à vous engager ?')
-    expect(ctaSection.find('.btn-secondary').exists()).toBe(true)
-    expect(ctaSection.find('.btn-secondary').text()).toBe('Commencer maintenant')
-  })
-}) 
+  it("should have search functionality elements", () => {
+    const wrapper = mount(MockIndex);
+    const searchInput = wrapper.find('input[type="text"]');
+    expect(searchInput.exists()).toBe(true);
+    expect(searchInput.classes()).toContain("input");
+    expect(searchInput.classes()).toContain("input-bordered");
+  });
+
+  it("should have CTA section with call to action", () => {
+    const wrapper = mount(MockIndex);
+    const ctaSection = wrapper.find("#cta-section");
+    expect(ctaSection.exists()).toBe(true);
+    expect(ctaSection.find("h2").text()).toBe("Prêt à vous engager ?");
+    expect(ctaSection.find(".btn-secondary").exists()).toBe(true);
+    expect(ctaSection.find(".btn-secondary").text()).toBe(
+      "Commencer maintenant",
+    );
+  });
+});

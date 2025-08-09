@@ -34,12 +34,12 @@
       "title": "Sign Up",
       "association_status_true": "I am an association",
       "association_status_false": "I am not an association",
-        "association_siret_status": "Please enter your SIRET number",
-        "association_siret_status_description": "The SIRET number is a unique identifier for businesses in France.",
-        "association_siret_status_placeholder": "Enter your SIRET",
-        "association_siret_status_error": "The SIRET number must contain 14 digits.",
-        "association_siret_status_error_description": "Please check that the SIRET number is correct.",
-        "association_siret_status_good": "Valid SIRET number",
+      "association_siret_status": "Please enter your SIRET number",
+      "association_siret_status_description": "The SIRET number is a unique identifier for businesses in France.",
+      "association_siret_status_placeholder": "Enter your SIRET",
+      "association_siret_status_error": "The SIRET number must contain 14 digits.",
+      "association_siret_status_error_description": "Please check that the SIRET number is correct.",
+      "association_siret_status_good": "Valid SIRET number",
       "description": "Sign up for free to join the community and take action for causes that matter to you.",
       "already_have_account": "Already have an account?",
       "login": "Log In",
@@ -73,9 +73,9 @@
       "type": "Type of Association",
       "phone": "Phone",
       "website": "Website",
-        "email": "Email",
-        "contact_info": "Contact Information",
-        "location": "Address",
+      "email": "Email",
+      "contact_info": "Contact Information",
+      "location": "Address",
       "city": "City",
       "postal_code": "Postal Code",
       "country": "Country",
@@ -218,16 +218,16 @@
       "add_items": "Add items to your favorites to see them here."
     }
   },
-    "association": {
-      "activity": {
-        "new_event": "New Event",
-        "history_events": "Past Events",
-        "upcoming_events": "Upcoming Events",
-        "manage_events": "Manage Events",
-        "requests": "My Requests",
-        "dashboard": "Dashboard"
-      }
-    },
+  "association": {
+    "activity": {
+      "new_event": "New Event",
+      "history_events": "Past Events",
+      "upcoming_events": "Upcoming Events",
+      "manage_events": "Manage Events",
+      "requests": "My Requests",
+      "dashboard": "Dashboard"
+    }
+  },
   "announcement": {
     "title": "Announcement",
     "no_announcements": "No announcements found",

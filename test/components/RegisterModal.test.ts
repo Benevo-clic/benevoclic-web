@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { describe, it, expect, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { describe, it, expect, vi } from "vitest";
+import { mount } from "@vue/test-utils";
+import { nextTick } from "vue";
 
 // Mock component pour tester le RegisterModal
 const MockRegisterModal = {
@@ -20,267 +20,269 @@ const MockRegisterModal = {
   props: {
     isAssociation: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       registerModal: null,
-      isRegisterMode: false
-    }
+      isRegisterMode: false,
+    };
   },
   methods: {
     handleRegister() {
       if (this.registerModal) {
-        this.isRegisterMode = true
+        this.isRegisterMode = true;
       } else {
-        console.log('registerModal est null')
+        console.log("registerModal est null");
       }
     },
-    
+
     openRegisterModal() {
-      this.handleRegister()
-    }
+      this.handleRegister();
+    },
   },
   mounted() {
-    this.registerModal = this.$el
-  }
-}
+    this.registerModal = this.$el;
+  },
+};
 
-describe('RegisterModal', () => {
-  describe('Rendu de base', () => {
-    it('should render register modal', () => {
-      const wrapper = mount(MockRegisterModal)
+describe("RegisterModal", () => {
+  describe("Rendu de base", () => {
+    it("should render register modal", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      expect(wrapper.exists()).toBe(true)
-      expect(wrapper.find('.flex.items-center.justify-center').exists()).toBe(true)
-    })
+      expect(wrapper.exists()).toBe(true);
+      expect(wrapper.find(".flex.items-center.justify-center").exists()).toBe(
+        true,
+      );
+    });
 
-    it('should render container with proper styling', () => {
-      const wrapper = mount(MockRegisterModal)
+    it("should render container with proper styling", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      const container = wrapper.find('.w-full.max-w-xl')
-      expect(container.exists()).toBe(true)
-    })
+      const container = wrapper.find(".w-full.max-w-xl");
+      expect(container.exists()).toBe(true);
+    });
 
-    it('should have proper background styling', () => {
-      const wrapper = mount(MockRegisterModal)
+    it("should have proper background styling", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      const background = wrapper.find('.min-h-screen.bg-base-200')
-      expect(background.exists()).toBe(true)
-    })
-  })
+      const background = wrapper.find(".min-h-screen.bg-base-200");
+      expect(background.exists()).toBe(true);
+    });
+  });
 
-  describe('Affichage conditionnel', () => {
-    it('should show RegisterAssociation when isAssociation is true', () => {
+  describe("Affichage conditionnel", () => {
+    it("should show RegisterAssociation when isAssociation is true", () => {
       const wrapper = mount(MockRegisterModal, {
         props: {
-          isAssociation: true
-        }
-      })
+          isAssociation: true,
+        },
+      });
 
-      const associationComponent = wrapper.find('.mock-register-association')
-      expect(associationComponent.exists()).toBe(true)
-      expect(associationComponent.text()).toBe('RegisterAssociation Component')
-    })
+      const associationComponent = wrapper.find(".mock-register-association");
+      expect(associationComponent.exists()).toBe(true);
+      expect(associationComponent.text()).toBe("RegisterAssociation Component");
+    });
 
-    it('should show RegisterVolunteer when isAssociation is false', () => {
+    it("should show RegisterVolunteer when isAssociation is false", () => {
       const wrapper = mount(MockRegisterModal, {
         props: {
-          isAssociation: false
-        }
-      })
+          isAssociation: false,
+        },
+      });
 
-      const volunteerComponent = wrapper.find('.mock-register-volunteer')
-      expect(volunteerComponent.exists()).toBe(true)
-      expect(volunteerComponent.text()).toBe('RegisterVolunteer Component')
-    })
+      const volunteerComponent = wrapper.find(".mock-register-volunteer");
+      expect(volunteerComponent.exists()).toBe(true);
+      expect(volunteerComponent.text()).toBe("RegisterVolunteer Component");
+    });
 
-    it('should not show RegisterAssociation when isAssociation is false', () => {
+    it("should not show RegisterAssociation when isAssociation is false", () => {
       const wrapper = mount(MockRegisterModal, {
         props: {
-          isAssociation: false
-        }
-      })
+          isAssociation: false,
+        },
+      });
 
-      const associationComponent = wrapper.find('.mock-register-association')
-      expect(associationComponent.exists()).toBe(false)
-    })
+      const associationComponent = wrapper.find(".mock-register-association");
+      expect(associationComponent.exists()).toBe(false);
+    });
 
-    it('should not show RegisterVolunteer when isAssociation is true', () => {
+    it("should not show RegisterVolunteer when isAssociation is true", () => {
       const wrapper = mount(MockRegisterModal, {
         props: {
-          isAssociation: true
-        }
-      })
+          isAssociation: true,
+        },
+      });
 
-      const volunteerComponent = wrapper.find('.mock-register-volunteer')
-      expect(volunteerComponent.exists()).toBe(false)
-    })
-  })
+      const volunteerComponent = wrapper.find(".mock-register-volunteer");
+      expect(volunteerComponent.exists()).toBe(false);
+    });
+  });
 
-  describe('Props et états', () => {
-    it('should initialize with isAssociation false by default', () => {
-      const wrapper = mount(MockRegisterModal)
+  describe("Props et états", () => {
+    it("should initialize with isAssociation false by default", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      expect(wrapper.vm.isAssociation).toBe(false)
-    })
+      expect(wrapper.vm.isAssociation).toBe(false);
+    });
 
-    it('should accept isAssociation prop', () => {
+    it("should accept isAssociation prop", () => {
       const wrapper = mount(MockRegisterModal, {
         props: {
-          isAssociation: true
-        }
-      })
+          isAssociation: true,
+        },
+      });
 
-      expect(wrapper.vm.isAssociation).toBe(true)
-    })
+      expect(wrapper.vm.isAssociation).toBe(true);
+    });
 
-    it('should handle isAssociation prop changes', async () => {
+    it("should handle isAssociation prop changes", async () => {
       const wrapper = mount(MockRegisterModal, {
         props: {
-          isAssociation: false
-        }
-      })
+          isAssociation: false,
+        },
+      });
 
-      expect(wrapper.vm.isAssociation).toBe(false)
+      expect(wrapper.vm.isAssociation).toBe(false);
 
-      await wrapper.setProps({ isAssociation: true })
-      await nextTick()
+      await wrapper.setProps({ isAssociation: true });
+      await nextTick();
 
-      expect(wrapper.vm.isAssociation).toBe(true)
-    })
-  })
+      expect(wrapper.vm.isAssociation).toBe(true);
+    });
+  });
 
-  describe('Méthodes', () => {
-    it('should have handleRegister method', () => {
-      const wrapper = mount(MockRegisterModal)
+  describe("Méthodes", () => {
+    it("should have handleRegister method", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      expect(typeof wrapper.vm.handleRegister).toBe('function')
-    })
+      expect(typeof wrapper.vm.handleRegister).toBe("function");
+    });
 
-    it('should have openRegisterModal method', () => {
-      const wrapper = mount(MockRegisterModal)
+    it("should have openRegisterModal method", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      expect(typeof wrapper.vm.openRegisterModal).toBe('function')
-    })
+      expect(typeof wrapper.vm.openRegisterModal).toBe("function");
+    });
 
-    it('should set isRegisterMode to true when handleRegister is called', () => {
-      const wrapper = mount(MockRegisterModal)
+    it("should set isRegisterMode to true when handleRegister is called", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      expect(wrapper.vm.isRegisterMode).toBe(false)
+      expect(wrapper.vm.isRegisterMode).toBe(false);
 
-      wrapper.vm.handleRegister()
+      wrapper.vm.handleRegister();
 
-      expect(wrapper.vm.isRegisterMode).toBe(true)
-    })
+      expect(wrapper.vm.isRegisterMode).toBe(true);
+    });
 
-    it('should call handleRegister when openRegisterModal is called', () => {
-      const wrapper = mount(MockRegisterModal)
-      const handleRegisterSpy = vi.spyOn(wrapper.vm, 'handleRegister')
+    it("should call handleRegister when openRegisterModal is called", () => {
+      const wrapper = mount(MockRegisterModal);
+      const handleRegisterSpy = vi.spyOn(wrapper.vm, "handleRegister");
 
-      wrapper.vm.openRegisterModal()
+      wrapper.vm.openRegisterModal();
 
-      expect(handleRegisterSpy).toHaveBeenCalled()
-    })
-  })
+      expect(handleRegisterSpy).toHaveBeenCalled();
+    });
+  });
 
-  describe('Styles et classes CSS', () => {
-    it('should have proper flex container styling', () => {
-      const wrapper = mount(MockRegisterModal)
+  describe("Styles et classes CSS", () => {
+    it("should have proper flex container styling", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      const flexContainer = wrapper.find('.flex.items-center.justify-center')
-      expect(flexContainer.exists()).toBe(true)
-    })
+      const flexContainer = wrapper.find(".flex.items-center.justify-center");
+      expect(flexContainer.exists()).toBe(true);
+    });
 
-    it('should have proper min height and background', () => {
-      const wrapper = mount(MockRegisterModal)
+    it("should have proper min height and background", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      const background = wrapper.find('.min-h-screen.bg-base-200')
-      expect(background.exists()).toBe(true)
-    })
+      const background = wrapper.find(".min-h-screen.bg-base-200");
+      expect(background.exists()).toBe(true);
+    });
 
-    it('should have proper padding', () => {
-      const wrapper = mount(MockRegisterModal)
+    it("should have proper padding", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      const paddedContainer = wrapper.find('.p-4')
-      expect(paddedContainer.exists()).toBe(true)
-    })
+      const paddedContainer = wrapper.find(".p-4");
+      expect(paddedContainer.exists()).toBe(true);
+    });
 
-    it('should have proper max width container', () => {
-      const wrapper = mount(MockRegisterModal)
+    it("should have proper max width container", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      const maxWidthContainer = wrapper.find('.w-full.max-w-xl')
-      expect(maxWidthContainer.exists()).toBe(true)
-    })
-  })
+      const maxWidthContainer = wrapper.find(".w-full.max-w-xl");
+      expect(maxWidthContainer.exists()).toBe(true);
+    });
+  });
 
-  describe('Accessibilité', () => {
-    it('should have proper container structure', () => {
-      const wrapper = mount(MockRegisterModal)
+  describe("Accessibilité", () => {
+    it("should have proper container structure", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      const mainContainer = wrapper.find('div')
-      expect(mainContainer.exists()).toBe(true)
-    })
+      const mainContainer = wrapper.find("div");
+      expect(mainContainer.exists()).toBe(true);
+    });
 
-    it('should have proper content structure', () => {
-      const wrapper = mount(MockRegisterModal)
+    it("should have proper content structure", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      const contentContainer = wrapper.find('.w-full.max-w-xl')
-      expect(contentContainer.exists()).toBe(true)
-    })
-  })
+      const contentContainer = wrapper.find(".w-full.max-w-xl");
+      expect(contentContainer.exists()).toBe(true);
+    });
+  });
 
-  describe('Comportement du modal', () => {
-    it('should initialize with isRegisterMode false', () => {
-      const wrapper = mount(MockRegisterModal)
+  describe("Comportement du modal", () => {
+    it("should initialize with isRegisterMode false", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      expect(wrapper.vm.isRegisterMode).toBe(false)
-    })
+      expect(wrapper.vm.isRegisterMode).toBe(false);
+    });
 
-    it('should set isRegisterMode to true when register is handled', () => {
-      const wrapper = mount(MockRegisterModal)
+    it("should set isRegisterMode to true when register is handled", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      wrapper.vm.handleRegister()
+      wrapper.vm.handleRegister();
 
-      expect(wrapper.vm.isRegisterMode).toBe(true)
-    })
+      expect(wrapper.vm.isRegisterMode).toBe(true);
+    });
 
-    it('should have registerModal reference', () => {
-      const wrapper = mount(MockRegisterModal)
+    it("should have registerModal reference", () => {
+      const wrapper = mount(MockRegisterModal);
 
-      expect(wrapper.vm.registerModal).toBeDefined()
-    })
-  })
+      expect(wrapper.vm.registerModal).toBeDefined();
+    });
+  });
 
-  describe('Gestion des erreurs', () => {
-    it('should log error when registerModal is null', () => {
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
-      const wrapper = mount(MockRegisterModal)
+  describe("Gestion des erreurs", () => {
+    it("should log error when registerModal is null", () => {
+      const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+      const wrapper = mount(MockRegisterModal);
 
       // Simuler registerModal null
-      wrapper.vm.registerModal = null
-      wrapper.vm.handleRegister()
+      wrapper.vm.registerModal = null;
+      wrapper.vm.handleRegister();
 
-      expect(consoleSpy).toHaveBeenCalledWith('registerModal est null')
-      
-      consoleSpy.mockRestore()
-    })
-  })
+      expect(consoleSpy).toHaveBeenCalledWith("registerModal est null");
 
-  describe('Responsive design', () => {
-    it('should have responsive width classes', () => {
-      const wrapper = mount(MockRegisterModal)
+      consoleSpy.mockRestore();
+    });
+  });
 
-      const responsiveContainer = wrapper.find('.w-full.max-w-xl')
-      expect(responsiveContainer.exists()).toBe(true)
-    })
+  describe("Responsive design", () => {
+    it("should have responsive width classes", () => {
+      const wrapper = mount(MockRegisterModal);
 
-    it('should have proper min height for full screen', () => {
-      const wrapper = mount(MockRegisterModal)
+      const responsiveContainer = wrapper.find(".w-full.max-w-xl");
+      expect(responsiveContainer.exists()).toBe(true);
+    });
 
-      const fullHeightContainer = wrapper.find('.min-h-screen')
-      expect(fullHeightContainer.exists()).toBe(true)
-    })
-  })
-}) 
+    it("should have proper min height for full screen", () => {
+      const wrapper = mount(MockRegisterModal);
+
+      const fullHeightContainer = wrapper.find(".min-h-screen");
+      expect(fullHeightContainer.exists()).toBe(true);
+    });
+  });
+});

@@ -1,120 +1,238 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-screen bg-base-200 py-8">
-    <div class="w-full max-w-2xl mx-auto px-2  p-6">
-      <h1 class="text-3xl font-bold mb-8 text-center text-base-content">{{ t('drawer-content.account.edit_profile') }}</h1>
+  <div
+    class="flex flex-col items-center justify-center min-h-screen bg-base-200 py-8"
+  >
+    <div class="w-full max-w-2xl mx-auto px-2 p-6">
+      <h1 class="text-3xl font-bold mb-8 text-center text-base-content">
+        {{ t("drawer-content.account.edit_profile") }}
+      </h1>
 
       <!-- Alert messages -->
-      <div v-if="alertStatus === 'success'" role="alert" class="alert alert-success mb-4 shadow-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <div
+        v-if="alertStatus === 'success'"
+        role="alert"
+        class="alert alert-success mb-4 shadow-lg"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="stroke-current shrink-0 h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
         <span>{{ alertMessage }}</span>
-        <button class="btn btn-sm btn-ghost" @click="alertStatus = null">×</button>
+        <button class="btn btn-sm btn-ghost" @click="alertStatus = null">
+          ×
+        </button>
       </div>
-      <div v-if="alertStatus === 'error'" role="alert" class="alert alert-error mb-4 shadow-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <div
+        v-if="alertStatus === 'error'"
+        role="alert"
+        class="alert alert-error mb-4 shadow-lg"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="stroke-current shrink-0 h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
         <span>{{ alertMessage }}</span>
-        <button class="btn btn-sm btn-ghost" @click="alertStatus = null">×</button>
+        <button class="btn btn-sm btn-ghost" @click="alertStatus = null">
+          ×
+        </button>
       </div>
 
       <!-- Avatar/logo -->
       <div class="flex flex-col items-center mb-8">
-        <div class="w-32 h-32 rounded-full overflow-hidden bg-base-300 relative group mb-2 shadow-lg border-4 border-base-200">
+        <div
+          class="w-32 h-32 rounded-full overflow-hidden bg-base-300 relative group mb-2 shadow-lg border-4 border-base-200"
+        >
           <!-- Loading spinner -->
-          <div v-if="isImageUploading" class="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center z-10">
-            <div class="loading loading-spinner loading-lg text-primary"></div>
+          <div
+            v-if="isImageUploading"
+            class="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center z-10"
+          >
+            <div class="loading loading-spinner loading-lg text-primary" />
           </div>
 
           <!-- Profile image -->
-          <img 
-            v-if="profileImageUrl" 
-            :src="profileImageUrl" 
-            alt="Logo de l'association" 
+          <img
+            v-if="profileImageUrl"
+            :src="profileImageUrl"
+            alt="Logo de l'association"
             class="w-full h-full object-cover"
             width="200"
             height="200"
             loading="lazy"
             decoding="async"
-          />
+          >
           <div v-else class="w-full h-full flex items-center justify-center">
             <UserRound class="w-16 h-16 text-base-content opacity-50" />
           </div>
 
           <!-- Upload overlay -->
-          <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <label for="profile-image" class="cursor-pointer text-white text-sm font-medium flex flex-col items-center">
+          <div
+            class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            <label
+              for="profile-image"
+              class="cursor-pointer text-white text-sm font-medium flex flex-col items-center"
+            >
               <Upload class="w-6 h-6 mx-auto mb-1" />
               Changer
             </label>
-            <input id="profile-image" type="file" accept="image/*" class="hidden" @change="handleImageChange" />
+            <input
+              id="profile-image"
+              type="file"
+              accept="image/*"
+              class="hidden"
+              @change="handleImageChange"
+            >
           </div>
         </div>
         <span class="text-base-content/70 text-sm">Logo de l'association</span>
       </div>
 
       <!-- Edit profile form -->
-      <form @submit.prevent="saveProfile" class="space-y-6">
-        <div class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form class="space-y-6" @submit.prevent="saveProfile">
+        <div
+          class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
           <div class="form-control w-full">
-            <label class="label"><span class="label-text text-base-content">{{ t('auth.association.name') || 'Association Name' }}</span></label>
-            <input type="text" v-model="form.associationName" class="input input-bordered w-full" aria-label="Nom de l'association">
+            <label class="label"><span class="label-text text-base-content">{{
+              t("auth.association.name") || "Association Name"
+            }}</span></label>
+            <input
+              v-model="form.associationName"
+              type="text"
+              class="input input-bordered w-full"
+              aria-label="Nom de l'association"
+            >
           </div>
           <div class="form-control w-full">
-            <label class="label"><span class="label-text text-base-content">{{ t('auth.association.type') || 'Type' }}</span></label>
-            <input type="text" v-model="form.type" class="input input-bordered w-full" aria-label="Type d'association">
+            <label class="label"><span class="label-text text-base-content">{{
+              t("auth.association.type") || "Type"
+            }}</span></label>
+            <input
+              v-model="form.type"
+              type="text"
+              class="input input-bordered w-full"
+              aria-label="Type d'association"
+            >
           </div>
         </div>
-        <div class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div
+          class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
           <div class="form-control w-full">
-            <label class="label"><span class="label-text text-base-content">{{ t('auth.association.phone') || 'Phone' }}</span></label>
-            <input type="tel" v-model="form.phone" class="input input-bordered w-full" aria-label="Numéro de téléphone de l'association">
+            <label class="label"><span class="label-text text-base-content">{{
+              t("auth.association.phone") || "Phone"
+            }}</span></label>
+            <input
+              v-model="form.phone"
+              type="tel"
+              class="input input-bordered w-full"
+              aria-label="Numéro de téléphone de l'association"
+            >
           </div>
           <div class="form-control w-full">
-            <label class="label"><span class="label-text text-base-content">{{ t('auth.association.country') || 'Country' }}</span></label>
-            <input type="text" v-model="form.country" class="input input-bordered w-full" aria-label="Pays de l'association">
+            <label class="label"><span class="label-text text-base-content">{{
+              t("auth.association.country") || "Country"
+            }}</span></label>
+            <input
+              v-model="form.country"
+              type="text"
+              class="input input-bordered w-full"
+              aria-label="Pays de l'association"
+            >
           </div>
         </div>
-        <div class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div
+          class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
           <div class="form-control w-full">
-            <label class="label"><span class="label-text text-base-content">{{ t('auth.association.city') || 'City' }}</span></label>
-            <input type="text" v-model="form.city" class="input input-bordered w-full" aria-label="Ville de l'association">
+            <label class="label"><span class="label-text text-base-content">{{
+              t("auth.association.city") || "City"
+            }}</span></label>
+            <input
+              v-model="form.city"
+              type="text"
+              class="input input-bordered w-full"
+              aria-label="Ville de l'association"
+            >
           </div>
           <div class="form-control w-full">
-            <label class="label"><span class="label-text text-base-content">{{ t('auth.association.postal_code') || 'Postal Code' }}</span></label>
-            <input type="text" v-model="form.postalCode" class="input input-bordered w-full" aria-label="Code postal de l'association">
+            <label class="label"><span class="label-text text-base-content">{{
+              t("auth.association.postal_code") || "Postal Code"
+            }}</span></label>
+            <input
+              v-model="form.postalCode"
+              type="text"
+              class="input input-bordered w-full"
+              aria-label="Code postal de l'association"
+            >
           </div>
         </div>
         <div class="bg-base-100 rounded-xl shadow p-6">
           <div class="form-control w-full">
-            <label class="label"><span class="label-text text-base-content">{{ t('auth.association.bio') || 'Bio' }}</span></label>
-            <textarea v-model="form.bio" class="textarea textarea-bordered h-24 w-full" aria-label="Description de l'association"></textarea>
+            <label class="label"><span class="label-text text-base-content">{{
+              t("auth.association.bio") || "Bio"
+            }}</span></label>
+            <textarea
+              v-model="form.bio"
+              class="textarea textarea-bordered h-24 w-full"
+              aria-label="Description de l'association"
+            />
           </div>
         </div>
         <div class="flex justify-end">
-          <button type="submit" class="btn btn-primary btn-wide" :disabled="!isFormChanged">
-            <span v-if="isImageUploading" class="loading loading-spinner loading-xs mr-2"></span>
+          <button
+            type="submit"
+            class="btn btn-primary btn-wide"
+            :disabled="!isFormChanged"
+          >
+            <span
+              v-if="isImageUploading"
+              class="loading loading-spinner loading-xs mr-2"
+            />
             Sauvegarder
           </button>
         </div>
       </form>
     </div>
     <ErrorPopup
-        :show-error-modal="showErrorModal"
-        :error-type="errorType"
-        @reload="handleReload"
-        @goHome="handleGoHome"
+      :show-error-modal="showErrorModal"
+      :error-type="errorType"
+      @reload="handleReload"
+      @go-home="handleGoHome"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, ref} from 'vue'
-import {Upload, UserRound} from 'lucide-vue-next'
-import {useUser} from '~/composables/auth/useUser'
+import { computed, onMounted, ref } from 'vue'
+import { Upload, UserRound } from 'lucide-vue-next'
 
-import {useI18n} from 'vue-i18n'
-import {isEqual} from 'lodash'
-import {useAssociationAuth} from "~/composables/useAssociation";
-import {useNavigation} from "~/composables/useNavigation";
-import ErrorPopup from "~/components/utils/ErrorPopup.vue";
+import { useI18n } from 'vue-i18n'
+// eslint-disable-next-line import/named
+import { isEqual } from 'lodash'
+import { useUser } from '~/composables/auth/useUser'
+import { useAssociationAuth } from '~/composables/useAssociation'
+import { useNavigation } from '~/composables/useNavigation'
+import ErrorPopup from '~/components/utils/ErrorPopup.vue'
 
 const { t } = useI18n()
 
@@ -127,9 +245,17 @@ definePageMeta({
 useHead({
   title: 'Modifier le profil - Benevoclic',
   meta: [
-    { name: 'description', content: 'Modifiez les informations de votre association : nom, type, coordonnées et description. Gérez votre profil Benevoclic.' },
+    {
+      name: 'description',
+      content:
+        'Modifiez les informations de votre association : nom, type, coordonnées et description. Gérez votre profil Benevoclic.'
+    },
     { property: 'og:title', content: 'Modifier le profil - Benevoclic' },
-    { property: 'og:description', content: 'Modifiez les informations de votre association : nom, type, coordonnées et description.' },
+    {
+      property: 'og:description',
+      content:
+        'Modifiez les informations de votre association : nom, type, coordonnées et description.'
+    },
     { property: 'og:type', content: 'website' },
     { name: 'robots', content: 'noindex, nofollow' } // Page privée
   ]
@@ -137,23 +263,22 @@ useHead({
 
 const auth = useUser()
 const associationAuth = useAssociationAuth()
-const {navigateToRoute} = useNavigation()
+const { navigateToRoute } = useNavigation()
 
 onMounted(async () => {
   try {
     await initData()
-  }catch(error) {
+  } catch (error) {
     handleError(error)
   }
 
-  initForm();
-
+  initForm()
 })
 
-function initForm(){
+function initForm () {
   if (associationAuth.association.value) {
-
-    const associationName = associationAuth.association.value.associationName || ''
+    const associationName =
+      associationAuth.association.value.associationName || ''
     const phone = associationAuth.association.value.phone || ''
     const city = associationAuth.association.value.city || ''
     const postalCode = associationAuth.association.value.postalCode || ''
@@ -179,32 +304,32 @@ function initForm(){
   }
 }
 
-const showErrorModal = ref(false);
-const errorType = ref<'4xx' | '5xx' | null>(null);
+const showErrorModal = ref(false)
+const errorType = ref<'4xx' | '5xx' | null>(null)
 
-function handleReload() {
-  window.location.reload();
+function handleReload () {
+  window.location.reload()
 }
-async function handleGoHome() {
-  await navigateToRoute('/');
+async function handleGoHome () {
+  await navigateToRoute('/')
 }
 
-async function initData() {
+async function initData () {
   await auth.initializeUser()
   if (!associationAuth.association.value) {
     await associationAuth.getAssociationInfo()
   }
 }
 
-function handleError(error: any) {
+function handleError (error: any) {
   if (error?.response?.status >= 500 && error?.response?.status < 600) {
-    errorType.value = '5xx';
-    showErrorModal.value = true;
+    errorType.value = '5xx'
+    showErrorModal.value = true
   } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
-    errorType.value = '4xx';
-    showErrorModal.value = true;
+    errorType.value = '4xx'
+    showErrorModal.value = true
   } else {
-    console.error('Erreur inattendue:', error);
+    console.error('Erreur inattendue:', error)
   }
 }
 
@@ -215,7 +340,7 @@ const form = ref({
   postalCode: '',
   bio: '',
   type: '',
-  country: '',
+  country: ''
 })
 
 const initialForm = ref({
@@ -225,14 +350,14 @@ const initialForm = ref({
   postalCode: '',
   bio: '',
   type: '',
-  country: '',
+  country: ''
 })
 
 const alertStatus = ref<'success' | 'error' | null>(null)
 const alertMessage = ref('')
 const isImageUploading = ref(false)
 
-let profileImageUrl = computed(() => {
+const profileImageUrl = computed(() => {
   return auth.user.value?.avatarFileKey
 })
 
@@ -240,9 +365,7 @@ const isFormChanged = computed(() => {
   return !isEqual(form.value, initialForm.value)
 })
 
-
-
-function handleImageChange(event: Event) {
+function handleImageChange (event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (file) {
     isImageUploading.value = true
@@ -252,20 +375,24 @@ function handleImageChange(event: Event) {
       try {
         await auth.updateAvatar(file)
         alertStatus.value = 'success'
-        alertMessage.value = t('drawer-content.account.profile_updated_success') || 'Profile image updated successfully'
+        alertMessage.value =
+          t('drawer-content.account.profile_updated_success') ||
+          'Profile image updated successfully'
         setTimeout(() => {
           alertStatus.value = null
-        }, 1000*3)
+        }, 1000 * 3)
       } catch (error) {
         // Show error alert
         alertStatus.value = 'error'
-        alertMessage.value = t('drawer-content.account.profile_update_error') || 'Error updating profile image. Please try again.'
+        alertMessage.value =
+          t('drawer-content.account.profile_update_error') ||
+          'Error updating profile image. Please try again.'
         handleError(error)
 
         // Auto-hide alert after 10 seconds
         setTimeout(() => {
           alertStatus.value = null
-        }, 1000*3)
+        }, 1000 * 3)
       } finally {
         isImageUploading.value = false
       }
@@ -274,20 +401,27 @@ function handleImageChange(event: Event) {
   }
 }
 
-async function saveProfile() {
+async function saveProfile () {
   try {
-    await associationAuth.updateAssociation(form.value, auth.user.value?.userId)
+    await associationAuth.updateAssociation(
+      form.value,
+      auth.user.value?.userId
+    )
 
     initialForm.value = { ...form.value }
 
     alertStatus.value = 'success'
-    alertMessage.value = t('drawer-content.account.profile_updated_success') || 'Profile updated successfully'
+    alertMessage.value =
+      t('drawer-content.account.profile_updated_success') ||
+      'Profile updated successfully'
     setTimeout(() => {
       alertStatus.value = null
     }, 1000)
   } catch (error) {
     alertStatus.value = 'error'
-    alertMessage.value = t('drawer-content.account.profile_update_error') || 'Error updating profile. Please try again.'
+    alertMessage.value =
+      t('drawer-content.account.profile_update_error') ||
+      'Error updating profile. Please try again.'
     console.error('Error updating profile:', error)
     handleError(error)
     setTimeout(() => {

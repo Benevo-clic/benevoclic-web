@@ -2,192 +2,192 @@
 
 /* Respect des préférences utilisateur */
 @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @media (prefers-contrast: more) {
-    .badge-outline {
-        border-width: 2px !important;
-        font-weight: 700 !important;
-    }
+  .badge-outline {
+    border-width: 2px !important;
+    font-weight: 700 !important;
+  }
 
-    .btn {
-        border-width: 2px !important;
-    }
+  .btn {
+    border-width: 2px !important;
+  }
 
-    .card {
-        border-width: 2px !important;
-    }
+  .card {
+    border-width: 2px !important;
+  }
 }
 
 /* Focus visible amélioré */
 *:focus-visible {
-    outline: 2px solid oklch(74% 0.16 232.661) !important;
-    outline-offset: 2px !important;
+  outline: 2px solid oklch(74% 0.16 232.661) !important;
+  outline-offset: 2px !important;
 }
 
 /* Mode sombre */
 @media (prefers-color-scheme: dark) {
-    *:focus-visible {
-        outline-color: oklch(92% 0.004 286.32) !important;
-    }
+  *:focus-visible {
+    outline-color: oklch(92% 0.004 286.32) !important;
+  }
 }
 
 /* Amélioration des contrastes pour les badges */
 .badge-outline {
-    color: oklch(18% 0.006 285.885) !important;
-    border-color: oklch(18% 0.006 285.885) !important;
-    background-color: transparent !important;
+  color: oklch(18% 0.006 285.885) !important;
+  border-color: oklch(18% 0.006 285.885) !important;
+  background-color: transparent !important;
 }
 
 .badge-outline:hover {
-    color: oklch(98% 0.034 272.788) !important;
-    background-color: #eb5577 !important;
-    border-color: #eb5577 !important;
+  color: oklch(98% 0.034 272.788) !important;
+  background-color: #eb5577 !important;
+  border-color: #eb5577 !important;
 }
 
 /* Mode sombre pour les badges */
 @media (prefers-color-scheme: dark) {
-    .badge-outline {
-        color: oklch(99% 0.029 256.847) !important;
-        border-color: oklch(99% 0.029 256.847) !important;
-    }
+  .badge-outline {
+    color: oklch(99% 0.029 256.847) !important;
+    border-color: oklch(99% 0.029 256.847) !important;
+  }
 
-    .badge-outline:hover {
-        color: oklch(98% 0 0) !important;
-        background-color: #eb5577 !important;
-        border-color: #eb5577 !important;
-    }
+  .badge-outline:hover {
+    color: oklch(98% 0 0) !important;
+    background-color: #eb5577 !important;
+    border-color: #eb5577 !important;
+  }
 }
 
 /* Amélioration des cartes cliquables */
 .card[role="button"]:focus-visible {
-    outline: 2px solid oklch(74% 0.16 232.661) !important;
-    outline-offset: 2px !important;
-    transform: none !important;
+  outline: 2px solid oklch(74% 0.16 232.661) !important;
+  outline-offset: 2px !important;
+  transform: none !important;
 }
 
 @media (prefers-color-scheme: dark) {
-    .card[role="button"]:focus-visible {
-        outline-color: oklch(92% 0.004 286.32) !important;
-    }
+  .card[role="button"]:focus-visible {
+    outline-color: oklch(92% 0.004 286.32) !important;
+  }
 }
 
 /* Amélioration des boutons */
 .btn:focus-visible {
-    outline: 2px solid oklch(74% 0.16 232.661) !important;
-    outline-offset: 2px !important;
+  outline: 2px solid oklch(74% 0.16 232.661) !important;
+  outline-offset: 2px !important;
 }
 
 @media (prefers-color-scheme: dark) {
-    .btn:focus-visible {
-        outline-color: oklch(92% 0.004 286.32) !important;
-    }
+  .btn:focus-visible {
+    outline-color: oklch(92% 0.004 286.32) !important;
+  }
 }
 
 /* Amélioration des formulaires */
 .input:focus-visible,
 .select:focus-visible,
 .textarea:focus-visible {
-    outline: 2px solid oklch(74% 0.16 232.661) !important;
-    outline-offset: 2px !important;
-    border-color: oklch(74% 0.16 232.661) !important;
+  outline: 2px solid oklch(74% 0.16 232.661) !important;
+  outline-offset: 2px !important;
+  border-color: oklch(74% 0.16 232.661) !important;
 }
 
 @media (prefers-color-scheme: dark) {
-    .input:focus-visible,
-    .select:focus-visible,
-    .textarea:focus-visible {
-        outline-color: oklch(92% 0.004 286.32) !important;
-        border-color: oklch(92% 0.004 286.32) !important;
-    }
+  .input:focus-visible,
+  .select:focus-visible,
+  .textarea:focus-visible {
+    outline-color: oklch(92% 0.004 286.32) !important;
+    border-color: oklch(92% 0.004 286.32) !important;
+  }
 }
 
 /* Screen reader only */
 .sr-only {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: -1px !important;
-    overflow: hidden !important;
-    clip: rect(0, 0, 0, 0) !important;
-    white-space: nowrap !important;
-    border: 0 !important;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
 /* Amélioration des images */
 img[alt=""] {
-    border: 1px dashed oklch(74% 0.16 232.661);
+  border: 1px dashed oklch(74% 0.16 232.661);
 }
 
 /* Mode contraste élevé */
 .high-contrast {
-    --text-color: oklch(0% 0 0);
-    --bg-color: oklch(100% 0 0);
-    --border-color: oklch(0% 0 0);
+  --text-color: oklch(0% 0 0);
+  --bg-color: oklch(100% 0 0);
+  --border-color: oklch(0% 0 0);
 }
 
 .high-contrast * {
-    color: var(--text-color) !important;
-    background-color: var(--bg-color) !important;
-    border-color: var(--border-color) !important;
+  color: var(--text-color) !important;
+  background-color: var(--bg-color) !important;
+  border-color: var(--border-color) !important;
 }
 
 .high-contrast .badge-outline {
-    border-width: 2px !important;
-    font-weight: 700 !important;
+  border-width: 2px !important;
+  font-weight: 700 !important;
 }
 
 .high-contrast .btn {
-    border-width: 2px !important;
+  border-width: 2px !important;
 }
 
 .high-contrast .card {
-    border-width: 2px !important;
+  border-width: 2px !important;
 }
 
 /* Skip links */
 .skip-link {
-    position: absolute;
-    top: -40px;
-    left: 6px;
-    background: oklch(74% 0.16 232.661);
-    color: white;
-    padding: 8px 16px;
-    text-decoration: none;
-    border-radius: 4px;
-    z-index: 1001;
-    font-weight: 600;
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: oklch(74% 0.16 232.661);
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1001;
+  font-weight: 600;
 }
 
 .skip-link:focus {
-    top: 6px;
+  top: 6px;
 }
 
 /* Amélioration des annonces pour lecteurs d'écran */
 [aria-live="polite"],
 [aria-live="assertive"] {
-    position: absolute;
-    left: -10000px;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 /* Amélioration des états de chargement */
 .loading[aria-label]::after {
-    content: attr(aria-label);
-    position: absolute;
-    left: -9999px;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
+  content: attr(aria-label);
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
