@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {$fetch} from 'ofetch'
+import { useNuxtApp, useRequestFetch } from '#app'
 import type {UserInfo} from "~/common/types/auth.type";
 import type {User} from "firebase/auth";
 import {
@@ -8,7 +8,6 @@ import {
   reauthenticateWithCredential,
   updatePassword
 } from "firebase/auth";
-import { useNuxtApp } from '#app';
 import {useAuthStore} from "~/stores/auth/auth.store";
 
 // Fonction utilitaire pour obtenir Firebase de manière sécurisée
@@ -110,6 +109,7 @@ export const useUserStore = defineStore('user', {
         this.error = null;
         const authStore = useAuthStore();
         await authStore.refreshTokens();
+        const $fetch = useRequestFetch()
         const userData = await $fetch<UserInfo>('/api/user/current-user',{
             method: 'GET',
             credentials: 'include',
@@ -145,6 +145,7 @@ export const useUserStore = defineStore('user', {
       this.loading = true;
       this.error = null;
       try {
+        const $fetch = useRequestFetch()
         const response = await $fetch<UserInfo>(`/api/user/${id}`,{
             method: 'GET',
             credentials: 'include',
@@ -168,6 +169,7 @@ export const useUserStore = defineStore('user', {
       this.loading = true;
       this.error = null;
       try {
+        const $fetch = useRequestFetch()
         const response = await $fetch<UserInfo>(`/api/user/${id}/isCompleted/${isCompleted}`, {
           method: 'PATCH',
           credentials: 'include'
@@ -192,6 +194,7 @@ export const useUserStore = defineStore('user', {
       this.error = null;
 
       try {
+        const $fetch = useRequestFetch()
         const response = await $fetch('/api/user/updateProfileUser', {
           method: 'PATCH',
           credentials: 'include',
@@ -233,6 +236,7 @@ export const useUserStore = defineStore('user', {
           formData.append('file', file)
 
 
+          const $fetch = useRequestFetch()
           const response = await $fetch<UserInfo>(
               `/api/user/${user.uid}/update-avatar`,
               {
@@ -258,6 +262,7 @@ export const useUserStore = defineStore('user', {
       this.error = null;
 
       try {
+        const $fetch = useRequestFetch()
         const response = await $fetch<{ approved: boolean }>(`/api/admin/${this.user?.userId}/check-approval-status`, {
           method: 'GET',
           credentials: 'include'
@@ -284,7 +289,8 @@ export const useUserStore = defineStore('user', {
         throw new Error(this.error);
       }
       try {
-        const response = await $fetch(`/api/user/${this.user?.userId}`, {
+        const $fetch = useRequestFetch()
+        const response = await $fetch<{ success?: boolean }>(`/api/user/${this.user?.userId}`, {
           method: 'DELETE',
           credentials: 'include'
         });
