@@ -11,7 +11,7 @@
           :src="coverImageUrl"
           alt="Image de l'événement"
           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        >
+        />
         <div
           v-else
           class="w-full h-full flex flex-col items-center justify-center text-base-content/60"
@@ -34,9 +34,7 @@
               </svg>
             </div>
           </div>
-          <p class="text-sm font-medium">
-            Aucune image
-          </p>
+          <p class="text-sm font-medium">Aucune image</p>
         </div>
       </figure>
 
@@ -67,9 +65,9 @@
         <div class="flex items-center gap-2">
           <Calendar class="h-4 w-4 text-primary" />
           <span class="font-medium">{{
-            new Date(announcement.dateEvent).toLocaleDateString("fr-FR", {
-              day: "2-digit",
-              month: "2-digit",
+            new Date(announcement.dateEvent).toLocaleDateString('fr-FR', {
+              day: '2-digit',
+              month: '2-digit'
             })
           }}</span>
           <span class="text-base-content/60">•</span>
@@ -77,14 +75,9 @@
         </div>
 
         <!-- Ville -->
-        <div
-          v-if="announcement.addressAnnouncement?.city"
-          class="flex items-center gap-2"
-        >
+        <div v-if="announcement.addressAnnouncement?.city" class="flex items-center gap-2">
           <MapPin class="h-4 w-4 text-secondary" />
-          <span class="truncate max-w-[100px]">{{
-            announcement.addressAnnouncement.city
-          }}</span>
+          <span class="truncate max-w-[100px]">{{ announcement.addressAnnouncement.city }}</span>
         </div>
       </div>
 
@@ -92,17 +85,17 @@
       <div class="flex gap-6 mb-4 text-sm">
         <div class="flex items-center gap-2">
           <Users class="h-4 w-4 text-primary" />
-          <span class="font-medium">{{ announcement.nbParticipants }}/{{
-            announcement.maxParticipants
-          }}</span>
+          <span class="font-medium"
+            >{{ announcement.nbParticipants }}/{{ announcement.maxParticipants }}</span
+          >
           <span class="text-base-content/60">participants</span>
         </div>
 
         <div class="flex items-center gap-2">
           <HeartHandshake class="h-4 w-4 text-secondary" />
-          <span class="font-medium">{{ announcement.nbVolunteers }}/{{
-            announcement.maxVolunteers
-          }}</span>
+          <span class="font-medium"
+            >{{ announcement.nbVolunteers }}/{{ announcement.maxVolunteers }}</span
+          >
           <span class="text-base-content/60">bénévoles</span>
         </div>
       </div>
@@ -119,17 +112,14 @@
             role="button"
             :aria-label="`Filtrer par tag : ${tag}`"
           >
-            <span
-              class="text-base-content/70 group-hover:text-primary transition-colors"
-            >{{ tag }}</span>
+            <span class="text-base-content/70 group-hover:text-primary transition-colors">{{
+              tag
+            }}</span>
           </div>
-          <div
-            v-if="announcement.tags.length > 2"
-            class="badge badge-ghost text-sm text-neutral"
-          >
-            <span
-              class="text-base-content/70 group-hover:text-primary transition-colors"
-            >+{{ announcement.tags.length - 2 }}</span>
+          <div v-if="announcement.tags.length > 2" class="badge badge-ghost text-sm text-neutral">
+            <span class="text-base-content/70 group-hover:text-primary transition-colors"
+              >+{{ announcement.tags.length - 2 }}</span
+            >
           </div>
         </div>
 
@@ -159,41 +149,41 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { HeartHandshake, Users, Calendar, MapPin } from 'lucide-vue-next'
-import { navigateTo } from '#app'
-import type { Announcement } from '~/common/interface/event.interface'
-import { EventStatus } from '~/common/enums/event.enum'
+  import { computed } from 'vue'
+  import { HeartHandshake, Users, Calendar, MapPin } from 'lucide-vue-next'
+  import { navigateTo } from '#app'
+  import type { Announcement } from '~/common/interface/event.interface'
+  import { EventStatus } from '~/common/enums/event.enum'
 
-const props = defineProps<{
-  announcement: Announcement;
-}>()
+  const props = defineProps<{
+    announcement: Announcement
+  }>()
 
-const statusBadgeClass = computed(() => {
-  switch (props.announcement.status) {
-    case EventStatus.ACTIVE:
-      return 'badge-success'
-    case EventStatus.INACTIVE:
-      return 'badge-warning'
-    case EventStatus.COMPLETED:
-      return 'badge-neutral'
-    default:
-      return 'badge-primary'
+  const statusBadgeClass = computed(() => {
+    switch (props.announcement.status) {
+      case EventStatus.ACTIVE:
+        return 'badge-success'
+      case EventStatus.INACTIVE:
+        return 'badge-warning'
+      case EventStatus.COMPLETED:
+        return 'badge-neutral'
+      default:
+        return 'badge-primary'
+    }
+  })
+
+  const coverImageUrl = computed(() => {
+    return props.announcement.announcementImage
+  })
+
+  const MAX_LEN = 100
+
+  const truncatedDescription = computed(() => {
+    const desc = props.announcement.description || ''
+    return desc.length > MAX_LEN ? desc.substring(0, MAX_LEN) + '…' : desc
+  })
+
+  function goToDetails() {
+    navigateTo(`/association/events/announcement/${props.announcement._id}`)
   }
-})
-
-const coverImageUrl = computed(() => {
-  return props.announcement.announcementImage
-})
-
-const MAX_LEN = 100
-
-const truncatedDescription = computed(() => {
-  const desc = props.announcement.description || ''
-  return desc.length > MAX_LEN ? desc.substring(0, MAX_LEN) + '…' : desc
-})
-
-function goToDetails () {
-  navigateTo(`/association/events/announcement/${props.announcement._id}`)
-}
 </script>

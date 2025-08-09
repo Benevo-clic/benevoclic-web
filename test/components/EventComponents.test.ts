@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { describe, it, expect } from "vitest";
-import { mount } from "@vue/test-utils";
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
 
 // Composant simple pour tester les événements
 const SimpleEventCard = {
@@ -24,196 +24,192 @@ const SimpleEventCard = {
     location: String,
     isFavorite: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
-  emits: ["click", "favorite"],
+  emits: ['click', 'favorite'],
   methods: {
     handleClick() {
-      this.$emit("click", this.title);
+      this.$emit('click', this.title)
     },
     toggleFavorite() {
-      this.$emit("favorite", this.title);
+      this.$emit('favorite', this.title)
     },
     formatDate(date: string) {
-      return new Date(date).toLocaleDateString("fr-FR");
-    },
-  },
-};
+      return new Date(date).toLocaleDateString('fr-FR')
+    }
+  }
+}
 
-describe("Event Components", () => {
-  describe("SimpleEventCard", () => {
+describe('Event Components', () => {
+  describe('SimpleEventCard', () => {
     const mockEvent = {
-      title: "Test Event",
-      description: "This is a test event description",
-      date: "2024-12-25T10:00:00Z",
-      location: "Paris, France",
-    };
+      title: 'Test Event',
+      description: 'This is a test event description',
+      date: '2024-12-25T10:00:00Z',
+      location: 'Paris, France'
+    }
 
-    it("should render event card component", () => {
+    it('should render event card component', () => {
       const wrapper = mount(SimpleEventCard, {
-        props: mockEvent,
-      });
+        props: mockEvent
+      })
 
-      expect(wrapper.exists()).toBe(true);
-      expect(wrapper.find(".event-card").exists()).toBe(true);
-    });
+      expect(wrapper.exists()).toBe(true)
+      expect(wrapper.find('.event-card').exists()).toBe(true)
+    })
 
-    it("should display event information correctly", () => {
+    it('should display event information correctly', () => {
       const wrapper = mount(SimpleEventCard, {
-        props: mockEvent,
-      });
+        props: mockEvent
+      })
 
-      expect(wrapper.find(".event-title").text()).toBe("Test Event");
-      expect(wrapper.find(".event-description").text()).toBe(
-        "This is a test event description",
-      );
-      expect(wrapper.find(".event-location").text()).toBe("Paris, France");
-    });
+      expect(wrapper.find('.event-title').text()).toBe('Test Event')
+      expect(wrapper.find('.event-description').text()).toBe('This is a test event description')
+      expect(wrapper.find('.event-location').text()).toBe('Paris, France')
+    })
 
-    it("should format date correctly", () => {
+    it('should format date correctly', () => {
       const wrapper = mount(SimpleEventCard, {
-        props: mockEvent,
-      });
+        props: mockEvent
+      })
 
-      expect(wrapper.find(".event-date").text()).toBe("25/12/2024");
-    });
+      expect(wrapper.find('.event-date').text()).toBe('25/12/2024')
+    })
 
-    it("should emit click event when card is clicked", async () => {
+    it('should emit click event when card is clicked', async () => {
       const wrapper = mount(SimpleEventCard, {
-        props: mockEvent,
-      });
+        props: mockEvent
+      })
 
-      await wrapper.find(".event-card").trigger("click");
+      await wrapper.find('.event-card').trigger('click')
 
-      expect(wrapper.emitted("click")).toBeTruthy();
-      expect(wrapper.emitted("click")?.[0]).toEqual(["Test Event"]);
-    });
+      expect(wrapper.emitted('click')).toBeTruthy()
+      expect(wrapper.emitted('click')?.[0]).toEqual(['Test Event'])
+    })
 
-    it("should emit favorite event when favorite button is clicked", async () => {
+    it('should emit favorite event when favorite button is clicked', async () => {
       const wrapper = mount(SimpleEventCard, {
-        props: mockEvent,
-      });
+        props: mockEvent
+      })
 
-      await wrapper.find(".favorite-btn").trigger("click");
+      await wrapper.find('.favorite-btn').trigger('click')
 
-      expect(wrapper.emitted("favorite")).toBeTruthy();
-      expect(wrapper.emitted("favorite")?.[0]).toEqual(["Test Event"]);
-    });
+      expect(wrapper.emitted('favorite')).toBeTruthy()
+      expect(wrapper.emitted('favorite')?.[0]).toEqual(['Test Event'])
+    })
 
-    it("should show favorite state correctly", () => {
+    it('should show favorite state correctly', () => {
       const wrapper = mount(SimpleEventCard, {
         props: {
           ...mockEvent,
-          isFavorite: true,
-        },
-      });
+          isFavorite: true
+        }
+      })
 
-      const favoriteBtn = wrapper.find(".favorite-btn");
-      expect(favoriteBtn.classes()).toContain("is-favorite");
-      expect(favoriteBtn.text()).toBe("❤️");
-    });
+      const favoriteBtn = wrapper.find('.favorite-btn')
+      expect(favoriteBtn.classes()).toContain('is-favorite')
+      expect(favoriteBtn.text()).toBe('❤️')
+    })
 
-    it("should show unfavorite state correctly", () => {
+    it('should show unfavorite state correctly', () => {
       const wrapper = mount(SimpleEventCard, {
         props: {
           ...mockEvent,
-          isFavorite: false,
-        },
-      });
+          isFavorite: false
+        }
+      })
 
-      const favoriteBtn = wrapper.find(".favorite-btn");
-      expect(favoriteBtn.classes()).not.toContain("is-favorite");
-      expect(favoriteBtn.text()).toBe("🤍");
-    });
+      const favoriteBtn = wrapper.find('.favorite-btn')
+      expect(favoriteBtn.classes()).not.toContain('is-favorite')
+      expect(favoriteBtn.text()).toBe('🤍')
+    })
 
-    it("should handle different event data", () => {
+    it('should handle different event data', () => {
       const differentEvent = {
-        title: "Another Event",
-        description: "Different description",
-        date: "2024-01-01T00:00:00Z",
-        location: "Lyon, France",
-      };
+        title: 'Another Event',
+        description: 'Different description',
+        date: '2024-01-01T00:00:00Z',
+        location: 'Lyon, France'
+      }
 
       const wrapper = mount(SimpleEventCard, {
-        props: differentEvent,
-      });
+        props: differentEvent
+      })
 
-      expect(wrapper.find(".event-title").text()).toBe("Another Event");
-      expect(wrapper.find(".event-description").text()).toBe(
-        "Different description",
-      );
-      expect(wrapper.find(".event-location").text()).toBe("Lyon, France");
-      expect(wrapper.find(".event-date").text()).toBe("01/01/2024");
-    });
+      expect(wrapper.find('.event-title').text()).toBe('Another Event')
+      expect(wrapper.find('.event-description').text()).toBe('Different description')
+      expect(wrapper.find('.event-location').text()).toBe('Lyon, France')
+      expect(wrapper.find('.event-date').text()).toBe('01/01/2024')
+    })
 
-    it("should have proper CSS classes", () => {
+    it('should have proper CSS classes', () => {
       const wrapper = mount(SimpleEventCard, {
-        props: mockEvent,
-      });
+        props: mockEvent
+      })
 
-      expect(wrapper.find(".event-card").exists()).toBe(true);
-      expect(wrapper.find(".event-title").exists()).toBe(true);
-      expect(wrapper.find(".event-description").exists()).toBe(true);
-      expect(wrapper.find(".event-meta").exists()).toBe(true);
-      expect(wrapper.find(".event-date").exists()).toBe(true);
-      expect(wrapper.find(".event-location").exists()).toBe(true);
-      expect(wrapper.find(".favorite-btn").exists()).toBe(true);
-    });
+      expect(wrapper.find('.event-card').exists()).toBe(true)
+      expect(wrapper.find('.event-title').exists()).toBe(true)
+      expect(wrapper.find('.event-description').exists()).toBe(true)
+      expect(wrapper.find('.event-meta').exists()).toBe(true)
+      expect(wrapper.find('.event-date').exists()).toBe(true)
+      expect(wrapper.find('.event-location').exists()).toBe(true)
+      expect(wrapper.find('.favorite-btn').exists()).toBe(true)
+    })
 
-    it("should handle empty description", () => {
+    it('should handle empty description', () => {
       const eventWithoutDescription = {
         ...mockEvent,
-        description: "",
-      };
+        description: ''
+      }
 
       const wrapper = mount(SimpleEventCard, {
-        props: eventWithoutDescription,
-      });
+        props: eventWithoutDescription
+      })
 
-      expect(wrapper.find(".event-description").text()).toBe("");
-    });
+      expect(wrapper.find('.event-description').text()).toBe('')
+    })
 
-    it("should handle missing location", () => {
+    it('should handle missing location', () => {
       const eventWithoutLocation = {
         ...mockEvent,
-        location: "",
-      };
+        location: ''
+      }
 
       const wrapper = mount(SimpleEventCard, {
-        props: eventWithoutLocation,
-      });
+        props: eventWithoutLocation
+      })
 
-      expect(wrapper.find(".event-location").text()).toBe("");
-    });
+      expect(wrapper.find('.event-location').text()).toBe('')
+    })
 
-    it("should handle invalid date gracefully", () => {
+    it('should handle invalid date gracefully', () => {
       const eventWithInvalidDate = {
         ...mockEvent,
-        date: "invalid-date",
-      };
+        date: 'invalid-date'
+      }
 
       const wrapper = mount(SimpleEventCard, {
-        props: eventWithInvalidDate,
-      });
+        props: eventWithInvalidDate
+      })
 
-      expect(wrapper.find(".event-date").text()).toBe("Invalid Date");
-    });
+      expect(wrapper.find('.event-date').text()).toBe('Invalid Date')
+    })
 
-    it("should prevent event bubbling on favorite button click", async () => {
+    it('should prevent event bubbling on favorite button click', async () => {
       const wrapper = mount(SimpleEventCard, {
-        props: mockEvent,
-      });
+        props: mockEvent
+      })
 
-      await wrapper.find(".favorite-btn").trigger("click");
+      await wrapper.find('.favorite-btn').trigger('click')
 
       // Le clic sur le bouton favorite ne devrait pas déclencher le clic sur la carte
-      expect(wrapper.emitted("favorite")).toBeTruthy();
-      expect(wrapper.emitted("click")).toBeFalsy();
-    });
-  });
+      expect(wrapper.emitted('favorite')).toBeTruthy()
+      expect(wrapper.emitted('click')).toBeFalsy()
+    })
+  })
 
-  describe("Event List Component", () => {
+  describe('Event List Component', () => {
     const SimpleEventList = {
       template: `
         <div class="event-list">
@@ -234,121 +230,121 @@ describe("Event Components", () => {
         </div>
       `,
       components: {
-        SimpleEventCard,
+        SimpleEventCard
       },
       props: {
         title: String,
         events: {
           type: Array,
-          default: () => [],
+          default: () => []
         },
         loading: {
           type: Boolean,
-          default: false,
-        },
+          default: false
+        }
       },
-      emits: ["eventClick", "favorite"],
+      emits: ['eventClick', 'favorite'],
       methods: {
         handleEventClick(eventTitle: string) {
-          this.$emit("eventClick", eventTitle);
+          this.$emit('eventClick', eventTitle)
         },
         handleFavorite(eventTitle: string) {
-          this.$emit("favorite", eventTitle);
-        },
-      },
-    };
+          this.$emit('favorite', eventTitle)
+        }
+      }
+    }
 
     const mockEvents = [
       {
-        id: "1",
-        title: "Event 1",
-        description: "Description 1",
-        date: "2024-12-25T10:00:00Z",
-        location: "Paris",
+        id: '1',
+        title: 'Event 1',
+        description: 'Description 1',
+        date: '2024-12-25T10:00:00Z',
+        location: 'Paris'
       },
       {
-        id: "2",
-        title: "Event 2",
-        description: "Description 2",
-        date: "2024-12-26T10:00:00Z",
-        location: "Lyon",
-      },
-    ];
+        id: '2',
+        title: 'Event 2',
+        description: 'Description 2',
+        date: '2024-12-26T10:00:00Z',
+        location: 'Lyon'
+      }
+    ]
 
-    it("should render event list component", () => {
+    it('should render event list component', () => {
       const wrapper = mount(SimpleEventList, {
         props: {
-          title: "Test Announcements",
-          events: mockEvents,
-        },
-      });
+          title: 'Test Announcements',
+          events: mockEvents
+        }
+      })
 
-      expect(wrapper.exists()).toBe(true);
-      expect(wrapper.find(".event-list").exists()).toBe(true);
-    });
+      expect(wrapper.exists()).toBe(true)
+      expect(wrapper.find('.event-list').exists()).toBe(true)
+    })
 
-    it("should display list title", () => {
+    it('should display list title', () => {
       const wrapper = mount(SimpleEventList, {
         props: {
-          title: "Test Announcements",
-          events: mockEvents,
-        },
-      });
+          title: 'Test Announcements',
+          events: mockEvents
+        }
+      })
 
-      expect(wrapper.find(".list-title").text()).toBe("Test Announcements");
-    });
+      expect(wrapper.find('.list-title').text()).toBe('Test Announcements')
+    })
 
-    it("should display loading state", () => {
+    it('should display loading state', () => {
       const wrapper = mount(SimpleEventList, {
         props: {
-          title: "Test Announcements",
+          title: 'Test Announcements',
           events: [],
-          loading: true,
-        },
-      });
+          loading: true
+        }
+      })
 
-      expect(wrapper.find(".loading").exists()).toBe(true);
-      expect(wrapper.find(".loading").text()).toBe("Loading...");
-    });
+      expect(wrapper.find('.loading').exists()).toBe(true)
+      expect(wrapper.find('.loading').text()).toBe('Loading...')
+    })
 
-    it("should display empty state when no events", () => {
+    it('should display empty state when no events', () => {
       const wrapper = mount(SimpleEventList, {
         props: {
-          title: "Test Announcements",
+          title: 'Test Announcements',
           events: [],
-          loading: false,
-        },
-      });
+          loading: false
+        }
+      })
 
-      expect(wrapper.find(".empty-state").exists()).toBe(true);
-      expect(wrapper.find(".empty-state p").text()).toBe("No events found");
-    });
+      expect(wrapper.find('.empty-state').exists()).toBe(true)
+      expect(wrapper.find('.empty-state p').text()).toBe('No events found')
+    })
 
-    it("should render correct number of event cards", () => {
+    it('should render correct number of event cards', () => {
       const wrapper = mount(SimpleEventList, {
         props: {
-          title: "Test Announcements",
-          events: mockEvents,
-        },
-      });
+          title: 'Test Announcements',
+          events: mockEvents
+        }
+      })
 
-      const eventCards = wrapper.findAll(".event-card");
-      expect(eventCards).toHaveLength(2);
-    });
+      const eventCards = wrapper.findAll('.event-card')
+      expect(eventCards).toHaveLength(2)
+    })
 
-    it("should emit events from child components", async () => {
+    it('should emit events from child components', async () => {
       const wrapper = mount(SimpleEventList, {
         props: {
-          title: "Test Announcements",
-          events: mockEvents,
-        },
-      });
+          title: 'Test Announcements',
+          events: mockEvents
+        }
+      })
 
-      const eventCards = wrapper.findAll(".event-card");
-      await eventCards[0].trigger("click");
+      const eventCards = wrapper.findAll('.event-card')
+      await eventCards[0].trigger('click')
 
-      expect(wrapper.emitted("eventClick")).toBeTruthy();
-      expect(wrapper.emitted("eventClick")?.[0]).toEqual(["Event 1"]);
-    });
-  });
-});
+      expect(wrapper.emitted('eventClick')).toBeTruthy()
+      expect(wrapper.emitted('eventClick')?.[0]).toEqual(['Event 1'])
+    })
+  })
+})

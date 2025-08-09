@@ -1,22 +1,12 @@
 <template>
   <div>
-    <h3 class="text-lg font-bold mb-4">
-      Participants
-    </h3>
-    <div
-      v-if="props.participants && props.participants.length"
-      class="space-y-3"
-    >
+    <h3 class="text-lg font-bold mb-4">Participants</h3>
+    <div v-if="props.participants && props.participants.length" class="space-y-3">
       <!-- Optimisation avec v-memo basé sur les propriétés importantes -->
       <ParticipantOrVolunteerCard
         v-for="participant in props.participants"
         :key="participant.id"
-        v-memo="[
-          participant.id,
-          participant.name,
-          participant.status,
-          participant.isPresent,
-        ]"
+        v-memo="[participant.id, participant.name, participant.status, participant.isPresent]"
         :participant="mapVolunteerToParticipant(participant)"
         :is-volunteer="false"
         @right-action="handleRightAction"
@@ -42,53 +32,51 @@
           </svg>
         </div>
       </div>
-      <p class="text-sm font-medium">
-        Aucun participant pour cette annonce
-      </p>
+      <p class="text-sm font-medium">Aucun participant pour cette annonce</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import ParticipantOrVolunteerCard from './ParticipantOrVolunteerCard.vue'
+  import ParticipantOrVolunteerCard from './ParticipantOrVolunteerCard.vue'
 
-interface Participant {
-  id: string;
-  name: string;
-  status?: string; // Ajouté pour v-memo
-  isPresent?: boolean;
-}
-
-interface mapVolunteer {
-  volunteerId: string;
-  volunteerName: string;
-  status?: string;
-  isPresent?: boolean;
-}
-
-function mapVolunteerToParticipant (volunteer: Participant): mapVolunteer {
-  return {
-    volunteerId: volunteer.id,
-    volunteerName: volunteer.name,
-    status: volunteer.status,
-    isPresent: volunteer.isPresent
+  interface Participant {
+    id: string
+    name: string
+    status?: string // Ajouté pour v-memo
+    isPresent?: boolean
   }
-}
 
-const props = defineProps<{
-  participants: Participant[] | undefined;
-}>()
+  interface mapVolunteer {
+    volunteerId: string
+    volunteerName: string
+    status?: string
+    isPresent?: boolean
+  }
 
-const emit = defineEmits<{
-  rightAction: [participant: string];
-  presenceAction: [participant: string, isPresent: boolean];
-}>()
+  function mapVolunteerToParticipant(volunteer: Participant): mapVolunteer {
+    return {
+      volunteerId: volunteer.id,
+      volunteerName: volunteer.name,
+      status: volunteer.status,
+      isPresent: volunteer.isPresent
+    }
+  }
 
-function handleRightAction (id: string) {
-  emit('rightAction', id)
-}
+  const props = defineProps<{
+    participants: Participant[] | undefined
+  }>()
 
-function handlePresenceAction (id: string, isPresent: boolean) {
-  emit('presenceAction', id, isPresent)
-}
+  const emit = defineEmits<{
+    rightAction: [participant: string]
+    presenceAction: [participant: string, isPresent: boolean]
+  }>()
+
+  function handleRightAction(id: string) {
+    emit('rightAction', id)
+  }
+
+  function handlePresenceAction(id: string, isPresent: boolean) {
+    emit('presenceAction', id, isPresent)
+  }
 </script>

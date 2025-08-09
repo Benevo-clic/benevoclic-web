@@ -14,10 +14,8 @@ export const useAssociationAuth = () => {
     getAssociationInfoBySiret: associationStore.getAssociationInfoBySiret,
     removeAssociation: associationStore.removeAssociation,
     addVolunteerToAssociation: associationStore.addVolunteerToAssociation,
-    removeVolunteerFromAssociation:
-      associationStore.removeVolunteerFromAssociation,
-    removeAssociationVolunteerWaiting:
-      associationStore.removeAssociationVolunteerWaiting,
+    removeVolunteerFromAssociation: associationStore.removeVolunteerFromAssociation,
+    removeAssociationVolunteerWaiting: associationStore.removeAssociationVolunteerWaiting,
     updateAssociation: associationStore.updateAssociation,
     clearCache: associationStore.clearCache
   }

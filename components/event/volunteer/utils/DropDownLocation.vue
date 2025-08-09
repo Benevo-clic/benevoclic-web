@@ -1,258 +1,242 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import { MapPin, ChevronRight, X } from 'lucide-vue-next'
-import { useUserLocation } from '~/composables/useUserLocation'
-import type { FilterAnnouncement } from '~/common/interface/filter.interface'
+  import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+  import { MapPin, ChevronRight, X } from 'lucide-vue-next'
+  import { useUserLocation } from '~/composables/useUserLocation'
+  import type { FilterAnnouncement } from '~/common/interface/filter.interface'
 
-const props = defineProps<{
-  filters: FilterAnnouncement;
-  resetLocation?: boolean;
-  isMobile?: boolean;
-  dropdownStyle?: Record<string, string>;
-  showLocationDropdown?: boolean;
-}>()
-// eslint-disable-next-line func-call-spacing
-const emits = defineEmits<{
-  (e: 'update:filters', newFilters: FilterAnnouncement): void;
-  (e: 'close'): void;
-}>()
+  const props = defineProps<{
+    filters: FilterAnnouncement
+    resetLocation?: boolean
+    isMobile?: boolean
+    dropdownStyle?: Record<string, string>
+    showLocationDropdown?: boolean
+  }>()
+  // eslint-disable-next-line func-call-spacing
+  const emits = defineEmits<{
+    (e: 'update:filters', newFilters: FilterAnnouncement): void
+    (e: 'close'): void
+  }>()
 
-// États réactifs
-const locationSearch = ref('')
-const locationSearchResults = ref<any[]>([])
-const selectedLocations = ref<any[]>([])
-const useCurrentLocation = ref(false)
-const locationRadius = ref(props.filters.radius || 5)
+  // États réactifs
+  const locationSearch = ref('')
+  const locationSearchResults = ref<any[]>([])
+  const selectedLocations = ref<any[]>([])
+  const useCurrentLocation = ref(false)
+  const locationRadius = ref(props.filters.radius || 5)
 
-const userLocation = useUserLocation()
-const userCurrentLocation = ref<any>(null)
-const currentLatitude = ref<number | null>(null)
-const currentLongitude = ref<number | null>(null)
-const canUseLocation = ref(false)
+  const userLocation = useUserLocation()
+  const userCurrentLocation = ref<any>(null)
+  const currentLatitude = ref<number | null>(null)
+  const currentLongitude = ref<number | null>(null)
+  const canUseLocation = ref(false)
 
-const searchTimeout = ref<number | null>(null)
+  const searchTimeout = ref<number | null>(null)
 
-const isCityActive = (index: number) =>
-  !useCurrentLocation.value && index === 0
+  const isCityActive = (index: number) => !useCurrentLocation.value && index === 0
 
-const dropdownStyle = computed(() => {
-  return (
-    props.dropdownStyle || {
-      position: 'absolute',
-      top: '0px',
-      left: '0px',
-      zIndex: '9999',
-      minWidth: '320px'
-    }
-  )
-})
-
-const formatCityName = (result: any) => {
-  const addr = result.address || {}
-  return (
-    addr.city ||
-    addr.town ||
-    addr.village ||
-    addr.municipality ||
-    result.display_name?.split(',')[0]?.trim() ||
-    ''
-  )
-}
-
-// Fonctions
-const openCookieSettings = () => {
-  window.dispatchEvent(new CustomEvent('openCookieSettings'))
-}
-
-const checkLocationPermissions = async () => {
-  try {
-    const { usePermissions } = await import('~/composables/usePermissions')
-    const { hasPermission, loadCookiePreferences } = usePermissions()
-    loadCookiePreferences()
-    canUseLocation.value = hasPermission('canUseLocation')
-    if (!canUseLocation.value) {
-      console.log(
-        'Cookies de personnalisation non acceptés - géolocalisation désactivée'
-      )
-    }
-  } catch (err) {
-    console.warn(
-      'Impossible de vérifier les permissions de géolocalisation:',
-      err
-    )
-    canUseLocation.value = false
-  }
-}
-
-const initLocation = async () => {
-  try {
-    const location = await userLocation.getUserLocation()
-    if (location) {
-      currentLatitude.value = location.latitude
-      currentLongitude.value = location.longitude
-      userCurrentLocation.value = {
-        place_id: 'current_location',
-        display_name: 'Ma position actuelle',
-        city: location.city || 'Position détectée',
-        lat: location.latitude.toString(),
-        lon: location.longitude.toString()
+  const dropdownStyle = computed(() => {
+    return (
+      props.dropdownStyle || {
+        position: 'absolute',
+        top: '0px',
+        left: '0px',
+        zIndex: '9999',
+        minWidth: '320px'
       }
-    } else {
-      console.log('Aucune position obtenue')
+    )
+  })
+
+  const formatCityName = (result: any) => {
+    const addr = result.address || {}
+    return (
+      addr.city ||
+      addr.town ||
+      addr.village ||
+      addr.municipality ||
+      result.display_name?.split(',')[0]?.trim() ||
+      ''
+    )
+  }
+
+  // Fonctions
+  const openCookieSettings = () => {
+    window.dispatchEvent(new CustomEvent('openCookieSettings'))
+  }
+
+  const checkLocationPermissions = async () => {
+    try {
+      const { usePermissions } = await import('~/composables/usePermissions')
+      const { hasPermission, loadCookiePreferences } = usePermissions()
+      loadCookiePreferences()
+      canUseLocation.value = hasPermission('canUseLocation')
+      if (!canUseLocation.value) {
+        console.log('Cookies de personnalisation non acceptés - géolocalisation désactivée')
+      }
+    } catch (err) {
+      console.warn('Impossible de vérifier les permissions de géolocalisation:', err)
+      canUseLocation.value = false
     }
-  } catch (error) {
-    console.error('Error getting user location:', error)
   }
-}
 
-const debounce = (fn: Function, delay = 300) => {
-  return (...args: any[]) => {
-    if (searchTimeout.value) { clearTimeout(searchTimeout.value) }
-    searchTimeout.value = window.setTimeout(() => {
-      fn(...args)
-    }, delay)
+  const initLocation = async () => {
+    try {
+      const location = await userLocation.getUserLocation()
+      if (location) {
+        currentLatitude.value = location.latitude
+        currentLongitude.value = location.longitude
+        userCurrentLocation.value = {
+          place_id: 'current_location',
+          display_name: 'Ma position actuelle',
+          city: location.city || 'Position détectée',
+          lat: location.latitude.toString(),
+          lon: location.longitude.toString()
+        }
+      } else {
+        console.log('Aucune position obtenue')
+      }
+    } catch (error) {
+      console.error('Error getting user location:', error)
+    }
   }
-}
 
-const performLocationSearch = async () => {
-  if (locationSearch.value.length < 2) {
+  const debounce = (fn: Function, delay = 300) => {
+    return (...args: any[]) => {
+      if (searchTimeout.value) {
+        clearTimeout(searchTimeout.value)
+      }
+      searchTimeout.value = window.setTimeout(() => {
+        fn(...args)
+      }, delay)
+    }
+  }
+
+  const performLocationSearch = async () => {
+    if (locationSearch.value.length < 2) {
+      locationSearchResults.value = []
+      return
+    }
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          locationSearch.value
+        )}&countrycodes=fr&limit=10&addressdetails=1`
+      )
+      const data = await res.json()
+      locationSearchResults.value = data
+        .filter((i: any) => {
+          const validTypes = ['city', 'town', 'village', 'municipality', 'administrative']
+          const hasValidType = validTypes.includes(i.type)
+          const hasCityAddress =
+            i.address &&
+            (i.address.city || i.address.town || i.address.village || i.address.municipality)
+          const isCityLevel = i.place_rank && i.place_rank <= 16
+          return hasValidType || hasCityAddress || isCityLevel
+        })
+        .slice(0, 5)
+    } catch (error) {
+      console.error('Erreur lors de la recherche de villes:', error)
+      locationSearchResults.value = []
+    }
+  }
+
+  const onSearchInput = debounce(() => {
+    performLocationSearch()
+  }, 500)
+
+  const selectLocation = (loc: any) => {
+    if (!selectedLocations.value.some(l => l.place_id === loc.place_id)) {
+      selectedLocations.value.push(loc)
+    }
+    useCurrentLocation.value = false
+    locationSearch.value = ''
     locationSearchResults.value = []
-    return
   }
-  try {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-        locationSearch.value
-      )}&countrycodes=fr&limit=10&addressdetails=1`
-    )
-    const data = await res.json()
-    locationSearchResults.value = data
-      .filter((i: any) => {
-        const validTypes = [
-          'city',
-          'town',
-          'village',
-          'municipality',
-          'administrative'
-        ]
-        const hasValidType = validTypes.includes(i.type)
-        const hasCityAddress =
-          i.address &&
-          (i.address.city ||
-            i.address.town ||
-            i.address.village ||
-            i.address.municipality)
-        const isCityLevel = i.place_rank && i.place_rank <= 16
-        return hasValidType || hasCityAddress || isCityLevel
-      })
-      .slice(0, 5)
-  } catch (error) {
-    console.error('Erreur lors de la recherche de villes:', error)
-    locationSearchResults.value = []
-  }
-}
 
-const onSearchInput = debounce(() => {
-  performLocationSearch()
-}, 500)
-
-const selectLocation = (loc: any) => {
-  if (!selectedLocations.value.some(l => l.place_id === loc.place_id)) {
-    selectedLocations.value.push(loc)
-  }
-  useCurrentLocation.value = false
-  locationSearch.value = ''
-  locationSearchResults.value = []
-}
-
-const makeActive = (i: number) => {
-  useCurrentLocation.value = false
-  if (i !== 0) { selectedLocations.value.unshift(selectedLocations.value.splice(i, 1)[0]) }
-}
-
-const removeLocation = (i: number) => {
-  selectedLocations.value.splice(i, 1)
-}
-
-const toggleCurrentLocation = () => {
-  useCurrentLocation.value = !useCurrentLocation.value
-}
-
-function updateLocationFilter () {
-  try {
-    const filterAnnouncement: FilterAnnouncement = {
-      ...props.filters,
-      latitude: undefined,
-      longitude: undefined,
-      radius: 0
+  const makeActive = (i: number) => {
+    useCurrentLocation.value = false
+    if (i !== 0) {
+      selectedLocations.value.unshift(selectedLocations.value.splice(i, 1)[0])
     }
-    if (
-      useCurrentLocation.value &&
-      currentLatitude.value != null &&
-      currentLongitude.value != null
-    ) {
-      filterAnnouncement.latitude = currentLatitude.value
-      filterAnnouncement.longitude = currentLongitude.value
-      filterAnnouncement.radius = locationRadius.value
-    } else if (selectedLocations.value.length) {
-      const l = selectedLocations.value[0]
-      filterAnnouncement.latitude = parseFloat(l.lat)
-      filterAnnouncement.longitude = parseFloat(l.lon)
-      filterAnnouncement.radius = locationRadius.value
+  }
+
+  const removeLocation = (i: number) => {
+    selectedLocations.value.splice(i, 1)
+  }
+
+  const toggleCurrentLocation = () => {
+    useCurrentLocation.value = !useCurrentLocation.value
+  }
+
+  function updateLocationFilter() {
+    try {
+      const filterAnnouncement: FilterAnnouncement = {
+        ...props.filters,
+        latitude: undefined,
+        longitude: undefined,
+        radius: 0
+      }
+      if (
+        useCurrentLocation.value &&
+        currentLatitude.value != null &&
+        currentLongitude.value != null
+      ) {
+        filterAnnouncement.latitude = currentLatitude.value
+        filterAnnouncement.longitude = currentLongitude.value
+        filterAnnouncement.radius = locationRadius.value
+      } else if (selectedLocations.value.length) {
+        const l = selectedLocations.value[0]
+        filterAnnouncement.latitude = parseFloat(l.lat)
+        filterAnnouncement.longitude = parseFloat(l.lon)
+        filterAnnouncement.radius = locationRadius.value
+      }
+      emits('update:filters', filterAnnouncement)
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du filtre de localisation:', error)
     }
-    emits('update:filters', filterAnnouncement)
-  } catch (error) {
-    console.error(
-      'Erreur lors de la mise à jour du filtre de localisation:',
-      error
-    )
   }
-}
 
-const onApply = () => {
-  updateLocationFilter()
-  emits('close')
-}
-
-const onClear = () => {
-  selectedLocations.value = []
-  useCurrentLocation.value = false
-  locationRadius.value = props.filters.radius || 5
-  updateLocationFilter()
-  emits('close')
-}
-
-// Watchers
-watch(
-  () => props.resetLocation,
-  (newVal) => {
-    if (newVal) { onClear() }
-  },
-  { immediate: true }
-)
-
-watch(
-  [useCurrentLocation, selectedLocations, locationRadius],
-  updateLocationFilter
-)
-
-// Lifecycles
-onMounted(async () => {
-  try {
-    await userLocation.initializeLocation()
-    await checkLocationPermissions()
-    await initLocation()
-  } catch (error) {
-    console.error(
-      "Erreur lors de l'initialisation de la géolocalisation:",
-      error
-    )
+  const onApply = () => {
+    updateLocationFilter()
+    emits('close')
   }
-})
 
-onUnmounted(() => {
-  if (searchTimeout.value) { clearTimeout(searchTimeout.value) }
-})
+  const onClear = () => {
+    selectedLocations.value = []
+    useCurrentLocation.value = false
+    locationRadius.value = props.filters.radius || 5
+    updateLocationFilter()
+    emits('close')
+  }
+
+  // Watchers
+  watch(
+    () => props.resetLocation,
+    newVal => {
+      if (newVal) {
+        onClear()
+      }
+    },
+    { immediate: true }
+  )
+
+  watch([useCurrentLocation, selectedLocations, locationRadius], updateLocationFilter)
+
+  // Lifecycles
+  onMounted(async () => {
+    try {
+      await userLocation.initializeLocation()
+      await checkLocationPermissions()
+      await initLocation()
+    } catch (error) {
+      console.error("Erreur lors de l'initialisation de la géolocalisation:", error)
+    }
+  })
+
+  onUnmounted(() => {
+    if (searchTimeout.value) {
+      clearTimeout(searchTimeout.value)
+    }
+  })
 </script>
 
 <template>
@@ -282,7 +266,7 @@ onUnmounted(() => {
             class="input input-bordered w-full pl-10"
             aria-label="Recherche de ville"
             @input="onSearchInput"
-          >
+          />
         </div>
       </div>
 
@@ -304,9 +288,7 @@ onUnmounted(() => {
               tabindex="0"
               @click="selectLocation(result)"
             >
-              <span class="font-medium text-sm">{{
-                formatCityName(result)
-              }}</span>
+              <span class="font-medium text-sm">{{ formatCityName(result) }}</span>
               <ChevronRight class="w-4 h-4" />
             </div>
           </div>
@@ -318,10 +300,7 @@ onUnmounted(() => {
         <label class="label">
           <span class="label-text font-medium">Villes sélectionnées</span>
         </label>
-        <div
-          v-if="selectedLocations.length > 1"
-          class="alert alert-info alert-sm mb-2"
-        >
+        <div v-if="selectedLocations.length > 1" class="alert alert-info alert-sm mb-2">
           <div class="text-xs">
             <strong>Note:</strong> Seule la première ville est prise en compte.
           </div>
@@ -338,10 +317,7 @@ onUnmounted(() => {
           >
             <span class="font-medium text-sm">
               {{ formatCityName(loc) }}
-              <span
-                v-if="isCityActive(index)"
-                class="text-primary ml-1"
-              >(active)</span>
+              <span v-if="isCityActive(index)" class="text-primary ml-1">(active)</span>
             </span>
             <button
               class="btn btn-ghost btn-xs"
@@ -369,13 +345,11 @@ onUnmounted(() => {
                 class="radio radio-primary radio-sm"
                 aria-label="Utiliser ma position actuelle"
                 @change="toggleCurrentLocation"
-              >
+              />
               <div class="flex-1">
-                <div class="font-medium text-sm">
-                  Ma position actuelle
-                </div>
+                <div class="font-medium text-sm">Ma position actuelle</div>
                 <div class="text-xs text-base-content/70">
-                  {{ userCurrentLocation.city || "Position détectée" }}
+                  {{ userCurrentLocation.city || 'Position détectée' }}
                 </div>
               </div>
               <MapPin class="w-4 h-4 text-primary" />
@@ -400,17 +374,11 @@ onUnmounted(() => {
           />
         </svg>
         <div>
-          <h4 class="font-bold">
-            Géolocalisation désactivée
-          </h4>
+          <h4 class="font-bold">Géolocalisation désactivée</h4>
           <p class="text-xs">
-            Acceptez les cookies de personnalisation pour utiliser votre
-            position.
+            Acceptez les cookies de personnalisation pour utiliser votre position.
           </p>
-          <button
-            class="btn btn-primary btn-xs mt-2"
-            @click="openCookieSettings"
-          >
+          <button class="btn btn-primary btn-xs mt-2" @click="openCookieSettings">
             Paramétrer les cookies
           </button>
         </div>
@@ -434,7 +402,7 @@ onUnmounted(() => {
             class="range range-sm range-primary w-full"
             aria-label="Rayon de recherche"
             @input="updateLocationFilter"
-          >
+          />
           <div class="flex justify-between text-xs text-base-content/50">
             <span>0 km</span>
             <span>200 km</span>
@@ -444,22 +412,18 @@ onUnmounted(() => {
 
       <!-- Actions -->
       <div class="flex gap-2 pt-2">
-        <button class="btn btn-outline btn-sm flex-1" @click="onClear">
-          Effacer
-        </button>
-        <button class="btn btn-primary btn-sm flex-1" @click="onApply">
-          Valider
-        </button>
+        <button class="btn btn-outline btn-sm flex-1" @click="onClear">Effacer</button>
+        <button class="btn btn-primary btn-sm flex-1" @click="onApply">Valider</button>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.location-dropdown-portal {
-  /* Renforcer au cas où */
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2);
-  border-radius: 0.75rem;
-  background-clip: padding-box;
-}
+  .location-dropdown-portal {
+    /* Renforcer au cas où */
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2);
+    border-radius: 0.75rem;
+    background-clip: padding-box;
+  }
 </style>

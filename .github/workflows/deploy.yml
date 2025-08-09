@@ -3,7 +3,7 @@ name: Deploy Web to OVH VPS
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["Deploy to DockerHub"]
+    workflows: ['Deploy to DockerHub']
     types: [completed]
     branches: [main]
 

@@ -1,201 +1,195 @@
 <script setup lang="ts">
-import { reactive, ref, watch, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
-import UsersLoginForm from '~/components/header/auth/form/UsersLoginForm.vue'
-import UserRegisterForm from '~/components/header/auth/form/UserRegisterForm.vue'
-import { useUser } from '~/composables/auth/useUser'
-import { RoleUser } from '~/common/enums/role.enum'
-import { useVolunteerAuth } from '~/composables/useVolunteer'
+  import { reactive, ref, watch, onMounted } from 'vue'
+  import { useI18n } from 'vue-i18n'
+  import UsersLoginForm from '~/components/header/auth/form/UsersLoginForm.vue'
+  import UserRegisterForm from '~/components/header/auth/form/UserRegisterForm.vue'
+  import { useUser } from '~/composables/auth/useUser'
+  import { RoleUser } from '~/common/enums/role.enum'
+  import { useVolunteerAuth } from '~/composables/useVolunteer'
 
-const auth = useUser()
-const volunteer = useVolunteerAuth()
+  const auth = useUser()
+  const volunteer = useVolunteerAuth()
 
-const { t } = useI18n()
+  const { t } = useI18n()
 
-onMounted(async () => {
-  await auth.initializeUser()
-  await volunteer.getVolunteerInfo()
-})
+  onMounted(async () => {
+    await auth.initializeUser()
+    await volunteer.getVolunteerInfo()
+  })
 
-const loading = ref(false)
-const isError = ref(false)
-const associationExists = ref(false)
-const messageError = ref('')
-const showCookieAlert = ref(false)
-const termsAccepted = ref(false)
+  const loading = ref(false)
+  const isError = ref(false)
+  const associationExists = ref(false)
+  const messageError = ref('')
+  const showCookieAlert = ref(false)
+  const termsAccepted = ref(false)
 
-const form = reactive({
-  email: '',
-  password: '',
-  role: RoleUser.VOLUNTEER
-})
+  const form = reactive({
+    email: '',
+    password: '',
+    role: RoleUser.VOLUNTEER
+  })
 
-const { checked, isRegister } = defineProps<{
-  checked: boolean;
-  isRegister: boolean;
-}>()
+  const { checked, isRegister } = defineProps<{
+    checked: boolean
+    isRegister: boolean
+  }>()
 
-async function handleLogin () {
-  // Vérifier les permissions de cookies avant la connexion
-  try {
-    const { usePermissions } = await import('~/composables/usePermissions')
-    const { hasPermission } = usePermissions()
+  async function handleLogin() {
+    // Vérifier les permissions de cookies avant la connexion
+    try {
+      const { usePermissions } = await import('~/composables/usePermissions')
+      const { hasPermission } = usePermissions()
 
-    if (!hasPermission('canAuthenticate')) {
-      showCookieAlert.value = true
-      messageError.value =
-        'Vous devez accepter les cookies essentiels pour vous connecter'
+      if (!hasPermission('canAuthenticate')) {
+        showCookieAlert.value = true
+        messageError.value = 'Vous devez accepter les cookies essentiels pour vous connecter'
+        isError.value = true
+        return
+      }
+    } catch (err) {
+      console.warn('Impossible de vérifier les permissions de cookies:', err)
+    }
+
+    loading.value = true
+    try {
+      const response = await auth.login({
+        email: form.email,
+        password: form.password,
+        role: isAssociation.value ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER
+      })
+      if (response.idToken) {
+        switch (isAssociation.value) {
+          case true:
+            break
+          case false:
+            const volunteerInfo = await volunteer.getVolunteerInfo()
+            if (!volunteerInfo?.volunteerId) {
+              navigateTo({
+                path: '/auth/registerVolunteer'
+              })
+            }
+            break
+        }
+      }
+
+      isError.value = false
+    } catch (error) {
       isError.value = true
+      messageError.value = t('auth.login.error.invalid_credentials')
+      console.error('Erreur de connexion:', error)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const openCookieSettings = () => {
+    window.dispatchEvent(new CustomEvent('openCookieSettings'))
+    showCookieAlert.value = false
+  }
+
+  const emit = defineEmits<{
+    (e: 'toggle-check', isChecked: boolean): void
+    (e: 'toggle-register', isRegisterMode: boolean): void
+  }>()
+
+  const isAssociation = ref(false)
+  const isRegisterMode = ref(isRegister)
+
+  watch(
+    () => checked,
+    value => {
+      isAssociation.value = value
+    }
+  )
+
+  watch(
+    () => isRegister,
+    newVal => {
+      isRegisterMode.value = newVal
+    },
+    { immediate: true }
+  )
+
+  function handleCheckboxChange() {
+    emit('toggle-check', isAssociation.value)
+  }
+
+  function toggleRegisterMode() {
+    emit('toggle-register', !isRegisterMode.value)
+  }
+
+  function toggleUserType() {
+    isAssociation.value = !isAssociation.value
+  }
+
+  async function handleGoogleLogin() {
+    try {
+      if (isAssociation.value && !associationExists.value) {
+        isError.value = true
+        messageError.value = t('auth.register.association_siret_status')
+      } else {
+        await auth.loginWithGoogle(
+          isAssociation.value ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER,
+          isRegisterMode.value, // Passer le mode (inscription/connexion)
+          termsAccepted.value
+        )
+        isError.value = false
+      }
+    } catch (error: any) {
+      console.error('Erreur de connexion Google:', error)
+      isError.value = true
+      messageError.value = error?.message || t('auth.login.error.invalid_credentials')
+    }
+  }
+
+  function toggleVerifyEmail(value: boolean) {
+    if (value) {
+      navigateTo({
+        path: '/auth/VerifyEmailPage'
+      })
+    }
+    isError.value = false
+  }
+
+  function verifyAssociation(value: boolean) {
+    associationExists.value = value
+    isError.value = false
+  }
+
+  const forgotPasswordEmail = ref('')
+  const forgotPasswordSent = ref(false)
+  const forgotPasswordError = ref('')
+
+  async function handleForgotPassword(email: string) {
+    forgotPasswordError.value = ''
+    forgotPasswordSent.value = false
+    forgotPasswordEmail.value = email || form.email
+    if (!forgotPasswordEmail.value) {
+      forgotPasswordError.value = t('auth.forgot_password_enter_email')
       return
     }
-  } catch (err) {
-    console.warn('Impossible de vérifier les permissions de cookies:', err)
-  }
-
-  loading.value = true
-  try {
-    const response = await auth.login({
-      email: form.email,
-      password: form.password,
-      role: isAssociation.value ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER
-    })
-    if (response.idToken) {
-      switch (isAssociation.value) {
-        case true:
-          break
-        case false:
-          const volunteerInfo = await volunteer.getVolunteerInfo()
-          if (!volunteerInfo?.volunteerId) {
-            navigateTo({
-              path: '/auth/registerVolunteer'
-            })
-          }
-          break
-      }
+    try {
+      await auth.forgotPassword(forgotPasswordEmail.value)
+      forgotPasswordSent.value = true
+    } catch (e: any) {
+      forgotPasswordError.value = t('auth.forgot_password_error')
     }
-
-    isError.value = false
-  } catch (error) {
-    isError.value = true
-    messageError.value = t('auth.login.error.invalid_credentials')
-    console.error('Erreur de connexion:', error)
-  } finally {
-    loading.value = false
   }
-}
-
-const openCookieSettings = () => {
-  window.dispatchEvent(new CustomEvent('openCookieSettings'))
-  showCookieAlert.value = false
-}
-
-const emit = defineEmits<{
-  (e: 'toggle-check', isChecked: boolean): void;
-  (e: 'toggle-register', isRegisterMode: boolean): void;
-}>()
-
-const isAssociation = ref(false)
-const isRegisterMode = ref(isRegister)
-
-watch(
-  () => checked,
-  (value) => {
-    isAssociation.value = value
-  }
-)
-
-watch(
-  () => isRegister,
-  (newVal) => {
-    isRegisterMode.value = newVal
-  },
-  { immediate: true }
-)
-
-function handleCheckboxChange () {
-  emit('toggle-check', isAssociation.value)
-}
-
-function toggleRegisterMode () {
-  emit('toggle-register', !isRegisterMode.value)
-}
-
-function toggleUserType () {
-  isAssociation.value = !isAssociation.value
-}
-
-async function handleGoogleLogin () {
-  try {
-    if (isAssociation.value && !associationExists.value) {
-      isError.value = true
-      messageError.value = t('auth.register.association_siret_status')
-    } else {
-      await auth.loginWithGoogle(
-        isAssociation.value ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER,
-        isRegisterMode.value, // Passer le mode (inscription/connexion)
-        termsAccepted.value
-      )
-      isError.value = false
-    }
-  } catch (error: any) {
-    console.error('Erreur de connexion Google:', error)
-    isError.value = true
-    messageError.value =
-      error?.message || t('auth.login.error.invalid_credentials')
-  }
-}
-
-function toggleVerifyEmail (value: boolean) {
-  if (value) {
-    navigateTo({
-      path: '/auth/VerifyEmailPage'
-    })
-  }
-  isError.value = false
-}
-
-function verifyAssociation (value: boolean) {
-  associationExists.value = value
-  isError.value = false
-}
-
-const forgotPasswordEmail = ref('')
-const forgotPasswordSent = ref(false)
-const forgotPasswordError = ref('')
-
-async function handleForgotPassword (email: string) {
-  forgotPasswordError.value = ''
-  forgotPasswordSent.value = false
-  forgotPasswordEmail.value = email || form.email
-  if (!forgotPasswordEmail.value) {
-    forgotPasswordError.value = t('auth.forgot_password_enter_email')
-    return
-  }
-  try {
-    await auth.forgotPassword(forgotPasswordEmail.value)
-    forgotPasswordSent.value = true
-  } catch (e: any) {
-    forgotPasswordError.value = t('auth.forgot_password_error')
-  }
-}
 </script>
 
 <template>
   <div class="w-full max-w-md" role="main" aria-labelledby="login-title">
     <h1 id="login-title" class="text-3xl font-bold mb-2">
-      {{ t("auth.title") }} <br>
-      <span class="text-primary">{{ t("auth.title_2") }} 👋</span>
+      {{ t('auth.title') }} <br />
+      <span class="text-primary">{{ t('auth.title_2') }} 👋</span>
     </h1>
 
-    <p
-      v-if="!isRegisterMode"
-      id="login-description"
-      class="text-base text-gray-600 mb-6"
-    >
-      {{ t("auth.login.description") }}
+    <p v-if="!isRegisterMode" id="login-description" class="text-base text-gray-600 mb-6">
+      {{ t('auth.login.description') }}
     </p>
     <p v-else id="register-description" class="text-base text-gray-600 mb-6">
-      {{ t("auth.register.description") }}
+      {{ t('auth.register.description') }}
     </p>
 
     <!-- Alerte pour les cookies essentiels -->
@@ -221,12 +215,8 @@ async function handleForgotPassword (email: string) {
         />
       </svg>
       <div>
-        <h4 class="font-bold">
-          Cookies essentiels requis
-        </h4>
-        <p class="text-sm">
-          Vous devez accepter les cookies essentiels pour vous connecter.
-        </p>
+        <h4 class="font-bold">Cookies essentiels requis</h4>
+        <p class="text-sm">Vous devez accepter les cookies essentiels pour vous connecter.</p>
         <button
           class="btn btn-primary btn-xs mt-2 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
           type="button"
@@ -283,7 +273,7 @@ async function handleForgotPassword (email: string) {
           d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
         />
       </svg>
-      <span>{{ t("auth.login.siret.success") }}</span>
+      <span>{{ t('auth.login.siret.success') }}</span>
     </div>
 
     <!-- Texte + switch utilisateur -->
@@ -292,8 +282,8 @@ async function handleForgotPassword (email: string) {
         {{
           t(
             isAssociation
-              ? "auth.register.association_status_true"
-              : "auth.register.association_status_false",
+              ? 'auth.register.association_status_true'
+              : 'auth.register.association_status_false'
           )
         }}
       </legend>
@@ -303,14 +293,12 @@ async function handleForgotPassword (email: string) {
           type="checkbox"
           class="toggle border-indigo-600 bg-indigo-500 checked:border-orange-500 checked:bg-orange-400 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
           :aria-label="
-            isAssociation
-              ? 'Basculer vers mode bénévole'
-              : 'Basculer vers mode association'
+            isAssociation ? 'Basculer vers mode bénévole' : 'Basculer vers mode association'
           "
           @change="handleCheckboxChange"
-        >
+        />
         <span class="text-sm">
-          {{ isAssociation ? "Mode Association" : "Mode Bénévole" }}
+          {{ isAssociation ? 'Mode Association' : 'Mode Bénévole' }}
         </span>
       </label>
     </fieldset>
@@ -336,7 +324,7 @@ async function handleForgotPassword (email: string) {
 
     <!-- Divider -->
     <div class="divider" role="separator" aria-label="Ou">
-      {{ t("auth.or") }}
+      {{ t('auth.or') }}
     </div>
 
     <!-- Case à cocher pour les conditions générales (visible uniquement en mode inscription) -->
@@ -347,7 +335,7 @@ async function handleForgotPassword (email: string) {
           type="checkbox"
           class="checkbox checkbox-primary checkbox-sm focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
           :aria-describedby="isRegisterMode ? 'terms-description' : undefined"
-        >
+        />
         <span class="label-text text-sm">
           J'accepte les
           <a
@@ -379,9 +367,7 @@ async function handleForgotPassword (email: string) {
       type="button"
       class="btn btn-outline w-full flex items-center justify-center focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
       :disabled="isRegisterMode && !termsAccepted"
-      :aria-describedby="
-        isRegisterMode && !termsAccepted ? 'google-disabled-reason' : undefined
-      "
+      :aria-describedby="isRegisterMode && !termsAccepted ? 'google-disabled-reason' : undefined"
       @click="handleGoogleLogin"
     >
       <img
@@ -389,35 +375,24 @@ async function handleForgotPassword (email: string) {
         class="w-5 h-5 mr-2"
         alt="Logo Google"
         aria-hidden="true"
-      >
-      {{ t("auth.login.login_with_google") }}
+      />
+      {{ t('auth.login.login_with_google') }}
     </button>
-    <div
-      v-if="isRegisterMode && !termsAccepted"
-      id="google-disabled-reason"
-      class="sr-only"
-    >
-      Vous devez accepter les conditions générales pour vous connecter avec
-      Google
+    <div v-if="isRegisterMode && !termsAccepted" id="google-disabled-reason" class="sr-only">
+      Vous devez accepter les conditions générales pour vous connecter avec Google
     </div>
 
     <!-- Switch vers inscription / connexion -->
     <p class="text-center text-sm text-gray-600 mt-4">
-      <span v-if="isRegisterMode">{{
-        t("auth.register.already_have_account")
-      }}</span>
-      <span v-else>{{ t("auth.login.no_account") }} </span>
+      <span v-if="isRegisterMode">{{ t('auth.register.already_have_account') }}</span>
+      <span v-else>{{ t('auth.login.no_account') }} </span>
       <button
         class="text-primary hover:underline focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
         type="button"
-        :aria-label="
-          isRegisterMode
-            ? 'Basculer vers la connexion'
-            : 'Basculer vers l\'inscription'
-        "
+        :aria-label="isRegisterMode ? 'Basculer vers la connexion' : 'Basculer vers l\'inscription'"
         @click="toggleRegisterMode"
       >
-        {{ isRegisterMode ? t("auth.login.title") : t("auth.login.register") }}
+        {{ isRegisterMode ? t('auth.login.title') : t('auth.login.register') }}
       </button>
     </p>
 
@@ -425,11 +400,7 @@ async function handleForgotPassword (email: string) {
     <div v-if="isRegisterMode" class="text-center mt-8 md:hidden">
       <h2 class="text-xl sm:text-2xl font-bold mb-2">
         {{
-          t(
-            isAssociation
-              ? "auth.register.association_true"
-              : "auth.register.association_false",
-          )
+          t(isAssociation ? 'auth.register.association_true' : 'auth.register.association_false')
         }}
       </h2>
 
@@ -440,7 +411,7 @@ async function handleForgotPassword (email: string) {
         :aria-label="'Basculer vers ' + t('auth.register.association_register')"
         @click="toggleUserType"
       >
-        {{ t("auth.register.association_register") }}
+        {{ t('auth.register.association_register') }}
       </button>
       <button
         v-if="!isAssociation"
@@ -449,9 +420,9 @@ async function handleForgotPassword (email: string) {
         :aria-label="'Basculer vers mode association'"
         @click="toggleUserType"
       >
-        {{ t("auth.register.click_here") }}
+        {{ t('auth.register.click_here') }}
         <span class="text-primary hover:underline">
-          {{ t("auth.register.info_click_here") }}
+          {{ t('auth.register.info_click_here') }}
         </span>
       </button>
     </div>
@@ -464,7 +435,7 @@ async function handleForgotPassword (email: string) {
       aria-live="polite"
       aria-atomic="true"
     >
-      {{ t("auth.forgot_password_sent") }}
+      {{ t('auth.forgot_password_sent') }}
     </div>
     <div
       v-if="forgotPasswordError"
@@ -476,9 +447,7 @@ async function handleForgotPassword (email: string) {
       {{ forgotPasswordError }}
     </div>
 
-    <p class="text-center text-xs text-gray-400 mt-6">
-      © 2024 TOUS DROITS RÉSERVÉS
-    </p>
+    <p class="text-center text-xs text-gray-400 mt-6">© 2024 TOUS DROITS RÉSERVÉS</p>
   </div>
 </template>
 

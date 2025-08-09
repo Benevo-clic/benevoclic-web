@@ -7,12 +7,9 @@ export const useFavoritesAnnouncement = () => {
     fetchFavorites: announcementStore.fetchFavorites,
     addFavorite: announcementStore.addFavorite,
     getFavorites: computed(() => announcementStore.getFavorites),
-    getFavoriteVolunteers: computed(
-      () => announcementStore.getFavoriteVolunteers
-    ),
+    getFavoriteVolunteers: computed(() => announcementStore.getFavoriteVolunteers),
     fetchAllFavorites: announcementStore.fetchAllFavorites,
-    fetchFavoritesByAnnouncementId:
-      announcementStore.fetchFavoritesByAnnouncementId,
+    fetchFavoritesByAnnouncementId: announcementStore.fetchFavoritesByAnnouncementId,
     findAllFavoritesAnnouncementsByVolunteerId:
       announcementStore.findAllFavoritesAnnouncementsByVolunteerId,
     removeAllByVolunteerId: announcementStore.removeAllByVolunteerId,
@@ -23,11 +20,8 @@ export const useFavoritesAnnouncement = () => {
     ),
     loading: computed(() => announcementStore.loading),
     error: computed(() => announcementStore.error),
-    removeByVolunteerIdAndAnnouncementId:
-      announcementStore.removeByVolunteerIdAndAnnouncementId,
-    fetchAllFavoritesOfVolunteer:
-      announcementStore.fetchAllFavoritesOfVolunteer,
-    fetchFavoriteVolunteerByVolunteerId:
-      announcementStore.fetchFavoriteVolunteerByVolunteerId
+    removeByVolunteerIdAndAnnouncementId: announcementStore.removeByVolunteerIdAndAnnouncementId,
+    fetchAllFavoritesOfVolunteer: announcementStore.fetchAllFavoritesOfVolunteer,
+    fetchFavoriteVolunteerByVolunteerId: announcementStore.fetchFavoriteVolunteerByVolunteerId
   }
 }

@@ -9,7 +9,7 @@
     <div class="md:col-span-3">
       <div class="bg-base-100 rounded-lg shadow-md p-6">
         <h1 class="text-2xl font-bold mb-6 text-base-content">
-          {{ t("drawer-content.activity.history") }}
+          {{ t('drawer-content.activity.history') }}
         </h1>
 
         <!-- History list -->
@@ -23,7 +23,7 @@
                   placeholder="Search history..."
                   class="input input-bordered w-full mr-2"
                   aria-label="Champ de saisie"
-                >
+                />
                 <button class="btn btn-square">
                   <Search class="w-5 h-5" />
                 </button>
@@ -31,27 +31,17 @@
             </div>
 
             <select class="select select-bordered" aria-label="Sélection">
-              <option value="all">
-                All Activities
-              </option>
-              <option value="missions">
-                Missions
-              </option>
-              <option value="applications">
-                Applications
-              </option>
-              <option value="searches">
-                Searches
-              </option>
+              <option value="all">All Activities</option>
+              <option value="missions">Missions</option>
+              <option value="applications">Applications</option>
+              <option value="searches">Searches</option>
             </select>
           </div>
 
           <!-- Timeline -->
           <div v-if="historyItems.length > 0" class="relative">
             <!-- Timeline line -->
-            <div
-              class="absolute left-0 top-0 bottom-0 w-0.5 bg-base-300 ml-6 md:ml-8"
-            />
+            <div class="absolute left-0 top-0 bottom-0 w-0.5 bg-base-300 ml-6 md:ml-8" />
 
             <!-- Timeline items -->
             <div class="space-y-6">
@@ -61,16 +51,11 @@
                 class="relative pl-16 md:pl-20"
               >
                 <!-- Timeline dot -->
-                <div
-                  class="absolute left-0 top-0 w-12 md:w-16 flex items-center justify-center"
-                >
+                <div class="absolute left-0 top-0 w-12 md:w-16 flex items-center justify-center">
                   <div
                     class="w-8 h-8 rounded-full bg-base-300 flex items-center justify-center z-10"
                   >
-                    <component
-                      :is="getIconForType(item.type)"
-                      class="w-4 h-4 text-base-content"
-                    />
+                    <component :is="getIconForType(item.type)" class="w-4 h-4 text-base-content" />
                   </div>
                 </div>
 
@@ -121,22 +106,13 @@
           <!-- Empty state -->
           <div v-else class="text-center py-12">
             <Clock class="w-16 h-16 mx-auto text-base-content opacity-30" />
-            <h3 class="mt-4 text-lg font-medium text-base-content">
-              No history found
-            </h3>
-            <p class="mt-2 text-base-content opacity-70">
-              Your activity history will appear here.
-            </p>
+            <h3 class="mt-4 text-lg font-medium text-base-content">No history found</h3>
+            <p class="mt-2 text-base-content opacity-70">Your activity history will appear here.</p>
           </div>
 
           <!-- Load more button -->
           <div v-if="historyItems.length > 0" class="flex justify-center mt-8">
-            <button
-              class="btn btn-outline"
-              type="button"
-            >
-              Load More
-            </button>
+            <button class="btn btn-outline" type="button">Load More</button>
           </div>
         </div>
       </div>
@@ -145,76 +121,68 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import {
-  Search,
-  Clock,
-  MapPin,
-  FileText,
-  Search as SearchIcon
-} from 'lucide-vue-next'
-import ActivityMenu from '~/components/activity/ActivityMenu.vue'
+  import { ref } from 'vue'
+  import { Search, Clock, MapPin, FileText, Search as SearchIcon } from 'lucide-vue-next'
+  import ActivityMenu from '~/components/activity/ActivityMenu.vue'
 
-definePageMeta({
-  middleware: ['auth'],
-  layout: 'app'
-})
-
-const { t } = useI18n()
-
-// Mock history data - would be fetched from API in a real app
-const historyItems = ref([
-  {
-    type: 'mission',
-    title: 'Completed Mission: Beach Cleanup',
-    description:
-      'You completed the Beach Cleanup mission with Ocean Conservation Group.',
-    date: '2023-05-15T14:30:00'
-  },
-  {
-    type: 'application',
-    title: 'Application Submitted',
-    description:
-      'You applied to the Food Distribution mission with Community Food Bank.',
-    date: '2023-05-10T09:15:00'
-  },
-  {
-    type: 'search',
-    title: 'Search Performed',
-    description: 'You searched for "environmental missions" in Miami.',
-    date: '2023-05-05T16:45:00'
-  },
-  {
-    type: 'mission',
-    title: 'Mission Canceled',
-    description: 'Your participation in Tree Planting Event was canceled.',
-    date: '2023-04-28T11:20:00'
-  }
-])
-
-// Format date for display
-function formatDate (dateString: string): string {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+  definePageMeta({
+    middleware: ['auth'],
+    layout: 'app'
   })
-}
 
-// Get icon component based on activity type
-function getIconForType (type: string) {
-  switch (type) {
-    case 'mission':
-      return MapPin
-    case 'application':
-      return FileText
-    case 'search':
-      return SearchIcon
-    default:
-      return Clock
+  const { t } = useI18n()
+
+  // Mock history data - would be fetched from API in a real app
+  const historyItems = ref([
+    {
+      type: 'mission',
+      title: 'Completed Mission: Beach Cleanup',
+      description: 'You completed the Beach Cleanup mission with Ocean Conservation Group.',
+      date: '2023-05-15T14:30:00'
+    },
+    {
+      type: 'application',
+      title: 'Application Submitted',
+      description: 'You applied to the Food Distribution mission with Community Food Bank.',
+      date: '2023-05-10T09:15:00'
+    },
+    {
+      type: 'search',
+      title: 'Search Performed',
+      description: 'You searched for "environmental missions" in Miami.',
+      date: '2023-05-05T16:45:00'
+    },
+    {
+      type: 'mission',
+      title: 'Mission Canceled',
+      description: 'Your participation in Tree Planting Event was canceled.',
+      date: '2023-04-28T11:20:00'
+    }
+  ])
+
+  // Format date for display
+  function formatDate(dateString: string): string {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
   }
-}
+
+  // Get icon component based on activity type
+  function getIconForType(type: string) {
+    switch (type) {
+      case 'mission':
+        return MapPin
+      case 'application':
+        return FileText
+      case 'search':
+        return SearchIcon
+      default:
+        return Clock
+    }
+  }
 </script>

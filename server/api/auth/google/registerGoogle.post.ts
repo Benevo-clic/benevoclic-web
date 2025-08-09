@@ -3,13 +3,10 @@ import { initializeApp } from '@firebase/app'
 import { getAuth, signInWithCustomToken } from '@firebase/auth'
 import axios from 'axios'
 import { setCookies } from '~/server/api/auth/login.post'
-import type {
-  RegisterGooglePayload,
-  RegisterUserGoogleResponse
-} from '~/common/types/auth.type'
+import type { RegisterGooglePayload, RegisterUserGoogleResponse } from '~/common/types/auth.type'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const body = await readBody(event)
   const config = useRuntimeConfig()
 
@@ -22,10 +19,7 @@ export default defineEventHandler(async (event) => {
   try {
     app = initializeApp(config.public.firebaseConfig)
   } catch (error) {
-    console.error(
-      "Erreur lors de l'initialisation de Firebase côté serveur:",
-      error
-    )
+    console.error("Erreur lors de l'initialisation de Firebase côté serveur:", error)
     return { error: "Erreur d'initialisation Firebase" }
   }
 
@@ -49,10 +43,7 @@ export default defineEventHandler(async (event) => {
   const auth = getAuth(app)
 
   try {
-    const userCredential = await signInWithCustomToken(
-      auth,
-      response.data.token
-    )
+    const userCredential = await signInWithCustomToken(auth, response.data.token)
 
     const idToken = await userCredential.user.getIdToken()
     const refreshToken = userCredential.user.refreshToken
@@ -68,15 +59,9 @@ export default defineEventHandler(async (event) => {
       refreshToken
     }
   } catch (error) {
-    console.error(
-      "Erreur lors de l'authentification avec token personnalisé:",
-      error
-    )
+    console.error("Erreur lors de l'authentification avec token personnalisé:", error)
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        "Erreur lors de l'authentification avec Google"
-      )
+      ApiError.handleAxios(error, "Erreur lors de l'authentification avec Google")
     }
     return { error: "Erreur lors de l'authentification" }
   }

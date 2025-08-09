@@ -25,7 +25,7 @@
           height="144"
           loading="lazy"
           decoding="async"
-        >
+        />
         <div
           v-else
           class="w-full h-full flex flex-col items-center justify-center text-base-content/60"
@@ -50,9 +50,7 @@
               </svg>
             </div>
           </div>
-          <p class="text-sm font-medium">
-            Aucune image
-          </p>
+          <p class="text-sm font-medium">Aucune image</p>
         </div>
       </figure>
 
@@ -87,7 +85,7 @@
               height="48"
               loading="lazy"
               decoding="async"
-            >
+            />
             <div
               v-else
               class="w-full h-full bg-base-300 flex items-center justify-center"
@@ -113,7 +111,7 @@
         </div>
         <div class="flex flex-col">
           <span class="font-medium text-sm">{{
-            announcement.associationName || "Association"
+            announcement.associationName || 'Association'
           }}</span>
           <span class="text-xs text-base-content/60">Organisateur</span>
         </div>
@@ -136,16 +134,13 @@
 
       <!-- Date & Lieu -->
       <div class="flex items-center flex-wrap gap-4 mb-4 text-sm">
-        <div
-          class="flex items-center gap-2"
-          aria-label="Date et heure de l'événement"
-        >
+        <div class="flex items-center gap-2" aria-label="Date et heure de l'événement">
           <Calendar class="h-4 w-4 text-primary" aria-hidden="true" />
           <time :datetime="announcement.dateEvent" class="font-medium">
             {{
-              new Date(announcement.dateEvent).toLocaleDateString("fr-FR", {
-                day: "2-digit",
-                month: "2-digit",
+              new Date(announcement.dateEvent).toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit'
               })
             }}
           </time>
@@ -158,33 +153,24 @@
           aria-label="Lieu de l'événement"
         >
           <MapPin class="h-4 w-4 text-secondary" aria-hidden="true" />
-          <span class="truncate max-w-[100px]">{{
-            announcement.addressAnnouncement.city
-          }}</span>
+          <span class="truncate max-w-[100px]">{{ announcement.addressAnnouncement.city }}</span>
         </div>
       </div>
 
       <!-- Participants & Bénévoles -->
-      <div
-        class="flex gap-6 mb-4 text-sm"
-        role="group"
-        aria-label="Statistiques de participation"
-      >
-        <div
-          class="flex items-center gap-2"
-          aria-label="Nombre de participants"
-        >
+      <div class="flex gap-6 mb-4 text-sm" role="group" aria-label="Statistiques de participation">
+        <div class="flex items-center gap-2" aria-label="Nombre de participants">
           <Users class="h-4 w-4 text-primary" aria-hidden="true" />
-          <span class="font-medium">{{ announcement.nbParticipants }}/{{
-            announcement.maxParticipants
-          }}</span>
+          <span class="font-medium"
+            >{{ announcement.nbParticipants }}/{{ announcement.maxParticipants }}</span
+          >
           <span class="text-base-content/60">participants</span>
         </div>
         <div class="flex items-center gap-2" aria-label="Nombre de bénévoles">
           <HeartHandshake class="h-4 w-4 text-secondary" aria-hidden="true" />
-          <span class="font-medium">{{ announcement.nbVolunteers }}/{{
-            announcement.maxVolunteers
-          }}</span>
+          <span class="font-medium"
+            >{{ announcement.nbVolunteers }}/{{ announcement.maxVolunteers }}</span
+          >
           <span class="text-base-content/60">bénévoles</span>
         </div>
       </div>
@@ -208,17 +194,14 @@
             @keyup.enter="filterByTag(tag)"
             @keyup.space.prevent="filterByTag(tag)"
           >
-            <span
-              class="text-base-content/70 group-hover:text-primary transition-colors"
-            >{{ tag }}</span>
+            <span class="text-base-content/70 group-hover:text-primary transition-colors">{{
+              tag
+            }}</span>
           </div>
-          <div
-            v-if="announcement.tags.length > 2"
-            class="badge badge-ghost text-sm text-neutral"
-          >
-            <span
-              class="text-base-content/70 group-hover:text-primary transition-colors"
-            >+{{ announcement.tags.length - 2 }}</span>
+          <div v-if="announcement.tags.length > 2" class="badge badge-ghost text-sm text-neutral">
+            <span class="text-base-content/70 group-hover:text-primary transition-colors"
+              >+{{ announcement.tags.length - 2 }}</span
+            >
           </div>
         </div>
 
@@ -250,57 +233,51 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue'
-import {
-  Heart,
-  HeartHandshake,
-  Users,
-  Calendar,
-  MapPin
-} from 'lucide-vue-next'
-import { navigateTo } from '#app'
-import type { Announcement } from '~/common/interface/event.interface'
+  import { computed, watch, ref } from 'vue'
+  import { Heart, HeartHandshake, Users, Calendar, MapPin } from 'lucide-vue-next'
+  import { navigateTo } from '#app'
+  import type { Announcement } from '~/common/interface/event.interface'
 
-const props = defineProps<{
-  announcement: Announcement;
-  isFavorite?: boolean;
-  isConnected?: boolean;
-}>()
+  const props = defineProps<{
+    announcement: Announcement
+    isFavorite?: boolean
+    isConnected?: boolean
+  }>()
 
-const favorite = ref(props.isFavorite)
+  const favorite = ref(props.isFavorite)
 
-watch(
-  () => props.isFavorite,
-  (newValue) => {
-    favorite.value = newValue
-  },
-  { immediate: true }
-)
+  watch(
+    () => props.isFavorite,
+    newValue => {
+      favorite.value = newValue
+    },
+    { immediate: true }
+  )
 
-const coverImageUrl = computed(() => {
-  return props.announcement.announcementImage
-})
+  const coverImageUrl = computed(() => {
+    return props.announcement.announcementImage
+  })
 
-const associationImageUrl = computed(() => {
-  return props.announcement.associationLogo
-})
+  const associationImageUrl = computed(() => {
+    return props.announcement.associationLogo
+  })
 
-const emit = defineEmits(['favorite', 'participate', 'filter-by-tag'])
+  const emit = defineEmits(['favorite', 'participate', 'filter-by-tag'])
 
-function toggleFavorite () {
-  favorite.value = !favorite.value
-  emit('favorite', props.announcement)
-}
-
-function goToDetails () {
-  if (!props.isConnected) {
-    navigateTo(`/announcement/${props.announcement._id}`)
-    return
+  function toggleFavorite() {
+    favorite.value = !favorite.value
+    emit('favorite', props.announcement)
   }
-  navigateTo(`/volunteer/events/announcement/${props.announcement._id}`)
-}
 
-function filterByTag (tag: string) {
-  emit('filter-by-tag', tag)
-}
+  function goToDetails() {
+    if (!props.isConnected) {
+      navigateTo(`/announcement/${props.announcement._id}`)
+      return
+    }
+    navigateTo(`/volunteer/events/announcement/${props.announcement._id}`)
+  }
+
+  function filterByTag(tag: string) {
+    emit('filter-by-tag', tag)
+  }
 </script>

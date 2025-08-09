@@ -38,9 +38,7 @@ async function getFirebase () {
   }
 
   if (!firebase || !firebase.auth) {
-    throw new Error(
-      'Firebase non initialisé - veuillez réessayer dans quelques secondes'
-    )
+    throw new Error('Firebase non initialisé - veuillez réessayer dans quelques secondes')
   }
 
   return firebase
@@ -53,14 +51,14 @@ export async function loginWithGoogle (): Promise<User> {
 }
 
 interface UserState {
-  user: UserInfo | null;
-  loading: boolean;
-  error: string | null;
+  user: UserInfo | null
+  loading: boolean
+  error: string | null
   // Cache pour éviter les appels API redondants
-  _lastUserFetch: number;
-  _userCacheExpiry: number;
-  _isFetching: boolean;
-  _lastUserUpdate: number; // Timestamp de la dernière mise à jour
+  _lastUserFetch: number
+  _userCacheExpiry: number
+  _isFetching: boolean
+  _lastUserUpdate: number // Timestamp de la dernière mise à jour
 }
 
 export const useUserStore = defineStore('user', {
@@ -78,8 +76,7 @@ export const useUserStore = defineStore('user', {
     userId: state => state.user?.userId ?? null,
     getUser: state => state.user,
     getRole: state => state.user?.role ?? null,
-    fullName: state =>
-      state.user ? `${state.user.firstName} ${state.user.lastName}` : '',
+    fullName: state => (state.user ? `${state.user.firstName} ${state.user.lastName}` : ''),
     isFetching: state => state._isFetching,
     isUserCacheValid: (state) => {
       return Date.now() - state._lastUserFetch < state._userCacheExpiry
@@ -177,13 +174,10 @@ export const useUserStore = defineStore('user', {
       this.error = null
       try {
         const $fetch = useRequestFetch()
-        const response = await $fetch<UserInfo>(
-          `/api/user/${id}/isCompleted/${isCompleted}`,
-          {
-            method: 'PATCH',
-            credentials: 'include'
-          }
-        )
+        const response = await $fetch<UserInfo>(`/api/user/${id}/isCompleted/${isCompleted}`, {
+          method: 'PATCH',
+          credentials: 'include'
+        })
 
         if (response) {
           this.updateUserData(response)
@@ -246,21 +240,17 @@ export const useUserStore = defineStore('user', {
         formData.append('file', file)
 
         const $fetch = useRequestFetch()
-        const response = await $fetch<UserInfo>(
-          `/api/user/${user.uid}/update-avatar`,
-          {
-            method: 'PATCH',
-            credentials: 'include',
-            body: formData
-          }
-        )
+        const response = await $fetch<UserInfo>(`/api/user/${user.uid}/update-avatar`, {
+          method: 'PATCH',
+          credentials: 'include',
+          body: formData
+        })
 
         if (response) {
           this.updateUserData(response)
         }
       } catch (error: any) {
-        this.error =
-          error?.message || "Erreur lors de la mise à jour de l'avatar"
+        this.error = error?.message || "Erreur lors de la mise à jour de l'avatar"
         throw error
       } finally {
         this.loading = false
@@ -286,9 +276,7 @@ export const useUserStore = defineStore('user', {
           return false
         }
       } catch (error: any) {
-        this.error =
-          error?.message ||
-          "Erreur lors de la vérification du statut d'approbation"
+        this.error = error?.message || "Erreur lors de la vérification du statut d'approbation"
         throw error
       } finally {
         this.loading = false
@@ -304,13 +292,10 @@ export const useUserStore = defineStore('user', {
       }
       try {
         const $fetch = useRequestFetch()
-        const response = await $fetch<{ success?: boolean }>(
-          `/api/user/${this.user?.userId}`,
-          {
-            method: 'DELETE',
-            credentials: 'include'
-          }
-        )
+        const response = await $fetch<{ success?: boolean }>(`/api/user/${this.user?.userId}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        })
 
         if (response.success) {
           this.user = null
@@ -325,10 +310,7 @@ export const useUserStore = defineStore('user', {
     },
 
     // Met à jour le mot de passe (Firebase)
-    async updatePassword (payload: {
-      oldPassword: string;
-      newPassword: string;
-    }) {
+    async updatePassword (payload: { oldPassword: string; newPassword: string }) {
       this.loading = true
       this.error = null
       try {
@@ -342,16 +324,12 @@ export const useUserStore = defineStore('user', {
           payload.oldPassword
         )
 
-        await reauthenticateWithCredential(
-          firebase.auth.currentUser,
-          credential
-        )
+        await reauthenticateWithCredential(firebase.auth.currentUser, credential)
         await updatePassword(firebase.auth.currentUser, payload.newPassword)
 
         this.invalidateUserCache()
       } catch (error: any) {
-        this.error =
-          error?.message || 'Erreur lors de la mise à jour du mot de passe'
+        this.error = error?.message || 'Erreur lors de la mise à jour du mot de passe'
         throw error
       } finally {
         this.loading = false

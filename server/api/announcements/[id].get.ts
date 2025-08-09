@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Announcement } from '~/common/interface/event.interface'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const announcementId = event.context.params?.id
   const token = getCookie(event, 'auth_token')
   const config = useRuntimeConfig()
@@ -28,10 +28,7 @@ export default defineEventHandler(async (event) => {
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la récupération des annonces par association'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la récupération des annonces par association')
     }
   }
 })

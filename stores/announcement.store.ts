@@ -35,10 +35,7 @@ export const useAnnouncementStore = defineStore('announcement', {
     getLoading: state => state.loading,
     getError: state => state.error,
     getAnnouncementById: state => (id: string) => {
-      return (
-        state._announcementsCache.get(id) ||
-        state.announcements.find(a => a._id === id)
-      )
+      return state._announcementsCache.get(id) || state.announcements.find(a => a._id === id)
     },
     getCurrentFilter: state => state.currentFilter,
     isCacheValid: (state) => {
@@ -79,13 +76,10 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.loading = true
       this.error = null
       try {
-        this.announcements = await $fetch<Announcement[]>(
-          `/api/announcements/association/${id}`,
-          {
-            method: 'GET',
-            credentials: 'include'
-          }
-        )
+        this.announcements = await $fetch<Announcement[]>(`/api/announcements/association/${id}`, {
+          method: 'GET',
+          credentials: 'include'
+        })
 
         if (!this.announcements || this.announcements.length === 0) {
           this.error = 'Aucune annonce trouvée'
@@ -110,13 +104,10 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.loading = true
       this.error = null
       try {
-        this.announcements = await $fetch<Announcement[]>(
-          '/api/announcements/allAnnouncements',
-          {
-            method: 'GET',
-            credentials: 'include'
-          }
-        )
+        this.announcements = await $fetch<Announcement[]>('/api/announcements/allAnnouncements', {
+          method: 'GET',
+          credentials: 'include'
+        })
         if (!this.announcements || this.announcements.length === 0) {
           this.error = 'Aucune annonce trouvée'
         }
@@ -141,19 +132,13 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.loading = true
       this.error = null
       try {
-        this.currentAnnouncement = await $fetch<Announcement>(
-          `/api/announcements/${id}`,
-          {
-            method: 'GET',
-            credentials: 'include'
-          }
-        )
+        this.currentAnnouncement = await $fetch<Announcement>(`/api/announcements/${id}`, {
+          method: 'GET',
+          credentials: 'include'
+        })
 
         if (this.currentAnnouncement?._id) {
-          this._announcementsCache.set(
-            this.currentAnnouncement._id,
-            this.currentAnnouncement
-          )
+          this._announcementsCache.set(this.currentAnnouncement._id, this.currentAnnouncement)
         }
 
         return this.currentAnnouncement
@@ -229,14 +214,11 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.loading = true
       this.error = null
       try {
-        const response = await $fetch<Announcement>(
-          `/api/announcements/${id}`,
-          {
-            method: 'PATCH',
-            credentials: 'include',
-            body: payload
-          }
-        )
+        const response = await $fetch<Announcement>(`/api/announcements/${id}`, {
+          method: 'PATCH',
+          credentials: 'include',
+          body: payload
+        })
 
         const index = this.announcements.findIndex(a => a._id === id)
         if (index !== -1) {
@@ -298,23 +280,17 @@ export const useAnnouncementStore = defineStore('announcement', {
       this._lastFetch = 0
     },
 
-    async addParticipant (
-      id: string,
-      participant: { id: string; name: string }
-    ) {
+    async addParticipant (id: string, participant: { id: string; name: string }) {
       this.loading = true
       this.error = null
       try {
-        const response = await $fetch(
-          `/api/announcements/participant/register/${id}`,
-          {
-            method: 'PATCH',
-            credentials: 'include',
-            body: {
-              ...participant
-            }
+        const response = await $fetch(`/api/announcements/participant/register/${id}`, {
+          method: 'PATCH',
+          credentials: 'include',
+          body: {
+            ...participant
           }
-        )
+        })
 
         if (this.currentAnnouncement?._id === id) {
           await this.fetchAnnouncementById(id)
@@ -329,23 +305,17 @@ export const useAnnouncementStore = defineStore('announcement', {
         this.loading = false
       }
     },
-    async addVolunteerWaiting (
-      id: string,
-      volunteer: { id: string; name: string }
-    ) {
+    async addVolunteerWaiting (id: string, volunteer: { id: string; name: string }) {
       this.loading = true
       this.error = null
       try {
-        const response = await $fetch(
-          `/api/announcements/volunteerWaiting/register/${id}`,
-          {
-            method: 'PATCH',
-            credentials: 'include',
-            body: {
-              ...volunteer
-            }
+        const response = await $fetch(`/api/announcements/volunteerWaiting/register/${id}`, {
+          method: 'PATCH',
+          credentials: 'include',
+          body: {
+            ...volunteer
           }
-        )
+        })
 
         if (this.currentAnnouncement?._id === id) {
           await this.fetchAnnouncementById(id)
@@ -355,8 +325,7 @@ export const useAnnouncementStore = defineStore('announcement', {
 
         return response
       } catch (err: any) {
-        this.error =
-          err?.message || "Erreur d'enregistrement du volontaire en attente"
+        this.error = err?.message || "Erreur d'enregistrement du volontaire en attente"
         throw err
       } finally {
         this.loading = false
@@ -366,16 +335,13 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.loading = true
       this.error = null
       try {
-        const response = await $fetch(
-          `/api/announcements/volunteer/register/${id}`,
-          {
-            method: 'PATCH',
-            credentials: 'include',
-            body: {
-              ...volunteer
-            }
+        const response = await $fetch(`/api/announcements/volunteer/register/${id}`, {
+          method: 'PATCH',
+          credentials: 'include',
+          body: {
+            ...volunteer
           }
-        )
+        })
 
         if (this.currentAnnouncement?._id === id) {
           await this.fetchAnnouncementById(id)
@@ -464,8 +430,7 @@ export const useAnnouncementStore = defineStore('announcement', {
 
         return response
       } catch (err: any) {
-        this.error =
-          err?.message || 'Erreur de suppression du volontaire en attente'
+        this.error = err?.message || 'Erreur de suppression du volontaire en attente'
         throw err
       } finally {
         this.loading = false
@@ -475,14 +440,11 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.loading = true
       this.error = null
       try {
-        const response = await $fetch(
-          `/api/announcements/updateStatus/${announcementId}`,
-          {
-            method: 'PATCH',
-            credentials: 'include',
-            body: { status }
-          }
-        )
+        const response = await $fetch(`/api/announcements/updateStatus/${announcementId}`, {
+          method: 'PATCH',
+          credentials: 'include',
+          body: { status }
+        })
 
         if (this.currentAnnouncement?._id === announcementId) {
           await this.fetchAnnouncementById(announcementId)
@@ -494,8 +456,7 @@ export const useAnnouncementStore = defineStore('announcement', {
 
         return response
       } catch (err: any) {
-        this.error =
-          err?.message || "Erreur de mise à jour du statut de l'annonce"
+        this.error = err?.message || "Erreur de mise à jour du statut de l'annonce"
         throw err
       } finally {
         this.loading = false
@@ -548,8 +509,7 @@ export const useAnnouncementStore = defineStore('announcement', {
 
         return response
       } catch (err: any) {
-        this.error =
-          err?.message || 'Erreur de mise à jour du participant présent'
+        this.error = err?.message || 'Erreur de mise à jour du participant présent'
         throw err
       } finally {
         this.loading = false
@@ -560,14 +520,11 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.loading = true
       this.error = null
       try {
-        const response = await $fetch<Announcement>(
-          `/api/announcements/volunteer/presence/${id}`,
-          {
-            method: 'PATCH',
-            credentials: 'include',
-            body: volunteer
-          }
-        )
+        const response = await $fetch<Announcement>(`/api/announcements/volunteer/presence/${id}`, {
+          method: 'PATCH',
+          credentials: 'include',
+          body: volunteer
+        })
 
         if (this.currentAnnouncement?._id === id) {
           await this.fetchAnnouncementById(id)
@@ -577,8 +534,7 @@ export const useAnnouncementStore = defineStore('announcement', {
 
         return response
       } catch (err: any) {
-        this.error =
-          err?.message || 'Erreur de mise à jour du volontaire présent'
+        this.error = err?.message || 'Erreur de mise à jour du volontaire présent'
         throw err
       } finally {
         this.loading = false
@@ -640,10 +596,7 @@ export const useAnnouncementStore = defineStore('announcement', {
     },
 
     // Méthode pour comparer deux filtres
-    isSameFilter (
-      filter1: FilterAnnouncement,
-      filter2: FilterAnnouncement
-    ): boolean {
+    isSameFilter (filter1: FilterAnnouncement, filter2: FilterAnnouncement): boolean {
       // Normalise les objets avant comparaison
       const normalizeFilter = (filter: FilterAnnouncement) => {
         const normalized = { ...filter }
@@ -653,10 +606,7 @@ export const useAnnouncementStore = defineStore('announcement', {
         return normalized
       }
 
-      return (
-        JSON.stringify(normalizeFilter(filter1)) ===
-        JSON.stringify(normalizeFilter(filter2))
-      )
+      return JSON.stringify(normalizeFilter(filter1)) === JSON.stringify(normalizeFilter(filter2))
     },
 
     // Méthode pour vider le cache (optionnel)
@@ -664,9 +614,7 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.lastFilter = null
       this.cachedResponse = null
     },
-    validateFilterResponse (
-      response: FilterAnnouncementResponse | undefined
-    ): void {
+    validateFilterResponse (response: FilterAnnouncementResponse | undefined): void {
       if (!response || response.annonces.length === 0) {
         this.error = 'Aucune annonce trouvée pour les critères spécifiés'
       }

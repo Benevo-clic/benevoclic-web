@@ -1,33 +1,24 @@
 <script setup lang="ts">
-const props = defineProps<{
-  startSearching: boolean;
-  isVisible: boolean;
-  animatedStats: {
-    events: number;
-    associations: number;
-    volunteers: number;
-  };
-}>()
+  const props = defineProps<{
+    startSearching: boolean
+    isVisible: boolean
+    animatedStats: {
+      events: number
+      associations: number
+      volunteers: number
+    }
+  }>()
 </script>
 
 <template>
   <div class="statistique">
-    <section
-      v-if="!props.startSearching"
-      id="stats-section"
-      class="py-16 px-4 bg-base-200"
-    >
+    <section v-if="!props.startSearching" id="stats-section" class="py-16 px-4 bg-base-200">
       <div class="max-w-6xl mx-auto">
-        <div
-          class="text-center mb-12 slide-in-up"
-          :class="{ visible: props.isVisible }"
-        >
-          <h2 class="text-3xl font-bold mb-4">
-            Benevoclic en chiffres
-          </h2>
+        <div class="text-center mb-12 slide-in-up" :class="{ visible: props.isVisible }">
+          <h2 class="text-3xl font-bold mb-4">Benevoclic en chiffres</h2>
           <p class="text-base-content/70 max-w-2xl mx-auto">
-            Rejoignez notre communauté grandissante et participez à des
-            événements qui font la différence.
+            Rejoignez notre communauté grandissante et participez à des événements qui font la
+            différence.
           </p>
         </div>
 
@@ -39,12 +30,9 @@ const props = defineProps<{
             <div class="text-4xl font-bold text-primary mb-2 counter-animate">
               {{ props.animatedStats.events }}
             </div>
-            <div class="text-xl font-semibold mb-2">
-              Événements
-            </div>
+            <div class="text-xl font-semibold mb-2">Événements</div>
             <p class="text-base-content/70">
-              Événements disponibles sur notre plateforme pour vous engager et
-              faire la différence.
+              Événements disponibles sur notre plateforme pour vous engager et faire la différence.
             </p>
           </div>
 
@@ -55,12 +43,9 @@ const props = defineProps<{
             <div class="text-4xl font-bold text-secondary mb-2 counter-animate">
               {{ animatedStats.associations }}
             </div>
-            <div class="text-xl font-semibold mb-2">
-              Associations
-            </div>
+            <div class="text-xl font-semibold mb-2">Associations</div>
             <p class="text-base-content/70">
-              Associations actives qui proposent des missions et événements
-              variés.
+              Associations actives qui proposent des missions et événements variés.
             </p>
           </div>
 
@@ -72,12 +57,13 @@ const props = defineProps<{
               {{ animatedStats.volunteers }}
             </div>
             <div class="text-xl font-semibold mb-2">
-              Bénévole<span v-if="animatedStats.volunteers > 1">s</span> &
-              participant<span v-if="animatedStats.volunteers > 1">s</span>
+              Bénévole<span v-if="animatedStats.volunteers > 1">s</span> & participant<span
+                v-if="animatedStats.volunteers > 1"
+                >s</span
+              >
             </div>
             <p class="text-base-content/70">
-              Nombre de bénévoles et participants engagés dans des actions
-              solidaires.
+              Nombre de bénévoles et participants engagés dans des actions solidaires.
             </p>
           </div>
         </div>

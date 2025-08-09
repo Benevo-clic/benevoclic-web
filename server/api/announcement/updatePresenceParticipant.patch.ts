@@ -3,7 +3,7 @@ import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 import type { InfoVolunteer } from '~/common/interface/event.interface'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
   const config = useRuntimeConfig()
   const body = (await readBody(event)) as InfoVolunteer

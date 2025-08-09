@@ -1,80 +1,80 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { mount } from "@vue/test-utils";
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { mount } from '@vue/test-utils'
 
 // Mock des icônes
 const MockSearch = {
-  template: '<div class="search-icon">Search</div>',
-};
+  template: '<div class="search-icon">Search</div>'
+}
 
 const MockClock = {
-  template: '<div class="clock-icon">Clock</div>',
-};
+  template: '<div class="clock-icon">Clock</div>'
+}
 
 const MockMapPin = {
-  template: '<div class="map-pin-icon">MapPin</div>',
-};
+  template: '<div class="map-pin-icon">MapPin</div>'
+}
 
 const MockFileText = {
-  template: '<div class="file-text-icon">FileText</div>',
-};
+  template: '<div class="file-text-icon">FileText</div>'
+}
 
 const MockSearchIcon = {
-  template: '<div class="search-icon-alt">SearchIcon</div>',
-};
+  template: '<div class="search-icon-alt">SearchIcon</div>'
+}
 
 const MockActivityMenu = {
-  template: '<div class="activity-menu">Activity Menu</div>',
-};
+  template: '<div class="activity-menu">Activity Menu</div>'
+}
 
 // Mock des composables
-const mockT = vi.fn((key) => {
+const mockT = vi.fn(key => {
   const translations = {
-    "drawer-content.activity.history": "Historique d'activité",
-  };
-  return translations[key] || key;
-});
+    'drawer-content.activity.history': "Historique d'activité"
+  }
+  return translations[key] || key
+})
 
 // Mock des données
 const mockHistoryItems = [
   {
-    id: "1",
-    type: "mission",
-    title: "Mission complétée",
-    description: "Aide aux personnes âgées",
-    date: "2024-06-15",
+    id: '1',
+    type: 'mission',
+    title: 'Mission complétée',
+    description: 'Aide aux personnes âgées',
+    date: '2024-06-15'
   },
   {
-    id: "2",
-    type: "application",
-    title: "Candidature soumise",
-    description: "Poste de bénévole",
-    date: "2024-06-10",
+    id: '2',
+    type: 'application',
+    title: 'Candidature soumise',
+    description: 'Poste de bénévole',
+    date: '2024-06-10'
   },
   {
-    id: "3",
-    type: "search",
-    title: "Recherche effectuée",
+    id: '3',
+    type: 'search',
+    title: 'Recherche effectuée',
     description: "Recherche d'événements",
-    date: "2024-06-05",
-  },
-];
+    date: '2024-06-05'
+  }
+]
 
 // Mock des modules
-vi.mock("lucide-vue-next", () => ({
+vi.mock('lucide-vue-next', () => ({
   Search: MockSearch,
   Clock: MockClock,
   MapPin: MockMapPin,
-  FileText: MockFileText,
-}));
+  FileText: MockFileText
+}))
 
-vi.mock("~/components/activity/ActivityMenu.vue", () => MockActivityMenu);
+vi.mock('~/components/activity/ActivityMenu.vue', () => MockActivityMenu)
 
-vi.mock("~/composables/useI18n", () => ({
+vi.mock('~/composables/useI18n', () => ({
   useI18n: () => ({
-    t: mockT,
-  }),
-}));
+    t: mockT
+  })
+}))
 
 // Composant mock pour le test
 const MockAssociationHistory = {
@@ -167,294 +167,290 @@ const MockAssociationHistory = {
     Clock: MockClock,
     MapPin: MockMapPin,
     FileText: MockFileText,
-    ActivityMenu: MockActivityMenu,
+    ActivityMenu: MockActivityMenu
   },
   data() {
     return {
       t: mockT,
-      historyItems: mockHistoryItems,
-    };
+      historyItems: mockHistoryItems
+    }
   },
   methods: {
     getIconForType(type: string) {
       const icons = {
         mission: MockMapPin,
         application: MockFileText,
-        search: MockSearchIcon,
-      };
-      return icons[type] || MockClock;
+        search: MockSearchIcon
+      }
+      return icons[type] || MockClock
     },
     formatDate(date: string) {
-      return new Date(date).toLocaleDateString();
-    },
-  },
-};
+      return new Date(date).toLocaleDateString()
+    }
+  }
+}
 
-describe("AssociationHistory", () => {
+describe('AssociationHistory', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-  });
+    vi.clearAllMocks()
+  })
 
-  describe("Rendu de base", () => {
-    it("should render the main container", () => {
-      const wrapper = mount(MockAssociationHistory);
-      expect(wrapper.find(".grid.grid-cols-1.md\\:grid-cols-4").exists()).toBe(
-        true,
-      );
-    });
+  describe('Rendu de base', () => {
+    it('should render the main container', () => {
+      const wrapper = mount(MockAssociationHistory)
+      expect(wrapper.find('.grid.grid-cols-1.md\\:grid-cols-4').exists()).toBe(true)
+    })
 
-    it("should render the page title", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const title = wrapper.find("h1");
-      expect(title.exists()).toBe(true);
-      expect(title.text()).toBe("Historique d'activité");
-    });
-  });
+    it('should render the page title', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const title = wrapper.find('h1')
+      expect(title.exists()).toBe(true)
+      expect(title.text()).toBe("Historique d'activité")
+    })
+  })
 
-  describe("Sidebar Menu", () => {
-    it("should render activity menu on desktop", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const activityMenu = wrapper.find(".activity-menu");
-      expect(activityMenu.exists()).toBe(true);
-    });
+  describe('Sidebar Menu', () => {
+    it('should render activity menu on desktop', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const activityMenu = wrapper.find('.activity-menu')
+      expect(activityMenu.exists()).toBe(true)
+    })
 
-    it("should be hidden on mobile", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const sidebar = wrapper.find(".hidden.md\\:block");
-      expect(sidebar.exists()).toBe(true);
-    });
-  });
+    it('should be hidden on mobile', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const sidebar = wrapper.find('.hidden.md\\:block')
+      expect(sidebar.exists()).toBe(true)
+    })
+  })
 
-  describe("Search and Filter Section", () => {
-    it("should render search input", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const searchInput = wrapper.find('input[type="text"]');
-      expect(searchInput.exists()).toBe(true);
-    });
+  describe('Search and Filter Section', () => {
+    it('should render search input', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const searchInput = wrapper.find('input[type="text"]')
+      expect(searchInput.exists()).toBe(true)
+    })
 
-    it("should render search button", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const searchButton = wrapper.find(".btn.btn-square");
-      expect(searchButton.exists()).toBe(true);
-    });
+    it('should render search button', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const searchButton = wrapper.find('.btn.btn-square')
+      expect(searchButton.exists()).toBe(true)
+    })
 
-    it("should render search icon", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const searchIcon = wrapper.find(".search-icon");
-      expect(searchIcon.exists()).toBe(true);
-    });
+    it('should render search icon', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const searchIcon = wrapper.find('.search-icon')
+      expect(searchIcon.exists()).toBe(true)
+    })
 
-    it("should render filter select", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const filterSelect = wrapper.find("select");
-      expect(filterSelect.exists()).toBe(true);
-    });
+    it('should render filter select', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const filterSelect = wrapper.find('select')
+      expect(filterSelect.exists()).toBe(true)
+    })
 
-    it("should have filter options", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const options = wrapper.findAll("option");
-      expect(options.length).toBeGreaterThan(0);
-    });
-  });
+    it('should have filter options', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const options = wrapper.findAll('option')
+      expect(options.length).toBeGreaterThan(0)
+    })
+  })
 
-  describe("Timeline Section", () => {
-    it("should render timeline when items exist", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const timeline = wrapper.find(".relative");
-      expect(timeline.exists()).toBe(true);
-    });
+  describe('Timeline Section', () => {
+    it('should render timeline when items exist', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const timeline = wrapper.find('.relative')
+      expect(timeline.exists()).toBe(true)
+    })
 
-    it("should render timeline line", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const timelineLine = wrapper.find(
-        ".absolute.left-0.top-0.bottom-0.w-0\\.5",
-      );
-      expect(timelineLine.exists()).toBe(true);
-    });
+    it('should render timeline line', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const timelineLine = wrapper.find('.absolute.left-0.top-0.bottom-0.w-0\\.5')
+      expect(timelineLine.exists()).toBe(true)
+    })
 
-    it("should render timeline items", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const timelineItems = wrapper.findAll(".relative.pl-16.md\\:pl-20");
-      expect(timelineItems.length).toBeGreaterThan(0);
-    });
+    it('should render timeline items', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const timelineItems = wrapper.findAll('.relative.pl-16.md\\:pl-20')
+      expect(timelineItems.length).toBeGreaterThan(0)
+    })
 
-    it("should render timeline dots", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const timelineDots = wrapper.findAll(".w-8.h-8.rounded-full");
-      expect(timelineDots.length).toBeGreaterThan(0);
-    });
+    it('should render timeline dots', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const timelineDots = wrapper.findAll('.w-8.h-8.rounded-full')
+      expect(timelineDots.length).toBeGreaterThan(0)
+    })
 
-    it("should render timeline content", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const timelineContent = wrapper.findAll(".bg-base-200.rounded-lg.p-4");
-      expect(timelineContent.length).toBeGreaterThan(0);
-    });
-  });
+    it('should render timeline content', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const timelineContent = wrapper.findAll('.bg-base-200.rounded-lg.p-4')
+      expect(timelineContent.length).toBeGreaterThan(0)
+    })
+  })
 
-  describe("Timeline Items", () => {
-    it("should display item titles", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const titles = wrapper.findAll("h3.font-semibold");
-      expect(titles.length).toBeGreaterThan(0);
-    });
+  describe('Timeline Items', () => {
+    it('should display item titles', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const titles = wrapper.findAll('h3.font-semibold')
+      expect(titles.length).toBeGreaterThan(0)
+    })
 
-    it("should display item descriptions", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const descriptions = wrapper.findAll("p.text-base-content");
-      expect(descriptions.length).toBeGreaterThan(0);
-    });
+    it('should display item descriptions', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const descriptions = wrapper.findAll('p.text-base-content')
+      expect(descriptions.length).toBeGreaterThan(0)
+    })
 
-    it("should display item dates", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const dates = wrapper.findAll(".text-sm.text-base-content.opacity-70");
-      expect(dates.length).toBeGreaterThan(0);
-    });
-  });
+    it('should display item dates', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const dates = wrapper.findAll('.text-sm.text-base-content.opacity-70')
+      expect(dates.length).toBeGreaterThan(0)
+    })
+  })
 
-  describe("Action Buttons", () => {
-    it("should render mission buttons", () => {
-      const wrapper = mount(MockAssociationHistory);
+  describe('Action Buttons', () => {
+    it('should render mission buttons', () => {
+      const wrapper = mount(MockAssociationHistory)
       const missionButtons = wrapper
-        .findAll("button")
-        .filter((btn) => btn.text().includes("View Mission"));
-      expect(missionButtons.length).toBeGreaterThan(0);
-    });
+        .findAll('button')
+        .filter(btn => btn.text().includes('View Mission'))
+      expect(missionButtons.length).toBeGreaterThan(0)
+    })
 
-    it("should render application buttons", () => {
-      const wrapper = mount(MockAssociationHistory);
+    it('should render application buttons', () => {
+      const wrapper = mount(MockAssociationHistory)
       const applicationButtons = wrapper
-        .findAll("button")
-        .filter((btn) => btn.text().includes("View Application"));
-      expect(applicationButtons.length).toBeGreaterThan(0);
-    });
+        .findAll('button')
+        .filter(btn => btn.text().includes('View Application'))
+      expect(applicationButtons.length).toBeGreaterThan(0)
+    })
 
-    it("should render search buttons", () => {
-      const wrapper = mount(MockAssociationHistory);
+    it('should render search buttons', () => {
+      const wrapper = mount(MockAssociationHistory)
       const searchButtons = wrapper
-        .findAll("button")
-        .filter((btn) => btn.text().includes("Repeat Search"));
-      expect(searchButtons.length).toBeGreaterThan(0);
-    });
-  });
+        .findAll('button')
+        .filter(btn => btn.text().includes('Repeat Search'))
+      expect(searchButtons.length).toBeGreaterThan(0)
+    })
+  })
 
-  describe("Empty State", () => {
-    it("should render empty state when no items", () => {
+  describe('Empty State', () => {
+    it('should render empty state when no items', () => {
       const wrapper = mount(MockAssociationHistory, {
         data() {
           return {
-            historyItems: [],
-          };
-        },
-      });
-      const emptyState = wrapper.find(".text-center.py-12");
-      expect(emptyState.exists()).toBe(true);
-    });
+            historyItems: []
+          }
+        }
+      })
+      const emptyState = wrapper.find('.text-center.py-12')
+      expect(emptyState.exists()).toBe(true)
+    })
 
-    it("should display empty state message", () => {
+    it('should display empty state message', () => {
       const wrapper = mount(MockAssociationHistory, {
         data() {
           return {
-            historyItems: [],
-          };
-        },
-      });
-      const message = wrapper.find("h3.mt-4.text-lg.font-medium");
-      expect(message.exists()).toBe(true);
-      expect(message.text()).toBe("No history found");
-    });
+            historyItems: []
+          }
+        }
+      })
+      const message = wrapper.find('h3.mt-4.text-lg.font-medium')
+      expect(message.exists()).toBe(true)
+      expect(message.text()).toBe('No history found')
+    })
 
-    it("should display empty state icon", () => {
+    it('should display empty state icon', () => {
       const wrapper = mount(MockAssociationHistory, {
         data() {
           return {
-            historyItems: [],
-          };
-        },
-      });
-      const clockIcon = wrapper.find(".clock-icon");
-      expect(clockIcon.exists()).toBe(true);
-    });
-  });
+            historyItems: []
+          }
+        }
+      })
+      const clockIcon = wrapper.find('.clock-icon')
+      expect(clockIcon.exists()).toBe(true)
+    })
+  })
 
-  describe("Load More Button", () => {
-    it("should render load more button when items exist", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const loadMoreButton = wrapper.find("button.btn.btn-outline");
-      expect(loadMoreButton.exists()).toBe(true);
-    });
+  describe('Load More Button', () => {
+    it('should render load more button when items exist', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const loadMoreButton = wrapper.find('button.btn.btn-outline')
+      expect(loadMoreButton.exists()).toBe(true)
+    })
 
-    it("should not render load more button when no items", () => {
+    it('should not render load more button when no items', () => {
       const wrapper = mount(MockAssociationHistory, {
         data() {
           return {
-            historyItems: [],
-          };
-        },
-      });
-      const loadMoreButton = wrapper.find("button.btn.btn-outline");
-      expect(loadMoreButton.exists()).toBe(false);
-    });
-  });
+            historyItems: []
+          }
+        }
+      })
+      const loadMoreButton = wrapper.find('button.btn.btn-outline')
+      expect(loadMoreButton.exists()).toBe(false)
+    })
+  })
 
-  describe("Responsive Design", () => {
-    it("should have responsive grid layout", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const grid = wrapper.find(".grid.grid-cols-1.md\\:grid-cols-4");
-      expect(grid.exists()).toBe(true);
-    });
+  describe('Responsive Design', () => {
+    it('should have responsive grid layout', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const grid = wrapper.find('.grid.grid-cols-1.md\\:grid-cols-4')
+      expect(grid.exists()).toBe(true)
+    })
 
-    it("should have responsive flex layout for search", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const searchContainer = wrapper.find(".flex.flex-col.md\\:flex-row");
-      expect(searchContainer.exists()).toBe(true);
-    });
+    it('should have responsive flex layout for search', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const searchContainer = wrapper.find('.flex.flex-col.md\\:flex-row')
+      expect(searchContainer.exists()).toBe(true)
+    })
 
-    it("should have responsive padding for timeline items", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const timelineItem = wrapper.find(".relative.pl-16.md\\:pl-20");
-      expect(timelineItem.exists()).toBe(true);
-    });
-  });
+    it('should have responsive padding for timeline items', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const timelineItem = wrapper.find('.relative.pl-16.md\\:pl-20')
+      expect(timelineItem.exists()).toBe(true)
+    })
+  })
 
-  describe("Accessibility", () => {
-    it("should have proper aria-labels", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const inputs = wrapper.findAll("input, select");
-      inputs.forEach((input) => {
-        expect(input.attributes("aria-label")).toBeDefined();
-      });
-    });
+  describe('Accessibility', () => {
+    it('should have proper aria-labels', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const inputs = wrapper.findAll('input, select')
+      inputs.forEach(input => {
+        expect(input.attributes('aria-label')).toBeDefined()
+      })
+    })
 
-    it("should have proper heading structure", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const headings = wrapper.findAll("h1, h3");
-      expect(headings.length).toBeGreaterThan(0);
-    });
+    it('should have proper heading structure', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const headings = wrapper.findAll('h1, h3')
+      expect(headings.length).toBeGreaterThan(0)
+    })
 
-    it("should have proper button types", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const buttons = wrapper.findAll("button");
-      expect(buttons.length).toBeGreaterThan(0);
-    });
-  });
+    it('should have proper button types', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const buttons = wrapper.findAll('button')
+      expect(buttons.length).toBeGreaterThan(0)
+    })
+  })
 
-  describe("Content Structure", () => {
-    it("should have main content area", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const mainContent = wrapper.find(".md\\:col-span-3");
-      expect(mainContent.exists()).toBe(true);
-    });
+  describe('Content Structure', () => {
+    it('should have main content area', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const mainContent = wrapper.find('.md\\:col-span-3')
+      expect(mainContent.exists()).toBe(true)
+    })
 
-    it("should have content card", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const contentCard = wrapper.find(".bg-base-100.rounded-lg.shadow-md.p-6");
-      expect(contentCard.exists()).toBe(true);
-    });
+    it('should have content card', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const contentCard = wrapper.find('.bg-base-100.rounded-lg.shadow-md.p-6')
+      expect(contentCard.exists()).toBe(true)
+    })
 
-    it("should have proper spacing", () => {
-      const wrapper = mount(MockAssociationHistory);
-      const spacedElements = wrapper.findAll(".space-y-4, .space-y-6");
-      expect(spacedElements.length).toBeGreaterThan(0);
-    });
-  });
-});
+    it('should have proper spacing', () => {
+      const wrapper = mount(MockAssociationHistory)
+      const spacedElements = wrapper.findAll('.space-y-4, .space-y-6')
+      expect(spacedElements.length).toBeGreaterThan(0)
+    })
+  })
+})

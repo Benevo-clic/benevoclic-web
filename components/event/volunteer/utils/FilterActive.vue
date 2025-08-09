@@ -1,235 +1,230 @@
 <script setup lang="ts">
-import { SlidersHorizontal, X } from 'lucide-vue-next'
-import { watch, ref } from 'vue'
-import type {
-  AnnouncementState,
-  AnnouncementStatus,
-  FilterAnnouncement,
-  PublicationInterval,
-  SortOption
-} from '~/common/interface/filter.interface'
+  import { SlidersHorizontal, X } from 'lucide-vue-next'
+  import { watch, ref } from 'vue'
+  import type {
+    AnnouncementState,
+    AnnouncementStatus,
+    FilterAnnouncement,
+    PublicationInterval,
+    SortOption
+  } from '~/common/interface/filter.interface'
 
-const props = defineProps<{
-  filters: {
-    status?: AnnouncementStatus | undefined;
-    hoursEventFrom?: string | undefined;
-    hoursEventTo?: string | undefined;
-    dateEventFrom?: string | undefined;
-    dateEventTo?: string | undefined;
-    publicationInterval?: PublicationInterval | undefined;
-    datePublicationFrom?: string | undefined;
-    datePublicationTo?: string | undefined;
-    tags?: string[] | undefined;
-    latitude?: number | undefined;
-    longitude?: number | undefined;
-    radius?: number | undefined;
-    page?: number | undefined;
-    limit?: number | undefined;
-    sort?: SortOption | undefined;
-    stateEvent?: AnnouncementState | undefined;
-  };
-  selectedTags?: string[];
-  selectedTypes?: string[];
-  hasActiveFilters?: boolean;
-}>()
-
-const filters = ref<FilterAnnouncement & { stateEvent?: AnnouncementState }>({
-  status: props.filters.status,
-  stateEvent: props.filters.stateEvent,
-  hoursEventFrom: props.filters.hoursEventFrom,
-  hoursEventTo: props.filters.hoursEventTo,
-  dateEventFrom: props.filters.dateEventFrom,
-  dateEventTo: props.filters.dateEventTo,
-  publicationInterval: props.filters.publicationInterval,
-  datePublicationFrom: props.filters.datePublicationFrom,
-  datePublicationTo: props.filters.datePublicationTo,
-  tags: props.filters.tags || [],
-  radius: props.filters.radius || 0,
-  page: props.filters.page || 1,
-  limit: props.filters.limit || 9,
-  sort: props.filters.sort
-})
-
-watch(
-  props,
-  (newFilters: any) => {
-    filters.value = {
-      status: newFilters.filters.status,
-      hoursEventFrom: newFilters.filters.hoursEventFrom,
-      hoursEventTo: newFilters.filters.hoursEventTo,
-      dateEventFrom: newFilters.filters.dateEventFrom,
-      dateEventTo: newFilters.filters.dateEventTo,
-      publicationInterval: newFilters.filters.publicationInterval,
-      datePublicationFrom: newFilters.filters.datePublicationFrom,
-      datePublicationTo: newFilters.filters.datePublicationTo,
-      tags: newFilters.filters.tags || [],
-      radius: newFilters.filters.radius || 0,
-      page: newFilters.filters.page || 1,
-      limit: newFilters.filters.limit || 9,
-      sort: newFilters.filters.sort
+  const props = defineProps<{
+    filters: {
+      status?: AnnouncementStatus | undefined
+      hoursEventFrom?: string | undefined
+      hoursEventTo?: string | undefined
+      dateEventFrom?: string | undefined
+      dateEventTo?: string | undefined
+      publicationInterval?: PublicationInterval | undefined
+      datePublicationFrom?: string | undefined
+      datePublicationTo?: string | undefined
+      tags?: string[] | undefined
+      latitude?: number | undefined
+      longitude?: number | undefined
+      radius?: number | undefined
+      page?: number | undefined
+      limit?: number | undefined
+      sort?: SortOption | undefined
+      stateEvent?: AnnouncementState | undefined
     }
-  },
-  { deep: true, immediate: true }
-)
+    selectedTags?: string[]
+    selectedTypes?: string[]
+    hasActiveFilters?: boolean
+  }>()
 
-// eslint-disable-next-line func-call-spacing
-const emit = defineEmits<{
-  (event: 'status'): void;
-  (event: 'stateEvent'): void;
-  (event: 'sort'): void;
-  (event: 'dateEvent'): void;
-  (event: 'hoursEvent'): void;
-  (event: 'datePublication'): void;
-  (event: 'publicationInterval'): void;
-  (event: 'radius'): void;
-  (event: 'resetFilters'): void;
-  (event: 'selectedTags', tags: string): void;
-  (event: 'selectedTypes', types: string): void;
-}>()
+  const filters = ref<FilterAnnouncement & { stateEvent?: AnnouncementState }>({
+    status: props.filters.status,
+    stateEvent: props.filters.stateEvent,
+    hoursEventFrom: props.filters.hoursEventFrom,
+    hoursEventTo: props.filters.hoursEventTo,
+    dateEventFrom: props.filters.dateEventFrom,
+    dateEventTo: props.filters.dateEventTo,
+    publicationInterval: props.filters.publicationInterval,
+    datePublicationFrom: props.filters.datePublicationFrom,
+    datePublicationTo: props.filters.datePublicationTo,
+    tags: props.filters.tags || [],
+    radius: props.filters.radius || 0,
+    page: props.filters.page || 1,
+    limit: props.filters.limit || 9,
+    sort: props.filters.sort
+  })
 
-const localSelectedTags = ref<string[] | undefined>([])
-const localSelectedTypes = ref<string[]>([])
+  watch(
+    props,
+    (newFilters: any) => {
+      filters.value = {
+        status: newFilters.filters.status,
+        hoursEventFrom: newFilters.filters.hoursEventFrom,
+        hoursEventTo: newFilters.filters.hoursEventTo,
+        dateEventFrom: newFilters.filters.dateEventFrom,
+        dateEventTo: newFilters.filters.dateEventTo,
+        publicationInterval: newFilters.filters.publicationInterval,
+        datePublicationFrom: newFilters.filters.datePublicationFrom,
+        datePublicationTo: newFilters.filters.datePublicationTo,
+        tags: newFilters.filters.tags || [],
+        radius: newFilters.filters.radius || 0,
+        page: newFilters.filters.page || 1,
+        limit: newFilters.filters.limit || 9,
+        sort: newFilters.filters.sort
+      }
+    },
+    { deep: true, immediate: true }
+  )
 
-const getStatusLabel = (status: AnnouncementStatus) => {
-  switch (status) {
-    case 'ACTIVE':
-      return 'Actif'
-    case 'COMPLETED':
-      return 'Terminé'
-    case 'INACTIVE':
-      return 'Inactif'
-    default:
-      return status
+  // eslint-disable-next-line func-call-spacing
+  const emit = defineEmits<{
+    (event: 'status'): void
+    (event: 'stateEvent'): void
+    (event: 'sort'): void
+    (event: 'dateEvent'): void
+    (event: 'hoursEvent'): void
+    (event: 'datePublication'): void
+    (event: 'publicationInterval'): void
+    (event: 'radius'): void
+    (event: 'resetFilters'): void
+    (event: 'selectedTags', tags: string): void
+    (event: 'selectedTypes', types: string): void
+  }>()
+
+  const localSelectedTags = ref<string[] | undefined>([])
+  const localSelectedTypes = ref<string[]>([])
+
+  const getStatusLabel = (status: AnnouncementStatus) => {
+    switch (status) {
+      case 'ACTIVE':
+        return 'Actif'
+      case 'COMPLETED':
+        return 'Terminé'
+      case 'INACTIVE':
+        return 'Inactif'
+      default:
+        return status
+    }
   }
-}
 
-const getStateEventLabel = (state: AnnouncementState) => {
-  switch (state) {
-    case 'NOW':
-      return 'En cours'
-    case 'PAST':
-      return 'Terminé'
-    case 'UPCOMING':
-      return 'À venir'
-    default:
-      return state
+  const getStateEventLabel = (state: AnnouncementState) => {
+    switch (state) {
+      case 'NOW':
+        return 'En cours'
+      case 'PAST':
+        return 'Terminé'
+      case 'UPCOMING':
+        return 'À venir'
+      default:
+        return state
+    }
   }
-}
 
-const getSortLabel = (sort: SortOption) => {
-  switch (sort) {
-    case 'dateEvent_asc':
-      return 'Date événement (croissant)'
-    case 'dateEvent_desc':
-      return 'Date événement (décroissant)'
-    case 'datePublication_desc':
-      return 'Date publication (récent)'
-    default:
-      return sort
+  const getSortLabel = (sort: SortOption) => {
+    switch (sort) {
+      case 'dateEvent_asc':
+        return 'Date événement (croissant)'
+      case 'dateEvent_desc':
+        return 'Date événement (décroissant)'
+      case 'datePublication_desc':
+        return 'Date publication (récent)'
+      default:
+        return sort
+    }
   }
-}
 
-const getIntervalLabel = (interval: PublicationInterval) => {
-  switch (interval) {
-    case '1h':
-      return 'Dernière heure'
-    case '5h':
-      return '5 dernières heures'
-    case '1d':
-      return 'Dernière journée'
-    case '1w':
-      return 'Dernière semaine'
-    case '1M':
-      return 'Dernier mois'
-    default:
-      return interval
+  const getIntervalLabel = (interval: PublicationInterval) => {
+    switch (interval) {
+      case '1h':
+        return 'Dernière heure'
+      case '5h':
+        return '5 dernières heures'
+      case '1d':
+        return 'Dernière journée'
+      case '1w':
+        return 'Dernière semaine'
+      case '1M':
+        return 'Dernier mois'
+      default:
+        return interval
+    }
   }
-}
 
-const removeStatus = () => {
-  filters.value.status = undefined
-  emit('status')
-}
-
-const removeStateEvent = () => {
-  filters.value.stateEvent = undefined
-  emit('stateEvent')
-}
-
-const removeSort = () => {
-  filters.value.sort = undefined
-  emit('sort')
-}
-
-const removeTag = (tag: string) => {
-  localSelectedTags.value = props.selectedTags?.filter(t => t !== tag)
-  emit('selectedTags', tag)
-}
-
-const removeType = (type: string) => {
-  localSelectedTypes.value = props.selectedTypes?.filter(t => t !== type) || []
-  emit('selectedTypes', type)
-}
-
-const removeDateEvent = () => {
-  filters.value.dateEventFrom = undefined
-  filters.value.dateEventTo = undefined
-  emit('dateEvent')
-}
-
-const removeHoursEvent = () => {
-  filters.value.hoursEventFrom = undefined
-  filters.value.hoursEventTo = undefined
-  emit('hoursEvent')
-}
-
-const removeDatePublication = () => {
-  filters.value.datePublicationFrom = undefined
-  filters.value.datePublicationTo = undefined
-  emit('datePublication')
-}
-
-const removePublicationInterval = () => {
-  filters.value.publicationInterval = undefined
-  emit('publicationInterval')
-}
-
-const removeRadius = () => {
-  filters.value.radius = 0
-  emit('radius')
-}
-
-const resetFilters = () => {
-  filters.value = {
-    status: undefined,
-    stateEvent: undefined,
-    hoursEventFrom: undefined,
-    hoursEventTo: undefined,
-    dateEventFrom: undefined,
-    dateEventTo: undefined,
-    publicationInterval: undefined,
-    datePublicationFrom: undefined,
-    datePublicationTo: undefined,
-    tags: [],
-    radius: 0,
-    page: 1,
-    limit: 9,
-    sort: undefined
+  const removeStatus = () => {
+    filters.value.status = undefined
+    emit('status')
   }
-  localSelectedTags.value = []
-  localSelectedTypes.value = []
-  emit('resetFilters')
-}
+
+  const removeStateEvent = () => {
+    filters.value.stateEvent = undefined
+    emit('stateEvent')
+  }
+
+  const removeSort = () => {
+    filters.value.sort = undefined
+    emit('sort')
+  }
+
+  const removeTag = (tag: string) => {
+    localSelectedTags.value = props.selectedTags?.filter(t => t !== tag)
+    emit('selectedTags', tag)
+  }
+
+  const removeType = (type: string) => {
+    localSelectedTypes.value = props.selectedTypes?.filter(t => t !== type) || []
+    emit('selectedTypes', type)
+  }
+
+  const removeDateEvent = () => {
+    filters.value.dateEventFrom = undefined
+    filters.value.dateEventTo = undefined
+    emit('dateEvent')
+  }
+
+  const removeHoursEvent = () => {
+    filters.value.hoursEventFrom = undefined
+    filters.value.hoursEventTo = undefined
+    emit('hoursEvent')
+  }
+
+  const removeDatePublication = () => {
+    filters.value.datePublicationFrom = undefined
+    filters.value.datePublicationTo = undefined
+    emit('datePublication')
+  }
+
+  const removePublicationInterval = () => {
+    filters.value.publicationInterval = undefined
+    emit('publicationInterval')
+  }
+
+  const removeRadius = () => {
+    filters.value.radius = 0
+    emit('radius')
+  }
+
+  const resetFilters = () => {
+    filters.value = {
+      status: undefined,
+      stateEvent: undefined,
+      hoursEventFrom: undefined,
+      hoursEventTo: undefined,
+      dateEventFrom: undefined,
+      dateEventTo: undefined,
+      publicationInterval: undefined,
+      datePublicationFrom: undefined,
+      datePublicationTo: undefined,
+      tags: [],
+      radius: 0,
+      page: 1,
+      limit: 9,
+      sort: undefined
+    }
+    localSelectedTags.value = []
+    localSelectedTypes.value = []
+    emit('resetFilters')
+  }
 </script>
 
 <template>
-  <div
-    v-if="props.hasActiveFilters"
-    class="mb-4 p-4 bg-base-200 rounded-lg border border-base-300"
-  >
-    <h4
-      class="text-sm font-medium mb-3 text-base-content/70 flex items-center gap-2"
-    >
+  <div v-if="props.hasActiveFilters" class="mb-4 p-4 bg-base-200 rounded-lg border border-base-300">
+    <h4 class="text-sm font-medium mb-3 text-base-content/70 flex items-center gap-2">
       <SlidersHorizontal class="w-4 h-4" />
       Filtres actifs:
     </h4>
@@ -245,10 +240,7 @@ const resetFilters = () => {
       <!-- État de l'événement -->
       <div v-if="props.filters.stateEvent" class="badge badge-secondary gap-1">
         {{ getStateEventLabel(props.filters.stateEvent) }}
-        <button
-          class="btn btn-ghost btn-xs p-0 h-4 w-4"
-          @click="removeStateEvent"
-        >
+        <button class="btn btn-ghost btn-xs p-0 h-4 w-4" @click="removeStateEvent">
           <X class="w-3 h-3" />
         </button>
       </div>
@@ -262,31 +254,17 @@ const resetFilters = () => {
       </div>
 
       <!-- Tags -->
-      <div
-        v-for="tag in props.selectedTags"
-        :key="tag"
-        class="badge badge-accent gap-1"
-      >
+      <div v-for="tag in props.selectedTags" :key="tag" class="badge badge-accent gap-1">
         {{ tag }}
-        <button
-          class="btn btn-ghost btn-xs p-0 h-4 w-4"
-          @click="removeTag(tag)"
-        >
+        <button class="btn btn-ghost btn-xs p-0 h-4 w-4" @click="removeTag(tag)">
           <X class="w-3 h-3" />
         </button>
       </div>
 
       <!-- Types d'association -->
-      <div
-        v-for="type in localSelectedTypes"
-        :key="type"
-        class="badge badge-info gap-1"
-      >
+      <div v-for="type in localSelectedTypes" :key="type" class="badge badge-info gap-1">
         {{ type }}
-        <button
-          class="btn btn-ghost btn-xs p-0 h-4 w-4"
-          @click="removeType(type)"
-        >
+        <button class="btn btn-ghost btn-xs p-0 h-4 w-4" @click="removeType(type)">
           <X class="w-3 h-3" />
         </button>
       </div>
@@ -297,10 +275,7 @@ const resetFilters = () => {
         class="badge badge-warning gap-1"
       >
         Date événement
-        <button
-          class="btn btn-ghost btn-xs p-0 h-4 w-4"
-          @click="removeDateEvent"
-        >
+        <button class="btn btn-ghost btn-xs p-0 h-4 w-4" @click="removeDateEvent">
           <X class="w-3 h-3" />
         </button>
       </div>
@@ -311,40 +286,26 @@ const resetFilters = () => {
         class="badge badge-warning gap-1"
       >
         Heure événement
-        <button
-          class="btn btn-ghost btn-xs p-0 h-4 w-4"
-          @click="removeHoursEvent"
-        >
+        <button class="btn btn-ghost btn-xs p-0 h-4 w-4" @click="removeHoursEvent">
           <X class="w-3 h-3" />
         </button>
       </div>
 
       <!-- Date publication -->
       <div
-        v-if="
-          props.filters.datePublicationFrom || props.filters.datePublicationTo
-        "
+        v-if="props.filters.datePublicationFrom || props.filters.datePublicationTo"
         class="badge badge-error gap-1"
       >
         Date publication
-        <button
-          class="btn btn-ghost btn-xs p-0 h-4 w-4"
-          @click="removeDatePublication"
-        >
+        <button class="btn btn-ghost btn-xs p-0 h-4 w-4" @click="removeDatePublication">
           <X class="w-3 h-3" />
         </button>
       </div>
 
       <!-- Intervalle publication -->
-      <div
-        v-if="props.filters.publicationInterval"
-        class="badge badge-error gap-1"
-      >
+      <div v-if="props.filters.publicationInterval" class="badge badge-error gap-1">
         {{ getIntervalLabel(props.filters.publicationInterval) }}
-        <button
-          class="btn btn-ghost btn-xs p-0 h-4 w-4"
-          @click="removePublicationInterval"
-        >
+        <button class="btn btn-ghost btn-xs p-0 h-4 w-4" @click="removePublicationInterval">
           <X class="w-3 h-3" />
         </button>
       </div>

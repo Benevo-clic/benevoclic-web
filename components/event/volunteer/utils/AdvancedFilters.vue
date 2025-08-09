@@ -1,118 +1,114 @@
 <script setup lang="ts">
-import { X } from 'lucide-vue-next'
-import { ref, watch, computed } from 'vue'
-import type { FilterAnnouncement } from '~/common/interface/filter.interface'
+  import { X } from 'lucide-vue-next'
+  import { ref, watch, computed } from 'vue'
+  import type { FilterAnnouncement } from '~/common/interface/filter.interface'
 
-const props = defineProps<{
-  showAdvancedFilters: boolean;
-  filters: Partial<FilterAnnouncement>;
-}>()
+  const props = defineProps<{
+    showAdvancedFilters: boolean
+    filters: Partial<FilterAnnouncement>
+  }>()
 
-// eslint-disable-next-line func-call-spacing
-const emit = defineEmits<{
-  (event: 'applyFilters', filter: Partial<FilterAnnouncement>): void;
-  (event: 'resetFilters'): void;
-  (event: 'closeFilters'): void;
-}>()
+  // eslint-disable-next-line func-call-spacing
+  const emit = defineEmits<{
+    (event: 'applyFilters', filter: Partial<FilterAnnouncement>): void
+    (event: 'resetFilters'): void
+    (event: 'closeFilters'): void
+  }>()
 
-const showAdvancedFilters = ref(props.showAdvancedFilters)
+  const showAdvancedFilters = ref(props.showAdvancedFilters)
 
-// Filtres temporaires locaux
-const localFilters = ref({
-  dateEventFrom: props.filters.dateEventFrom,
-  dateEventTo: props.filters.dateEventTo,
-  hoursEventFrom: props.filters.hoursEventFrom,
-  hoursEventTo: props.filters.hoursEventTo,
-  datePublicationFrom: props.filters.datePublicationFrom,
-  datePublicationTo: props.filters.datePublicationTo,
-  publicationInterval: props.filters.publicationInterval
-})
-
-// Synchroniser avec les props
-watch(
-  () => props.filters,
-  (newFilters) => {
-    localFilters.value = {
-      dateEventFrom: newFilters.dateEventFrom,
-      dateEventTo: newFilters.dateEventTo,
-      hoursEventFrom: newFilters.hoursEventFrom,
-      hoursEventTo: newFilters.hoursEventTo,
-      datePublicationFrom: newFilters.datePublicationFrom,
-      datePublicationTo: newFilters.datePublicationTo,
-      publicationInterval: newFilters.publicationInterval
-    }
-  },
-  { deep: true }
-)
-
-function applyFilters () {
-  const isDateEventValid =
-    (localFilters.value.dateEventFrom && localFilters.value.dateEventTo) ||
-    (!localFilters.value.dateEventFrom && !localFilters.value.dateEventTo)
-
-  const isHoursEventValid =
-    (localFilters.value.hoursEventFrom && localFilters.value.hoursEventTo) ||
-    (!localFilters.value.hoursEventFrom && !localFilters.value.hoursEventTo)
-
-  const isDatePublicationValid =
-    (localFilters.value.datePublicationFrom &&
-      localFilters.value.datePublicationTo) ||
-    (!localFilters.value.datePublicationFrom &&
-      !localFilters.value.datePublicationTo)
-
-  if (!isDateEventValid || !isHoursEventValid || !isDatePublicationValid) {
-    return
-  }
-
-  emit('applyFilters', {
-    dateEventFrom: localFilters.value.dateEventFrom,
-    dateEventTo: localFilters.value.dateEventTo,
-    hoursEventFrom: localFilters.value.hoursEventFrom,
-    hoursEventTo: localFilters.value.hoursEventTo,
-    datePublicationFrom: localFilters.value.datePublicationFrom,
-    datePublicationTo: localFilters.value.datePublicationTo,
-    publicationInterval: localFilters.value.publicationInterval
+  // Filtres temporaires locaux
+  const localFilters = ref({
+    dateEventFrom: props.filters.dateEventFrom,
+    dateEventTo: props.filters.dateEventTo,
+    hoursEventFrom: props.filters.hoursEventFrom,
+    hoursEventTo: props.filters.hoursEventTo,
+    datePublicationFrom: props.filters.datePublicationFrom,
+    datePublicationTo: props.filters.datePublicationTo,
+    publicationInterval: props.filters.publicationInterval
   })
-  showAdvancedFilters.value = false
-}
 
-// Function to reset filters
-function resetFilters () {
-  localFilters.value = {
-    dateEventFrom: undefined,
-    dateEventTo: undefined,
-    hoursEventFrom: undefined,
-    hoursEventTo: undefined,
-    datePublicationFrom: undefined,
-    datePublicationTo: undefined,
-    publicationInterval: undefined
+  // Synchroniser avec les props
+  watch(
+    () => props.filters,
+    newFilters => {
+      localFilters.value = {
+        dateEventFrom: newFilters.dateEventFrom,
+        dateEventTo: newFilters.dateEventTo,
+        hoursEventFrom: newFilters.hoursEventFrom,
+        hoursEventTo: newFilters.hoursEventTo,
+        datePublicationFrom: newFilters.datePublicationFrom,
+        datePublicationTo: newFilters.datePublicationTo,
+        publicationInterval: newFilters.publicationInterval
+      }
+    },
+    { deep: true }
+  )
+
+  function applyFilters() {
+    const isDateEventValid =
+      (localFilters.value.dateEventFrom && localFilters.value.dateEventTo) ||
+      (!localFilters.value.dateEventFrom && !localFilters.value.dateEventTo)
+
+    const isHoursEventValid =
+      (localFilters.value.hoursEventFrom && localFilters.value.hoursEventTo) ||
+      (!localFilters.value.hoursEventFrom && !localFilters.value.hoursEventTo)
+
+    const isDatePublicationValid =
+      (localFilters.value.datePublicationFrom && localFilters.value.datePublicationTo) ||
+      (!localFilters.value.datePublicationFrom && !localFilters.value.datePublicationTo)
+
+    if (!isDateEventValid || !isHoursEventValid || !isDatePublicationValid) {
+      return
+    }
+
+    emit('applyFilters', {
+      dateEventFrom: localFilters.value.dateEventFrom,
+      dateEventTo: localFilters.value.dateEventTo,
+      hoursEventFrom: localFilters.value.hoursEventFrom,
+      hoursEventTo: localFilters.value.hoursEventTo,
+      datePublicationFrom: localFilters.value.datePublicationFrom,
+      datePublicationTo: localFilters.value.datePublicationTo,
+      publicationInterval: localFilters.value.publicationInterval
+    })
+    showAdvancedFilters.value = false
   }
-  emit('resetFilters')
-}
 
-// Computed property pour vérifier si les filtres sont valides
-const areFiltersValid = computed(() => {
-  const isDateEventValid =
-    (localFilters.value.dateEventFrom && localFilters.value.dateEventTo) ||
-    (!localFilters.value.dateEventFrom && !localFilters.value.dateEventTo)
+  // Function to reset filters
+  function resetFilters() {
+    localFilters.value = {
+      dateEventFrom: undefined,
+      dateEventTo: undefined,
+      hoursEventFrom: undefined,
+      hoursEventTo: undefined,
+      datePublicationFrom: undefined,
+      datePublicationTo: undefined,
+      publicationInterval: undefined
+    }
+    emit('resetFilters')
+  }
 
-  const isHoursEventValid =
-    (localFilters.value.hoursEventFrom && localFilters.value.hoursEventTo) ||
-    (!localFilters.value.hoursEventFrom && !localFilters.value.hoursEventTo)
+  // Computed property pour vérifier si les filtres sont valides
+  const areFiltersValid = computed(() => {
+    const isDateEventValid =
+      (localFilters.value.dateEventFrom && localFilters.value.dateEventTo) ||
+      (!localFilters.value.dateEventFrom && !localFilters.value.dateEventTo)
 
-  const isDatePublicationValid =
-    (localFilters.value.datePublicationFrom &&
-      localFilters.value.datePublicationTo) ||
-    (!localFilters.value.datePublicationFrom &&
-      !localFilters.value.datePublicationTo)
+    const isHoursEventValid =
+      (localFilters.value.hoursEventFrom && localFilters.value.hoursEventTo) ||
+      (!localFilters.value.hoursEventFrom && !localFilters.value.hoursEventTo)
 
-  return isDateEventValid && isHoursEventValid && isDatePublicationValid
-})
+    const isDatePublicationValid =
+      (localFilters.value.datePublicationFrom && localFilters.value.datePublicationTo) ||
+      (!localFilters.value.datePublicationFrom && !localFilters.value.datePublicationTo)
 
-function disableAdvancedFilters () {
-  showAdvancedFilters.value = false
-  emit('closeFilters')
-}
+    return isDateEventValid && isHoursEventValid && isDatePublicationValid
+  })
+
+  function disableAdvancedFilters() {
+    showAdvancedFilters.value = false
+    emit('closeFilters')
+  }
 </script>
 
 <template>
@@ -132,16 +128,9 @@ function disableAdvancedFilters () {
         >
           <div class="flex flex-col h-full">
             <!-- Header -->
-            <div
-              class="flex justify-between items-center p-6 border-b border-base-300"
-            >
-              <h3 class="text-lg font-semibold">
-                Filtres avancés
-              </h3>
-              <button
-                class="btn btn-ghost btn-sm"
-                @click="disableAdvancedFilters"
-              >
+            <div class="flex justify-between items-center p-6 border-b border-base-300">
+              <h3 class="text-lg font-semibold">Filtres avancés</h3>
+              <button class="btn btn-ghost btn-sm" @click="disableAdvancedFilters">
                 <X class="w-5 h-5" />
               </button>
             </div>
@@ -152,9 +141,7 @@ function disableAdvancedFilters () {
                 <!-- Date de l'événement -->
                 <div class="card bg-base-200 shadow-sm">
                   <div class="card-body p-4">
-                    <h4 class="font-medium mb-3">
-                      Date de l'événement
-                    </h4>
+                    <h4 class="font-medium mb-3">Date de l'événement</h4>
                     <div class="space-y-3">
                       <div>
                         <label class="label">
@@ -165,7 +152,7 @@ function disableAdvancedFilters () {
                           type="date"
                           class="input input-bordered input-sm w-full"
                           aria-label="Champ de saisie"
-                        >
+                        />
                       </div>
                       <div>
                         <label class="label">
@@ -176,7 +163,7 @@ function disableAdvancedFilters () {
                           type="date"
                           class="input input-bordered input-sm w-full"
                           aria-label="Champ de saisie"
-                        >
+                        />
                       </div>
                     </div>
                   </div>
@@ -185,9 +172,7 @@ function disableAdvancedFilters () {
                 <!-- Heure de l'événement -->
                 <div class="card bg-base-200 shadow-sm">
                   <div class="card-body p-4">
-                    <h4 class="font-medium mb-3">
-                      Heure de l'événement
-                    </h4>
+                    <h4 class="font-medium mb-3">Heure de l'événement</h4>
                     <div class="space-y-3">
                       <div>
                         <label class="label">
@@ -198,7 +183,7 @@ function disableAdvancedFilters () {
                           type="time"
                           class="input input-bordered input-sm w-full"
                           aria-label="Champ de saisie"
-                        >
+                        />
                       </div>
                       <div>
                         <label class="label">
@@ -209,7 +194,7 @@ function disableAdvancedFilters () {
                           type="time"
                           class="input input-bordered input-sm w-full"
                           aria-label="Champ de saisie"
-                        >
+                        />
                       </div>
                     </div>
                   </div>
@@ -218,9 +203,7 @@ function disableAdvancedFilters () {
                 <!-- Date de publication -->
                 <div class="card bg-base-200 shadow-sm">
                   <div class="card-body p-4">
-                    <h4 class="font-medium mb-3">
-                      Date de publication
-                    </h4>
+                    <h4 class="font-medium mb-3">Date de publication</h4>
                     <div class="space-y-3">
                       <div>
                         <label class="label">
@@ -231,7 +214,7 @@ function disableAdvancedFilters () {
                           type="date"
                           class="input input-bordered input-sm w-full"
                           aria-label="Champ de saisie"
-                        >
+                        />
                       </div>
                       <div>
                         <label class="label">
@@ -242,7 +225,7 @@ function disableAdvancedFilters () {
                           type="date"
                           class="input input-bordered input-sm w-full"
                           aria-label="Champ de saisie"
-                        >
+                        />
                       </div>
                     </div>
                   </div>
@@ -251,32 +234,18 @@ function disableAdvancedFilters () {
                 <!-- Intervalle de publication -->
                 <div class="card bg-base-200 shadow-sm">
                   <div class="card-body p-4">
-                    <h4 class="font-medium mb-3">
-                      Intervalle de publication
-                    </h4>
+                    <h4 class="font-medium mb-3">Intervalle de publication</h4>
                     <select
                       v-model="localFilters.publicationInterval"
                       class="select select-bordered select-sm w-full"
                       aria-label="Sélection"
                     >
-                      <option value="">
-                        Tous
-                      </option>
-                      <option value="1h">
-                        Dernière heure
-                      </option>
-                      <option value="5h">
-                        5 dernières heures
-                      </option>
-                      <option value="1d">
-                        Dernière journée
-                      </option>
-                      <option value="1w">
-                        Dernière semaine
-                      </option>
-                      <option value="1M">
-                        Dernier mois
-                      </option>
+                      <option value="">Tous</option>
+                      <option value="1h">Dernière heure</option>
+                      <option value="5h">5 dernières heures</option>
+                      <option value="1d">Dernière journée</option>
+                      <option value="1w">Dernière semaine</option>
+                      <option value="1M">Dernier mois</option>
                     </select>
                   </div>
                 </div>
@@ -288,18 +257,12 @@ function disableAdvancedFilters () {
               <div class="flex flex-col gap-2">
                 <button
                   :disabled="!areFiltersValid"
-                  :class="
-                    areFiltersValid
-                      ? 'btn btn-primary btn-sm'
-                      : 'btn btn-disabled btn-sm'
-                  "
+                  :class="areFiltersValid ? 'btn btn-primary btn-sm' : 'btn btn-disabled btn-sm'"
                   @click="applyFilters"
                 >
                   Appliquer les filtres
                 </button>
-                <button class="btn btn-outline btn-sm" @click="resetFilters">
-                  Réinitialiser
-                </button>
+                <button class="btn btn-outline btn-sm" @click="resetFilters">Réinitialiser</button>
               </div>
             </div>
           </div>

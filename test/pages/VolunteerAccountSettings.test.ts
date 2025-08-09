@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { describe, it, expect } from "vitest";
-import { mount } from "@vue/test-utils";
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
 
 const MockVolunteerAccountSettings = {
   template: `
@@ -96,135 +96,127 @@ const MockVolunteerAccountSettings = {
         </div>
       </div>
     </div>
-  `,
-};
+  `
+}
 
-describe("VolunteerAccountSettings", () => {
-  it("should render the main container", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    expect(wrapper.find(".min-h-screen.bg-base-200").exists()).toBe(true);
-  });
+describe('VolunteerAccountSettings', () => {
+  it('should render the main container', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    expect(wrapper.find('.min-h-screen.bg-base-200').exists()).toBe(true)
+  })
 
-  it("should render the page header", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    const header = wrapper.find(".mb-8");
-    expect(header.exists()).toBe(true);
-    expect(header.find("h1").text()).toBe("Paramètres");
-    expect(header.find("p").text()).toBe("Gérez vos préférences");
-  });
+  it('should render the page header', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    const header = wrapper.find('.mb-8')
+    expect(header.exists()).toBe(true)
+    expect(header.find('h1').text()).toBe('Paramètres')
+    expect(header.find('p').text()).toBe('Gérez vos préférences')
+  })
 
-  it("should render the save button", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    const saveButton = wrapper.find(".btn.btn-primary.btn-sm");
-    expect(saveButton.exists()).toBe(true);
-    expect(saveButton.text()).toContain("Sauvegarder");
-  });
+  it('should render the save button', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    const saveButton = wrapper.find('.btn.btn-primary.btn-sm')
+    expect(saveButton.exists()).toBe(true)
+    expect(saveButton.text()).toContain('Sauvegarder')
+  })
 
-  it("should render the sidebar navigation", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    const sidebar = wrapper.find(".lg\\:col-span-1");
-    expect(sidebar.exists()).toBe(true);
-    expect(sidebar.find("h3").text()).toBe("Navigation");
-  });
+  it('should render the sidebar navigation', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    const sidebar = wrapper.find('.lg\\:col-span-1')
+    expect(sidebar.exists()).toBe(true)
+    expect(sidebar.find('h3').text()).toBe('Navigation')
+  })
 
-  it("should render navigation buttons", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    const navButtons = wrapper.findAll(
-      ".btn.btn-outline.btn-sm.w-full.justify-start",
-    );
-    expect(navButtons.length).toBe(3);
-  });
+  it('should render navigation buttons', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    const navButtons = wrapper.findAll('.btn.btn-outline.btn-sm.w-full.justify-start')
+    expect(navButtons.length).toBe(3)
+  })
 
-  it("should render the active navigation button", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    const activeButton = wrapper.find(
-      ".btn.btn-primary.btn-sm.w-full.justify-start",
-    );
-    expect(activeButton.exists()).toBe(true);
-    expect(activeButton.text()).toContain("Notifications");
-  });
+  it('should render the active navigation button', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    const activeButton = wrapper.find('.btn.btn-primary.btn-sm.w-full.justify-start')
+    expect(activeButton.exists()).toBe(true)
+    expect(activeButton.text()).toContain('Notifications')
+  })
 
-  it("should render the main content area", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    const mainContent = wrapper.find(".lg\\:col-span-3");
-    expect(mainContent.exists()).toBe(true);
-  });
+  it('should render the main content area', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    const mainContent = wrapper.find('.lg\\:col-span-3')
+    expect(mainContent.exists()).toBe(true)
+  })
 
-  it("should render the notifications section", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
+  it('should render the notifications section', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
     const notificationsSection = wrapper.find(
-      ".bg-base-100.rounded-xl.shadow-lg.border.border-base-300.p-6",
-    );
-    expect(notificationsSection.exists()).toBe(true);
-  });
+      '.bg-base-100.rounded-xl.shadow-lg.border.border-base-300.p-6'
+    )
+    expect(notificationsSection.exists()).toBe(true)
+  })
 
-  it("should render the notifications header", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    const header = wrapper.find(".flex.items-center.gap-3.mb-6");
-    expect(header.exists()).toBe(true);
-    expect(header.find("h2").text()).toBe("Notifications");
-    expect(header.find("p").text()).toBe(
-      "Gérez vos préférences de notifications",
-    );
-  });
+  it('should render the notifications header', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    const header = wrapper.find('.flex.items-center.gap-3.mb-6')
+    expect(header.exists()).toBe(true)
+    expect(header.find('h2').text()).toBe('Notifications')
+    expect(header.find('p').text()).toBe('Gérez vos préférences de notifications')
+  })
 
-  it("should render notification toggles", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    const toggles = wrapper.findAll(".toggle.toggle-primary");
-    expect(toggles.length).toBe(3);
-  });
+  it('should render notification toggles', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    const toggles = wrapper.findAll('.toggle.toggle-primary')
+    expect(toggles.length).toBe(3)
+  })
 
-  it("should render notification labels", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    const labels = wrapper.findAll(".label-text.font-medium");
-    expect(labels.length).toBe(3);
+  it('should render notification labels', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    const labels = wrapper.findAll('.label-text.font-medium')
+    expect(labels.length).toBe(3)
 
-    const labelTexts = labels.map((label) => label.text());
-    expect(labelTexts).toContain("Notifications par email");
-    expect(labelTexts).toContain("Notifications push");
-    expect(labelTexts).toContain("Mises à jour de missions");
-  });
+    const labelTexts = labels.map(label => label.text())
+    expect(labelTexts).toContain('Notifications par email')
+    expect(labelTexts).toContain('Notifications push')
+    expect(labelTexts).toContain('Mises à jour de missions')
+  })
 
-  it("should render notification descriptions", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    const descriptions = wrapper.findAll(".text-xs.text-base-content\\/70");
-    expect(descriptions.length).toBe(3);
-  });
+  it('should render notification descriptions', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    const descriptions = wrapper.findAll('.text-xs.text-base-content\\/70')
+    expect(descriptions.length).toBe(3)
+  })
 
-  it("should have proper grid layout", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    const grid = wrapper.find(".grid.grid-cols-1.lg\\:grid-cols-4.gap-6");
-    expect(grid.exists()).toBe(true);
-  });
+  it('should have proper grid layout', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    const grid = wrapper.find('.grid.grid-cols-1.lg\\:grid-cols-4.gap-6')
+    expect(grid.exists()).toBe(true)
+  })
 
-  it("should have proper sidebar styling", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    const sidebar = wrapper.find(
-      ".bg-base-100.rounded-xl.shadow-lg.border.border-base-300.p-6",
-    );
-    expect(sidebar.exists()).toBe(true);
-    expect(sidebar.classes()).toContain("bg-base-100");
-    expect(sidebar.classes()).toContain("rounded-xl");
-    expect(sidebar.classes()).toContain("shadow-lg");
-  });
+  it('should have proper sidebar styling', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    const sidebar = wrapper.find('.bg-base-100.rounded-xl.shadow-lg.border.border-base-300.p-6')
+    expect(sidebar.exists()).toBe(true)
+    expect(sidebar.classes()).toContain('bg-base-100')
+    expect(sidebar.classes()).toContain('rounded-xl')
+    expect(sidebar.classes()).toContain('shadow-lg')
+  })
 
-  it("should have proper button styling", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    const buttons = wrapper.findAll(".btn");
-    expect(buttons.length).toBeGreaterThan(0);
+  it('should have proper button styling', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    const buttons = wrapper.findAll('.btn')
+    expect(buttons.length).toBeGreaterThan(0)
 
-    buttons.forEach((button) => {
-      expect(button.classes()).toContain("btn");
-    });
-  });
+    buttons.forEach(button => {
+      expect(button.classes()).toContain('btn')
+    })
+  })
 
-  it("should have proper accessibility attributes", () => {
-    const wrapper = mount(MockVolunteerAccountSettings);
-    const inputs = wrapper.findAll("input");
-    expect(inputs.length).toBe(3);
+  it('should have proper accessibility attributes', () => {
+    const wrapper = mount(MockVolunteerAccountSettings)
+    const inputs = wrapper.findAll('input')
+    expect(inputs.length).toBe(3)
 
-    inputs.forEach((input) => {
-      expect(input.attributes("aria-label")).toBe("Champ de saisie");
-    });
-  });
-});
+    inputs.forEach(input => {
+      expect(input.attributes('aria-label')).toBe('Champ de saisie')
+    })
+  })
+})

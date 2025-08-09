@@ -2,7 +2,7 @@ import axios from 'axios'
 import { defineEventHandler, readBody } from 'h3'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const body = await readBody(event)
   const volunteerId = body.volunteerId as string
   const announcementId = body.announcementId as string
@@ -28,10 +28,7 @@ export default defineEventHandler(async (event) => {
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la suppression du favori de l’annonce'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la suppression du favori de l’annonce')
     }
   }
 })

@@ -2,7 +2,7 @@ import { defineEventHandler, getCookie, createError } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
   const config = useRuntimeConfig()
   const url = `${config.private.api_base_url}/support/reports`
@@ -16,10 +16,7 @@ export default defineEventHandler(async (event) => {
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la récupération des tickets de support'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la récupération des tickets de support')
     }
     throw createError({
       statusCode: error?.response?.status || 500,

@@ -8,5 +8,5 @@
 </template>
 
 <script setup>
-import HeaderAuth from '~/components/header/HeaderAuth.vue'
+  import HeaderAuth from '~/components/header/HeaderAuth.vue'
 </script>

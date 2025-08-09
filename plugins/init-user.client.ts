@@ -12,10 +12,7 @@ export default defineNuxtPlugin(async () => {
       await userStore.fetchUser()
       console.log('✅ Utilisateur initialisé:', userStore.getUser)
     } catch (error) {
-      console.error(
-        "❌ Erreur lors de l'initialisation de l'utilisateur:",
-        error
-      )
+      console.error("❌ Erreur lors de l'initialisation de l'utilisateur:", error)
       await auth.logout()
     }
   }

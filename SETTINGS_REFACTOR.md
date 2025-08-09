@@ -70,11 +70,11 @@ Les pages de paramètres pour les volontaires et associations ont été complèt
 ```typescript
 // Navigation par onglets
 const sections = [
-  { id: "notifications", label: "Notifications", icon: Bell },
-  { id: "privacy", label: "Confidentialité", icon: Shield },
-  { id: "account", label: "Compte", icon: User },
-  { id: "security", label: "Sécurité", icon: Lock },
-];
+  { id: 'notifications', label: 'Notifications', icon: Bell },
+  { id: 'privacy', label: 'Confidentialité', icon: Shield },
+  { id: 'account', label: 'Compte', icon: User },
+  { id: 'security', label: 'Sécurité', icon: Lock }
+]
 ```
 
 ### **Paramètres organisés**
@@ -95,8 +95,8 @@ const settings = {
 
   // Sécurité
   twoFactor: boolean,
-  loginNotifications: boolean,
-};
+  loginNotifications: boolean
+}
 ```
 
 ## 🎨 Éléments de design

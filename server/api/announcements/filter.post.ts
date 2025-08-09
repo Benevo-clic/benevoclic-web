@@ -1,12 +1,9 @@
 import { defineEventHandler } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
-import {
-  FilterAnnouncement,
-  FilterAnnouncementResponse
-} from '~/common/interface/filter.interface'
+import { FilterAnnouncement, FilterAnnouncementResponse } from '~/common/interface/filter.interface'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
   const config = useRuntimeConfig()
   const body = (await readBody(event)) as FilterAnnouncement
@@ -49,10 +46,7 @@ export default defineEventHandler(async (event) => {
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de l’ajout du volontaire à l’association'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de l’ajout du volontaire à l’association')
     }
   }
 })

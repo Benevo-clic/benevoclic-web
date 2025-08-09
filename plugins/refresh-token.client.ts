@@ -13,14 +13,14 @@ export default defineNuxtPlugin(() => {
   let timerId: number | null = null
   let refreshing = false
 
-  function clearTimer () {
+  function clearTimer() {
     if (timerId) {
       clearTimeout(timerId)
       timerId = null
     }
   }
 
-  function getMsUntilPreExpiry (idToken?: string | null) {
+  function getMsUntilPreExpiry(idToken?: string | null) {
     try {
       if (!idToken) {
         return null
@@ -34,7 +34,7 @@ export default defineNuxtPlugin(() => {
     }
   }
 
-  function getRoleDefaultIntervalMs (role?: string) {
+  function getRoleDefaultIntervalMs(role?: string) {
     // ADMIN: 10 minutes, autres: 20 minutes
     if (role === 'ADMIN') {
       return 10 * 60 * 1000
@@ -42,7 +42,7 @@ export default defineNuxtPlugin(() => {
     return 20 * 60 * 1000
   }
 
-  function scheduleNext () {
+  function scheduleNext() {
     clearTimer()
     if (!auth.isConnected) {
       return
@@ -57,7 +57,7 @@ export default defineNuxtPlugin(() => {
     }, nextMs)
   }
 
-  async function safeRefresh () {
+  async function safeRefresh() {
     if (refreshing || !auth.isConnected) {
       scheduleNext()
       return
@@ -73,13 +73,13 @@ export default defineNuxtPlugin(() => {
     }
   }
 
-  function onVisibility () {
+  function onVisibility() {
     if (document.visibilityState === 'visible') {
       void safeRefresh()
     }
   }
 
-  function onFocus () {
+  function onFocus() {
     void safeRefresh()
   }
 

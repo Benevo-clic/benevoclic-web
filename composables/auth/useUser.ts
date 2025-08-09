@@ -26,8 +26,7 @@ export const useUser = () => {
       initializationError.value = null
       return userStore.getUser as UserInfo
     } catch (error: any) {
-      initializationError.value =
-        error?.message || "Erreur lors de l'initialisation"
+      initializationError.value = error?.message || "Erreur lors de l'initialisation"
       console.error("Erreur d'initialisation:", error)
     }
   }

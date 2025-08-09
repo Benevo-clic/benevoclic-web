@@ -2,7 +2,7 @@ import { defineEventHandler, getCookie } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const config = useRuntimeConfig()
   const token = getCookie(event, 'auth_token')
   const { volunteerId } = getQuery(event) as { volunteerId?: string }

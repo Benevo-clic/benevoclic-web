@@ -1,85 +1,85 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { RoleUser } from '~/common/enums/role.enum'
-import { useUser } from '~/composables/auth/useUser'
-import VerifSiretAssociation from '~/components/header/auth/form/VerifSiretAssociation.vue'
+  import { reactive, ref } from 'vue'
+  import { useI18n } from 'vue-i18n'
+  import { RoleUser } from '~/common/enums/role.enum'
+  import { useUser } from '~/composables/auth/useUser'
+  import VerifSiretAssociation from '~/components/header/auth/form/VerifSiretAssociation.vue'
 
-const { t } = useI18n()
+  const { t } = useI18n()
 
-const loading = ref(false)
-const associationExists = ref(false)
+  const loading = ref(false)
+  const associationExists = ref(false)
 
-const user = useUser()
+  const user = useUser()
 
-const { isAssociation } = defineProps<{
-  isAssociation: boolean;
-}>()
+  const { isAssociation } = defineProps<{
+    isAssociation: boolean
+  }>()
 
-const form = reactive({
-  email: '',
-  password: '',
-  confirmPassword: ''
-})
+  const form = reactive({
+    email: '',
+    password: '',
+    confirmPassword: ''
+  })
 
-const errorMessage = ref('')
-const termsAccepted = ref(false)
+  const errorMessage = ref('')
+  const termsAccepted = ref(false)
 
-const emit = defineEmits<{
-  (e: 'emailVerified', isVerified: boolean): void;
-  (e: 'associationExists', isVerified: boolean): void;
-}>()
+  const emit = defineEmits<{
+    (e: 'emailVerified', isVerified: boolean): void
+    (e: 'associationExists', isVerified: boolean): void
+  }>()
 
-const isEmailVerified = ref(false)
+  const isEmailVerified = ref(false)
 
-// Generate unique IDs for accessibility
-const emailId = `register-email-${Math.random().toString(36).substr(2, 9)}`
-const passwordId = `register-password-${Math.random().toString(36).substr(2, 9)}`
-const confirmPasswordId = `register-confirm-password-${Math.random().toString(36).substr(2, 9)}`
-const termsId = `register-terms-${Math.random().toString(36).substr(2, 9)}`
+  // Generate unique IDs for accessibility
+  const emailId = `register-email-${Math.random().toString(36).substr(2, 9)}`
+  const passwordId = `register-password-${Math.random().toString(36).substr(2, 9)}`
+  const confirmPasswordId = `register-confirm-password-${Math.random().toString(36).substr(2, 9)}`
+  const termsId = `register-terms-${Math.random().toString(36).substr(2, 9)}`
 
-async function handleRegister () {
-  errorMessage.value = ''
+  async function handleRegister() {
+    errorMessage.value = ''
 
-  if (form.password !== form.confirmPassword) {
-    errorMessage.value = t('auth.register.error.password_mismatch')
-    return
+    if (form.password !== form.confirmPassword) {
+      errorMessage.value = t('auth.register.error.password_mismatch')
+      return
+    }
+
+    if (form.password.length < 8) {
+      errorMessage.value = t('auth.register.error.weak_password')
+      return
+    }
+
+    if (!termsAccepted.value) {
+      errorMessage.value = t('auth.register.error.terms_not_accepted')
+      return
+    }
+
+    loading.value = true
+
+    try {
+      await user.register({
+        email: form.email,
+        password: form.password,
+        role: isAssociation ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER
+      })
+      isEmailVerified.value = true
+      emit('emailVerified', isEmailVerified.value)
+    } catch (error) {
+      console.error('Erreur de connexion:', error)
+      errorMessage.value = "Une erreur est survenue lors de l'inscription."
+      isEmailVerified.value = false
+      emit('emailVerified', isEmailVerified.value)
+    } finally {
+      loading.value = false
+    }
   }
 
-  if (form.password.length < 8) {
-    errorMessage.value = t('auth.register.error.weak_password')
-    return
+  function verifyAssociation(value: boolean) {
+    associationExists.value = value
+    emit('associationExists', associationExists.value)
   }
-
-  if (!termsAccepted.value) {
-    errorMessage.value = t('auth.register.error.terms_not_accepted')
-    return
-  }
-
-  loading.value = true
-
-  try {
-    await user.register({
-      email: form.email,
-      password: form.password,
-      role: isAssociation ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER
-    })
-    isEmailVerified.value = true
-    emit('emailVerified', isEmailVerified.value)
-  } catch (error) {
-    console.error('Erreur de connexion:', error)
-    errorMessage.value = "Une erreur est survenue lors de l'inscription."
-    isEmailVerified.value = false
-    emit('emailVerified', isEmailVerified.value)
-  } finally {
-    loading.value = false
-  }
-}
-
-function verifyAssociation (value: boolean) {
-  associationExists.value = value
-  emit('associationExists', associationExists.value)
-}
 </script>
 
 <template>
@@ -94,14 +94,14 @@ function verifyAssociation (value: boolean) {
     aria-labelledby="register-form-title"
     @submit.prevent="handleRegister"
   >
-    <h2 id="register-form-title" class="sr-only">
-      Formulaire d'inscription
-    </h2>
+    <h2 id="register-form-title" class="sr-only">Formulaire d'inscription</h2>
 
     <div class="form-control">
       <label :for="emailId" class="label">
-        <span class="label-text">{{ t("auth.email") }}
-          <span class="text-error" aria-label="Champ obligatoire">*</span></span>
+        <span class="label-text"
+          >{{ t('auth.email') }}
+          <span class="text-error" aria-label="Champ obligatoire">*</span></span
+        >
       </label>
       <input
         :id="emailId"
@@ -113,7 +113,7 @@ function verifyAssociation (value: boolean) {
         aria-required="true"
         autocomplete="email"
         aria-describedby="email-description"
-      >
+      />
       <div id="email-description" class="text-xs text-gray-500 mt-1">
         Saisissez votre adresse email
       </div>
@@ -121,8 +121,10 @@ function verifyAssociation (value: boolean) {
 
     <div class="form-control">
       <label :for="passwordId" class="label">
-        <span class="label-text">{{ t("auth.password") }}
-          <span class="text-error" aria-label="Champ obligatoire">*</span></span>
+        <span class="label-text"
+          >{{ t('auth.password') }}
+          <span class="text-error" aria-label="Champ obligatoire">*</span></span
+        >
       </label>
       <input
         :id="passwordId"
@@ -134,7 +136,7 @@ function verifyAssociation (value: boolean) {
         aria-required="true"
         autocomplete="new-password"
         aria-describedby="password-description"
-      >
+      />
       <div id="password-description" class="text-xs text-gray-500 mt-1">
         Le mot de passe doit contenir au moins 8 caractères
       </div>
@@ -142,8 +144,10 @@ function verifyAssociation (value: boolean) {
 
     <div class="form-control">
       <label :for="confirmPasswordId" class="label">
-        <span class="label-text">{{ t("auth.confirm_password") }}
-          <span class="text-error" aria-label="Champ obligatoire">*</span></span>
+        <span class="label-text"
+          >{{ t('auth.confirm_password') }}
+          <span class="text-error" aria-label="Champ obligatoire">*</span></span
+        >
       </label>
       <input
         :id="confirmPasswordId"
@@ -159,7 +163,7 @@ function verifyAssociation (value: boolean) {
             ? 'password-mismatch'
             : 'confirm-password-description'
         "
-      >
+      />
       <div id="confirm-password-description" class="text-xs text-gray-500 mt-1">
         Confirmez votre mot de passe
       </div>
@@ -183,7 +187,7 @@ function verifyAssociation (value: boolean) {
           required
           aria-required="true"
           aria-describedby="terms-description"
-        >
+        />
         <span class="label-text text-sm">
           J'accepte les
           <a
@@ -240,23 +244,13 @@ function verifyAssociation (value: boolean) {
       class="btn btn-primary w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
       :disabled="loading || !termsAccepted"
       :aria-describedby="
-        loading
-          ? 'register-loading'
-          : !termsAccepted
-            ? 'register-disabled'
-            : undefined
+        loading ? 'register-loading' : !termsAccepted ? 'register-disabled' : undefined
       "
     >
-      <span
-        v-if="loading"
-        class="loading loading-spinner loading-sm"
-        aria-hidden="true"
-      />
-      <span v-else>{{ t("auth.continue") }}</span>
+      <span v-if="loading" class="loading loading-spinner loading-sm" aria-hidden="true" />
+      <span v-else>{{ t('auth.continue') }}</span>
     </button>
-    <div v-if="loading" id="register-loading" class="sr-only">
-      Inscription en cours...
-    </div>
+    <div v-if="loading" id="register-loading" class="sr-only">Inscription en cours...</div>
     <div v-if="!termsAccepted" id="register-disabled" class="sr-only">
       Vous devez accepter les conditions générales pour continuer
     </div>
@@ -264,31 +258,31 @@ function verifyAssociation (value: boolean) {
 </template>
 
 <style scoped>
-/* Styles pour améliorer l'accessibilité */
-.form-control label {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
+  /* Styles pour améliorer l'accessibilité */
+  .form-control label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
 
-.form-control input:focus-visible {
-  border-color: #eb5577;
-  box-shadow: 0 0 0 2px rgba(235, 85, 119, 0.2);
-}
+  .form-control input:focus-visible {
+    border-color: #eb5577;
+    box-shadow: 0 0 0 2px rgba(235, 85, 119, 0.2);
+  }
 
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 
-.btn:disabled:focus-visible {
-  outline: none;
-  box-shadow: none;
-}
+  .btn:disabled:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
 
-/* Amélioration du contraste pour les liens */
-a:focus-visible {
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 2px;
-}
+  /* Amélioration du contraste pour les liens */
+  a:focus-visible {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
+  }
 </style>

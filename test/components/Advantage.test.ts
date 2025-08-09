@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { mount } from "@vue/test-utils";
-import { nextTick } from "vue";
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 
 // Mock component pour tester le composant Advantage
 const MockAdvantage = {
@@ -123,263 +123,249 @@ const MockAdvantage = {
   props: {
     startSearching: {
       type: Boolean,
-      default: false,
+      default: false
     },
     isVisible: {
       type: Boolean,
-      default: false,
-    },
-  },
-};
+      default: false
+    }
+  }
+}
 
-describe("Advantage", () => {
+describe('Advantage', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-  });
+    vi.clearAllMocks()
+  })
 
-  describe("Rendu de base", () => {
-    it("should render benefits section when not searching", () => {
+  describe('Rendu de base', () => {
+    it('should render benefits section when not searching', () => {
       const wrapper = mount(MockAdvantage, {
         props: {
-          startSearching: false,
-        },
-      });
+          startSearching: false
+        }
+      })
 
-      const benefitsSection = wrapper.find("#benefits-section");
-      expect(benefitsSection.exists()).toBe(true);
-    });
+      const benefitsSection = wrapper.find('#benefits-section')
+      expect(benefitsSection.exists()).toBe(true)
+    })
 
-    it("should not render benefits section when searching", () => {
+    it('should not render benefits section when searching', () => {
       const wrapper = mount(MockAdvantage, {
         props: {
-          startSearching: true,
-        },
-      });
+          startSearching: true
+        }
+      })
 
-      const benefitsSection = wrapper.find("#benefits-section");
-      expect(benefitsSection.exists()).toBe(false);
-    });
+      const benefitsSection = wrapper.find('#benefits-section')
+      expect(benefitsSection.exists()).toBe(false)
+    })
 
-    it("should display main heading", () => {
-      const wrapper = mount(MockAdvantage);
+    it('should display main heading', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const heading = wrapper.find("h2");
-      expect(heading.exists()).toBe(true);
-      expect(heading.text()).toBe("Pourquoi rejoindre Benevoclic ?");
-    });
+      const heading = wrapper.find('h2')
+      expect(heading.exists()).toBe(true)
+      expect(heading.text()).toBe('Pourquoi rejoindre Benevoclic ?')
+    })
 
-    it("should display description text", () => {
-      const wrapper = mount(MockAdvantage);
+    it('should display description text', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const description = wrapper.find("p");
-      expect(description.exists()).toBe(true);
-      expect(description.text()).toContain(
-        "Notre plateforme permet aux associations",
-      );
-    });
-  });
+      const description = wrapper.find('p')
+      expect(description.exists()).toBe(true)
+      expect(description.text()).toContain('Notre plateforme permet aux associations')
+    })
+  })
 
   describe("Cartes d'avantages", () => {
-    it("should display all 6 advantage cards", () => {
-      const wrapper = mount(MockAdvantage);
+    it('should display all 6 advantage cards', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const cards = wrapper.findAll(".card");
-      expect(cards.length).toBe(6);
-    });
+      const cards = wrapper.findAll('.card')
+      expect(cards.length).toBe(6)
+    })
 
-    it("should display first card with correct content", () => {
-      const wrapper = mount(MockAdvantage);
+    it('should display first card with correct content', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const firstCard = wrapper.findAll(".card")[0];
-      expect(firstCard.find("h3").text()).toBe("Trouvez facilement");
-      expect(firstCard.find("p").text()).toContain(
-        "Accédez à des milliers d'événements",
-      );
-    });
+      const firstCard = wrapper.findAll('.card')[0]
+      expect(firstCard.find('h3').text()).toBe('Trouvez facilement')
+      expect(firstCard.find('p').text()).toContain("Accédez à des milliers d'événements")
+    })
 
-    it("should display second card with correct content", () => {
-      const wrapper = mount(MockAdvantage);
+    it('should display second card with correct content', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const secondCard = wrapper.findAll(".card")[1];
-      expect(secondCard.find("h3").text()).toBe("Gérez votre temps");
-      expect(secondCard.find("p").text()).toContain(
-        "Choisissez des missions adaptées",
-      );
-    });
+      const secondCard = wrapper.findAll('.card')[1]
+      expect(secondCard.find('h3').text()).toBe('Gérez votre temps')
+      expect(secondCard.find('p').text()).toContain('Choisissez des missions adaptées')
+    })
 
-    it("should display third card with correct content", () => {
-      const wrapper = mount(MockAdvantage);
+    it('should display third card with correct content', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const thirdCard = wrapper.findAll(".card")[2];
-      expect(thirdCard.find("h3").text()).toBe("Développez vos compétences");
-      expect(thirdCard.find("p").text()).toContain(
-        "Mettez en pratique vos talents",
-      );
-    });
+      const thirdCard = wrapper.findAll('.card')[2]
+      expect(thirdCard.find('h3').text()).toBe('Développez vos compétences')
+      expect(thirdCard.find('p').text()).toContain('Mettez en pratique vos talents')
+    })
 
-    it("should display fourth card with correct content", () => {
-      const wrapper = mount(MockAdvantage);
+    it('should display fourth card with correct content', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const fourthCard = wrapper.findAll(".card")[3];
-      expect(fourthCard.find("h3").text()).toBe("Rejoignez une communauté");
-      expect(fourthCard.find("p").text()).toContain(
-        "Connectez-vous avec d'autres bénévoles",
-      );
-    });
+      const fourthCard = wrapper.findAll('.card')[3]
+      expect(fourthCard.find('h3').text()).toBe('Rejoignez une communauté')
+      expect(fourthCard.find('p').text()).toContain("Connectez-vous avec d'autres bénévoles")
+    })
 
-    it("should display fifth card with correct content", () => {
-      const wrapper = mount(MockAdvantage);
+    it('should display fifth card with correct content', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const fifthCard = wrapper.findAll(".card")[4];
-      expect(fifthCard.find("h3").text()).toBe("Faites la différence");
-      expect(fifthCard.find("p").text()).toContain(
-        "Contribuez concrètement à des causes",
-      );
-    });
+      const fifthCard = wrapper.findAll('.card')[4]
+      expect(fifthCard.find('h3').text()).toBe('Faites la différence')
+      expect(fifthCard.find('p').text()).toContain('Contribuez concrètement à des causes')
+    })
 
-    it("should display sixth card with correct content", () => {
-      const wrapper = mount(MockAdvantage);
+    it('should display sixth card with correct content', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const sixthCard = wrapper.findAll(".card")[5];
-      expect(sixthCard.find("h3").text()).toBe("Sécurité garantie");
-      expect(sixthCard.find("p").text()).toContain(
-        "Bénéficiez d'un environnement sécurisé",
-      );
-    });
-  });
+      const sixthCard = wrapper.findAll('.card')[5]
+      expect(sixthCard.find('h3').text()).toBe('Sécurité garantie')
+      expect(sixthCard.find('p').text()).toContain("Bénéficiez d'un environnement sécurisé")
+    })
+  })
 
-  describe("Icônes et visuels", () => {
-    it("should display icons for each card", () => {
-      const wrapper = mount(MockAdvantage);
+  describe('Icônes et visuels', () => {
+    it('should display icons for each card', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const icons = wrapper.findAll("span");
-      expect(icons.length).toBeGreaterThan(0);
-    });
+      const icons = wrapper.findAll('span')
+      expect(icons.length).toBeGreaterThan(0)
+    })
 
-    it("should have proper icon styling", () => {
-      const wrapper = mount(MockAdvantage);
+    it('should have proper icon styling', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const iconContainers = wrapper.findAll(".p-3.rounded-lg");
-      iconContainers.forEach((container) => {
-        expect(container.classes()).toContain("p-3");
-        expect(container.classes()).toContain("rounded-lg");
-      });
-    });
-  });
+      const iconContainers = wrapper.findAll('.p-3.rounded-lg')
+      iconContainers.forEach(container => {
+        expect(container.classes()).toContain('p-3')
+        expect(container.classes()).toContain('rounded-lg')
+      })
+    })
+  })
 
-  describe("Styles et classes CSS", () => {
-    it("should have proper section styling", () => {
-      const wrapper = mount(MockAdvantage);
+  describe('Styles et classes CSS', () => {
+    it('should have proper section styling', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const section = wrapper.find("#benefits-section");
-      expect(section.classes()).toContain("py-16");
-      expect(section.classes()).toContain("px-4");
-      expect(section.classes()).toContain("bg-base-200");
-    });
+      const section = wrapper.find('#benefits-section')
+      expect(section.classes()).toContain('py-16')
+      expect(section.classes()).toContain('px-4')
+      expect(section.classes()).toContain('bg-base-200')
+    })
 
-    it("should have proper grid layout", () => {
-      const wrapper = mount(MockAdvantage);
+    it('should have proper grid layout', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const grid = wrapper.find(".grid");
-      expect(grid.classes()).toContain("grid-cols-1");
-      expect(grid.classes()).toContain("md:grid-cols-2");
-      expect(grid.classes()).toContain("lg:grid-cols-3");
-    });
+      const grid = wrapper.find('.grid')
+      expect(grid.classes()).toContain('grid-cols-1')
+      expect(grid.classes()).toContain('md:grid-cols-2')
+      expect(grid.classes()).toContain('lg:grid-cols-3')
+    })
 
-    it("should have proper card styling", () => {
-      const wrapper = mount(MockAdvantage);
+    it('should have proper card styling', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const cards = wrapper.findAll(".card");
-      cards.forEach((card) => {
-        expect(card.classes()).toContain("card");
-        expect(card.classes()).toContain("bg-base-100");
-        expect(card.classes()).toContain("shadow-lg");
-      });
-    });
-  });
+      const cards = wrapper.findAll('.card')
+      cards.forEach(card => {
+        expect(card.classes()).toContain('card')
+        expect(card.classes()).toContain('bg-base-100')
+        expect(card.classes()).toContain('shadow-lg')
+      })
+    })
+  })
 
-  describe("Animation et visibilité", () => {
-    it("should apply visible class when isVisible is true", () => {
+  describe('Animation et visibilité', () => {
+    it('should apply visible class when isVisible is true', () => {
       const wrapper = mount(MockAdvantage, {
         props: {
-          isVisible: true,
-        },
-      });
+          isVisible: true
+        }
+      })
 
-      const visibleElements = wrapper.findAll(".visible");
-      expect(visibleElements.length).toBeGreaterThan(0);
-    });
+      const visibleElements = wrapper.findAll('.visible')
+      expect(visibleElements.length).toBeGreaterThan(0)
+    })
 
-    it("should not apply visible class when isVisible is false", () => {
+    it('should not apply visible class when isVisible is false', () => {
       const wrapper = mount(MockAdvantage, {
         props: {
-          isVisible: false,
-        },
-      });
+          isVisible: false
+        }
+      })
 
-      const visibleElements = wrapper.findAll(".visible");
-      expect(visibleElements.length).toBe(0);
-    });
-  });
+      const visibleElements = wrapper.findAll('.visible')
+      expect(visibleElements.length).toBe(0)
+    })
+  })
 
-  describe("Accessibilité", () => {
-    it("should have proper heading structure", () => {
-      const wrapper = mount(MockAdvantage);
+  describe('Accessibilité', () => {
+    it('should have proper heading structure', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const heading = wrapper.find("h2");
-      expect(heading.exists()).toBe(true);
-      expect(heading.text()).toBeTruthy();
-    });
+      const heading = wrapper.find('h2')
+      expect(heading.exists()).toBe(true)
+      expect(heading.text()).toBeTruthy()
+    })
 
-    it("should have proper card structure", () => {
-      const wrapper = mount(MockAdvantage);
+    it('should have proper card structure', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const cards = wrapper.findAll(".card");
-      cards.forEach((card) => {
-        const cardBody = card.find(".card-body");
-        expect(cardBody.exists()).toBe(true);
-      });
-    });
-  });
+      const cards = wrapper.findAll('.card')
+      cards.forEach(card => {
+        const cardBody = card.find('.card-body')
+        expect(cardBody.exists()).toBe(true)
+      })
+    })
+  })
 
-  describe("Responsive design", () => {
-    it("should have responsive grid layout", () => {
-      const wrapper = mount(MockAdvantage);
+  describe('Responsive design', () => {
+    it('should have responsive grid layout', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const grid = wrapper.find(".grid");
-      expect(grid.classes()).toContain("grid-cols-1");
-      expect(grid.classes()).toContain("md:grid-cols-2");
-      expect(grid.classes()).toContain("lg:grid-cols-3");
-    });
+      const grid = wrapper.find('.grid')
+      expect(grid.classes()).toContain('grid-cols-1')
+      expect(grid.classes()).toContain('md:grid-cols-2')
+      expect(grid.classes()).toContain('lg:grid-cols-3')
+    })
 
-    it("should have responsive text sizing", () => {
-      const wrapper = mount(MockAdvantage);
+    it('should have responsive text sizing', () => {
+      const wrapper = mount(MockAdvantage)
 
-      const heading = wrapper.find("h2");
-      expect(heading.classes()).toContain("text-3xl");
-    });
-  });
+      const heading = wrapper.find('h2')
+      expect(heading.classes()).toContain('text-3xl')
+    })
+  })
 
-  describe("Props et états", () => {
-    it("should handle startSearching prop correctly", () => {
+  describe('Props et états', () => {
+    it('should handle startSearching prop correctly', () => {
       const wrapper = mount(MockAdvantage, {
         props: {
-          startSearching: false,
-        },
-      });
+          startSearching: false
+        }
+      })
 
-      expect(wrapper.vm.startSearching).toBe(false);
-      expect(wrapper.find("#benefits-section").exists()).toBe(true);
-    });
+      expect(wrapper.vm.startSearching).toBe(false)
+      expect(wrapper.find('#benefits-section').exists()).toBe(true)
+    })
 
-    it("should handle isVisible prop correctly", () => {
+    it('should handle isVisible prop correctly', () => {
       const wrapper = mount(MockAdvantage, {
         props: {
-          isVisible: true,
-        },
-      });
+          isVisible: true
+        }
+      })
 
-      expect(wrapper.vm.isVisible).toBe(true);
-    });
-  });
-});
+      expect(wrapper.vm.isVisible).toBe(true)
+    })
+  })
+})

@@ -8,13 +8,7 @@
         class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4"
       >
         <div class="flex items-center gap-2">
-          <img
-            src="/logo.png"
-            alt="Logo Benevoclic"
-            class="h-8 w-8"
-            width="32"
-            height="32"
-          >
+          <img src="/logo.png" alt="Logo Benevoclic" class="h-8 w-8" width="32" height="32" />
           <span class="font-bold text-lg">Benevoclic</span>
         </div>
         <nav
@@ -79,27 +73,24 @@
 </template>
 
 <script setup lang="ts">
-// Function to open cookie settings
-function openCookieSettings () {
-  // Find the CookieConsent component and call its openSettings method
-  const cookieConsent = document.querySelector('#cookie-consent')
-  if (cookieConsent) {
-    // Use a more type-safe approach
-    const vueComponent = (cookieConsent as any).__vueParentComponent
-    if (
-      vueComponent?.ctx?.openSettings &&
-      typeof vueComponent.ctx.openSettings === 'function'
-    ) {
-      vueComponent.ctx.openSettings()
+  // Function to open cookie settings
+  function openCookieSettings() {
+    // Find the CookieConsent component and call its openSettings method
+    const cookieConsent = document.querySelector('#cookie-consent')
+    if (cookieConsent) {
+      // Use a more type-safe approach
+      const vueComponent = (cookieConsent as any).__vueParentComponent
+      if (vueComponent?.ctx?.openSettings && typeof vueComponent.ctx.openSettings === 'function') {
+        vueComponent.ctx.openSettings()
+      } else {
+        // If the component is not found, create a new instance of it
+        const event = new CustomEvent('openCookieSettings')
+        window.dispatchEvent(event)
+      }
     } else {
       // If the component is not found, create a new instance of it
       const event = new CustomEvent('openCookieSettings')
       window.dispatchEvent(event)
     }
-  } else {
-    // If the component is not found, create a new instance of it
-    const event = new CustomEvent('openCookieSettings')
-    window.dispatchEvent(event)
   }
-}
 </script>

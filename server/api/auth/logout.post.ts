@@ -1,14 +1,8 @@
-import {
-  defineEventHandler,
-  deleteCookie,
-  H3Event,
-  EventHandlerRequest,
-  getCookie
-} from 'h3'
+import { defineEventHandler, deleteCookie, H3Event, EventHandlerRequest, getCookie } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export function deleteCookies (event: H3Event<EventHandlerRequest>) {
+export function deleteCookies(event: H3Event<EventHandlerRequest>) {
   deleteCookie(event, 'auth_token', {
     httpOnly: true,
     secure: true,
@@ -27,7 +21,7 @@ export function deleteCookies (event: H3Event<EventHandlerRequest>) {
   deleteCookie(event, 'id_user')
 }
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
   const config = useRuntimeConfig()
 

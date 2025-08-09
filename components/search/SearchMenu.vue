@@ -4,12 +4,7 @@
     role="region"
     aria-labelledby="search-menu-title"
   >
-    <h2
-      id="search-menu-title"
-      class="text-xl font-semibold mb-4 text-base-content"
-    >
-      Search
-    </h2>
+    <h2 id="search-menu-title" class="text-xl font-semibold mb-4 text-base-content">Search</h2>
     <nav role="navigation" aria-label="Menu de recherche">
       <ul class="menu menu-vertical w-full" role="menu">
         <li role="none">
@@ -40,28 +35,28 @@
 </template>
 
 <script setup lang="ts">
-import { Search, Clock } from 'lucide-vue-next'
+  import { Search, Clock } from 'lucide-vue-next'
 </script>
 
 <style scoped>
-/* Amélioration de l'accessibilité pour les liens */
-a:focus-visible {
-  outline: 2px solid #eb5577;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* Amélioration du contraste pour les utilisateurs en mode high-contrast */
-@media (prefers-contrast: more) {
-  .menu li a {
-    border: 1px solid currentColor;
+  /* Amélioration de l'accessibilité pour les liens */
+  a:focus-visible {
+    outline: 2px solid #eb5577;
+    outline-offset: 2px;
+    border-radius: 4px;
   }
-}
 
-/* Respect des préférences de réduction de mouvement */
-@media (prefers-reduced-motion: reduce) {
-  .menu li a {
-    transition: none;
+  /* Amélioration du contraste pour les utilisateurs en mode high-contrast */
+  @media (prefers-contrast: more) {
+    .menu li a {
+      border: 1px solid currentColor;
+    }
   }
-}
+
+  /* Respect des préférences de réduction de mouvement */
+  @media (prefers-reduced-motion: reduce) {
+    .menu li a {
+      transition: none;
+    }
+  }
 </style>

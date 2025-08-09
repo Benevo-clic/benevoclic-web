@@ -1,18 +1,12 @@
 <template>
-  <div
-    class="flex flex-col items-center justify-center min-h-screen bg-base-200 py-8"
-  >
+  <div class="flex flex-col items-center justify-center min-h-screen bg-base-200 py-8">
     <div class="w-full max-w-2xl mx-auto px-2 p-6">
       <h1 class="text-3xl font-bold mb-8 text-center text-base-content">
-        {{ t("drawer-content.account.edit_profile") }}
+        {{ t('drawer-content.account.edit_profile') }}
       </h1>
 
       <!-- Alert messages -->
-      <div
-        v-if="alertStatus === 'success'"
-        role="alert"
-        class="alert alert-success mb-4 shadow-lg"
-      >
+      <div v-if="alertStatus === 'success'" role="alert" class="alert alert-success mb-4 shadow-lg">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="stroke-current shrink-0 h-6 w-6"
@@ -27,15 +21,9 @@
           />
         </svg>
         <span>{{ alertMessage }}</span>
-        <button class="btn btn-sm btn-ghost" @click="alertStatus = null">
-          ×
-        </button>
+        <button class="btn btn-sm btn-ghost" @click="alertStatus = null">×</button>
       </div>
-      <div
-        v-if="alertStatus === 'error'"
-        role="alert"
-        class="alert alert-error mb-4 shadow-lg"
-      >
+      <div v-if="alertStatus === 'error'" role="alert" class="alert alert-error mb-4 shadow-lg">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="stroke-current shrink-0 h-6 w-6"
@@ -50,9 +38,7 @@
           />
         </svg>
         <span>{{ alertMessage }}</span>
-        <button class="btn btn-sm btn-ghost" @click="alertStatus = null">
-          ×
-        </button>
+        <button class="btn btn-sm btn-ghost" @click="alertStatus = null">×</button>
       </div>
 
       <!-- Avatar/logo -->
@@ -78,7 +64,7 @@
             height="200"
             loading="lazy"
             decoding="async"
-          >
+          />
           <div v-else class="w-full h-full flex items-center justify-center">
             <UserRound class="w-16 h-16 text-base-content opacity-50" />
           </div>
@@ -100,7 +86,7 @@
               accept="image/*"
               class="hidden"
               @change="handleImageChange"
-            >
+            />
           </div>
         </div>
         <span class="text-base-content/70 text-sm">Logo de l'association</span>
@@ -108,89 +94,97 @@
 
       <!-- Edit profile form -->
       <form class="space-y-6" @submit.prevent="saveProfile">
-        <div
-          class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4"
-        >
+        <div class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="form-control w-full">
-            <label class="label"><span class="label-text text-base-content">{{
-              t("auth.association.name") || "Association Name"
-            }}</span></label>
+            <label class="label"
+              ><span class="label-text text-base-content">{{
+                t('auth.association.name') || 'Association Name'
+              }}</span></label
+            >
             <input
               v-model="form.associationName"
               type="text"
               class="input input-bordered w-full"
               aria-label="Nom de l'association"
-            >
+            />
           </div>
           <div class="form-control w-full">
-            <label class="label"><span class="label-text text-base-content">{{
-              t("auth.association.type") || "Type"
-            }}</span></label>
+            <label class="label"
+              ><span class="label-text text-base-content">{{
+                t('auth.association.type') || 'Type'
+              }}</span></label
+            >
             <input
               v-model="form.type"
               type="text"
               class="input input-bordered w-full"
               aria-label="Type d'association"
-            >
+            />
           </div>
         </div>
-        <div
-          class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4"
-        >
+        <div class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="form-control w-full">
-            <label class="label"><span class="label-text text-base-content">{{
-              t("auth.association.phone") || "Phone"
-            }}</span></label>
+            <label class="label"
+              ><span class="label-text text-base-content">{{
+                t('auth.association.phone') || 'Phone'
+              }}</span></label
+            >
             <input
               v-model="form.phone"
               type="tel"
               class="input input-bordered w-full"
               aria-label="Numéro de téléphone de l'association"
-            >
+            />
           </div>
           <div class="form-control w-full">
-            <label class="label"><span class="label-text text-base-content">{{
-              t("auth.association.country") || "Country"
-            }}</span></label>
+            <label class="label"
+              ><span class="label-text text-base-content">{{
+                t('auth.association.country') || 'Country'
+              }}</span></label
+            >
             <input
               v-model="form.country"
               type="text"
               class="input input-bordered w-full"
               aria-label="Pays de l'association"
-            >
+            />
           </div>
         </div>
-        <div
-          class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4"
-        >
+        <div class="bg-base-100 rounded-xl shadow p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="form-control w-full">
-            <label class="label"><span class="label-text text-base-content">{{
-              t("auth.association.city") || "City"
-            }}</span></label>
+            <label class="label"
+              ><span class="label-text text-base-content">{{
+                t('auth.association.city') || 'City'
+              }}</span></label
+            >
             <input
               v-model="form.city"
               type="text"
               class="input input-bordered w-full"
               aria-label="Ville de l'association"
-            >
+            />
           </div>
           <div class="form-control w-full">
-            <label class="label"><span class="label-text text-base-content">{{
-              t("auth.association.postal_code") || "Postal Code"
-            }}</span></label>
+            <label class="label"
+              ><span class="label-text text-base-content">{{
+                t('auth.association.postal_code') || 'Postal Code'
+              }}</span></label
+            >
             <input
               v-model="form.postalCode"
               type="text"
               class="input input-bordered w-full"
               aria-label="Code postal de l'association"
-            >
+            />
           </div>
         </div>
         <div class="bg-base-100 rounded-xl shadow p-6">
           <div class="form-control w-full">
-            <label class="label"><span class="label-text text-base-content">{{
-              t("auth.association.bio") || "Bio"
-            }}</span></label>
+            <label class="label"
+              ><span class="label-text text-base-content">{{
+                t('auth.association.bio') || 'Bio'
+              }}</span></label
+            >
             <textarea
               v-model="form.bio"
               class="textarea textarea-bordered h-24 w-full"
@@ -199,15 +193,8 @@
           </div>
         </div>
         <div class="flex justify-end">
-          <button
-            type="submit"
-            class="btn btn-primary btn-wide"
-            :disabled="!isFormChanged"
-          >
-            <span
-              v-if="isImageUploading"
-              class="loading loading-spinner loading-xs mr-2"
-            />
+          <button type="submit" class="btn btn-primary btn-wide" :disabled="!isFormChanged">
+            <span v-if="isImageUploading" class="loading loading-spinner loading-xs mr-2" />
             Sauvegarder
           </button>
         </div>
@@ -223,210 +210,205 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { Upload, UserRound } from 'lucide-vue-next'
+  import { computed, onMounted, ref } from 'vue'
+  import { Upload, UserRound } from 'lucide-vue-next'
 
-import { useI18n } from 'vue-i18n'
-// eslint-disable-next-line import/named
-import { isEqual } from 'lodash'
-import { useUser } from '~/composables/auth/useUser'
-import { useAssociationAuth } from '~/composables/useAssociation'
-import { useNavigation } from '~/composables/useNavigation'
-import ErrorPopup from '~/components/utils/ErrorPopup.vue'
+  import { useI18n } from 'vue-i18n'
+  // eslint-disable-next-line import/named
+  import { isEqual } from 'lodash'
+  import { useUser } from '~/composables/auth/useUser'
+  import { useAssociationAuth } from '~/composables/useAssociation'
+  import { useNavigation } from '~/composables/useNavigation'
+  import ErrorPopup from '~/components/utils/ErrorPopup.vue'
 
-const { t } = useI18n()
+  const { t } = useI18n()
 
-definePageMeta({
-  middleware: ['auth'],
-  layout: 'app'
-})
+  definePageMeta({
+    middleware: ['auth'],
+    layout: 'app'
+  })
 
-// Configuration SEO spécifique à la page
-useHead({
-  title: 'Modifier le profil - Benevoclic',
-  meta: [
-    {
-      name: 'description',
-      content:
-        'Modifiez les informations de votre association : nom, type, coordonnées et description. Gérez votre profil Benevoclic.'
-    },
-    { property: 'og:title', content: 'Modifier le profil - Benevoclic' },
-    {
-      property: 'og:description',
-      content:
-        'Modifiez les informations de votre association : nom, type, coordonnées et description.'
-    },
-    { property: 'og:type', content: 'website' },
-    { name: 'robots', content: 'noindex, nofollow' } // Page privée
-  ]
-})
+  // Configuration SEO spécifique à la page
+  useHead({
+    title: 'Modifier le profil - Benevoclic',
+    meta: [
+      {
+        name: 'description',
+        content:
+          'Modifiez les informations de votre association : nom, type, coordonnées et description. Gérez votre profil Benevoclic.'
+      },
+      { property: 'og:title', content: 'Modifier le profil - Benevoclic' },
+      {
+        property: 'og:description',
+        content:
+          'Modifiez les informations de votre association : nom, type, coordonnées et description.'
+      },
+      { property: 'og:type', content: 'website' },
+      { name: 'robots', content: 'noindex, nofollow' } // Page privée
+    ]
+  })
 
-const auth = useUser()
-const associationAuth = useAssociationAuth()
-const { navigateToRoute } = useNavigation()
+  const auth = useUser()
+  const associationAuth = useAssociationAuth()
+  const { navigateToRoute } = useNavigation()
 
-onMounted(async () => {
-  try {
-    await initData()
-  } catch (error) {
-    handleError(error)
-  }
-
-  initForm()
-})
-
-function initForm () {
-  if (associationAuth.association.value) {
-    const associationName =
-      associationAuth.association.value.associationName || ''
-    const phone = associationAuth.association.value.phone || ''
-    const city = associationAuth.association.value.city || ''
-    const postalCode = associationAuth.association.value.postalCode || ''
-    const bio = associationAuth.association.value.bio || ''
-    const type = associationAuth.association.value.type || ''
-    const country = associationAuth.association.value.country || ''
-
-    form.value.associationName = associationName
-    form.value.phone = phone
-    form.value.city = city
-    form.value.postalCode = postalCode
-    form.value.bio = bio
-    form.value.type = type
-    form.value.country = country
-
-    initialForm.value.associationName = associationName
-    initialForm.value.phone = phone
-    initialForm.value.city = city
-    initialForm.value.postalCode = postalCode
-    initialForm.value.bio = bio
-    initialForm.value.type = type
-    initialForm.value.country = country
-  }
-}
-
-const showErrorModal = ref(false)
-const errorType = ref<'4xx' | '5xx' | null>(null)
-
-function handleReload () {
-  window.location.reload()
-}
-async function handleGoHome () {
-  await navigateToRoute('/')
-}
-
-async function initData () {
-  await auth.initializeUser()
-  if (!associationAuth.association.value) {
-    await associationAuth.getAssociationInfo()
-  }
-}
-
-function handleError (error: any) {
-  if (error?.response?.status >= 500 && error?.response?.status < 600) {
-    errorType.value = '5xx'
-    showErrorModal.value = true
-  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
-    errorType.value = '4xx'
-    showErrorModal.value = true
-  } else {
-    console.error('Erreur inattendue:', error)
-  }
-}
-
-const form = ref({
-  associationName: '',
-  phone: '',
-  city: '',
-  postalCode: '',
-  bio: '',
-  type: '',
-  country: ''
-})
-
-const initialForm = ref({
-  associationName: '',
-  phone: '',
-  city: '',
-  postalCode: '',
-  bio: '',
-  type: '',
-  country: ''
-})
-
-const alertStatus = ref<'success' | 'error' | null>(null)
-const alertMessage = ref('')
-const isImageUploading = ref(false)
-
-const profileImageUrl = computed(() => {
-  return auth.user.value?.avatarFileKey
-})
-
-const isFormChanged = computed(() => {
-  return !isEqual(form.value, initialForm.value)
-})
-
-function handleImageChange (event: Event) {
-  const file = (event.target as HTMLInputElement).files?.[0]
-  if (file) {
-    isImageUploading.value = true
-
-    const reader = new FileReader()
-    reader.onload = async () => {
-      try {
-        await auth.updateAvatar(file)
-        alertStatus.value = 'success'
-        alertMessage.value =
-          t('drawer-content.account.profile_updated_success') ||
-          'Profile image updated successfully'
-        setTimeout(() => {
-          alertStatus.value = null
-        }, 1000 * 3)
-      } catch (error) {
-        // Show error alert
-        alertStatus.value = 'error'
-        alertMessage.value =
-          t('drawer-content.account.profile_update_error') ||
-          'Error updating profile image. Please try again.'
-        handleError(error)
-
-        // Auto-hide alert after 10 seconds
-        setTimeout(() => {
-          alertStatus.value = null
-        }, 1000 * 3)
-      } finally {
-        isImageUploading.value = false
-      }
+  onMounted(async () => {
+    try {
+      await initData()
+    } catch (error) {
+      handleError(error)
     }
-    reader.readAsDataURL(file)
+
+    initForm()
+  })
+
+  function initForm() {
+    if (associationAuth.association.value) {
+      const associationName = associationAuth.association.value.associationName || ''
+      const phone = associationAuth.association.value.phone || ''
+      const city = associationAuth.association.value.city || ''
+      const postalCode = associationAuth.association.value.postalCode || ''
+      const bio = associationAuth.association.value.bio || ''
+      const type = associationAuth.association.value.type || ''
+      const country = associationAuth.association.value.country || ''
+
+      form.value.associationName = associationName
+      form.value.phone = phone
+      form.value.city = city
+      form.value.postalCode = postalCode
+      form.value.bio = bio
+      form.value.type = type
+      form.value.country = country
+
+      initialForm.value.associationName = associationName
+      initialForm.value.phone = phone
+      initialForm.value.city = city
+      initialForm.value.postalCode = postalCode
+      initialForm.value.bio = bio
+      initialForm.value.type = type
+      initialForm.value.country = country
+    }
   }
-}
 
-async function saveProfile () {
-  try {
-    await associationAuth.updateAssociation(
-      form.value,
-      auth.user.value?.userId
-    )
+  const showErrorModal = ref(false)
+  const errorType = ref<'4xx' | '5xx' | null>(null)
 
-    initialForm.value = { ...form.value }
-
-    alertStatus.value = 'success'
-    alertMessage.value =
-      t('drawer-content.account.profile_updated_success') ||
-      'Profile updated successfully'
-    setTimeout(() => {
-      alertStatus.value = null
-    }, 1000)
-  } catch (error) {
-    alertStatus.value = 'error'
-    alertMessage.value =
-      t('drawer-content.account.profile_update_error') ||
-      'Error updating profile. Please try again.'
-    console.error('Error updating profile:', error)
-    handleError(error)
-    setTimeout(() => {
-      alertStatus.value = null
-    }, 10000)
+  function handleReload() {
+    window.location.reload()
   }
-}
+  async function handleGoHome() {
+    await navigateToRoute('/')
+  }
+
+  async function initData() {
+    await auth.initializeUser()
+    if (!associationAuth.association.value) {
+      await associationAuth.getAssociationInfo()
+    }
+  }
+
+  function handleError(error: any) {
+    if (error?.response?.status >= 500 && error?.response?.status < 600) {
+      errorType.value = '5xx'
+      showErrorModal.value = true
+    } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+      errorType.value = '4xx'
+      showErrorModal.value = true
+    } else {
+      console.error('Erreur inattendue:', error)
+    }
+  }
+
+  const form = ref({
+    associationName: '',
+    phone: '',
+    city: '',
+    postalCode: '',
+    bio: '',
+    type: '',
+    country: ''
+  })
+
+  const initialForm = ref({
+    associationName: '',
+    phone: '',
+    city: '',
+    postalCode: '',
+    bio: '',
+    type: '',
+    country: ''
+  })
+
+  const alertStatus = ref<'success' | 'error' | null>(null)
+  const alertMessage = ref('')
+  const isImageUploading = ref(false)
+
+  const profileImageUrl = computed(() => {
+    return auth.user.value?.avatarFileKey
+  })
+
+  const isFormChanged = computed(() => {
+    return !isEqual(form.value, initialForm.value)
+  })
+
+  function handleImageChange(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0]
+    if (file) {
+      isImageUploading.value = true
+
+      const reader = new FileReader()
+      reader.onload = async () => {
+        try {
+          await auth.updateAvatar(file)
+          alertStatus.value = 'success'
+          alertMessage.value =
+            t('drawer-content.account.profile_updated_success') ||
+            'Profile image updated successfully'
+          setTimeout(() => {
+            alertStatus.value = null
+          }, 1000 * 3)
+        } catch (error) {
+          // Show error alert
+          alertStatus.value = 'error'
+          alertMessage.value =
+            t('drawer-content.account.profile_update_error') ||
+            'Error updating profile image. Please try again.'
+          handleError(error)
+
+          // Auto-hide alert after 10 seconds
+          setTimeout(() => {
+            alertStatus.value = null
+          }, 1000 * 3)
+        } finally {
+          isImageUploading.value = false
+        }
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  async function saveProfile() {
+    try {
+      await associationAuth.updateAssociation(form.value, auth.user.value?.userId)
+
+      initialForm.value = { ...form.value }
+
+      alertStatus.value = 'success'
+      alertMessage.value =
+        t('drawer-content.account.profile_updated_success') || 'Profile updated successfully'
+      setTimeout(() => {
+        alertStatus.value = null
+      }, 1000)
+    } catch (error) {
+      alertStatus.value = 'error'
+      alertMessage.value =
+        t('drawer-content.account.profile_update_error') ||
+        'Error updating profile. Please try again.'
+      console.error('Error updating profile:', error)
+      handleError(error)
+      setTimeout(() => {
+        alertStatus.value = null
+      }, 10000)
+    }
+  }
 </script>

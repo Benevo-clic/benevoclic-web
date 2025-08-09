@@ -122,11 +122,11 @@ npm run test:a11y
 // vitest.config.ts
 export default defineConfig({
   test: {
-    environment: "happy-dom",
+    environment: 'happy-dom',
     globals: true,
-    setupFiles: ["./test/setup.ts"],
-  },
-});
+    setupFiles: ['./test/setup.ts']
+  }
+})
 ```
 
 #### Couverture de code
@@ -175,31 +175,31 @@ coverage: {
 ### Structure d'un test
 
 ```typescript
-describe("NomDuComposant", () => {
+describe('NomDuComposant', () => {
   // Configuration
   beforeEach(() => {
-    vi.clearAllMocks();
-  });
+    vi.clearAllMocks()
+  })
 
   // Tests de rendu
-  it("should render correctly", () => {
-    const wrapper = mount(Component);
-    expect(wrapper.exists()).toBe(true);
-  });
+  it('should render correctly', () => {
+    const wrapper = mount(Component)
+    expect(wrapper.exists()).toBe(true)
+  })
 
   // Tests d'interaction
-  it("should handle user interaction", async () => {
-    const wrapper = mount(Component);
-    await wrapper.find("button").trigger("click");
-    expect(wrapper.emitted("event")).toBeTruthy();
-  });
+  it('should handle user interaction', async () => {
+    const wrapper = mount(Component)
+    await wrapper.find('button').trigger('click')
+    expect(wrapper.emitted('event')).toBeTruthy()
+  })
 
   // Tests d'accessibilité
-  it("should be accessible", () => {
-    const wrapper = mount(Component);
-    expect(wrapper.find('[role="button"]').exists()).toBe(true);
-  });
-});
+  it('should be accessible', () => {
+    const wrapper = mount(Component)
+    expect(wrapper.find('[role="button"]').exists()).toBe(true)
+  })
+})
 ```
 
 ### Mocks et stubs
@@ -228,11 +228,11 @@ global: {
 ### Tests d'accessibilité
 
 ```typescript
-it("should have proper ARIA attributes", () => {
-  const wrapper = mount(Component);
-  expect(wrapper.find('[role="button"]').exists()).toBe(true);
-  expect(wrapper.find("[aria-label]").exists()).toBe(true);
-});
+it('should have proper ARIA attributes', () => {
+  const wrapper = mount(Component)
+  expect(wrapper.find('[role="button"]').exists()).toBe(true)
+  expect(wrapper.find('[aria-label]').exists()).toBe(true)
+})
 ```
 
 ## 📈 Rapports et métriques

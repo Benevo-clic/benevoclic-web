@@ -1,4 +1,4 @@
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const config = useRuntimeConfig()
 
@@ -8,8 +8,7 @@ export default defineEventHandler(async (event) => {
     if (!body.type || !body.category || !body.description) {
       throw createError({
         statusCode: 400,
-        statusMessage:
-          'Données manquantes: type, category et description sont requis'
+        statusMessage: 'Données manquantes: type, category et description sont requis'
       })
     }
 
@@ -23,14 +22,11 @@ export default defineEventHandler(async (event) => {
       headers.Authorization = `Bearer ${token}`
     }
 
-    const response = await $fetch(
-      `${config.private.api_base_url}/support/reports`,
-      {
-        method: 'POST',
-        body,
-        headers
-      }
-    )
+    const response = await $fetch(`${config.private.api_base_url}/support/reports`, {
+      method: 'POST',
+      body,
+      headers
+    })
 
     return response
   } catch (error: any) {
@@ -39,8 +35,7 @@ export default defineEventHandler(async (event) => {
     if (error.statusCode) {
       throw createError({
         statusCode: error.statusCode,
-        statusMessage:
-          error.statusMessage || 'Erreur lors de la création du signalement'
+        statusMessage: error.statusMessage || 'Erreur lors de la création du signalement'
       })
     }
 

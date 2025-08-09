@@ -60,13 +60,10 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
       this.loading = true
       this.error = null
       try {
-        const response = await $fetch<VolunteerInfo>(
-          `/api/volunteer/${user?.userId}`,
-          {
-            method: 'GET',
-            credentials: 'include'
-          }
-        )
+        const response = await $fetch<VolunteerInfo>(`/api/volunteer/${user?.userId}`, {
+          method: 'GET',
+          credentials: 'include'
+        })
         if (response) {
           this.volunteer = response
           this._updateCache(response)
@@ -106,28 +103,21 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
       this.loading = true
       this.error = null
       try {
-        const response = await $fetch<{ nbVolunteer: number }>(
-          '/api/volunteer/nb-volunteer',
-          {
-            method: 'GET',
-            credentials: 'include'
-          }
-        )
+        const response = await $fetch<{ nbVolunteer: number }>('/api/volunteer/nb-volunteer', {
+          method: 'GET',
+          credentials: 'include'
+        })
 
         return response.nbVolunteer
       } catch (err: any) {
-        this.error =
-          err?.message || 'Erreur de récupération du nombre de bénévoles'
+        this.error = err?.message || 'Erreur de récupération du nombre de bénévoles'
         throw err
       } finally {
         this.loading = false
       }
     },
 
-    async updateVolunteer (
-      payload: Partial<VolunteerInfo>,
-      id: string | null = null
-    ) {
+    async updateVolunteer (payload: Partial<VolunteerInfo>, id: string | null = null) {
       this.loading = true
       this.error = null
       try {
@@ -159,13 +149,10 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
       this.loading = true
       this.error = null
       try {
-        const response = await $fetch(
-          `/api/association/waiting/by-volunteer/${user?.userId}`,
-          {
-            method: 'GET',
-            credentials: 'include'
-          }
-        )
+        const response = await $fetch(`/api/association/waiting/by-volunteer/${user?.userId}`, {
+          method: 'GET',
+          credentials: 'include'
+        })
         await this.getVolunteerInfo()
         return response as VolunteerInfo[]
       } catch (err: any) {
@@ -192,8 +179,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
         await this.getVolunteerInfo()
         return response as { message: string }
       } catch (err: any) {
-        this.error =
-          err?.message || "Erreur de suppression de la liste d'attente"
+        this.error = err?.message || "Erreur de suppression de la liste d'attente"
         throw err
       } finally {
         this.loading = false
@@ -218,10 +204,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
           }
         )
 
-        console.log(
-          'Response from addVolunteerToWaitingListAssociation:',
-          response
-        )
+        console.log('Response from addVolunteerToWaitingListAssociation:', response)
 
         await this.getVolunteerInfo()
         return response
@@ -257,10 +240,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
         this.loading = false
       }
     },
-    async removeVolunteerFromAssociation (
-      associationId: string,
-      volunteerId: string
-    ) {
+    async removeVolunteerFromAssociation (associationId: string, volunteerId: string) {
       this.loading = true
       this.error = null
       try {
@@ -274,17 +254,14 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
 
         if (response) {
           this.clearCache()
-          this.associationsFollowingList = (
-            this.associationsFollowingList ?? []
-          ).filter(
+          this.associationsFollowingList = (this.associationsFollowingList ?? []).filter(
             association => association.associationId !== associationId
           )
         }
 
         return response as AssociationInfo
       } catch (err: any) {
-        this.error =
-          err?.message || "Erreur de suppression du bénévole de l'association"
+        this.error = err?.message || "Erreur de suppression du bénévole de l'association"
         throw err
       } finally {
         this.loading = false
@@ -302,8 +279,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
           }
         )
       } catch (err: any) {
-        this.error =
-          err?.message || 'Erreur de récupération des associations en attente'
+        this.error = err?.message || 'Erreur de récupération des associations en attente'
         throw err
       } finally {
         this.loading = false
@@ -315,13 +291,10 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
       this.loading = true
       this.error = null
       try {
-        const response = await $fetch(
-          `/api/association/by-volunteer/${user?.userId}`,
-          {
-            method: 'GET',
-            credentials: 'include'
-          }
-        )
+        const response = await $fetch(`/api/association/by-volunteer/${user?.userId}`, {
+          method: 'GET',
+          credentials: 'include'
+        })
 
         await this.getVolunteerInfo()
         return response as VolunteerInfo[]
@@ -333,9 +306,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
       }
     },
 
-    async getVolunteerAnnouncements (
-      volunteerId: string
-    ): Promise<Announcement[]> {
+    async getVolunteerAnnouncements (volunteerId: string): Promise<Announcement[]> {
       this.loading = true
       this.error = null
       try {
@@ -349,8 +320,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
 
         return response as Announcement[]
       } catch (err: any) {
-        this.error =
-          err?.message || 'Erreur de récupération des annonces du bénévole'
+        this.error = err?.message || 'Erreur de récupération des annonces du bénévole'
         throw err
       } finally {
         this.loading = false
@@ -361,18 +331,14 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
       this.loading = true
       this.error = null
       try {
-        const response = await $fetch(
-          `/api/announcements/participant/${volunteerId}`,
-          {
-            method: 'GET',
-            credentials: 'include'
-          }
-        )
+        const response = await $fetch(`/api/announcements/participant/${volunteerId}`, {
+          method: 'GET',
+          credentials: 'include'
+        })
 
         return response as Announcement[]
       } catch (err: any) {
-        this.error =
-          err?.message || 'Erreur de récupération des annonces du participant'
+        this.error = err?.message || 'Erreur de récupération des annonces du participant'
         throw err
       } finally {
         this.loading = false
@@ -382,19 +348,14 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
       this.loading = true
       this.error = null
       try {
-        const response = await $fetch(
-          `/api/announcements/participant/past/${volunteerId}`,
-          {
-            method: 'GET',
-            credentials: 'include'
-          }
-        )
+        const response = await $fetch(`/api/announcements/participant/past/${volunteerId}`, {
+          method: 'GET',
+          credentials: 'include'
+        })
 
         return response as Announcement[]
       } catch (err: any) {
-        this.error =
-          err?.message ||
-          'Erreur de récupération des annonces passées du bénévole'
+        this.error = err?.message || 'Erreur de récupération des annonces passées du bénévole'
         throw err
       } finally {
         this.loading = false
@@ -405,13 +366,10 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
       this.loading = true
       this.error = null
       try {
-        const data = await $fetch(
-          `/api/volunteer/${this.volunteer?.volunteerId}`,
-          {
-            method: 'DELETE',
-            credentials: 'include'
-          }
-        )
+        const data = await $fetch(`/api/volunteer/${this.volunteer?.volunteerId}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        })
 
         if (this.volunteer?.volunteerId) {
           this._volunteerCache.delete(this.volunteer.volunteerId)

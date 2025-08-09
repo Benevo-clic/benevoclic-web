@@ -8,27 +8,21 @@ import {
   sendPasswordResetEmail
 } from 'firebase/auth'
 import { RoleUser } from '~/common/enums/role.enum'
-import {
-  loginWithGoogle as firebaseLoginWithGoogle,
-  useUserStore
-} from '~/stores/user/user.store'
-import type {
-  RegisterEmailVerifiedResponse,
-  RegisterPayload
-} from '~/common/types/register.type'
+import { loginWithGoogle as firebaseLoginWithGoogle, useUserStore } from '~/stores/user/user.store'
+import type { RegisterEmailVerifiedResponse, RegisterPayload } from '~/common/types/register.type'
 
 interface AuthState {
-  idToken: string | null;
-  refreshToken: string | null;
-  idUser: string | null;
-  isConnected: boolean;
-  email: string;
-  loading: boolean;
-  error: string | null;
-  unsubscribe: (() => void) | null;
-  isVerified: boolean;
-  tempPassword: string;
-  role: RoleUser | null;
+  idToken: string | null
+  refreshToken: string | null
+  idUser: string | null
+  isConnected: boolean
+  email: string
+  loading: boolean
+  error: string | null
+  unsubscribe: (() => void) | null
+  isVerified: boolean
+  tempPassword: string
+  role: RoleUser | null
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -76,9 +70,7 @@ export const useAuthStore = defineStore('auth', {
         const $fetch = useRequestFetch()
         if (process.client) {
           try {
-            const { usePermissions } = await import(
-              '~/composables/usePermissions'
-            )
+            const { usePermissions } = await import('~/composables/usePermissions')
             const { hasPermission } = usePermissions()
 
             if (!hasPermission('canAuthenticate')) {
@@ -88,10 +80,7 @@ export const useAuthStore = defineStore('auth', {
             }
           } catch (err) {
             if (process.dev) {
-              console.warn(
-                'Impossible de vérifier les permissions de cookies:',
-                err
-              )
+              console.warn('Impossible de vérifier les permissions de cookies:', err)
             }
           }
         }
@@ -127,17 +116,11 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async goToPageAfterLogin (payload: {
-      role: RoleUser;
-      password: string;
-      email: string;
-    }) {
+    async goToPageAfterLogin (payload: { role: RoleUser; password: string; email: string }) {
       const auth = getAuth()
       const userStore = useUserStore()
       if (!auth.currentUser) {
-        throw new Error(
-          'Aucun utilisateur connecté pour envoyer la vérification par email.'
-        )
+        throw new Error('Aucun utilisateur connecté pour envoyer la vérification par email.')
       }
 
       if (!auth.currentUser?.emailVerified) {
@@ -219,25 +202,17 @@ export const useAuthStore = defineStore('auth', {
         }
       } catch (error) {
         if (process.dev) {
-          console.error(
-            "Erreur lors de la récupération de l'utilisateur:",
-            error
-          )
+          console.error("Erreur lors de la récupération de l'utilisateur:", error)
         }
         await this.logout()
       }
     },
 
-    async sendEmailVerification (payload: {
-      role: RoleUser;
-      tempPassword: string;
-    }) {
+    async sendEmailVerification (payload: { role: RoleUser; tempPassword: string }) {
       const auth = getAuth()
 
       if (!auth.currentUser) {
-        throw new Error(
-          'Aucun utilisateur connecté pour envoyer la vérification par email.'
-        )
+        throw new Error('Aucun utilisateur connecté pour envoyer la vérification par email.')
       }
 
       if (auth.currentUser.emailVerified) {
@@ -320,10 +295,7 @@ export const useAuthStore = defineStore('auth', {
                 })
               } catch (error) {
                 if (process.dev) {
-                  console.error(
-                    "Erreur lors de l'enregistrement vérifié:",
-                    error
-                  )
+                  console.error("Erreur lors de l'enregistrement vérifié:", error)
                 }
                 this.isVerified = false
                 return
@@ -389,10 +361,7 @@ export const useAuthStore = defineStore('auth', {
         await sendEmailVerification(userCredential.user)
 
         if (process.dev) {
-          console.log(
-            '✅ Inscription réussie, email de vérification envoyé',
-            payload
-          )
+          console.log('✅ Inscription réussie, email de vérification envoyé', payload)
         }
         if (process.dev) {
           console.log('Utilisateur créé avec succès:', userCredential.user)
@@ -404,10 +373,7 @@ export const useAuthStore = defineStore('auth', {
           role: payload.role
         })
         if (process.dev) {
-          console.log(
-            '✅ Inscription réussie, email de vérification envoyé',
-            payload
-          )
+          console.log('✅ Inscription réussie, email de vérification envoyé', payload)
         }
         return userCredential.user.emailVerified
       } catch (error: any) {
@@ -431,8 +397,7 @@ export const useAuthStore = defineStore('auth', {
         const auth = getAuth()
         await sendPasswordResetEmail(auth, email)
       } catch (e: any) {
-        this.error =
-          e?.message || 'Erreur lors de la réinitialisation du mot de passe'
+        this.error = e?.message || 'Erreur lors de la réinitialisation du mot de passe'
         throw e
       } finally {
         this.loading = false
@@ -452,9 +417,7 @@ export const useAuthStore = defineStore('auth', {
         // Vérifier les permissions de cookies côté client
         if (process.client) {
           try {
-            const { usePermissions } = await import(
-              '~/composables/usePermissions'
-            )
+            const { usePermissions } = await import('~/composables/usePermissions')
             const { hasPermission } = usePermissions()
 
             if (!hasPermission('canAuthenticate')) {
@@ -463,17 +426,13 @@ export const useAuthStore = defineStore('auth', {
               throw new Error('Cookies essentiels non acceptés')
             }
           } catch (err) {
-            console.warn(
-              'Impossible de vérifier les permissions de cookies:',
-              err
-            )
+            console.warn('Impossible de vérifier les permissions de cookies:', err)
           }
         }
 
         // Vérifier l'acceptation des conditions générales
         if (isRegisterMode && !termsAccepted) {
-          this.error =
-            "Vous devez accepter les conditions générales d'utilisation pour continuer."
+          this.error = "Vous devez accepter les conditions générales d'utilisation pour continuer."
           throw new Error('Conditions générales non acceptées')
         }
 
@@ -515,11 +474,7 @@ export const useAuthStore = defineStore('auth', {
       })
     },
 
-    async fetchUserGoogle (body: {
-      idToken: string;
-      refreshToken: string;
-      uid: string;
-    }) {
+    async fetchUserGoogle (body: { idToken: string; refreshToken: string; uid: string }) {
       const $fetch = useRequestFetch()
       await $fetch(`/api/user/${body.uid}/update-connected/${true}`, {
         method: 'PATCH',

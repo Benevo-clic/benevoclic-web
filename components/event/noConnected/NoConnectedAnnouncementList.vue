@@ -12,12 +12,9 @@
         alt="Illustration"
         class="w-full max-w-xl mx-auto"
         onerror="this.src='/images/volunteer-info.png'"
-      >
+      />
     </div>
-    <div
-      v-else
-      class="grid grid-cols-1 md:grid-cols-2 xl1285:grid-cols-3 gap-4"
-    >
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 xl1285:grid-cols-3 gap-4">
       <VolunteerAnnouncementCard
         v-for="announcement in props.announcements"
         :key="announcement._id"
@@ -30,17 +27,17 @@
 </template>
 
 <script setup lang="ts">
-import type { Announcement } from '../../../common/interface/event.interface'
-import VolunteerAnnouncementCard from '../volunteer/VolunteerAnnouncementCard.vue'
+  import type { Announcement } from '../../../common/interface/event.interface'
+  import VolunteerAnnouncementCard from '../volunteer/VolunteerAnnouncementCard.vue'
 
-const props = defineProps<{
-  announcements: Announcement[];
-  totalAnnouncements: number;
-  error: string | null;
-  loading: boolean;
-}>()
+  const props = defineProps<{
+    announcements: Announcement[]
+    totalAnnouncements: number
+    error: string | null
+    loading: boolean
+  }>()
 
-function toggleFavorite (announcement: Announcement) {
-  console.log('Toggle favorite for announcement:', announcement._id)
-}
+  function toggleFavorite(announcement: Announcement) {
+    console.log('Toggle favorite for announcement:', announcement._id)
+  }
 </script>

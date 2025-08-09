@@ -21,20 +21,13 @@
               />
             </svg>
           </div>
-          <h1 class="text-2xl font-bold text-base-content">
-            Connexion Admin
-          </h1>
-          <p class="text-base-content/70">
-            Accédez à votre espace d'administration
-          </p>
+          <h1 class="text-2xl font-bold text-base-content">Connexion Admin</h1>
+          <p class="text-base-content/70">Accédez à votre espace d'administration</p>
         </div>
 
         <form class="space-y-6" @submit.prevent="handleLogin">
           <div>
-            <label
-              for="email"
-              class="block text-sm font-medium text-base-content mb-2"
-            >
+            <label for="email" class="block text-sm font-medium text-base-content mb-2">
               Email
             </label>
             <input
@@ -44,14 +37,11 @@
               class="input input-bordered w-full"
               placeholder="admin@example.com"
               required
-            >
+            />
           </div>
 
           <div>
-            <label
-              for="password"
-              class="block text-sm font-medium text-base-content mb-2"
-            >
+            <label for="password" class="block text-sm font-medium text-base-content mb-2">
               Mot de passe
             </label>
             <input
@@ -61,24 +51,17 @@
               class="input input-bordered w-full"
               placeholder="••••••••"
               required
-            >
+            />
           </div>
 
-          <button
-            type="submit"
-            class="btn btn-primary w-full"
-            :disabled="loading || !isFormValid"
-          >
+          <button type="submit" class="btn btn-primary w-full" :disabled="loading || !isFormValid">
             <span v-if="loading" class="loading loading-spinner loading-sm" />
-            {{ loading ? "Connexion en cours..." : "Se connecter" }}
+            {{ loading ? 'Connexion en cours...' : 'Se connecter' }}
           </button>
         </form>
 
         <!-- Message d'erreur -->
-        <div
-          v-if="errorMessage"
-          class="mt-4 p-3 bg-error/10 text-error rounded-lg text-sm"
-        >
+        <div v-if="errorMessage" class="mt-4 p-3 bg-error/10 text-error rounded-lg text-sm">
           {{ errorMessage }}
         </div>
 
@@ -86,17 +69,13 @@
         <div class="mt-6 text-center">
           <p class="text-base-content/70 text-sm">
             Pas encore de compte admin ?
-            <button class="link link-primary" @click="goToRegister">
-              Créer un compte
-            </button>
+            <button class="link link-primary" @click="goToRegister">Créer un compte</button>
           </p>
         </div>
 
         <!-- Lien vers l'accueil -->
         <div class="mt-4 text-center">
-          <button class="link link-neutral text-sm" @click="goToHome">
-            ← Retour à l'accueil
-          </button>
+          <button class="link link-neutral text-sm" @click="goToHome">← Retour à l'accueil</button>
         </div>
       </div>
     </div>
@@ -104,60 +83,56 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { RoleUser } from '~/common/enums/role.enum'
-import { useUser } from '~/composables/auth/useUser'
+  import { computed, ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { RoleUser } from '~/common/enums/role.enum'
+  import { useUser } from '~/composables/auth/useUser'
 
-const router = useRouter()
-const { login } = useUser()
-const form = ref({ email: '', password: '' })
-const loading = ref(false)
-const errorMessage = ref('')
+  const router = useRouter()
+  const { login } = useUser()
+  const form = ref({ email: '', password: '' })
+  const loading = ref(false)
+  const errorMessage = ref('')
 
-const isFormValid = computed(() => {
-  return (
-    form.value.email && form.value.password && form.value.password.length >= 6
-  )
-})
+  const isFormValid = computed(() => {
+    return form.value.email && form.value.password && form.value.password.length >= 6
+  })
 
-async function handleLogin () {
-  if (!isFormValid.value) {
-    errorMessage.value = 'Veuillez remplir tous les champs correctement'
-    return
+  async function handleLogin() {
+    if (!isFormValid.value) {
+      errorMessage.value = 'Veuillez remplir tous les champs correctement'
+      return
+    }
+
+    loading.value = true
+    errorMessage.value = ''
+
+    try {
+      // Utiliser l'API de connexion existante
+      await login({
+        email: form.value.email,
+        password: form.value.password,
+        role: RoleUser.ADMIN
+      })
+    } catch (error: any) {
+      console.error('❌ Erreur lors de la connexion admin:', error)
+      errorMessage.value =
+        error?.data?.message || error?.message || 'Email ou mot de passe incorrect'
+    } finally {
+      loading.value = false
+    }
   }
 
-  loading.value = true
-  errorMessage.value = ''
-
-  try {
-    // Utiliser l'API de connexion existante
-    await login({
-      email: form.value.email,
-      password: form.value.password,
-      role: RoleUser.ADMIN
-    })
-  } catch (error: any) {
-    console.error('❌ Erreur lors de la connexion admin:', error)
-    errorMessage.value =
-      error?.data?.message ||
-      error?.message ||
-      'Email ou mot de passe incorrect'
-  } finally {
-    loading.value = false
+  function goToRegister() {
+    router.push('/admin/register')
   }
-}
 
-function goToRegister () {
-  router.push('/admin/register')
-}
+  function goToHome() {
+    router.push('/')
+  }
 
-function goToHome () {
-  router.push('/')
-}
-
-// Empêcher l'initialisation automatique sur la page de login
-definePageMeta({
-  title: 'Connexion Admin'
-})
+  // Empêcher l'initialisation automatique sur la page de login
+  definePageMeta({
+    title: 'Connexion Admin'
+  })
 </script>

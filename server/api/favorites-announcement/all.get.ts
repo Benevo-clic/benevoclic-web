@@ -2,7 +2,7 @@ import { defineEventHandler, createError } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const token = getCookie(event, 'auth_token')
 
@@ -19,16 +19,11 @@ export default defineEventHandler(async (event) => {
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la récupération de tous les favoris'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la récupération de tous les favoris')
     }
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage:
-        error.statusMessage ||
-        'Erreur lors de la récupération de tous les favoris'
+      statusMessage: error.statusMessage || 'Erreur lors de la récupération de tous les favoris'
     })
   }
 })

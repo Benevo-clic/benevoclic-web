@@ -2,7 +2,7 @@ import { defineEventHandler, getRouterParam, getCookie, createError } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
   const id = getRouterParam(event, 'id')
   const config = useRuntimeConfig()

@@ -15,8 +15,7 @@ export const useAnnouncement = () => {
     updateAnnouncement: announcementStore.updateAnnouncement,
     updateStatus: announcementStore.updateStatus,
     filterAnnouncement: announcementStore.filterAnnouncement,
-    filterAssociationAnnouncementByAssociationId:
-      announcementStore.filterAssociationAnnouncements,
+    filterAssociationAnnouncementByAssociationId: announcementStore.filterAssociationAnnouncements,
     updatePresentVolunteer: announcementStore.updatePresenceVolunteer,
     updatePresentParticipant: announcementStore.updatePresenceParticipant,
     getCurrentFilter: computed(() => announcementStore.getCurrentFilter),
@@ -24,9 +23,7 @@ export const useAnnouncement = () => {
     patchCurrentFilter: announcementStore.patchCurrentFilter,
     removeAnnouncement: announcementStore.removeAnnouncement,
     getAnnouncements: computed(() => announcementStore.getAnnouncements),
-    getCurrentAnnouncement: computed(
-      () => announcementStore.getCurrentAnnouncement
-    ),
+    getCurrentAnnouncement: computed(() => announcementStore.getCurrentAnnouncement),
     fetchAllAnnouncements: announcementStore.fetchAllAnnouncements,
     fetchAnnouncements: announcementStore.fetchAnnouncements,
     fetchAnnouncementById: announcementStore.fetchAnnouncementById,

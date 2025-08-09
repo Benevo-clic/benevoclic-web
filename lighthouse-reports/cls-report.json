@@ -30856,11 +30856,7 @@
           "weight": 15,
           "group": "metrics",
           "acronym": "CLS",
-          "relevantAudits": [
-            "layout-shift-elements",
-            "non-composited-animations",
-            "unsized-images"
-          ]
+          "relevantAudits": ["layout-shift-elements", "non-composited-animations", "unsized-images"]
         },
         {
           "id": "max-potential-fid",
@@ -34375,9 +34371,7 @@
         }
       ],
       "lighthouse-core/audits/viewport.js | title": ["audits.viewport.title"],
-      "lighthouse-core/audits/viewport.js | description": [
-        "audits.viewport.description"
-      ],
+      "lighthouse-core/audits/viewport.js | description": ["audits.viewport.description"],
       "lighthouse-core/lib/i18n/i18n.js | firstContentfulPaintMetric": [
         "audits[first-contentful-paint].title"
       ],
@@ -34440,9 +34434,7 @@
       "lighthouse-core/audits/metrics/first-meaningful-paint.js | description": [
         "audits[first-meaningful-paint].description"
       ],
-      "lighthouse-core/lib/i18n/i18n.js | speedIndexMetric": [
-        "audits[speed-index].title"
-      ],
+      "lighthouse-core/lib/i18n/i18n.js | speedIndexMetric": ["audits[speed-index].title"],
       "lighthouse-core/audits/metrics/speed-index.js | description": [
         "audits[speed-index].description"
       ],
@@ -34533,18 +34525,12 @@
         "audits[network-rtt].details.headings[1].text",
         "audits[network-server-latency].details.headings[1].text"
       ],
-      "lighthouse-core/lib/i18n/i18n.js | interactiveMetric": [
-        "audits.interactive.title"
-      ],
+      "lighthouse-core/lib/i18n/i18n.js | interactiveMetric": ["audits.interactive.title"],
       "lighthouse-core/audits/metrics/interactive.js | description": [
         "audits.interactive.description"
       ],
-      "lighthouse-core/audits/user-timings.js | title": [
-        "audits[user-timings].title"
-      ],
-      "lighthouse-core/audits/user-timings.js | description": [
-        "audits[user-timings].description"
-      ],
+      "lighthouse-core/audits/user-timings.js | title": ["audits[user-timings].title"],
+      "lighthouse-core/audits/user-timings.js | description": ["audits[user-timings].description"],
       "lighthouse-core/audits/user-timings.js | displayValue": [
         {
           "values": {
@@ -34583,9 +34569,7 @@
         }
       ],
       "lighthouse-core/audits/redirects.js | title": ["audits.redirects.title"],
-      "lighthouse-core/audits/redirects.js | description": [
-        "audits.redirects.description"
-      ],
+      "lighthouse-core/audits/redirects.js | description": ["audits.redirects.description"],
       "lighthouse-core/lib/i18n/i18n.js | displayValueMsSavings": [
         {
           "values": {
@@ -34615,12 +34599,8 @@
       "lighthouse-core/audits/mainthread-work-breakdown.js | columnCategory": [
         "audits[mainthread-work-breakdown].details.headings[0].text"
       ],
-      "lighthouse-core/audits/bootup-time.js | title": [
-        "audits[bootup-time].title"
-      ],
-      "lighthouse-core/audits/bootup-time.js | description": [
-        "audits[bootup-time].description"
-      ],
+      "lighthouse-core/audits/bootup-time.js | title": ["audits[bootup-time].title"],
+      "lighthouse-core/audits/bootup-time.js | description": ["audits[bootup-time].description"],
       "lighthouse-core/audits/bootup-time.js | columnTotal": [
         "audits[bootup-time].details.headings[1].text"
       ],
@@ -34630,9 +34610,7 @@
       "lighthouse-core/audits/bootup-time.js | columnScriptParse": [
         "audits[bootup-time].details.headings[3].text"
       ],
-      "lighthouse-core/audits/uses-rel-preload.js | title": [
-        "audits[uses-rel-preload].title"
-      ],
+      "lighthouse-core/audits/uses-rel-preload.js | title": ["audits[uses-rel-preload].title"],
       "lighthouse-core/audits/uses-rel-preload.js | description": [
         "audits[uses-rel-preload].description"
       ],
@@ -34664,39 +34642,25 @@
         "audits[duplicated-javascript].details.headings[2].label",
         "audits[legacy-javascript].details.headings[2].label"
       ],
-      "lighthouse-core/audits/font-display.js | title": [
-        "audits[font-display].title"
-      ],
-      "lighthouse-core/audits/font-display.js | description": [
-        "audits[font-display].description"
-      ],
-      "lighthouse-core/audits/network-rtt.js | title": [
-        "audits[network-rtt].title"
-      ],
-      "lighthouse-core/audits/network-rtt.js | description": [
-        "audits[network-rtt].description"
-      ],
+      "lighthouse-core/audits/font-display.js | title": ["audits[font-display].title"],
+      "lighthouse-core/audits/font-display.js | description": ["audits[font-display].description"],
+      "lighthouse-core/audits/network-rtt.js | title": ["audits[network-rtt].title"],
+      "lighthouse-core/audits/network-rtt.js | description": ["audits[network-rtt].description"],
       "lighthouse-core/audits/network-server-latency.js | title": [
         "audits[network-server-latency].title"
       ],
       "lighthouse-core/audits/network-server-latency.js | description": [
         "audits[network-server-latency].description"
       ],
-      "lighthouse-core/audits/performance-budget.js | title": [
-        "audits[performance-budget].title"
-      ],
+      "lighthouse-core/audits/performance-budget.js | title": ["audits[performance-budget].title"],
       "lighthouse-core/audits/performance-budget.js | description": [
         "audits[performance-budget].description"
       ],
-      "lighthouse-core/audits/timing-budget.js | title": [
-        "audits[timing-budget].title"
-      ],
+      "lighthouse-core/audits/timing-budget.js | title": ["audits[timing-budget].title"],
       "lighthouse-core/audits/timing-budget.js | description": [
         "audits[timing-budget].description"
       ],
-      "lighthouse-core/audits/resource-summary.js | title": [
-        "audits[resource-summary].title"
-      ],
+      "lighthouse-core/audits/resource-summary.js | title": ["audits[resource-summary].title"],
       "lighthouse-core/audits/resource-summary.js | description": [
         "audits[resource-summary].description"
       ],
@@ -34807,9 +34771,7 @@
         "audits[non-composited-animations].details.headings[0].text",
         "audits[dom-size].details.headings[1].text"
       ],
-      "lighthouse-core/audits/lcp-lazy-loaded.js | title": [
-        "audits[lcp-lazy-loaded].title"
-      ],
+      "lighthouse-core/audits/lcp-lazy-loaded.js | title": ["audits[lcp-lazy-loaded].title"],
       "lighthouse-core/audits/lcp-lazy-loaded.js | description": [
         "audits[lcp-lazy-loaded].description"
       ],
@@ -34822,12 +34784,8 @@
       "lighthouse-core/audits/layout-shift-elements.js | columnContribution": [
         "audits[layout-shift-elements].details.headings[1].text"
       ],
-      "lighthouse-core/audits/long-tasks.js | title": [
-        "audits[long-tasks].title"
-      ],
-      "lighthouse-core/audits/long-tasks.js | description": [
-        "audits[long-tasks].description"
-      ],
+      "lighthouse-core/audits/long-tasks.js | title": ["audits[long-tasks].title"],
+      "lighthouse-core/audits/long-tasks.js | description": ["audits[long-tasks].description"],
       "lighthouse-core/audits/long-tasks.js | displayValue": [
         {
           "values": {
@@ -34901,18 +34859,14 @@
           "path": "audits[non-composited-animations].details.items[5].subItems.items[0].failureReason"
         }
       ],
-      "lighthouse-core/audits/unsized-images.js | failureTitle": [
-        "audits[unsized-images].title"
-      ],
+      "lighthouse-core/audits/unsized-images.js | failureTitle": ["audits[unsized-images].title"],
       "lighthouse-core/audits/unsized-images.js | description": [
         "audits[unsized-images].description"
       ],
       "lighthouse-core/lib/i18n/i18n.js | columnFailingElem": [
         "audits[unsized-images].details.headings[2].text"
       ],
-      "lighthouse-core/audits/preload-lcp-image.js | title": [
-        "audits[preload-lcp-image].title"
-      ],
+      "lighthouse-core/audits/preload-lcp-image.js | title": ["audits[preload-lcp-image].title"],
       "lighthouse-core/audits/preload-lcp-image.js | description": [
         "audits[preload-lcp-image].description"
       ],
@@ -35095,9 +35049,7 @@
       "lighthouse-core/audits/byte-efficiency/legacy-javascript.js | description": [
         "audits[legacy-javascript].description"
       ],
-      "lighthouse-core/audits/dobetterweb/dom-size.js | failureTitle": [
-        "audits[dom-size].title"
-      ],
+      "lighthouse-core/audits/dobetterweb/dom-size.js | failureTitle": ["audits[dom-size].title"],
       "lighthouse-core/audits/dobetterweb/dom-size.js | description": [
         "audits[dom-size].description"
       ],
@@ -35130,9 +35082,7 @@
       "lighthouse-core/audits/dobetterweb/no-document-write.js | description": [
         "audits[no-document-write].description"
       ],
-      "lighthouse-core/audits/dobetterweb/uses-http2.js | title": [
-        "audits[uses-http2].title"
-      ],
+      "lighthouse-core/audits/dobetterweb/uses-http2.js | title": ["audits[uses-http2].title"],
       "lighthouse-core/audits/dobetterweb/uses-http2.js | description": [
         "audits[uses-http2].description"
       ],

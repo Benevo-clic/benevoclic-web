@@ -14,12 +14,12 @@
             :alt="props.volunteer.name"
             class="w-full h-full object-cover"
             @error="
-              (event) => {
-                const target = event.target as HTMLImageElement;
-                target.src = '/images/default-avatar.png';
+              event => {
+                const target = event.target as HTMLImageElement
+                target.src = '/images/default-avatar.png'
               }
             "
-          >
+          />
         </div>
       </div>
 
@@ -34,12 +34,7 @@
 
         <!-- Contexte de l'événement -->
         <div v-if="type === 'event' && context" class="flex items-center gap-2">
-          <svg
-            class="w-4 h-4 text-primary"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -54,12 +49,7 @@
 
         <!-- Contexte de l'association -->
         <div v-else-if="type === 'association'" class="flex items-center gap-2">
-          <svg
-            class="w-4 h-4 text-secondary"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -80,12 +70,7 @@
         class="btn btn-success flex-1 gap-2 hover:scale-105 transition-transform duration-200"
         @click="$emit('accept')"
       >
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -99,12 +84,7 @@
         class="btn btn-error flex-1 gap-2 hover:scale-105 transition-transform duration-200"
         @click="$emit('refuse')"
       >
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -119,54 +99,54 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  volunteer: { name: string; email: string; avatar: string };
-  context?: string;
-  type: 'event' | 'association';
-}>()
+  const props = defineProps<{
+    volunteer: { name: string; email: string; avatar: string }
+    context?: string
+    type: 'event' | 'association'
+  }>()
 
-defineEmits<{
-  accept: [];
-  refuse: [];
-}>()
+  defineEmits<{
+    accept: []
+    refuse: []
+  }>()
 </script>
 
 <style scoped>
-/* Animation d'entrée */
-.card {
-  animation: slideInUp 0.3s ease-out;
-}
-
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Hover effects */
-.card:hover {
-  transform: translateY(-2px);
-}
-
-/* Responsive adjustments */
-@media (max-width: 640px) {
+  /* Animation d'entrée */
   .card {
-    padding: 1rem;
+    animation: slideInUp 0.3s ease-out;
   }
 
-  .avatar {
-    width: 3rem;
-    height: 3rem;
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
-  .btn {
-    font-size: 0.875rem;
-    padding: 0.5rem 1rem;
+  /* Hover effects */
+  .card:hover {
+    transform: translateY(-2px);
   }
-}
+
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .card {
+      padding: 1rem;
+    }
+
+    .avatar {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .btn {
+      font-size: 0.875rem;
+      padding: 0.5rem 1rem;
+    }
+  }
 </style>

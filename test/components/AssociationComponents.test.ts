@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { describe, it, expect } from "vitest";
-import { mount } from "@vue/test-utils";
-import type { ComponentOptions } from "vue";
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
+import type { ComponentOptions } from 'vue'
 
 // Composant simple pour tester les associations
 const SimpleAssociationCard: any = {
@@ -17,26 +17,26 @@ const SimpleAssociationCard: any = {
     name: String,
     type: String,
     status: String,
-    email: String,
+    email: String
   },
-  emits: ["click", "contact"],
+  emits: ['click', 'contact'],
   computed: {
     // @ts-ignore
     statusClass() {
-      return `status-${this.status.toLowerCase()}`;
-    },
+      return `status-${this.status.toLowerCase()}`
+    }
   },
   methods: {
     // @ts-ignore
     handleClick() {
-      this.$emit("click", this.name);
+      this.$emit('click', this.name)
     },
     // @ts-ignore
     handleContact() {
-      this.$emit("contact", this.email);
-    },
-  },
-};
+      this.$emit('contact', this.email)
+    }
+  }
+}
 
 // Composant liste d'associations
 const SimpleAssociationList: any = {
@@ -59,302 +59,296 @@ const SimpleAssociationList: any = {
     </div>
   `,
   components: {
-    SimpleAssociationCard,
+    SimpleAssociationCard
   },
   props: {
     title: String,
     associations: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     loading: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
-  emits: ["associationClick", "contact"],
+  emits: ['associationClick', 'contact'],
   methods: {
     // @ts-ignore
     handleAssociationClick(associationName: string) {
-      this.$emit("associationClick", associationName);
+      this.$emit('associationClick', associationName)
     },
     // @ts-ignore
     handleContact(email: string) {
-      this.$emit("contact", email);
-    },
-  },
-};
+      this.$emit('contact', email)
+    }
+  }
+}
 
-describe("Association Components", () => {
-  describe("SimpleAssociationCard", () => {
-    it("should render association card component", () => {
+describe('Association Components', () => {
+  describe('SimpleAssociationCard', () => {
+    it('should render association card component', () => {
       const wrapper = mount(SimpleAssociationCard, {
         props: {
-          name: "Test Association",
-          type: "Sport",
-          status: "ACTIVE",
-          email: "test@example.com",
-        },
-      });
+          name: 'Test Association',
+          type: 'Sport',
+          status: 'ACTIVE',
+          email: 'test@example.com'
+        }
+      })
 
-      expect(wrapper.exists()).toBe(true);
-      expect(wrapper.find(".association-card").exists()).toBe(true);
-    });
+      expect(wrapper.exists()).toBe(true)
+      expect(wrapper.find('.association-card').exists()).toBe(true)
+    })
 
-    it("should display association information", () => {
+    it('should display association information', () => {
       const wrapper = mount(SimpleAssociationCard, {
         props: {
-          name: "Test Association",
-          type: "Sport",
-          status: "ACTIVE",
-          email: "test@example.com",
-        },
-      });
+          name: 'Test Association',
+          type: 'Sport',
+          status: 'ACTIVE',
+          email: 'test@example.com'
+        }
+      })
 
-      expect(wrapper.find(".association-name").text()).toBe("Test Association");
-      expect(wrapper.find(".association-type").text()).toBe("Sport");
-      expect(wrapper.find(".association-status").text()).toBe("ACTIVE");
-    });
+      expect(wrapper.find('.association-name').text()).toBe('Test Association')
+      expect(wrapper.find('.association-type').text()).toBe('Sport')
+      expect(wrapper.find('.association-status').text()).toBe('ACTIVE')
+    })
 
-    it("should have proper status styling", () => {
+    it('should have proper status styling', () => {
       const wrapper = mount(SimpleAssociationCard, {
         props: {
-          name: "Test Association",
-          type: "Sport",
-          status: "ACTIVE",
-          email: "test@example.com",
-        },
-      });
+          name: 'Test Association',
+          type: 'Sport',
+          status: 'ACTIVE',
+          email: 'test@example.com'
+        }
+      })
 
-      const statusElement = wrapper.find(".association-status");
-      expect(statusElement.classes()).toContain("status-active");
-    });
+      const statusElement = wrapper.find('.association-status')
+      expect(statusElement.classes()).toContain('status-active')
+    })
 
-    it("should emit click event when card is clicked", async () => {
+    it('should emit click event when card is clicked', async () => {
       const wrapper = mount(SimpleAssociationCard, {
         props: {
-          name: "Test Association",
-          type: "Sport",
-          status: "ACTIVE",
-          email: "test@example.com",
-        },
-      });
+          name: 'Test Association',
+          type: 'Sport',
+          status: 'ACTIVE',
+          email: 'test@example.com'
+        }
+      })
 
-      await wrapper.find(".association-card").trigger("click");
+      await wrapper.find('.association-card').trigger('click')
 
-      expect(wrapper.emitted("click")).toBeTruthy();
-      expect(wrapper.emitted("click")?.[0]).toEqual(["Test Association"]);
-    });
+      expect(wrapper.emitted('click')).toBeTruthy()
+      expect(wrapper.emitted('click')?.[0]).toEqual(['Test Association'])
+    })
 
-    it("should emit contact event when contact button is clicked", async () => {
+    it('should emit contact event when contact button is clicked', async () => {
       const wrapper = mount(SimpleAssociationCard, {
         props: {
-          name: "Test Association",
-          type: "Sport",
-          status: "ACTIVE",
-          email: "test@example.com",
-        },
-      });
+          name: 'Test Association',
+          type: 'Sport',
+          status: 'ACTIVE',
+          email: 'test@example.com'
+        }
+      })
 
-      await wrapper.find(".contact-btn").trigger("click");
+      await wrapper.find('.contact-btn').trigger('click')
 
-      expect(wrapper.emitted("contact")).toBeTruthy();
-      expect(wrapper.emitted("contact")?.[0]).toEqual(["test@example.com"]);
-    });
+      expect(wrapper.emitted('contact')).toBeTruthy()
+      expect(wrapper.emitted('contact')?.[0]).toEqual(['test@example.com'])
+    })
 
-    it("should handle different statuses", () => {
-      const statuses = ["ACTIVE", "INACTIVE", "PENDING"];
+    it('should handle different statuses', () => {
+      const statuses = ['ACTIVE', 'INACTIVE', 'PENDING']
 
-      statuses.forEach((status) => {
+      statuses.forEach(status => {
         const wrapper = mount(SimpleAssociationCard, {
           props: {
-            name: "Test Association",
-            type: "Sport",
+            name: 'Test Association',
+            type: 'Sport',
             status,
-            email: "test@example.com",
-          },
-        });
+            email: 'test@example.com'
+          }
+        })
 
-        const statusElement = wrapper.find(".association-status");
-        expect(statusElement.text()).toBe(status);
-        expect(statusElement.classes()).toContain(
-          `status-${status.toLowerCase()}`,
-        );
-      });
-    });
-  });
+        const statusElement = wrapper.find('.association-status')
+        expect(statusElement.text()).toBe(status)
+        expect(statusElement.classes()).toContain(`status-${status.toLowerCase()}`)
+      })
+    })
+  })
 
-  describe("SimpleAssociationList", () => {
+  describe('SimpleAssociationList', () => {
     const mockAssociations = [
       {
-        id: "1",
-        name: "Association 1",
-        type: "Sport",
-        status: "ACTIVE",
-        email: "assoc1@example.com",
+        id: '1',
+        name: 'Association 1',
+        type: 'Sport',
+        status: 'ACTIVE',
+        email: 'assoc1@example.com'
       },
       {
-        id: "2",
-        name: "Association 2",
-        type: "Culture",
-        status: "PENDING",
-        email: "assoc2@example.com",
-      },
-    ];
+        id: '2',
+        name: 'Association 2',
+        type: 'Culture',
+        status: 'PENDING',
+        email: 'assoc2@example.com'
+      }
+    ]
 
-    it("should render association list component", () => {
+    it('should render association list component', () => {
       const wrapper = mount(SimpleAssociationList, {
         props: {
-          title: "Associations",
+          title: 'Associations',
           associations: mockAssociations,
-          loading: false,
-        },
-      });
+          loading: false
+        }
+      })
 
-      expect(wrapper.exists()).toBe(true);
-      expect(wrapper.find(".association-list").exists()).toBe(true);
-    });
+      expect(wrapper.exists()).toBe(true)
+      expect(wrapper.find('.association-list').exists()).toBe(true)
+    })
 
-    it("should display list title", () => {
+    it('should display list title', () => {
       const wrapper = mount(SimpleAssociationList, {
         props: {
-          title: "Associations",
+          title: 'Associations',
           associations: mockAssociations,
-          loading: false,
-        },
-      });
+          loading: false
+        }
+      })
 
-      expect(wrapper.find(".list-title").text()).toBe("Associations");
-    });
+      expect(wrapper.find('.list-title').text()).toBe('Associations')
+    })
 
-    it("should display associations when available", () => {
+    it('should display associations when available', () => {
       const wrapper = mount(SimpleAssociationList, {
         props: {
-          title: "Associations",
+          title: 'Associations',
           associations: mockAssociations,
-          loading: false,
-        },
-      });
+          loading: false
+        }
+      })
 
-      const cards = wrapper.findAll(".association-card");
-      expect(cards).toHaveLength(2);
-    });
+      const cards = wrapper.findAll('.association-card')
+      expect(cards).toHaveLength(2)
+    })
 
-    it("should display loading state", () => {
+    it('should display loading state', () => {
       const wrapper = mount(SimpleAssociationList, {
         props: {
-          title: "Associations",
+          title: 'Associations',
           associations: [],
-          loading: true,
-        },
-      });
+          loading: true
+        }
+      })
 
-      expect(wrapper.find(".loading").exists()).toBe(true);
-      expect(wrapper.text()).toContain("Chargement...");
-    });
+      expect(wrapper.find('.loading').exists()).toBe(true)
+      expect(wrapper.text()).toContain('Chargement...')
+    })
 
-    it("should display empty state when no associations", () => {
+    it('should display empty state when no associations', () => {
       const wrapper = mount(SimpleAssociationList, {
         props: {
-          title: "Associations",
+          title: 'Associations',
           associations: [],
-          loading: false,
-        },
-      });
+          loading: false
+        }
+      })
 
-      expect(wrapper.find(".empty-state").exists()).toBe(true);
-      expect(wrapper.text()).toContain("Aucune association trouvée");
-    });
+      expect(wrapper.find('.empty-state').exists()).toBe(true)
+      expect(wrapper.text()).toContain('Aucune association trouvée')
+    })
 
-    it("should emit associationClick event", async () => {
+    it('should emit associationClick event', async () => {
       const wrapper = mount(SimpleAssociationList, {
         props: {
-          title: "Associations",
+          title: 'Associations',
           associations: mockAssociations,
-          loading: false,
-        },
-      });
+          loading: false
+        }
+      })
 
-      const firstCard = wrapper.findAll(".association-card")[0];
-      await firstCard.trigger("click");
+      const firstCard = wrapper.findAll('.association-card')[0]
+      await firstCard.trigger('click')
 
-      expect(wrapper.emitted("associationClick")).toBeTruthy();
-      expect(wrapper.emitted("associationClick")?.[0]).toEqual([
-        "Association 1",
-      ]);
-    });
+      expect(wrapper.emitted('associationClick')).toBeTruthy()
+      expect(wrapper.emitted('associationClick')?.[0]).toEqual(['Association 1'])
+    })
 
-    it("should emit contact event", async () => {
+    it('should emit contact event', async () => {
       const wrapper = mount(SimpleAssociationList, {
         props: {
-          title: "Associations",
+          title: 'Associations',
           associations: mockAssociations,
-          loading: false,
-        },
-      });
+          loading: false
+        }
+      })
 
-      const firstContactBtn = wrapper.findAll(".contact-btn")[0];
-      await firstContactBtn.trigger("click");
+      const firstContactBtn = wrapper.findAll('.contact-btn')[0]
+      await firstContactBtn.trigger('click')
 
-      expect(wrapper.emitted("contact")).toBeTruthy();
-      expect(wrapper.emitted("contact")?.[0]).toEqual(["assoc1@example.com"]);
-    });
+      expect(wrapper.emitted('contact')).toBeTruthy()
+      expect(wrapper.emitted('contact')?.[0]).toEqual(['assoc1@example.com'])
+    })
 
-    it("should handle multiple events", async () => {
+    it('should handle multiple events', async () => {
       const wrapper = mount(SimpleAssociationList, {
         props: {
-          title: "Associations",
+          title: 'Associations',
           associations: mockAssociations,
-          loading: false,
-        },
-      });
+          loading: false
+        }
+      })
 
-      const cards = wrapper.findAll(".association-card");
-      const contactBtns = wrapper.findAll(".contact-btn");
+      const cards = wrapper.findAll('.association-card')
+      const contactBtns = wrapper.findAll('.contact-btn')
 
-      await cards[0].trigger("click");
-      await contactBtns[1].trigger("click");
+      await cards[0].trigger('click')
+      await contactBtns[1].trigger('click')
 
-      expect(wrapper.emitted("associationClick")).toBeTruthy();
-      expect(wrapper.emitted("contact")).toBeTruthy();
-      expect(wrapper.emitted("associationClick")?.[0]).toEqual([
-        "Association 1",
-      ]);
-      expect(wrapper.emitted("contact")?.[0]).toEqual(["assoc2@example.com"]);
-    });
+      expect(wrapper.emitted('associationClick')).toBeTruthy()
+      expect(wrapper.emitted('contact')).toBeTruthy()
+      expect(wrapper.emitted('associationClick')?.[0]).toEqual(['Association 1'])
+      expect(wrapper.emitted('contact')?.[0]).toEqual(['assoc2@example.com'])
+    })
 
-    it("should have proper grid layout", () => {
+    it('should have proper grid layout', () => {
       const wrapper = mount(SimpleAssociationList, {
         props: {
-          title: "Associations",
+          title: 'Associations',
           associations: mockAssociations,
-          loading: false,
-        },
-      });
+          loading: false
+        }
+      })
 
-      const grid = wrapper.find(".associations-grid");
-      expect(grid.exists()).toBe(true);
-    });
+      const grid = wrapper.find('.associations-grid')
+      expect(grid.exists()).toBe(true)
+    })
 
-    it("should handle large association lists", () => {
+    it('should handle large association lists', () => {
       const largeAssociationList = Array.from({ length: 10 }, (_, i) => ({
         id: `id-${i}`,
         name: `Association ${i}`,
-        type: i % 2 === 0 ? "Sport" : "Culture",
-        status: i % 3 === 0 ? "ACTIVE" : "PENDING",
-        email: `assoc${i}@example.com`,
-      }));
+        type: i % 2 === 0 ? 'Sport' : 'Culture',
+        status: i % 3 === 0 ? 'ACTIVE' : 'PENDING',
+        email: `assoc${i}@example.com`
+      }))
 
       const wrapper = mount(SimpleAssociationList, {
         props: {
-          title: "Associations",
+          title: 'Associations',
           associations: largeAssociationList,
-          loading: false,
-        },
-      });
+          loading: false
+        }
+      })
 
-      const cards = wrapper.findAll(".association-card");
-      expect(cards).toHaveLength(10);
-    });
-  });
-});
+      const cards = wrapper.findAll('.association-card')
+      expect(cards).toHaveLength(10)
+    })
+  })
+})

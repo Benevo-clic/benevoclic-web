@@ -17,7 +17,7 @@ const BASE_ROUTE_CONFIG = {
   ]
 }
 
-export default defineNuxtRouteMiddleware(async (to) => {
+export default defineNuxtRouteMiddleware(async to => {
   if (!to.path.startsWith('/admin')) {
     return
   }
@@ -31,9 +31,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   const isConnectedRaw = useCookie<any>('isConnected').value
   const isConnected =
-    isConnectedRaw === 'true' ||
-    isConnectedRaw === true ||
-    authStore.isConnected === true
+    isConnectedRaw === 'true' || isConnectedRaw === true || authStore.isConnected === true
   const isPublicAdminRoute = BASE_ROUTE_CONFIG.public.includes(to.path)
 
   if (!isConnected) {

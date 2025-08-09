@@ -3,7 +3,7 @@ import { defineEventHandler, readBody } from 'h3'
 import type { FavoritesAnnouncement } from '~/common/interface/event.interface'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const body = (await readBody(event)) as FavoritesAnnouncement
   const token = getCookie(event, 'auth_token')
   const config = useRuntimeConfig()
@@ -19,10 +19,7 @@ export default defineEventHandler(async (event) => {
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la création du favori de l’annonce'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la création du favori de l’annonce')
     }
   }
 })

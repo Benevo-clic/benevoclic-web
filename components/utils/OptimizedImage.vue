@@ -52,13 +52,8 @@
       @load="onImageLoad"
       @error="onImageError"
       @click="onImageClick"
-    >
-    <div
-      v-else
-      class="placeholder"
-      :class="placeholderClass"
-      :aria-label="placeholderAriaLabel"
-    >
+    />
+    <div v-else class="placeholder" :class="placeholderClass" :aria-label="placeholderAriaLabel">
       <slot name="placeholder">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -81,111 +76,111 @@
 </template>
 
 <script setup lang="ts">
-interface Props {
-  src?: string;
-  alt: string;
-  width?: number;
-  height?: number;
-  loading?: 'lazy' | 'eager';
-  decoding?: 'sync' | 'async' | 'auto';
-  aspectRatio?: string;
-  containerClass?: string;
-  imageClass?: string;
-  placeholderClass?: string;
-  placeholderAriaLabel?: string;
-  sizes?: string;
-  srcset?: string;
-  clickable?: boolean;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  loading: 'lazy',
-  decoding: 'async',
-  containerClass: '',
-  imageClass: '',
-  placeholderClass: 'bg-base-300 text-base-content/60',
-  placeholderAriaLabel: 'Image non disponible',
-  clickable: false
-})
-
-const emit = defineEmits<{
-  load: [event: Event];
-  error: [event: Event];
-  click: [event: MouseEvent];
-}>()
-
-const containerStyle = computed(() => {
-  const styles: Record<string, string> = {}
-
-  if (props.aspectRatio) {
-    styles.aspectRatio = props.aspectRatio
+  interface Props {
+    src?: string
+    alt: string
+    width?: number
+    height?: number
+    loading?: 'lazy' | 'eager'
+    decoding?: 'sync' | 'async' | 'auto'
+    aspectRatio?: string
+    containerClass?: string
+    imageClass?: string
+    placeholderClass?: string
+    placeholderAriaLabel?: string
+    sizes?: string
+    srcset?: string
+    clickable?: boolean
   }
 
-  if (props.clickable) {
-    styles.cursor = 'pointer'
+  const props = withDefaults(defineProps<Props>(), {
+    loading: 'lazy',
+    decoding: 'async',
+    containerClass: '',
+    imageClass: '',
+    placeholderClass: 'bg-base-300 text-base-content/60',
+    placeholderAriaLabel: 'Image non disponible',
+    clickable: false
+  })
+
+  const emit = defineEmits<{
+    load: [event: Event]
+    error: [event: Event]
+    click: [event: MouseEvent]
+  }>()
+
+  const containerStyle = computed(() => {
+    const styles: Record<string, string> = {}
+
+    if (props.aspectRatio) {
+      styles.aspectRatio = props.aspectRatio
+    }
+
+    if (props.clickable) {
+      styles.cursor = 'pointer'
+    }
+
+    return styles
+  })
+
+  function onImageLoad(event: Event) {
+    emit('load', event)
   }
 
-  return styles
-})
-
-function onImageLoad (event: Event) {
-  emit('load', event)
-}
-
-function onImageError (event: Event) {
-  emit('error', event)
-}
-
-function onImageClick (event: MouseEvent) {
-  if (props.clickable) {
-    emit('click', event)
+  function onImageError(event: Event) {
+    emit('error', event)
   }
-}
+
+  function onImageClick(event: MouseEvent) {
+    if (props.clickable) {
+      emit('click', event)
+    }
+  }
 </script>
 
 <style scoped>
-.image-container {
-  position: relative;
-  overflow: hidden;
-}
+  .image-container {
+    position: relative;
+    overflow: hidden;
+  }
 
-.image-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
-}
-
-.image-container img:hover {
-  transform: scale(1.05);
-}
-
-.placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-/* Amélioration de l'accessibilité */
-.image-container:focus-visible {
-  outline: 2px solid #eb5577;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* Respect des préférences de réduction de mouvement */
-@media (prefers-reduced-motion: reduce) {
   .image-container img {
-    transition: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
   }
 
   .image-container img:hover {
-    transform: none;
+    transform: scale(1.05);
   }
-}
+
+  .placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  /* Amélioration de l'accessibilité */
+  .image-container:focus-visible {
+    outline: 2px solid #eb5577;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Respect des préférences de réduction de mouvement */
+  @media (prefers-reduced-motion: reduce) {
+    .image-container img {
+      transition: none;
+    }
+
+    .image-container img:hover {
+      transform: none;
+    }
+  }
 </style>

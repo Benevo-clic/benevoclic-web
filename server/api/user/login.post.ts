@@ -10,16 +10,13 @@ import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
 export interface LoginResponse {
-  idUser: string;
-  idToken: string;
-  refreshToken: string;
-  expiresIn?: string;
+  idUser: string
+  idToken: string
+  refreshToken: string
+  expiresIn?: string
 }
 
-export function setCookies (
-  event: H3Event<EventHandlerRequest>,
-  loginResponse: LoginResponse
-) {
+export function setCookies(event: H3Event<EventHandlerRequest>, loginResponse: LoginResponse) {
   if (loginResponse.idToken) {
     setCookie(event, 'auth_token', loginResponse.idToken, {
       httpOnly: true,
@@ -59,7 +56,7 @@ export function setCookies (
   }
 }
 
-export async function login (
+export async function login(
   payload: { email: string; password: string },
   apiBase: string | undefined
 ): Promise<LoginResponse> {
@@ -79,7 +76,7 @@ export async function login (
   return response.data
 }
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const body = await readBody(event)
   const config = useRuntimeConfig()
 

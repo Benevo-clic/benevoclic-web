@@ -2,7 +2,7 @@ import { defineEventHandler, createError, getCookie } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const { associationId, volunteerId } = event.context.params || {}
 
@@ -27,16 +27,11 @@ export default defineEventHandler(async (event) => {
       error
     )
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        "Erreur lors de la récupération de la liste d'attente"
-      )
+      ApiError.handleAxios(error, "Erreur lors de la récupération de la liste d'attente")
     }
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage:
-        error.statusMessage ||
-        "Erreur lors de la récupération de la liste d'attente"
+      statusMessage: error.statusMessage || "Erreur lors de la récupération de la liste d'attente"
     })
   }
 })

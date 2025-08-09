@@ -5,7 +5,7 @@ import { useRuntimeConfig } from '#imports'
 import { deleteCookies } from '~/server/api/auth/logout.post'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const config = useRuntimeConfig()
   const token = getCookie(event, 'auth_token')
   if (!token) {

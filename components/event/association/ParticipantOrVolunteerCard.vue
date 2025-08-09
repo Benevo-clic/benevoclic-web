@@ -12,9 +12,7 @@
         </div>
       </div>
       <div v-else-if="userInfo?.avatarFileKey" class="avatar">
-        <div
-          class="w-16 h-16 rounded-full ring-2 ring-primary ring-offset-2 ring-offset-base-100"
-        >
+        <div class="w-16 h-16 rounded-full ring-2 ring-primary ring-offset-2 ring-offset-base-100">
           <img
             :src="profileImageUrl"
             :alt="`Photo de ${participant.volunteerName}`"
@@ -23,7 +21,7 @@
             height="48"
             loading="lazy"
             decoding="async"
-          >
+          />
         </div>
       </div>
       <div v-else class="avatar placeholder">
@@ -44,7 +42,7 @@
           {{ participant.volunteerName }}
         </h4>
         <p class="text-sm text-base-content/70 truncate">
-          {{ userInfo?.email || "Email non disponible" }}
+          {{ userInfo?.email || 'Email non disponible' }}
         </p>
       </div>
       <!-- Boutons en bas -->
@@ -61,7 +59,7 @@
           :class="participant.isPresent ? 'btn-success' : 'btn-primary'"
           @click="openPresenceModal"
         >
-          {{ participant.isPresent ? "Présent" : "Marquer présent" }}
+          {{ participant.isPresent ? 'Présent' : 'Marquer présent' }}
         </button>
         <button
           class="btn btn-sm btn-outline btn-error flex-1"
@@ -93,108 +91,110 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { useUser } from '~/composables/auth/useUser'
-import ErrorPopup from '~/components/utils/ErrorPopup.vue'
-import { useNavigation } from '~/composables/useNavigation'
-import PresenceModal from '~/components/event/association/PresenceModal.vue'
+  import { computed, onMounted, ref } from 'vue'
+  import { useUser } from '~/composables/auth/useUser'
+  import ErrorPopup from '~/components/utils/ErrorPopup.vue'
+  import { useNavigation } from '~/composables/useNavigation'
+  import PresenceModal from '~/components/event/association/PresenceModal.vue'
 
-interface Participant {
-  volunteerId: string;
-  volunteerName: string;
-  isPresent?: boolean;
-}
-
-interface UserInfo {
-  userId: string;
-  email: string;
-  avatarFileKey?: string;
-}
-
-const props = defineProps<{
-  participant: Participant;
-  isVolunteer?: boolean;
-}>()
-
-const emit = defineEmits<{
-  rightAction: [id: string];
-  presenceAction: [id: string, isPresent: boolean];
-}>()
-
-const { navigateToRoute } = useNavigation()
-const { getUserById } = useUser()
-const userInfo = ref<UserInfo | null>(null)
-const loading = ref(false)
-const presenceModalRef = ref<InstanceType<typeof PresenceModal> | null>(null)
-
-const showErrorModal = ref(false)
-const errorType = ref<'4xx' | '5xx' | null>(null)
-
-function handleReload () {
-  window.location.reload()
-}
-function handleGoHome () {
-  navigateToRoute('/')
-}
-
-const profileImageUrl = computed(() => {
-  return userInfo.value?.avatarFileKey
-})
-
-function handleError (error: any) {
-  if (error?.response?.status >= 500 && error?.response?.status < 600) {
-    errorType.value = '5xx'
-    showErrorModal.value = true
-  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
-    errorType.value = '4xx'
-    showErrorModal.value = true
-  } else {
-    console.error('Erreur inattendue:', error)
+  interface Participant {
+    volunteerId: string
+    volunteerName: string
+    isPresent?: boolean
   }
-}
 
-async function loadUserInfo () {
-  if (!props.participant.volunteerId) { return }
-
-  loading.value = true
-  try {
-    userInfo.value = await getUserById(props.participant.volunteerId)
-  } catch (error) {
-    handleError(error)
-    return
-  } finally {
-    loading.value = false
+  interface UserInfo {
+    userId: string
+    email: string
+    avatarFileKey?: string
   }
-}
 
-function openPresenceModal () {
-  presenceModalRef.value?.showModal()
-}
+  const props = defineProps<{
+    participant: Participant
+    isVolunteer?: boolean
+  }>()
 
-function handlePresenceConfirm (id: string, isPresent: boolean) {
-  emit('presenceAction', id, isPresent)
-  presenceModalRef.value?.closeModal()
-}
+  const emit = defineEmits<{
+    rightAction: [id: string]
+    presenceAction: [id: string, isPresent: boolean]
+  }>()
 
-onMounted(() => {
-  loadUserInfo()
-})
+  const { navigateToRoute } = useNavigation()
+  const { getUserById } = useUser()
+  const userInfo = ref<UserInfo | null>(null)
+  const loading = ref(false)
+  const presenceModalRef = ref<InstanceType<typeof PresenceModal> | null>(null)
+
+  const showErrorModal = ref(false)
+  const errorType = ref<'4xx' | '5xx' | null>(null)
+
+  function handleReload() {
+    window.location.reload()
+  }
+  function handleGoHome() {
+    navigateToRoute('/')
+  }
+
+  const profileImageUrl = computed(() => {
+    return userInfo.value?.avatarFileKey
+  })
+
+  function handleError(error: any) {
+    if (error?.response?.status >= 500 && error?.response?.status < 600) {
+      errorType.value = '5xx'
+      showErrorModal.value = true
+    } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+      errorType.value = '4xx'
+      showErrorModal.value = true
+    } else {
+      console.error('Erreur inattendue:', error)
+    }
+  }
+
+  async function loadUserInfo() {
+    if (!props.participant.volunteerId) {
+      return
+    }
+
+    loading.value = true
+    try {
+      userInfo.value = await getUserById(props.participant.volunteerId)
+    } catch (error) {
+      handleError(error)
+      return
+    } finally {
+      loading.value = false
+    }
+  }
+
+  function openPresenceModal() {
+    presenceModalRef.value?.showModal()
+  }
+
+  function handlePresenceConfirm(id: string, isPresent: boolean) {
+    emit('presenceAction', id, isPresent)
+    presenceModalRef.value?.closeModal()
+  }
+
+  onMounted(() => {
+    loadUserInfo()
+  })
 </script>
 
 <style scoped>
-.avatar img {
-  transition: transform 0.2s ease-in-out;
-}
+  .avatar img {
+    transition: transform 0.2s ease-in-out;
+  }
 
-.avatar:hover img {
-  transform: scale(1.05);
-}
+  .avatar:hover img {
+    transform: scale(1.05);
+  }
 
-.btn {
-  transition: all 0.2s ease-in-out;
-}
+  .btn {
+    transition: all 0.2s ease-in-out;
+  }
 
-.btn:hover {
-  transform: translateY(-1px);
-}
+  .btn:hover {
+    transform: translateY(-1px);
+  }
 </style>

@@ -77,111 +77,109 @@
         <button class="btn btn-primary btn-xs" @click="openCookieSettings">
           Paramétrer les cookies
         </button>
-        <button class="btn btn-ghost btn-xs" @click="closeAlert">
-          Plus tard
-        </button>
+        <button class="btn btn-ghost btn-xs" @click="closeAlert">Plus tard</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+  import { ref, computed, onMounted } from 'vue'
 
-interface Props {
-  type?: 'warning' | 'info' | 'error';
-  title: string;
-  message: string;
-  showActions?: boolean;
-  autoClose?: boolean;
-  duration?: number;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  type: 'warning',
-  showActions: true,
-  autoClose: true,
-  duration: 5000
-})
-
-const showAlert = ref(false)
-
-const alertClass = computed(() => {
-  switch (props.type) {
-    case 'warning':
-      return 'alert-warning'
-    case 'info':
-      return 'alert-info'
-    case 'error':
-      return 'alert-error'
-    default:
-      return 'alert-warning'
+  interface Props {
+    type?: 'warning' | 'info' | 'error'
+    title: string
+    message: string
+    showActions?: boolean
+    autoClose?: boolean
+    duration?: number
   }
-})
 
-const closeAlert = () => {
-  showAlert.value = false
-}
+  const props = withDefaults(defineProps<Props>(), {
+    type: 'warning',
+    showActions: true,
+    autoClose: true,
+    duration: 5000
+  })
 
-const openCookieSettings = () => {
-  // Émettre un événement pour ouvrir les paramètres de cookies
-  window.dispatchEvent(new CustomEvent('openCookieSettings'))
-  closeAlert()
-}
+  const showAlert = ref(false)
 
-const showAlertWithDelay = () => {
-  setTimeout(() => {
-    showAlert.value = true
-
-    if (props.autoClose) {
-      setTimeout(() => {
-        closeAlert()
-      }, props.duration)
-    }
-  }, 1000) // Délai pour laisser le temps à l'utilisateur de voir les changements
-}
-
-// Exposer des méthodes pour contrôler l'alerte depuis l'extérieur
-defineExpose({
-  show: () => {
-    showAlert.value = true
-  },
-  hide: closeAlert,
-  showWithDelay: showAlertWithDelay
-})
-
-onMounted(() => {
-  // Écouter les événements de permissions manquantes
-  window.addEventListener('permissionDenied', (event: any) => {
-    if (event.detail?.type === props.type) {
-      showAlertWithDelay()
+  const alertClass = computed(() => {
+    switch (props.type) {
+      case 'warning':
+        return 'alert-warning'
+      case 'info':
+        return 'alert-info'
+      case 'error':
+        return 'alert-error'
+      default:
+        return 'alert-warning'
     }
   })
-})
+
+  const closeAlert = () => {
+    showAlert.value = false
+  }
+
+  const openCookieSettings = () => {
+    // Émettre un événement pour ouvrir les paramètres de cookies
+    window.dispatchEvent(new CustomEvent('openCookieSettings'))
+    closeAlert()
+  }
+
+  const showAlertWithDelay = () => {
+    setTimeout(() => {
+      showAlert.value = true
+
+      if (props.autoClose) {
+        setTimeout(() => {
+          closeAlert()
+        }, props.duration)
+      }
+    }, 1000) // Délai pour laisser le temps à l'utilisateur de voir les changements
+  }
+
+  // Exposer des méthodes pour contrôler l'alerte depuis l'extérieur
+  defineExpose({
+    show: () => {
+      showAlert.value = true
+    },
+    hide: closeAlert,
+    showWithDelay: showAlertWithDelay
+  })
+
+  onMounted(() => {
+    // Écouter les événements de permissions manquantes
+    window.addEventListener('permissionDenied', (event: any) => {
+      if (event.detail?.type === props.type) {
+        showAlertWithDelay()
+      }
+    })
+  })
 </script>
 
 <style scoped>
-.alert {
-  animation: slideInRight 0.3s ease-out;
-}
-
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-/* Responsive */
-@media (max-width: 640px) {
   .alert {
-    max-width: calc(100vw - 2rem);
-    right: 1rem;
-    left: 1rem;
+    animation: slideInRight 0.3s ease-out;
   }
-}
+
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .alert {
+      max-width: calc(100vw - 2rem);
+      right: 1rem;
+      left: 1rem;
+    }
+  }
 </style>

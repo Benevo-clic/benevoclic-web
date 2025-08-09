@@ -21,20 +21,13 @@
               />
             </svg>
           </div>
-          <h1 class="text-2xl font-bold text-base-content">
-            Créer un compte Admin
-          </h1>
-          <p class="text-base-content/70">
-            Accédez à l'espace d'administration
-          </p>
+          <h1 class="text-2xl font-bold text-base-content">Créer un compte Admin</h1>
+          <p class="text-base-content/70">Accédez à l'espace d'administration</p>
         </div>
 
         <form class="space-y-6" @submit.prevent="handleRegister">
           <div>
-            <label
-              for="email"
-              class="block text-sm font-medium text-base-content mb-2"
-            >
+            <label for="email" class="block text-sm font-medium text-base-content mb-2">
               Email
             </label>
             <input
@@ -44,14 +37,11 @@
               class="input input-bordered w-full"
               placeholder="admin@example.com"
               required
-            >
+            />
           </div>
 
           <div>
-            <label
-              for="password"
-              class="block text-sm font-medium text-base-content mb-2"
-            >
+            <label for="password" class="block text-sm font-medium text-base-content mb-2">
               Mot de passe
             </label>
             <input
@@ -61,17 +51,12 @@
               class="input input-bordered w-full"
               placeholder="••••••••"
               required
-            >
-            <p class="text-xs text-base-content/60 mt-1">
-              Minimum 8 caractères
-            </p>
+            />
+            <p class="text-xs text-base-content/60 mt-1">Minimum 8 caractères</p>
           </div>
 
           <div>
-            <label
-              for="confirmPassword"
-              class="block text-sm font-medium text-base-content mb-2"
-            >
+            <label for="confirmPassword" class="block text-sm font-medium text-base-content mb-2">
               Confirmer le mot de passe
             </label>
             <input
@@ -81,24 +66,17 @@
               class="input input-bordered w-full"
               placeholder="••••••••"
               required
-            >
+            />
           </div>
 
-          <button
-            type="submit"
-            class="btn btn-primary w-full"
-            :disabled="loading || !isFormValid"
-          >
+          <button type="submit" class="btn btn-primary w-full" :disabled="loading || !isFormValid">
             <span v-if="loading" class="loading loading-spinner loading-sm" />
-            {{ loading ? "Création en cours..." : "Créer le compte admin" }}
+            {{ loading ? 'Création en cours...' : 'Créer le compte admin' }}
           </button>
         </form>
 
         <!-- Message d'erreur -->
-        <div
-          v-if="errorMessage"
-          class="mt-4 p-3 bg-error/10 text-error rounded-lg text-sm"
-        >
+        <div v-if="errorMessage" class="mt-4 p-3 bg-error/10 text-error rounded-lg text-sm">
           {{ errorMessage }}
         </div>
 
@@ -106,17 +84,13 @@
         <div class="mt-6 text-center">
           <p class="text-base-content/70 text-sm">
             Déjà un compte admin ?
-            <button class="link link-primary" @click="goToLogin">
-              Se connecter
-            </button>
+            <button class="link link-primary" @click="goToLogin">Se connecter</button>
           </p>
         </div>
 
         <!-- Lien vers l'accueil -->
         <div class="mt-4 text-center">
-          <button class="link link-neutral text-sm" @click="goToHome">
-            ← Retour à l'accueil
-          </button>
+          <button class="link link-neutral text-sm" @click="goToHome">← Retour à l'accueil</button>
         </div>
       </div>
     </div>
@@ -124,67 +98,66 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import type { RegisterPayload } from '~/common/types/register.type'
-import { useUser } from '~/composables/auth/useUser'
-import { RoleUser } from '~/common/enums/role.enum'
+  import { computed, ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import type { RegisterPayload } from '~/common/types/register.type'
+  import { useUser } from '~/composables/auth/useUser'
+  import { RoleUser } from '~/common/enums/role.enum'
 
-const router = useRouter()
-const useAdmin = useUser()
-const form = ref({ email: '', password: '', confirmPassword: '' })
-const loading = ref(false)
-const errorMessage = ref('')
-const isEmailVerified = ref(false)
+  const router = useRouter()
+  const useAdmin = useUser()
+  const form = ref({ email: '', password: '', confirmPassword: '' })
+  const loading = ref(false)
+  const errorMessage = ref('')
+  const isEmailVerified = ref(false)
 
-const isFormValid = computed(() => {
-  return (
-    form.value.email &&
-    form.value.password &&
-    form.value.confirmPassword &&
-    form.value.password === form.value.confirmPassword &&
-    form.value.password.length >= 8
-  )
-})
+  const isFormValid = computed(() => {
+    return (
+      form.value.email &&
+      form.value.password &&
+      form.value.confirmPassword &&
+      form.value.password === form.value.confirmPassword &&
+      form.value.password.length >= 8
+    )
+  })
 
-async function handleRegister () {
-  if (!isFormValid.value) {
-    errorMessage.value = 'Veuillez remplir tous les champs correctement'
-    return
-  }
-
-  loading.value = true
-  errorMessage.value = ''
-
-  try {
-    isEmailVerified.value = await useAdmin.register({
-      email: form.value.email,
-      password: form.value.password,
-      role: RoleUser.ADMIN
-    } as RegisterPayload)
-    if (!isEmailVerified.value) {
-      navigateTo({
-        path: '/auth/VerifyEmailPage'
-      })
+  async function handleRegister() {
+    if (!isFormValid.value) {
+      errorMessage.value = 'Veuillez remplir tous les champs correctement'
+      return
     }
-  } catch (error: any) {
-    console.error("❌ Erreur lors de l'inscription admin:", error)
-    errorMessage.value =
-      error?.data?.message || "Une erreur est survenue lors de l'inscription"
-  } finally {
-    loading.value = false
+
+    loading.value = true
+    errorMessage.value = ''
+
+    try {
+      isEmailVerified.value = await useAdmin.register({
+        email: form.value.email,
+        password: form.value.password,
+        role: RoleUser.ADMIN
+      } as RegisterPayload)
+      if (!isEmailVerified.value) {
+        navigateTo({
+          path: '/auth/VerifyEmailPage'
+        })
+      }
+    } catch (error: any) {
+      console.error("❌ Erreur lors de l'inscription admin:", error)
+      errorMessage.value = error?.data?.message || "Une erreur est survenue lors de l'inscription"
+    } finally {
+      loading.value = false
+    }
   }
-}
 
-function goToLogin () {
-  router.push('/admin/login')
-}
+  function goToLogin() {
+    router.push('/admin/login')
+  }
 
-function goToHome () {
-  router.push('/')
-}
+  function goToHome() {
+    router.push('/')
+  }
 
-definePageMeta({
-  title: 'Inscription Admin'
-})
+  definePageMeta({
+    title: 'Inscription Admin'
+  })
 </script>

@@ -2,7 +2,7 @@ import { defineEventHandler, getCookie } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const config = useRuntimeConfig()
   const token = getCookie(event, 'auth_token')
   const { userId } = getQuery(event) as { userId?: string }
@@ -14,17 +14,13 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const { data } = await axios.get(
-      `${config.private.api_base_url}/volunteer/${userId}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    )
+    const { data } = await axios.get(`${config.private.api_base_url}/volunteer/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
     return data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la récupération des informations du volontaire'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la récupération des informations du volontaire')
     }
   }
 })

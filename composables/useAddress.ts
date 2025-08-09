@@ -4,26 +4,26 @@ import type { Ref } from 'vue'
 
 interface Feature {
   properties: {
-    id: number;
-    label: string;
-    postcode: string;
-    city: string;
-    context: string;
-    lat: number;
-    lon: number;
-  };
+    id: number
+    label: string
+    postcode: string
+    city: string
+    context: string
+    lat: number
+    lon: number
+  }
 }
 
-export function useAddressAutocomplete (): {
-  query: Ref<string>;
-  suggestions: Ref<Feature[]>;
-  search: () => Promise<void>;
-  pick: (feat: Feature) => void;
-  } {
+export function useAddressAutocomplete(): {
+  query: Ref<string>
+  suggestions: Ref<Feature[]>
+  search: () => Promise<void>
+  pick: (feat: Feature) => void
+} {
   const query = ref('')
   const suggestions = ref<Feature[]>([])
 
-  async function search () {
+  async function search() {
     if (query.value.length < 3) {
       suggestions.value = []
       return
@@ -36,7 +36,7 @@ export function useAddressAutocomplete (): {
     suggestions.value = json.features
   }
 
-  function pick (feat: Feature) {
+  function pick(feat: Feature) {
     query.value = feat.properties.label
     suggestions.value = []
   }

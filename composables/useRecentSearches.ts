@@ -1,6 +1,6 @@
 import { ref, computed, watch } from 'vue'
 
-export function useRecentSearches () {
+export function useRecentSearches() {
   const MAX_RECENT_SEARCHES = 5
   const STORAGE_KEY = 'recentSearches'
 
@@ -19,10 +19,7 @@ export function useRecentSearches () {
         cachedSearches = parsedSearches
         return parsedSearches
       } catch (error) {
-        console.warn(
-          'Erreur lors du chargement des recherches récentes:',
-          error
-        )
+        console.warn('Erreur lors du chargement des recherches récentes:', error)
         cachedSearches = []
         return []
       }
@@ -39,10 +36,7 @@ export function useRecentSearches () {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(searches))
         cachedSearches = searches
       } catch (error) {
-        console.warn(
-          'Erreur lors de la sauvegarde des recherches récentes:',
-          error
-        )
+        console.warn('Erreur lors de la sauvegarde des recherches récentes:', error)
       }
     }
   }
@@ -61,10 +55,7 @@ export function useRecentSearches () {
     )
 
     // Ajouter la nouvelle recherche en premier
-    const updatedSearches = [trimmedSearch, ...filteredSearches].slice(
-      0,
-      MAX_RECENT_SEARCHES
-    )
+    const updatedSearches = [trimmedSearch, ...filteredSearches].slice(0, MAX_RECENT_SEARCHES)
 
     recentSearches.value = updatedSearches
     saveRecentSearches(updatedSearches)
@@ -78,10 +69,7 @@ export function useRecentSearches () {
       try {
         localStorage.removeItem(STORAGE_KEY)
       } catch (error) {
-        console.warn(
-          'Erreur lors de la suppression des recherches récentes:',
-          error
-        )
+        console.warn('Erreur lors de la suppression des recherches récentes:', error)
       }
     }
   }
@@ -99,7 +87,7 @@ export function useRecentSearches () {
   if (process.client) {
     watch(
       recentSearches,
-      (newSearches) => {
+      newSearches => {
         saveRecentSearches(newSearches)
       },
       { deep: true }

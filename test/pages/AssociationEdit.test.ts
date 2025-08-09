@@ -1,69 +1,69 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { mount } from "@vue/test-utils";
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { mount } from '@vue/test-utils'
 
 // Mock des icônes
 const MockUserRound = {
-  template: '<div class="user-round-icon">UserRound</div>',
-};
+  template: '<div class="user-round-icon">UserRound</div>'
+}
 
 const MockUpload = {
-  template: '<div class="upload-icon">Upload</div>',
-};
+  template: '<div class="upload-icon">Upload</div>'
+}
 
 const MockErrorPopup = {
   template: '<div class="error-popup">Error Popup</div>',
-  props: ["showErrorModal", "errorType"],
-  emits: ["reload", "goHome"],
-};
+  props: ['showErrorModal', 'errorType'],
+  emits: ['reload', 'goHome']
+}
 
 // Mock des composables
-const mockT = vi.fn((key) => {
+const mockT = vi.fn(key => {
   const translations = {
-    "drawer-content.account.edit_profile": "Modifier le profil",
-    "auth.association.name": "Nom de l'association",
-    "auth.association.type": "Type",
-    "auth.association.phone": "Téléphone",
-    "auth.association.country": "Pays",
-    "auth.association.city": "Ville",
-    "auth.association.postal_code": "Code postal",
-    "auth.association.bio": "Description",
-  };
-  return translations[key] || key;
-});
+    'drawer-content.account.edit_profile': 'Modifier le profil',
+    'auth.association.name': "Nom de l'association",
+    'auth.association.type': 'Type',
+    'auth.association.phone': 'Téléphone',
+    'auth.association.country': 'Pays',
+    'auth.association.city': 'Ville',
+    'auth.association.postal_code': 'Code postal',
+    'auth.association.bio': 'Description'
+  }
+  return translations[key] || key
+})
 
 const mockUseUser = {
   user: {
     value: {
-      associationName: "Association Test",
-      type: "ONG",
-      bio: "Une association de test",
-      phone: "0123456789",
-      country: "France",
-      city: "Paris",
-      postalCode: "75001",
-      profileImageUrl: null,
-    },
-  },
-};
+      associationName: 'Association Test',
+      type: 'ONG',
+      bio: 'Une association de test',
+      phone: '0123456789',
+      country: 'France',
+      city: 'Paris',
+      postalCode: '75001',
+      profileImageUrl: null
+    }
+  }
+}
 
 // Mock des modules
-vi.mock("lucide-vue-next", () => ({
+vi.mock('lucide-vue-next', () => ({
   UserRound: MockUserRound,
-  Upload: MockUpload,
-}));
+  Upload: MockUpload
+}))
 
-vi.mock("~/components/utils/ErrorPopup.vue", () => MockErrorPopup);
+vi.mock('~/components/utils/ErrorPopup.vue', () => MockErrorPopup)
 
-vi.mock("~/composables/useI18n", () => ({
+vi.mock('~/composables/useI18n', () => ({
   useI18n: () => ({
-    t: mockT,
-  }),
-}));
+    t: mockT
+  })
+}))
 
-vi.mock("~/composables/auth/useUser", () => ({
-  useUser: () => mockUseUser,
-}));
+vi.mock('~/composables/auth/useUser', () => ({
+  useUser: () => mockUseUser
+}))
 
 // Composant mock pour le test
 const MockAssociationEdit = {
@@ -176,32 +176,32 @@ const MockAssociationEdit = {
   components: {
     UserRound: MockUserRound,
     Upload: MockUpload,
-    ErrorPopup: MockErrorPopup,
+    ErrorPopup: MockErrorPopup
   },
   data() {
     return {
       t: mockT,
       alertStatus: null,
-      alertMessage: "",
+      alertMessage: '',
       isImageUploading: false,
       profileImageUrl: null,
       showErrorModal: false,
       errorType: null,
       form: {
-        associationName: "Association Test",
-        type: "ONG",
-        bio: "Une association de test",
-        phone: "0123456789",
-        country: "France",
-        city: "Paris",
-        postalCode: "75001",
-      },
-    };
+        associationName: 'Association Test',
+        type: 'ONG',
+        bio: 'Une association de test',
+        phone: '0123456789',
+        country: 'France',
+        city: 'Paris',
+        postalCode: '75001'
+      }
+    }
   },
   computed: {
     isFormChanged() {
-      return true; // Mock implementation
-    },
+      return true // Mock implementation
+    }
   },
   methods: {
     handleImageChange() {
@@ -215,329 +215,317 @@ const MockAssociationEdit = {
     },
     handleGoHome() {
       // Mock method
-    },
-  },
-};
+    }
+  }
+}
 
-describe("AssociationEdit", () => {
+describe('AssociationEdit', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-  });
+    vi.clearAllMocks()
+  })
 
-  describe("Rendu de base", () => {
-    it("should render the main container", () => {
-      const wrapper = mount(MockAssociationEdit);
-      expect(
-        wrapper
-          .find(".flex.flex-col.items-center.justify-center.min-h-screen")
-          .exists(),
-      ).toBe(true);
-    });
+  describe('Rendu de base', () => {
+    it('should render the main container', () => {
+      const wrapper = mount(MockAssociationEdit)
+      expect(wrapper.find('.flex.flex-col.items-center.justify-center.min-h-screen').exists()).toBe(
+        true
+      )
+    })
 
-    it("should render the page title", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const title = wrapper.find("h1");
-      expect(title.exists()).toBe(true);
-      expect(title.text()).toBe("Modifier le profil");
-    });
-  });
+    it('should render the page title', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const title = wrapper.find('h1')
+      expect(title.exists()).toBe(true)
+      expect(title.text()).toBe('Modifier le profil')
+    })
+  })
 
-  describe("Alert Messages", () => {
-    it("should render success alert when alertStatus is success", () => {
+  describe('Alert Messages', () => {
+    it('should render success alert when alertStatus is success', () => {
       const wrapper = mount(MockAssociationEdit, {
         data() {
           return {
-            alertStatus: "success",
-            alertMessage: "Profil mis à jour avec succès",
-          };
-        },
-      });
-      const successAlert = wrapper.find(".alert.alert-success");
-      expect(successAlert.exists()).toBe(true);
-    });
+            alertStatus: 'success',
+            alertMessage: 'Profil mis à jour avec succès'
+          }
+        }
+      })
+      const successAlert = wrapper.find('.alert.alert-success')
+      expect(successAlert.exists()).toBe(true)
+    })
 
-    it("should render error alert when alertStatus is error", () => {
+    it('should render error alert when alertStatus is error', () => {
       const wrapper = mount(MockAssociationEdit, {
         data() {
           return {
-            alertStatus: "error",
-            alertMessage: "Erreur lors de la mise à jour",
-          };
-        },
-      });
-      const errorAlert = wrapper.find(".alert.alert-error");
-      expect(errorAlert.exists()).toBe(true);
-    });
+            alertStatus: 'error',
+            alertMessage: 'Erreur lors de la mise à jour'
+          }
+        }
+      })
+      const errorAlert = wrapper.find('.alert.alert-error')
+      expect(errorAlert.exists()).toBe(true)
+    })
 
-    it("should not render alerts when alertStatus is null", () => {
+    it('should not render alerts when alertStatus is null', () => {
       const wrapper = mount(MockAssociationEdit, {
         data() {
           return {
-            alertStatus: null,
-          };
-        },
-      });
-      const alerts = wrapper.findAll(".alert");
-      expect(alerts.length).toBe(0);
-    });
-  });
+            alertStatus: null
+          }
+        }
+      })
+      const alerts = wrapper.findAll('.alert')
+      expect(alerts.length).toBe(0)
+    })
+  })
 
-  describe("Profile Image Section", () => {
-    it("should render the profile image container", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const imageContainer = wrapper.find(".w-32.h-32.rounded-full");
-      expect(imageContainer.exists()).toBe(true);
-    });
+  describe('Profile Image Section', () => {
+    it('should render the profile image container', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const imageContainer = wrapper.find('.w-32.h-32.rounded-full')
+      expect(imageContainer.exists()).toBe(true)
+    })
 
-    it("should show user icon when no profile image", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const userIcon = wrapper.find(".user-round-icon");
-      expect(userIcon.exists()).toBe(true);
-    });
+    it('should show user icon when no profile image', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const userIcon = wrapper.find('.user-round-icon')
+      expect(userIcon.exists()).toBe(true)
+    })
 
-    it("should show profile image when available", () => {
+    it('should show profile image when available', () => {
       const wrapper = mount(MockAssociationEdit, {
         data() {
           return {
-            profileImageUrl: "/test-image.jpg",
-          };
-        },
-      });
-      const profileImage = wrapper.find('img[src="/test-image.jpg"]');
-      expect(profileImage.exists()).toBe(true);
-    });
+            profileImageUrl: '/test-image.jpg'
+          }
+        }
+      })
+      const profileImage = wrapper.find('img[src="/test-image.jpg"]')
+      expect(profileImage.exists()).toBe(true)
+    })
 
-    it("should render upload overlay", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const uploadOverlay = wrapper.find(
-        ".absolute.inset-0.bg-black.bg-opacity-50",
-      );
-      expect(uploadOverlay.exists()).toBe(true);
-    });
+    it('should render upload overlay', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const uploadOverlay = wrapper.find('.absolute.inset-0.bg-black.bg-opacity-50')
+      expect(uploadOverlay.exists()).toBe(true)
+    })
 
-    it("should render file input", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const fileInput = wrapper.find('input[type="file"]');
-      expect(fileInput.exists()).toBe(true);
-    });
+    it('should render file input', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const fileInput = wrapper.find('input[type="file"]')
+      expect(fileInput.exists()).toBe(true)
+    })
 
-    it("should render upload label", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const uploadLabel = wrapper.find('label[for="profile-image"]');
-      expect(uploadLabel.exists()).toBe(true);
-    });
-  });
+    it('should render upload label', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const uploadLabel = wrapper.find('label[for="profile-image"]')
+      expect(uploadLabel.exists()).toBe(true)
+    })
+  })
 
-  describe("Form Fields", () => {
-    it("should render association name field", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const nameField = wrapper.find('input[type="text"]');
-      expect(nameField.exists()).toBe(true);
-    });
+  describe('Form Fields', () => {
+    it('should render association name field', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const nameField = wrapper.find('input[type="text"]')
+      expect(nameField.exists()).toBe(true)
+    })
 
-    it("should render association type field", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const typeFields = wrapper.findAll('input[type="text"]');
-      expect(typeFields.length).toBeGreaterThan(1);
-    });
+    it('should render association type field', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const typeFields = wrapper.findAll('input[type="text"]')
+      expect(typeFields.length).toBeGreaterThan(1)
+    })
 
-    it("should render phone field", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const phoneField = wrapper.find('input[type="tel"]');
-      expect(phoneField.exists()).toBe(true);
-    });
+    it('should render phone field', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const phoneField = wrapper.find('input[type="tel"]')
+      expect(phoneField.exists()).toBe(true)
+    })
 
-    it("should render country field", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const textFields = wrapper.findAll('input[type="text"]');
-      expect(textFields.length).toBeGreaterThan(2);
-    });
+    it('should render country field', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const textFields = wrapper.findAll('input[type="text"]')
+      expect(textFields.length).toBeGreaterThan(2)
+    })
 
-    it("should render city field", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const textFields = wrapper.findAll('input[type="text"]');
-      expect(textFields.length).toBeGreaterThan(3);
-    });
+    it('should render city field', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const textFields = wrapper.findAll('input[type="text"]')
+      expect(textFields.length).toBeGreaterThan(3)
+    })
 
-    it("should render postal code field", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const textFields = wrapper.findAll('input[type="text"]');
-      expect(textFields.length).toBeGreaterThan(4);
-    });
+    it('should render postal code field', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const textFields = wrapper.findAll('input[type="text"]')
+      expect(textFields.length).toBeGreaterThan(4)
+    })
 
-    it("should render bio textarea", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const bioField = wrapper.find("textarea");
-      expect(bioField.exists()).toBe(true);
-    });
-  });
+    it('should render bio textarea', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const bioField = wrapper.find('textarea')
+      expect(bioField.exists()).toBe(true)
+    })
+  })
 
-  describe("Form Labels", () => {
-    it("should render association name label", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const labels = wrapper.findAll(".label-text");
-      const nameLabel = labels.find(
-        (label) => label.text() === "Nom de l'association",
-      );
-      expect(nameLabel).toBeDefined();
-    });
+  describe('Form Labels', () => {
+    it('should render association name label', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const labels = wrapper.findAll('.label-text')
+      const nameLabel = labels.find(label => label.text() === "Nom de l'association")
+      expect(nameLabel).toBeDefined()
+    })
 
-    it("should render association type label", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const labels = wrapper.findAll(".label-text");
-      const typeLabel = labels.find((label) => label.text() === "Type");
-      expect(typeLabel).toBeDefined();
-    });
+    it('should render association type label', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const labels = wrapper.findAll('.label-text')
+      const typeLabel = labels.find(label => label.text() === 'Type')
+      expect(typeLabel).toBeDefined()
+    })
 
-    it("should render phone label", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const labels = wrapper.findAll(".label-text");
-      const phoneLabel = labels.find((label) => label.text() === "Téléphone");
-      expect(phoneLabel).toBeDefined();
-    });
+    it('should render phone label', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const labels = wrapper.findAll('.label-text')
+      const phoneLabel = labels.find(label => label.text() === 'Téléphone')
+      expect(phoneLabel).toBeDefined()
+    })
 
-    it("should render country label", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const labels = wrapper.findAll(".label-text");
-      const countryLabel = labels.find((label) => label.text() === "Pays");
-      expect(countryLabel).toBeDefined();
-    });
+    it('should render country label', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const labels = wrapper.findAll('.label-text')
+      const countryLabel = labels.find(label => label.text() === 'Pays')
+      expect(countryLabel).toBeDefined()
+    })
 
-    it("should render city label", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const labels = wrapper.findAll(".label-text");
-      const cityLabel = labels.find((label) => label.text() === "Ville");
-      expect(cityLabel).toBeDefined();
-    });
+    it('should render city label', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const labels = wrapper.findAll('.label-text')
+      const cityLabel = labels.find(label => label.text() === 'Ville')
+      expect(cityLabel).toBeDefined()
+    })
 
-    it("should render postal code label", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const labels = wrapper.findAll(".label-text");
-      const postalLabel = labels.find(
-        (label) => label.text() === "Code postal",
-      );
-      expect(postalLabel).toBeDefined();
-    });
+    it('should render postal code label', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const labels = wrapper.findAll('.label-text')
+      const postalLabel = labels.find(label => label.text() === 'Code postal')
+      expect(postalLabel).toBeDefined()
+    })
 
-    it("should render bio label", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const labels = wrapper.findAll(".label-text");
-      const bioLabel = labels.find((label) => label.text() === "Description");
-      expect(bioLabel).toBeDefined();
-    });
-  });
+    it('should render bio label', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const labels = wrapper.findAll('.label-text')
+      const bioLabel = labels.find(label => label.text() === 'Description')
+      expect(bioLabel).toBeDefined()
+    })
+  })
 
-  describe("Submit Button", () => {
-    it("should render submit button", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const submitButton = wrapper.find('button[type="submit"]');
-      expect(submitButton.exists()).toBe(true);
-    });
+  describe('Submit Button', () => {
+    it('should render submit button', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const submitButton = wrapper.find('button[type="submit"]')
+      expect(submitButton.exists()).toBe(true)
+    })
 
-    it("should have correct button text", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const submitButton = wrapper.find('button[type="submit"]');
-      expect(submitButton.text()).toContain("Sauvegarder");
-    });
+    it('should have correct button text', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const submitButton = wrapper.find('button[type="submit"]')
+      expect(submitButton.text()).toContain('Sauvegarder')
+    })
 
-    it("should have primary button styling", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const submitButton = wrapper.find('button[type="submit"]');
-      expect(submitButton.classes()).toContain("btn-primary");
-    });
-  });
+    it('should have primary button styling', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const submitButton = wrapper.find('button[type="submit"]')
+      expect(submitButton.classes()).toContain('btn-primary')
+    })
+  })
 
-  describe("Loading States", () => {
-    it("should show loading spinner when image is uploading", () => {
+  describe('Loading States', () => {
+    it('should show loading spinner when image is uploading', () => {
       const wrapper = mount(MockAssociationEdit, {
         data() {
           return {
-            isImageUploading: true,
-          };
-        },
-      });
-      const loadingSpinner = wrapper.find(".loading.loading-spinner");
-      expect(loadingSpinner.exists()).toBe(true);
-    });
+            isImageUploading: true
+          }
+        }
+      })
+      const loadingSpinner = wrapper.find('.loading.loading-spinner')
+      expect(loadingSpinner.exists()).toBe(true)
+    })
 
-    it("should show loading spinner in submit button when uploading", () => {
+    it('should show loading spinner in submit button when uploading', () => {
       const wrapper = mount(MockAssociationEdit, {
         data() {
           return {
-            isImageUploading: true,
-          };
-        },
-      });
-      const buttonSpinner = wrapper.find(".loading.loading-spinner.loading-xs");
-      expect(buttonSpinner.exists()).toBe(true);
-    });
-  });
+            isImageUploading: true
+          }
+        }
+      })
+      const buttonSpinner = wrapper.find('.loading.loading-spinner.loading-xs')
+      expect(buttonSpinner.exists()).toBe(true)
+    })
+  })
 
-  describe("Form Structure", () => {
-    it("should render form element", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const form = wrapper.find("form");
-      expect(form.exists()).toBe(true);
-    });
+  describe('Form Structure', () => {
+    it('should render form element', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const form = wrapper.find('form')
+      expect(form.exists()).toBe(true)
+    })
 
-    it("should have form sections with proper styling", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const formSections = wrapper.findAll(
-        ".bg-base-100.rounded-xl.shadow.p-6",
-      );
-      expect(formSections.length).toBeGreaterThan(0);
-    });
+    it('should have form sections with proper styling', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const formSections = wrapper.findAll('.bg-base-100.rounded-xl.shadow.p-6')
+      expect(formSections.length).toBeGreaterThan(0)
+    })
 
-    it("should have responsive grid layout", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const gridSections = wrapper.findAll(
-        ".grid.grid-cols-1.md\\:grid-cols-2",
-      );
-      expect(gridSections.length).toBeGreaterThan(0);
-    });
-  });
+    it('should have responsive grid layout', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const gridSections = wrapper.findAll('.grid.grid-cols-1.md\\:grid-cols-2')
+      expect(gridSections.length).toBeGreaterThan(0)
+    })
+  })
 
-  describe("Error Handling", () => {
-    it("should render error popup component", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const errorPopup = wrapper.find(".error-popup");
-      expect(errorPopup.exists()).toBe(true);
-    });
-  });
+  describe('Error Handling', () => {
+    it('should render error popup component', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const errorPopup = wrapper.find('.error-popup')
+      expect(errorPopup.exists()).toBe(true)
+    })
+  })
 
-  describe("Accessibility", () => {
-    it("should have proper form labels", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const labels = wrapper.findAll("label");
-      expect(labels.length).toBeGreaterThan(0);
-    });
+  describe('Accessibility', () => {
+    it('should have proper form labels', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const labels = wrapper.findAll('label')
+      expect(labels.length).toBeGreaterThan(0)
+    })
 
-    it("should have proper form controls", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const inputs = wrapper.findAll("input, textarea");
-      expect(inputs.length).toBeGreaterThan(0);
-    });
+    it('should have proper form controls', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const inputs = wrapper.findAll('input, textarea')
+      expect(inputs.length).toBeGreaterThan(0)
+    })
 
-    it("should have proper alt text for images", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const images = wrapper.findAll("img");
-      images.forEach((img) => {
-        expect(img.attributes("alt")).toBeDefined();
-      });
-    });
-  });
+    it('should have proper alt text for images', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const images = wrapper.findAll('img')
+      images.forEach(img => {
+        expect(img.attributes('alt')).toBeDefined()
+      })
+    })
+  })
 
-  describe("Responsive Design", () => {
-    it("should have responsive container classes", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const container = wrapper.find(".w-full.max-w-2xl.mx-auto");
-      expect(container.exists()).toBe(true);
-    });
+  describe('Responsive Design', () => {
+    it('should have responsive container classes', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const container = wrapper.find('.w-full.max-w-2xl.mx-auto')
+      expect(container.exists()).toBe(true)
+    })
 
-    it("should have responsive grid classes", () => {
-      const wrapper = mount(MockAssociationEdit);
-      const grid = wrapper.find(".grid.grid-cols-1.md\\:grid-cols-2");
-      expect(grid.exists()).toBe(true);
-    });
-  });
-});
+    it('should have responsive grid classes', () => {
+      const wrapper = mount(MockAssociationEdit)
+      const grid = wrapper.find('.grid.grid-cols-1.md\\:grid-cols-2')
+      expect(grid.exists()).toBe(true)
+    })
+  })
+})

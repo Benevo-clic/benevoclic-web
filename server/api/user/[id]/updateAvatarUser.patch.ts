@@ -1,16 +1,11 @@
 // server/api/user/[id]/update-avatar.patch.ts
-import {
-  defineEventHandler,
-  readMultipartFormData,
-  getCookie,
-  createError
-} from 'h3'
+import { defineEventHandler, readMultipartFormData, getCookie, createError } from 'h3'
 import axios from 'axios'
 import FormData from 'form-data'
 import type { UserInfo } from '~/common/types/auth.type'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const config = useRuntimeConfig()
   const token = getCookie(event, 'auth_token')
 
@@ -33,9 +28,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // 3️⃣ Trouver la partie "file"
-  const filePart = parts.find(
-    p => p.name === 'file' && typeof (p as any).filename === 'string'
-  )
+  const filePart = parts.find(p => p.name === 'file' && typeof (p as any).filename === 'string')
   if (!filePart) {
     throw createError({
       statusCode: 400,
@@ -45,9 +38,9 @@ export default defineEventHandler(async (event) => {
 
   // 4️⃣ Reconstituer un FormData pour Axios
   const { data, filename, mimeType } = filePart as {
-    data: Buffer;
-    filename: string;
-    mimeType: string;
+    data: Buffer
+    filename: string
+    mimeType: string
   }
   const form = new FormData()
   form.append('file', data, { filename, contentType: mimeType })

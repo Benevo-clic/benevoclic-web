@@ -2,7 +2,7 @@ import { defineEventHandler, createError } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const { id, isCompleted } = event.context.params || {}
 
@@ -25,16 +25,11 @@ export default defineEventHandler(async (event) => {
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la mise à jour du statut isCompleted'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la mise à jour du statut isCompleted')
     }
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage:
-        error.statusMessage ||
-        'Erreur lors de la mise à jour du statut isCompleted'
+      statusMessage: error.statusMessage || 'Erreur lors de la mise à jour du statut isCompleted'
     })
   }
 })

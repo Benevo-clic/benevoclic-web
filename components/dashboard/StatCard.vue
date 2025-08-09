@@ -9,5 +9,5 @@
   </div>
 </template>
 <script setup lang="ts">
-defineProps<{ value: number | string; label: string }>()
+  defineProps<{ value: number | string; label: string }>()
 </script>

@@ -2,7 +2,7 @@ import { defineEventHandler, readBody, createError, getCookie } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const { associationId } = event.context.params || {}
     const body = await readBody(event)
@@ -22,16 +22,11 @@ export default defineEventHandler(async (event) => {
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        "Erreur lors de l'ajout du volontaire à l'association"
-      )
+      ApiError.handleAxios(error, "Erreur lors de l'ajout du volontaire à l'association")
     }
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage:
-        error.statusMessage ||
-        "Erreur lors de l'ajout du volontaire à l'association"
+      statusMessage: error.statusMessage || "Erreur lors de l'ajout du volontaire à l'association"
     })
   }
 })

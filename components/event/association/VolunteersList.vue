@@ -1,17 +1,11 @@
 <template>
   <div>
-    <h3 class="text-lg font-bold mb-4">
-      Bénévoles
-    </h3>
+    <h3 class="text-lg font-bold mb-4">Bénévoles</h3>
     <div v-if="props.volunteers && props.volunteers.length">
       <ParticipantOrVolunteerCard
         v-for="volunteer in props.volunteers"
         :key="volunteer.volunteerId"
-        v-memo="[
-          volunteer.volunteerId,
-          volunteer.volunteerName,
-          volunteer.isPresent,
-        ]"
+        v-memo="[volunteer.volunteerId, volunteer.volunteerName, volunteer.isPresent]"
         :participant="volunteer"
         :is-volunteer="true"
         @right-action="handleRightAction"
@@ -37,36 +31,34 @@
           </svg>
         </div>
       </div>
-      <p class="text-sm font-medium">
-        Aucun participant pour cette annonce
-      </p>
+      <p class="text-sm font-medium">Aucun participant pour cette annonce</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import ParticipantOrVolunteerCard from './ParticipantOrVolunteerCard.vue'
+  import ParticipantOrVolunteerCard from './ParticipantOrVolunteerCard.vue'
 
-interface Volunteer {
-  volunteerId: string;
-  volunteerName: string;
-  isPresent?: boolean;
-}
+  interface Volunteer {
+    volunteerId: string
+    volunteerName: string
+    isPresent?: boolean
+  }
 
-const props = defineProps<{
-  volunteers: Volunteer[] | undefined;
-}>()
+  const props = defineProps<{
+    volunteers: Volunteer[] | undefined
+  }>()
 
-const emit = defineEmits<{
-  rightAction: [volunteer: string];
-  presenceAction: [volunteer: string, isPresent: boolean];
-}>()
+  const emit = defineEmits<{
+    rightAction: [volunteer: string]
+    presenceAction: [volunteer: string, isPresent: boolean]
+  }>()
 
-function handleRightAction (id: string) {
-  emit('rightAction', id)
-}
+  function handleRightAction(id: string) {
+    emit('rightAction', id)
+  }
 
-function handlePresenceAction (id: string, isPresent: boolean) {
-  emit('presenceAction', id, isPresent)
-}
+  function handlePresenceAction(id: string, isPresent: boolean) {
+    emit('presenceAction', id, isPresent)
+  }
 </script>

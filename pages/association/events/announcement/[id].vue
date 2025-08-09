@@ -2,7 +2,7 @@
   <div ref="scrollContainer" class="relative">
     <!-- Loading state -->
     <div v-if="loading" class="min-h-screen flex justify-center items-center">
-      <img src="/logo.png" alt="Chargement…" class="w-24 h-24 animate-spin">
+      <img src="/logo.png" alt="Chargement…" class="w-24 h-24 animate-spin" />
     </div>
 
     <!-- Content when loaded -->
@@ -12,15 +12,13 @@
         class="relative w-full rounded-3xl overflow-hidden mb-8 bg-gradient-to-r from-primary/5 to-secondary/5"
       >
         <!-- Cover image -->
-        <div
-          class="aspect-[16/6] md:aspect-[16/5] lg:aspect-[16/4] overflow-hidden"
-        >
+        <div class="aspect-[16/6] md:aspect-[16/5] lg:aspect-[16/4] overflow-hidden">
           <img
             v-if="announcement?.announcementImage"
             :src="coverImageUrl"
             alt="Photo de couverture"
             class="object-cover w-full h-full transition-all duration-700 hover:scale-105"
-          >
+          />
           <div
             v-else
             class="w-full h-full flex flex-col items-center justify-center text-base-content/60 bg-base-200"
@@ -45,9 +43,7 @@
                 </svg>
               </div>
             </div>
-            <p class="text-sm font-medium">
-              Aucune image disponible
-            </p>
+            <p class="text-sm font-medium">Aucune image disponible</p>
           </div>
         </div>
 
@@ -64,9 +60,7 @@
         <!-- Main info -->
         <div class="space-y-6">
           <!-- Association and event info card -->
-          <div
-            class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300"
-          >
+          <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300">
             <div class="card-body p-6">
               <!-- Association info -->
               <div class="flex items-center gap-4 mb-4">
@@ -82,7 +76,7 @@
                       loading="lazy"
                       decoding="async"
                       class="object-cover"
-                    >
+                    />
                   </div>
                 </div>
                 <div v-else class="avatar placeholder">
@@ -90,7 +84,7 @@
                     class="w-14 h-14 rounded-full bg-primary/10 text-primary ring-2 ring-primary/20 ring-offset-2 ring-offset-base-100"
                   >
                     <span class="text-lg font-bold">{{
-                      announcement?.associationName?.charAt(0) || "A"
+                      announcement?.associationName?.charAt(0) || 'A'
                     }}</span>
                   </div>
                 </div>
@@ -112,10 +106,7 @@
                   <Calendar class="h-4 w-4" />
                   {{ formatDate(announcement?.dateEvent) }}
                 </div>
-                <div
-                  v-if="announcement?.hoursEvent"
-                  class="badge badge-lg badge-primary gap-2"
-                >
+                <div v-if="announcement?.hoursEvent" class="badge badge-lg badge-primary gap-2">
                   <Clock class="h-4 w-4" />
                   {{ announcement.hoursEvent }}
                 </div>
@@ -225,9 +216,7 @@
         <!-- Stats and additional info -->
         <div class="space-y-6">
           <!-- Stats card -->
-          <div
-            class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300"
-          >
+          <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300">
             <div class="card-body p-6">
               <h2 class="card-title text-xl mb-4 flex items-center gap-2">
                 <svg
@@ -252,17 +241,11 @@
                 <div class="stat-figure text-secondary">
                   <Users class="h-8 w-8" />
                 </div>
-                <div class="stat-title">
-                  Participants
-                </div>
+                <div class="stat-title">Participants</div>
                 <div class="stat-value text-primary">
-                  {{ announcement?.nbParticipants }}/{{
-                    announcement?.maxParticipants
-                  }}
+                  {{ announcement?.nbParticipants }}/{{ announcement?.maxParticipants }}
                 </div>
-                <div class="stat-desc">
-                  Personnes inscrites à l'événement
-                </div>
+                <div class="stat-desc">Personnes inscrites à l'événement</div>
               </div>
 
               <!-- Volunteers stats -->
@@ -270,17 +253,11 @@
                 <div class="stat-figure text-secondary">
                   <HeartHandshake class="h-8 w-8" />
                 </div>
-                <div class="stat-title">
-                  Bénévoles
-                </div>
+                <div class="stat-title">Bénévoles</div>
                 <div class="stat-value text-secondary">
-                  {{ announcement?.nbVolunteers }}/{{
-                    announcement?.maxVolunteers
-                  }}
+                  {{ announcement?.nbVolunteers }}/{{ announcement?.maxVolunteers }}
                 </div>
-                <div class="stat-desc">
-                  Personnes aidant à l'organisation
-                </div>
+                <div class="stat-desc">Personnes aidant à l'organisation</div>
               </div>
             </div>
           </div>
@@ -290,14 +267,12 @@
       <!-- Tabs section -->
       <div class="mt-8">
         <!-- Tabs navigation -->
-        <div
-          class="tabs tabs-boxed bg-base-200 p-1 rounded-t-xl justify-center"
-        >
+        <div class="tabs tabs-boxed bg-base-200 p-1 rounded-t-xl justify-center">
           <a
             role="tab"
             :class="[
               'tab tab-lg gap-2 transition-all duration-300',
-              tab === 'participants' ? 'tab-active' : '',
+              tab === 'participants' ? 'tab-active' : ''
             ]"
             @click="tab = 'participants'"
           >
@@ -308,7 +283,7 @@
             role="tab"
             :class="[
               'tab tab-lg gap-2 transition-all duration-300',
-              tab === 'volunteers' ? 'tab-active' : '',
+              tab === 'volunteers' ? 'tab-active' : ''
             ]"
             @click="tab = 'volunteers'"
           >
@@ -330,12 +305,12 @@
             <div v-else key="volunteers">
               <VolunteersList
                 :volunteers="
-                  announcement?.volunteers?.map((volunteer) => {
+                  announcement?.volunteers?.map(volunteer => {
                     return {
                       volunteerId: volunteer.id,
                       volunteerName: volunteer.name,
-                      isPresent: volunteer.isPresent,
-                    };
+                      isPresent: volunteer.isPresent
+                    }
                   })
                 "
                 @right-action="handleRightActionVolunteer"
@@ -357,17 +332,17 @@
     <dialog ref="deleteConfirmationModal" class="modal">
       <div class="modal-box">
         <h3 class="font-bold text-lg">
-          {{ t("announcements.delete_confirmation.title") }}
+          {{ t('announcements.delete_confirmation.title') }}
         </h3>
         <p class="py-4">
-          {{ t("announcements.delete_confirmation.message") }}
+          {{ t('announcements.delete_confirmation.message') }}
         </p>
         <div class="modal-action">
           <button class="btn" @click="cancelDelete">
-            {{ t("announcements.delete_confirmation.cancel") }}
+            {{ t('announcements.delete_confirmation.cancel') }}
           </button>
           <button class="btn btn-error" @click="confirmDelete">
-            {{ t("announcements.delete_confirmation.confirm") }}
+            {{ t('announcements.delete_confirmation.confirm') }}
           </button>
         </div>
       </div>
@@ -404,9 +379,7 @@
         v-if="showScrollUp"
         class="fixed left-1/2 -translate-x-1/2 top-4 z-50 flex flex-col items-center pointer-events-none select-none"
       >
-        <div
-          class="bg-base-200/80 rounded-full shadow p-2 animate-bounce rotate-180"
-        >
+        <div class="bg-base-200/80 rounded-full shadow p-2 animate-bounce rotate-180">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-7 w-7 text-primary"
@@ -445,335 +418,317 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted } from 'vue'
-import { useRoute } from 'vue-router'
-import {
-  HeartHandshake,
-  Users,
-  Calendar,
-  Clock,
-  MapPin
-} from 'lucide-vue-next'
-import AnnouncementEditForm from '~/components/event/association/AnnouncementEditForm.vue'
-import VolunteersList from '~/components/event/association/VolunteersList.vue'
-import ParticipantsList from '~/components/event/association/ParticipantsList.vue'
-import { definePageMeta, useNavigation } from '#imports'
-import { EventStatus } from '~/common/enums/event.enum'
-import { useAnnouncement } from '~/composables/useAnnouncement'
-import ErrorPopup from '~/components/utils/ErrorPopup.vue'
-import PresenceListModal from '~/components/event/association/PresenceListModal.vue'
-const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
-const { t } = useI18n()
+  import { ref, onMounted, computed, onUnmounted } from 'vue'
+  import { useRoute } from 'vue-router'
+  import { HeartHandshake, Users, Calendar, Clock, MapPin } from 'lucide-vue-next'
+  import AnnouncementEditForm from '~/components/event/association/AnnouncementEditForm.vue'
+  import VolunteersList from '~/components/event/association/VolunteersList.vue'
+  import ParticipantsList from '~/components/event/association/ParticipantsList.vue'
+  import { definePageMeta, useNavigation } from '#imports'
+  import { EventStatus } from '~/common/enums/event.enum'
+  import { useAnnouncement } from '~/composables/useAnnouncement'
+  import ErrorPopup from '~/components/utils/ErrorPopup.vue'
+  import PresenceListModal from '~/components/event/association/PresenceListModal.vue'
+  const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
+  const { t } = useI18n()
 
-const route = useRoute()
-const useAnnouncementAuth = useAnnouncement()
-const { navigateToRoute } = useNavigation()
-const loading = ref(true)
-const editModalOpen = ref(false)
-const tab = ref<'participants' | 'volunteers'>('participants')
-const presenceModalRef = ref<InstanceType<typeof PresenceListModal> | null>(
-  null
-)
+  const route = useRoute()
+  const useAnnouncementAuth = useAnnouncement()
+  const { navigateToRoute } = useNavigation()
+  const loading = ref(true)
+  const editModalOpen = ref(false)
+  const tab = ref<'participants' | 'volunteers'>('participants')
+  const presenceModalRef = ref<InstanceType<typeof PresenceListModal> | null>(null)
 
-const announcement = computed(
-  () => useAnnouncementAuth.getCurrentAnnouncement.value
-)
+  const announcement = computed(() => useAnnouncementAuth.getCurrentAnnouncement.value)
 
-const profileImageUrl = computed(() => {
-  return announcement.value?.associationLogo
-})
+  const profileImageUrl = computed(() => {
+    return announcement.value?.associationLogo
+  })
 
-const scrollContainer = ref<HTMLElement | null>(null)
-const showScrollDown = ref(false)
-const showScrollUp = ref(false)
+  const scrollContainer = ref<HTMLElement | null>(null)
+  const showScrollDown = ref(false)
+  const showScrollUp = ref(false)
 
-const showErrorModal = ref(false)
-const errorType = ref<'4xx' | '5xx' | null>(null)
+  const showErrorModal = ref(false)
+  const errorType = ref<'4xx' | '5xx' | null>(null)
 
-function handleReload () {
-  window.location.reload()
-}
-function handleGoHome () {
-  navigateToRoute('/association/events/association/manage')
-}
-
-function handleError (error: any) {
-  if (error?.response?.status >= 500 && error?.response?.status < 600) {
-    errorType.value = '5xx'
-    showErrorModal.value = true
-  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
-    errorType.value = '4xx'
-    showErrorModal.value = true
-  } else {
-    console.error('Erreur inattendue:', error)
+  function handleReload() {
+    window.location.reload()
   }
-}
+  function handleGoHome() {
+    navigateToRoute('/association/events/association/manage')
+  }
 
-definePageMeta({
-  middleware: ['auth'],
-  layout: 'header'
-})
-
-onMounted(async () => {
-  await initData()
-})
-
-async function initData () {
-  try {
-    if (route.params.id) {
-      await fetchAnnouncement()
+  function handleError(error: any) {
+    if (error?.response?.status >= 500 && error?.response?.status < 600) {
+      errorType.value = '5xx'
+      showErrorModal.value = true
+    } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+      errorType.value = '4xx'
+      showErrorModal.value = true
     } else {
+      console.error('Erreur inattendue:', error)
+    }
+  }
+
+  definePageMeta({
+    middleware: ['auth'],
+    layout: 'header'
+  })
+
+  onMounted(async () => {
+    await initData()
+  })
+
+  async function initData() {
+    try {
+      if (route.params.id) {
+        await fetchAnnouncement()
+      } else {
+        navigateTo('/association/events/association/manage')
+      }
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  async function fetchAnnouncement() {
+    try {
+      useAnnouncementAuth.invalidateCache()
+      await useAnnouncementAuth.fetchAnnouncementById(route.params.id as string)
+      loading.value = useAnnouncementAuth.loading.value
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  function openEditModal() {
+    editModalOpen.value = true
+  }
+
+  function showDeleteConfirmation() {
+    deleteConfirmationModal.value?.showModal()
+  }
+
+  function closeEditModal() {
+    editModalOpen.value = false
+  }
+
+  function refresh() {
+    fetchAnnouncement()
+    closeEditModal()
+  }
+
+  function cancelDelete() {
+    deleteConfirmationModal.value?.close()
+  }
+
+  function confirmDelete() {
+    deleteConfirmationModal.value?.close()
+    announcementDelete()
+  }
+
+  async function handleRightAction(id: string) {
+    if (!announcement.value) {
+      return
+    }
+    try {
+      await useAnnouncementAuth.removeParticipant(announcement.value?._id, id)
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  async function handleRightActionVolunteer(id: string) {
+    if (!announcement.value) {
+      return
+    }
+    try {
+      await useAnnouncementAuth.removeVolunteer(announcement.value?._id, id)
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  async function handlePresenceActionParticipant(id: string, isPresent: boolean) {
+    if (!announcement.value) {
+      return
+    }
+    try {
+      console.log(`Updating presence for participant ${id}: ${isPresent}`)
+      const participant = {
+        id,
+        name: announcement.value.participants?.find(p => p.id === id)?.name || '',
+        isPresent
+      }
+      await useAnnouncementAuth.updatePresentParticipant(announcement.value._id, participant)
+      await fetchAnnouncement() // Refresh the data
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  async function handlePresenceActionVolunteer(id: string, isPresent: boolean) {
+    if (!announcement.value) {
+      return
+    }
+    try {
+      const volunteer = {
+        id,
+        name: announcement.value.volunteers?.find(v => v.id === id)?.name || '',
+        isPresent
+      }
+      await useAnnouncementAuth.updatePresentVolunteer(announcement.value._id, volunteer)
+      await fetchAnnouncement() // Refresh the data
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  async function announcementDelete() {
+    if (!announcement.value) {
+      return
+    }
+    try {
+      await useAnnouncementAuth.removeAnnouncement(announcement.value._id)
       navigateTo('/association/events/association/manage')
+    } catch (error) {
+      handleError(error)
     }
-  } catch (error) {
-    handleError(error)
   }
-}
 
-async function fetchAnnouncement () {
-  try {
-    useAnnouncementAuth.invalidateCache()
-    await useAnnouncementAuth.fetchAnnouncementById(route.params.id as string)
-    loading.value = useAnnouncementAuth.loading.value
-  } catch (error) {
-    handleError(error)
-  }
-}
+  const coverImageUrl = computed(() => {
+    return announcement.value?.announcementImage
+  })
 
-function openEditModal () {
-  editModalOpen.value = true
-}
-
-function showDeleteConfirmation () {
-  deleteConfirmationModal.value?.showModal()
-}
-
-function closeEditModal () {
-  editModalOpen.value = false
-}
-
-function refresh () {
-  fetchAnnouncement()
-  closeEditModal()
-}
-
-function cancelDelete () {
-  deleteConfirmationModal.value?.close()
-}
-
-function confirmDelete () {
-  deleteConfirmationModal.value?.close()
-  announcementDelete()
-}
-
-async function handleRightAction (id: string) {
-  if (!announcement.value) {
-    return
-  }
-  try {
-    await useAnnouncementAuth.removeParticipant(announcement.value?._id, id)
-  } catch (error) {
-    handleError(error)
-  }
-}
-
-async function handleRightActionVolunteer (id: string) {
-  if (!announcement.value) {
-    return
-  }
-  try {
-    await useAnnouncementAuth.removeVolunteer(announcement.value?._id, id)
-  } catch (error) {
-    handleError(error)
-  }
-}
-
-async function handlePresenceActionParticipant (id: string, isPresent: boolean) {
-  if (!announcement.value) {
-    return
-  }
-  try {
-    console.log(`Updating presence for participant ${id}: ${isPresent}`)
-    const participant = {
-      id,
-      name:
-        announcement.value.participants?.find(p => p.id === id)?.name || '',
-      isPresent
+  function formatDate(dateString?: string) {
+    if (!dateString) {
+      return ''
     }
-    await useAnnouncementAuth.updatePresentParticipant(
-      announcement.value._id,
-      participant
-    )
-    await fetchAnnouncement() // Refresh the data
-  } catch (error) {
-    handleError(error)
-  }
-}
-
-async function handlePresenceActionVolunteer (id: string, isPresent: boolean) {
-  if (!announcement.value) {
-    return
-  }
-  try {
-    const volunteer = {
-      id,
-      name: announcement.value.volunteers?.find(v => v.id === id)?.name || '',
-      isPresent
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     }
-    await useAnnouncementAuth.updatePresentVolunteer(
-      announcement.value._id,
-      volunteer
-    )
-    await fetchAnnouncement() // Refresh the data
-  } catch (error) {
-    handleError(error)
+    return new Date(dateString).toLocaleDateString('fr-FR', options)
   }
-}
 
-async function announcementDelete () {
-  if (!announcement.value) {
-    return
+  const statusBadgeClass = computed(() => {
+    switch (announcement.value?.status) {
+      case EventStatus.ACTIVE:
+        return 'badge-success'
+      case EventStatus.INACTIVE:
+        return 'badge-warning'
+      case EventStatus.COMPLETED:
+        return 'badge-neutral'
+      default:
+        return 'badge-primary'
+    }
+  })
+
+  function checkScrollIndicators() {
+    const el = document.documentElement
+    if (el.scrollHeight > window.innerHeight + 10) {
+      showScrollDown.value = window.scrollY + window.innerHeight < el.scrollHeight - 10
+      showScrollUp.value = window.scrollY > 10
+    } else {
+      showScrollDown.value = false
+      showScrollUp.value = false
+    }
   }
-  try {
-    await useAnnouncementAuth.removeAnnouncement(announcement.value._id)
-    navigateTo('/association/events/association/manage')
-  } catch (error) {
-    handleError(error)
+
+  // Presence modal functions
+  function openPresenceModal() {
+    if (announcement.value) {
+      presenceModalRef.value?.showModal()
+    } else {
+      console.warn('No announcement available to manage presence.')
+    }
   }
-}
 
-const coverImageUrl = computed(() => {
-  return announcement.value?.announcementImage
-})
-
-function formatDate (dateString?: string) {
-  if (!dateString) {
-    return ''
+  function handleModalClose() {
+    // Any cleanup needed after closing the modal
   }
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+
+  async function handleModalUpdate() {
+    // Refresh the data to show updated presence status
+    await fetchAnnouncement()
   }
-  return new Date(dateString).toLocaleDateString('fr-FR', options)
-}
 
-const statusBadgeClass = computed(() => {
-  switch (announcement.value?.status) {
-    case EventStatus.ACTIVE:
-      return 'badge-success'
-    case EventStatus.INACTIVE:
-      return 'badge-warning'
-    case EventStatus.COMPLETED:
-      return 'badge-neutral'
-    default:
-      return 'badge-primary'
-  }
-})
+  onMounted(() => {
+    checkScrollIndicators()
+    window.addEventListener('scroll', checkScrollIndicators, { passive: true })
+    window.addEventListener('resize', checkScrollIndicators)
+  })
 
-function checkScrollIndicators () {
-  const el = document.documentElement
-  if (el.scrollHeight > window.innerHeight + 10) {
-    showScrollDown.value =
-      window.scrollY + window.innerHeight < el.scrollHeight - 10
-    showScrollUp.value = window.scrollY > 10
-  } else {
-    showScrollDown.value = false
-    showScrollUp.value = false
-  }
-}
-
-// Presence modal functions
-function openPresenceModal () {
-  if (announcement.value) {
-    presenceModalRef.value?.showModal()
-  } else {
-    console.warn('No announcement available to manage presence.')
-  }
-}
-
-function handleModalClose () {
-  // Any cleanup needed after closing the modal
-}
-
-async function handleModalUpdate () {
-  // Refresh the data to show updated presence status
-  await fetchAnnouncement()
-}
-
-onMounted(() => {
-  checkScrollIndicators()
-  window.addEventListener('scroll', checkScrollIndicators, { passive: true })
-  window.addEventListener('resize', checkScrollIndicators)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', checkScrollIndicators)
-  window.removeEventListener('resize', checkScrollIndicators)
-})
+  onUnmounted(() => {
+    window.removeEventListener('scroll', checkScrollIndicators)
+    window.removeEventListener('resize', checkScrollIndicators)
+  })
 </script>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-/* Card hover effects */
-.card {
-  transition: all 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-/* Badge hover effects */
-.badge {
-  transition: all 0.2s ease;
-}
-
-/* Button animations */
-.btn {
-  transition: all 0.3s ease;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.2);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .card-body {
-    padding: 1rem;
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all 0.3s ease;
+  }
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+    transform: translateY(10px);
   }
 
-  .stat {
-    padding: 0.75rem;
+  /* Card hover effects */
+  .card {
+    transition: all 0.3s ease;
   }
 
-  .stat-value {
-    font-size: 1.5rem;
+  .card:hover {
+    transform: translateY(-5px);
   }
-}
+
+  /* Badge hover effects */
+  .badge {
+    transition: all 0.2s ease;
+  }
+
+  /* Button animations */
+  .btn {
+    transition: all 0.3s ease;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .card-body {
+      padding: 1rem;
+    }
+
+    .stat {
+      padding: 0.75rem;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+    }
+  }
 </style>

@@ -48,8 +48,7 @@ export default defineNuxtPlugin(async () => {
     })
 
     // Intercepter les tentatives d'utilisation de la géolocalisation
-    const originalGetCurrentPosition =
-      navigator.geolocation?.getCurrentPosition
+    const originalGetCurrentPosition = navigator.geolocation?.getCurrentPosition
     if (originalGetCurrentPosition) {
       navigator.geolocation.getCurrentPosition = function (
         successCallback,
@@ -63,8 +62,7 @@ export default defineNuxtPlugin(async () => {
               detail: {
                 type: 'warning',
                 permission: 'canUseLocation',
-                message:
-                  'Géolocalisation bloquée - cookies de personnalisation requis'
+                message: 'Géolocalisation bloquée - cookies de personnalisation requis'
               }
             })
           )
@@ -73,20 +71,14 @@ export default defineNuxtPlugin(async () => {
           if (errorCallback) {
             errorCallback({
               code: 1, // PERMISSION_DENIED
-              message:
-                'Permission de géolocalisation refusée - cookies de personnalisation requis'
+              message: 'Permission de géolocalisation refusée - cookies de personnalisation requis'
             } as GeolocationPositionError)
           }
           return
         }
 
         // Si les permissions sont accordées, utiliser la fonction originale
-        return originalGetCurrentPosition.call(
-          this,
-          successCallback,
-          errorCallback,
-          options
-        )
+        return originalGetCurrentPosition.call(this, successCallback, errorCallback, options)
       }
     }
 
@@ -94,15 +86,8 @@ export default defineNuxtPlugin(async () => {
     const originalSetItem = localStorage.setItem
     localStorage.setItem = function (key: string, value: string) {
       // Vérifier si la clé concerne des données personnelles
-      const personalDataKeys = [
-        'user_location',
-        'user_preferences',
-        'user_profile'
-      ]
-      if (
-        personalDataKeys.some(k => key.includes(k)) &&
-        !hasPermission('canUsePersonalData')
-      ) {
+      const personalDataKeys = ['user_location', 'user_preferences', 'user_profile']
+      if (personalDataKeys.some(k => key.includes(k)) && !hasPermission('canUsePersonalData')) {
         console.warn(
           "Tentative d'accès aux données personnelles bloquée - cookies de personnalisation requis"
         )
@@ -116,15 +101,8 @@ export default defineNuxtPlugin(async () => {
     const originalGetItem = localStorage.getItem
     localStorage.getItem = function (key: string) {
       // Vérifier si la clé concerne des données personnelles
-      const personalDataKeys = [
-        'user_location',
-        'user_preferences',
-        'user_profile'
-      ]
-      if (
-        personalDataKeys.some(k => key.includes(k)) &&
-        !hasPermission('canUsePersonalData')
-      ) {
+      const personalDataKeys = ['user_location', 'user_preferences', 'user_profile']
+      if (personalDataKeys.some(k => key.includes(k)) && !hasPermission('canUsePersonalData')) {
         console.warn(
           'Tentative de lecture des données personnelles bloquée - cookies de personnalisation requis'
         )

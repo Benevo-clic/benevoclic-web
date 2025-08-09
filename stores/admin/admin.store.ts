@@ -2,30 +2,30 @@ import { defineStore } from 'pinia'
 import { useRequestFetch } from '#app'
 
 export interface SupportReport {
-  _id: string;
-  type: 'ANNOUNCEMENT' | 'TECHNICAL' | 'USER_FEEDBACK' | 'OTHER';
-  category?: string;
-  description?: string;
-  status: 'PENDING' | 'IN_PROGRESS' | 'RESOLVED' | 'REJECTED';
-  priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  createdAt?: string;
-  userEmail?: string;
-  pageUrl?: string;
-  browserInfo?: string;
+  _id: string
+  type: 'ANNOUNCEMENT' | 'TECHNICAL' | 'USER_FEEDBACK' | 'OTHER'
+  category?: string
+  description?: string
+  status: 'PENDING' | 'IN_PROGRESS' | 'RESOLVED' | 'REJECTED'
+  priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'
+  createdAt?: string
+  userEmail?: string
+  pageUrl?: string
+  browserInfo?: string
 }
 
 interface Stats {
-  totalReports?: number;
-  pendingReports?: number;
-  resolvedReports?: number;
+  totalReports?: number
+  pendingReports?: number
+  resolvedReports?: number
 }
 
 interface AdminState {
-  reports: SupportReport[];
-  selectedReport: SupportReport | null;
-  stats: Stats | null;
-  loading: boolean;
-  error: string | null;
+  reports: SupportReport[]
+  selectedReport: SupportReport | null
+  stats: Stats | null
+  loading: boolean
+  error: string | null
 }
 
 export const useAdminStore = defineStore('admin', {
@@ -95,8 +95,7 @@ export const useAdminStore = defineStore('admin', {
         this.stats = stats
         return stats
       } catch (e: any) {
-        this.error =
-          e?.message || 'Erreur lors de la récupération des statistiques'
+        this.error = e?.message || 'Erreur lors de la récupération des statistiques'
         throw e
       }
     }

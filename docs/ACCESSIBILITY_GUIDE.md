@@ -86,11 +86,7 @@ node scripts/fix-a11y.js
 ### AccessibleButton
 
 ```vue
-<AccessibleButton
-  variant="primary"
-  aria-label="Action principale"
-  @click="handleClick"
->
+<AccessibleButton variant="primary" aria-label="Action principale" @click="handleClick">
   Texte du bouton
 </AccessibleButton>
 ```
@@ -98,12 +94,7 @@ node scripts/fix-a11y.js
 ### AccessibleImage
 
 ```vue
-<AccessibleImage
-  src="/image.jpg"
-  alt="Description de l'image"
-  width="300"
-  height="200"
-/>
+<AccessibleImage src="/image.jpg" alt="Description de l'image" width="300" height="200" />
 ```
 
 ### AccessibleForm

@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { mount } from "@vue/test-utils";
-import { nextTick } from "vue";
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 
 // Mock component pour tester le DrawerContent
 const MockDrawerContent = {
@@ -74,462 +74,460 @@ const MockDrawerContent = {
   props: {
     isAuthenticated: {
       type: Boolean,
-      default: false,
+      default: false
     },
     menuOpen: {
       type: Boolean,
-      default: false,
+      default: false
     },
     userFirstName: {
       type: String,
-      default: "",
+      default: ''
     },
     role: {
       type: String,
-      default: "",
-    },
+      default: ''
+    }
   },
   data() {
     return {
-      bodyScrollDisabled: false,
-    };
+      bodyScrollDisabled: false
+    }
   },
   methods: {
     toggleBodyScroll(disable) {
-      this.bodyScrollDisabled = disable;
+      this.bodyScrollDisabled = disable
       if (disable) {
-        document.body.style.overflow = "hidden";
+        document.body.style.overflow = 'hidden'
       } else {
-        document.body.style.overflow = "";
+        document.body.style.overflow = ''
       }
     },
 
     handleCloseDrawer() {
-      this.$emit("closeDrawer");
+      this.$emit('closeDrawer')
     },
 
     handleKeydown(event) {
-      if (event.key === "Escape") {
-        this.handleCloseDrawer();
+      if (event.key === 'Escape') {
+        this.handleCloseDrawer()
       }
     },
 
     handleOverlayClick() {
-      this.handleCloseDrawer();
-    },
+      this.handleCloseDrawer()
+    }
   },
   watch: {
     menuOpen(isOpen) {
-      this.toggleBodyScroll(isOpen);
-    },
+      this.toggleBodyScroll(isOpen)
+    }
   },
   mounted() {
     if (this.menuOpen) {
-      this.toggleBodyScroll(true);
+      this.toggleBodyScroll(true)
     }
   },
   unmounted() {
-    this.toggleBodyScroll(false);
-  },
-};
+    this.toggleBodyScroll(false)
+  }
+}
 
-describe("DrawerContent", () => {
+describe('DrawerContent', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearAllMocks()
     // Reset body overflow
-    document.body.style.overflow = "";
-  });
+    document.body.style.overflow = ''
+  })
 
-  describe("Rendu de base", () => {
-    it("should render drawer content", () => {
-      const wrapper = mount(MockDrawerContent);
+  describe('Rendu de base', () => {
+    it('should render drawer content', () => {
+      const wrapper = mount(MockDrawerContent)
 
-      expect(wrapper.exists()).toBe(true);
-      expect(wrapper.find(".drawer-content").exists()).toBe(true);
-    });
+      expect(wrapper.exists()).toBe(true)
+      expect(wrapper.find('.drawer-content').exists()).toBe(true)
+    })
 
-    it("should not show drawer when menu is closed", () => {
+    it('should not show drawer when menu is closed', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
-          menuOpen: false,
-        },
-      });
+          menuOpen: false
+        }
+      })
 
-      const aside = wrapper.find("aside");
-      expect(aside.exists()).toBe(false);
-    });
+      const aside = wrapper.find('aside')
+      expect(aside.exists()).toBe(false)
+    })
 
-    it("should show drawer when menu is open", () => {
+    it('should show drawer when menu is open', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
-          menuOpen: true,
-        },
-      });
+          menuOpen: true
+        }
+      })
 
-      const aside = wrapper.find("aside");
-      expect(aside.exists()).toBe(true);
-    });
-  });
+      const aside = wrapper.find('aside')
+      expect(aside.exists()).toBe(true)
+    })
+  })
 
-  describe("Overlay", () => {
-    it("should render overlay when menu is open", () => {
+  describe('Overlay', () => {
+    it('should render overlay when menu is open', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
-          menuOpen: true,
-        },
-      });
+          menuOpen: true
+        }
+      })
 
-      const overlay = wrapper.find('div[role="presentation"]');
-      expect(overlay.exists()).toBe(true);
-      expect(overlay.classes()).toContain("fixed");
-      expect(overlay.classes()).toContain("inset-0");
-    });
+      const overlay = wrapper.find('div[role="presentation"]')
+      expect(overlay.exists()).toBe(true)
+      expect(overlay.classes()).toContain('fixed')
+      expect(overlay.classes()).toContain('inset-0')
+    })
 
-    it("should handle overlay click", async () => {
+    it('should handle overlay click', async () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
-          menuOpen: true,
-        },
-      });
+          menuOpen: true
+        }
+      })
 
-      const overlay = wrapper.find('div[role="presentation"]');
-      await overlay.trigger("click");
+      const overlay = wrapper.find('div[role="presentation"]')
+      await overlay.trigger('click')
 
-      expect(wrapper.emitted("closeDrawer")).toBeTruthy();
-    });
-  });
+      expect(wrapper.emitted('closeDrawer')).toBeTruthy()
+    })
+  })
 
-  describe("Header du drawer", () => {
-    it("should render header with title", () => {
-      const wrapper = mount(MockDrawerContent, {
-        props: {
-          menuOpen: true,
-          isAuthenticated: true,
-        },
-      });
-
-      const header = wrapper.find("h2");
-      expect(header.exists()).toBe(true);
-      expect(header.text()).toBe("Menu");
-    });
-
-    it("should show welcome title when not authenticated", () => {
+  describe('Header du drawer', () => {
+    it('should render header with title', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
           menuOpen: true,
-          isAuthenticated: false,
-        },
-      });
+          isAuthenticated: true
+        }
+      })
 
-      const header = wrapper.find("h2");
-      expect(header.text()).toBe("Bienvenue");
-    });
+      const header = wrapper.find('h2')
+      expect(header.exists()).toBe(true)
+      expect(header.text()).toBe('Menu')
+    })
 
-    it("should render close button", () => {
+    it('should show welcome title when not authenticated', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
           menuOpen: true,
-        },
-      });
+          isAuthenticated: false
+        }
+      })
 
-      const closeButton = wrapper.find("button");
-      expect(closeButton.exists()).toBe(true);
-      expect(closeButton.classes()).toContain("btn");
-      expect(closeButton.classes()).toContain("btn-ghost");
-    });
+      const header = wrapper.find('h2')
+      expect(header.text()).toBe('Bienvenue')
+    })
 
-    it("should handle close button click", async () => {
+    it('should render close button', () => {
+      const wrapper = mount(MockDrawerContent, {
+        props: {
+          menuOpen: true
+        }
+      })
+
+      const closeButton = wrapper.find('button')
+      expect(closeButton.exists()).toBe(true)
+      expect(closeButton.classes()).toContain('btn')
+      expect(closeButton.classes()).toContain('btn-ghost')
+    })
+
+    it('should handle close button click', async () => {
+      const wrapper = mount(MockDrawerContent, {
+        props: {
+          menuOpen: true
+        }
+      })
+
+      const closeButton = wrapper.find('button')
+      await closeButton.trigger('click')
+
+      expect(wrapper.emitted('closeDrawer')).toBeTruthy()
+    })
+  })
+
+  describe('Contenu dynamique', () => {
+    it('should show volunteer content when role is VOLUNTEER', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
           menuOpen: true,
-        },
-      });
+          role: 'VOLUNTEER'
+        }
+      })
 
-      const closeButton = wrapper.find("button");
-      await closeButton.trigger("click");
+      const volunteerContent = wrapper.find('.mock-volunteer-content')
+      expect(volunteerContent.exists()).toBe(true)
+      expect(volunteerContent.text()).toBe('Contenu bénévole')
+    })
 
-      expect(wrapper.emitted("closeDrawer")).toBeTruthy();
-    });
-  });
-
-  describe("Contenu dynamique", () => {
-    it("should show volunteer content when role is VOLUNTEER", () => {
+    it('should show association content when role is ASSOCIATION', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
           menuOpen: true,
-          role: "VOLUNTEER",
-        },
-      });
+          role: 'ASSOCIATION'
+        }
+      })
 
-      const volunteerContent = wrapper.find(".mock-volunteer-content");
-      expect(volunteerContent.exists()).toBe(true);
-      expect(volunteerContent.text()).toBe("Contenu bénévole");
-    });
+      const associationContent = wrapper.find('.mock-association-content')
+      expect(associationContent.exists()).toBe(true)
+      expect(associationContent.text()).toBe('Contenu association')
+    })
 
-    it("should show association content when role is ASSOCIATION", () => {
+    it('should show no connected content when no role', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
           menuOpen: true,
-          role: "ASSOCIATION",
-        },
-      });
+          role: ''
+        }
+      })
 
-      const associationContent = wrapper.find(".mock-association-content");
-      expect(associationContent.exists()).toBe(true);
-      expect(associationContent.text()).toBe("Contenu association");
-    });
+      const noConnectedContent = wrapper.find('.mock-no-connected-content')
+      expect(noConnectedContent.exists()).toBe(true)
+      expect(noConnectedContent.text()).toBe('Contenu non connecté')
+    })
+  })
 
-    it("should show no connected content when no role", () => {
+  describe('Gestion du scroll', () => {
+    it('should disable body scroll when menu opens', async () => {
+      const wrapper = mount(MockDrawerContent, {
+        props: {
+          menuOpen: false
+        }
+      })
+
+      await wrapper.setProps({ menuOpen: true })
+      await nextTick()
+
+      expect(wrapper.vm.bodyScrollDisabled).toBe(true)
+    })
+
+    it('should enable body scroll when menu closes', async () => {
+      const wrapper = mount(MockDrawerContent, {
+        props: {
+          menuOpen: true
+        }
+      })
+
+      await wrapper.setProps({ menuOpen: false })
+      await nextTick()
+
+      expect(wrapper.vm.bodyScrollDisabled).toBe(false)
+    })
+  })
+
+  describe('Navigation clavier', () => {
+    it('should handle escape key', async () => {
+      const wrapper = mount(MockDrawerContent, {
+        props: {
+          menuOpen: true
+        }
+      })
+
+      const aside = wrapper.find('aside')
+      await aside.trigger('keydown', { key: 'Escape' })
+
+      expect(wrapper.emitted('closeDrawer')).toBeTruthy()
+    })
+
+    it('should not close on other keys', async () => {
+      const wrapper = mount(MockDrawerContent, {
+        props: {
+          menuOpen: true
+        }
+      })
+
+      const aside = wrapper.find('aside')
+      await aside.trigger('keydown', { key: 'Enter' })
+
+      expect(wrapper.emitted('closeDrawer')).toBeFalsy()
+    })
+  })
+
+  describe('Accessibilité', () => {
+    it('should have proper dialog role', () => {
+      const wrapper = mount(MockDrawerContent, {
+        props: {
+          menuOpen: true
+        }
+      })
+
+      const aside = wrapper.find('aside')
+      expect(aside.attributes('role')).toBe('dialog')
+      expect(aside.attributes('aria-modal')).toBe('true')
+    })
+
+    it('should have proper aria-labelledby for authenticated user', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
           menuOpen: true,
-          role: "",
-        },
-      });
+          isAuthenticated: true
+        }
+      })
 
-      const noConnectedContent = wrapper.find(".mock-no-connected-content");
-      expect(noConnectedContent.exists()).toBe(true);
-      expect(noConnectedContent.text()).toBe("Contenu non connecté");
-    });
-  });
+      const aside = wrapper.find('aside')
+      expect(aside.attributes('aria-labelledby')).toBe('drawer-title')
+      expect(aside.attributes('aria-describedby')).toBe('drawer-description')
+    })
 
-  describe("Gestion du scroll", () => {
-    it("should disable body scroll when menu opens", async () => {
-      const wrapper = mount(MockDrawerContent, {
-        props: {
-          menuOpen: false,
-        },
-      });
-
-      await wrapper.setProps({ menuOpen: true });
-      await nextTick();
-
-      expect(wrapper.vm.bodyScrollDisabled).toBe(true);
-    });
-
-    it("should enable body scroll when menu closes", async () => {
+    it('should have proper aria-labelledby for non-authenticated user', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
           menuOpen: true,
-        },
-      });
+          isAuthenticated: false
+        }
+      })
 
-      await wrapper.setProps({ menuOpen: false });
-      await nextTick();
+      const aside = wrapper.find('aside')
+      expect(aside.attributes('aria-labelledby')).toBe('welcome-title')
+      expect(aside.attributes('aria-describedby')).toBe('welcome-description')
+    })
 
-      expect(wrapper.vm.bodyScrollDisabled).toBe(false);
-    });
-  });
-
-  describe("Navigation clavier", () => {
-    it("should handle escape key", async () => {
+    it('should have proper button aria-label', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
           menuOpen: true,
-        },
-      });
+          isAuthenticated: true
+        }
+      })
 
-      const aside = wrapper.find("aside");
-      await aside.trigger("keydown", { key: "Escape" });
+      const closeButton = wrapper.find('button')
+      expect(closeButton.attributes('aria-label')).toBe('Fermer le menu')
+    })
 
-      expect(wrapper.emitted("closeDrawer")).toBeTruthy();
-    });
-
-    it("should not close on other keys", async () => {
+    it('should have proper button aria-label for non-authenticated user', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
           menuOpen: true,
-        },
-      });
+          isAuthenticated: false
+        }
+      })
 
-      const aside = wrapper.find("aside");
-      await aside.trigger("keydown", { key: "Enter" });
+      const closeButton = wrapper.find('button')
+      expect(closeButton.attributes('aria-label')).toBe('Fermer le panneau de bienvenue')
+    })
 
-      expect(wrapper.emitted("closeDrawer")).toBeFalsy();
-    });
-  });
-
-  describe("Accessibilité", () => {
-    it("should have proper dialog role", () => {
+    it('should have proper screen reader descriptions', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
           menuOpen: true,
-        },
-      });
+          isAuthenticated: true
+        }
+      })
 
-      const aside = wrapper.find("aside");
-      expect(aside.attributes("role")).toBe("dialog");
-      expect(aside.attributes("aria-modal")).toBe("true");
-    });
+      const description = wrapper.find('#drawer-description')
+      expect(description.exists()).toBe(true)
+      expect(description.classes()).toContain('sr-only')
+    })
+  })
 
-    it("should have proper aria-labelledby for authenticated user", () => {
+  describe('Styles et classes CSS', () => {
+    it('should have proper drawer styling', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
-          menuOpen: true,
-          isAuthenticated: true,
-        },
-      });
+          menuOpen: true
+        }
+      })
 
-      const aside = wrapper.find("aside");
-      expect(aside.attributes("aria-labelledby")).toBe("drawer-title");
-      expect(aside.attributes("aria-describedby")).toBe("drawer-description");
-    });
+      const aside = wrapper.find('aside')
+      expect(aside.classes()).toContain('fixed')
+      expect(aside.classes()).toContain('top-0')
+      expect(aside.classes()).toContain('right-0')
+      expect(aside.classes()).toContain('h-screen')
+      expect(aside.classes()).toContain('w-80')
+    })
 
-    it("should have proper aria-labelledby for non-authenticated user", () => {
+    it('should have proper header styling', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
-          menuOpen: true,
-          isAuthenticated: false,
-        },
-      });
+          menuOpen: true
+        }
+      })
 
-      const aside = wrapper.find("aside");
-      expect(aside.attributes("aria-labelledby")).toBe("welcome-title");
-      expect(aside.attributes("aria-describedby")).toBe("welcome-description");
-    });
+      const header = wrapper.find('div.flex-shrink-0')
+      expect(header.exists()).toBe(true)
+      expect(header.classes()).toContain('bg-base-100/80')
+      expect(header.classes()).toContain('backdrop-blur-md')
+    })
 
-    it("should have proper button aria-label", () => {
+    it('should have proper close button styling', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
-          menuOpen: true,
-          isAuthenticated: true,
-        },
-      });
+          menuOpen: true
+        }
+      })
 
-      const closeButton = wrapper.find("button");
-      expect(closeButton.attributes("aria-label")).toBe("Fermer le menu");
-    });
+      const closeButton = wrapper.find('button')
+      expect(closeButton.classes()).toContain('btn')
+      expect(closeButton.classes()).toContain('btn-ghost')
+      expect(closeButton.classes()).toContain('btn-circle')
+      expect(closeButton.classes()).toContain('btn-sm')
+    })
+  })
 
-    it("should have proper button aria-label for non-authenticated user", () => {
+  describe('Transitions', () => {
+    it('should have fade transition for overlay', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
-          menuOpen: true,
-          isAuthenticated: false,
-        },
-      });
+          menuOpen: true
+        }
+      })
 
-      const closeButton = wrapper.find("button");
-      expect(closeButton.attributes("aria-label")).toBe(
-        "Fermer le panneau de bienvenue",
-      );
-    });
-
-    it("should have proper screen reader descriptions", () => {
-      const wrapper = mount(MockDrawerContent, {
-        props: {
-          menuOpen: true,
-          isAuthenticated: true,
-        },
-      });
-
-      const description = wrapper.find("#drawer-description");
-      expect(description.exists()).toBe(true);
-      expect(description.classes()).toContain("sr-only");
-    });
-  });
-
-  describe("Styles et classes CSS", () => {
-    it("should have proper drawer styling", () => {
-      const wrapper = mount(MockDrawerContent, {
-        props: {
-          menuOpen: true,
-        },
-      });
-
-      const aside = wrapper.find("aside");
-      expect(aside.classes()).toContain("fixed");
-      expect(aside.classes()).toContain("top-0");
-      expect(aside.classes()).toContain("right-0");
-      expect(aside.classes()).toContain("h-screen");
-      expect(aside.classes()).toContain("w-80");
-    });
-
-    it("should have proper header styling", () => {
-      const wrapper = mount(MockDrawerContent, {
-        props: {
-          menuOpen: true,
-        },
-      });
-
-      const header = wrapper.find("div.flex-shrink-0");
-      expect(header.exists()).toBe(true);
-      expect(header.classes()).toContain("bg-base-100/80");
-      expect(header.classes()).toContain("backdrop-blur-md");
-    });
-
-    it("should have proper close button styling", () => {
-      const wrapper = mount(MockDrawerContent, {
-        props: {
-          menuOpen: true,
-        },
-      });
-
-      const closeButton = wrapper.find("button");
-      expect(closeButton.classes()).toContain("btn");
-      expect(closeButton.classes()).toContain("btn-ghost");
-      expect(closeButton.classes()).toContain("btn-circle");
-      expect(closeButton.classes()).toContain("btn-sm");
-    });
-  });
-
-  describe("Transitions", () => {
-    it("should have fade transition for overlay", () => {
-      const wrapper = mount(MockDrawerContent, {
-        props: {
-          menuOpen: true,
-        },
-      });
-
-      const overlay = wrapper.find('div[role="presentation"]');
-      expect(overlay.exists()).toBe(true);
+      const overlay = wrapper.find('div[role="presentation"]')
+      expect(overlay.exists()).toBe(true)
       // Note: Testing transition classes in Vue Test Utils is complex
       // We'll just verify the overlay exists when menu is open
-    });
+    })
 
-    it("should have slide transition for drawer", () => {
+    it('should have slide transition for drawer', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
-          menuOpen: true,
-        },
-      });
+          menuOpen: true
+        }
+      })
 
-      const aside = wrapper.find("aside");
-      expect(aside.exists()).toBe(true);
+      const aside = wrapper.find('aside')
+      expect(aside.exists()).toBe(true)
       // Note: Testing transition classes in Vue Test Utils is complex
       // We'll just verify the drawer exists when menu is open
-    });
-  });
+    })
+  })
 
-  describe("Props et états", () => {
-    it("should initialize with correct props", () => {
+  describe('Props et états', () => {
+    it('should initialize with correct props', () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
           isAuthenticated: true,
           menuOpen: false,
-          userFirstName: "John",
-          role: "VOLUNTEER",
-        },
-      });
+          userFirstName: 'John',
+          role: 'VOLUNTEER'
+        }
+      })
 
-      expect(wrapper.vm.isAuthenticated).toBe(true);
-      expect(wrapper.vm.menuOpen).toBe(false);
-      expect(wrapper.vm.userFirstName).toBe("John");
-      expect(wrapper.vm.role).toBe("VOLUNTEER");
-    });
+      expect(wrapper.vm.isAuthenticated).toBe(true)
+      expect(wrapper.vm.menuOpen).toBe(false)
+      expect(wrapper.vm.userFirstName).toBe('John')
+      expect(wrapper.vm.role).toBe('VOLUNTEER')
+    })
 
-    it("should handle prop changes", async () => {
+    it('should handle prop changes', async () => {
       const wrapper = mount(MockDrawerContent, {
         props: {
-          menuOpen: false,
-        },
-      });
+          menuOpen: false
+        }
+      })
 
-      expect(wrapper.vm.menuOpen).toBe(false);
+      expect(wrapper.vm.menuOpen).toBe(false)
 
-      await wrapper.setProps({ menuOpen: true });
-      await nextTick();
+      await wrapper.setProps({ menuOpen: true })
+      await nextTick()
 
-      expect(wrapper.vm.menuOpen).toBe(true);
-    });
-  });
-});
+      expect(wrapper.vm.menuOpen).toBe(true)
+    })
+  })
+})

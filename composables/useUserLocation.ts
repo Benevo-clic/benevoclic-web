@@ -1,11 +1,11 @@
 import { ref, readonly } from 'vue'
 
 interface UserLocation {
-  latitude: number;
-  longitude: number;
-  timestamp: number;
-  city?: string; // Récupéré via géocodage inverse
-  address?: string; // Adresse complète
+  latitude: number
+  longitude: number
+  timestamp: number
+  city?: string // Récupéré via géocodage inverse
+  address?: string // Adresse complète
 }
 
 export const useUserLocation = () => {
@@ -69,14 +69,12 @@ export const useUserLocation = () => {
   const getCurrentLocation = (): Promise<UserLocation> => {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
-        reject(
-          new Error("La géolocalisation n'est pas supportée par ce navigateur")
-        )
+        reject(new Error("La géolocalisation n'est pas supportée par ce navigateur"))
         return
       }
 
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        position => {
           const location: UserLocation = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -84,7 +82,7 @@ export const useUserLocation = () => {
           }
           resolve(location)
         },
-        (err) => {
+        err => {
           let errorMessage = 'Erreur lors de la géolocalisation'
           switch (err.code) {
             case err.PERMISSION_DENIED:
@@ -110,9 +108,7 @@ export const useUserLocation = () => {
   }
 
   // Obtenir la position (depuis le cache ou GPS)
-  const getUserLocation = async (
-    forceRefresh = false
-  ): Promise<UserLocation | null> => {
+  const getUserLocation = async (forceRefresh = false): Promise<UserLocation | null> => {
     if (typeof window === 'undefined') {
       return null
     }
@@ -201,10 +197,7 @@ export const useUserLocation = () => {
       const { hasPermission } = usePermissions()
       return hasPermission('canUseLocation') && !permissionDenied.value
     } catch (err) {
-      console.warn(
-        'Impossible de vérifier les permissions de géolocalisation:',
-        err
-      )
+      console.warn('Impossible de vérifier les permissions de géolocalisation:', err)
       return false
     }
   }
@@ -220,8 +213,7 @@ export const useUserLocation = () => {
       const { hasPermission } = usePermissions()
 
       if (!hasPermission('canUseLocation')) {
-        error.value =
-          "Vous devez d'abord accepter les cookies de personnalisation"
+        error.value = "Vous devez d'abord accepter les cookies de personnalisation"
         return false
       }
 
