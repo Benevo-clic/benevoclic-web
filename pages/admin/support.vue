@@ -179,13 +179,15 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useAdminStore, type SupportReport } from '~/stores/admin/admin.store'
+import type { SupportReport } from '~/stores/admin/admin.store'
 import AdminHeader from '~/components/admin/AdminHeader.vue'
+import { useAdmin } from '~/composables/useAdmin'
 
-const admin = useAdminStore()
+const admin = useAdmin()
 
-const loading = computed(() => admin.loading)
-const reports = computed<SupportReport[]>(() => admin.reports)
+const loading = computed(() => admin.loading.value)
+const displayed = ref<SupportReport[]>([])
+const reports = computed<SupportReport[]>(() => admin.reports.value)
 const selectedReport = ref<SupportReport | null>(null)
 const stats = ref({ totalReports: 0, pendingReports: 0, resolvedReports: 0 })
 
@@ -194,7 +196,7 @@ const searchId = ref('')
 const noResultMsg = ref<string>('')
 
 const filteredReports = computed<SupportReport[]>(() => {
-  let list = reports.value
+  let list = displayed.value
   if (filter.value.status) list = list.filter(r => r.status === filter.value.status)
   if (filter.value.type) list = list.filter(r => r.type === filter.value.type)
   return list
@@ -202,18 +204,19 @@ const filteredReports = computed<SupportReport[]>(() => {
 
 async function loadReports() {
   await admin.fetchReports()
+  displayed.value = reports.value
   noResultMsg.value = ''
   updateStats()
 }
 
 function updateStats() {
-  stats.value.totalReports = reports.value.length
-  stats.value.pendingReports = reports.value.filter(r => r.status === 'PENDING').length
-  stats.value.resolvedReports = reports.value.filter(r => r.status === 'RESOLVED').length
+  stats.value.totalReports = filteredReports.value.length
+  stats.value.pendingReports = filteredReports.value.filter(r => r.status === 'PENDING').length
+  stats.value.resolvedReports = filteredReports.value.filter(r => r.status === 'RESOLVED').length
 }
 
 function refreshReports() {
-  loadReports()
+  void loadReports()
 }
 
 function viewReport(report: SupportReport) {
@@ -223,6 +226,8 @@ function viewReport(report: SupportReport) {
 async function updateStatus(reportId: string, newStatus: SupportReport['status']) {
   try {
     await admin.updateReportStatus(reportId, newStatus)
+    const row = displayed.value.find(r => r._id === reportId)
+    if (row) row.status = newStatus
     if (selectedReport.value && selectedReport.value._id === reportId) {
       selectedReport.value.status = newStatus
     }
@@ -239,16 +244,14 @@ async function searchById() {
       return
     }
     const report = await admin.fetchReportById(searchId.value)
-    // Remplacer la liste par le résultat unique
-    admin.reports = report ? [report] : []
+    displayed.value = report ? [report] : []
     updateStats()
     if (!report) {
       noResultMsg.value = `Aucun résultat pour l'ID ${searchId.value}`
       console.warn('Ticket non trouvé pour ID:', searchId.value)
     }
   } catch (e) {
-    // Si 404 ou autre erreur: afficher aucun résultat
-    admin.reports = []
+    displayed.value = []
     updateStats()
     noResultMsg.value = `Aucun résultat pour l'ID ${searchId.value}`
   }
@@ -257,7 +260,8 @@ async function searchById() {
 function resetSearch() {
   searchId.value = ''
   noResultMsg.value = ''
-  loadReports()
+  displayed.value = reports.value
+  updateStats()
 }
 
 function getStatusBadgeClass(status: SupportReport['status']) {
@@ -283,7 +287,7 @@ function formatDate(dateString?: string) {
 }
 
 onMounted(() => {
-  loadReports()
+  void loadReports()
 })
 
 definePageMeta({

@@ -17,20 +17,34 @@ export interface SupportReport {
 interface AdminState {
   reports: SupportReport[]
   selectedReport: SupportReport | null
+  stats: Stats | null
   loading: boolean
   error: string | null
 }
+
+interface Stats {
+  totalReports?: number;
+  pendingReports?: number;
+  resolvedReports?: number
+}
+
 
 export const useAdminStore = defineStore('admin', {
   state: (): AdminState => ({
     reports: [],
     selectedReport: null,
+    stats: null,
     loading: false,
     error: null,
   }),
   getters: {
     filteredByStatus: (state) => (status?: SupportReport['status']) =>
       status ? state.reports.filter(r => r.status === status) : state.reports,
+    getReports: (state) => state.reports,
+    getSelectedReport: (state) => state.selectedReport,
+    getStats: (state) => state.stats,
+    isLoading: (state) => state.loading,
+    getError: (state) => state.error,
   },
   actions: {
     async fetchReports() {
@@ -68,5 +82,21 @@ export const useAdminStore = defineStore('admin', {
       const report = this.reports.find(r => r._id === id)
       if (report) report.status = status
     },
+
+    async supportStats(): Promise<Stats> {
+        const $fetch = useRequestFetch()
+        try {
+            const stats = await $fetch<Stats>('/api/support/stats', {
+            method: 'GET',
+            credentials: 'include',
+            })
+          this.stats = stats
+          return stats
+        } catch (e: any) {
+            this.error = e?.message || 'Erreur lors de la récupération des statistiques'
+            throw e
+        }
+    }
+
   }
 })
