@@ -11,7 +11,7 @@ import type { UserInfo } from '~/common/types/auth.type'
 import { useAuthStore } from '@/stores/auth/auth.store'
 
 // Fonction utilitaire pour obtenir Firebase de manière sécurisée
-async function getFirebase () {
+async function getFirebase() {
   const { $firebase, $firebaseBase } = useNuxtApp()
 
   // Essayer d'abord le plugin Firebase avec permissions
@@ -44,7 +44,7 @@ async function getFirebase () {
   return firebase
 }
 
-export async function loginWithGoogle (): Promise<User> {
+export async function loginWithGoogle(): Promise<User> {
   const firebase = await getFirebase()
   const result = await signInWithPopup(firebase.auth, firebase.provider!)
   return result.user
@@ -78,27 +78,27 @@ export const useUserStore = defineStore('user', {
     getRole: state => state.user?.role ?? null,
     fullName: state => (state.user ? `${state.user.firstName} ${state.user.lastName}` : ''),
     isFetching: state => state._isFetching,
-    isUserCacheValid: (state) => {
+    isUserCacheValid: state => {
       return Date.now() - state._lastUserFetch < state._userCacheExpiry
     },
-    isUserDataFresh: (state) => {
+    isUserDataFresh: state => {
       return state._lastUserUpdate > state._lastUserFetch
     }
   },
 
   actions: {
-    invalidateUserCache () {
+    invalidateUserCache() {
       this._lastUserFetch = 0
       this._isFetching = false
     },
 
-    updateUserData (userData: UserInfo) {
+    updateUserData(userData: UserInfo) {
       this.user = userData
       this._lastUserUpdate = Date.now()
       this.error = null
     },
 
-    async fetchUser () {
+    async fetchUser() {
       if (this._isFetching) {
         return this.user
       }
@@ -137,7 +137,7 @@ export const useUserStore = defineStore('user', {
     },
 
     // Récupère un utilisateur par ID
-    async getUserById (id: string) {
+    async getUserById(id: string) {
       if (this.user?.userId === id && this.isUserCacheValid && this.user) {
         return this.user
       }
@@ -169,7 +169,7 @@ export const useUserStore = defineStore('user', {
     },
 
     // Met à jour le statut isCompleted
-    async updateIsCompleted (id: string, isCompleted: boolean) {
+    async updateIsCompleted(id: string, isCompleted: boolean) {
       this.loading = true
       this.error = null
       try {
@@ -193,7 +193,7 @@ export const useUserStore = defineStore('user', {
     },
 
     // Upload photo de profil
-    async uploadProfilePicture (imageBase64: string) {
+    async uploadProfilePicture(imageBase64: string) {
       this.loading = true
       this.error = null
 
@@ -225,7 +225,7 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    async updateAvatar (file: File) {
+    async updateAvatar(file: File) {
       this.loading = true
       this.error = null
 
@@ -256,7 +256,7 @@ export const useUserStore = defineStore('user', {
         this.loading = false
       }
     },
-    async checkAdminApprovalStatus () {
+    async checkAdminApprovalStatus() {
       this.loading = true
       this.error = null
 
@@ -270,11 +270,7 @@ export const useUserStore = defineStore('user', {
           }
         )
 
-        if (response.approved) {
-          return true
-        } else {
-          return false
-        }
+        return !!response.approved;
       } catch (error: any) {
         this.error = error?.message || "Erreur lors de la vérification du statut d'approbation"
         throw error
@@ -283,7 +279,7 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    async removeUserAccount () {
+    async removeUserAccount() {
       this.loading = true
       this.error = null
       if (this.user === null || !this.user.userId) {
@@ -310,7 +306,7 @@ export const useUserStore = defineStore('user', {
     },
 
     // Met à jour le mot de passe (Firebase)
-    async updatePassword (payload: { oldPassword: string; newPassword: string }) {
+    async updatePassword(payload: { oldPassword: string; newPassword: string }) {
       this.loading = true
       this.error = null
       try {
@@ -336,7 +332,7 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    clearUserCache () {
+    clearUserCache() {
       this.invalidateUserCache()
     }
   }

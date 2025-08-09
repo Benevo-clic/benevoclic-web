@@ -26,25 +26,25 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
     getVolunteer: state => state.volunteer,
     isExist: state => state.volunteer !== null,
     getAssociationsFollowingList: state => state.associationsFollowingList,
-    isCacheValid: (state) => {
+    isCacheValid: state => {
       return Date.now() - state._lastFetch < state._cacheExpiry
     }
   },
 
   actions: {
-    _updateCache (volunteer: VolunteerInfo) {
+    _updateCache(volunteer: VolunteerInfo) {
       if (volunteer?.volunteerId) {
         this._volunteerCache.set(volunteer.volunteerId, volunteer)
       }
       this._lastFetch = Date.now()
     },
 
-    clearCache () {
+    clearCache() {
       this._volunteerCache.clear()
       this._lastFetch = 0
     },
 
-    async getVolunteerInfo () {
+    async getVolunteerInfo() {
       const user = useUserStore().getUser
       if (
         !!(user?.userId && user?.role !== RoleUser.VOLUNTEER) ||
@@ -76,7 +76,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
         this.loading = false
       }
     },
-    async registerVolunteer (payload: CreateVolunteerDto) {
+    async registerVolunteer(payload: CreateVolunteerDto) {
       this.loading = true
       this.error = null
       try {
@@ -99,7 +99,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
       }
     },
 
-    async getNumberOfVolunteers (): Promise<number> {
+    async getNumberOfVolunteers(): Promise<number> {
       this.loading = true
       this.error = null
       try {
@@ -117,7 +117,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
       }
     },
 
-    async updateVolunteer (payload: Partial<VolunteerInfo>, id: string | null = null) {
+    async updateVolunteer(payload: Partial<VolunteerInfo>, id: string | null = null) {
       this.loading = true
       this.error = null
       try {
@@ -143,7 +143,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
         this.loading = false
       }
     },
-    async getAssociationToWaitingList () {
+    async getAssociationToWaitingList() {
       const user = useUserStore().getUser
 
       this.loading = true
@@ -162,7 +162,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
         this.loading = false
       }
     },
-    async removeVolunteerFromWaitingListAssociation (associationId: string) {
+    async removeVolunteerFromWaitingListAssociation(associationId: string) {
       const user = useUserStore().getUser
 
       this.loading = true
@@ -185,7 +185,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
         this.loading = false
       }
     },
-    async addVolunteerToWaitingListAssociation (
+    async addVolunteerToWaitingListAssociation(
       associationId: string,
       volunteer: { volunteerId: string; volunteerName: string }
     ) {
@@ -215,7 +215,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
         this.loading = false
       }
     },
-    async getAllAssociationsFollowingList (volunteerId: string) {
+    async getAllAssociationsFollowingList(volunteerId: string) {
       if (this.associationsFollowingList !== null) {
         return this.associationsFollowingList
       }
@@ -240,7 +240,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
         this.loading = false
       }
     },
-    async removeVolunteerFromAssociation (associationId: string, volunteerId: string) {
+    async removeVolunteerFromAssociation(associationId: string, volunteerId: string) {
       this.loading = true
       this.error = null
       try {
@@ -267,7 +267,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
         this.loading = false
       }
     },
-    async getAllAssociationsToWaitingList (volunteerId: string) {
+    async getAllAssociationsToWaitingList(volunteerId: string) {
       this.loading = true
       this.error = null
       try {
@@ -285,7 +285,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
         this.loading = false
       }
     },
-    async getAssociations () {
+    async getAssociations() {
       const user = useUserStore().getUser
 
       this.loading = true
@@ -306,7 +306,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
       }
     },
 
-    async getVolunteerAnnouncements (volunteerId: string): Promise<Announcement[]> {
+    async getVolunteerAnnouncements(volunteerId: string): Promise<Announcement[]> {
       this.loading = true
       this.error = null
       try {
@@ -327,7 +327,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
       }
     },
 
-    async getParticipantAnnouncement (volunteerId: string) {
+    async getParticipantAnnouncement(volunteerId: string) {
       this.loading = true
       this.error = null
       try {
@@ -344,7 +344,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
         this.loading = false
       }
     },
-    async getPastVolunteerAnnouncement (volunteerId: string) {
+    async getPastVolunteerAnnouncement(volunteerId: string) {
       this.loading = true
       this.error = null
       try {
@@ -362,7 +362,7 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
       }
     },
 
-    async removeVolunteer () {
+    async removeVolunteer() {
       this.loading = true
       this.error = null
       try {
