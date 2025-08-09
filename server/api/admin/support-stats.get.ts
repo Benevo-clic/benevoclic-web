@@ -10,20 +10,17 @@ export default defineEventHandler(async (event) => {
   try {
     const response = await axios.get(url, {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la récupération des statistiques support'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la récupération des statistiques support')
     }
     throw createError({
       statusCode: error?.response?.status || 500,
-      statusMessage: 'Erreur lors de la récupération des statistiques support'
+      statusMessage: 'Erreur lors de la récupération des statistiques support',
     })
   }
 })
