@@ -294,6 +294,28 @@ export const useUserStore = defineStore('user', {
         this.loading = false
       }
     },
+    async checkAdminApprovalStatus() {
+      this.loading = true;
+      this.error = null;
+
+      try {
+        const response = await $fetch<{ approved: boolean }>(`/api/admin/${this.user?.userId}/check-approval-status`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+
+        if (response.approved) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (error: any) {
+        this.error = error?.message || 'Erreur lors de la vérification du statut d\'approbation';
+        throw error;
+      } finally {
+        this.loading = false;
+      }
+    },
 
     async removeUserAccount () {
       this.loading = true

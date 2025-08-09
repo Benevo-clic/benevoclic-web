@@ -1,29 +1,35 @@
-import { defineEventHandler, getCookie, createError } from 'h3'
-import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
-
 export default defineEventHandler(async (event) => {
-  const token = getCookie(event, 'auth_token')
-  const config = useRuntimeConfig()
-  const url = `${config.private.api_base_url}/support/reports`
-
   try {
-    const response = await axios.get(url, {
+    const token = getCookie(event, 'auth-token')
+    const config = useRuntimeConfig();
+
+
+    if (!token) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Token d\'authentification requis'
+      })
+    }
+
+    return await $fetch(`${config.private.api_base_url}/admin/support-reports`, {
+      method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`
+        'Authorization': `Bearer ${token}`
       }
     })
-    return response.data
   } catch (error: any) {
-    if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la récupération des tickets de support'
-      )
+    console.error('Erreur lors de la récupération des tickets:', error)
+    
+    if (error.statusCode) {
+      throw createError({
+        statusCode: error.statusCode,
+        statusMessage: error.statusMessage || 'Erreur lors de la récupération des tickets'
+      })
     }
+    
     throw createError({
-      statusCode: error?.response?.status || 500,
-      statusMessage: 'Erreur lors de la récupération des tickets de support'
+      statusCode: 500,
+      statusMessage: 'Erreur interne du serveur'
     })
   }
-})
+}) 
