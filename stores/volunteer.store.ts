@@ -5,7 +5,7 @@ import {defineStore} from 'pinia'
 import type {AssociationInfo} from "~/common/interface/association.interface";
 import {RoleUser} from "~/common/enums/role.enum";
 import {useCookie} from "#app";
-import {useAuthStore} from "~/stores/auth/auth.store";
+import {useAuthStore} from '@/stores/auth/auth.store';
 import type {Announcement} from "~/common/interface/event.interface";
 
 

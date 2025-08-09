@@ -8,7 +8,7 @@ import {
   reauthenticateWithCredential,
   updatePassword
 } from "firebase/auth";
-import {useAuthStore} from "~/stores/auth/auth.store";
+import {useAuthStore} from "@/stores/auth/auth.store";
 
 // Fonction utilitaire pour obtenir Firebase de manière sécurisée
 async function getFirebase() {

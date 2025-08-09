@@ -11,8 +11,7 @@ import {useUser} from "~/composables/auth/useUser";
 import {useVolunteerAuth} from "~/composables/useVolunteer";
 import {useNavigation} from "~/composables/useNavigation";
 import ErrorPopup from "~/components/utils/ErrorPopup.vue";
-import {useAuthStore} from "~/stores/auth/auth.store";
-import type {LocationGeoJson} from "~/common/interface/event.interface";
+import { useAuthStore } from '@/stores/auth/auth.store'
 
 const { user, updateIsCompleted } = useUser()
 const authStore = useAuthStore()

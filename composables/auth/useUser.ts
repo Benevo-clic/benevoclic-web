@@ -1,4 +1,4 @@
-import { useAuthStore } from '~/stores/auth/auth.store'
+import { useAuthStore } from '@/stores/auth/auth.store'
 import { useUserStore } from '~/stores/user/user.store'
 import { onMounted, computed, ref } from 'vue'
 import type { UserInfo } from "~/common/types/auth.type"

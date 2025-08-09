@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useAuthStore } from "~/stores/auth/auth.store"
+import { useAuthStore } from '@/stores/auth/auth.store'
 import { useUser } from "~/composables/auth/useUser"
 import { getAuth } from 'firebase/auth'
 import type {RoleUser} from "~/common/enums/role.enum";

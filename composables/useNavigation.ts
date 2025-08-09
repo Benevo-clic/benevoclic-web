@@ -1,4 +1,4 @@
-import { useAuthStore } from '~/stores/auth/auth.store'
+import { useAuthStore } from '@/stores/auth/auth.store'
 import { useUserStore } from '~/stores/user/user.store'
 import { RoleUser } from '~/common/enums/role.enum'
 

@@ -296,7 +296,7 @@
         :is-open="showReportModal"
         :announcement-id="announcement?._id"
         :announcement-title="announcement?.nameEvent"
-        :user-email="userEmail"
+        :user-email="userEmail.value"
         @close="closeReportModal"
         @submitted="handleReportSubmitted"
     />

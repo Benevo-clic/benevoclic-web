@@ -2,7 +2,7 @@ import type {ApiResponseSubset, AssociationInfo} from "~/common/interface/associ
 import type {CreateAssociationDto} from "~/common/interface/register.interface";
 import {useUserStore} from "~/stores/user/user.store";
 import { defineStore } from 'pinia'
-import {useAuthStore} from "~/stores/auth/auth.store";
+import { useAuthStore } from '@/stores/auth/auth.store'
 
 
 export const useAssociationAuthStore = defineStore('associationAuth', {
