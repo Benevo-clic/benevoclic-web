@@ -1,4 +1,4 @@
-import {defineEventHandler, createError, H3Event, EventHandlerRequest, deleteCookie} from 'h3'
+import {defineEventHandler, H3Event, EventHandlerRequest, deleteCookie, getCookie} from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
@@ -25,6 +25,7 @@ export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'auth_token')
   const config = useRuntimeConfig();
 
+  console.log('Déconnexion en cours...');
   try {
     await axios.post(`${config.private.api_base_url}/user/logout`,
         {},

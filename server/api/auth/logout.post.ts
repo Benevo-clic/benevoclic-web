@@ -1,4 +1,4 @@
-import {defineEventHandler, deleteCookie, H3Event, EventHandlerRequest} from 'h3'
+import {defineEventHandler, deleteCookie, H3Event, EventHandlerRequest, getCookie} from 'h3'
 import axios from "axios";
 import {ApiError} from "~/utils/ErrorHandler";
 

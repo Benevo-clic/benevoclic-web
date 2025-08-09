@@ -72,6 +72,7 @@ export const useUser = () => {
         updateAvatar: userStore.updateAvatar,
         register: authStore.registerWithEmailPassword,
         updatePassword: userStore.updatePassword,
+        checkAdminApprovalStatus: userStore.checkAdminApprovalStatus,
         
         // Méthodes utilitaires
         refreshUser: refreshUserData,

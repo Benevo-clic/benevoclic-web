@@ -1,7 +1,6 @@
 import {defineEventHandler, readBody, createError, H3Event, EventHandlerRequest, setCookie} from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
-import {decodePasswordBase64} from "~/utils/crypto";
 
 export interface LoginResponse {
   idUser: string
@@ -17,6 +16,7 @@ export function setCookies(event:H3Event<EventHandlerRequest>,loginResponse: Log
       httpOnly: true,
       secure: true,
       sameSite: 'none',
+      path: '/',
       maxAge: 60 * 60 * 24 // 24 heures
     })
 
@@ -24,6 +24,7 @@ export function setCookies(event:H3Event<EventHandlerRequest>,loginResponse: Log
       httpOnly: false,
       secure: false,
       sameSite: 'none',
+      path: '/',
       maxAge: 60 * 60 * 24 * 30 // 30 jours
     })
 
@@ -31,12 +32,14 @@ export function setCookies(event:H3Event<EventHandlerRequest>,loginResponse: Log
       httpOnly: true,
       secure: true,
       sameSite: 'none',
+      path: '/',
       maxAge: 60 * 60 * 24 * 30 // 30 jours
     })
     setCookie(event,'isConnected','true',{
       httpOnly: false,
       secure: false,
       sameSite: 'strict',
+      path: '/',
       maxAge: 60 * 60 * 24 * 30 // 30 jours
     })
 
@@ -50,10 +53,9 @@ export function setCookies(event:H3Event<EventHandlerRequest>,loginResponse: Log
 
 export async function login(payload: { email: string, password: string },apiBase:string | undefined): Promise<LoginResponse> {
 
-  const decodedPassword = decodePasswordBase64(payload.password)
   const response  = await axios.post<LoginResponse>(`${apiBase}/user/login`, {
     email: payload.email,
-    password: decodedPassword
+    password: payload.password,
   }, {
     headers: {
       'Content-Type': 'application/json',

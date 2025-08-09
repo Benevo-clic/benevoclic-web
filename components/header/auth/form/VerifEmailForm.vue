@@ -148,7 +148,7 @@ async function continueRegistration() {
 
     await authStore.login({
       email: authStore.email,
-      password: decodePasswordBase64(authStore.tempPassword),
+      password: authStore.tempPassword,
       role: authStore.role as RoleUser,
     }).then(() => {
       tempPwdCookie.value = ''

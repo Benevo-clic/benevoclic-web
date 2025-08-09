@@ -1,12 +1,15 @@
-import { defineStore } from 'pinia'
-import {useCookie} from '#app'
-import { RoleUser } from '~/common/enums/role.enum'
-import { loginWithGoogle as firebaseLoginWithGoogle } from '~/stores/user/user.store'
-import { useUserStore } from '~/stores/user/user.store'
+import {defineStore} from 'pinia'
+import {useCookie, useRequestFetch} from '#app'
+import {RoleUser} from '~/common/enums/role.enum'
+import {loginWithGoogle as firebaseLoginWithGoogle, useUserStore} from '~/stores/user/user.store'
 import type {RegisterEmailVerifiedResponse, RegisterPayload} from "~/common/types/register.type";
-import {createUserWithEmailAndPassword, getAuth, onIdTokenChanged, sendEmailVerification, sendPasswordResetEmail} from "firebase/auth";
-import {$fetch} from "ofetch";
-import { encodePasswordBase64 } from "~/utils/crypto"
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  onIdTokenChanged,
+  sendEmailVerification,
+  sendPasswordResetEmail
+} from "firebase/auth";
 
 interface AuthState {
   idToken: string | null
@@ -56,7 +59,8 @@ export const useAuthStore = defineStore('auth', {
       this.idToken = useCookie('auth_token').value || null
       this.refreshToken = useCookie('refresh_token').value || null
       this.idUser = useCookie('id_user').value || null
-      this.isConnected = Boolean(useCookie('isConnected').value)
+      const isConnectedRaw = useCookie<any>('isConnected').value
+      this.isConnected = isConnectedRaw === 'true' || isConnectedRaw === true
     },
 
     async login(payload: { email: string; password: string, role: RoleUser }) {
@@ -64,6 +68,7 @@ export const useAuthStore = defineStore('auth', {
       this.error = null
       
       try {
+        const $fetch = useRequestFetch()
         if (process.client) {
           try {
             const { usePermissions } = await import('~/composables/usePermissions')
@@ -78,7 +83,6 @@ export const useAuthStore = defineStore('auth', {
           }
         }
 
-        const encodedPassword = encodePasswordBase64(payload.password)
         const response = await $fetch('/api/user/login', {
           method: 'POST',
           credentials: 'include',
@@ -89,6 +93,12 @@ export const useAuthStore = defineStore('auth', {
           },
         })
 
+        // Forcer le cookie et le flag store avant hydratation et redirection
+        if (process.client) {
+          const isConnectedCookie = useCookie<string>('isConnected')
+          isConnectedCookie.value = 'true'
+        }
+        this.isConnected = true
         this.hydrate()
         await this.goToPageAfterLogin(
             { role: payload.role, password: payload.password , email: payload.email }
@@ -113,7 +123,7 @@ export const useAuthStore = defineStore('auth', {
         const tempPwdCookie = useCookie<string>('tempPassword')
         const roleCookie   = useCookie<string>('userRole')
         const emailCookie = useCookie<string>('email')
-        tempPwdCookie.value = encodePasswordBase64(payload.password)
+        tempPwdCookie.value =payload.password
         roleCookie.value    = payload.role
         emailCookie.value   = payload.email
 
@@ -137,6 +147,8 @@ export const useAuthStore = defineStore('auth', {
               return navigateTo('/auth/registerVolunteer')
           case RoleUser.ASSOCIATION:
               return navigateTo('/auth/registerAssociation')
+          case RoleUser.ADMIN:
+              return navigateTo('/admin/verification')
           default:
               return navigateTo('/')
           }
@@ -146,6 +158,8 @@ export const useAuthStore = defineStore('auth', {
               return navigateTo('/volunteer')
           case RoleUser.ASSOCIATION:
               return navigateTo('/association/dashboard')
+            case RoleUser.ADMIN:
+              return navigateTo('/admin')
           default:
               return '/'
           }
@@ -166,6 +180,8 @@ export const useAuthStore = defineStore('auth', {
               return navigateTo('/auth/registerVolunteer')
           case RoleUser.ASSOCIATION:
               return navigateTo('/auth/registerAssociation')
+          case RoleUser.ADMIN:
+              return navigateTo('/admin/verification')
           default:
               return window.location.href = '/'
           }
@@ -175,6 +191,8 @@ export const useAuthStore = defineStore('auth', {
               return window.location.href = '/volunteer'
             case RoleUser.ASSOCIATION:
               return window.location.href = '/association/dashboard'
+            case RoleUser.ADMIN:
+                return window.location.href = '/admin/dashboard'
             default:
               return window.location.href = '/'
           }
@@ -182,30 +200,6 @@ export const useAuthStore = defineStore('auth', {
       } catch (error) {
         console.error('Erreur lors de la récupération de l\'utilisateur:', error)
         await this.logout()
-      }
-    },
-
-    // Register email/mot de passe
-    async register(payload: { email: string; password: string; role: RoleUser }) {
-      this.loading = true
-      this.error = null
-      try {
-        const encodedPassword = encodePasswordBase64(payload.password)
-        await $fetch('/api/auth/registerEmailVerified', {
-          method: 'POST',
-          credentials: 'include',
-          body: {
-            email: payload.email,
-            password: encodedPassword,
-            role: payload.role,
-          },
-        })
-        await this.refreshTokens()
-      } catch (e: any) {
-        this.error = e?.data?.message || 'Erreur d\'inscription'
-        throw e
-      } finally {
-        this.loading = false
       }
     },
 
@@ -235,6 +229,7 @@ export const useAuthStore = defineStore('auth', {
         this.$patch({ isVerified: false });
 
 
+        console.log('✅ Email de vérification envoyé, écoute en cours...');
         await this.startEmailVerificationListener({
           email: auth.currentUser.email || '',
           password: this.tempPassword as string || payload.tempPassword,
@@ -254,33 +249,60 @@ export const useAuthStore = defineStore('auth', {
 
     async startEmailVerificationListener(payload: RegisterPayload) {
       const auth = getAuth();
+      
+      // Ajouter un flag pour éviter les appels multiples
+      if (this.isVerified) {
+        console.log('Email déjà vérifié, arrêt de l\'écouteur');
+        return;
+      }
 
       this.unsubscribe = onIdTokenChanged(auth, async (user) => {
         if (user) {
           await user.reload();
 
-          if (user.emailVerified) {
-
+          if (user.emailVerified && !this.isVerified) {
+            console.log('Email vérifié, traitement en cours...');
 
             if (this.unsubscribe) {
               const tempPwdCookie = useCookie<string>('tempPassword')
               const roleCookie   = useCookie<string>('userRole')
               const emailCookie  = useCookie<string>('email')
-              tempPwdCookie.value = encodePasswordBase64(payload.password)
+              tempPwdCookie.value = payload.password
               roleCookie.value    = payload.role
               emailCookie.value   = payload.email
               this.isVerified = true
-              this.callRegisterEmailVerified({ email: payload.email, password: payload.password, role: payload.role });
+              
+              try {
+                await this.callRegisterEmailVerified({
+                  email: payload.email,
+                  password: payload.password,
+                  role: payload.role
+                });
+              } catch (error) {
+                console.error('Erreur lors de l\'enregistrement vérifié:', error);
+                this.isVerified = false;
+                return;
+              }
+              
               this.unsubscribe();
               this.unsubscribe = null;
+
             }
           }
         }
       });
     },
     async callRegisterEmailVerified(payload: RegisterPayload) {
+      // Vérifier si l'appel est déjà en cours
+      if (this.loading) {
+        console.log('Appel en cours, attente...')
+        return
+      }
+      
+      this.loading = true
       try {
-        await $fetch<RegisterEmailVerifiedResponse>(`/api/user/register-user-verified`, {
+        const $fetch = useRequestFetch()
+        const response = await $fetch<RegisterEmailVerifiedResponse>(`/api/user/register-user-verified`, {
           method: 'POST',
           credentials: 'include',
           headers: {
@@ -292,36 +314,35 @@ export const useAuthStore = defineStore('auth', {
             password: payload.password
           }
         })
-
-        if(payload.role === 'VOLUNTEER'){
-          navigateTo(
-              {
-                path: '/auth/registerVolunteer',
-              }
-          )
-        }else {
-          navigateTo(
-              {
-                path: '/auth/registerAssociation',
-              })
+        
+        if(response){
+          await this.login(payload)
         }
-
       } catch (error) {
+        console.error('❌ Erreur lors de l\'enregistrement vérifié:', error)
         this.error = "Une erreur est survenue lors de l'inscription"
-        throw new Error('Erreur lors de l\'inscription'+error);
+        throw new Error('Erreur lors de l\'inscription: ' + error)
+      } finally {
+        this.loading = false
       }
     },
+
     async registerWithEmailPassword(payload: RegisterPayload) {
       const auth = getAuth();
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, payload.email, payload.password);
         await sendEmailVerification(userCredential.user);
 
+        console.log('✅ Inscription réussie, email de vérification envoyé', payload);
+        console.log('Utilisateur créé avec succès:', userCredential.user);
+
         await this.startEmailVerificationListener({
           email: payload.email,
           password: payload.password,
           role: payload.role,
         });
+        console.log('✅ Inscription réussie, email de vérification envoyé',payload);
+        return userCredential.user.emailVerified;
       } catch (error: any) {
         this.error = error.message;
         throw new Error('Erreur lors de l\'inscription'+error);
@@ -402,6 +423,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async callRegisterGoogle(idToken: string, role: RoleUser) {
+      const $fetch = useRequestFetch()
       await $fetch('/api/user/register-google', {
         method: 'POST',
         credentials: 'include',
@@ -411,6 +433,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async fetchUserGoogle(body: { idToken: string; refreshToken: string; uid: string }) {
+      const $fetch = useRequestFetch()
       await $fetch(`/api/user/${body.uid}/update-connected/${true}`, {
         method: 'PATCH',
         credentials: 'include',
@@ -421,6 +444,7 @@ export const useAuthStore = defineStore('auth', {
 
     async deleteCookies() {
       try {
+        const $fetch = useRequestFetch()
         await $fetch('/api/auth/deleteCookies', {
           method: 'DELETE',
           credentials: 'include',
@@ -439,7 +463,9 @@ export const useAuthStore = defineStore('auth', {
         userStore.user = null
         userStore.clearUserCache()
         this.resetCookies()
-        window.location.href = '/'
+        if (process.client) {
+          window.location.href = '/'
+        }
       }catch (error) {
 
       }
@@ -450,6 +476,7 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true
       this.error = null
       try {
+        const $fetch = useRequestFetch()
         await $fetch('/api/user/logout', { method: 'POST', credentials: 'include' })
         await this.deleteCookies()
       } catch (e: any) {
@@ -463,6 +490,7 @@ export const useAuthStore = defineStore('auth', {
     async refreshTokens() {
       try {
         this.error = null
+        const $fetch = useRequestFetch()
         await $fetch('/api/user/refresh',
             { method: 'POST',
                       credentials: 'include'
