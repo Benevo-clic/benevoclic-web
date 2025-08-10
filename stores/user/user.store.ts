@@ -12,36 +12,25 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 
 // Fonction utilitaire pour obtenir Firebase de manière sécurisée
 async function getFirebase() {
-  const { $firebase, $firebaseBase } = useNuxtApp()
+  try {
+    const { useFirebase } = await import('~/composables/useFirebase')
+    const { initializeFirebase, getAuth, getProvider } = useFirebase()
 
-  // Essayer d'abord le plugin Firebase avec permissions
-  let firebase = null
-  if ($firebase) {
-    try {
-      firebase = await $firebase
-    } catch (error) {
-      if (process.dev) {
-        console.warn('Firebase avec permissions non disponible:', error)
-      }
+    await initializeFirebase()
+    const auth = getAuth()
+    const provider = getProvider()
+
+    if (!auth) {
+      throw new Error('Firebase non initialisé - veuillez réessayer dans quelques secondes')
     }
-  }
 
-  // Fallback vers Firebase de base si nécessaire
-  if (!firebase && $firebaseBase) {
-    try {
-      firebase = await $firebaseBase
-    } catch (error) {
-      if (process.dev) {
-        console.warn('Firebase de base non disponible:', error)
-      }
+    return { auth, provider }
+  } catch (error) {
+    if (process.dev) {
+      console.warn('Firebase non disponible:', error)
     }
-  }
-
-  if (!firebase || !firebase.auth) {
     throw new Error('Firebase non initialisé - veuillez réessayer dans quelques secondes')
   }
-
-  return firebase
 }
 
 export async function loginWithGoogle(): Promise<User> {

@@ -1,6 +1,21 @@
 <script setup lang="ts">
   import CookieConsent from './components/CookieConsent.vue'
 
+  // Initialiser Firebase côté client
+  if (process.client) {
+    onMounted(async () => {
+      try {
+        const { useFirebase } = await import('~/composables/useFirebase')
+        const { initializeFirebase } = useFirebase()
+
+        await initializeFirebase()
+        console.log('✅ Firebase initialisé via app.vue')
+      } catch (error) {
+        console.error("❌ Erreur lors de l'initialisation Firebase via app.vue:", error)
+      }
+    })
+  }
+
   const siteDescription =
     'Benevoclic met en relation bénévoles, associations et personnes dans le besoin : publiez et découvrez des événements solidaires, trouvez des missions et mobilisez l’entraide.'
 

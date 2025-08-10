@@ -142,22 +142,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   if (import.meta.client) {
     try {
-      const { $firebase } = useNuxtApp()
-      let firebase = null
+      // Utiliser le nouveau composable Firebase
+      const { useFirebase } = await import('~/composables/useFirebase')
+      const { initializeFirebase, getAuth } = useFirebase()
 
-      if ($firebase) {
-        firebase = await $firebase
-      }
+      await initializeFirebase()
+      const auth = getAuth()
 
-      if (!firebase) {
-        const { $firebaseBase } = useNuxtApp()
-        if ($firebaseBase) {
-          firebase = await $firebaseBase
-        }
-      }
-
-      if (firebase && firebase.auth) {
-        const currentUser = firebase.auth.currentUser
+      if (auth) {
+        const currentUser = auth.currentUser
         if (currentUser && !currentUser.emailVerified) {
           if (to.path !== '/auth/VerifyEmailPage') {
             return navigateTo('/auth/VerifyEmailPage')
