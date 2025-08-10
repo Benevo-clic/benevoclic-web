@@ -161,7 +161,6 @@ export default defineNuxtConfig({
     storageKey: 'benevoclic-color-mode'
   },
 
-  // Configuration Partytown pour les scripts tiers
   partytown: {
     lib: '/~partytown/',
     forward: ['dataLayer.push', 'gtag'],
@@ -169,10 +168,11 @@ export default defineNuxtConfig({
   },
 
   plugins: [
-    { src: '~/plugins/runtime-config.server.ts', mode: 'server' },
     { src: '~/plugins/init-permissions.client.ts', mode: 'client' },
     { src: '~/plugins/permissions.client.ts', mode: 'client' },
-    { src: '~/plugins/maplibre.client.ts', mode: 'client' }
+    { src: '~/plugins/maplibre.client.ts', mode: 'client' },
+    { src: '~/plugins/init-user.client.ts', mode: 'client' },
+    { src: '~/plugins/refresh-token.client.ts', mode: 'client' }
   ],
   build: {
     transpile: ['defu']

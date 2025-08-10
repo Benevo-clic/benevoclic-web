@@ -7,11 +7,6 @@ export default defineEventHandler(async event => {
   // Utiliser process.env directement au lieu de useRuntimeConfig()
   const apiBaseUrl = process.env.API_BASE_URL
 
-  // Debug: Afficher les variables d'environnement
-  console.log("🔍 Debug - Variables d'environnement (announcements.post.ts):", {
-    api_base_url: apiBaseUrl
-  })
-
   if (!apiBaseUrl) {
     throw createError({
       statusCode: 500,

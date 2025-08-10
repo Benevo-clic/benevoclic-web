@@ -6,16 +6,16 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 class="text-3xl font-bold text-base-content">
-              {{ $t('settings.title') }}
+              {{ t('settings.title') }}
             </h1>
             <p class="text-base-content/70 mt-2">
-              {{ $t('settings.subtitle') }}
+              {{ t('settings.subtitle') }}
             </p>
           </div>
           <div class="flex gap-2">
             <button class="btn btn-primary btn-sm" :disabled="isSaving" @click="saveSettings">
               <Save class="w-4 h-4 mr-2" />
-              {{ isSaving ? $t('settings.saving') : $t('settings.save') }}
+              {{ isSaving ? t('settings.saving') : t('settings.save') }}
             </button>
           </div>
         </div>
@@ -26,7 +26,7 @@
         <div class="lg:col-span-1">
           <div class="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6">
             <h3 class="text-lg font-semibold text-base-content mb-4">
-              {{ $t('settings.navigation') }}
+              {{ t('settings.navigation') }}
             </h3>
             <div class="space-y-2">
               <button
@@ -59,10 +59,10 @@
                 </div>
                 <div>
                   <h2 class="text-xl font-semibold text-base-content">
-                    {{ $t('settings.notifications.title') }}
+                    {{ t('settings.notifications.title') }}
                   </h2>
                   <p class="text-base-content/70">
-                    {{ $t('settings.notifications.description') }}
+                    {{ t('settings.notifications.description') }}
                   </p>
                 </div>
               </div>
@@ -72,10 +72,10 @@
                   <label class="label cursor-pointer justify-between">
                     <div>
                       <span class="label-text font-medium">{{
-                        $t('settings.notifications.email')
+                        t('settings.notifications.email')
                       }}</span>
                       <p class="text-xs text-base-content/70">
-                        {{ $t('settings.notifications.email_description') }}
+                        {{ t('settings.notifications.email_description') }}
                       </p>
                     </div>
                     <input
@@ -91,10 +91,10 @@
                   <label class="label cursor-pointer justify-between">
                     <div>
                       <span class="label-text font-medium">{{
-                        $t('settings.notifications.push')
+                        t('settings.notifications.push')
                       }}</span>
                       <p class="text-xs text-base-content/70">
-                        {{ $t('settings.notifications.push_description') }}
+                        {{ t('settings.notifications.push_description') }}
                       </p>
                     </div>
                     <input
@@ -110,10 +110,10 @@
                   <label class="label cursor-pointer justify-between">
                     <div>
                       <span class="label-text font-medium">{{
-                        $t('settings.notifications.mission_updates')
+                        t('settings.notifications.mission_updates')
                       }}</span>
                       <p class="text-xs text-base-content/70">
-                        {{ $t('settings.notifications.mission_updates_description') }}
+                        {{ t('settings.notifications.mission_updates_description') }}
                       </p>
                     </div>
                     <input
@@ -129,10 +129,10 @@
                   <label class="label cursor-pointer justify-between">
                     <div>
                       <span class="label-text font-medium">{{
-                        $t('settings.notifications.achievements')
+                        t('settings.notifications.achievements')
                       }}</span>
                       <p class="text-xs text-base-content/70">
-                        {{ $t('settings.notifications.achievements_description') }}
+                        {{ t('settings.notifications.achievements_description') }}
                       </p>
                     </div>
                     <input
@@ -156,10 +156,10 @@
                 </div>
                 <div>
                   <h2 class="text-xl font-semibold text-base-content">
-                    {{ $t('settings.privacy.title') }}
+                    {{ t('settings.privacy.title') }}
                   </h2>
                   <p class="text-base-content/70">
-                    {{ $t('settings.privacy.description') }}
+                    {{ t('settings.privacy.description') }}
                   </p>
                 </div>
               </div>
@@ -169,10 +169,10 @@
                   <label class="label cursor-pointer justify-between">
                     <div>
                       <span class="label-text font-medium">{{
-                        $t('settings.privacy.profile_visibility')
+                        t('settings.privacy.profile_visibility')
                       }}</span>
                       <p class="text-xs text-base-content/70">
-                        {{ $t('settings.privacy.profile_visibility_description') }}
+                        {{ t('settings.privacy.profile_visibility_description') }}
                       </p>
                     </div>
                     <input
@@ -188,10 +188,10 @@
                   <label class="label cursor-pointer justify-between">
                     <div>
                       <span class="label-text font-medium">{{
-                        $t('settings.privacy.location_sharing')
+                        t('settings.privacy.location_sharing')
                       }}</span>
                       <p class="text-xs text-base-content/70">
-                        {{ $t('settings.privacy.location_sharing_description') }}
+                        {{ t('settings.privacy.location_sharing_description') }}
                       </p>
                     </div>
                     <input
@@ -207,10 +207,10 @@
                   <label class="label cursor-pointer justify-between">
                     <div>
                       <span class="label-text font-medium">{{
-                        $t('settings.privacy.activity_sharing')
+                        t('settings.privacy.activity_sharing')
                       }}</span>
                       <p class="text-xs text-base-content/70">
-                        {{ $t('settings.privacy.activity_sharing_description') }}
+                        {{ t('settings.privacy.activity_sharing_description') }}
                       </p>
                     </div>
                     <input
@@ -234,10 +234,10 @@
                 </div>
                 <div>
                   <h2 class="text-xl font-semibold text-base-content">
-                    {{ $t('settings.account.title') }}
+                    {{ t('settings.account.title') }}
                   </h2>
                   <p class="text-base-content/70">
-                    {{ $t('settings.account.description') }}
+                    {{ t('settings.account.description') }}
                   </p>
                 </div>
               </div>
@@ -248,10 +248,10 @@
                   <div class="flex items-center justify-between">
                     <div>
                       <h3 class="font-medium text-base-content">
-                        {{ $t('settings.account.change_password') }}
+                        {{ t('settings.account.change_password') }}
                       </h3>
                       <p class="text-sm text-base-content/70">
-                        {{ $t('settings.account.change_password_description') }}
+                        {{ t('settings.account.change_password_description') }}
                       </p>
                     </div>
                     <button
@@ -259,7 +259,7 @@
                       @click="showPasswordChangeModal"
                     >
                       <Key class="w-4 h-4 mr-2" />
-                      {{ $t('settings.account.change') }}
+                      {{ t('settings.account.change') }}
                     </button>
                   </div>
                 </div>
@@ -269,10 +269,10 @@
                   <div class="flex items-center justify-between">
                     <div>
                       <h3 class="font-medium text-base-content">
-                        {{ $t('settings.account.delete_account') }}
+                        {{ t('settings.account.delete_account') }}
                       </h3>
                       <p class="text-sm text-base-content/70">
-                        {{ $t('settings.account.delete_account_description') }}
+                        {{ t('settings.account.delete_account_description') }}
                       </p>
                     </div>
                     <button
@@ -280,7 +280,7 @@
                       @click="showDeleteConfirmation"
                     >
                       <Trash2 class="w-4 h-4 mr-2" />
-                      {{ $t('settings.account.delete') }}
+                      {{ t('settings.account.delete') }}
                     </button>
                   </div>
                 </div>
@@ -297,10 +297,10 @@
                 </div>
                 <div>
                   <h2 class="text-xl font-semibold text-base-content">
-                    {{ $t('settings.security.title') }}
+                    {{ t('settings.security.title') }}
                   </h2>
                   <p class="text-base-content/70">
-                    {{ $t('settings.security.description') }}
+                    {{ t('settings.security.description') }}
                   </p>
                 </div>
               </div>
@@ -310,10 +310,10 @@
                   <label class="label cursor-pointer justify-between">
                     <div>
                       <span class="label-text font-medium">{{
-                        $t('settings.security.two_factor')
+                        t('settings.security.two_factor')
                       }}</span>
                       <p class="text-xs text-base-content/70">
-                        {{ $t('settings.security.two_factor_description') }}
+                        {{ t('settings.security.two_factor_description') }}
                       </p>
                     </div>
                     <input
@@ -329,10 +329,10 @@
                   <label class="label cursor-pointer justify-between">
                     <div>
                       <span class="label-text font-medium">{{
-                        $t('settings.security.login_notifications')
+                        t('settings.security.login_notifications')
                       }}</span>
                       <p class="text-xs text-base-content/70">
-                        {{ $t('settings.security.login_notifications_description') }}
+                        {{ t('settings.security.login_notifications_description') }}
                       </p>
                     </div>
                     <input
@@ -358,19 +358,19 @@
             <AlertTriangle class="w-5 h-5 text-error" />
           </div>
           <h3 class="font-bold text-lg">
-            {{ $t('settings.delete_confirmation.title') }}
+            {{ t('settings.delete_confirmation.title') }}
           </h3>
         </div>
         <p class="py-4 text-base-content/70">
-          {{ $t('settings.delete_confirmation.message') }}
+          {{ t('settings.delete_confirmation.message') }}
         </p>
         <div class="modal-action">
           <button class="btn btn-outline" @click="cancelDelete">
-            {{ $t('settings.delete_confirmation.cancel') }}
+            {{ t('settings.delete_confirmation.cancel') }}
           </button>
           <button class="btn btn-error" @click="confirmDelete">
             <Trash2 class="w-4 h-4 mr-2" />
-            {{ $t('settings.delete_confirmation.confirm') }}
+            {{ t('settings.delete_confirmation.confirm') }}
           </button>
         </div>
       </div>
@@ -384,18 +384,18 @@
             <Key class="w-5 h-5 text-primary" />
           </div>
           <h3 class="font-bold text-lg">
-            {{ $t('settings.password_change.title') }}
+            {{ t('settings.password_change.title') }}
           </h3>
         </div>
         <p class="py-2 text-base-content/70">
-          {{ $t('settings.password_change.message') }}
+          {{ t('settings.password_change.message') }}
         </p>
 
         <form class="space-y-4 py-4" @submit.prevent="changePassword">
           <div class="form-control">
             <label class="label">
               <span class="label-text font-medium">{{
-                $t('settings.password_change.old_password')
+                t('settings.password_change.old_password')
               }}</span>
             </label>
             <input
@@ -403,7 +403,7 @@
               type="password"
               class="input input-bordered"
               required
-              :placeholder="$t('settings.password_change.old_password_placeholder')"
+              :placeholder="t('settings.password_change.old_password_placeholder')"
               aria-label="Mot de passe"
             />
           </div>
@@ -411,7 +411,7 @@
           <div class="form-control">
             <label class="label">
               <span class="label-text font-medium">{{
-                $t('settings.password_change.new_password')
+                t('settings.password_change.new_password')
               }}</span>
             </label>
             <input
@@ -420,12 +420,12 @@
               class="input input-bordered"
               required
               minlength="8"
-              :placeholder="$t('settings.password_change.new_password_placeholder')"
+              :placeholder="t('settings.password_change.new_password_placeholder')"
               aria-label="Mot de passe"
             />
             <label class="label">
               <span class="label-text-alt text-base-content/50">{{
-                $t('settings.password_change.password_requirements')
+                t('settings.password_change.password_requirements')
               }}</span>
             </label>
           </div>
@@ -433,7 +433,7 @@
           <div class="form-control">
             <label class="label">
               <span class="label-text font-medium">{{
-                $t('settings.password_change.confirm_password')
+                t('settings.password_change.confirm_password')
               }}</span>
             </label>
             <input
@@ -441,7 +441,7 @@
               type="password"
               class="input input-bordered"
               required
-              :placeholder="$t('settings.password_change.confirm_password_placeholder')"
+              :placeholder="t('settings.password_change.confirm_password_placeholder')"
               aria-label="Mot de passe"
             />
           </div>
@@ -453,11 +453,11 @@
 
           <div class="modal-action">
             <button type="button" class="btn btn-outline" @click="cancelPasswordChange">
-              {{ $t('settings.password_change.cancel') }}
+              {{ t('settings.password_change.cancel') }}
             </button>
             <button type="submit" class="btn btn-primary" :disabled="isPasswordFormInvalid">
               <Save class="w-4 h-4 mr-2" />
-              {{ $t('settings.password_change.confirm') }}
+              {{ t('settings.password_change.confirm') }}
             </button>
           </div>
         </form>
@@ -484,8 +484,7 @@
     Trash2,
     Save,
     AlertTriangle,
-    AlertCircle,
-    Settings
+    AlertCircle
   } from 'lucide-vue-next'
   import { useUser } from '~/composables/auth/useUser'
   import { useVolunteerAuth } from '~/composables/useVolunteer'
