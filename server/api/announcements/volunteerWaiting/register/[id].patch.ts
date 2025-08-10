@@ -2,7 +2,7 @@ import axios from 'axios'
 import { defineEventHandler, readBody, getCookie } from 'h3'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const announcementId = event.context.params?.id
   const body = await readBody(event)
   const token = getCookie(event, 'auth_token')

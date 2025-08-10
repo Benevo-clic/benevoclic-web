@@ -124,8 +124,8 @@ label {
 }
 
 /* Annonces pour lecteurs d'écran */
-[aria-live="polite"],
-[aria-live="assertive"] {
+[aria-live='polite'],
+[aria-live='assertive'] {
   position: absolute;
   left: -10000px;
   width: 1px;

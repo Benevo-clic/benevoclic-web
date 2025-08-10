@@ -1,68 +1,67 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRequestFetch } from '#app'
-import AdminHeader from '~/components/admin/AdminHeader.vue'
-import { useAdmin } from '~/composables/useAdmin'
-import { useAnnouncement } from '~/composables/useAnnouncement'
+  import { ref, onMounted } from 'vue'
+  import { useRequestFetch } from '#app'
+  import AdminHeader from '~/components/admin/AdminHeader.vue'
+  import { useAdmin } from '~/composables/useAdmin'
+  import { useAnnouncement } from '~/composables/useAnnouncement'
 
-const $fetch = useRequestFetch()
-const admin = useAdmin()
-const announcement = useAnnouncement()
+  const $fetch = useRequestFetch()
+  const admin = useAdmin()
+  const announcement = useAnnouncement()
 
-const loading = ref(false)
-const usersCount = ref<number | null>(null)
-const supportStats = ref<{
-  totalReports?: number;
-  pendingReports?: number;
-  resolvedReports?: number;
-} | null>(null)
-const announcementsCount = ref<number | null>(null)
-const errorMsg = ref('')
+  const loading = ref(false)
+  const usersCount = ref<number | null>(null)
+  const supportStats = ref<{
+    totalReports?: number
+    pendingReports?: number
+    resolvedReports?: number
+  } | null>(null)
+  const announcementsCount = ref<number | null>(null)
+  const errorMsg = ref('')
 
-async function loadOverview () {
-  loading.value = true
-  errorMsg.value = ''
-  try {
-    // Utilisateurs (pas de composable pour la liste globale → API admin)
+  async function loadOverview() {
+    loading.value = true
+    errorMsg.value = ''
     try {
-      const users = await $fetch<any[]>('/api/admin/users', {
-        method: 'GET',
-        credentials: 'include'
-      })
-      usersCount.value = Array.isArray(users) ? users.length : null
-    } catch (e) {
-      usersCount.value = null
-    }
-
-    // Support (via composable useAdmin)
-    try {
-      await admin.fetchReports()
-      const reports = admin.reports.value
-      supportStats.value = {
-        totalReports: reports.length,
-        pendingReports: reports.filter(r => r.status === 'PENDING').length,
-        resolvedReports: reports.filter(r => r.status === 'RESOLVED').length
+      // Utilisateurs (pas de composable pour la liste globale → API admin)
+      try {
+        const users = await $fetch<any[]>('/api/admin/users', {
+          method: 'GET',
+          credentials: 'include'
+        })
+        usersCount.value = Array.isArray(users) ? users.length : null
+      } catch (e) {
+        usersCount.value = null
       }
-    } catch (e) {
-      supportStats.value = null
-    }
 
-    // Annonces (via composable useAnnouncement)
-    try {
-      await announcement.fetchAllAnnouncements()
-      announcementsCount.value =
-        announcement.getAnnouncements.value?.length ?? null
-    } catch (e) {
-      announcementsCount.value = null
+      // Support (via composable useAdmin)
+      try {
+        await admin.fetchReports()
+        const reports = admin.reports.value
+        supportStats.value = {
+          totalReports: reports.length,
+          pendingReports: reports.filter(r => r.status === 'PENDING').length,
+          resolvedReports: reports.filter(r => r.status === 'RESOLVED').length
+        }
+      } catch (e) {
+        supportStats.value = null
+      }
+
+      // Annonces (via composable useAnnouncement)
+      try {
+        await announcement.fetchAllAnnouncements()
+        announcementsCount.value = announcement.getAnnouncements.value?.length ?? null
+      } catch (e) {
+        announcementsCount.value = null
+      }
+    } catch (e: any) {
+      errorMsg.value = e?.message || 'Erreur lors du chargement du résumé'
+    } finally {
+      loading.value = false
     }
-  } catch (e: any) {
-    errorMsg.value = e?.message || 'Erreur lors du chargement du résumé'
-  } finally {
-    loading.value = false
   }
-}
 
-onMounted(loadOverview)
+  onMounted(loadOverview)
 </script>
 <template>
   <div class="min-h-screen bg-base-200">
@@ -73,12 +72,9 @@ onMounted(loadOverview)
       <div class="hero bg-base-100 rounded-xl shadow-sm">
         <div class="hero-content flex-col lg:flex-row gap-6 lg:gap-10">
           <div>
-            <h1 class="text-3xl lg:text-4xl font-bold">
-              Bienvenue dans l’espace d’administration
-            </h1>
+            <h1 class="text-3xl lg:text-4xl font-bold">Bienvenue dans l’espace d’administration</h1>
             <p class="py-2 text-base-content/70">
-              Surveillez l’activité de la plateforme et accédez rapidement aux
-              outils de gestion.
+              Surveillez l’activité de la plateforme et accédez rapidement aux outils de gestion.
             </p>
           </div>
         </div>
@@ -105,15 +101,11 @@ onMounted(loadOverview)
               />
             </svg>
           </div>
-          <div class="stat-title">
-            Utilisateurs
-          </div>
+          <div class="stat-title">Utilisateurs</div>
           <div class="stat-value">
-            {{ usersCount ?? "—" }}
+            {{ usersCount ?? '—' }}
           </div>
-          <div class="stat-desc">
-            Total des comptes
-          </div>
+          <div class="stat-desc">Total des comptes</div>
         </div>
 
         <div class="stat bg-base-100 rounded-xl shadow">
@@ -133,15 +125,13 @@ onMounted(loadOverview)
               />
             </svg>
           </div>
-          <div class="stat-title">
-            Tickets Support
-          </div>
+          <div class="stat-title">Tickets Support</div>
           <div class="stat-value">
-            {{ supportStats?.totalReports ?? "—" }}
+            {{ supportStats?.totalReports ?? '—' }}
           </div>
           <div class="stat-desc">
-            En attente: {{ supportStats?.pendingReports ?? "—" }} • Résolus:
-            {{ supportStats?.resolvedReports ?? "—" }}
+            En attente: {{ supportStats?.pendingReports ?? '—' }} • Résolus:
+            {{ supportStats?.resolvedReports ?? '—' }}
           </div>
         </div>
 
@@ -162,15 +152,11 @@ onMounted(loadOverview)
               />
             </svg>
           </div>
-          <div class="stat-title">
-            Annonces
-          </div>
+          <div class="stat-title">Annonces</div>
           <div class="stat-value">
-            {{ announcementsCount ?? "—" }}
+            {{ announcementsCount ?? '—' }}
           </div>
-          <div class="stat-desc">
-            Toutes les annonces
-          </div>
+          <div class="stat-desc">Toutes les annonces</div>
         </div>
       </div>
 

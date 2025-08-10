@@ -1,87 +1,86 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import {
-  Heart as HeartIcon,
-  Clock as ClockIcon,
-  HelpCircle as HelpIcon,
-  Search as SearchIcon,
-  Home as HomeIcon
-} from 'lucide-vue-next'
-import { navigateTo } from '#app'
-import { useRecentSearches } from '~/composables/useRecentSearches'
-import { useAnnouncement } from '~/composables/useAnnouncement'
-import type { FilterAnnouncement } from '~/common/interface/filter.interface'
+  import { ref } from 'vue'
+  import {
+    Heart as HeartIcon,
+    Clock as ClockIcon,
+    HelpCircle as HelpIcon,
+    Search as SearchIcon,
+    Home as HomeIcon
+  } from 'lucide-vue-next'
+  import { navigateTo } from '#app'
+  import { useRecentSearches } from '~/composables/useRecentSearches'
+  import { useAnnouncement } from '~/composables/useAnnouncement'
+  import type { FilterAnnouncement } from '~/common/interface/filter.interface'
 
-const { t } = useI18n()
-const showRecentSearches = ref(false)
-const searchQuery = ref('')
-const { recentSearches, addRecentSearch, clearRecentSearches } =
-  useRecentSearches()
-const { patchCurrentFilter } = useAnnouncement()
+  const { t } = useI18n()
+  const showRecentSearches = ref(false)
+  const searchQuery = ref('')
+  const { recentSearches, addRecentSearch, clearRecentSearches } = useRecentSearches()
+  const { patchCurrentFilter } = useAnnouncement()
 
-// Generate unique IDs for accessibility
-const searchInputId = `search-input-${Math.random().toString(36).substr(2, 9)}`
-const recentSearchesId = `recent-searches-${Math.random().toString(36).substr(2, 9)}`
+  // Generate unique IDs for accessibility
+  const searchInputId = `search-input-${Math.random().toString(36).substr(2, 9)}`
+  const recentSearchesId = `recent-searches-${Math.random().toString(36).substr(2, 9)}`
 
-const handleSearch = () => {
-  if (searchQuery.value.trim()) {
-    addRecentSearch(searchQuery.value.trim())
-    patchCurrentFilter({
-      nameEvent: searchQuery.value.trim(),
-      description: searchQuery.value.trim(),
-      associationName: searchQuery.value.trim()
-    } as FilterAnnouncement)
-  } else {
-    patchCurrentFilter({
-      nameEvent: '',
-      description: '',
-      associationName: ''
-    } as FilterAnnouncement)
+  const handleSearch = () => {
+    if (searchQuery.value.trim()) {
+      addRecentSearch(searchQuery.value.trim())
+      patchCurrentFilter({
+        nameEvent: searchQuery.value.trim(),
+        description: searchQuery.value.trim(),
+        associationName: searchQuery.value.trim()
+      } as FilterAnnouncement)
+    } else {
+      patchCurrentFilter({
+        nameEvent: '',
+        description: '',
+        associationName: ''
+      } as FilterAnnouncement)
+    }
   }
-}
 
-const selectRecentSearch = (search: string) => {
-  searchQuery.value = search
-  showRecentSearches.value = false
-  handleSearch()
-}
-
-const toggleRecentSearches = () => {
-  showRecentSearches.value = !showRecentSearches.value
-}
-
-const closeRecentSearches = (event: MouseEvent) => {
-  const target = event.target as HTMLElement
-  if (
-    !target.closest('.recent-searches-container') &&
-    !target.closest('.recent-searches-button')
-  ) {
+  const selectRecentSearch = (search: string) => {
+    searchQuery.value = search
     showRecentSearches.value = false
+    handleSearch()
   }
-}
 
-// Gestion de la navigation clavier
-function handleKeydown (event: KeyboardEvent) {
-  if (event.key === 'Escape') {
-    showRecentSearches.value = false
+  const toggleRecentSearches = () => {
+    showRecentSearches.value = !showRecentSearches.value
   }
-}
 
-onMounted(() => {
-  document.addEventListener('click', closeRecentSearches)
-})
+  const closeRecentSearches = (event: MouseEvent) => {
+    const target = event.target as HTMLElement
+    if (
+      !target.closest('.recent-searches-container') &&
+      !target.closest('.recent-searches-button')
+    ) {
+      showRecentSearches.value = false
+    }
+  }
 
-onUnmounted(() => {
-  document.removeEventListener('click', closeRecentSearches)
-})
+  // Gestion de la navigation clavier
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      showRecentSearches.value = false
+    }
+  }
 
-function handleFavorites () {
-  navigateTo('/volunteer/activity/favorites')
-}
+  onMounted(() => {
+    document.addEventListener('click', closeRecentSearches)
+  })
 
-function handleHome () {
-  navigateTo('/volunteer')
-}
+  onUnmounted(() => {
+    document.removeEventListener('click', closeRecentSearches)
+  })
+
+  function handleFavorites() {
+    navigateTo('/volunteer/activity/favorites')
+  }
+
+  function handleHome() {
+    navigateTo('/volunteer')
+  }
 </script>
 
 <template>
@@ -103,7 +102,7 @@ function handleHome () {
             autocomplete="off"
             @keyup.enter="handleSearch"
             @keydown="handleKeydown"
-          >
+          />
           <button
             class="btn btn-primary h-12 ml-2 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             :aria-describedby="searchInputId"
@@ -127,7 +126,7 @@ function handleHome () {
         @click="handleHome"
       >
         <HomeIcon class="w-6 h-6" aria-hidden="true" />
-        <span>{{ t("header.volunteer.home") }}</span>
+        <span>{{ t('header.volunteer.home') }}</span>
       </button>
       <button
         class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -135,7 +134,7 @@ function handleHome () {
         @click="handleFavorites"
       >
         <HeartIcon class="w-6 h-6" aria-hidden="true" />
-        <span>{{ t("header.volunteer.favorites") }}</span>
+        <span>{{ t('header.volunteer.favorites') }}</span>
       </button>
       <div class="relative recent-searches-container">
         <button
@@ -147,7 +146,7 @@ function handleHome () {
           @keydown="handleKeydown"
         >
           <ClockIcon class="w-6 h-6" aria-hidden="true" />
-          <span>{{ t("header.volunteer.recent-search") }}</span>
+          <span>{{ t('header.volunteer.recent-search') }}</span>
         </button>
 
         <div
@@ -158,14 +157,9 @@ function handleHome () {
           aria-labelledby="recent-searches-title"
           aria-modal="true"
         >
-          <div
-            class="flex justify-between items-center mb-2 pb-2 border-b border-base-300"
-          >
-            <h3
-              id="recent-searches-title"
-              class="font-medium text-base-content"
-            >
-              {{ t("header.volunteer.recent-search") }}
+          <div class="flex justify-between items-center mb-2 pb-2 border-b border-base-300">
+            <h3 id="recent-searches-title" class="font-medium text-base-content">
+              {{ t('header.volunteer.recent-search') }}
             </h3>
             <button
               v-if="recentSearches.length > 0"
@@ -173,7 +167,7 @@ function handleHome () {
               aria-label="Effacer tout l'historique"
               @click.stop="clearRecentSearches"
             >
-              {{ t("search.history.clear_all") }}
+              {{ t('search.history.clear_all') }}
             </button>
           </div>
 
@@ -194,10 +188,7 @@ function handleHome () {
               @keyup.space.prevent="selectRecentSearch(search)"
             >
               <span class="truncate">{{ search }}</span>
-              <SearchIcon
-                class="w-4 h-4 text-base-content opacity-50"
-                aria-hidden="true"
-              />
+              <SearchIcon class="w-4 h-4 text-base-content opacity-50" aria-hidden="true" />
             </button>
           </div>
 
@@ -207,7 +198,7 @@ function handleHome () {
             role="status"
             aria-live="polite"
           >
-            {{ t("search.history.no_history_description") }}
+            {{ t('search.history.no_history_description') }}
           </div>
         </div>
       </div>
@@ -217,32 +208,32 @@ function handleHome () {
         @click="navigateTo('/help')"
       >
         <HelpIcon class="w-6 h-6" aria-hidden="true" />
-        <span>{{ t("header.volunteer.help") }}</span>
+        <span>{{ t('header.volunteer.help') }}</span>
       </button>
     </div>
   </nav>
 </template>
 
 <style scoped>
-/* Amélioration de l'accessibilité pour les éléments interactifs */
-.btn:focus-visible,
-input:focus-visible {
-  outline: 2px solid #eb5577;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* Amélioration du contraste pour les utilisateurs en mode high-contrast */
-@media (prefers-contrast: more) {
-  .btn {
-    border-width: 2px;
+  /* Amélioration de l'accessibilité pour les éléments interactifs */
+  .btn:focus-visible,
+  input:focus-visible {
+    outline: 2px solid #eb5577;
+    outline-offset: 2px;
+    border-radius: 4px;
   }
-}
 
-/* Respect des préférences de réduction de mouvement */
-@media (prefers-reduced-motion: reduce) {
-  .btn {
-    transition: none;
+  /* Amélioration du contraste pour les utilisateurs en mode high-contrast */
+  @media (prefers-contrast: more) {
+    .btn {
+      border-width: 2px;
+    }
   }
-}
+
+  /* Respect des préférences de réduction de mouvement */
+  @media (prefers-reduced-motion: reduce) {
+    .btn {
+      transition: none;
+    }
+  }
 </style>

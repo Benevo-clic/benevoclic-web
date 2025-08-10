@@ -24,32 +24,32 @@
 ```typescript
 // Avant (incorrect)
 const mockAnnouncement = {
-  status: "ACTIVE",
+  status: 'ACTIVE',
   addressAnnouncement: {
-    street: "Test Street", // ❌ Propriété inexistante
-  },
-};
+    street: 'Test Street' // ❌ Propriété inexistante
+  }
+}
 
 // Après (correct)
 const mockAnnouncement: Announcement = {
   status: EventStatus.ACTIVE,
   addressAnnouncement: {
-    address: "Test Street", // ✅ Propriété correcte
-    city: "Paris",
-    postalCode: "75001",
-    country: "France",
-  },
-};
+    address: 'Test Street', // ✅ Propriété correcte
+    city: 'Paris',
+    postalCode: '75001',
+    country: 'France'
+  }
+}
 ```
 
 ### **3. Imports corrigés** ✅
 
 ```typescript
 // Avant (ne fonctionne pas dans les tests)
-import { EventStatus } from "~/common/enums/event.enum";
+import { EventStatus } from '~/common/enums/event.enum'
 
 // Après (fonctionne)
-import { EventStatus } from "../../common/enums/event.enum";
+import { EventStatus } from '../../common/enums/event.enum'
 ```
 
 ## ⚠️ **PROBLÈMES IDENTIFIÉS**

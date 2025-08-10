@@ -1,6 +1,6 @@
 import { createError, defineEventHandler, getCookie } from 'h3'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const token = getCookie(event, 'auth_token')
     const config = useRuntimeConfig()
@@ -13,26 +13,19 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    return await $fetch(
-      `${config.private.api_base_url}/admin/${adminId}/check-approval-status`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+    return await $fetch(`${config.private.api_base_url}/admin/${adminId}/check-approval-status`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-    )
+    })
   } catch (error: any) {
-    console.error(
-      "Erreur lors de la vérification du statut d'approbation:",
-      error
-    )
+    console.error("Erreur lors de la vérification du statut d'approbation:", error)
 
     if (error.statusCode) {
       throw createError({
         statusCode: error.statusCode,
-        statusMessage:
-          error.statusMessage || 'Erreur lors de la vérification du statut'
+        statusMessage: error.statusMessage || 'Erreur lors de la vérification du statut'
       })
     }
 

@@ -10,10 +10,7 @@ import axios from 'axios'
 import { LoginResponse } from '~/common/types/auth.type'
 import { ApiError } from '~/utils/ErrorHandler'
 
-function setAccessTokenOnly (
-  event: H3Event<EventHandlerRequest>,
-  loginResponse: LoginResponse
-) {
+function setAccessTokenOnly(event: H3Event<EventHandlerRequest>, loginResponse: LoginResponse) {
   if (loginResponse.idToken) {
     setCookie(event, 'auth_token', loginResponse.idToken, {
       httpOnly: true,
@@ -24,7 +21,7 @@ function setAccessTokenOnly (
   }
 }
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const config = useRuntimeConfig()
   const refreshToken = getCookie(event, 'refresh_token')
 
@@ -51,10 +48,7 @@ export default defineEventHandler(async (event) => {
     return loginResponse.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la récupération de l’utilisateur actuel'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la récupération de l’utilisateur actuel')
     }
   }
 })

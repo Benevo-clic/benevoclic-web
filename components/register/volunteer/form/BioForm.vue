@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
+  import { defineProps, defineEmits } from 'vue'
 
-const props = defineProps<{
-  modelValue: string;
-  error?: string;
-}>()
+  const props = defineProps<{
+    modelValue: string
+    error?: string
+  }>()
 
-// eslint-disable-next-line func-call-spacing
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void;
-}>()
+  // eslint-disable-next-line func-call-spacing
+  const emit = defineEmits<{
+    (e: 'update:modelValue', value: string): void
+  }>()
 
-function onInput (e: Event) {
-  const value = (e.target as HTMLTextAreaElement).value
-  emit('update:modelValue', value)
-}
+  function onInput(e: Event) {
+    const value = (e.target as HTMLTextAreaElement).value
+    emit('update:modelValue', value)
+  }
 </script>
 
 <template>

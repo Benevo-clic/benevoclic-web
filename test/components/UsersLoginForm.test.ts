@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { mount } from "@vue/test-utils";
-import { nextTick } from "vue";
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 
 // Mock component pour tester le UsersLoginForm
 const MockUsersLoginForm = {
@@ -91,360 +91,356 @@ const MockUsersLoginForm = {
     form: {
       type: Object,
       default: () => ({
-        email: "",
-        password: "",
-      }),
+        email: '',
+        password: ''
+      })
     },
     handleLogin: {
       type: Function,
-      default: () => Promise.resolve(),
+      default: () => Promise.resolve()
     },
     loading: {
       type: Boolean,
-      default: false,
+      default: false
     },
     isAssociation: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
       associationExists: false,
       forgotPasswordSent: false,
-      forgotPasswordError: "",
+      forgotPasswordError: '',
       emailId: `email-${Math.random().toString(36).substr(2, 9)}`,
       passwordId: `password-${Math.random().toString(36).substr(2, 9)}`,
-      forgotPasswordId: `forgot-password-${Math.random().toString(36).substr(2, 9)}`,
-    };
+      forgotPasswordId: `forgot-password-${Math.random().toString(36).substr(2, 9)}`
+    }
   },
   methods: {
     verifyAssociation(value) {
-      this.associationExists = value;
-      this.$emit("associationExists", this.associationExists);
+      this.associationExists = value
+      this.$emit('associationExists', this.associationExists)
     },
 
     handleForgotPassword() {
-      this.$emit("forgot-password", this.form.email);
+      this.$emit('forgot-password', this.form.email)
     },
 
     t(key) {
-      return key;
-    },
-  },
-};
+      return key
+    }
+  }
+}
 
-describe("UsersLoginForm", () => {
+describe('UsersLoginForm', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-  });
+    vi.clearAllMocks()
+  })
 
-  describe("Rendu de base", () => {
-    it("should render users login form", () => {
-      const wrapper = mount(MockUsersLoginForm);
+  describe('Rendu de base', () => {
+    it('should render users login form', () => {
+      const wrapper = mount(MockUsersLoginForm)
 
-      expect(wrapper.exists()).toBe(true);
-      expect(wrapper.find(".users-login-form").exists()).toBe(true);
-    });
+      expect(wrapper.exists()).toBe(true)
+      expect(wrapper.find('.users-login-form').exists()).toBe(true)
+    })
 
-    it("should render login form when not association", () => {
+    it('should render login form when not association', () => {
       const wrapper = mount(MockUsersLoginForm, {
         props: {
-          isAssociation: false,
-        },
-      });
+          isAssociation: false
+        }
+      })
 
-      const loginForm = wrapper.find(".login-form");
-      expect(loginForm.exists()).toBe(true);
-    });
+      const loginForm = wrapper.find('.login-form')
+      expect(loginForm.exists()).toBe(true)
+    })
 
-    it("should render login form when association exists", () => {
+    it('should render login form when association exists', () => {
       const wrapper = mount(MockUsersLoginForm, {
         props: {
-          isAssociation: true,
-        },
-      });
+          isAssociation: true
+        }
+      })
 
       // Ce test vérifie que le formulaire existe quand l'association est vérifiée
       // Dans un vrai environnement, cela dépendrait de la logique de vérification SIRET
-      expect(wrapper.vm.isAssociation).toBe(true);
-    });
-  });
+      expect(wrapper.vm.isAssociation).toBe(true)
+    })
+  })
 
-  describe("Vérification SIRET", () => {
-    it("should show SIRET verification when association and not verified", () => {
+  describe('Vérification SIRET', () => {
+    it('should show SIRET verification when association and not verified', () => {
       const wrapper = mount(MockUsersLoginForm, {
         props: {
-          isAssociation: true,
-        },
-      });
+          isAssociation: true
+        }
+      })
 
-      const verifSiret = wrapper.find(".verif-siret");
-      expect(verifSiret.exists()).toBe(true);
-    });
+      const verifSiret = wrapper.find('.verif-siret')
+      expect(verifSiret.exists()).toBe(true)
+    })
 
-    it("should not show SIRET verification when not association", () => {
+    it('should not show SIRET verification when not association', () => {
       const wrapper = mount(MockUsersLoginForm, {
         props: {
-          isAssociation: false,
-        },
-      });
+          isAssociation: false
+        }
+      })
 
-      const verifSiret = wrapper.find(".verif-siret");
-      expect(verifSiret.exists()).toBe(false);
-    });
+      const verifSiret = wrapper.find('.verif-siret')
+      expect(verifSiret.exists()).toBe(false)
+    })
 
-    it("should emit associationExists event", async () => {
-      const wrapper = mount(MockUsersLoginForm);
+    it('should emit associationExists event', async () => {
+      const wrapper = mount(MockUsersLoginForm)
 
-      await wrapper.vm.verifyAssociation(true);
+      await wrapper.vm.verifyAssociation(true)
 
-      expect(wrapper.emitted("associationExists")).toBeTruthy();
-      expect(wrapper.emitted("associationExists")[0]).toEqual([true]);
-    });
-  });
+      expect(wrapper.emitted('associationExists')).toBeTruthy()
+      expect(wrapper.emitted('associationExists')[0]).toEqual([true])
+    })
+  })
 
-  describe("Champs de formulaire", () => {
-    it("should render email field", () => {
-      const wrapper = mount(MockUsersLoginForm);
+  describe('Champs de formulaire', () => {
+    it('should render email field', () => {
+      const wrapper = mount(MockUsersLoginForm)
 
-      const emailInput = wrapper.find('input[type="email"]');
-      expect(emailInput.exists()).toBe(true);
-      expect(emailInput.attributes("autocomplete")).toBe("email");
-      expect(emailInput.attributes("required")).toBeDefined();
-    });
+      const emailInput = wrapper.find('input[type="email"]')
+      expect(emailInput.exists()).toBe(true)
+      expect(emailInput.attributes('autocomplete')).toBe('email')
+      expect(emailInput.attributes('required')).toBeDefined()
+    })
 
-    it("should render password field", () => {
-      const wrapper = mount(MockUsersLoginForm);
+    it('should render password field', () => {
+      const wrapper = mount(MockUsersLoginForm)
 
-      const passwordInput = wrapper.find('input[type="password"]');
-      expect(passwordInput.exists()).toBe(true);
-      expect(passwordInput.attributes("autocomplete")).toBe("current-password");
-      expect(passwordInput.attributes("required")).toBeDefined();
-    });
+      const passwordInput = wrapper.find('input[type="password"]')
+      expect(passwordInput.exists()).toBe(true)
+      expect(passwordInput.attributes('autocomplete')).toBe('current-password')
+      expect(passwordInput.attributes('required')).toBeDefined()
+    })
 
-    it("should have proper labels", () => {
-      const wrapper = mount(MockUsersLoginForm);
+    it('should have proper labels', () => {
+      const wrapper = mount(MockUsersLoginForm)
 
-      const labels = wrapper.findAll("label");
-      expect(labels.length).toBeGreaterThan(0);
-    });
+      const labels = wrapper.findAll('label')
+      expect(labels.length).toBeGreaterThan(0)
+    })
 
-    it("should have proper input IDs", () => {
-      const wrapper = mount(MockUsersLoginForm);
+    it('should have proper input IDs', () => {
+      const wrapper = mount(MockUsersLoginForm)
 
-      const emailInput = wrapper.find('input[type="email"]');
-      const passwordInput = wrapper.find('input[type="password"]');
+      const emailInput = wrapper.find('input[type="email"]')
+      const passwordInput = wrapper.find('input[type="password"]')
 
-      expect(emailInput.attributes("id")).toBeDefined();
-      expect(passwordInput.attributes("id")).toBeDefined();
-    });
-  });
+      expect(emailInput.attributes('id')).toBeDefined()
+      expect(passwordInput.attributes('id')).toBeDefined()
+    })
+  })
 
-  describe("Mot de passe oublié", () => {
-    it("should render forgot password button", () => {
-      const wrapper = mount(MockUsersLoginForm);
+  describe('Mot de passe oublié', () => {
+    it('should render forgot password button', () => {
+      const wrapper = mount(MockUsersLoginForm)
 
-      const forgotPasswordButton = wrapper.find('button[type="button"]');
-      expect(forgotPasswordButton.exists()).toBe(true);
-      expect(forgotPasswordButton.text()).toContain("auth.forgot_password");
-    });
+      const forgotPasswordButton = wrapper.find('button[type="button"]')
+      expect(forgotPasswordButton.exists()).toBe(true)
+      expect(forgotPasswordButton.text()).toContain('auth.forgot_password')
+    })
 
-    it("should emit forgot-password event", async () => {
-      const wrapper = mount(MockUsersLoginForm, {
-        props: {
-          form: {
-            email: "test@example.com",
-            password: "",
-          },
-        },
-      });
-
-      await wrapper.vm.handleForgotPassword();
-
-      expect(wrapper.emitted("forgot-password")).toBeTruthy();
-      expect(wrapper.emitted("forgot-password")[0]).toEqual([
-        "test@example.com",
-      ]);
-    });
-
-    it("should show accessibility message when no email", () => {
+    it('should emit forgot-password event', async () => {
       const wrapper = mount(MockUsersLoginForm, {
         props: {
           form: {
-            email: "",
-            password: "",
-          },
-        },
-      });
+            email: 'test@example.com',
+            password: ''
+          }
+        }
+      })
 
-      const accessibilityMessage = wrapper.find("#forgot-password-no-email");
-      expect(accessibilityMessage.exists()).toBe(true);
-    });
-  });
+      await wrapper.vm.handleForgotPassword()
 
-  describe("Soumission du formulaire", () => {
-    it("should render submit button", () => {
-      const wrapper = mount(MockUsersLoginForm);
+      expect(wrapper.emitted('forgot-password')).toBeTruthy()
+      expect(wrapper.emitted('forgot-password')[0]).toEqual(['test@example.com'])
+    })
 
-      const submitButton = wrapper.find('button[type="submit"]');
-      expect(submitButton.exists()).toBe(true);
-      expect(submitButton.text()).toContain("auth.login");
-    });
-
-    it("should disable submit button when loading", async () => {
-      const wrapper = mount(MockUsersLoginForm, {
-        props: {
-          loading: true,
-        },
-      });
-
-      const submitButton = wrapper.find('button[type="submit"]');
-      expect(submitButton.attributes("disabled")).toBeDefined();
-    });
-
-    it("should show loading text when loading", async () => {
-      const wrapper = mount(MockUsersLoginForm, {
-        props: {
-          loading: true,
-        },
-      });
-
-      const submitButton = wrapper.find('button[type="submit"]');
-      expect(submitButton.text()).toContain("Chargement...");
-    });
-  });
-
-  describe("Accessibilité", () => {
-    it("should have proper form structure", () => {
-      const wrapper = mount(MockUsersLoginForm);
-
-      const form = wrapper.find("form");
-      expect(form.exists()).toBe(true);
-      expect(form.attributes("aria-labelledby")).toBe("login-form-title");
-    });
-
-    it("should have proper heading structure", () => {
-      const wrapper = mount(MockUsersLoginForm);
-
-      const heading = wrapper.find("h2");
-      expect(heading.exists()).toBe(true);
-      expect(heading.attributes("id")).toBe("login-form-title");
-      expect(heading.classes()).toContain("sr-only");
-    });
-
-    it("should have proper input descriptions", () => {
-      const wrapper = mount(MockUsersLoginForm);
-
-      const emailDescription = wrapper.find("#email-description");
-      const passwordDescription = wrapper.find("#password-description");
-
-      expect(emailDescription.exists()).toBe(true);
-      expect(passwordDescription.exists()).toBe(true);
-    });
-
-    it("should have proper aria attributes", () => {
-      const wrapper = mount(MockUsersLoginForm);
-
-      const emailInput = wrapper.find('input[type="email"]');
-      const passwordInput = wrapper.find('input[type="password"]');
-
-      expect(emailInput.attributes("aria-required")).toBe("true");
-      expect(passwordInput.attributes("aria-required")).toBe("true");
-    });
-  });
-
-  describe("États et props", () => {
-    it("should initialize with correct props", () => {
+    it('should show accessibility message when no email', () => {
       const wrapper = mount(MockUsersLoginForm, {
         props: {
           form: {
-            email: "test@example.com",
-            password: "password123",
+            email: '',
+            password: ''
+          }
+        }
+      })
+
+      const accessibilityMessage = wrapper.find('#forgot-password-no-email')
+      expect(accessibilityMessage.exists()).toBe(true)
+    })
+  })
+
+  describe('Soumission du formulaire', () => {
+    it('should render submit button', () => {
+      const wrapper = mount(MockUsersLoginForm)
+
+      const submitButton = wrapper.find('button[type="submit"]')
+      expect(submitButton.exists()).toBe(true)
+      expect(submitButton.text()).toContain('auth.login')
+    })
+
+    it('should disable submit button when loading', async () => {
+      const wrapper = mount(MockUsersLoginForm, {
+        props: {
+          loading: true
+        }
+      })
+
+      const submitButton = wrapper.find('button[type="submit"]')
+      expect(submitButton.attributes('disabled')).toBeDefined()
+    })
+
+    it('should show loading text when loading', async () => {
+      const wrapper = mount(MockUsersLoginForm, {
+        props: {
+          loading: true
+        }
+      })
+
+      const submitButton = wrapper.find('button[type="submit"]')
+      expect(submitButton.text()).toContain('Chargement...')
+    })
+  })
+
+  describe('Accessibilité', () => {
+    it('should have proper form structure', () => {
+      const wrapper = mount(MockUsersLoginForm)
+
+      const form = wrapper.find('form')
+      expect(form.exists()).toBe(true)
+      expect(form.attributes('aria-labelledby')).toBe('login-form-title')
+    })
+
+    it('should have proper heading structure', () => {
+      const wrapper = mount(MockUsersLoginForm)
+
+      const heading = wrapper.find('h2')
+      expect(heading.exists()).toBe(true)
+      expect(heading.attributes('id')).toBe('login-form-title')
+      expect(heading.classes()).toContain('sr-only')
+    })
+
+    it('should have proper input descriptions', () => {
+      const wrapper = mount(MockUsersLoginForm)
+
+      const emailDescription = wrapper.find('#email-description')
+      const passwordDescription = wrapper.find('#password-description')
+
+      expect(emailDescription.exists()).toBe(true)
+      expect(passwordDescription.exists()).toBe(true)
+    })
+
+    it('should have proper aria attributes', () => {
+      const wrapper = mount(MockUsersLoginForm)
+
+      const emailInput = wrapper.find('input[type="email"]')
+      const passwordInput = wrapper.find('input[type="password"]')
+
+      expect(emailInput.attributes('aria-required')).toBe('true')
+      expect(passwordInput.attributes('aria-required')).toBe('true')
+    })
+  })
+
+  describe('États et props', () => {
+    it('should initialize with correct props', () => {
+      const wrapper = mount(MockUsersLoginForm, {
+        props: {
+          form: {
+            email: 'test@example.com',
+            password: 'password123'
           },
           loading: true,
-          isAssociation: true,
-        },
-      });
+          isAssociation: true
+        }
+      })
 
-      expect(wrapper.vm.form.email).toBe("test@example.com");
-      expect(wrapper.vm.form.password).toBe("password123");
-      expect(wrapper.vm.loading).toBe(true);
-      expect(wrapper.vm.isAssociation).toBe(true);
-    });
+      expect(wrapper.vm.form.email).toBe('test@example.com')
+      expect(wrapper.vm.form.password).toBe('password123')
+      expect(wrapper.vm.loading).toBe(true)
+      expect(wrapper.vm.isAssociation).toBe(true)
+    })
 
-    it("should initialize association state", () => {
-      const wrapper = mount(MockUsersLoginForm);
+    it('should initialize association state', () => {
+      const wrapper = mount(MockUsersLoginForm)
 
-      expect(wrapper.vm.associationExists).toBe(false);
-    });
+      expect(wrapper.vm.associationExists).toBe(false)
+    })
 
-    it("should initialize forgot password state", () => {
-      const wrapper = mount(MockUsersLoginForm);
+    it('should initialize forgot password state', () => {
+      const wrapper = mount(MockUsersLoginForm)
 
-      expect(wrapper.vm.forgotPasswordSent).toBe(false);
-      expect(wrapper.vm.forgotPasswordError).toBe("");
-    });
-  });
+      expect(wrapper.vm.forgotPasswordSent).toBe(false)
+      expect(wrapper.vm.forgotPasswordError).toBe('')
+    })
+  })
 
-  describe("Styles et classes CSS", () => {
-    it("should have proper container styling", () => {
-      const wrapper = mount(MockUsersLoginForm);
+  describe('Styles et classes CSS', () => {
+    it('should have proper container styling', () => {
+      const wrapper = mount(MockUsersLoginForm)
 
-      const container = wrapper.find(".users-login-form");
-      expect(container.exists()).toBe(true);
-    });
+      const container = wrapper.find('.users-login-form')
+      expect(container.exists()).toBe(true)
+    })
 
-    it("should have proper form styling", () => {
-      const wrapper = mount(MockUsersLoginForm);
+    it('should have proper form styling', () => {
+      const wrapper = mount(MockUsersLoginForm)
 
-      const form = wrapper.find(".login-form");
-      expect(form.exists()).toBe(true);
-      expect(form.classes()).toContain("space-y-4");
-    });
+      const form = wrapper.find('.login-form')
+      expect(form.exists()).toBe(true)
+      expect(form.classes()).toContain('space-y-4')
+    })
 
-    it("should have proper input styling", () => {
-      const wrapper = mount(MockUsersLoginForm);
+    it('should have proper input styling', () => {
+      const wrapper = mount(MockUsersLoginForm)
 
-      const emailInput = wrapper.find('input[type="email"]');
-      expect(emailInput.classes()).toContain("input");
-      expect(emailInput.classes()).toContain("input-bordered");
-    });
+      const emailInput = wrapper.find('input[type="email"]')
+      expect(emailInput.classes()).toContain('input')
+      expect(emailInput.classes()).toContain('input-bordered')
+    })
 
-    it("should have proper button styling", () => {
-      const wrapper = mount(MockUsersLoginForm);
+    it('should have proper button styling', () => {
+      const wrapper = mount(MockUsersLoginForm)
 
-      const submitButton = wrapper.find('button[type="submit"]');
-      expect(submitButton.classes()).toContain("btn");
-      expect(submitButton.classes()).toContain("btn-primary");
-    });
-  });
+      const submitButton = wrapper.find('button[type="submit"]')
+      expect(submitButton.classes()).toContain('btn')
+      expect(submitButton.classes()).toContain('btn-primary')
+    })
+  })
 
-  describe("Gestion des erreurs", () => {
-    it("should show forgot password success message", async () => {
-      const wrapper = mount(MockUsersLoginForm);
+  describe('Gestion des erreurs', () => {
+    it('should show forgot password success message', async () => {
+      const wrapper = mount(MockUsersLoginForm)
 
-      await wrapper.setData({ forgotPasswordSent: true });
-      await nextTick();
+      await wrapper.setData({ forgotPasswordSent: true })
+      await nextTick()
 
-      const successMessage = wrapper.find(".forgot-password-success");
-      expect(successMessage.exists()).toBe(true);
-      expect(successMessage.text()).toContain(
-        "Email de réinitialisation envoyé",
-      );
-    });
+      const successMessage = wrapper.find('.forgot-password-success')
+      expect(successMessage.exists()).toBe(true)
+      expect(successMessage.text()).toContain('Email de réinitialisation envoyé')
+    })
 
-    it("should show forgot password error message", async () => {
-      const wrapper = mount(MockUsersLoginForm);
+    it('should show forgot password error message', async () => {
+      const wrapper = mount(MockUsersLoginForm)
 
       await wrapper.setData({
-        forgotPasswordError: "Erreur lors de l'envoi",
-      });
-      await nextTick();
+        forgotPasswordError: "Erreur lors de l'envoi"
+      })
+      await nextTick()
 
-      const errorMessage = wrapper.find(".forgot-password-error");
-      expect(errorMessage.exists()).toBe(true);
-      expect(errorMessage.text()).toContain("Erreur lors de l'envoi");
-    });
-  });
-});
+      const errorMessage = wrapper.find('.forgot-password-error')
+      expect(errorMessage.exists()).toBe(true)
+      expect(errorMessage.text()).toContain("Erreur lors de l'envoi")
+    })
+  })
+})

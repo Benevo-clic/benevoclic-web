@@ -4,7 +4,7 @@ import { UserInfo } from '~/common/types/auth.type'
 import { ApiError } from '~/utils/ErrorHandler'
 // Types pour la réponse de l'API
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
   const config = useRuntimeConfig()
 
@@ -35,10 +35,7 @@ export default defineEventHandler(async (event) => {
     return currentUser.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la récupération de l’utilisateur actuel'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la récupération de l’utilisateur actuel')
     }
   }
 })

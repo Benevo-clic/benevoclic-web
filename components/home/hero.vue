@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ArrowRight } from 'lucide-vue-next'
+  import { ArrowRight } from 'lucide-vue-next'
 
-const props = defineProps<{
-  startSearching: boolean;
-}>()
+  const props = defineProps<{
+    startSearching: boolean
+  }>()
 </script>
 
 <template>
@@ -21,10 +21,9 @@ const props = defineProps<{
               <span class="text-primary">Benevoclic</span>
             </h1>
             <p class="text-lg text-base-content/80 max-w-xl">
-              Découvrez des événements et missions qui correspondent à vos
-              compétences, vos centres d'intérêt et vos disponibilités. Que vous
-              soyez bénévole ou personne dans le besoin, rejoignez une
-              communauté engagée et participez à des projets solidaires.
+              Découvrez des événements et missions qui correspondent à vos compétences, vos centres
+              d'intérêt et vos disponibilités. Que vous soyez bénévole ou personne dans le besoin,
+              rejoignez une communauté engagée et participez à des projets solidaires.
             </p>
             <div class="flex flex-wrap gap-4">
               <NuxtLink to="#search-section" class="btn btn-primary group">
@@ -33,22 +32,18 @@ const props = defineProps<{
                   class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300"
                 />
               </NuxtLink>
-              <button
-                class="btn btn-outline hover:scale-105 transition-transform duration-300"
-              >
+              <button class="btn btn-outline hover:scale-105 transition-transform duration-300">
                 En savoir plus
               </button>
             </div>
           </div>
-          <div
-            class="relative slide-in-right visible delay-400 hidden lg:block"
-          >
+          <div class="relative slide-in-right visible delay-400 hidden lg:block">
             <img
               src="/images/volunteer-info.png"
               alt="Bénévoles en action"
               class="w-full h-auto rounded-xl shadow-xl transform hover:scale-[1.02] transition-transform duration-500"
               loading="lazy"
-            >
+            />
           </div>
         </div>
       </div>

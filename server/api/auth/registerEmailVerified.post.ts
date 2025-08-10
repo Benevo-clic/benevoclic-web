@@ -4,10 +4,10 @@ import { login, setCookies } from '~/server/api/auth/login.post'
 import { RegisterEmailVerifiedPayload } from '~/common/types/register.type'
 import { ApiError } from '~/utils/ErrorHandler'
 interface RegisterResponse {
-  uid: string;
+  uid: string
 }
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const body = await readBody(event)
   const config = useRuntimeConfig()
 

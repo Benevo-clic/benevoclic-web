@@ -1,15 +1,11 @@
 import { ref, computed } from 'vue'
 
-export function useImageOptimization () {
+export function useImageOptimization() {
   const imageLoading = ref(false)
   const imageError = ref<string | null>(null)
 
   // Fonction pour optimiser une image base64
-  const optimizeBase64Image = (
-    base64: string,
-    maxWidth = 800,
-    quality = 0.8
-  ): Promise<string> => {
+  const optimizeBase64Image = (base64: string, maxWidth = 800, quality = 0.8): Promise<string> => {
     return new Promise((resolve, reject) => {
       const img = new Image()
       img.onload = () => {
@@ -60,14 +56,10 @@ export function useImageOptimization () {
       return new Promise((resolve, reject) => {
         const reader = new FileReader()
 
-        reader.onload = async (e) => {
+        reader.onload = async e => {
           try {
             const base64 = e.target?.result as string
-            const optimized = await optimizeBase64Image(
-              base64,
-              maxWidth,
-              quality
-            )
+            const optimized = await optimizeBase64Image(base64, maxWidth, quality)
             resolve(optimized)
           } catch (error) {
             reject(error)
@@ -89,10 +81,7 @@ export function useImageOptimization () {
   }
 
   // Fonction pour créer une URL d'image optimisée
-  const createOptimizedImageUrl = (
-    base64: string,
-    contentType?: string
-  ): string => {
+  const createOptimizedImageUrl = (base64: string, contentType?: string): string => {
     if (contentType) {
       return `data:${contentType};base64,${base64}`
     }
@@ -105,8 +94,7 @@ export function useImageOptimization () {
     const maxSize = 5 * 1024 * 1024 // 5MB
 
     if (!validTypes.includes(file.type)) {
-      imageError.value =
-        "Format d'image non supporté. Utilisez JPEG, PNG ou WebP."
+      imageError.value = "Format d'image non supporté. Utilisez JPEG, PNG ou WebP."
       return false
     }
 

@@ -2,7 +2,7 @@ import { defineEventHandler, createError, getCookie } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const { associationId, volunteerId } = event.context.params || {}
 
@@ -25,16 +25,12 @@ export default defineEventHandler(async (event) => {
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        "Erreur lors de la suppression du volontaire de l'association"
-      )
+      ApiError.handleAxios(error, "Erreur lors de la suppression du volontaire de l'association")
     }
     throw createError({
       statusCode: error.statusCode || 500,
       statusMessage:
-        error.statusMessage ||
-        "Erreur lors de la suppression du volontaire de l'association"
+        error.statusMessage || "Erreur lors de la suppression du volontaire de l'association"
     })
   }
 })

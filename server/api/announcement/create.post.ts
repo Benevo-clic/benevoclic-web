@@ -3,7 +3,7 @@ import { defineEventHandler, readBody, getCookie } from 'h3'
 import type { CreateAnnouncementDto } from '~/common/interface/event.interface'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const body = (await readBody(event)) as CreateAnnouncementDto
   const token = getCookie(event, 'auth_token')
   const config = useRuntimeConfig()

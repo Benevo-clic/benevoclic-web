@@ -1,47 +1,33 @@
 <script setup lang="ts">
-import VolunteerAnnouncementCard from '~/components/event/volunteer/VolunteerAnnouncementCard.vue'
-import type { Announcement } from '~/common/interface/event.interface'
+  import VolunteerAnnouncementCard from '~/components/event/volunteer/VolunteerAnnouncementCard.vue'
+  import type { Announcement } from '~/common/interface/event.interface'
 
-const props = defineProps<{
-  startSearching: boolean;
-  isVisible: boolean;
-  animatedStats: {
-    events: number;
-    associations: number;
-    volunteers: number;
-  };
-  featuredEvents: Announcement[];
-  isLoading: boolean;
-  error: string | null;
-}>()
-
+  const props = defineProps<{
+    startSearching: boolean
+    isVisible: boolean
+    animatedStats: {
+      events: number
+      associations: number
+      volunteers: number
+    }
+    featuredEvents: Announcement[]
+    isLoading: boolean
+    error: string | null
+  }>()
 </script>
 
 <template>
   <div class="events">
-    <section
-      v-if="!props.startSearching"
-      id="events-section"
-      class="py-16 px-4 bg-base-100"
-    >
+    <section v-if="!props.startSearching" id="events-section" class="py-16 px-4 bg-base-100">
       <div class="max-w-6xl mx-auto">
-        <div
-          class="text-center mb-12 slide-in-up"
-          :class="{ visible: props.isVisible }"
-        >
-          <h2 class="text-3xl font-bold mb-4">
-            Événements à venir
-          </h2>
+        <div class="text-center mb-12 slide-in-up" :class="{ visible: props.isVisible }">
+          <h2 class="text-3xl font-bold mb-4">Événements à venir</h2>
           <p class="text-base-content/70 max-w-2xl mx-auto">
-            Découvrez les prochains événements et rejoignez-les en tant que
-            bénévole ou participant.
+            Découvrez les prochains événements et rejoignez-les en tant que bénévole ou participant.
           </p>
         </div>
 
-        <div
-          v-if="props.isLoading"
-          class="flex justify-center items-center h-64"
-        >
+        <div v-if="props.isLoading" class="flex justify-center items-center h-64">
           <div class="loading loading-spinner loading-lg text-primary" />
         </div>
 
@@ -78,17 +64,11 @@ const props = defineProps<{
             alt="Aucun événement trouvé"
             class="w-full max-w-md mx-auto mb-4"
             loading="lazy"
-          >
-          <p class="text-lg text-base-content/70">
-            Aucun événement à venir pour le moment.
-          </p>
+          />
+          <p class="text-lg text-base-content/70">Aucun événement à venir pour le moment.</p>
         </div>
 
-        <div
-          v-else
-          class="w-full slide-in-up"
-          :class="{ visible: props.isVisible }"
-        >
+        <div v-else class="w-full slide-in-up" :class="{ visible: props.isVisible }">
           <!-- Carousel pour les événements à venir -->
           <div class="carousel w-full rounded-box relative">
             <div

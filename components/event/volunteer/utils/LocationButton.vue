@@ -1,13 +1,10 @@
 <template>
-  <div
-    ref="dropdownRef"
-    class="relative location-dropdown-container inline-block"
-  >
+  <div ref="dropdownRef" class="relative location-dropdown-container inline-block">
     <!-- Bouton principal -->
     <button
       :class="[
         'btn btn-sm rounded-full flex items-center justify-center gap-1 basis-1/3',
-        hasLocationFilter ? 'btn-success' : 'btn-outline',
+        hasLocationFilter ? 'btn-success' : 'btn-outline'
       ]"
       aria-label="Sélecteur de lieu"
       @click="toggleLocationDropdown"
@@ -44,7 +41,7 @@
                 class="input input-bordered w-full pl-10"
                 aria-label="Recherche de ville"
                 @input="onSearchInput"
-              >
+              />
             </div>
           </div>
 
@@ -66,9 +63,7 @@
                   tabindex="0"
                   @click.prevent.stop="selectLocation(result)"
                 >
-                  <span class="font-medium text-sm">{{
-                    formatCityName(result)
-                  }}</span>
+                  <span class="font-medium text-sm">{{ formatCityName(result) }}</span>
                   <ChevronRight class="w-4 h-4" />
                 </div>
               </div>
@@ -80,13 +75,9 @@
             <label class="label">
               <span class="label-text font-medium">Villes sélectionnées</span>
             </label>
-            <div
-              v-if="selectedLocations.length > 1"
-              class="alert alert-info alert-sm mb-2"
-            >
+            <div v-if="selectedLocations.length > 1" class="alert alert-info alert-sm mb-2">
               <div class="text-xs">
-                <strong>Note:</strong> Seule la première ville est prise en
-                compte.
+                <strong>Note:</strong> Seule la première ville est prise en compte.
               </div>
             </div>
             <div class="space-y-2 selected-locations">
@@ -101,10 +92,7 @@
               >
                 <span class="font-medium text-sm">
                   {{ formatCityName(loc) }}
-                  <span
-                    v-if="isCityActive(index)"
-                    class="text-primary ml-1"
-                  >(active)</span>
+                  <span v-if="isCityActive(index)" class="text-primary ml-1">(active)</span>
                 </span>
                 <button
                   class="btn btn-ghost btn-xs"
@@ -132,13 +120,11 @@
                     class="radio radio-primary radio-sm"
                     aria-label="Utiliser ma position actuelle"
                     @change="toggleCurrentLocation"
-                  >
+                  />
                   <div class="flex-1">
-                    <div class="font-medium text-sm">
-                      Ma position actuelle
-                    </div>
+                    <div class="font-medium text-sm">Ma position actuelle</div>
                     <div class="text-xs text-base-content/70">
-                      {{ userCurrentLocation.city || "Position détectée" }}
+                      {{ userCurrentLocation.city || 'Position détectée' }}
                     </div>
                   </div>
                   <MapPin class="w-4 h-4 text-primary" />
@@ -163,17 +149,11 @@
               />
             </svg>
             <div>
-              <h4 class="font-bold">
-                Géolocalisation désactivée
-              </h4>
+              <h4 class="font-bold">Géolocalisation désactivée</h4>
               <p class="text-xs">
-                Acceptez les cookies de personnalisation pour utiliser votre
-                position.
+                Acceptez les cookies de personnalisation pour utiliser votre position.
               </p>
-              <button
-                class="btn btn-primary btn-xs mt-2"
-                @click="openCookieSettings"
-              >
+              <button class="btn btn-primary btn-xs mt-2" @click="openCookieSettings">
                 Paramétrer les cookies
               </button>
             </div>
@@ -197,7 +177,7 @@
                 class="range range-sm range-primary w-full"
                 aria-label="Rayon de recherche"
                 @input="updateLocationFilter"
-              >
+              />
               <div class="flex justify-between text-xs text-base-content/50">
                 <span>0 km</span>
                 <span>200 km</span>
@@ -207,12 +187,8 @@
 
           <!-- Actions -->
           <div class="flex gap-2 pt-2">
-            <button class="btn btn-outline btn-sm flex-1" @click="onClear">
-              Effacer
-            </button>
-            <button class="btn btn-primary btn-sm flex-1" @click="onApply">
-              Valider
-            </button>
+            <button class="btn btn-outline btn-sm flex-1" @click="onClear">Effacer</button>
+            <button class="btn btn-primary btn-sm flex-1" @click="onApply">Valider</button>
           </div>
         </div>
       </div>
@@ -221,310 +197,304 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import { MapPin, ChevronRight, X } from 'lucide-vue-next'
-import { useUserLocation } from '~/composables/useUserLocation'
-import type { FilterAnnouncement } from '~/common/interface/filter.interface'
+  import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
+  import { MapPin, ChevronRight, X } from 'lucide-vue-next'
+  import { useUserLocation } from '~/composables/useUserLocation'
+  import type { FilterAnnouncement } from '~/common/interface/filter.interface'
 
-const props = defineProps<{
-  filters: FilterAnnouncement;
-  resetLocation?: boolean;
-  isMobile?: boolean;
-}>()
-const emits = defineEmits<{
-  (e: 'update:filters', newFilters: FilterAnnouncement): void;
-}>()
+  const props = defineProps<{
+    filters: FilterAnnouncement
+    resetLocation?: boolean
+    isMobile?: boolean
+  }>()
+  const emits = defineEmits<{
+    (e: 'update:filters', newFilters: FilterAnnouncement): void
+  }>()
 
-// États réactifs
-const dropdownRef = ref<HTMLElement | null>(null)
-const portalDropdown = ref<HTMLElement | null>(null)
-const showLocationDropdown = ref(false)
-const locationSearch = ref('')
-const locationSearchResults = ref<any[]>([])
-const selectedLocations = ref<any[]>([])
-const useCurrentLocation = ref(false)
-const locationRadius = ref(props.filters.radius || 5)
+  // États réactifs
+  const dropdownRef = ref<HTMLElement | null>(null)
+  const portalDropdown = ref<HTMLElement | null>(null)
+  const showLocationDropdown = ref(false)
+  const locationSearch = ref('')
+  const locationSearchResults = ref<any[]>([])
+  const selectedLocations = ref<any[]>([])
+  const useCurrentLocation = ref(false)
+  const locationRadius = ref(props.filters.radius || 5)
 
-const userLocation = useUserLocation()
-const userCurrentLocation = ref<any>(null)
-const currentLatitude = ref<number | null>(null)
-const currentLongitude = ref<number | null>(null)
-const canUseLocation = ref(false)
+  const userLocation = useUserLocation()
+  const userCurrentLocation = ref<any>(null)
+  const currentLatitude = ref<number | null>(null)
+  const currentLongitude = ref<number | null>(null)
+  const canUseLocation = ref(false)
 
-const searchTimeout = ref<number | null>(null)
+  const searchTimeout = ref<number | null>(null)
 
-// Computed
-const hasLocationFilter = computed(
-  () => useCurrentLocation.value || selectedLocations.value.length > 0
-)
-const isCityActive = (index: number) =>
-  !useCurrentLocation.value && index === 0
-
-// Styles dynamiques pour le dropdown téléporté
-const dropdownStyle = ref<Record<string, string>>({
-  position: 'absolute',
-  top: '0px',
-  left: '0px',
-  zIndex: '9999',
-  minWidth: '320px'
-})
-
-const formatCityName = (result: any) => {
-  const addr = result.address || {}
-  return (
-    addr.city ||
-    addr.town ||
-    addr.village ||
-    addr.municipality ||
-    result.display_name?.split(',')[0]?.trim() ||
-    ''
+  // Computed
+  const hasLocationFilter = computed(
+    () => useCurrentLocation.value || selectedLocations.value.length > 0
   )
-}
+  const isCityActive = (index: number) => !useCurrentLocation.value && index === 0
 
-// Watchers
-watch(
-  () => props.resetLocation,
-  (newVal) => {
-    if (newVal) { onClear() }
-  },
-  { immediate: true }
-)
-
-watch(
-  [useCurrentLocation, selectedLocations, locationRadius],
-  updateLocationFilter
-)
-
-// Fonctions
-const toggleLocationDropdown = () => {
-  showLocationDropdown.value = !showLocationDropdown.value
-}
-
-const openCookieSettings = () => {
-  window.dispatchEvent(new CustomEvent('openCookieSettings'))
-}
-
-const checkLocationPermissions = async () => {
-  try {
-    const { usePermissions } = await import('~/composables/usePermissions')
-    const { hasPermission, loadCookiePreferences } = usePermissions()
-    loadCookiePreferences()
-    canUseLocation.value = hasPermission('canUseLocation')
-    if (!canUseLocation.value) {
-      console.log(
-        'Cookies de personnalisation non acceptés - géolocalisation désactivée'
-      )
-    }
-  } catch (err) {
-    console.warn(
-      'Impossible de vérifier les permissions de géolocalisation:',
-      err
-    )
-    canUseLocation.value = false
-  }
-}
-
-const initLocation = async () => {
-  try {
-    const location = await userLocation.getUserLocation()
-    if (location) {
-      currentLatitude.value = location.latitude
-      currentLongitude.value = location.longitude
-      userCurrentLocation.value = {
-        place_id: 'current_location',
-        display_name: 'Ma position actuelle',
-        city: location.city || 'Position détectée',
-        lat: location.latitude.toString(),
-        lon: location.longitude.toString()
-      }
-    } else {
-      console.log('Aucune position obtenue')
-    }
-  } catch (error) {
-    console.error('Error getting user location:', error)
-  }
-}
-
-const updateDropdownPosition = () => {
-  if (!dropdownRef.value || !showLocationDropdown.value) { return }
-  const btnRect = dropdownRef.value.getBoundingClientRect()
-  const isMobile = props.isMobile
-  const top = btnRect.bottom + window.scrollY + 8
-  let left: number
-
-  if (isMobile) {
-    // centrer horizontalement
-    left = window.innerWidth / 2 - (isMobile ? 160 : 192)
-  } else {
-    left = btnRect.left + window.scrollX
-    // éviter overflow droit
-    const estimatedWidth = 384 // w-96 ~= 384px
-    if (left + estimatedWidth > window.scrollX + window.innerWidth) {
-      left = window.scrollX + window.innerWidth - estimatedWidth - 8
-    }
-    if (left < 8) { left = 8 }
-  }
-
-  dropdownStyle.value = {
+  // Styles dynamiques pour le dropdown téléporté
+  const dropdownStyle = ref<Record<string, string>>({
     position: 'absolute',
-    top: `${top}px`,
-    left: `${left}px`,
+    top: '0px',
+    left: '0px',
     zIndex: '9999',
-    width: isMobile ? '320px' : '384px'
-  }
-}
+    minWidth: '320px'
+  })
 
-const onClickOutside = (e: MouseEvent) => {
-  const target = e.target as HTMLElement
-  const isInsideTrigger = dropdownRef.value?.contains(target)
-  const isInsidePortal = portalDropdown.value?.contains(target)
-  if (!isInsideTrigger && !isInsidePortal) {
+  const formatCityName = (result: any) => {
+    const addr = result.address || {}
+    return (
+      addr.city ||
+      addr.town ||
+      addr.village ||
+      addr.municipality ||
+      result.display_name?.split(',')[0]?.trim() ||
+      ''
+    )
+  }
+
+  // Watchers
+  watch(
+    () => props.resetLocation,
+    newVal => {
+      if (newVal) {
+        onClear()
+      }
+    },
+    { immediate: true }
+  )
+
+  watch([useCurrentLocation, selectedLocations, locationRadius], updateLocationFilter)
+
+  // Fonctions
+  const toggleLocationDropdown = () => {
+    showLocationDropdown.value = !showLocationDropdown.value
+  }
+
+  const openCookieSettings = () => {
+    window.dispatchEvent(new CustomEvent('openCookieSettings'))
+  }
+
+  const checkLocationPermissions = async () => {
+    try {
+      const { usePermissions } = await import('~/composables/usePermissions')
+      const { hasPermission, loadCookiePreferences } = usePermissions()
+      loadCookiePreferences()
+      canUseLocation.value = hasPermission('canUseLocation')
+      if (!canUseLocation.value) {
+        console.log('Cookies de personnalisation non acceptés - géolocalisation désactivée')
+      }
+    } catch (err) {
+      console.warn('Impossible de vérifier les permissions de géolocalisation:', err)
+      canUseLocation.value = false
+    }
+  }
+
+  const initLocation = async () => {
+    try {
+      const location = await userLocation.getUserLocation()
+      if (location) {
+        currentLatitude.value = location.latitude
+        currentLongitude.value = location.longitude
+        userCurrentLocation.value = {
+          place_id: 'current_location',
+          display_name: 'Ma position actuelle',
+          city: location.city || 'Position détectée',
+          lat: location.latitude.toString(),
+          lon: location.longitude.toString()
+        }
+      } else {
+        console.log('Aucune position obtenue')
+      }
+    } catch (error) {
+      console.error('Error getting user location:', error)
+    }
+  }
+
+  const updateDropdownPosition = () => {
+    if (!dropdownRef.value || !showLocationDropdown.value) {
+      return
+    }
+    const btnRect = dropdownRef.value.getBoundingClientRect()
+    const isMobile = props.isMobile
+    const top = btnRect.bottom + window.scrollY + 8
+    let left: number
+
+    if (isMobile) {
+      // centrer horizontalement
+      left = window.innerWidth / 2 - (isMobile ? 160 : 192)
+    } else {
+      left = btnRect.left + window.scrollX
+      // éviter overflow droit
+      const estimatedWidth = 384 // w-96 ~= 384px
+      if (left + estimatedWidth > window.scrollX + window.innerWidth) {
+        left = window.scrollX + window.innerWidth - estimatedWidth - 8
+      }
+      if (left < 8) {
+        left = 8
+      }
+    }
+
+    dropdownStyle.value = {
+      position: 'absolute',
+      top: `${top}px`,
+      left: `${left}px`,
+      zIndex: '9999',
+      width: isMobile ? '320px' : '384px'
+    }
+  }
+
+  const onClickOutside = (e: MouseEvent) => {
+    const target = e.target as HTMLElement
+    const isInsideTrigger = dropdownRef.value?.contains(target)
+    const isInsidePortal = portalDropdown.value?.contains(target)
+    if (!isInsideTrigger && !isInsidePortal) {
+      showLocationDropdown.value = false
+    }
+  }
+
+  const debounce = (fn: Function, delay = 300) => {
+    return (...args: any[]) => {
+      if (searchTimeout.value) {
+        clearTimeout(searchTimeout.value)
+      }
+      searchTimeout.value = window.setTimeout(() => {
+        fn(...args)
+      }, delay)
+    }
+  }
+
+  const performLocationSearch = async () => {
+    if (locationSearch.value.length < 2) {
+      locationSearchResults.value = []
+      return
+    }
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          locationSearch.value
+        )}&countrycodes=fr&limit=10&addressdetails=1`
+      )
+      const data = await res.json()
+      locationSearchResults.value = data
+        .filter((i: any) => {
+          const validTypes = ['city', 'town', 'village', 'municipality', 'administrative']
+          const hasValidType = validTypes.includes(i.type)
+          const hasCityAddress =
+            i.address &&
+            (i.address.city || i.address.town || i.address.village || i.address.municipality)
+          const isCityLevel = i.place_rank && i.place_rank <= 16
+          return hasValidType || hasCityAddress || isCityLevel
+        })
+        .slice(0, 5)
+    } catch (error) {
+      console.error('Erreur lors de la recherche de villes:', error)
+      locationSearchResults.value = []
+    }
+  }
+
+  const onSearchInput = debounce(() => {
+    performLocationSearch()
+  }, 500)
+
+  const selectLocation = (loc: any) => {
+    if (!selectedLocations.value.some(l => l.place_id === loc.place_id)) {
+      selectedLocations.value.push(loc)
+    }
+    useCurrentLocation.value = false
+    locationSearch.value = ''
+    locationSearchResults.value = []
+  }
+
+  const makeActive = (i: number) => {
+    useCurrentLocation.value = false
+    if (i !== 0) {
+      selectedLocations.value.unshift(selectedLocations.value.splice(i, 1)[0])
+    }
+  }
+
+  const removeLocation = (i: number) => {
+    selectedLocations.value.splice(i, 1)
+  }
+
+  const toggleCurrentLocation = () => {
+    useCurrentLocation.value = !useCurrentLocation.value
+  }
+
+  function updateLocationFilter() {
+    const filterAnnouncement: FilterAnnouncement = {
+      ...props.filters,
+      latitude: undefined,
+      longitude: undefined,
+      radius: 0
+    }
+    if (
+      useCurrentLocation.value &&
+      currentLatitude.value != null &&
+      currentLongitude.value != null
+    ) {
+      filterAnnouncement.latitude = currentLatitude.value
+      filterAnnouncement.longitude = currentLongitude.value
+      filterAnnouncement.radius = locationRadius.value
+    } else if (selectedLocations.value.length) {
+      const l = selectedLocations.value[0]
+      filterAnnouncement.latitude = parseFloat(l.lat)
+      filterAnnouncement.longitude = parseFloat(l.lon)
+      filterAnnouncement.radius = locationRadius.value
+    }
+    emits('update:filters', filterAnnouncement)
+  }
+
+  const onApply = () => {
+    updateLocationFilter()
     showLocationDropdown.value = false
   }
-}
 
-const debounce = (fn: Function, delay = 300) => {
-  return (...args: any[]) => {
-    if (searchTimeout.value) { clearTimeout(searchTimeout.value) }
-    searchTimeout.value = window.setTimeout(() => {
-      fn(...args)
-    }, delay)
+  const onClear = () => {
+    selectedLocations.value = []
+    useCurrentLocation.value = false
+    locationRadius.value = props.filters.radius || 5
+    updateLocationFilter()
+    showLocationDropdown.value = false
   }
-}
 
-const performLocationSearch = async () => {
-  if (locationSearch.value.length < 2) {
-    locationSearchResults.value = []
-    return
-  }
-  try {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-        locationSearch.value
-      )}&countrycodes=fr&limit=10&addressdetails=1`
-    )
-    const data = await res.json()
-    locationSearchResults.value = data
-      .filter((i: any) => {
-        const validTypes = [
-          'city',
-          'town',
-          'village',
-          'municipality',
-          'administrative'
-        ]
-        const hasValidType = validTypes.includes(i.type)
-        const hasCityAddress =
-          i.address &&
-          (i.address.city ||
-            i.address.town ||
-            i.address.village ||
-            i.address.municipality)
-        const isCityLevel = i.place_rank && i.place_rank <= 16
-        return hasValidType || hasCityAddress || isCityLevel
-      })
-      .slice(0, 5)
-  } catch (error) {
-    console.error('Erreur lors de la recherche de villes:', error)
-    locationSearchResults.value = []
-  }
-}
+  // Lifecycles
+  onMounted(async () => {
+    await userLocation.initializeLocation()
+    await checkLocationPermissions()
+    await initLocation()
+    document.addEventListener('click', onClickOutside)
+  })
 
-const onSearchInput = debounce(() => {
-  performLocationSearch()
-}, 500)
+  onUnmounted(() => {
+    document.removeEventListener('click', onClickOutside)
+    if (searchTimeout.value) {
+      clearTimeout(searchTimeout.value)
+    }
+  })
 
-const selectLocation = (loc: any) => {
-  if (!selectedLocations.value.some(l => l.place_id === loc.place_id)) {
-    selectedLocations.value.push(loc)
-  }
-  useCurrentLocation.value = false
-  locationSearch.value = ''
-  locationSearchResults.value = []
-}
-
-const makeActive = (i: number) => {
-  useCurrentLocation.value = false
-  if (i !== 0) { selectedLocations.value.unshift(selectedLocations.value.splice(i, 1)[0]) }
-}
-
-const removeLocation = (i: number) => {
-  selectedLocations.value.splice(i, 1)
-}
-
-const toggleCurrentLocation = () => {
-  useCurrentLocation.value = !useCurrentLocation.value
-}
-
-function updateLocationFilter () {
-  const filterAnnouncement: FilterAnnouncement = {
-    ...props.filters,
-    latitude: undefined,
-    longitude: undefined,
-    radius: 0
-  }
-  if (
-    useCurrentLocation.value &&
-    currentLatitude.value != null &&
-    currentLongitude.value != null
-  ) {
-    filterAnnouncement.latitude = currentLatitude.value
-    filterAnnouncement.longitude = currentLongitude.value
-    filterAnnouncement.radius = locationRadius.value
-  } else if (selectedLocations.value.length) {
-    const l = selectedLocations.value[0]
-    filterAnnouncement.latitude = parseFloat(l.lat)
-    filterAnnouncement.longitude = parseFloat(l.lon)
-    filterAnnouncement.radius = locationRadius.value
-  }
-  emits('update:filters', filterAnnouncement)
-}
-
-const onApply = () => {
-  updateLocationFilter()
-  showLocationDropdown.value = false
-}
-
-const onClear = () => {
-  selectedLocations.value = []
-  useCurrentLocation.value = false
-  locationRadius.value = props.filters.radius || 5
-  updateLocationFilter()
-  showLocationDropdown.value = false
-}
-
-// Lifecycles
-onMounted(async () => {
-  await userLocation.initializeLocation()
-  await checkLocationPermissions()
-  await initLocation()
-  document.addEventListener('click', onClickOutside)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', onClickOutside)
-  if (searchTimeout.value) { clearTimeout(searchTimeout.value) }
-})
-
-// Repositionnement quand visible / resize / scroll
-watch(showLocationDropdown, async (visible) => {
-  if (visible) {
-    await nextTick()
-    updateDropdownPosition()
-    window.addEventListener('resize', updateDropdownPosition)
-    window.addEventListener('scroll', updateDropdownPosition, true)
-  } else {
-    window.removeEventListener('resize', updateDropdownPosition)
-    window.removeEventListener('scroll', updateDropdownPosition, true)
-  }
-})
+  // Repositionnement quand visible / resize / scroll
+  watch(showLocationDropdown, async visible => {
+    if (visible) {
+      await nextTick()
+      updateDropdownPosition()
+      window.addEventListener('resize', updateDropdownPosition)
+      window.addEventListener('scroll', updateDropdownPosition, true)
+    } else {
+      window.removeEventListener('resize', updateDropdownPosition)
+      window.removeEventListener('scroll', updateDropdownPosition, true)
+    }
+  })
 </script>
 
 <style scoped>
-.location-dropdown-portal {
-  /* Renforcer au cas où */
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2);
-  border-radius: 0.75rem;
-  background-clip: padding-box;
-}
+  .location-dropdown-portal {
+    /* Renforcer au cas où */
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2);
+    border-radius: 0.75rem;
+    background-clip: padding-box;
+  }
 </style>

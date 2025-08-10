@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import RegisterVolunteer from '~/components/register/volunteer/RegisterVolunteer.vue'
-import { definePageMeta } from '#imports'
+  import RegisterVolunteer from '~/components/register/volunteer/RegisterVolunteer.vue'
+  import { definePageMeta } from '#imports'
 
-definePageMeta({
-  middleware: ['auth'],
-  layout: 'header-auth'
-})
+  definePageMeta({
+    middleware: ['auth'],
+    layout: 'header-auth'
+  })
 </script>
 
 <template>

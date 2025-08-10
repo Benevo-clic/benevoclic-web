@@ -68,14 +68,14 @@
 }
 
 /* Amélioration des cartes cliquables */
-.card[role="button"]:focus-visible {
+.card[role='button']:focus-visible {
   outline: 2px solid oklch(74% 0.16 232.661) !important;
   outline-offset: 2px !important;
   transform: none !important;
 }
 
 @media (prefers-color-scheme: dark) {
-  .card[role="button"]:focus-visible {
+  .card[role='button']:focus-visible {
     outline-color: oklch(92% 0.004 286.32) !important;
   }
 }
@@ -124,7 +124,7 @@
 }
 
 /* Amélioration des images */
-img[alt=""] {
+img[alt=''] {
   border: 1px dashed oklch(74% 0.16 232.661);
 }
 
@@ -173,8 +173,8 @@ img[alt=""] {
 }
 
 /* Amélioration des annonces pour lecteurs d'écran */
-[aria-live="polite"],
-[aria-live="assertive"] {
+[aria-live='polite'],
+[aria-live='assertive'] {
   position: absolute;
   left: -10000px;
   width: 1px;

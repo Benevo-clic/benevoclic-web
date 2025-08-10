@@ -1,12 +1,6 @@
-import {
-  defineEventHandler,
-  createError,
-  deleteCookie,
-  H3Event,
-  EventHandlerRequest
-} from 'h3'
+import { defineEventHandler, createError, deleteCookie, H3Event, EventHandlerRequest } from 'h3'
 
-export function deleteCookies (event: H3Event<EventHandlerRequest>) {
+export function deleteCookies(event: H3Event<EventHandlerRequest>) {
   deleteCookie(event, 'auth_token', {
     httpOnly: true,
     secure: true,
@@ -28,7 +22,7 @@ export function deleteCookies (event: H3Event<EventHandlerRequest>) {
   deleteCookie(event, 'tempPassword')
 }
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     deleteCookies(event)
   } catch (error: any) {

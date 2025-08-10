@@ -2,7 +2,7 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { useUserStore } from '~/stores/user/user.store'
 import { RoleUser } from '~/common/enums/role.enum'
 
-export function useNavigation () {
+export function useNavigation() {
   const userStore = useUserStore()
 
   // Configuration des routes par rôle (même que dans le middleware)
@@ -100,9 +100,7 @@ export function useNavigation () {
     const authStore = useAuthStore()
     // Vérifier si l'utilisateur est connecté
     if (!authStore.isConnected) {
-      console.log(
-        '🔍 Utilisateur non connecté, redirection vers la page de connexion'
-      )
+      console.log('🔍 Utilisateur non connecté, redirection vers la page de connexion')
       return navigateTo('/')
     }
     if (!useCookie('isConnected').value) {

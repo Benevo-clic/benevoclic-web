@@ -1,112 +1,107 @@
 // @ts-nocheck
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { mount } from "@vue/test-utils";
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { mount } from '@vue/test-utils'
 
 // Mock des composants
 const MockRequestItem = {
   template: '<div class="request-item">Request Item</div>',
-  props: ["volunteer", "context", "type"],
-  emits: ["accept", "refuse"],
-};
+  props: ['volunteer', 'context', 'type'],
+  emits: ['accept', 'refuse']
+}
 
 const MockErrorPopup = {
   template: '<div class="error-popup">Error Popup</div>',
-  props: ["showErrorModal", "errorType"],
-  emits: ["reload", "goHome"],
-};
+  props: ['showErrorModal', 'errorType'],
+  emits: ['reload', 'goHome']
+}
 
 // Mock des composables
 const mockUseAnnouncement = {
   getAnnouncements: {
     value: [
       {
-        id: "1",
-        title: "Événement Test 1",
-        volunteers: [
-          { id: "v1", name: "Bénévole 1", email: "volunteer1@test.com" },
-        ],
-      },
-    ],
+        id: '1',
+        title: 'Événement Test 1',
+        volunteers: [{ id: 'v1', name: 'Bénévole 1', email: 'volunteer1@test.com' }]
+      }
+    ]
   },
-  fetchAnnouncements: vi.fn(),
-};
+  fetchAnnouncements: vi.fn()
+}
 
 const mockUseUser = {
-  getUserId: "user123",
+  getUserId: 'user123',
   getUserById: vi.fn(),
-  initializeUser: vi.fn(),
-};
+  initializeUser: vi.fn()
+}
 
 const mockUseAssociationAuth = {
   getAssociationRequests: vi.fn(),
   acceptRequestAssociation: vi.fn(),
-  refuseRequestAssociation: vi.fn(),
-};
+  refuseRequestAssociation: vi.fn()
+}
 
 const mockUseNavigation = {
-  navigateToRoute: vi.fn(),
-};
+  navigateToRoute: vi.fn()
+}
 
 // Mock des données
 const mockEventRequests = [
   {
-    id: "1",
+    id: '1',
     volunteer: {
-      id: "v1",
-      name: "Bénévole 1",
-      email: "volunteer1@test.com",
+      id: 'v1',
+      name: 'Bénévole 1',
+      email: 'volunteer1@test.com'
     },
-    eventName: "Événement Test 1",
+    eventName: 'Événement Test 1'
   },
   {
-    id: "2",
+    id: '2',
     volunteer: {
-      id: "v2",
-      name: "Bénévole 2",
-      email: "volunteer2@test.com",
+      id: 'v2',
+      name: 'Bénévole 2',
+      email: 'volunteer2@test.com'
     },
-    eventName: "Événement Test 2",
-  },
-];
+    eventName: 'Événement Test 2'
+  }
+]
 
 const mockAssociationRequests = [
   {
-    id: "1",
-    idAssociation: "assoc1",
+    id: '1',
+    idAssociation: 'assoc1',
     volunteer: {
-      id: "v1",
-      name: "Bénévole 1",
-      email: "volunteer1@test.com",
-    },
-  },
-];
+      id: 'v1',
+      name: 'Bénévole 1',
+      email: 'volunteer1@test.com'
+    }
+  }
+]
 
 // Mock des modules
-vi.mock(
-  "~/components/event/association/RequestItem.vue",
-  () => MockRequestItem,
-);
+vi.mock('~/components/event/association/RequestItem.vue', () => MockRequestItem)
 
-vi.mock("~/components/utils/ErrorPopup.vue", () => MockErrorPopup);
+vi.mock('~/components/utils/ErrorPopup.vue', () => MockErrorPopup)
 
-vi.mock("~/composables/useAnnouncement", () => ({
-  useAnnouncement: () => mockUseAnnouncement,
-}));
+vi.mock('~/composables/useAnnouncement', () => ({
+  useAnnouncement: () => mockUseAnnouncement
+}))
 
-vi.mock("~/composables/auth/useUser", () => ({
-  useUser: () => mockUseUser,
-}));
+vi.mock('~/composables/auth/useUser', () => ({
+  useUser: () => mockUseUser
+}))
 
-vi.mock("~/composables/useAssociation", () => ({
-  useAssociationAuth: () => mockUseAssociationAuth,
-}));
+vi.mock('~/composables/useAssociation', () => ({
+  useAssociationAuth: () => mockUseAssociationAuth
+}))
 
-vi.mock("~/composables/useNavigation", () => ({
-  useNavigation: () => mockUseNavigation,
-}));
+vi.mock('~/composables/useNavigation', () => ({
+  useNavigation: () => mockUseNavigation
+}))
 
 // Mock de definePageMeta
-global.definePageMeta = vi.fn();
+global.definePageMeta = vi.fn()
 
 // Composant mock pour le test
 const MockAssociationRequests = {
@@ -269,40 +264,37 @@ const MockAssociationRequests = {
   `,
   components: {
     RequestItem: MockRequestItem,
-    ErrorPopup: MockErrorPopup,
+    ErrorPopup: MockErrorPopup
   },
   data() {
     return {
-      tab: "event",
+      tab: 'event',
       isLoading: false,
       loading: false,
       showErrorModal: false,
       errorType: null,
       eventRequests: mockEventRequests,
-      associationRequests: mockAssociationRequests,
-    };
+      associationRequests: mockAssociationRequests
+    }
   },
   methods: {
     async initData() {
       try {
-        this.loading = true;
+        this.loading = true
         // Mock implementation
-        this.loading = false;
+        this.loading = false
       } catch (error) {
-        this.loading = false;
-        this.handleError(error);
+        this.loading = false
+        this.handleError(error)
       }
     },
     handleError(error) {
       if (error?.response?.status >= 500 && error?.response?.status < 600) {
-        this.errorType = "5xx";
-        this.showErrorModal = true;
-      } else if (
-        error?.response?.status >= 400 &&
-        error?.response?.status < 500
-      ) {
-        this.errorType = "4xx";
-        this.showErrorModal = true;
+        this.errorType = '5xx'
+        this.showErrorModal = true
+      } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+        this.errorType = '4xx'
+        this.showErrorModal = true
       }
     },
     handleReload() {
@@ -328,381 +320,369 @@ const MockAssociationRequests = {
     },
     async buildAssociationRequests() {
       // Mock method
-    },
-  },
-};
+    }
+  }
+}
 
-describe("AssociationRequests", () => {
+describe('AssociationRequests', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-  });
+    vi.clearAllMocks()
+  })
 
-  describe("Rendu de base", () => {
-    it("should render the main container", () => {
-      const wrapper = mount(MockAssociationRequests);
-      expect(wrapper.find(".min-h-screen.bg-gradient-to-br").exists()).toBe(
-        true,
-      );
-    });
+  describe('Rendu de base', () => {
+    it('should render the main container', () => {
+      const wrapper = mount(MockAssociationRequests)
+      expect(wrapper.find('.min-h-screen.bg-gradient-to-br').exists()).toBe(true)
+    })
 
-    it("should render the page title", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const title = wrapper.find("h1");
-      expect(title.exists()).toBe(true);
-      expect(title.text()).toBe("Mes demandes");
-    });
+    it('should render the page title', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const title = wrapper.find('h1')
+      expect(title.exists()).toBe(true)
+      expect(title.text()).toBe('Mes demandes')
+    })
 
-    it("should render the page description", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const description = wrapper.find("p.text-base-content.opacity-70");
-      expect(description.exists()).toBe(true);
-      expect(description.text()).toContain("Gérez les demandes");
-    });
-  });
+    it('should render the page description', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const description = wrapper.find('p.text-base-content.opacity-70')
+      expect(description.exists()).toBe(true)
+      expect(description.text()).toContain('Gérez les demandes')
+    })
+  })
 
-  describe("Loading State", () => {
-    it("should show loading overlay when isLoading is true", () => {
+  describe('Loading State', () => {
+    it('should show loading overlay when isLoading is true', () => {
       const wrapper = mount(MockAssociationRequests, {
         data() {
           return {
-            isLoading: true,
-          };
-        },
-      });
-      const loadingOverlay = wrapper.find(".fixed.inset-0.bg-base-200");
-      expect(loadingOverlay.exists()).toBe(true);
-    });
+            isLoading: true
+          }
+        }
+      })
+      const loadingOverlay = wrapper.find('.fixed.inset-0.bg-base-200')
+      expect(loadingOverlay.exists()).toBe(true)
+    })
 
-    it("should show loading image", () => {
+    it('should show loading image', () => {
       const wrapper = mount(MockAssociationRequests, {
         data() {
           return {
-            isLoading: true,
-          };
-        },
-      });
-      const loadingImage = wrapper.find('img[src="/logo.png"]');
-      expect(loadingImage.exists()).toBe(true);
-    });
+            isLoading: true
+          }
+        }
+      })
+      const loadingImage = wrapper.find('img[src="/logo.png"]')
+      expect(loadingImage.exists()).toBe(true)
+    })
 
-    it("should show loading text", () => {
+    it('should show loading text', () => {
       const wrapper = mount(MockAssociationRequests, {
         data() {
           return {
-            isLoading: true,
-          };
-        },
-      });
-      const loadingText = wrapper.find(".text-base-content.opacity-70");
-      expect(loadingText.exists()).toBe(true);
-      expect(loadingText.text()).toBe("Chargement en cours...");
-    });
+            isLoading: true
+          }
+        }
+      })
+      const loadingText = wrapper.find('.text-base-content.opacity-70')
+      expect(loadingText.exists()).toBe(true)
+      expect(loadingText.text()).toBe('Chargement en cours...')
+    })
 
-    it("should not show loading overlay when isLoading is false", () => {
+    it('should not show loading overlay when isLoading is false', () => {
       const wrapper = mount(MockAssociationRequests, {
         data() {
           return {
-            isLoading: false,
-          };
-        },
-      });
-      const loadingOverlay = wrapper.find(".fixed.inset-0.bg-base-200");
-      expect(loadingOverlay.exists()).toBe(false);
-    });
-  });
+            isLoading: false
+          }
+        }
+      })
+      const loadingOverlay = wrapper.find('.fixed.inset-0.bg-base-200')
+      expect(loadingOverlay.exists()).toBe(false)
+    })
+  })
 
-  describe("Tabs Navigation", () => {
-    it("should render tabs container", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const tabsContainer = wrapper.find(
-        ".bg-base-100.rounded-2xl.shadow-lg.p-1",
-      );
-      expect(tabsContainer.exists()).toBe(true);
-    });
+  describe('Tabs Navigation', () => {
+    it('should render tabs container', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const tabsContainer = wrapper.find('.bg-base-100.rounded-2xl.shadow-lg.p-1')
+      expect(tabsContainer.exists()).toBe(true)
+    })
 
-    it("should render event tab button", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const buttons = wrapper.findAll("button");
-      const eventTab = buttons.filter((btn) =>
-        btn.text().includes("Bénévolat"),
-      );
-      expect(eventTab.length).toBeGreaterThan(0);
-    });
+    it('should render event tab button', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const buttons = wrapper.findAll('button')
+      const eventTab = buttons.filter(btn => btn.text().includes('Bénévolat'))
+      expect(eventTab.length).toBeGreaterThan(0)
+    })
 
-    it("should render association tab button", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const buttons = wrapper.findAll("button");
-      const associationTab = buttons.filter((btn) =>
-        btn.text().includes("Adhésion"),
-      );
-      expect(associationTab.length).toBeGreaterThan(0);
-    });
+    it('should render association tab button', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const buttons = wrapper.findAll('button')
+      const associationTab = buttons.filter(btn => btn.text().includes('Adhésion'))
+      expect(associationTab.length).toBeGreaterThan(0)
+    })
 
-    it("should have active tab styling", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const activeTab = wrapper.find(".bg-primary.text-primary-content");
-      expect(activeTab.exists()).toBe(true);
-    });
+    it('should have active tab styling', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const activeTab = wrapper.find('.bg-primary.text-primary-content')
+      expect(activeTab.exists()).toBe(true)
+    })
 
-    it("should have responsive tab text", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const responsiveText = wrapper.find(".hidden.sm\\:inline");
-      expect(responsiveText.exists()).toBe(true);
-    });
-  });
+    it('should have responsive tab text', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const responsiveText = wrapper.find('.hidden.sm\\:inline')
+      expect(responsiveText.exists()).toBe(true)
+    })
+  })
 
-  describe("Event Requests Section", () => {
-    it("should render event requests title", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const title = wrapper.find("h2");
-      expect(title.exists()).toBe(true);
-      expect(title.text()).toBe("Demandes de bénévolat à un événement");
-    });
+  describe('Event Requests Section', () => {
+    it('should render event requests title', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const title = wrapper.find('h2')
+      expect(title.exists()).toBe(true)
+      expect(title.text()).toBe('Demandes de bénévolat à un événement')
+    })
 
-    it("should display request count badge", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const badge = wrapper.find(".badge.badge-primary");
-      expect(badge.exists()).toBe(true);
-      expect(badge.text()).toContain("2 demande");
-    });
+    it('should display request count badge', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const badge = wrapper.find('.badge.badge-primary')
+      expect(badge.exists()).toBe(true)
+      expect(badge.text()).toContain('2 demande')
+    })
 
-    it("should render request items when requests exist", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const requestItems = wrapper.findAll(".request-item");
-      expect(requestItems.length).toBeGreaterThan(0);
-    });
+    it('should render request items when requests exist', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const requestItems = wrapper.findAll('.request-item')
+      expect(requestItems.length).toBeGreaterThan(0)
+    })
 
-    it("should render request cards with proper styling", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const requestCards = wrapper.findAll(
-        ".bg-base-100.rounded-2xl.shadow-lg",
-      );
-      expect(requestCards.length).toBeGreaterThan(0);
-    });
+    it('should render request cards with proper styling', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const requestCards = wrapper.findAll('.bg-base-100.rounded-2xl.shadow-lg')
+      expect(requestCards.length).toBeGreaterThan(0)
+    })
 
-    it("should show empty state when no requests", () => {
+    it('should show empty state when no requests', () => {
       const wrapper = mount(MockAssociationRequests, {
         data() {
           return {
-            eventRequests: [],
-          };
-        },
-      });
-      const emptyState = wrapper.find(".text-center.py-12");
-      expect(emptyState.exists()).toBe(true);
-    });
+            eventRequests: []
+          }
+        }
+      })
+      const emptyState = wrapper.find('.text-center.py-12')
+      expect(emptyState.exists()).toBe(true)
+    })
 
-    it("should display empty state message", () => {
+    it('should display empty state message', () => {
       const wrapper = mount(MockAssociationRequests, {
         data() {
           return {
-            eventRequests: [],
-          };
-        },
-      });
-      const message = wrapper.find("h3.text-lg.font-medium");
-      expect(message.exists()).toBe(true);
-      expect(message.text()).toBe("Aucune demande");
-    });
-  });
+            eventRequests: []
+          }
+        }
+      })
+      const message = wrapper.find('h3.text-lg.font-medium')
+      expect(message.exists()).toBe(true)
+      expect(message.text()).toBe('Aucune demande')
+    })
+  })
 
-  describe("Association Requests Section", () => {
-    it("should render association requests when tab is association", () => {
+  describe('Association Requests Section', () => {
+    it('should render association requests when tab is association', () => {
       const wrapper = mount(MockAssociationRequests, {
         data() {
           return {
-            tab: "association",
-          };
-        },
-      });
-      const title = wrapper.find("h2");
-      expect(title.text()).toBe("Demandes d'adhésion à l'association");
-    });
+            tab: 'association'
+          }
+        }
+      })
+      const title = wrapper.find('h2')
+      expect(title.text()).toBe("Demandes d'adhésion à l'association")
+    })
 
-    it("should display association request count", () => {
+    it('should display association request count', () => {
       const wrapper = mount(MockAssociationRequests, {
         data() {
           return {
-            tab: "association",
-          };
-        },
-      });
-      const badge = wrapper.find(".badge.badge-primary");
-      expect(badge.exists()).toBe(true);
-      expect(badge.text()).toContain("1 demande");
-    });
+            tab: 'association'
+          }
+        }
+      })
+      const badge = wrapper.find('.badge.badge-primary')
+      expect(badge.exists()).toBe(true)
+      expect(badge.text()).toContain('1 demande')
+    })
 
-    it("should render association request items", () => {
+    it('should render association request items', () => {
       const wrapper = mount(MockAssociationRequests, {
         data() {
           return {
-            tab: "association",
-          };
-        },
-      });
-      const requestItems = wrapper.findAll(".request-item");
-      expect(requestItems.length).toBeGreaterThan(0);
-    });
+            tab: 'association'
+          }
+        }
+      })
+      const requestItems = wrapper.findAll('.request-item')
+      expect(requestItems.length).toBeGreaterThan(0)
+    })
 
-    it("should show empty state for association requests", () => {
+    it('should show empty state for association requests', () => {
       const wrapper = mount(MockAssociationRequests, {
         data() {
           return {
-            tab: "association",
-            associationRequests: [],
-          };
-        },
-      });
-      const emptyState = wrapper.find(".text-center.py-12");
-      expect(emptyState.exists()).toBe(true);
-    });
-  });
+            tab: 'association',
+            associationRequests: []
+          }
+        }
+      })
+      const emptyState = wrapper.find('.text-center.py-12')
+      expect(emptyState.exists()).toBe(true)
+    })
+  })
 
-  describe("Request Item Integration", () => {
-    it("should pass correct props to RequestItem for events", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const requestItems = wrapper.findAll(".request-item");
-      expect(requestItems.length).toBeGreaterThan(0);
-    });
+  describe('Request Item Integration', () => {
+    it('should pass correct props to RequestItem for events', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const requestItems = wrapper.findAll('.request-item')
+      expect(requestItems.length).toBeGreaterThan(0)
+    })
 
-    it("should pass correct props to RequestItem for associations", () => {
+    it('should pass correct props to RequestItem for associations', () => {
       const wrapper = mount(MockAssociationRequests, {
         data() {
           return {
-            tab: "association",
-          };
-        },
-      });
-      const requestItems = wrapper.findAll(".request-item");
-      expect(requestItems.length).toBeGreaterThan(0);
-    });
-  });
+            tab: 'association'
+          }
+        }
+      })
+      const requestItems = wrapper.findAll('.request-item')
+      expect(requestItems.length).toBeGreaterThan(0)
+    })
+  })
 
-  describe("Error Handling", () => {
-    it("should render error popup component", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const errorPopup = wrapper.find(".error-popup");
-      expect(errorPopup.exists()).toBe(true);
-    });
+  describe('Error Handling', () => {
+    it('should render error popup component', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const errorPopup = wrapper.find('.error-popup')
+      expect(errorPopup.exists()).toBe(true)
+    })
 
-    it("should handle 5xx errors", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const error = { response: { status: 500 } };
-      wrapper.vm.handleError(error);
-      expect(wrapper.vm.errorType).toBe("5xx");
-      expect(wrapper.vm.showErrorModal).toBe(true);
-    });
+    it('should handle 5xx errors', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const error = { response: { status: 500 } }
+      wrapper.vm.handleError(error)
+      expect(wrapper.vm.errorType).toBe('5xx')
+      expect(wrapper.vm.showErrorModal).toBe(true)
+    })
 
-    it("should handle 4xx errors", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const error = { response: { status: 400 } };
-      wrapper.vm.handleError(error);
-      expect(wrapper.vm.errorType).toBe("4xx");
-      expect(wrapper.vm.showErrorModal).toBe(true);
-    });
-  });
+    it('should handle 4xx errors', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const error = { response: { status: 400 } }
+      wrapper.vm.handleError(error)
+      expect(wrapper.vm.errorType).toBe('4xx')
+      expect(wrapper.vm.showErrorModal).toBe(true)
+    })
+  })
 
-  describe("Request Actions", () => {
-    it("should handle accept request announcement", async () => {
-      const wrapper = mount(MockAssociationRequests);
-      await wrapper.vm.acceptRequestAnnouncement("1", "Bénévole 1");
+  describe('Request Actions', () => {
+    it('should handle accept request announcement', async () => {
+      const wrapper = mount(MockAssociationRequests)
+      await wrapper.vm.acceptRequestAnnouncement('1', 'Bénévole 1')
       // Mock implementation should not throw
-    });
+    })
 
-    it("should handle refuse request announcement", async () => {
-      const wrapper = mount(MockAssociationRequests);
-      await wrapper.vm.refuseRequestAnnouncement("1");
+    it('should handle refuse request announcement', async () => {
+      const wrapper = mount(MockAssociationRequests)
+      await wrapper.vm.refuseRequestAnnouncement('1')
       // Mock implementation should not throw
-    });
+    })
 
-    it("should handle accept request association", async () => {
-      const wrapper = mount(MockAssociationRequests);
-      await wrapper.vm.acceptRequestAssociation("assoc1", "1", "Bénévole 1");
+    it('should handle accept request association', async () => {
+      const wrapper = mount(MockAssociationRequests)
+      await wrapper.vm.acceptRequestAssociation('assoc1', '1', 'Bénévole 1')
       // Mock implementation should not throw
-    });
+    })
 
-    it("should handle refuse request association", async () => {
-      const wrapper = mount(MockAssociationRequests);
-      await wrapper.vm.refuseRequestAssociation("assoc1", "1");
+    it('should handle refuse request association', async () => {
+      const wrapper = mount(MockAssociationRequests)
+      await wrapper.vm.refuseRequestAssociation('assoc1', '1')
       // Mock implementation should not throw
-    });
-  });
+    })
+  })
 
-  describe("Responsive Design", () => {
-    it("should have responsive container classes", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const container = wrapper.find(".container.mx-auto.px-4");
-      expect(container.exists()).toBe(true);
-    });
+  describe('Responsive Design', () => {
+    it('should have responsive container classes', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const container = wrapper.find('.container.mx-auto.px-4')
+      expect(container.exists()).toBe(true)
+    })
 
-    it("should have responsive grid layout", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const grid = wrapper.find(
-        ".grid.gap-4.md\\:grid-cols-2.lg\\:grid-cols-3",
-      );
-      expect(grid.exists()).toBe(true);
-    });
+    it('should have responsive grid layout', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const grid = wrapper.find('.grid.gap-4.md\\:grid-cols-2.lg\\:grid-cols-3')
+      expect(grid.exists()).toBe(true)
+    })
 
-    it("should have responsive text sizing", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const title = wrapper.find("h1.text-3xl.md\\:text-4xl");
-      expect(title.exists()).toBe(true);
-    });
-  });
+    it('should have responsive text sizing', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const title = wrapper.find('h1.text-3xl.md\\:text-4xl')
+      expect(title.exists()).toBe(true)
+    })
+  })
 
-  describe("Accessibility", () => {
-    it("should have proper heading structure", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const headings = wrapper.findAll("h1, h2, h3");
-      expect(headings.length).toBeGreaterThan(0);
-    });
+  describe('Accessibility', () => {
+    it('should have proper heading structure', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const headings = wrapper.findAll('h1, h2, h3')
+      expect(headings.length).toBeGreaterThan(0)
+    })
 
-    it("should have proper alt text for images", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const images = wrapper.findAll("img");
-      images.forEach((img) => {
-        expect(img.attributes("alt")).toBeDefined();
-      });
-    });
+    it('should have proper alt text for images', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const images = wrapper.findAll('img')
+      images.forEach(img => {
+        expect(img.attributes('alt')).toBeDefined()
+      })
+    })
 
-    it("should have proper button types", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const buttons = wrapper.findAll("button");
-      expect(buttons.length).toBeGreaterThan(0);
-    });
-  });
+    it('should have proper button types', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const buttons = wrapper.findAll('button')
+      expect(buttons.length).toBeGreaterThan(0)
+    })
+  })
 
-  describe("Data Management", () => {
-    it("should initialize data correctly", async () => {
-      const wrapper = mount(MockAssociationRequests);
-      await wrapper.vm.initData();
+  describe('Data Management', () => {
+    it('should initialize data correctly', async () => {
+      const wrapper = mount(MockAssociationRequests)
+      await wrapper.vm.initData()
       // Mock implementation should not throw
-    });
+    })
 
-    it("should build event requests", async () => {
-      const wrapper = mount(MockAssociationRequests);
-      await wrapper.vm.buildEventRequests();
+    it('should build event requests', async () => {
+      const wrapper = mount(MockAssociationRequests)
+      await wrapper.vm.buildEventRequests()
       // Mock implementation should not throw
-    });
+    })
 
-    it("should build association requests", async () => {
-      const wrapper = mount(MockAssociationRequests);
-      await wrapper.vm.buildAssociationRequests();
+    it('should build association requests', async () => {
+      const wrapper = mount(MockAssociationRequests)
+      await wrapper.vm.buildAssociationRequests()
       // Mock implementation should not throw
-    });
-  });
+    })
+  })
 
-  describe("Component Integration", () => {
-    it("should integrate with RequestItem component", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const requestItems = wrapper.findAll(".request-item");
-      expect(requestItems.length).toBeGreaterThan(0);
-    });
+  describe('Component Integration', () => {
+    it('should integrate with RequestItem component', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const requestItems = wrapper.findAll('.request-item')
+      expect(requestItems.length).toBeGreaterThan(0)
+    })
 
-    it("should integrate with ErrorPopup component", () => {
-      const wrapper = mount(MockAssociationRequests);
-      const errorPopup = wrapper.find(".error-popup");
-      expect(errorPopup.exists()).toBe(true);
-    });
-  });
-});
+    it('should integrate with ErrorPopup component', () => {
+      const wrapper = mount(MockAssociationRequests)
+      const errorPopup = wrapper.find('.error-popup')
+      expect(errorPopup.exists()).toBe(true)
+    })
+  })
+})

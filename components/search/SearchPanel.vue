@@ -1,22 +1,11 @@
 <template>
-  <div
-    class="bg-base-100 rounded-lg shadow-md p-4"
-    role="search"
-    aria-label="Panneau de recherche"
-  >
-    <h2
-      id="search-panel-heading"
-      class="text-xl font-semibold mb-4 text-base-content"
-    >
+  <div class="bg-base-100 rounded-lg shadow-md p-4" role="search" aria-label="Panneau de recherche">
+    <h2 id="search-panel-heading" class="text-xl font-semibold mb-4 text-base-content">
       Recherche
     </h2>
 
     <!-- Search form -->
-    <form
-      class="space-y-4"
-      aria-labelledby="search-panel-heading"
-      @submit.prevent="performSearch"
-    >
+    <form class="space-y-4" aria-labelledby="search-panel-heading" @submit.prevent="performSearch">
       <div class="form-control">
         <label for="search-input" class="label">
           <span class="label-text text-base-content">Rechercher</span>
@@ -31,7 +20,7 @@
             aria-describedby="search-description"
             autocomplete="off"
             @keyup.enter="performSearch"
-          >
+          />
           <button
             type="submit"
             class="btn btn-square focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -41,22 +30,14 @@
             <Search class="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
-        <div
-          id="search-description"
-          class="text-sm text-base-content opacity-70 mt-1"
-        >
+        <div id="search-description" class="text-sm text-base-content opacity-70 mt-1">
           Tapez vos mots-clés pour trouver des missions et organisations
         </div>
       </div>
 
       <!-- Filters -->
-      <fieldset
-        class="grid grid-cols-1 md:grid-cols-2 gap-4"
-        aria-labelledby="filters-heading"
-      >
-        <legend id="filters-heading" class="sr-only">
-          Filtres de recherche
-        </legend>
+      <fieldset class="grid grid-cols-1 md:grid-cols-2 gap-4" aria-labelledby="filters-heading">
+        <legend id="filters-heading" class="sr-only">Filtres de recherche</legend>
 
         <div class="form-control">
           <label for="category-select" class="label">
@@ -68,24 +49,12 @@
             class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             aria-label="Filtrer par catégorie"
           >
-            <option value="">
-              Toutes les catégories
-            </option>
-            <option value="environmental">
-              Environnement
-            </option>
-            <option value="humanitarian">
-              Humanitaire
-            </option>
-            <option value="education">
-              Éducation
-            </option>
-            <option value="health">
-              Santé
-            </option>
-            <option value="community">
-              Communauté
-            </option>
+            <option value="">Toutes les catégories</option>
+            <option value="environmental">Environnement</option>
+            <option value="humanitarian">Humanitaire</option>
+            <option value="education">Éducation</option>
+            <option value="health">Santé</option>
+            <option value="community">Communauté</option>
           </select>
         </div>
 
@@ -99,24 +68,12 @@
             class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             aria-label="Filtrer par localisation"
           >
-            <option value="">
-              Toutes les localisations
-            </option>
-            <option value="paris">
-              Paris
-            </option>
-            <option value="lyon">
-              Lyon
-            </option>
-            <option value="marseille">
-              Marseille
-            </option>
-            <option value="bordeaux">
-              Bordeaux
-            </option>
-            <option value="lille">
-              Lille
-            </option>
+            <option value="">Toutes les localisations</option>
+            <option value="paris">Paris</option>
+            <option value="lyon">Lyon</option>
+            <option value="marseille">Marseille</option>
+            <option value="bordeaux">Bordeaux</option>
+            <option value="lille">Lille</option>
           </select>
         </div>
 
@@ -130,24 +87,12 @@
             class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             aria-label="Filtrer par période"
           >
-            <option value="">
-              N'importe quand
-            </option>
-            <option value="today">
-              Aujourd'hui
-            </option>
-            <option value="this-week">
-              Cette semaine
-            </option>
-            <option value="this-month">
-              Ce mois
-            </option>
-            <option value="next-month">
-              Mois prochain
-            </option>
-            <option value="custom">
-              Période personnalisée
-            </option>
+            <option value="">N'importe quand</option>
+            <option value="today">Aujourd'hui</option>
+            <option value="this-week">Cette semaine</option>
+            <option value="this-month">Ce mois</option>
+            <option value="next-month">Mois prochain</option>
+            <option value="custom">Période personnalisée</option>
           </select>
         </div>
 
@@ -161,18 +106,10 @@
             class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             aria-label="Filtrer par type"
           >
-            <option value="">
-              Tous les types
-            </option>
-            <option value="missions">
-              Missions
-            </option>
-            <option value="organizations">
-              Organisations
-            </option>
-            <option value="events">
-              Événements
-            </option>
+            <option value="">Tous les types</option>
+            <option value="missions">Missions</option>
+            <option value="organizations">Organisations</option>
+            <option value="events">Événements</option>
           </select>
         </div>
       </fieldset>
@@ -183,9 +120,7 @@
         class="grid grid-cols-1 md:grid-cols-2 gap-4"
         aria-labelledby="custom-date-heading"
       >
-        <legend id="custom-date-heading" class="sr-only">
-          Période personnalisée
-        </legend>
+        <legend id="custom-date-heading" class="sr-only">Période personnalisée</legend>
 
         <div class="form-control">
           <label for="start-date" class="label">
@@ -197,7 +132,7 @@
             type="date"
             class="input input-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             aria-label="Sélectionner la date de début"
-          >
+          />
         </div>
 
         <div class="form-control">
@@ -210,16 +145,12 @@
             type="date"
             class="input input-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             aria-label="Sélectionner la date de fin"
-          >
+          />
         </div>
       </fieldset>
 
       <!-- Action buttons -->
-      <div
-        class="flex justify-end gap-2"
-        role="group"
-        aria-label="Actions de recherche"
-      >
+      <div class="flex justify-end gap-2" role="group" aria-label="Actions de recherche">
         <button
           type="button"
           class="btn btn-outline focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -242,42 +173,42 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Search } from 'lucide-vue-next'
+  import { ref } from 'vue'
+  import { Search } from 'lucide-vue-next'
 
-const emit = defineEmits(['search'])
+  const emit = defineEmits(['search'])
 
-const searchQuery = ref('')
-const filters = ref({
-  category: '',
-  location: '',
-  dateRange: '',
-  type: '',
-  startDate: '',
-  endDate: ''
-})
-
-function performSearch () {
-  emit('search', {
-    query: searchQuery.value,
-    filters: { ...filters.value }
-  })
-}
-
-function resetFilters () {
-  searchQuery.value = ''
-  filters.value = {
+  const searchQuery = ref('')
+  const filters = ref({
     category: '',
     location: '',
     dateRange: '',
     type: '',
     startDate: '',
     endDate: ''
-  }
-  // Émettre une recherche vide pour réinitialiser les résultats
-  emit('search', {
-    query: '',
-    filters: { ...filters.value }
   })
-}
+
+  function performSearch() {
+    emit('search', {
+      query: searchQuery.value,
+      filters: { ...filters.value }
+    })
+  }
+
+  function resetFilters() {
+    searchQuery.value = ''
+    filters.value = {
+      category: '',
+      location: '',
+      dateRange: '',
+      type: '',
+      startDate: '',
+      endDate: ''
+    }
+    // Émettre une recherche vide pour réinitialiser les résultats
+    emit('search', {
+      query: '',
+      filters: { ...filters.value }
+    })
+  }
 </script>

@@ -51,9 +51,7 @@
         <!-- Boutons de filtres -->
         <div class="w-full">
           <!-- Desktop -->
-          <div
-            class="hidden md:flex flex-wrap gap-2 items-center justify-center w-full max-w-full"
-          >
+          <div class="hidden md:flex flex-wrap gap-2 items-center justify-center w-full max-w-full">
             <button
               class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
               :class="showMap ? 'btn-primary' : 'btn-outline'"
@@ -84,7 +82,7 @@
                       :checked="filters.sort === sortOption.value"
                       class="checkbox checkbox-xs mr-2"
                       aria-label="Champ de saisie"
-                    >
+                    />
                     {{ sortOption.label }}
                   </a>
                 </li>
@@ -104,17 +102,14 @@
               <ul
                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50"
               >
-                <li
-                  v-for="statusOption in statusOptions"
-                  :key="statusOption.value"
-                >
+                <li v-for="statusOption in statusOptions" :key="statusOption.value">
                   <a @click.stop="applyStatus(statusOption.value)">
                     <input
                       type="checkbox"
                       :checked="filters.status === statusOption.value"
                       class="checkbox checkbox-xs mr-2"
                       aria-label="Champ de saisie"
-                    >
+                    />
                     {{ statusOption.label }}
                   </a>
                 </li>
@@ -143,7 +138,7 @@
                         :checked="selectedTags.includes(tag)"
                         class="checkbox checkbox-xs mr-2"
                         aria-label="Champ de saisie"
-                      >
+                      />
                       {{ tag }}
                     </a>
                   </li>
@@ -164,7 +159,7 @@
                         class="input input-sm input-bordered w-full"
                         placeholder="Nouveau type…"
                         @keydown.enter.prevent="addCustomTag"
-                      >
+                      />
                       <button
                         class="btn btn-sm btn-ghost"
                         title="Annuler"
@@ -199,7 +194,7 @@
             <button
               :class="[
                 'btn btn-sm rounded-full flex items-center gap-1 justify-center basis-1/3',
-                showMap ? 'btn-primary' : 'btn-outline',
+                showMap ? 'btn-primary' : 'btn-outline'
               ]"
               @click="toggleMap"
             >
@@ -227,22 +222,15 @@
         <!-- Drawer Mobile -->
         <div v-if="mobileFiltersOpen" class="fixed inset-0 z-50 md:hidden">
           <!-- Overlay -->
-          <div
-            class="absolute inset-0 bg-black/50"
-            @click="closeMobileFilters"
-          />
+          <div class="absolute inset-0 bg-black/50" @click="closeMobileFilters" />
 
           <!-- Drawer -->
-          <div
-            class="absolute right-0 top-0 h-full w-80 bg-base-100 shadow-xl flex flex-col"
-          >
+          <div class="absolute right-0 top-0 h-full w-80 bg-base-100 shadow-xl flex flex-col">
             <!-- Header fixe -->
             <div
               class="flex justify-between items-center p-4 border-b border-base-300 flex-shrink-0"
             >
-              <h3 class="text-lg font-bold">
-                Filtres
-              </h3>
+              <h3 class="text-lg font-bold">Filtres</h3>
               <button class="btn btn-ghost btn-sm" @click="closeMobileFilters">
                 <X class="w-5 h-5" />
               </button>
@@ -262,7 +250,7 @@
                         'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
                         showSortMenu
                           ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
-                          : 'hover:bg-base-200 hover:shadow-sm',
+                          : 'hover:bg-base-200 hover:shadow-sm'
                       ]"
                       @click="toggleSortMenu"
                     >
@@ -288,19 +276,16 @@
                             'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
                             filters.sort === sortOption.value
                               ? 'bg-primary/20 text-primary'
-                              : 'hover:bg-base-200',
+                              : 'hover:bg-base-200'
                           ]"
-                          @click="
-                            applySort(sortOption.value);
-                            showSortMenu = false;
-                          "
+                          @click="handleSort(sortOption.value)"
                         >
                           <input
                             type="radio"
                             :checked="filters.sort === sortOption.value"
                             class="radio radio-sm radio-primary"
                             aria-label="Champ de saisie"
-                          >
+                          />
                           <span class="text-sm">{{ sortOption.label }}</span>
                         </button>
                       </div>
@@ -319,7 +304,7 @@
                         'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
                         showStatusMenu
                           ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
-                          : 'hover:bg-base-200 hover:shadow-sm',
+                          : 'hover:bg-base-200 hover:shadow-sm'
                       ]"
                       @click="toggleStatusMenu"
                     >
@@ -345,19 +330,16 @@
                             'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
                             filters.status === statusOption.value
                               ? 'bg-primary/20 text-primary'
-                              : 'hover:bg-base-200',
+                              : 'hover:bg-base-200'
                           ]"
-                          @click="
-                            applyStatus(statusOption.value);
-                            showStatusMenu = false;
-                          "
+                          @click="handleStatus(statusOption.value)"
                         >
                           <input
                             type="radio"
                             :checked="filters.status === statusOption.value"
                             class="radio radio-sm radio-primary"
                             aria-label="Champ de saisie"
-                          >
+                          />
                           <span class="text-sm">{{ statusOption.label }}</span>
                         </button>
                       </div>
@@ -376,7 +358,7 @@
                         'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
                         showTagsMenu
                           ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
-                          : 'hover:bg-base-200 hover:shadow-sm',
+                          : 'hover:bg-base-200 hover:shadow-sm'
                       ]"
                       @click="toggleTagsMenu"
                     >
@@ -402,7 +384,7 @@
                             'flex items-center gap-3 p-2 rounded-lg w-full text-left transition-colors',
                             selectedTags.includes(tag)
                               ? 'bg-primary/20 text-primary'
-                              : 'hover:bg-base-200',
+                              : 'hover:bg-base-200'
                           ]"
                           @click="toggleTag(tag)"
                         >
@@ -411,7 +393,7 @@
                             :checked="selectedTags.includes(tag)"
                             class="checkbox checkbox-sm checkbox-primary"
                             aria-label="Champ de saisie"
-                          >
+                          />
                           <span class="text-sm">{{ tag }}</span>
                         </button>
 
@@ -434,17 +416,9 @@
                               class="input input-sm input-bordered flex-1"
                               placeholder="Nouveau type…"
                               @keydown.enter.prevent="addCustomTag"
-                            >
-                            <button
-                              class="btn btn-sm btn-primary"
-                              @click="addCustomTag"
-                            >
-                              +
-                            </button>
-                            <button
-                              class="btn btn-sm btn-ghost"
-                              @click="cancelCustomInput"
-                            >
+                            />
+                            <button class="btn btn-sm btn-primary" @click="addCustomTag">+</button>
+                            <button class="btn btn-sm btn-ghost" @click="cancelCustomInput">
                               ✕
                             </button>
                           </div>
@@ -459,13 +433,7 @@
                   <label class="label">
                     <span class="label-text font-medium">Filtres avancés</span>
                   </label>
-                  <button
-                    class="btn btn-outline w-full"
-                    @click="
-                      showAdvancedFilters = true;
-                      closeMobileFilters();
-                    "
-                  >
+                  <button class="btn btn-outline w-full" @click="handleAdvancedFilters">
                     <SlidersHorizontal class="w-4 h-4 mr-2" />
                     Configurer les filtres avancés
                   </button>
@@ -473,13 +441,8 @@
 
                 <!-- Actions -->
                 <div class="flex gap-2 pt-4 border-t border-base-300">
-                  <button class="btn btn-ghost flex-1" @click="resetFilters">
-                    Réinitialiser
-                  </button>
-                  <button
-                    class="btn btn-primary flex-1"
-                    @click="closeMobileFilters"
-                  >
+                  <button class="btn btn-ghost flex-1" @click="resetFilters">Réinitialiser</button>
+                  <button class="btn btn-primary flex-1" @click="closeMobileFilters">
                     Appliquer
                   </button>
                 </div>
@@ -507,376 +470,159 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref,
-  onMounted,
-  onUnmounted,
-  computed,
-  defineEmits,
-  watch,
-  nextTick
-} from 'vue'
-import {
-  Map,
-  SortAsc,
-  ChevronRight,
-  SlidersHorizontal,
-  CircleDot,
-  Tag,
-  Plus,
-  X
-} from 'lucide-vue-next'
-import type { Announcement } from '~/common/interface/event.interface'
-import type {
-  FilterAnnouncement,
-  AnnouncementStatus,
-  SortOption
-} from '~/common/interface/filter.interface'
-import { useUserLocation } from '~/composables/useUserLocation'
-import FilterActive from '~/components/event/volunteer/utils/FilterActive.vue'
-import AdvancedFilters from '~/components/event/volunteer/utils/AdvancedFilters.vue'
-import LocationButton from '~/components/event/volunteer/utils/LocationButton.vue'
+  import { ref, onMounted, onUnmounted, computed, defineEmits, watch, nextTick } from 'vue'
+  import {
+    Map,
+    SortAsc,
+    ChevronRight,
+    SlidersHorizontal,
+    CircleDot,
+    Tag,
+    Plus,
+    X
+  } from 'lucide-vue-next'
+  import type { Announcement } from '~/common/interface/event.interface'
+  import type {
+    FilterAnnouncement,
+    AnnouncementStatus,
+    SortOption
+  } from '~/common/interface/filter.interface'
+  import { useUserLocation } from '~/composables/useUserLocation'
+  import FilterActive from '~/components/event/volunteer/utils/FilterActive.vue'
+  import AdvancedFilters from '~/components/event/volunteer/utils/AdvancedFilters.vue'
+  import LocationButton from '~/components/event/volunteer/utils/LocationButton.vue'
 
-const props = defineProps<{
-  announcements: Announcement[];
-  tags?: string[];
-}>()
+  const props = defineProps<{
+    announcements: Announcement[]
+    tags?: string[]
+  }>()
 
-const emit = defineEmits<{
-  (e: 'filter', filters: FilterAnnouncement): void;
-  (e: 'type', type: string): void;
-  (e: 'map'): void;
-}>()
+  const emit = defineEmits<{
+    (e: 'filter', filters: FilterAnnouncement): void
+    (e: 'type', type: string): void
+    (e: 'map'): void
+  }>()
 
-const showMap = ref(false)
+  const showMap = ref(false)
 
-const locations = computed(() => {
-  return props.announcements
-    .filter(announcement => announcement.locationAnnouncement)
-    .map(announcement => announcement.locationAnnouncement!)
-})
+  const locations = computed(() => {
+    return props.announcements
+      .filter(announcement => announcement.locationAnnouncement)
+      .map(announcement => announcement.locationAnnouncement!)
+  })
 
-const eventsData = computed(() => {
-  return props.announcements
-    .filter(announcement => announcement.locationAnnouncement)
-    .map(announcement => ({
-      name: announcement.nameEvent,
-      description: announcement.description,
-      date: announcement.dateEvent,
-      location:
-        announcement.addressAnnouncement?.city || 'Localisation inconnue',
-      coordinates: announcement.locationAnnouncement!.coordinates,
-      id: announcement._id
-    }))
-})
+  const eventsData = computed(() => {
+    return props.announcements
+      .filter(announcement => announcement.locationAnnouncement)
+      .map(announcement => ({
+        name: announcement.nameEvent,
+        description: announcement.description,
+        date: announcement.dateEvent,
+        location: announcement.addressAnnouncement?.city || 'Localisation inconnue',
+        coordinates: announcement.locationAnnouncement!.coordinates,
+        id: announcement._id
+      }))
+  })
 
-// Filter related
-const showAdvancedFilters = ref(false)
-const selectedTags = ref<string[]>([])
-const selectedTypes = ref<string[]>([])
-const userLocation = useUserLocation()
-const announcement = useAnnouncement()
+  // Filter related
+  const showAdvancedFilters = ref(false)
+  const selectedTags = ref<string[]>([])
+  const selectedTypes = ref<string[]>([])
+  const userLocation = useUserLocation()
+  const announcement = useAnnouncement()
 
-const isOpen = ref(false)
-const searchTimeout = ref<NodeJS.Timeout | null>(null)
-const userCurrentLocation = ref<any>(null)
-const currentLatitude = ref<number | undefined>(undefined)
-const currentLongitude = ref<number | undefined>(undefined)
-const resetLocation = ref(false)
+  const isOpen = ref(false)
+  const searchTimeout = ref<NodeJS.Timeout | null>(null)
+  const userCurrentLocation = ref<any>(null)
+  const currentLatitude = ref<number | undefined>(undefined)
+  const currentLongitude = ref<number | undefined>(undefined)
+  const resetLocation = ref(false)
 
-const currentFilterSearch = ref<FilterAnnouncement>()
+  const currentFilterSearch = ref<FilterAnnouncement>()
 
-watch(
-  () => announcement.getCurrentFilter.value,
-  async (newFilter) => {
-    currentFilterSearch.value = {
-      ...newFilter
-    }
-  }
-)
-
-const tempAdvancedFilters = ref<Partial<FilterAnnouncement>>({
-  dateEventFrom: undefined,
-  dateEventTo: undefined,
-  hoursEventFrom: undefined,
-  hoursEventTo: undefined,
-  datePublicationFrom: undefined,
-  datePublicationTo: undefined,
-  publicationInterval: undefined
-})
-
-const toggleDropdown = () => {
-  isOpen.value = !isOpen.value
-  if (isOpen.value) {
-    nextTick(() => {
-      customInputRef.value?.focus()
-    })
-  }
-}
-const initLocation = async () => {
-  try {
-    const location = await userLocation.getUserLocation()
-    if (location) {
-      currentLatitude.value = location.latitude
-      currentLongitude.value = location.longitude
-      userCurrentLocation.value = {
-        place_id: 'current_location',
-        display_name: 'Ma position actuelle',
-        city: location.city || 'Position détectée',
-        lat: location.latitude.toString(),
-        lon: location.longitude.toString()
+  watch(
+    () => announcement.getCurrentFilter.value,
+    async newFilter => {
+      currentFilterSearch.value = {
+        ...newFilter
       }
-      resetLocation.value = true
     }
-  } catch (error) {
-    console.error('Error getting user location:', error)
-  }
-}
-
-const availableTags = computed(() => {
-  return (
-    props.tags || [
-      'Urgent',
-      'Bénévolat',
-      'Formation',
-      'Événement',
-      'Collecte',
-      'Sensibilisation'
-    ]
   )
-})
 
-const availableTypes = ref([
-  'Humanitaire',
-  'Environnement',
-  'Sport',
-  'Culture',
-  'Éducation',
-  'Santé'
-])
+  const tempAdvancedFilters = ref<Partial<FilterAnnouncement>>({
+    dateEventFrom: undefined,
+    dateEventTo: undefined,
+    hoursEventFrom: undefined,
+    hoursEventTo: undefined,
+    datePublicationFrom: undefined,
+    datePublicationTo: undefined,
+    publicationInterval: undefined
+  })
 
-const sortOptions = ref([
-  {
-    value: 'dateEvent_asc' as SortOption,
-    label: "Date d'événement (croissant)"
-  },
-  {
-    value: 'dateEvent_desc' as SortOption,
-    label: "Date d'événement (décroissant)"
-  },
-  {
-    value: 'datePublication_desc' as SortOption,
-    label: 'Date de publication (récent)'
-  }
-])
-
-const statusOptions = ref([
-  { value: 'ACTIVE' as AnnouncementStatus, label: 'Actif' },
-  { value: 'COMPLETED' as AnnouncementStatus, label: 'Terminé' }
-])
-
-const filters = ref<FilterAnnouncement>({
-  status: undefined,
-  hoursEventFrom: undefined,
-  hoursEventTo: undefined,
-  dateEventFrom: undefined,
-  dateEventTo: undefined,
-  publicationInterval: undefined,
-  datePublicationFrom: undefined,
-  datePublicationTo: undefined,
-  tags: [],
-  latitude: currentLatitude.value,
-  longitude: currentLongitude.value,
-  radius: 0,
-  page: 1,
-  limit: 9,
-  sort: undefined
-})
-
-watch(
-  filters,
-  (newFilters) => {
-    tempAdvancedFilters.value = {
-      dateEventFrom: newFilters.dateEventFrom,
-      dateEventTo: newFilters.dateEventTo,
-      hoursEventFrom: newFilters.hoursEventFrom,
-      hoursEventTo: newFilters.hoursEventTo,
-      datePublicationFrom: newFilters.datePublicationFrom,
-      datePublicationTo: newFilters.datePublicationTo,
-      publicationInterval: newFilters.publicationInterval
+  const toggleDropdown = () => {
+    isOpen.value = !isOpen.value
+    if (isOpen.value) {
+      nextTick(() => {
+        customInputRef.value?.focus()
+      })
     }
-  },
-  { deep: true, immediate: true }
-)
-
-const hasActiveFilters = computed(() => {
-  return (
-    filters.value.status ||
-    filters.value.sort ||
-    selectedTags.value.length > 0 ||
-    selectedTypes.value.length > 0 ||
-    filters.value.dateEventFrom ||
-    filters.value.dateEventTo ||
-    filters.value.hoursEventFrom ||
-    filters.value.hoursEventTo ||
-    filters.value.datePublicationFrom ||
-    filters.value.datePublicationTo ||
-    filters.value.publicationInterval ||
-    filters.value.radius
-  )
-})
-
-const hasAdvancedFilters = computed(() => {
-  return (
-    filters.value.dateEventFrom ||
-    filters.value.dateEventTo ||
-    filters.value.hoursEventFrom ||
-    filters.value.hoursEventTo ||
-    filters.value.datePublicationFrom ||
-    filters.value.datePublicationTo ||
-    filters.value.publicationInterval
-  )
-})
-
-const showLocationDropdown = ref(false)
-const mobileFiltersOpen = ref(false)
-
-const customTag = ref('')
-const showCustomInput = ref(false)
-const customInputRef = ref<HTMLInputElement | null>(null)
-const searchQuery = ref('')
-
-function openMobileFilters () {
-  mobileFiltersOpen.value = true
-}
-
-function closeMobileFilters () {
-  mobileFiltersOpen.value = false
-}
-
-function addCustomTag () {
-  const tag = customTag.value.trim()
-  if (!tag) { return }
-  if (!availableTags.value.includes(tag)) {
-    availableTags.value.push(tag)
   }
-  if (!selectedTags.value.includes(tag)) {
-    selectedTags.value.push(tag)
+  const initLocation = async () => {
+    try {
+      const location = await userLocation.getUserLocation()
+      if (location) {
+        currentLatitude.value = location.latitude
+        currentLongitude.value = location.longitude
+        userCurrentLocation.value = {
+          place_id: 'current_location',
+          display_name: 'Ma position actuelle',
+          city: location.city || 'Position détectée',
+          lat: location.latitude.toString(),
+          lon: location.longitude.toString()
+        }
+        resetLocation.value = true
+      }
+    } catch (error) {
+      console.error('Error getting user location:', error)
+    }
   }
-  customTag.value = ''
-  showCustomInput.value = false
-  updateFilters()
-}
 
-function cancelCustomInput () {
-  customTag.value = ''
-  showCustomInput.value = false
-}
+  const availableTags = computed(() => {
+    return (
+      props.tags || ['Urgent', 'Bénévolat', 'Formation', 'Événement', 'Collecte', 'Sensibilisation']
+    )
+  })
 
-function openCustomInput () {
-  showCustomInput.value = true
-}
+  const availableTypes = ref([
+    'Humanitaire',
+    'Environnement',
+    'Sport',
+    'Culture',
+    'Éducation',
+    'Santé'
+  ])
 
-watch(showCustomInput, (val) => {
-  if (val) { nextTick(() => customInputRef.value && customInputRef.value?.focus()) }
-})
+  const sortOptions = ref([
+    {
+      value: 'dateEvent_asc' as SortOption,
+      label: "Date d'événement (croissant)"
+    },
+    {
+      value: 'dateEvent_desc' as SortOption,
+      label: "Date d'événement (décroissant)"
+    },
+    {
+      value: 'datePublication_desc' as SortOption,
+      label: 'Date de publication (récent)'
+    }
+  ])
 
-watch(searchQuery, (newQuery) => {
-  if (newQuery !== undefined) {
-  }
-})
+  const statusOptions = ref([
+    { value: 'ACTIVE' as AnnouncementStatus, label: 'Actif' },
+    { value: 'COMPLETED' as AnnouncementStatus, label: 'Terminé' }
+  ])
 
-const toggleMap = () => {
-  showMap.value = !showMap.value
-  emit('map')
-}
-
-const toggleTag = (tag: string) => {
-  if (selectedTags.value.includes(tag)) {
-    selectedTags.value = selectedTags.value.filter(t => t !== tag)
-  } else {
-    selectedTags.value.push(tag)
-  }
-  updateFilters()
-}
-
-function onFilterUpdate (newFilters: FilterAnnouncement) {
-  filters.value = newFilters
-  resetLocation.value = false
-  updateFilters()
-}
-
-const updateFilters = () => {
-  const allTags = [...selectedTags.value, ...selectedTypes.value]
-  filters.value.tags = allTags.length > 0 ? allTags : undefined
-  applyFilters()
-}
-
-const applySort = (sort: SortOption) => {
-  filters.value.sort = sort
-  applyFilters()
-}
-
-const applyStatus = (status: AnnouncementStatus) => {
-  filters.value.status = status
-  applyFilters()
-}
-
-const closeAdvancedFilters = () => {
-  showAdvancedFilters.value = false
-}
-
-const removeStatus = () => {
-  filters.value.status = undefined
-  applyFilters()
-}
-
-const removeSort = () => {
-  filters.value.sort = undefined
-  applyFilters()
-}
-
-const removeTag = (tag: string) => {
-  selectedTags.value = selectedTags.value.filter(t => t !== tag)
-  updateFilters()
-}
-
-const removeType = (type: string) => {
-  selectedTypes.value = selectedTypes.value.filter(t => t !== type)
-  updateFilters()
-}
-
-const removeDateEvent = () => {
-  filters.value.dateEventFrom = undefined
-  filters.value.dateEventTo = undefined
-  applyFilters()
-}
-
-const removeHoursEvent = () => {
-  filters.value.hoursEventFrom = undefined
-  filters.value.hoursEventTo = undefined
-  applyFilters()
-}
-
-const removeDatePublication = () => {
-  filters.value.datePublicationFrom = undefined
-  filters.value.datePublicationTo = undefined
-  applyFilters()
-}
-
-const removePublicationInterval = () => {
-  filters.value.publicationInterval = undefined
-  applyFilters()
-}
-
-const removeRadius = () => {
-  filters.value.radius = 0
-  resetLocation.value = true
-  applyFilters()
-}
-
-const resetFilters = () => {
-  filters.value = {
+  const filters = ref<FilterAnnouncement>({
     status: undefined,
     hoursEventFrom: undefined,
     hoursEventTo: undefined,
@@ -892,389 +638,603 @@ const resetFilters = () => {
     page: 1,
     limit: 9,
     sort: undefined
-  }
-  selectedTags.value = []
-  selectedTypes.value = []
+  })
 
-  tempAdvancedFilters.value = {
-    dateEventFrom: undefined,
-    dateEventTo: undefined,
-    hoursEventFrom: undefined,
-    hoursEventTo: undefined,
-    datePublicationFrom: undefined,
-    datePublicationTo: undefined,
-    publicationInterval: undefined
-  }
+  watch(
+    filters,
+    newFilters => {
+      tempAdvancedFilters.value = {
+        dateEventFrom: newFilters.dateEventFrom,
+        dateEventTo: newFilters.dateEventTo,
+        hoursEventFrom: newFilters.hoursEventFrom,
+        hoursEventTo: newFilters.hoursEventTo,
+        datePublicationFrom: newFilters.datePublicationFrom,
+        datePublicationTo: newFilters.datePublicationTo,
+        publicationInterval: newFilters.publicationInterval
+      }
+    },
+    { deep: true, immediate: true }
+  )
 
-  resetLocation.value = true
-  applyFilters()
-}
+  const hasActiveFilters = computed(() => {
+    return (
+      filters.value.status ||
+      filters.value.sort ||
+      selectedTags.value.length > 0 ||
+      selectedTypes.value.length > 0 ||
+      filters.value.dateEventFrom ||
+      filters.value.dateEventTo ||
+      filters.value.hoursEventFrom ||
+      filters.value.hoursEventTo ||
+      filters.value.datePublicationFrom ||
+      filters.value.datePublicationTo ||
+      filters.value.publicationInterval ||
+      filters.value.radius
+    )
+  })
 
-const applyFiltersAdvanced = (filtersAdvanced: Partial<FilterAnnouncement>) => {
-  filters.value.dateEventFrom =
-    filtersAdvanced.dateEventFrom || filters.value.dateEventFrom
-  filters.value.dateEventTo =
-    filtersAdvanced.dateEventTo || filters.value.dateEventTo
-  filters.value.hoursEventFrom =
-    filtersAdvanced.hoursEventFrom || filters.value.hoursEventFrom
-  filters.value.hoursEventTo =
-    filtersAdvanced.hoursEventTo || filters.value.hoursEventTo
-  filters.value.datePublicationFrom =
-    filtersAdvanced.datePublicationFrom || filters.value.datePublicationFrom
-  filters.value.datePublicationTo =
-    filtersAdvanced.datePublicationTo || filters.value.datePublicationTo
-  filters.value.publicationInterval =
-    filtersAdvanced.publicationInterval || filters.value.publicationInterval
+  const hasAdvancedFilters = computed(() => {
+    return (
+      filters.value.dateEventFrom ||
+      filters.value.dateEventTo ||
+      filters.value.hoursEventFrom ||
+      filters.value.hoursEventTo ||
+      filters.value.datePublicationFrom ||
+      filters.value.datePublicationTo ||
+      filters.value.publicationInterval
+    )
+  })
 
-  tempAdvancedFilters.value = {
-    dateEventFrom: undefined,
-    dateEventTo: undefined,
-    hoursEventFrom: undefined,
-    hoursEventTo: undefined,
-    datePublicationFrom: undefined,
-    datePublicationTo: undefined,
-    publicationInterval: undefined
-  }
+  const showLocationDropdown = ref(false)
+  const mobileFiltersOpen = ref(false)
 
-  applyFilters()
-}
+  const customTag = ref('')
+  const showCustomInput = ref(false)
+  const customInputRef = ref<HTMLInputElement | null>(null)
+  const searchQuery = ref('')
 
-const applyFilters = () => {
-  const filtersToSend = { ...filters.value }
-
-  delete filtersToSend.cityCoordinates
-
-  if (filtersToSend.radius && filtersToSend.radius > 0) {
-    filtersToSend.radius = filtersToSend.radius * 1000
-  }
-  showAdvancedFilters.value = false
-  emit('filter', filtersToSend)
-}
-
-const handleClickOutside = (event: Event) => {
-  const target = event.target as HTMLElement
-
-  if (
-    !target.closest('.multi-marker-map-container') &&
-    !target.closest('button')
-  ) {
-    showMap.value = false
+  function openMobileFilters() {
+    mobileFiltersOpen.value = true
   }
 
-  if (!target.closest('.location-dropdown-container')) {
-    showLocationDropdown.value = false
+  function closeMobileFilters() {
+    mobileFiltersOpen.value = false
   }
-}
 
-const filterHistory = ref<FilterAnnouncement[]>([])
-const showHistory = ref(true)
-const FILTER_HISTORY_KEY = 'filterHistory'
-
-watch(
-  filters,
-  (newFilters) => {
-    const filterWithoutLocation = {
-      ...newFilters,
-      latitude: undefined,
-      longitude: undefined,
-      radius: 0
+  function addCustomTag() {
+    const tag = customTag.value.trim()
+    if (!tag) {
+      return
     }
-    const isEmpty =
-      !filterWithoutLocation.status &&
-      !filterWithoutLocation.sort &&
-      (!filterWithoutLocation.tags ||
-        filterWithoutLocation.tags.length === 0) &&
-      !filterWithoutLocation.dateEventFrom &&
-      !filterWithoutLocation.dateEventTo &&
-      !filterWithoutLocation.hoursEventFrom &&
-      !filterWithoutLocation.hoursEventTo &&
-      !filterWithoutLocation.datePublicationFrom &&
-      !filterWithoutLocation.datePublicationTo &&
-      !filterWithoutLocation.publicationInterval &&
-      (!filterWithoutLocation.latitude || filterWithoutLocation.radius === 0) &&
-      filterWithoutLocation.page === 1 &&
-      filterWithoutLocation.limit === 9
+    if (!availableTags.value.includes(tag)) {
+      availableTags.value.push(tag)
+    }
+    if (!selectedTags.value.includes(tag)) {
+      selectedTags.value.push(tag)
+    }
+    customTag.value = ''
+    showCustomInput.value = false
+    updateFilters()
+  }
 
-    if (isEmpty) { return }
+  function cancelCustomInput() {
+    customTag.value = ''
+    showCustomInput.value = false
+  }
 
-    let criteriaCount = 0
-    if (filterWithoutLocation.status) { criteriaCount++ }
-    if (filterWithoutLocation.sort) { criteriaCount++ }
-    if (filterWithoutLocation.tags && filterWithoutLocation.tags.length > 0) { criteriaCount++ }
-    if (
-      filterWithoutLocation.dateEventFrom ||
-      filterWithoutLocation.dateEventTo
-    ) { criteriaCount++ }
-    if (
-      filterWithoutLocation.hoursEventFrom ||
-      filterWithoutLocation.hoursEventTo
-    ) { criteriaCount++ }
-    if (
-      filterWithoutLocation.datePublicationFrom ||
-      filterWithoutLocation.datePublicationTo
-    ) { criteriaCount++ }
-    if (filterWithoutLocation.publicationInterval) { criteriaCount++ }
+  function openCustomInput() {
+    showCustomInput.value = true
+  }
 
-    if (criteriaCount <= 3) { return }
+  watch(showCustomInput, val => {
+    if (val) {
+      nextTick(() => customInputRef.value && customInputRef.value?.focus())
+    }
+  })
 
+  watch(searchQuery, newQuery => {
+    if (newQuery !== undefined) {
+    }
+  })
+
+  const toggleMap = () => {
+    showMap.value = !showMap.value
+    emit('map')
+  }
+
+  const toggleTag = (tag: string) => {
+    if (selectedTags.value.includes(tag)) {
+      selectedTags.value = selectedTags.value.filter(t => t !== tag)
+    } else {
+      selectedTags.value.push(tag)
+    }
+    updateFilters()
+  }
+
+  function onFilterUpdate(newFilters: FilterAnnouncement) {
+    filters.value = newFilters
+    resetLocation.value = false
+    updateFilters()
+  }
+
+  const updateFilters = () => {
+    const allTags = [...selectedTags.value, ...selectedTypes.value]
+    filters.value.tags = allTags.length > 0 ? allTags : undefined
+    applyFilters()
+  }
+
+  const applySort = (sort: SortOption) => {
+    filters.value.sort = sort
+    applyFilters()
+  }
+
+  const applyStatus = (status: AnnouncementStatus) => {
+    filters.value.status = status
+    applyFilters()
+  }
+
+  const closeAdvancedFilters = () => {
+    showAdvancedFilters.value = false
+  }
+
+  const removeStatus = () => {
+    filters.value.status = undefined
+    applyFilters()
+  }
+
+  const removeSort = () => {
+    filters.value.sort = undefined
+    applyFilters()
+  }
+
+  const removeTag = (tag: string) => {
+    selectedTags.value = selectedTags.value.filter(t => t !== tag)
+    updateFilters()
+  }
+
+  const removeType = (type: string) => {
+    selectedTypes.value = selectedTypes.value.filter(t => t !== type)
+    updateFilters()
+  }
+
+  const removeDateEvent = () => {
+    filters.value.dateEventFrom = undefined
+    filters.value.dateEventTo = undefined
+    applyFilters()
+  }
+
+  const removeHoursEvent = () => {
+    filters.value.hoursEventFrom = undefined
+    filters.value.hoursEventTo = undefined
+    applyFilters()
+  }
+
+  const removeDatePublication = () => {
+    filters.value.datePublicationFrom = undefined
+    filters.value.datePublicationTo = undefined
+    applyFilters()
+  }
+
+  const removePublicationInterval = () => {
+    filters.value.publicationInterval = undefined
+    applyFilters()
+  }
+
+  const removeRadius = () => {
+    filters.value.radius = 0
+    resetLocation.value = true
+    applyFilters()
+  }
+
+  const resetFilters = () => {
+    filters.value = {
+      status: undefined,
+      hoursEventFrom: undefined,
+      hoursEventTo: undefined,
+      dateEventFrom: undefined,
+      dateEventTo: undefined,
+      publicationInterval: undefined,
+      datePublicationFrom: undefined,
+      datePublicationTo: undefined,
+      tags: [],
+      latitude: currentLatitude.value,
+      longitude: currentLongitude.value,
+      radius: 0,
+      page: 1,
+      limit: 9,
+      sort: undefined
+    }
+    selectedTags.value = []
+    selectedTypes.value = []
+
+    tempAdvancedFilters.value = {
+      dateEventFrom: undefined,
+      dateEventTo: undefined,
+      hoursEventFrom: undefined,
+      hoursEventTo: undefined,
+      datePublicationFrom: undefined,
+      datePublicationTo: undefined,
+      publicationInterval: undefined
+    }
+
+    resetLocation.value = true
+    applyFilters()
+  }
+
+  const applyFiltersAdvanced = (filtersAdvanced: Partial<FilterAnnouncement>) => {
+    filters.value.dateEventFrom = filtersAdvanced.dateEventFrom || filters.value.dateEventFrom
+    filters.value.dateEventTo = filtersAdvanced.dateEventTo || filters.value.dateEventTo
+    filters.value.hoursEventFrom = filtersAdvanced.hoursEventFrom || filters.value.hoursEventFrom
+    filters.value.hoursEventTo = filtersAdvanced.hoursEventTo || filters.value.hoursEventTo
+    filters.value.datePublicationFrom =
+      filtersAdvanced.datePublicationFrom || filters.value.datePublicationFrom
+    filters.value.datePublicationTo =
+      filtersAdvanced.datePublicationTo || filters.value.datePublicationTo
+    filters.value.publicationInterval =
+      filtersAdvanced.publicationInterval || filters.value.publicationInterval
+
+    tempAdvancedFilters.value = {
+      dateEventFrom: undefined,
+      dateEventTo: undefined,
+      hoursEventFrom: undefined,
+      hoursEventTo: undefined,
+      datePublicationFrom: undefined,
+      datePublicationTo: undefined,
+      publicationInterval: undefined
+    }
+
+    applyFilters()
+  }
+
+  const applyFilters = () => {
+    const filtersToSend = { ...filters.value }
+
+    delete filtersToSend.cityCoordinates
+
+    if (filtersToSend.radius && filtersToSend.radius > 0) {
+      filtersToSend.radius = filtersToSend.radius * 1000
+    }
+    showAdvancedFilters.value = false
+    emit('filter', filtersToSend)
+  }
+
+  const handleClickOutside = (event: Event) => {
+    const target = event.target as HTMLElement
+
+    if (!target.closest('.multi-marker-map-container') && !target.closest('button')) {
+      showMap.value = false
+    }
+
+    if (!target.closest('.location-dropdown-container')) {
+      showLocationDropdown.value = false
+    }
+  }
+
+  const filterHistory = ref<FilterAnnouncement[]>([])
+  const showHistory = ref(true)
+  const FILTER_HISTORY_KEY = 'filterHistory'
+
+  watch(
+    filters,
+    newFilters => {
+      const filterWithoutLocation = {
+        ...newFilters,
+        latitude: undefined,
+        longitude: undefined,
+        radius: 0
+      }
+      const isEmpty =
+        !filterWithoutLocation.status &&
+        !filterWithoutLocation.sort &&
+        (!filterWithoutLocation.tags || filterWithoutLocation.tags.length === 0) &&
+        !filterWithoutLocation.dateEventFrom &&
+        !filterWithoutLocation.dateEventTo &&
+        !filterWithoutLocation.hoursEventFrom &&
+        !filterWithoutLocation.hoursEventTo &&
+        !filterWithoutLocation.datePublicationFrom &&
+        !filterWithoutLocation.datePublicationTo &&
+        !filterWithoutLocation.publicationInterval &&
+        (!filterWithoutLocation.latitude || filterWithoutLocation.radius === 0) &&
+        filterWithoutLocation.page === 1 &&
+        filterWithoutLocation.limit === 9
+
+      if (isEmpty) {
+        return
+      }
+
+      let criteriaCount = 0
+      if (filterWithoutLocation.status) {
+        criteriaCount++
+      }
+      if (filterWithoutLocation.sort) {
+        criteriaCount++
+      }
+      if (filterWithoutLocation.tags && filterWithoutLocation.tags.length > 0) {
+        criteriaCount++
+      }
+      if (filterWithoutLocation.dateEventFrom || filterWithoutLocation.dateEventTo) {
+        criteriaCount++
+      }
+      if (filterWithoutLocation.hoursEventFrom || filterWithoutLocation.hoursEventTo) {
+        criteriaCount++
+      }
+      if (filterWithoutLocation.datePublicationFrom || filterWithoutLocation.datePublicationTo) {
+        criteriaCount++
+      }
+      if (filterWithoutLocation.publicationInterval) {
+        criteriaCount++
+      }
+
+      if (criteriaCount <= 3) {
+        return
+      }
+
+      let history: FilterAnnouncement[] = []
+      try {
+        history = JSON.parse(localStorage.getItem(FILTER_HISTORY_KEY) || '[]')
+      } catch {}
+
+      const isDifferentEnough = history.every(existingFilter => {
+        let differences = 0
+
+        if (filterWithoutLocation.status !== existingFilter.status) {
+          differences++
+        }
+        if (filterWithoutLocation.sort !== existingFilter.sort) {
+          differences++
+        }
+        if (JSON.stringify(filterWithoutLocation.tags) !== JSON.stringify(existingFilter.tags)) {
+          differences++
+        }
+        if (filterWithoutLocation.dateEventFrom !== existingFilter.dateEventFrom) {
+          differences++
+        }
+        if (filterWithoutLocation.dateEventTo !== existingFilter.dateEventTo) {
+          differences++
+        }
+        if (filterWithoutLocation.hoursEventFrom !== existingFilter.hoursEventFrom) {
+          differences++
+        }
+        if (filterWithoutLocation.hoursEventTo !== existingFilter.hoursEventTo) {
+          differences++
+        }
+        if (filterWithoutLocation.datePublicationFrom !== existingFilter.datePublicationFrom) {
+          differences++
+        }
+        if (filterWithoutLocation.datePublicationTo !== existingFilter.datePublicationTo) {
+          differences++
+        }
+        if (filterWithoutLocation.publicationInterval !== existingFilter.publicationInterval) {
+          differences++
+        }
+
+        return differences >= 3
+      })
+
+      if (!isDifferentEnough) {
+        return
+      }
+      if (currentFilterSearch.value) {
+        filterWithoutLocation.nameEvent = currentFilterSearch.value?.nameEvent
+        filterWithoutLocation.description = currentFilterSearch.value?.description
+        filterWithoutLocation.associationName = currentFilterSearch.value?.associationName
+      }
+
+      const newHistory = [
+        filterWithoutLocation,
+        ...history.filter(h => JSON.stringify(h) !== JSON.stringify(filterWithoutLocation))
+      ]
+
+      filterHistory.value = newHistory.slice(0, 3)
+      localStorage.setItem(FILTER_HISTORY_KEY, JSON.stringify(filterHistory.value))
+    },
+    { deep: true }
+  )
+
+  onMounted(async () => {
+    await initLocation()
+    document.addEventListener('click', handleClickOutside)
     let history: FilterAnnouncement[] = []
     try {
       history = JSON.parse(localStorage.getItem(FILTER_HISTORY_KEY) || '[]')
     } catch {}
-
-    const isDifferentEnough = history.every((existingFilter) => {
-      let differences = 0
-
-      if (filterWithoutLocation.status !== existingFilter.status) { differences++ }
-      if (filterWithoutLocation.sort !== existingFilter.sort) { differences++ }
-      if (
-        JSON.stringify(filterWithoutLocation.tags) !==
-        JSON.stringify(existingFilter.tags)
-      ) { differences++ }
-      if (filterWithoutLocation.dateEventFrom !== existingFilter.dateEventFrom) { differences++ }
-      if (filterWithoutLocation.dateEventTo !== existingFilter.dateEventTo) { differences++ }
-      if (
-        filterWithoutLocation.hoursEventFrom !== existingFilter.hoursEventFrom
-      ) { differences++ }
-      if (filterWithoutLocation.hoursEventTo !== existingFilter.hoursEventTo) { differences++ }
-      if (
-        filterWithoutLocation.datePublicationFrom !==
-        existingFilter.datePublicationFrom
-      ) { differences++ }
-      if (
-        filterWithoutLocation.datePublicationTo !==
-        existingFilter.datePublicationTo
-      ) { differences++ }
-      if (
-        filterWithoutLocation.publicationInterval !==
-        existingFilter.publicationInterval
-      ) { differences++ }
-
-      return differences >= 3
+    history = history.filter(h => {
+      const isOnlyLocation =
+        !!h.latitude &&
+        !!h.longitude &&
+        !h.status &&
+        !h.sort &&
+        (!h.tags || h.tags.length === 0) &&
+        !h.dateEventFrom &&
+        !h.dateEventTo &&
+        !h.hoursEventFrom &&
+        !h.hoursEventTo &&
+        !h.datePublicationFrom &&
+        !h.datePublicationTo &&
+        !h.publicationInterval
+      return !isOnlyLocation
     })
-
-    if (!isDifferentEnough) { return }
-    if (currentFilterSearch.value) {
-      filterWithoutLocation.nameEvent = currentFilterSearch.value?.nameEvent
-      filterWithoutLocation.description =
-        currentFilterSearch.value?.description
-      filterWithoutLocation.associationName =
-        currentFilterSearch.value?.associationName
+    if (history.length) {
+      filterHistory.value = history.slice(0, 3)
     }
-
-    const newHistory = [
-      filterWithoutLocation,
-      ...history.filter(
-        h => JSON.stringify(h) !== JSON.stringify(filterWithoutLocation)
-      )
-    ]
-
-    filterHistory.value = newHistory.slice(0, 3)
-    localStorage.setItem(
-      FILTER_HISTORY_KEY,
-      JSON.stringify(filterHistory.value)
-    )
-  },
-  { deep: true }
-)
-
-onMounted(async () => {
-  await initLocation()
-  document.addEventListener('click', handleClickOutside)
-  let history: FilterAnnouncement[] = []
-  try {
-    history = JSON.parse(localStorage.getItem(FILTER_HISTORY_KEY) || '[]')
-  } catch {}
-  history = history.filter((h) => {
-    const isOnlyLocation =
-      !!h.latitude &&
-      !!h.longitude &&
-      !h.status &&
-      !h.sort &&
-      (!h.tags || h.tags.length === 0) &&
-      !h.dateEventFrom &&
-      !h.dateEventTo &&
-      !h.hoursEventFrom &&
-      !h.hoursEventTo &&
-      !h.datePublicationFrom &&
-      !h.datePublicationTo &&
-      !h.publicationInterval
-    return !isOnlyLocation
   })
-  if (history.length) {
-    filterHistory.value = history.slice(0, 3)
+
+  onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside)
+
+    if (searchTimeout.value) {
+      clearTimeout(searchTimeout.value)
+    }
+  })
+
+  function applyHistory(idx: number) {
+    if (filterHistory.value[idx]) {
+      const selectedFilter = filterHistory.value[idx]
+
+      filters.value = { ...selectedFilter }
+
+      if (selectedFilter.tags && selectedFilter.tags.length > 0) {
+        const tags = selectedFilter.tags.filter(tag => availableTags.value.includes(tag))
+        const types = selectedFilter.tags.filter(type => availableTypes.value.includes(type))
+        selectedTags.value = tags
+        selectedTypes.value = types
+      } else {
+        selectedTags.value = []
+        selectedTypes.value = []
+      }
+
+      filterHistory.value = []
+      showHistory.value = false
+      localStorage.removeItem(FILTER_HISTORY_KEY)
+
+      console.log('Applying history filter:', filters.value)
+      emit('filter', filters.value)
+    }
   }
-})
 
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-
-  if (searchTimeout.value) {
-    clearTimeout(searchTimeout.value)
+  function removeHistory(idx: number) {
+    filterHistory.value.splice(idx, 1)
+    localStorage.setItem(FILTER_HISTORY_KEY, JSON.stringify(filterHistory.value))
+    if (filterHistory.value.length === 0) {
+      showHistory.value = false
+    }
   }
-})
 
-function applyHistory (idx: number) {
-  if (filterHistory.value[idx]) {
-    const selectedFilter = filterHistory.value[idx]
+  function filterTitle(f: FilterAnnouncement) {
+    return f.nameEvent || f.description || 'Recherche'
+  }
 
-    filters.value = { ...selectedFilter }
+  function getFilterCriteria(filter: FilterAnnouncement) {
+    const criteria: string[] = []
 
-    if (selectedFilter.tags && selectedFilter.tags.length > 0) {
-      const tags = selectedFilter.tags.filter(tag =>
-        availableTags.value.includes(tag)
-      )
-      const types = selectedFilter.tags.filter(type =>
-        availableTypes.value.includes(type)
-      )
-      selectedTags.value = tags
-      selectedTypes.value = types
-    } else {
-      selectedTags.value = []
-      selectedTypes.value = []
+    if (filter.status) {
+      criteria.push(filter.status)
+    }
+    if (filter.sort) {
+      const sortLabel = sortOptions.value.find(s => s.value === filter.sort)?.label
+      criteria.push(sortLabel?.split('(')[0].trim() || '')
+    }
+    if (filter.tags && filter.tags.length > 0) {
+      criteria.push(filter.tags.slice(0, 2).join(', '))
+    }
+    if (filter.dateEventFrom || filter.dateEventTo) {
+      const from = filter.dateEventFrom
+        ? new Date(filter.dateEventFrom).toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit'
+          })
+        : ''
+      const to = filter.dateEventTo
+        ? new Date(filter.dateEventTo).toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit'
+          })
+        : ''
+      criteria.push(`${from} - ${to}`)
+    }
+    if (filter.hoursEventFrom || filter.hoursEventTo) {
+      const from = filter.hoursEventFrom
+        ? new Date(filter.hoursEventFrom).toLocaleTimeString('fr-FR', {
+            hour: '2-digit',
+            minute: '2-digit'
+          })
+        : ''
+      const to = filter.hoursEventTo
+        ? new Date(filter.hoursEventTo).toLocaleTimeString('fr-FR', {
+            hour: '2-digit',
+            minute: '2-digit'
+          })
+        : ''
+      criteria.push(`${from} - ${to}`)
+    }
+    if (filter.datePublicationFrom || filter.datePublicationTo) {
+      const from = filter.datePublicationFrom
+        ? new Date(filter.datePublicationFrom).toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit'
+          })
+        : ''
+      const to = filter.datePublicationTo
+        ? new Date(filter.datePublicationTo).toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit'
+          })
+        : ''
+      criteria.push(`${from} - ${to}`)
+    }
+    if (filter.publicationInterval) {
+      criteria.push(filter.publicationInterval)
+    }
+    if (filter.radius && filter.radius > 0) {
+      criteria.push(`${filter.radius} km`)
     }
 
-    filterHistory.value = []
-    showHistory.value = false
-    localStorage.removeItem(FILTER_HISTORY_KEY)
-
-    console.log('Applying history filter:', filters.value)
-    emit('filter', filters.value)
-  }
-}
-
-function removeHistory (idx: number) {
-  filterHistory.value.splice(idx, 1)
-  localStorage.setItem(FILTER_HISTORY_KEY, JSON.stringify(filterHistory.value))
-  if (filterHistory.value.length === 0) { showHistory.value = false }
-}
-
-function filterTitle (f: FilterAnnouncement) {
-  return f.nameEvent || f.description || 'Recherche'
-}
-
-function getFilterCriteria (filter: FilterAnnouncement) {
-  const criteria: string[] = []
-
-  if (filter.status) {
-    criteria.push(filter.status)
-  }
-  if (filter.sort) {
-    const sortLabel = sortOptions.value.find(
-      s => s.value === filter.sort
-    )?.label
-    criteria.push(sortLabel?.split('(')[0].trim() || '')
-  }
-  if (filter.tags && filter.tags.length > 0) {
-    criteria.push(filter.tags.slice(0, 2).join(', '))
-  }
-  if (filter.dateEventFrom || filter.dateEventTo) {
-    const from = filter.dateEventFrom
-      ? new Date(filter.dateEventFrom).toLocaleDateString('fr-FR', {
-        day: '2-digit',
-        month: '2-digit'
-      })
-      : ''
-    const to = filter.dateEventTo
-      ? new Date(filter.dateEventTo).toLocaleDateString('fr-FR', {
-        day: '2-digit',
-        month: '2-digit'
-      })
-      : ''
-    criteria.push(`${from} - ${to}`)
-  }
-  if (filter.hoursEventFrom || filter.hoursEventTo) {
-    const from = filter.hoursEventFrom
-      ? new Date(filter.hoursEventFrom).toLocaleTimeString('fr-FR', {
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-      : ''
-    const to = filter.hoursEventTo
-      ? new Date(filter.hoursEventTo).toLocaleTimeString('fr-FR', {
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-      : ''
-    criteria.push(`${from} - ${to}`)
-  }
-  if (filter.datePublicationFrom || filter.datePublicationTo) {
-    const from = filter.datePublicationFrom
-      ? new Date(filter.datePublicationFrom).toLocaleDateString('fr-FR', {
-        day: '2-digit',
-        month: '2-digit'
-      })
-      : ''
-    const to = filter.datePublicationTo
-      ? new Date(filter.datePublicationTo).toLocaleDateString('fr-FR', {
-        day: '2-digit',
-        month: '2-digit'
-      })
-      : ''
-    criteria.push(`${from} - ${to}`)
-  }
-  if (filter.publicationInterval) {
-    criteria.push(filter.publicationInterval)
-  }
-  if (filter.radius && filter.radius > 0) {
-    criteria.push(`${filter.radius} km`)
+    return criteria.slice(0, 2).join(' • ')
   }
 
-  return criteria.slice(0, 2).join(' • ')
-}
+  const showSortMenu = ref(false)
+  const showStatusMenu = ref(false)
+  const showTagsMenu = ref(false)
 
-const showSortMenu = ref(false)
-const showStatusMenu = ref(false)
-const showTagsMenu = ref(false)
-
-const getSortLabel = () => {
-  const sortOption = sortOptions.value.find(
-    s => s.value === filters.value.sort
-  )
-  return sortOption ? sortOption.label : 'Trier par'
-}
-
-const getStatusLabel = () => {
-  const statusOption = statusOptions.value.find(
-    s => s.value === filters.value.status
-  )
-  return statusOption ? statusOption.label : 'Statut'
-}
-
-const getTagsLabel = () => {
-  if (selectedTags.value.length === 0) {
-    return "Type d'annonce"
+  const getSortLabel = () => {
+    const sortOption = sortOptions.value.find(s => s.value === filters.value.sort)
+    return sortOption ? sortOption.label : 'Trier par'
   }
-  if (selectedTags.value.length === 1) {
-    return selectedTags.value[0]
+
+  const getStatusLabel = () => {
+    const statusOption = statusOptions.value.find(s => s.value === filters.value.status)
+    return statusOption ? statusOption.label : 'Statut'
   }
-  return `${selectedTags.value.length} types`
-}
 
-const toggleSortMenu = () => {
-  showSortMenu.value = !showSortMenu.value
-}
+  const getTagsLabel = () => {
+    if (selectedTags.value.length === 0) {
+      return "Type d'annonce"
+    }
+    if (selectedTags.value.length === 1) {
+      return selectedTags.value[0]
+    }
+    return `${selectedTags.value.length} types`
+  }
 
-const toggleStatusMenu = () => {
-  showStatusMenu.value = !showStatusMenu.value
-}
+  const toggleSortMenu = () => {
+    showSortMenu.value = !showSortMenu.value
+  }
 
-const toggleTagsMenu = () => {
-  showTagsMenu.value = !showTagsMenu.value
-}
+  const toggleStatusMenu = () => {
+    showStatusMenu.value = !showStatusMenu.value
+  }
+
+  const toggleTagsMenu = () => {
+    showTagsMenu.value = !showTagsMenu.value
+  }
+
+  const handleSort = (value: SortOption) => {
+    applySort(value)
+    showSortMenu.value = false
+  }
+
+  const handleStatus = (value: AnnouncementStatus) => {
+    applyStatus(value)
+    showStatusMenu.value = false
+  }
+
+  const handleAdvancedFilters = () => {
+    showAdvancedFilters.value = true
+    closeMobileFilters()
+  }
 </script>
 
 <style scoped>
-.flex::-webkit-scrollbar {
-  display: none;
-}
+  .flex::-webkit-scrollbar {
+    display: none;
+  }
 
-.btn {
-  transition: all 0.2s ease-in-out;
-}
+  .btn {
+    transition: all 0.2s ease-in-out;
+  }
 
-.btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+  .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
 </style>

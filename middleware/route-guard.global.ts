@@ -3,12 +3,12 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { useUserStore } from '~/stores/user/user.store'
 import { RoleUser } from '~/common/enums/role.enum'
 
-function getPathWithoutLocale (path: string): string {
+function getPathWithoutLocale(path: string): string {
   return path.replace(/^\/(en|es)\//, '/')
 }
 
 // Fonction pour obtenir la locale depuis le chemin
-function getLocaleFromPath (path: string): string {
+function getLocaleFromPath(path: string): string {
   const match = path.match(/^\/(en|es)\//)
   return match ? match[1] : 'fr'
 }
@@ -74,7 +74,7 @@ const BASE_ROUTE_CONFIG = {
 }
 
 // Fonction pour vérifier si une route est accessible pour un rôle
-function isRouteAccessible (path: string, role: RoleUser | null): boolean {
+function isRouteAccessible(path: string, role: RoleUser | null): boolean {
   const pathWithoutLocale = getPathWithoutLocale(path)
 
   // Routes publiques toujours accessibles
@@ -98,24 +98,14 @@ function isRouteAccessible (path: string, role: RoleUser | null): boolean {
   // Vérifier selon le rôle
   switch (role) {
     case RoleUser.VOLUNTEER:
-      return BASE_ROUTE_CONFIG.volunteer.some(route =>
-        pathWithoutLocale.startsWith(route)
-      )
+      return BASE_ROUTE_CONFIG.volunteer.some(route => pathWithoutLocale.startsWith(route))
     case RoleUser.ASSOCIATION:
-      return BASE_ROUTE_CONFIG.association.some(route =>
-        pathWithoutLocale.startsWith(route)
-      )
+      return BASE_ROUTE_CONFIG.association.some(route => pathWithoutLocale.startsWith(route))
     case RoleUser.ADMIN:
       return (
-        BASE_ROUTE_CONFIG.admin.some(route =>
-          pathWithoutLocale.startsWith(route)
-        ) ||
-        BASE_ROUTE_CONFIG.volunteer.some(route =>
-          pathWithoutLocale.startsWith(route)
-        ) ||
-        BASE_ROUTE_CONFIG.association.some(route =>
-          pathWithoutLocale.startsWith(route)
-        )
+        BASE_ROUTE_CONFIG.admin.some(route => pathWithoutLocale.startsWith(route)) ||
+        BASE_ROUTE_CONFIG.volunteer.some(route => pathWithoutLocale.startsWith(route)) ||
+        BASE_ROUTE_CONFIG.association.some(route => pathWithoutLocale.startsWith(route))
       )
     default:
       return false
@@ -123,7 +113,7 @@ function isRouteAccessible (path: string, role: RoleUser | null): boolean {
 }
 
 // Fonction pour obtenir la page d'accueil selon le rôle et la langue
-function getHomePageForRole (role: RoleUser | null, locale?: string): string {
+function getHomePageForRole(role: RoleUser | null, locale?: string): string {
   const basePath = (() => {
     switch (role) {
       case RoleUser.VOLUNTEER:
@@ -206,11 +196,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
     // Si c'est une route de transition, rediriger vers login
-    if (
-      ['/auth/registerVolunteer', '/auth/registerAssociation'].includes(
-        pathWithoutLocale
-      )
-    ) {
+    if (['/auth/registerVolunteer', '/auth/registerAssociation'].includes(pathWithoutLocale)) {
       return navigateTo('/')
     }
 
@@ -228,19 +214,14 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   const userRole = userStore.getRole || null
 
-  if (
-    !authStore.isAuthenticated &&
-    ['/'].includes(getPathWithoutLocale(to.path))
-  ) {
+  if (!authStore.isAuthenticated && ['/'].includes(getPathWithoutLocale(to.path))) {
     const locale = getLocaleFromPath(to.path)
     return navigateTo(getHomePageForRole(userRole, locale))
   }
 
   // Gestion explicite des routes de transition
   if (
-    ['/auth/registerVolunteer', '/auth/registerAssociation'].includes(
-      getPathWithoutLocale(to.path)
-    )
+    ['/auth/registerVolunteer', '/auth/registerAssociation'].includes(getPathWithoutLocale(to.path))
   ) {
     if (userStore.user && userStore.user.isCompleted) {
       const locale = getLocaleFromPath(to.path)
@@ -261,18 +242,14 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       case RoleUser.VOLUNTEER:
         if (getPathWithoutLocale(to.path) !== '/auth/registerVolunteer') {
           const registerPath =
-            locale !== 'fr'
-              ? `/${locale}/auth/registerVolunteer`
-              : '/auth/registerVolunteer'
+            locale !== 'fr' ? `/${locale}/auth/registerVolunteer` : '/auth/registerVolunteer'
           return navigateTo(registerPath)
         }
         break
       case RoleUser.ASSOCIATION:
         if (getPathWithoutLocale(to.path) !== '/auth/registerAssociation') {
           const registerPath =
-            locale !== 'fr'
-              ? `/${locale}/auth/registerAssociation`
-              : '/auth/registerAssociation'
+            locale !== 'fr' ? `/${locale}/auth/registerAssociation` : '/auth/registerAssociation'
           return navigateTo(registerPath)
         }
         break

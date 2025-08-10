@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { describe, it, expect } from "vitest";
-import { mount } from "@vue/test-utils";
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
 
 const MockVolunteerParticipations = {
   template: `
@@ -114,117 +114,107 @@ const MockVolunteerParticipations = {
         </div>
       </div>
     </div>
-  `,
-};
+  `
+}
 
-describe("VolunteerParticipations", () => {
-  it("should render the main container", () => {
-    const wrapper = mount(MockVolunteerParticipations);
-    expect(wrapper.find(".min-h-screen.bg-gradient-to-br").exists()).toBe(true);
-  });
+describe('VolunteerParticipations', () => {
+  it('should render the main container', () => {
+    const wrapper = mount(MockVolunteerParticipations)
+    expect(wrapper.find('.min-h-screen.bg-gradient-to-br').exists()).toBe(true)
+  })
 
-  it("should render the header section", () => {
-    const wrapper = mount(MockVolunteerParticipations);
-    const header = wrapper.find(".mb-8");
-    expect(header.exists()).toBe(true);
-    expect(header.find("h1").text()).toBe("Mes participations");
-    expect(header.find("p").text()).toBe(
-      "Suivez vos participations à des missions",
-    );
-  });
+  it('should render the header section', () => {
+    const wrapper = mount(MockVolunteerParticipations)
+    const header = wrapper.find('.mb-8')
+    expect(header.exists()).toBe(true)
+    expect(header.find('h1').text()).toBe('Mes participations')
+    expect(header.find('p').text()).toBe('Suivez vos participations à des missions')
+  })
 
-  it("should render the filter and search section", () => {
-    const wrapper = mount(MockVolunteerParticipations);
-    const filterSection = wrapper.find(
-      ".bg-base-100.rounded-2xl.shadow-lg.p-6.mb-8",
-    );
-    expect(filterSection.exists()).toBe(true);
-    expect(filterSection.find('input[type="text"]').exists()).toBe(true);
-    expect(filterSection.find("select").exists()).toBe(true);
-  });
+  it('should render the filter and search section', () => {
+    const wrapper = mount(MockVolunteerParticipations)
+    const filterSection = wrapper.find('.bg-base-100.rounded-2xl.shadow-lg.p-6.mb-8')
+    expect(filterSection.exists()).toBe(true)
+    expect(filterSection.find('input[type="text"]').exists()).toBe(true)
+    expect(filterSection.find('select').exists()).toBe(true)
+  })
 
-  it("should render search input with proper attributes", () => {
-    const wrapper = mount(MockVolunteerParticipations);
-    const searchInput = wrapper.find('input[type="text"]');
-    expect(searchInput.exists()).toBe(true);
-    expect(searchInput.attributes("placeholder")).toBe(
-      "Rechercher des participations...",
-    );
-    expect(searchInput.attributes("aria-label")).toBe("Champ de saisie");
-  });
+  it('should render search input with proper attributes', () => {
+    const wrapper = mount(MockVolunteerParticipations)
+    const searchInput = wrapper.find('input[type="text"]')
+    expect(searchInput.exists()).toBe(true)
+    expect(searchInput.attributes('placeholder')).toBe('Rechercher des participations...')
+    expect(searchInput.attributes('aria-label')).toBe('Champ de saisie')
+  })
 
-  it("should render filter dropdown with options", () => {
-    const wrapper = mount(MockVolunteerParticipations);
-    const filterSelect = wrapper.find("select");
-    expect(filterSelect.exists()).toBe(true);
-    expect(filterSelect.attributes("aria-label")).toBe("Sélection");
+  it('should render filter dropdown with options', () => {
+    const wrapper = mount(MockVolunteerParticipations)
+    const filterSelect = wrapper.find('select')
+    expect(filterSelect.exists()).toBe(true)
+    expect(filterSelect.attributes('aria-label')).toBe('Sélection')
 
-    const options = filterSelect.findAll("option");
-    expect(options.length).toBe(3);
-    expect(options[0].text()).toBe("Toutes les participations");
-    expect(options[1].text()).toBe("Active");
-    expect(options[2].text()).toBe("Complet");
-  });
+    const options = filterSelect.findAll('option')
+    expect(options.length).toBe(3)
+    expect(options[0].text()).toBe('Toutes les participations')
+    expect(options[1].text()).toBe('Active')
+    expect(options[2].text()).toBe('Complet')
+  })
 
-  it("should render participation cards", () => {
-    const wrapper = mount(MockVolunteerParticipations);
-    const cards = wrapper.findAll(".group.bg-base-100.rounded-2xl");
-    expect(cards.length).toBe(2);
-  });
+  it('should render participation cards', () => {
+    const wrapper = mount(MockVolunteerParticipations)
+    const cards = wrapper.findAll('.group.bg-base-100.rounded-2xl')
+    expect(cards.length).toBe(2)
+  })
 
-  it("should render participation cards with proper structure", () => {
-    const wrapper = mount(MockVolunteerParticipations);
-    const cards = wrapper.findAll(".group.bg-base-100.rounded-2xl");
+  it('should render participation cards with proper structure', () => {
+    const wrapper = mount(MockVolunteerParticipations)
+    const cards = wrapper.findAll('.group.bg-base-100.rounded-2xl')
 
-    cards.forEach((card) => {
-      expect(card.find("h2").exists()).toBe(true);
-      expect(card.find(".badge").exists()).toBe(true);
-      expect(card.find(".space-y-3").exists()).toBe(true);
-    });
-  });
+    cards.forEach(card => {
+      expect(card.find('h2').exists()).toBe(true)
+      expect(card.find('.badge').exists()).toBe(true)
+      expect(card.find('.space-y-3').exists()).toBe(true)
+    })
+  })
 
-  it("should render status badges with different states", () => {
-    const wrapper = mount(MockVolunteerParticipations);
-    const badges = wrapper.findAll(".badge");
-    expect(badges.length).toBe(2);
+  it('should render status badges with different states', () => {
+    const wrapper = mount(MockVolunteerParticipations)
+    const badges = wrapper.findAll('.badge')
+    expect(badges.length).toBe(2)
 
-    expect(badges[0].text()).toBe("ACTIVE");
-    expect(badges[0].classes()).toContain("badge-primary");
+    expect(badges[0].text()).toBe('ACTIVE')
+    expect(badges[0].classes()).toContain('badge-primary')
 
-    expect(badges[1].text()).toBe("COMPLETED");
-    expect(badges[1].classes()).toContain("badge-success");
-  });
+    expect(badges[1].text()).toBe('COMPLETED')
+    expect(badges[1].classes()).toContain('badge-success')
+  })
 
-  it("should render participation details with icons", () => {
-    const wrapper = mount(MockVolunteerParticipations);
-    const iconContainers = wrapper.findAll(
-      ".flex.items-center.justify-center.w-8.h-8",
-    );
-    expect(iconContainers.length).toBe(4); // 2 cards × 2 icons each
-  });
+  it('should render participation details with icons', () => {
+    const wrapper = mount(MockVolunteerParticipations)
+    const iconContainers = wrapper.findAll('.flex.items-center.justify-center.w-8.h-8')
+    expect(iconContainers.length).toBe(4) // 2 cards × 2 icons each
+  })
 
-  it("should render location information", () => {
-    const wrapper = mount(MockVolunteerParticipations);
-    const locationTexts = wrapper.findAll(
-      ".text-sm.font-medium.text-base-content",
-    );
-    expect(locationTexts.length).toBe(4); // 2 cards × 2 info items each
+  it('should render location information', () => {
+    const wrapper = mount(MockVolunteerParticipations)
+    const locationTexts = wrapper.findAll('.text-sm.font-medium.text-base-content')
+    expect(locationTexts.length).toBe(4) // 2 cards × 2 info items each
 
-    const cities = ["Paris", "Lyon"];
+    const cities = ['Paris', 'Lyon']
     cities.forEach((city, index) => {
-      expect(locationTexts[index * 2 + 1].text()).toBe(city);
-    });
-  });
+      expect(locationTexts[index * 2 + 1].text()).toBe(city)
+    })
+  })
 
-  it("should have proper card styling and hover effects", () => {
-    const wrapper = mount(MockVolunteerParticipations);
-    const cards = wrapper.findAll(".group.bg-base-100.rounded-2xl");
+  it('should have proper card styling and hover effects', () => {
+    const wrapper = mount(MockVolunteerParticipations)
+    const cards = wrapper.findAll('.group.bg-base-100.rounded-2xl')
 
-    cards.forEach((card) => {
-      expect(card.classes()).toContain("shadow-lg");
-      expect(card.classes()).toContain("hover:shadow-2xl");
-      expect(card.classes()).toContain("transition-all");
-      expect(card.classes()).toContain("duration-500");
-    });
-  });
-});
+    cards.forEach(card => {
+      expect(card.classes()).toContain('shadow-lg')
+      expect(card.classes()).toContain('hover:shadow-2xl')
+      expect(card.classes()).toContain('transition-all')
+      expect(card.classes()).toContain('duration-500')
+    })
+  })
+})

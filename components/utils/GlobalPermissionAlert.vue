@@ -82,153 +82,148 @@
         <button class="btn btn-primary btn-xs" @click="openCookieSettings">
           Paramétrer les cookies
         </button>
-        <button class="btn btn-ghost btn-xs" @click="removeAlert(alert.id)">
-          Plus tard
-        </button>
+        <button class="btn btn-ghost btn-xs" @click="removeAlert(alert.id)">Plus tard</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+  import { ref, onMounted, onUnmounted } from 'vue'
 
-interface Alert {
-  id: string;
-  type: 'warning' | 'info' | 'error';
-  title: string;
-  message: string;
-  showActions?: boolean;
-  autoClose?: boolean;
-  duration?: number;
-}
-
-const activeAlerts = ref<Alert[]>([])
-let alertCounter = 0
-
-const getAlertClass = (type: string) => {
-  switch (type) {
-    case 'warning':
-      return 'alert-warning'
-    case 'info':
-      return 'alert-info'
-    case 'error':
-      return 'alert-error'
-    default:
-      return 'alert-warning'
-  }
-}
-
-const addAlert = (alert: Omit<Alert, 'id'>) => {
-  const newAlert: Alert = {
-    ...alert,
-    id: `alert-${++alertCounter}`,
-    autoClose: alert.autoClose ?? true,
-    duration: alert.duration ?? 5000
+  interface Alert {
+    id: string
+    type: 'warning' | 'info' | 'error'
+    title: string
+    message: string
+    showActions?: boolean
+    autoClose?: boolean
+    duration?: number
   }
 
-  activeAlerts.value.push(newAlert)
+  const activeAlerts = ref<Alert[]>([])
+  let alertCounter = 0
 
-  if (newAlert.autoClose) {
-    setTimeout(() => {
-      removeAlert(newAlert.id)
-    }, newAlert.duration)
-  }
-}
-
-const removeAlert = (id: string) => {
-  const index = activeAlerts.value.findIndex(alert => alert.id === id)
-  if (index > -1) {
-    activeAlerts.value.splice(index, 1)
-  }
-}
-
-const openCookieSettings = () => {
-  window.dispatchEvent(new CustomEvent('openCookieSettings'))
-  // Fermer toutes les alertes
-  activeAlerts.value = []
-}
-
-const handlePermissionDenied = (event: any) => {
-  const { type, permission, message } = event.detail
-
-  let title = ''
-  let alertMessage = message
-
-  switch (permission) {
-    case 'canAuthenticate':
-      title = 'Authentification impossible'
-      alertMessage =
-        'Vous devez accepter les cookies essentiels pour vous connecter.'
-      break
-    case 'canUseLocation':
-      title = 'Géolocalisation désactivée'
-      alertMessage =
-        'Acceptez les cookies de personnalisation pour utiliser la géolocalisation.'
-      break
-    case 'canUseAnalytics':
-      title = 'Analytics désactivés'
-      alertMessage =
-        'Acceptez les cookies analytiques pour améliorer votre expérience.'
-      break
-    default:
-      title = 'Permission requise'
+  const getAlertClass = (type: string) => {
+    switch (type) {
+      case 'warning':
+        return 'alert-warning'
+      case 'info':
+        return 'alert-info'
+      case 'error':
+        return 'alert-error'
+      default:
+        return 'alert-warning'
+    }
   }
 
-  addAlert({
-    type,
-    title,
-    message: alertMessage,
-    showActions: true,
-    autoClose: false
-  })
-}
+  const addAlert = (alert: Omit<Alert, 'id'>) => {
+    const newAlert: Alert = {
+      ...alert,
+      id: `alert-${++alertCounter}`,
+      autoClose: alert.autoClose ?? true,
+      duration: alert.duration ?? 5000
+    }
 
-onMounted(() => {
-  // Écouter les événements de permissions manquantes
-  window.addEventListener('permissionDenied', handlePermissionDenied)
+    activeAlerts.value.push(newAlert)
 
-  // Écouter les événements pour ouvrir les paramètres de cookies
-  window.addEventListener('openCookieSettings', () => {
-    // Émettre un événement pour ouvrir les paramètres
+    if (newAlert.autoClose) {
+      setTimeout(() => {
+        removeAlert(newAlert.id)
+      }, newAlert.duration)
+    }
+  }
+
+  const removeAlert = (id: string) => {
+    const index = activeAlerts.value.findIndex(alert => alert.id === id)
+    if (index > -1) {
+      activeAlerts.value.splice(index, 1)
+    }
+  }
+
+  const openCookieSettings = () => {
     window.dispatchEvent(new CustomEvent('openCookieSettings'))
+    // Fermer toutes les alertes
+    activeAlerts.value = []
+  }
+
+  const handlePermissionDenied = (event: any) => {
+    const { type, permission, message } = event.detail
+
+    let title = ''
+    let alertMessage = message
+
+    switch (permission) {
+      case 'canAuthenticate':
+        title = 'Authentification impossible'
+        alertMessage = 'Vous devez accepter les cookies essentiels pour vous connecter.'
+        break
+      case 'canUseLocation':
+        title = 'Géolocalisation désactivée'
+        alertMessage = 'Acceptez les cookies de personnalisation pour utiliser la géolocalisation.'
+        break
+      case 'canUseAnalytics':
+        title = 'Analytics désactivés'
+        alertMessage = 'Acceptez les cookies analytiques pour améliorer votre expérience.'
+        break
+      default:
+        title = 'Permission requise'
+    }
+
+    addAlert({
+      type,
+      title,
+      message: alertMessage,
+      showActions: true,
+      autoClose: false
+    })
+  }
+
+  onMounted(() => {
+    // Écouter les événements de permissions manquantes
+    window.addEventListener('permissionDenied', handlePermissionDenied)
+
+    // Écouter les événements pour ouvrir les paramètres de cookies
+    window.addEventListener('openCookieSettings', () => {
+      // Émettre un événement pour ouvrir les paramètres
+      window.dispatchEvent(new CustomEvent('openCookieSettings'))
+    })
   })
-})
 
-onUnmounted(() => {
-  window.removeEventListener('permissionDenied', handlePermissionDenied)
-})
+  onUnmounted(() => {
+    window.removeEventListener('permissionDenied', handlePermissionDenied)
+  })
 
-// Exposer des méthodes pour contrôler les alertes depuis l'extérieur
-defineExpose({
-  addAlert,
-  removeAlert,
-  openCookieSettings
-})
+  // Exposer des méthodes pour contrôler les alertes depuis l'extérieur
+  defineExpose({
+    addAlert,
+    removeAlert,
+    openCookieSettings
+  })
 </script>
 
 <style scoped>
-.alert {
-  animation: slideInRight 0.3s ease-out;
-}
-
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-/* Responsive */
-@media (max-width: 640px) {
   .alert {
-    max-width: calc(100vw - 2rem);
-    right: 1rem;
-    left: 1rem;
+    animation: slideInRight 0.3s ease-out;
   }
-}
+
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .alert {
+      max-width: calc(100vw - 2rem);
+      right: 1rem;
+      left: 1rem;
+    }
+  }
 </style>

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { defineEventHandler, readBody, getCookie } from 'h3'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const body = await readBody(event)
   const token = getCookie(event, 'auth_token')
   const config = useRuntimeConfig()
@@ -29,10 +29,7 @@ export default defineEventHandler(async (event) => {
     return participantInfo.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de l’inscription au participant'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de l’inscription au participant')
     }
   }
 })

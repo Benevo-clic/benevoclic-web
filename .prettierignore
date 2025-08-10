@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+.nuxt/
+.output/
+dist/
+
+# Coverage
+coverage/
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env*
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Git
+.git/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated files
+lighthouse-reports/
+*.html
+*.json
+
+# Documentation
+*.md
+docs/
+
+# Images and assets
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+
+# Lock files
+yarn.lock
+pnpm-lock.yaml

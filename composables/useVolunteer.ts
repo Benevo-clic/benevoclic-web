@@ -16,14 +16,10 @@ export const useVolunteerAuth = () => {
     getAssociationToWaitingList: volunteerStore.getAssociationToWaitingList,
     removeVolunteerFromWaitingListAssociation:
       volunteerStore.removeVolunteerFromWaitingListAssociation,
-    removeVolunteerFromAssociation:
-      volunteerStore.removeVolunteerFromAssociation,
-    addVolunteerToWaitingListAssociation:
-      volunteerStore.addVolunteerToWaitingListAssociation,
-    getAllAssociationsToWaitingList:
-      volunteerStore.getAllAssociationsToWaitingList,
-    getAllAssociationsFollowingList:
-      volunteerStore.getAllAssociationsFollowingList,
+    removeVolunteerFromAssociation: volunteerStore.removeVolunteerFromAssociation,
+    addVolunteerToWaitingListAssociation: volunteerStore.addVolunteerToWaitingListAssociation,
+    getAllAssociationsToWaitingList: volunteerStore.getAllAssociationsToWaitingList,
+    getAllAssociationsFollowingList: volunteerStore.getAllAssociationsFollowingList,
     getAssociationsFollowingList: volunteerStore.getAssociationsFollowingList,
     getAssociations: volunteerStore.getAssociations,
     getVolunteerAnnouncements: volunteerStore.getVolunteerAnnouncements,

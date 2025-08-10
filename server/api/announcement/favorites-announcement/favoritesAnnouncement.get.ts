@@ -2,7 +2,7 @@ import axios from 'axios'
 import { defineEventHandler, getQuery } from 'h3'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const query = getQuery(event)
   const volunteerId = query.volunteerId as string | undefined
   const announcementId = query.announcementId as string | undefined
@@ -28,10 +28,7 @@ export default defineEventHandler(async (event) => {
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la création du favori de l’annonce'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la création du favori de l’annonce')
     }
   }
 })

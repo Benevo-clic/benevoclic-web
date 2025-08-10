@@ -3,7 +3,7 @@ import axios from 'axios'
 import type { AssociationVolunteerFollow } from '~/common/interface/volunteer.interface'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const config = useRuntimeConfig()
   const token = getCookie(event, 'auth_token')
   const { volunteerId } = getQuery(event) as { volunteerId?: string }

@@ -3,7 +3,7 @@ import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 import { Announcement } from '~/common/interface/event.interface'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const config = useRuntimeConfig()
   const token = getCookie(event, 'auth_token')
   const participantId = event.context.params?.id

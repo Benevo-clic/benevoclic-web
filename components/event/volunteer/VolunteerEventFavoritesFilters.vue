@@ -14,9 +14,7 @@
       @type="() => {}"
       @reset-filters="resetFilters"
     />
-    <div
-      class="w-full flex flex-col sm:flex-row sm:items-center sm:justify-start gap-2"
-    >
+    <div class="w-full flex flex-col sm:flex-row sm:items-center sm:justify-start gap-2">
       <!-- Bouton Trier -->
       <div class="dropdown dropdown-bottom">
         <button
@@ -28,9 +26,7 @@
           Trier par
           <ChevronRight class="w-3 h-3" />
         </button>
-        <ul
-          class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50"
-        >
+        <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
           <li v-for="sortOption in sortOptions" :key="sortOption.value">
             <a @click="applySort(sortOption.value)">
               <input
@@ -38,7 +34,7 @@
                 :checked="filters.sort === sortOption.value"
                 class="checkbox checkbox-xs mr-2"
                 aria-label="Champ de saisie"
-              >
+              />
               {{ sortOption.label }}
             </a>
           </li>
@@ -49,78 +45,75 @@
 </template>
 
 <script setup lang="ts">
-import { SortAsc, ChevronRight } from 'lucide-vue-next'
-import { computed, defineEmits, ref } from 'vue'
-import type {
-  FilterAnnouncement,
-  SortOption
-} from '~/common/interface/filter.interface'
-import FilterActive from '~/components/event/volunteer/utils/FilterActive.vue'
+  import { SortAsc, ChevronRight } from 'lucide-vue-next'
+  import { computed, defineEmits, ref } from 'vue'
+  import type { FilterAnnouncement, SortOption } from '~/common/interface/filter.interface'
+  import FilterActive from '~/components/event/volunteer/utils/FilterActive.vue'
 
-const emit = defineEmits<{
-  (e: 'filter', filters: FilterAnnouncement): void;
-}>()
+  const emit = defineEmits<{
+    (e: 'filter', filters: FilterAnnouncement): void
+  }>()
 
-const filters = ref<FilterAnnouncement>({
-  status: undefined,
-  page: 1,
-  limit: 9,
-  sort: undefined
-})
-
-const sortOptions = ref([
-  {
-    value: 'dateEvent_asc' as SortOption,
-    label: "Date d'événement (croissant)"
-  },
-  {
-    value: 'dateEvent_desc' as SortOption,
-    label: "Date d'événement (décroissant)"
-  },
-  {
-    value: 'datePublication_desc' as SortOption,
-    label: 'Date de publication (récent)'
-  }
-])
-
-const hasActiveFilters = computed(() => {
-  return filters.value.status || filters.value.sort
-})
-
-const removeSort = () => {
-  filters.value.sort = undefined
-  applyFilters()
-}
-
-const applyFilters = () => {
-  const filtersToSend = { ...filters.value }
-
-  delete filtersToSend.cityCoordinates
-
-  if (filtersToSend.radius && filtersToSend.radius > 0) {
-    filtersToSend.radius = filtersToSend.radius * 1000
-  }
-  emit('filter', filtersToSend)
-}
-
-const resetFilters = () => {
-  filters.value = {
+  const filters = ref<FilterAnnouncement>({
     status: undefined,
     page: 1,
     limit: 9,
     sort: undefined
-  }
-  applyFilters()
-}
+  })
 
-const applySort = (sort: SortOption) => {
-  filters.value.sort = sort
-  applyFilters()
-}
+  const sortOptions = ref([
+    {
+      value: 'dateEvent_asc' as SortOption,
+      label: "Date d'événement (croissant)"
+    },
+    {
+      value: 'dateEvent_desc' as SortOption,
+      label: "Date d'événement (décroissant)"
+    },
+    {
+      value: 'datePublication_desc' as SortOption,
+      label: 'Date de publication (récent)'
+    }
+  ])
+
+  const hasActiveFilters = computed(() => {
+    return filters.value.status || filters.value.sort
+  })
+
+  const removeSort = () => {
+    filters.value.sort = undefined
+    applyFilters()
+  }
+
+  const applyFilters = () => {
+    const filtersToSend = { ...filters.value }
+
+    delete filtersToSend.cityCoordinates
+
+    if (filtersToSend.radius && filtersToSend.radius > 0) {
+      filtersToSend.radius = filtersToSend.radius * 1000
+    }
+    emit('filter', filtersToSend)
+  }
+
+  const resetFilters = () => {
+    filters.value = {
+      status: undefined,
+      page: 1,
+      limit: 9,
+      sort: undefined
+    }
+    applyFilters()
+  }
+
+  const applySort = (sort: SortOption) => {
+    filters.value.sort = sort
+    applyFilters()
+  }
 </script>
 
 <style scoped>
-.flex::-webkit-scrollbar {
-  display: none;
-}
+  .flex::-webkit-scrollbar {
+    display: none;
+  }
 </style>

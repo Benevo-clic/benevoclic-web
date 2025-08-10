@@ -2,7 +2,7 @@ import axios from 'axios'
 import { defineEventHandler, readBody } from 'h3'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
   const config = useRuntimeConfig()
   const { id } = getQuery(event) as { id?: string }
@@ -33,10 +33,7 @@ export default defineEventHandler(async (event) => {
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la mise à jour du volontaire'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la mise à jour du volontaire')
     }
   }
 })

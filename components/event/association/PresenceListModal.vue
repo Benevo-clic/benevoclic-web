@@ -1,9 +1,7 @@
 <template>
   <dialog ref="modalRef" class="modal">
     <div class="modal-box max-w-4xl">
-      <h3 class="font-bold text-xl mb-6">
-        Gestion des présences
-      </h3>
+      <h3 class="font-bold text-xl mb-6">Gestion des présences</h3>
 
       <!-- Tabs for participants and volunteers -->
       <div role="tablist" class="tabs tabs-bordered mb-4">
@@ -32,19 +30,14 @@
             placeholder="Rechercher..."
             class="input input-bordered w-full"
             aria-label="Champ de saisie"
-          >
+          />
         </div>
       </div>
 
       <!-- Participants list -->
       <div v-if="activeTab === 'participants'" class="max-h-96 overflow-y-auto">
-        <div
-          v-if="filteredParticipants.length === 0"
-          class="text-center py-8 text-base-content/60"
-        >
-          <p class="text-sm font-medium">
-            Aucun participant trouvé
-          </p>
+        <div v-if="filteredParticipants.length === 0" class="text-center py-8 text-base-content/60">
+          <p class="text-sm font-medium">Aucun participant trouvé</p>
         </div>
         <div v-else class="space-y-3">
           <div
@@ -75,10 +68,8 @@
                 :checked="participant.isPresent"
                 aria-label="Champ de saisie"
                 @change="togglePresence(participant, 'participant')"
-              >
-              <span class="label-text">{{
-                participant.isPresent ? "Présent" : "Absent"
-              }}</span>
+              />
+              <span class="label-text">{{ participant.isPresent ? 'Présent' : 'Absent' }}</span>
             </label>
           </div>
         </div>
@@ -86,13 +77,8 @@
 
       <!-- Volunteers list -->
       <div v-if="activeTab === 'volunteers'" class="max-h-96 overflow-y-auto">
-        <div
-          v-if="filteredVolunteers.length === 0"
-          class="text-center py-8 text-base-content/60"
-        >
-          <p class="text-sm font-medium">
-            Aucun bénévole trouvé
-          </p>
+        <div v-if="filteredVolunteers.length === 0" class="text-center py-8 text-base-content/60">
+          <p class="text-sm font-medium">Aucun bénévole trouvé</p>
         </div>
         <div v-else class="space-y-3">
           <div
@@ -123,10 +109,8 @@
                 :checked="volunteer.isPresent"
                 aria-label="Champ de saisie"
                 @change="togglePresence(volunteer, 'volunteer')"
-              >
-              <span class="label-text">{{
-                volunteer.isPresent ? "Présent" : "Absent"
-              }}</span>
+              />
+              <span class="label-text">{{ volunteer.isPresent ? 'Présent' : 'Absent' }}</span>
             </label>
           </div>
         </div>
@@ -134,164 +118,143 @@
 
       <!-- Modal actions -->
       <div class="modal-action">
-        <button
-          class="btn btn-ghost"
-          type="button"
-          @click="closeModal"
-        >
-          Fermer
-        </button>
+        <button class="btn btn-ghost" type="button" @click="closeModal">Fermer</button>
       </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button
-        type="button"
-      >
-        Fermer
-      </button>
+      <button type="button">Fermer</button>
     </form>
   </dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import type { InfoVolunteer } from '~/common/interface/event.interface'
-import { useAnnouncement } from '~/composables/useAnnouncement'
+  import { ref, computed, watch } from 'vue'
+  import type { InfoVolunteer } from '~/common/interface/event.interface'
+  import { useAnnouncement } from '~/composables/useAnnouncement'
 
-interface Props {
-  announcementId: string;
-  participants?: InfoVolunteer[];
-  volunteers?: InfoVolunteer[];
-}
-
-const props = defineProps<Props>()
-const emit = defineEmits<{
-  close: [];
-  update: [];
-}>()
-
-const modalRef = ref<HTMLDialogElement | null>(null)
-const activeTab = ref<'participants' | 'volunteers'>('participants')
-const searchQuery = ref('')
-const announcement = useAnnouncement()
-
-const localParticipants = ref<InfoVolunteer[]>([])
-const localVolunteers = ref<InfoVolunteer[]>([])
-
-watch(
-  () => props.participants,
-  (newParticipants) => {
-    if (newParticipants) {
-      localParticipants.value = JSON.parse(JSON.stringify(newParticipants))
-    }
-  },
-  { immediate: true }
-)
-
-watch(
-  () => props.volunteers,
-  (newVolunteers) => {
-    if (newVolunteers) {
-      localVolunteers.value = JSON.parse(JSON.stringify(newVolunteers))
-    }
-  },
-  { immediate: true }
-)
-
-// Filtered lists based on search query
-const filteredParticipants = computed(() => {
-  if (!searchQuery.value) { return localParticipants.value }
-  const query = searchQuery.value.toLowerCase()
-  return localParticipants.value.filter(p =>
-    p.name.toLowerCase().includes(query)
-  )
-})
-
-const filteredVolunteers = computed(() => {
-  if (!searchQuery.value) { return localVolunteers.value }
-  const query = searchQuery.value.toLowerCase()
-  return localVolunteers.value.filter(v =>
-    v.name.toLowerCase().includes(query)
-  )
-})
-
-// Toggle presence status
-async function togglePresence (
-  person: InfoVolunteer,
-  type: 'participant' | 'volunteer'
-) {
-  try {
-    const updatedPerson = {
-      ...person,
-      isPresent: !person.isPresent
-    }
-
-    if (type === 'participant') {
-      await announcement.updatePresentParticipant(
-        props.announcementId,
-        updatedPerson
-      )
-      // Update local copy
-      const index = localParticipants.value.findIndex(
-        p => p.id === person.id
-      )
-      if (index !== -1) {
-        localParticipants.value[index].isPresent = updatedPerson.isPresent
-      }
-    } else {
-      await announcement.updatePresentVolunteer(
-        props.announcementId,
-        updatedPerson
-      )
-      // Update local copy
-      const index = localVolunteers.value.findIndex(v => v.id === person.id)
-      if (index !== -1) {
-        localVolunteers.value[index].isPresent = updatedPerson.isPresent
-      }
-    }
-
-    emit('update')
-  } catch (error) {
-    console.error('Error updating presence status:', error)
+  interface Props {
+    announcementId: string
+    participants?: InfoVolunteer[]
+    volunteers?: InfoVolunteer[]
   }
-}
 
-function showModal () {
-  modalRef.value?.showModal()
-}
+  const props = defineProps<Props>()
+  const emit = defineEmits<{
+    close: []
+    update: []
+  }>()
 
-function closeModal () {
-  modalRef.value?.close()
-  emit('close')
-}
+  const modalRef = ref<HTMLDialogElement | null>(null)
+  const activeTab = ref<'participants' | 'volunteers'>('participants')
+  const searchQuery = ref('')
+  const announcement = useAnnouncement()
 
-defineExpose({
-  showModal
-})
+  const localParticipants = ref<InfoVolunteer[]>([])
+  const localVolunteers = ref<InfoVolunteer[]>([])
+
+  watch(
+    () => props.participants,
+    newParticipants => {
+      if (newParticipants) {
+        localParticipants.value = JSON.parse(JSON.stringify(newParticipants))
+      }
+    },
+    { immediate: true }
+  )
+
+  watch(
+    () => props.volunteers,
+    newVolunteers => {
+      if (newVolunteers) {
+        localVolunteers.value = JSON.parse(JSON.stringify(newVolunteers))
+      }
+    },
+    { immediate: true }
+  )
+
+  // Filtered lists based on search query
+  const filteredParticipants = computed(() => {
+    if (!searchQuery.value) {
+      return localParticipants.value
+    }
+    const query = searchQuery.value.toLowerCase()
+    return localParticipants.value.filter(p => p.name.toLowerCase().includes(query))
+  })
+
+  const filteredVolunteers = computed(() => {
+    if (!searchQuery.value) {
+      return localVolunteers.value
+    }
+    const query = searchQuery.value.toLowerCase()
+    return localVolunteers.value.filter(v => v.name.toLowerCase().includes(query))
+  })
+
+  // Toggle presence status
+  async function togglePresence(person: InfoVolunteer, type: 'participant' | 'volunteer') {
+    try {
+      const updatedPerson = {
+        ...person,
+        isPresent: !person.isPresent
+      }
+
+      if (type === 'participant') {
+        await announcement.updatePresentParticipant(props.announcementId, updatedPerson)
+        // Update local copy
+        const index = localParticipants.value.findIndex(p => p.id === person.id)
+        if (index !== -1) {
+          localParticipants.value[index].isPresent = updatedPerson.isPresent
+        }
+      } else {
+        await announcement.updatePresentVolunteer(props.announcementId, updatedPerson)
+        // Update local copy
+        const index = localVolunteers.value.findIndex(v => v.id === person.id)
+        if (index !== -1) {
+          localVolunteers.value[index].isPresent = updatedPerson.isPresent
+        }
+      }
+
+      emit('update')
+    } catch (error) {
+      console.error('Error updating presence status:', error)
+    }
+  }
+
+  function showModal() {
+    modalRef.value?.showModal()
+  }
+
+  function closeModal() {
+    modalRef.value?.close()
+    emit('close')
+  }
+
+  defineExpose({
+    showModal
+  })
 </script>
 
 <style scoped>
-.modal-box {
-  width: 90%;
-  max-width: 800px;
-}
+  .modal-box {
+    width: 90%;
+    max-width: 800px;
+  }
 
-/* Custom scrollbar */
-.overflow-y-auto::-webkit-scrollbar {
-  width: 8px;
-}
+  /* Custom scrollbar */
+  .overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+  }
 
-.overflow-y-auto::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
-}
+  .overflow-y-auto::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
 
-.overflow-y-auto::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-}
+  .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
 
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.2);
-}
+  .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
 </style>

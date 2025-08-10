@@ -10,27 +10,17 @@
             placeholder="Search favorites..."
             class="input input-bordered w-full"
             aria-label="Champ de saisie"
-          >
+          />
           <button class="btn btn-square">
             <Search class="w-5 h-5" />
           </button>
         </div>
       </div>
 
-      <select
-        v-model="filterType"
-        class="select select-bordered"
-        aria-label="Sélection"
-      >
-        <option value="all">
-          All Favorites
-        </option>
-        <option value="missions">
-          Missions
-        </option>
-        <option value="organizations">
-          Organizations
-        </option>
+      <select v-model="filterType" class="select select-bordered" aria-label="Sélection">
+        <option value="all">All Favorites</option>
+        <option value="missions">Missions</option>
+        <option value="organizations">Organizations</option>
       </select>
     </div>
 
@@ -48,7 +38,7 @@
             <div>
               <div class="flex items-center gap-2">
                 <span class="badge badge-sm">{{
-                  favorite.type === "mission" ? "Mission" : "Organization"
+                  favorite.type === 'mission' ? 'Mission' : 'Organization'
                 }}</span>
                 <h2 class="card-title text-base-content">
                   {{ favorite.title || favorite.name }}
@@ -58,28 +48,18 @@
                 {{ favorite.organization || favorite.category }}
               </p>
 
-              <div
-                v-if="favorite.type === 'mission'"
-                class="flex items-center gap-2 mt-2"
-              >
+              <div v-if="favorite.type === 'mission'" class="flex items-center gap-2 mt-2">
                 <Calendar class="w-4 h-4 text-base-content opacity-70" />
-                <span class="text-sm text-base-content opacity-70">{{
-                  favorite.date
-                }}</span>
+                <span class="text-sm text-base-content opacity-70">{{ favorite.date }}</span>
               </div>
 
               <div class="flex items-center gap-2 mt-1">
                 <MapPin class="w-4 h-4 text-base-content opacity-70" />
-                <span class="text-sm text-base-content opacity-70">{{
-                  favorite.location
-                }}</span>
+                <span class="text-sm text-base-content opacity-70">{{ favorite.location }}</span>
               </div>
             </div>
 
-            <button
-              class="btn btn-ghost btn-circle"
-              @click="removeFavorite(favorite)"
-            >
+            <button class="btn btn-ghost btn-circle" @click="removeFavorite(favorite)">
               <Heart class="w-5 h-5 text-error fill-error" />
             </button>
           </div>
@@ -97,9 +77,7 @@
               focus:ring-primary
               focus:ring-offset-2
             >
-              {{
-                favorite.type === "mission" ? "View Details" : "View Profile"
-              }}
+              {{ favorite.type === 'mission' ? 'View Details' : 'View Profile' }}
             </button>
             <button
               v-if="favorite.type === 'mission'"
@@ -120,14 +98,12 @@
     <!-- Empty state -->
     <div v-else class="text-center py-12">
       <Heart class="w-16 h-16 mx-auto text-base-content opacity-30" />
-      <h3 class="mt-4 text-lg font-medium text-base-content">
-        No favorites found
-      </h3>
+      <h3 class="mt-4 text-lg font-medium text-base-content">No favorites found</h3>
       <p class="mt-2 text-base-content opacity-70">
         {{
           searchQuery
-            ? "No favorites match your search criteria."
-            : "Add items to your favorites to see them here."
+            ? 'No favorites match your search criteria.'
+            : 'Add items to your favorites to see them here.'
         }}
       </p>
     </div>
@@ -135,60 +111,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { Search, Heart, Calendar, MapPin } from 'lucide-vue-next'
+  import { ref, computed } from 'vue'
+  import { Search, Heart, Calendar, MapPin } from 'lucide-vue-next'
 
-// Props to receive favorites data from parent
-const props = defineProps({
-  favorites: {
-    type: Array,
-    default: () => []
+  // Props to receive favorites data from parent
+  const props = defineProps({
+    favorites: {
+      type: Array,
+      default: () => []
+    }
+  })
+
+  // Emit events to parent
+  const emit = defineEmits(['remove'])
+
+  // Local state
+  const searchQuery = ref('')
+  const filterType = ref('all')
+
+  // Computed property to filter favorites based on search and filter
+  const filteredFavorites = computed(() => {
+    let results = props.favorites
+
+    // Filter by type
+    if (filterType.value !== 'all') {
+      results = results.filter(item => item.type === filterType.value.slice(0, -1)) // Remove 's' from end
+    }
+
+    // Filter by search query
+    if (searchQuery.value) {
+      const query = searchQuery.value.toLowerCase()
+      results = results.filter(item => {
+        const title = (item.title || item.name || '').toLowerCase()
+        const description = (item.description || '').toLowerCase()
+        const organization = (item.organization || item.category || '').toLowerCase()
+
+        return title.includes(query) || description.includes(query) || organization.includes(query)
+      })
+    }
+
+    return results
+  })
+
+  // Function to remove a favorite
+  function removeFavorite(favorite) {
+    emit('remove', favorite)
   }
-})
-
-// Emit events to parent
-const emit = defineEmits(['remove'])
-
-// Local state
-const searchQuery = ref('')
-const filterType = ref('all')
-
-// Computed property to filter favorites based on search and filter
-const filteredFavorites = computed(() => {
-  let results = props.favorites
-
-  // Filter by type
-  if (filterType.value !== 'all') {
-    results = results.filter(
-      item => item.type === filterType.value.slice(0, -1)
-    ) // Remove 's' from end
-  }
-
-  // Filter by search query
-  if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase()
-    results = results.filter((item) => {
-      const title = (item.title || item.name || '').toLowerCase()
-      const description = (item.description || '').toLowerCase()
-      const organization = (
-        item.organization ||
-        item.category ||
-        ''
-      ).toLowerCase()
-
-      return (
-        title.includes(query) ||
-        description.includes(query) ||
-        organization.includes(query)
-      )
-    })
-  }
-
-  return results
-})
-
-// Function to remove a favorite
-function removeFavorite (favorite) {
-  emit('remove', favorite)
-}
 </script>

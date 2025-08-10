@@ -1,16 +1,10 @@
-import {
-  defineEventHandler,
-  readBody,
-  createError,
-  getCookie,
-  readMultipartFormData
-} from 'h3'
+import { defineEventHandler, readBody, createError, getCookie, readMultipartFormData } from 'h3'
 import axios from 'axios'
 import FormData from 'form-data'
 import { ApiError } from '~/utils/ErrorHandler'
 import type { UserInfo } from '~/common/types/auth.type'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const config = useRuntimeConfig()
   const token = getCookie(event, 'auth_token')
 
@@ -30,9 +24,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const filePart = parts.find(
-    p => p.name === 'file' && typeof (p as any).filename === 'string'
-  )
+  const filePart = parts.find(p => p.name === 'file' && typeof (p as any).filename === 'string')
   if (!filePart) {
     throw createError({
       statusCode: 400,
@@ -41,9 +33,9 @@ export default defineEventHandler(async (event) => {
   }
 
   const { data, filename, mimeType } = filePart as {
-    data: Buffer;
-    filename: string;
-    mimeType: string;
+    data: Buffer
+    filename: string
+    mimeType: string
   }
   const form = new FormData()
   form.append('file', data, { filename, contentType: mimeType })

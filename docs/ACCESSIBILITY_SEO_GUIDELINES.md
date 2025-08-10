@@ -50,31 +50,15 @@
 
 ```html
 <!-- Boutons -->
-<button
-  aria-expanded="false"
-  aria-controls="menu-id"
-  aria-label="Ouvrir le menu"
->
-  Menu
-</button>
+<button aria-expanded="false" aria-controls="menu-id" aria-label="Ouvrir le menu">Menu</button>
 
 <!-- Formulaires -->
 <label for="email">Email</label>
-<input
-  id="email"
-  type="email"
-  aria-describedby="email-help"
-  aria-required="true"
-/>
+<input id="email" type="email" aria-describedby="email-help" aria-required="true" />
 <div id="email-help">Format: exemple@domaine.com</div>
 
 <!-- Images -->
-<img
-  src="logo.png"
-  alt="Logo Benevoclic - Retour à l'accueil"
-  width="150"
-  height="50"
-/>
+<img src="logo.png" alt="Logo Benevoclic - Retour à l'accueil" width="150" height="50" />
 ```
 
 #### 4. Contraste et couleurs
@@ -110,14 +94,8 @@
 #### 1. Balises meta de base
 
 ```html
-<meta
-  name="description"
-  content="Description unique et attractive (150-160 caractères)"
-/>
-<meta
-  name="keywords"
-  content="mots-clés, pertinents, séparés, par, des, virgules"
-/>
+<meta name="description" content="Description unique et attractive (150-160 caractères)" />
+<meta name="keywords" content="mots-clés, pertinents, séparés, par, des, virgules" />
 <meta name="author" content="Benevoclic" />
 <meta name="robots" content="index, follow" />
 ```
@@ -126,10 +104,7 @@
 
 ```html
 <meta property="og:title" content="Titre de la page" />
-<meta
-  property="og:description"
-  content="Description pour les réseaux sociaux"
-/>
+<meta property="og:description" content="Description pour les réseaux sociaux" />
 <meta property="og:image" content="https://www.benevoclic.fr/image.jpg" />
 <meta property="og:url" content="https://www.benevoclic.fr/page" />
 <meta property="og:type" content="website" />
@@ -306,9 +281,7 @@ npm run audit:lighthouse
   <legend>Informations personnelles</legend>
   <label for="name">Nom complet</label>
   <input id="name" type="text" required aria-describedby="name-help" />
-  <div id="name-help">
-    Votre nom complet tel qu'il apparaît sur vos documents
-  </div>
+  <div id="name-help">Votre nom complet tel qu'il apparaît sur vos documents</div>
 </fieldset>
 
 <!-- ❌ Éviter -->

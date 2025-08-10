@@ -4,19 +4,11 @@
     role="group"
     aria-labelledby="date-range-label"
   >
-    <label
-      id="date-range-label"
-      class="sr-only"
-    >Sélectionner une période</label>
+    <label id="date-range-label" class="sr-only">Sélectionner une période</label>
 
-    <div
-      class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1 sm:flex-none"
-    >
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1 sm:flex-none">
       <div class="form-control">
-        <label
-          :for="fromInputId"
-          class="label label-text sr-only"
-        >Date de début</label>
+        <label :for="fromInputId" class="label label-text sr-only">Date de début</label>
         <input
           :id="fromInputId"
           v-model="from"
@@ -24,21 +16,13 @@
           class="input input-sm border rounded flex-1 sm:w-auto min-w-0 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
           :aria-describedby="fromDescriptionId"
           @keydown="handleKeydown"
-        >
-        <div :id="fromDescriptionId" class="sr-only">
-          Sélectionnez la date de début
-        </div>
+        />
+        <div :id="fromDescriptionId" class="sr-only">Sélectionnez la date de début</div>
       </div>
 
-      <span
-        class="hidden sm:inline text-base-content opacity-70"
-        aria-hidden="true"
-      >—</span>
+      <span class="hidden sm:inline text-base-content opacity-70" aria-hidden="true">—</span>
       <div class="form-control">
-        <label
-          :for="toInputId"
-          class="label label-text sr-only"
-        >Date de fin</label>
+        <label :for="toInputId" class="label label-text sr-only">Date de fin</label>
         <input
           :id="toInputId"
           v-model="to"
@@ -46,10 +30,8 @@
           class="input input-sm border rounded flex-1 sm:w-auto min-w-0 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
           :aria-describedby="toDescriptionId"
           @keydown="handleKeydown"
-        >
-        <div :id="toDescriptionId" class="sr-only">
-          Sélectionnez la date de fin
-        </div>
+        />
+        <div :id="toDescriptionId" class="sr-only">Sélectionnez la date de fin</div>
       </div>
     </div>
 
@@ -72,106 +54,106 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+  import { ref, watch, computed } from 'vue'
 
-const props = defineProps<{ modelValue: { from: string; to: string } }>()
-const emit = defineEmits(['update:modelValue', 'change'])
+  const props = defineProps<{ modelValue: { from: string; to: string } }>()
+  const emit = defineEmits(['update:modelValue', 'change'])
 
-// Generate unique IDs for accessibility
-const fromInputId = `date-from-${Math.random().toString(36).substr(2, 9)}`
-const toInputId = `date-to-${Math.random().toString(36).substr(2, 9)}`
-const fromDescriptionId = `from-desc-${Math.random().toString(36).substr(2, 9)}`
-const toDescriptionId = `to-desc-${Math.random().toString(36).substr(2, 9)}`
+  // Generate unique IDs for accessibility
+  const fromInputId = `date-from-${Math.random().toString(36).substr(2, 9)}`
+  const toInputId = `date-to-${Math.random().toString(36).substr(2, 9)}`
+  const fromDescriptionId = `from-desc-${Math.random().toString(36).substr(2, 9)}`
+  const toDescriptionId = `to-desc-${Math.random().toString(36).substr(2, 9)}`
 
-const from = ref(props.modelValue.from)
-const to = ref(props.modelValue.to)
+  const from = ref(props.modelValue.from)
+  const to = ref(props.modelValue.to)
 
-// Validation de la plage de dates
-const isValidRange = computed(() => {
-  if (!from.value || !to.value) {
-    return true
-  } // Permettre la sélection partielle
-  return new Date(from.value) <= new Date(to.value)
-})
+  // Validation de la plage de dates
+  const isValidRange = computed(() => {
+    if (!from.value || !to.value) {
+      return true
+    } // Permettre la sélection partielle
+    return new Date(from.value) <= new Date(to.value)
+  })
 
-watch([from, to], () => {
-  if (isValidRange.value) {
-    emit('update:modelValue', { from: from.value, to: to.value })
+  watch([from, to], () => {
+    if (isValidRange.value) {
+      emit('update:modelValue', { from: from.value, to: to.value })
+    }
+  })
+
+  function emitRange() {
+    if (isValidRange.value) {
+      emit('change', { from: from.value, to: to.value })
+    }
   }
-})
 
-function emitRange () {
-  if (isValidRange.value) {
-    emit('change', { from: from.value, to: to.value })
+  // Gestion de la navigation clavier
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      emitRange()
+    }
   }
-}
-
-// Gestion de la navigation clavier
-function handleKeydown (event: KeyboardEvent) {
-  if (event.key === 'Enter') {
-    event.preventDefault()
-    emitRange()
-  }
-}
 </script>
 
 <style scoped>
-/* Amélioration de l'accessibilité pour les inputs */
-.input:focus-visible {
-  border-color: #eb5577;
-  box-shadow: 0 0 0 2px rgba(235, 85, 119, 0.2);
-}
-
-/* Amélioration du contraste pour les utilisateurs en mode high-contrast */
-@media (prefers-contrast: more) {
-  .input {
-    border-width: 2px;
+  /* Amélioration de l'accessibilité pour les inputs */
+  .input:focus-visible {
+    border-color: #eb5577;
+    box-shadow: 0 0 0 2px rgba(235, 85, 119, 0.2);
   }
 
-  .btn {
-    border-width: 2px;
-  }
-}
+  /* Amélioration du contraste pour les utilisateurs en mode high-contrast */
+  @media (prefers-contrast: more) {
+    .input {
+      border-width: 2px;
+    }
 
-/* Respect des préférences de réduction de mouvement */
-@media (prefers-reduced-motion: reduce) {
-  .input {
-    transition: none;
-  }
-
-  .btn {
-    transition: none;
-  }
-}
-
-/* Responsive adjustments */
-@media (max-width: 640px) {
-  .input {
-    font-size: 0.875rem;
-    padding: 0.5rem;
+    .btn {
+      border-width: 2px;
+    }
   }
 
-  .btn {
-    font-size: 0.875rem;
-    padding: 0.5rem 1rem;
+  /* Respect des préférences de réduction de mouvement */
+  @media (prefers-reduced-motion: reduce) {
+    .input {
+      transition: none;
+    }
+
+    .btn {
+      transition: none;
+    }
   }
-}
 
-/* Prevent horizontal scroll */
-input[type="date"] {
-  min-width: 0;
-  width: 100%;
-}
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .input {
+      font-size: 0.875rem;
+      padding: 0.5rem;
+    }
 
-/* Ensure proper date input sizing */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  cursor: pointer;
-}
-
-/* Mobile-specific styling */
-@media (max-width: 640px) {
-  input[type="date"] {
-    font-size: 16px; /* Prevents zoom on iOS */
+    .btn {
+      font-size: 0.875rem;
+      padding: 0.5rem 1rem;
+    }
   }
-}
+
+  /* Prevent horizontal scroll */
+  input[type='date'] {
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* Ensure proper date input sizing */
+  input[type='date']::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+  }
+
+  /* Mobile-specific styling */
+  @media (max-width: 640px) {
+    input[type='date'] {
+      font-size: 16px; /* Prevents zoom on iOS */
+    }
+  }
 </style>

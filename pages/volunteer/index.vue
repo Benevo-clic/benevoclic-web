@@ -1,300 +1,91 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, onUnmounted, watch } from 'vue'
-import {
-  Users,
-  HeartHandshake,
-  ArrowRight,
-  Search,
-  X,
-  SlidersHorizontal
-} from 'lucide-vue-next'
-import {
-  definePageMeta,
-  useHead,
-  useAnnouncement,
-  useVolunteerAuth,
-  useAssociationAuth,
-  navigateTo
-} from '#imports'
-import { useUserLocation } from '~/composables/useUserLocation'
-import VolunteerEventFilters from '~/components/event/volunteer/VolunteerEventFilters.vue'
-import type { Announcement } from '~/common/interface/event.interface'
-import type { FilterAnnouncement } from '~/common/interface/filter.interface'
-import VolunteerAnnouncementList from '~/components/event/volunteer/VolunteerAnnouncementList.vue'
-import Advantage from '~/components/home/advantage.vue'
-import Statistique from '~/components/home/statistique.vue'
-import CtaComponent from '~/components/home/ctaComponent.vue'
-import HowItWorks from '~/components/home/HowItWorks.vue'
-import { useFavoritesAnnouncement } from '~/composables/useFavoritesAnnouncement'
+  import { onMounted, ref, computed, onUnmounted, watch } from 'vue'
+  import { Users, HeartHandshake, ArrowRight, Search, X, SlidersHorizontal } from 'lucide-vue-next'
+  import {
+    definePageMeta,
+    useHead,
+    useAnnouncement,
+    useVolunteerAuth,
+    useAssociationAuth,
+    navigateTo
+  } from '#imports'
+  import { useUserLocation } from '~/composables/useUserLocation'
+  import VolunteerEventFilters from '~/components/event/volunteer/VolunteerEventFilters.vue'
+  import type { Announcement } from '~/common/interface/event.interface'
+  import type { FilterAnnouncement } from '~/common/interface/filter.interface'
+  import VolunteerAnnouncementList from '~/components/event/volunteer/VolunteerAnnouncementList.vue'
+  import Advantage from '~/components/home/advantage.vue'
+  import Statistique from '~/components/home/statistique.vue'
+  import CtaComponent from '~/components/home/ctaComponent.vue'
+  import HowItWorks from '~/components/home/HowItWorks.vue'
+  import { useFavoritesAnnouncement } from '~/composables/useFavoritesAnnouncement'
 
-definePageMeta({
-  middleware: ['auth'],
-  layout: 'header'
-})
+  definePageMeta({
+    middleware: ['auth'],
+    layout: 'header'
+  })
 
-useHead({
-  title:
-    'Benevoclic - Espace Bénévole | Participez à des événements solidaires',
-  meta: [
-    {
-      name: 'description',
-      content:
-        'Découvrez des événements et missions adaptés à vos compétences et disponibilités. Rejoignez la communauté Benevoclic, aidez les associations et participez à des actions solidaires.'
-    },
-    {
-      name: 'keywords',
-      content:
-        'bénévolat, missions, événements, volontariat, engagement citoyen, aide, solidarité, compétences, personnes dans le besoin'
-    }
-  ]
-})
-
-const announcement = useAnnouncement()
-const associations = useAssociationAuth()
-const useFavourites = useFavoritesAnnouncement()
-const volunteers = useVolunteerAuth()
-const featuredEvents = ref<Announcement[]>([])
-const isLoading = ref(true)
-const error = ref<string | null>(null)
-const currentSlideIndex = ref(0)
-const countAssociation = ref(0)
-const countVolunteer = ref(0)
-
-const totalEvents = ref(0)
-const totalAssociations = ref(0)
-const totalVolunteerSlots = ref(0)
-
-// Nouvelles variables pour la recherche
-const showSearchResults = ref(false)
-const searchAnnouncements = ref<Announcement[]>([])
-const searchLoading = ref(false)
-const searchError = ref<string | null>(null)
-const searchTotalAnnouncements = ref(0)
-const currentSearchPage = ref(1)
-const pageSize = 9
-const searchTotalPages = computed(() =>
-  Math.ceil(searchTotalAnnouncements.value / pageSize)
-)
-
-const isVisible = ref<{ [key: string]: boolean }>({
-  hero: true,
-  search: false,
-  stats: false,
-  events: false,
-  benefits: false,
-  howItWorks: false,
-  cta: false
-})
-const animatedStats = ref<{ [key: string]: number }>({
-  events: 0,
-  associations: 0,
-  volunteers: 0
-})
-const statsAnimationStarted = ref(false)
-
-let observers: IntersectionObserver[] = []
-
-// État partagé pour les filtres
-const sharedFilters = ref<FilterAnnouncement>({
-  nameEvent: undefined,
-  description: undefined,
-  status: undefined,
-  hoursEventFrom: undefined,
-  hoursEventTo: undefined,
-  dateEventFrom: undefined,
-  dateEventTo: undefined,
-  publicationInterval: undefined,
-  datePublicationFrom: undefined,
-  datePublicationTo: undefined,
-  tags: [],
-  latitude: undefined,
-  longitude: undefined,
-  radius: 0,
-  page: 1,
-  limit: 9,
-  sort: undefined
-})
-
-// Variables pour la recherche rapide (synchronisées avec sharedFilters)
-const searchQuery = computed({
-  get: () => sharedFilters.value.nameEvent || '',
-  set: (value: string) => {
-    sharedFilters.value.nameEvent = value || undefined
-    sharedFilters.value.description = value || undefined
-    sharedFilters.value.associationName = value || undefined
-  }
-})
-
-const searchTimeout = ref<NodeJS.Timeout | null>(null)
-
-const filteredEventsCount = ref<number>(0)
-const isCounting = ref<boolean>(false)
-const countTimeout = ref<NodeJS.Timeout | null>(null)
-
-const useCurrentLocation = ref<boolean>(false)
-const locationRadius = ref<number>(5)
-const userCurrentLocation = ref<any>(null)
-const currentLatitude = ref<number>()
-const currentLongitude = ref<number>()
-const canUseLocation = ref<boolean>(false)
-const resetLocation = ref(false)
-const startSearching = ref(false)
-
-async function fetchFeaturedEvents () {
-  isLoading.value = true
-  try {
-    const fetchFilter: FilterAnnouncement = {
-      page: 1,
-      limit: 9,
-      sort: 'dateEvent_asc'
-    }
-
-    const response = await announcement.filterAnnouncement(fetchFilter)
-    if (response && response.annonces) {
-      featuredEvents.value = response.annonces
-
-      totalEvents.value = response.meta.total || 0
-
-      const uniqueAssociations = new Set()
-      let volunteerSlots = 0
-
-      response.annonces.forEach((event) => {
-        if (event.associationId) {
-          uniqueAssociations.add(event.associationId)
-        }
-        volunteerSlots +=
-          (event.maxVolunteers || 0) - (event.nbVolunteers || 0)
-      })
-
-      totalAssociations.value = uniqueAssociations.size
-      totalVolunteerSlots.value = volunteerSlots
-    }
-
-    countAssociation.value = await associations.getNumberOfAssociations()
-    countVolunteer.value = await volunteers.getNumberOfVolunteers()
-  } catch (err: any) {
-    error.value =
-      err?.message || 'Erreur lors de la récupération des événements'
-    console.error('Erreur lors de la récupération des événements:', err)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-async function searchEvents (page = 1) {
-  startSearching.value = true
-
-  searchLoading.value = true
-  if (page === 1) {
-    showSearchResults.value = true
-  }
-
-  try {
-    const filters: FilterAnnouncement = {
-      ...sharedFilters.value,
-      page,
-      limit: pageSize
-    }
-
-    const cleanFilters = Object.fromEntries(
-      Object.entries(filters).filter(
-        ([_, value]) => value !== undefined && value !== null
-      )
-    ) as FilterAnnouncement
-
-    const response = await announcement.filterAnnouncement(cleanFilters)
-    if (response && response.annonces) {
-      searchAnnouncements.value = response.annonces
-      searchTotalAnnouncements.value = response.meta?.total || 0
-      currentSearchPage.value = page
-
-      if (page === 1) {
-        setTimeout(() => {
-          const searchSection = document.getElementById('search-section')
-          if (searchSection) {
-            searchSection.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            })
-          }
-        }, 100)
+  useHead({
+    title: 'Benevoclic - Espace Bénévole | Participez à des événements solidaires',
+    meta: [
+      {
+        name: 'description',
+        content:
+          'Découvrez des événements et missions adaptés à vos compétences et disponibilités. Rejoignez la communauté Benevoclic, aidez les associations et participez à des actions solidaires.'
+      },
+      {
+        name: 'keywords',
+        content:
+          'bénévolat, missions, événements, volontariat, engagement citoyen, aide, solidarité, compétences, personnes dans le besoin'
       }
-    }
-  } catch (err: any) {
-    console.error('Erreur lors de la recherche:', err)
+    ]
+  })
 
-    if (err?.status === 400) {
-      searchError.value =
-        'Les critères de recherche ne sont pas valides. Veuillez vérifier vos filtres.'
-    } else if (err?.status === 500) {
-      searchError.value = 'Erreur serveur. Veuillez réessayer plus tard.'
-    } else {
-      searchError.value = err?.message || 'Erreur lors de la recherche'
-    }
-  } finally {
-    searchLoading.value = false
-  }
-}
+  const announcement = useAnnouncement()
+  const associations = useAssociationAuth()
+  const useFavourites = useFavoritesAnnouncement()
+  const volunteers = useVolunteerAuth()
+  const featuredEvents = ref<Announcement[]>([])
+  const isLoading = ref(true)
+  const error = ref<string | null>(null)
+  const currentSlideIndex = ref(0)
+  const countAssociation = ref(0)
+  const countVolunteer = ref(0)
 
-async function handleSearchFilter (filters: FilterAnnouncement) {
-  searchLoading.value = true
+  const totalEvents = ref(0)
+  const totalAssociations = ref(0)
+  const totalVolunteerSlots = ref(0)
 
-  try {
-    sharedFilters.value = {
-      ...sharedFilters.value,
-      ...filters,
-      page: 1,
-      limit: pageSize
-    }
+  // Nouvelles variables pour la recherche
+  const showSearchResults = ref(false)
+  const searchAnnouncements = ref<Announcement[]>([])
+  const searchLoading = ref(false)
+  const searchError = ref<string | null>(null)
+  const searchTotalAnnouncements = ref(0)
+  const currentSearchPage = ref(1)
+  const pageSize = 9
+  const searchTotalPages = computed(() => Math.ceil(searchTotalAnnouncements.value / pageSize))
 
-    const cleanFilters = Object.fromEntries(
-      Object.entries(sharedFilters.value).filter(
-        ([_, value]) => value !== undefined && value !== null
-      )
-    ) as FilterAnnouncement
+  const isVisible = ref<{ [key: string]: boolean }>({
+    hero: true,
+    search: false,
+    stats: false,
+    events: false,
+    benefits: false,
+    howItWorks: false,
+    cta: false
+  })
+  const animatedStats = ref<{ [key: string]: number }>({
+    events: 0,
+    associations: 0,
+    volunteers: 0
+  })
+  const statsAnimationStarted = ref(false)
 
-    const response = await announcement.filterAnnouncement(cleanFilters)
-    if (response && response.annonces) {
-      searchAnnouncements.value = response.annonces
-      searchTotalAnnouncements.value = response.meta?.total || 0
-      currentSearchPage.value = 1
-    }
-  } catch (err: any) {
-    console.error('Erreur lors de la recherche:', err)
+  let observers: IntersectionObserver[] = []
 
-    // Gestion spécifique des erreurs
-    if (err?.status === 400) {
-      searchError.value =
-        'Les critères de recherche ne sont pas valides. Veuillez vérifier vos filtres.'
-    } else if (err?.status === 500) {
-      searchError.value = 'Erreur serveur. Veuillez réessayer plus tard.'
-    } else {
-      searchError.value = err?.message || 'Erreur lors de la recherche'
-    }
-  } finally {
-    searchLoading.value = false
-  }
-}
-
-function closeSearchResults () {
-  showSearchResults.value = false
-  startSearching.value = false
-
-  setTimeout(() => {
-    searchAnnouncements.value = []
-    searchError.value = null
-    searchTotalAnnouncements.value = 0
-    currentSearchPage.value = 1
-  }, 500)
-
-  const searchSection = document.getElementById('search-section')
-  if (searchSection) {
-    searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-}
-
-function resetAllFilters () {
-  sharedFilters.value = {
+  // État partagé pour les filtres
+  const sharedFilters = ref<FilterAnnouncement>({
     nameEvent: undefined,
     description: undefined,
     status: undefined,
@@ -312,250 +103,432 @@ function resetAllFilters () {
     page: 1,
     limit: 9,
     sort: undefined
-  }
+  })
 
-  // Réinitialiser les variables locales
-  useCurrentLocation.value = false
-  locationRadius.value = 5
-  resetLocation.value = true
-  searchError.value = null
+  // Variables pour la recherche rapide (synchronisées avec sharedFilters)
+  const searchQuery = computed({
+    get: () => sharedFilters.value.nameEvent || '',
+    set: (value: string) => {
+      sharedFilters.value.nameEvent = value || undefined
+      sharedFilters.value.description = value || undefined
+      sharedFilters.value.associationName = value || undefined
+    }
+  })
 
-  // Réinitialiser les compteurs
-  filteredEventsCount.value = 0
-  isCounting.value = false
-}
+  const searchTimeout = ref<NodeJS.Timeout | null>(null)
 
-function goToSearchPage (page: number) {
-  if (page >= 1 && page <= searchTotalPages.value) {
-    searchEvents(page)
-    // Scroll vers les résultats
-    setTimeout(() => {
-      const searchResults = document.querySelector('.search-results')
-      if (searchResults) {
-        searchResults.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  const filteredEventsCount = ref<number>(0)
+  const isCounting = ref<boolean>(false)
+  const countTimeout = ref<NodeJS.Timeout | null>(null)
+
+  const useCurrentLocation = ref<boolean>(false)
+  const locationRadius = ref<number>(5)
+  const userCurrentLocation = ref<any>(null)
+  const currentLatitude = ref<number>()
+  const currentLongitude = ref<number>()
+  const canUseLocation = ref<boolean>(false)
+  const resetLocation = ref(false)
+  const startSearching = ref(false)
+
+  async function fetchFeaturedEvents() {
+    isLoading.value = true
+    try {
+      const fetchFilter: FilterAnnouncement = {
+        page: 1,
+        limit: 9,
+        sort: 'dateEvent_asc'
       }
-    }, 100)
-  }
-}
 
-async function countFilteredEvents () {
-  if (countTimeout.value) {
-    clearTimeout(countTimeout.value)
+      const response = await announcement.filterAnnouncement(fetchFilter)
+      if (response && response.annonces) {
+        featuredEvents.value = response.annonces
+
+        totalEvents.value = response.meta.total || 0
+
+        const uniqueAssociations = new Set()
+        let volunteerSlots = 0
+
+        response.annonces.forEach(event => {
+          if (event.associationId) {
+            uniqueAssociations.add(event.associationId)
+          }
+          volunteerSlots += (event.maxVolunteers || 0) - (event.nbVolunteers || 0)
+        })
+
+        totalAssociations.value = uniqueAssociations.size
+        totalVolunteerSlots.value = volunteerSlots
+      }
+
+      countAssociation.value = await associations.getNumberOfAssociations()
+      countVolunteer.value = await volunteers.getNumberOfVolunteers()
+    } catch (err: any) {
+      error.value = err?.message || 'Erreur lors de la récupération des événements'
+      console.error('Erreur lors de la récupération des événements:', err)
+    } finally {
+      isLoading.value = false
+    }
   }
 
-  countTimeout.value = setTimeout(async () => {
-    isCounting.value = true
+  async function searchEvents(page = 1) {
+    startSearching.value = true
+
+    searchLoading.value = true
+    if (page === 1) {
+      showSearchResults.value = true
+    }
 
     try {
-      const filters: Partial<FilterAnnouncement> = {
+      const filters: FilterAnnouncement = {
         ...sharedFilters.value,
-        page: 1,
-        limit: 9
+        page,
+        limit: pageSize
       }
 
       const cleanFilters = Object.fromEntries(
-        Object.entries(filters).filter(
+        Object.entries(filters).filter(([_, value]) => value !== undefined && value !== null)
+      ) as FilterAnnouncement
+
+      const response = await announcement.filterAnnouncement(cleanFilters)
+      if (response && response.annonces) {
+        searchAnnouncements.value = response.annonces
+        searchTotalAnnouncements.value = response.meta?.total || 0
+        currentSearchPage.value = page
+
+        if (page === 1) {
+          setTimeout(() => {
+            const searchSection = document.getElementById('search-section')
+            if (searchSection) {
+              searchSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              })
+            }
+          }, 100)
+        }
+      }
+    } catch (err: any) {
+      console.error('Erreur lors de la recherche:', err)
+
+      if (err?.status === 400) {
+        searchError.value =
+          'Les critères de recherche ne sont pas valides. Veuillez vérifier vos filtres.'
+      } else if (err?.status === 500) {
+        searchError.value = 'Erreur serveur. Veuillez réessayer plus tard.'
+      } else {
+        searchError.value = err?.message || 'Erreur lors de la recherche'
+      }
+    } finally {
+      searchLoading.value = false
+    }
+  }
+
+  async function handleSearchFilter(filters: FilterAnnouncement) {
+    searchLoading.value = true
+
+    try {
+      sharedFilters.value = {
+        ...sharedFilters.value,
+        ...filters,
+        page: 1,
+        limit: pageSize
+      }
+
+      const cleanFilters = Object.fromEntries(
+        Object.entries(sharedFilters.value).filter(
           ([_, value]) => value !== undefined && value !== null
         )
       ) as FilterAnnouncement
 
       const response = await announcement.filterAnnouncement(cleanFilters)
-      filteredEventsCount.value = response?.meta?.total || 0
-    } catch (error) {
-      console.error('Erreur lors du comptage des événements:', error)
-      filteredEventsCount.value = 0
-    } finally {
-      isCounting.value = false
-    }
-  }, 500)
-}
-
-const hasActiveFilters = computed(() => {
-  return (
-    sharedFilters.value.nameEvent ||
-    sharedFilters.value.dateEventFrom ||
-    sharedFilters.value.dateEventTo ||
-    sharedFilters.value.status ||
-    sharedFilters.value.sort ||
-    (sharedFilters.value.tags && sharedFilters.value.tags.length > 0) ||
-    sharedFilters.value.latitude ||
-    sharedFilters.value.longitude ||
-    sharedFilters.value.radius
-  )
-})
-
-const userLocation = useUserLocation()
-
-const checkLocationPermissions = async () => {
-  try {
-    const { usePermissions } = await import('~/composables/usePermissions')
-    const { hasPermission, loadCookiePreferences } = usePermissions()
-
-    loadCookiePreferences()
-    canUseLocation.value = hasPermission('canUseLocation')
-
-    if (!canUseLocation.value) {
-      console.log(
-        'Cookies de personnalisation non acceptés - géolocalisation désactivée'
-      )
-    }
-  } catch (err) {
-    console.warn(
-      'Impossible de vérifier les permissions de géolocalisation:',
-      err
-    )
-    canUseLocation.value = false
-  }
-}
-
-const initLocation = async () => {
-  try {
-    const location = await userLocation.getUserLocation()
-    if (location) {
-      currentLatitude.value = location.latitude
-      currentLongitude.value = location.longitude
-      userCurrentLocation.value = {
-        place_id: 'current_location',
-        display_name: 'Ma position actuelle',
-        city: location.city || 'Position détectée',
-        lat: location.latitude.toString(),
-        lon: location.longitude.toString()
+      if (response && response.annonces) {
+        searchAnnouncements.value = response.annonces
+        searchTotalAnnouncements.value = response.meta?.total || 0
+        currentSearchPage.value = 1
       }
-    } else {
-      console.log('Aucune position obtenue')
+    } catch (err: any) {
+      console.error('Erreur lors de la recherche:', err)
+
+      // Gestion spécifique des erreurs
+      if (err?.status === 400) {
+        searchError.value =
+          'Les critères de recherche ne sont pas valides. Veuillez vérifier vos filtres.'
+      } else if (err?.status === 500) {
+        searchError.value = 'Erreur serveur. Veuillez réessayer plus tard.'
+      } else {
+        searchError.value = err?.message || 'Erreur lors de la recherche'
+      }
+    } finally {
+      searchLoading.value = false
     }
-  } catch (error) {
-    console.error('Error getting user location:', error)
   }
-}
 
-function triggerCount () {
-  countFilteredEvents()
-}
+  function closeSearchResults() {
+    showSearchResults.value = false
+    startSearching.value = false
 
-function animateCounters () {
-  if (statsAnimationStarted.value) {
-    return
-  }
-  statsAnimationStarted.value = true
+    setTimeout(() => {
+      searchAnnouncements.value = []
+      searchError.value = null
+      searchTotalAnnouncements.value = 0
+      currentSearchPage.value = 1
+    }, 500)
 
-  const duration = 2000 // 2 seconds
-  const steps = 60
-  const interval = duration / steps
-
-  let step = 0
-  const timer = setInterval(() => {
-    step++
-    const progress = step / steps
-
-    // Easing function for smoother animation
-    const easeOutQuad = (t: number) => t * (2 - t)
-    const easedProgress = easeOutQuad(progress)
-
-    animatedStats.value.events = Math.round(easedProgress * totalEvents.value)
-    animatedStats.value.associations = Math.round(
-      easedProgress * countAssociation.value
-    )
-    animatedStats.value.volunteers = Math.round(
-      easedProgress * countVolunteer.value
-    )
-
-    if (step >= steps) {
-      clearInterval(timer)
-      animatedStats.value.events = totalEvents.value
-      animatedStats.value.associations = countAssociation.value
-      animatedStats.value.volunteers = countVolunteer.value
+    const searchSection = document.getElementById('search-section')
+    if (searchSection) {
+      searchSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
-  }, interval)
-}
+  }
 
-function setupScrollObservers () {
-  const sections = [
-    { id: 'hero-section', key: 'hero' },
-    { id: 'search-section', key: 'search' },
-    { id: 'stats-section', key: 'stats' },
-    { id: 'events-section', key: 'events' },
-    { id: 'benefits-section', key: 'benefits' },
-    { id: 'how-it-works-section', key: 'howItWorks' },
-    { id: 'cta-section', key: 'cta' }
-  ]
+  function resetAllFilters() {
+    sharedFilters.value = {
+      nameEvent: undefined,
+      description: undefined,
+      status: undefined,
+      hoursEventFrom: undefined,
+      hoursEventTo: undefined,
+      dateEventFrom: undefined,
+      dateEventTo: undefined,
+      publicationInterval: undefined,
+      datePublicationFrom: undefined,
+      datePublicationTo: undefined,
+      tags: [],
+      latitude: undefined,
+      longitude: undefined,
+      radius: 0,
+      page: 1,
+      limit: 9,
+      sort: undefined
+    }
 
-  sections.forEach((section) => {
-    const element = document.getElementById(section.id)
-    if (!element) {
+    // Réinitialiser les variables locales
+    useCurrentLocation.value = false
+    locationRadius.value = 5
+    resetLocation.value = true
+    searchError.value = null
+
+    // Réinitialiser les compteurs
+    filteredEventsCount.value = 0
+    isCounting.value = false
+  }
+
+  function goToSearchPage(page: number) {
+    if (page >= 1 && page <= searchTotalPages.value) {
+      searchEvents(page)
+      // Scroll vers les résultats
+      setTimeout(() => {
+        const searchResults = document.querySelector('.search-results')
+        if (searchResults) {
+          searchResults.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }, 100)
+    }
+  }
+
+  async function countFilteredEvents() {
+    if (countTimeout.value) {
+      clearTimeout(countTimeout.value)
+    }
+
+    countTimeout.value = setTimeout(async () => {
+      isCounting.value = true
+
+      try {
+        const filters: Partial<FilterAnnouncement> = {
+          ...sharedFilters.value,
+          page: 1,
+          limit: 9
+        }
+
+        const cleanFilters = Object.fromEntries(
+          Object.entries(filters).filter(([_, value]) => value !== undefined && value !== null)
+        ) as FilterAnnouncement
+
+        const response = await announcement.filterAnnouncement(cleanFilters)
+        filteredEventsCount.value = response?.meta?.total || 0
+      } catch (error) {
+        console.error('Erreur lors du comptage des événements:', error)
+        filteredEventsCount.value = 0
+      } finally {
+        isCounting.value = false
+      }
+    }, 500)
+  }
+
+  const hasActiveFilters = computed(() => {
+    return (
+      sharedFilters.value.nameEvent ||
+      sharedFilters.value.dateEventFrom ||
+      sharedFilters.value.dateEventTo ||
+      sharedFilters.value.status ||
+      sharedFilters.value.sort ||
+      (sharedFilters.value.tags && sharedFilters.value.tags.length > 0) ||
+      sharedFilters.value.latitude ||
+      sharedFilters.value.longitude ||
+      sharedFilters.value.radius
+    )
+  })
+
+  const userLocation = useUserLocation()
+
+  const checkLocationPermissions = async () => {
+    try {
+      const { usePermissions } = await import('~/composables/usePermissions')
+      const { hasPermission, loadCookiePreferences } = usePermissions()
+
+      loadCookiePreferences()
+      canUseLocation.value = hasPermission('canUseLocation')
+
+      if (!canUseLocation.value) {
+        console.log('Cookies de personnalisation non acceptés - géolocalisation désactivée')
+      }
+    } catch (err) {
+      console.warn('Impossible de vérifier les permissions de géolocalisation:', err)
+      canUseLocation.value = false
+    }
+  }
+
+  const initLocation = async () => {
+    try {
+      const location = await userLocation.getUserLocation()
+      if (location) {
+        currentLatitude.value = location.latitude
+        currentLongitude.value = location.longitude
+        userCurrentLocation.value = {
+          place_id: 'current_location',
+          display_name: 'Ma position actuelle',
+          city: location.city || 'Position détectée',
+          lat: location.latitude.toString(),
+          lon: location.longitude.toString()
+        }
+      } else {
+        console.log('Aucune position obtenue')
+      }
+    } catch (error) {
+      console.error('Error getting user location:', error)
+    }
+  }
+
+  function triggerCount() {
+    countFilteredEvents()
+  }
+
+  function animateCounters() {
+    if (statsAnimationStarted.value) {
       return
     }
+    statsAnimationStarted.value = true
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            isVisible.value[section.key] = true
+    const duration = 2000 // 2 seconds
+    const steps = 60
+    const interval = duration / steps
 
-            // Start counter animation when stats section becomes visible
-            if (section.key === 'stats' && !statsAnimationStarted.value) {
-              animateCounters()
+    let step = 0
+    const timer = setInterval(() => {
+      step++
+      const progress = step / steps
+
+      // Easing function for smoother animation
+      const easeOutQuad = (t: number) => t * (2 - t)
+      const easedProgress = easeOutQuad(progress)
+
+      animatedStats.value.events = Math.round(easedProgress * totalEvents.value)
+      animatedStats.value.associations = Math.round(easedProgress * countAssociation.value)
+      animatedStats.value.volunteers = Math.round(easedProgress * countVolunteer.value)
+
+      if (step >= steps) {
+        clearInterval(timer)
+        animatedStats.value.events = totalEvents.value
+        animatedStats.value.associations = countAssociation.value
+        animatedStats.value.volunteers = countVolunteer.value
+      }
+    }, interval)
+  }
+
+  function setupScrollObservers() {
+    const sections = [
+      { id: 'hero-section', key: 'hero' },
+      { id: 'search-section', key: 'search' },
+      { id: 'stats-section', key: 'stats' },
+      { id: 'events-section', key: 'events' },
+      { id: 'benefits-section', key: 'benefits' },
+      { id: 'how-it-works-section', key: 'howItWorks' },
+      { id: 'cta-section', key: 'cta' }
+    ]
+
+    sections.forEach(section => {
+      const element = document.getElementById(section.id)
+      if (!element) {
+        return
+      }
+
+      const observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              isVisible.value[section.key] = true
+
+              // Start counter animation when stats section becomes visible
+              if (section.key === 'stats' && !statsAnimationStarted.value) {
+                animateCounters()
+              }
             }
-          }
-        })
-      },
-      { threshold: 0.2 }
-    ) // Trigger when 20% of the element is visible
+          })
+        },
+        { threshold: 0.2 }
+      ) // Trigger when 20% of the element is visible
 
-    observer.observe(element)
-    observers.push(observer)
-  })
-}
+      observer.observe(element)
+      observers.push(observer)
+    })
+  }
 
-onMounted(async () => {
-  await fetchFeaturedEvents()
+  onMounted(async () => {
+    await fetchFeaturedEvents()
 
-  // Initialize carousel to first slide
-  if (featuredEvents.value.length > 0) {
-    currentSlideIndex.value = 0
-    // Use setTimeout to ensure DOM is updated
+    // Initialize carousel to first slide
+    if (featuredEvents.value.length > 0) {
+      currentSlideIndex.value = 0
+      // Use setTimeout to ensure DOM is updated
+      setTimeout(() => {
+        window.location.hash = 'hero-section'
+      }, 100)
+    }
+
     setTimeout(() => {
-      window.location.hash = 'hero-section'
-    }, 100)
-  }
+      setupScrollObservers()
+    }, 200)
 
-  setTimeout(() => {
-    setupScrollObservers()
-  }, 200)
+    if (volunteers.volunteer.value?.volunteerId) {
+      await useFavourites.fetchAllFavoritesOfVolunteer(volunteers.volunteer.value?.volunteerId)
+    }
 
-  if (volunteers.volunteer.value?.volunteerId) {
-    await useFavourites.fetchAllFavoritesOfVolunteer(
-      volunteers.volunteer.value?.volunteerId
-    )
-  }
+    filteredEventsCount.value = totalEvents.value
 
-  filteredEventsCount.value = totalEvents.value
+    await userLocation.initializeLocation()
+    await checkLocationPermissions()
+    await initLocation()
+  })
 
-  await userLocation.initializeLocation()
-  await checkLocationPermissions()
-  await initLocation()
-})
+  watch(
+    [sharedFilters],
+    () => {
+      triggerCount()
+    },
+    { deep: true }
+  )
 
-watch(
-  [sharedFilters],
-  () => {
-    triggerCount()
-  },
-  { deep: true }
-)
+  onUnmounted(() => {
+    observers.forEach(observer => observer.disconnect())
+    observers = []
 
-onUnmounted(() => {
-  observers.forEach(observer => observer.disconnect())
-  observers = []
+    if (searchTimeout.value) {
+      clearTimeout(searchTimeout.value)
+    }
 
-  if (searchTimeout.value) {
-    clearTimeout(searchTimeout.value)
-  }
-
-  if (countTimeout.value) {
-    clearTimeout(countTimeout.value)
-  }
-})
+    if (countTimeout.value) {
+      clearTimeout(countTimeout.value)
+    }
+  })
 </script>
 
 <template>
@@ -591,10 +564,10 @@ onUnmounted(() => {
                   <span class="text-primary">Benevoclic</span>
                 </h1>
                 <p class="text-lg text-base-content/80 max-w-xl">
-                  Découvrez des événements et missions qui correspondent à vos
-                  compétences, vos centres d'intérêt et vos disponibilités. Que
-                  vous soyez bénévole ou personne dans le besoin, rejoignez une
-                  communauté engagée et participez à des projets solidaires.
+                  Découvrez des événements et missions qui correspondent à vos compétences, vos
+                  centres d'intérêt et vos disponibilités. Que vous soyez bénévole ou personne dans
+                  le besoin, rejoignez une communauté engagée et participez à des projets
+                  solidaires.
                 </p>
                 <div class="flex flex-wrap gap-4">
                   <NuxtLink to="#search-section" class="btn btn-primary group">
@@ -603,22 +576,18 @@ onUnmounted(() => {
                       class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300"
                     />
                   </NuxtLink>
-                  <button
-                    class="btn btn-outline hover:scale-105 transition-transform duration-300"
-                  >
+                  <button class="btn btn-outline hover:scale-105 transition-transform duration-300">
                     En savoir plus
                   </button>
                 </div>
               </div>
-              <div
-                class="relative slide-in-right visible delay-400 hidden lg:block"
-              >
+              <div class="relative slide-in-right visible delay-400 hidden lg:block">
                 <img
                   src="/images/volunteer-info.png"
                   alt="Bénévoles en action"
                   class="w-full h-auto rounded-xl shadow-xl transform hover:scale-[1.02] transition-transform duration-500"
                   loading="lazy"
-                >
+                />
               </div>
             </div>
           </div>
@@ -628,17 +597,11 @@ onUnmounted(() => {
       <!-- Section Recherche Rapide -->
       <section id="search-section" class="py-12 px-4 bg-base-100">
         <div class="max-w-6xl mx-auto">
-          <div
-            class="text-center mb-10 slide-in-up"
-            :class="{ visible: isVisible.search }"
-          >
-            <h2 class="text-3xl font-bold mb-4">
-              Trouvez l'événement qui vous correspond
-            </h2>
+          <div class="text-center mb-10 slide-in-up" :class="{ visible: isVisible.search }">
+            <h2 class="text-3xl font-bold mb-4">Trouvez l'événement qui vous correspond</h2>
             <p class="text-base-content/70 max-w-2xl mx-auto">
-              Utilisez notre moteur de recherche avancé pour trouver des
-              événements qui correspondent à vos besoins, que vous souhaitiez
-              aider ou participer.
+              Utilisez notre moteur de recherche avancé pour trouver des événements qui
+              correspondent à vos besoins, que vous souhaitiez aider ou participer.
             </p>
           </div>
 
@@ -661,7 +624,7 @@ onUnmounted(() => {
                   placeholder="Rechercher par nom d'événement, description, nom d'association..."
                   class="input input-bordered w-full pl-10 focus:border-primary transition-colors duration-300"
                   @keyup.enter="() => searchEvents()"
-                >
+                />
               </div>
             </div>
 
@@ -670,26 +633,25 @@ onUnmounted(() => {
               <div
                 class="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary/10 text-primary rounded-full text-sm sm:text-base"
               >
-                <div
-                  v-if="isCounting"
-                  class="loading loading-spinner loading-sm"
-                />
+                <div v-if="isCounting" class="loading loading-spinner loading-sm" />
                 <span v-else class="font-medium">
-                  <span class="hidden sm:inline">{{ filteredEventsCount }} événement{{
-                    filteredEventsCount !== 1 ? "s" : ""
-                  }}
-                    trouvé{{ filteredEventsCount !== 1 ? "s" : "" }}</span>
-                  <span class="sm:hidden">{{ filteredEventsCount }} résultat{{
-                    filteredEventsCount !== 1 ? "s" : ""
-                  }}</span>
+                  <span class="hidden sm:inline"
+                    >{{ filteredEventsCount }} événement{{
+                      filteredEventsCount !== 1 ? 's' : ''
+                    }}
+                    trouvé{{ filteredEventsCount !== 1 ? 's' : '' }}</span
+                  >
+                  <span class="sm:hidden"
+                    >{{ filteredEventsCount }} résultat{{
+                      filteredEventsCount !== 1 ? 's' : ''
+                    }}</span
+                  >
                 </span>
               </div>
             </div>
 
             <!-- Boutons d'action -->
-            <div
-              class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4"
-            >
+            <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
               <button
                 :disabled="searchLoading"
                 class="btn btn-primary px-4 sm:px-8 group hover:scale-105 transition-transform duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
@@ -701,13 +663,9 @@ onUnmounted(() => {
                 />
                 <div v-else class="loading loading-spinner loading-sm mr-2" />
                 <span class="hidden sm:inline">{{
-                  searchLoading
-                    ? "Recherche en cours..."
-                    : "Trouver des événements"
+                  searchLoading ? 'Recherche en cours...' : 'Trouver des événements'
                 }}</span>
-                <span class="sm:hidden">{{
-                  searchLoading ? "Recherche..." : "Rechercher"
-                }}</span>
+                <span class="sm:hidden">{{ searchLoading ? 'Recherche...' : 'Rechercher' }}</span>
               </button>
 
               <button
@@ -715,9 +673,7 @@ onUnmounted(() => {
                 :disabled="!hasActiveFilters"
                 @click="resetAllFilters"
               >
-                <X
-                  class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300"
-                />
+                <X class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
                 <span class="hidden sm:inline">Réinitialiser</span>
                 <span class="sm:hidden">Reset</span>
               </button>
@@ -728,32 +684,21 @@ onUnmounted(() => {
           <div
             v-if="showSearchResults"
             class="mt-8 transition-all duration-500 ease-in-out search-results"
-            :class="
-              showSearchResults
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-4'
-            "
+            :class="showSearchResults ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'"
           >
             <!-- Header des résultats -->
             <div
               class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6"
             >
-              <div
-                class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4"
-              >
-                <h3 class="text-xl sm:text-2xl font-bold">
-                  Résultats de recherche
-                </h3>
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+                <h3 class="text-xl sm:text-2xl font-bold">Résultats de recherche</h3>
                 <div class="flex flex-wrap gap-2">
                   <div class="badge badge-primary text-xs sm:text-sm">
                     {{ searchTotalAnnouncements }} résultat{{
-                      searchTotalAnnouncements !== 1 ? "s" : ""
+                      searchTotalAnnouncements !== 1 ? 's' : ''
                     }}
                   </div>
-                  <div
-                    v-if="hasActiveFilters"
-                    class="badge badge-secondary text-xs sm:text-sm"
-                  >
+                  <div v-if="hasActiveFilters" class="badge badge-secondary text-xs sm:text-sm">
                     <SlidersHorizontal class="w-3 h-3 mr-1" />
                     <span class="hidden sm:inline">Filtres actifs</span>
                     <span class="sm:hidden">Filtres</span>
@@ -795,11 +740,7 @@ onUnmounted(() => {
               role="navigation"
               aria-label="Navigation des pages de recherche"
             >
-              <div
-                class="join"
-                role="group"
-                aria-label="Contrôles de pagination"
-              >
+              <div class="join" role="group" aria-label="Contrôles de pagination">
                 <button
                   class="join-item btn btn-sm sm:btn-md focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
                   :disabled="currentSearchPage === 1"
@@ -819,7 +760,9 @@ onUnmounted(() => {
                   aria-label="Page actuelle"
                 >
                   <span class="sr-only">Page actuelle : </span>
-                  <span class="hidden sm:inline">Page {{ currentSearchPage }} / {{ searchTotalPages }}</span>
+                  <span class="hidden sm:inline"
+                    >Page {{ currentSearchPage }} / {{ searchTotalPages }}</span
+                  >
                   <span class="sm:hidden">{{ currentSearchPage }}/{{ searchTotalPages }}</span>
                 </button>
                 <button
@@ -846,21 +789,15 @@ onUnmounted(() => {
         :animated-stats="{
           events: animatedStats.events,
           associations: animatedStats.associations,
-          volunteers: animatedStats.volunteers,
+          volunteers: animatedStats.volunteers
         }"
       />
 
       <!-- Section Avantages -->
-      <Advantage
-        :start-searching="startSearching"
-        :is-visible="isVisible.benefits"
-      />
+      <Advantage :start-searching="startSearching" :is-visible="isVisible.benefits" />
 
       <!-- Section Comment ça marche -->
-      <HowItWorks
-        :start-searching="startSearching"
-        :is-visible="isVisible.howItWorks"
-      />
+      <HowItWorks :start-searching="startSearching" :is-visible="isVisible.howItWorks" />
 
       <!-- Section CTA -->
       <CtaComponent :start-searching="startSearching" :is-visible="isVisible.cta" />
@@ -869,176 +806,176 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* Amélioration de l'accessibilité pour les éléments interactifs */
-.btn:focus-visible {
-  outline: 2px solid #eb5577;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* Amélioration du contraste pour les utilisateurs en mode high-contrast */
-@media (prefers-contrast: more) {
-  .btn {
-    border-width: 2px;
-  }
-}
-
-/* Respect des préférences de réduction de mouvement */
-@media (prefers-reduced-motion: reduce) {
-  .transition-all,
-  .transition-shadow,
-  .transition-transform,
-  .transition-colors {
-    transition: none !important;
+  /* Amélioration de l'accessibilité pour les éléments interactifs */
+  .btn:focus-visible {
+    outline: 2px solid #eb5577;
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 
-  html {
-    scroll-behavior: auto;
+  /* Amélioration du contraste pour les utilisateurs en mode high-contrast */
+  @media (prefers-contrast: more) {
+    .btn {
+      border-width: 2px;
+    }
   }
 
-  .animate-bounce {
-    animation: none !important;
+  /* Respect des préférences de réduction de mouvement */
+  @media (prefers-reduced-motion: reduce) {
+    .transition-all,
+    .transition-shadow,
+    .transition-transform,
+    .transition-colors {
+      transition: none !important;
+    }
+
+    html {
+      scroll-behavior: auto;
+    }
+
+    .animate-bounce {
+      animation: none !important;
+    }
+
+    .fade-in,
+    .slide-in-left,
+    .slide-in-right,
+    .slide-in-up,
+    .slide-in-down {
+      opacity: 1 !important;
+      transform: none !important;
+    }
   }
 
-  .fade-in,
-  .slide-in-left,
-  .slide-in-right,
-  .slide-in-up,
-  .slide-in-down {
-    opacity: 1 !important;
-    transform: none !important;
+  /* Amélioration du focus pour le skip link */
+  a:focus-visible {
+    outline: 2px solid #eb5577;
+    outline-offset: 2px;
+    border-radius: 4px;
   }
-}
 
-/* Amélioration du focus pour le skip link */
-a:focus-visible {
-  outline: 2px solid #eb5577;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
+  /* Transitions pour startSearching */
+  .fade-slide-enter-active,
+  .fade-slide-leave-active {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-/* Transitions pour startSearching */
-.fade-slide-enter-active,
-.fade-slide-leave-active {
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.fade-slide-enter-from {
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateY(-30px);
-}
-
-.fade-slide-enter-to,
-.fade-slide-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Custom animations */
-.fade-in {
-  opacity: 0;
-  transition: opacity 0.8s ease-in-out;
-}
-
-.fade-in.visible {
-  opacity: 1;
-}
-
-.slide-in-left {
-  opacity: 0;
-  transform: translateX(-50px);
-  transition: all 0.8s ease-out;
-}
-
-.slide-in-right {
-  opacity: 0;
-  transform: translateX(50px);
-  transition: all 0.8s ease-out;
-}
-
-.slide-in-up {
-  opacity: 0;
-  transform: translateY(50px);
-  transition: all 0.8s ease-out;
-}
-
-.slide-in-down {
-  opacity: 0;
-  transform: translateY(-50px);
-  transition: all 0.8s ease-out;
-}
-
-.slide-in-left.visible,
-.slide-in-right.visible,
-.slide-in-up.visible,
-.slide-in-down.visible {
-  opacity: 1;
-  transform: translate(0);
-}
-
-/* Delay classes */
-.delay-200 {
-  transition-delay: 200ms;
-}
-
-.delay-400 {
-  transition-delay: 400ms;
-}
-
-.delay-600 {
-  transition-delay: 600ms;
-}
-
-.delay-800 {
-  transition-delay: 800ms;
-}
-
-/* Counter animation */
-@keyframes countUp {
-  from {
-    transform: translateY(20px);
+  .fade-slide-enter-from {
     opacity: 0;
+    transform: translateY(30px);
   }
-  to {
+
+  .fade-slide-leave-to {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  .fade-slide-enter-to,
+  .fade-slide-leave-from {
+    opacity: 1;
     transform: translateY(0);
+  }
+
+  /* Custom animations */
+  .fade-in {
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+  }
+
+  .fade-in.visible {
     opacity: 1;
   }
-}
 
-.counter-animate {
-  animation: countUp 0.5s ease-out forwards;
-}
+  .slide-in-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.8s ease-out;
+  }
 
-/* Search results transition */
-.search-results-enter-active,
-.search-results-leave-active {
-  transition: all 0.5s ease-in-out;
-}
+  .slide-in-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.8s ease-out;
+  }
 
-.search-results-enter-from {
-  opacity: 0;
-  transform: translateY(20px);
-}
+  .slide-in-up {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease-out;
+  }
 
-.search-results-leave-to {
-  opacity: 0;
-  transform: translateY(-20px);
-}
+  .slide-in-down {
+    opacity: 0;
+    transform: translateY(-50px);
+    transition: all 0.8s ease-out;
+  }
 
-/* Smooth scroll to search results */
-html {
-  scroll-behavior: smooth;
-}
+  .slide-in-left.visible,
+  .slide-in-right.visible,
+  .slide-in-up.visible,
+  .slide-in-down.visible {
+    opacity: 1;
+    transform: translate(0);
+  }
 
-/* Focus styles for better accessibility */
-.search-results:focus-within {
-  outline: 2px solid #eb5577;
-  outline-offset: 2px;
-  border-radius: 8px;
-}
+  /* Delay classes */
+  .delay-200 {
+    transition-delay: 200ms;
+  }
+
+  .delay-400 {
+    transition-delay: 400ms;
+  }
+
+  .delay-600 {
+    transition-delay: 600ms;
+  }
+
+  .delay-800 {
+    transition-delay: 800ms;
+  }
+
+  /* Counter animation */
+  @keyframes countUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .counter-animate {
+    animation: countUp 0.5s ease-out forwards;
+  }
+
+  /* Search results transition */
+  .search-results-enter-active,
+  .search-results-leave-active {
+    transition: all 0.5s ease-in-out;
+  }
+
+  .search-results-enter-from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .search-results-leave-to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  /* Smooth scroll to search results */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Focus styles for better accessibility */
+  .search-results:focus-within {
+    outline: 2px solid #eb5577;
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
 </style>

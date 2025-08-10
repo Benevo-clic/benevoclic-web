@@ -1,18 +1,18 @@
 import { ref, computed } from 'vue'
 
 export interface CookiePreferences {
-  essential: boolean;
-  analytics: boolean;
-  personalization: boolean;
-  thirdParty: boolean;
+  essential: boolean
+  analytics: boolean
+  personalization: boolean
+  thirdParty: boolean
 }
 
 export interface PermissionState {
-  canUseLocation: boolean;
-  canUsePersonalData: boolean;
-  canUseAnalytics: boolean;
-  canUseThirdParty: boolean;
-  canAuthenticate: boolean;
+  canUseLocation: boolean
+  canUsePersonalData: boolean
+  canUseAnalytics: boolean
+  canUseThirdParty: boolean
+  canAuthenticate: boolean
 }
 
 const COOKIE_PREFERENCES_KEY = 'benevoclic_cookie_preferences'
@@ -43,10 +43,7 @@ const initializePermissions = () => {
       }
     }
   } catch (error) {
-    console.error(
-      'Erreur lors du chargement des préférences de cookies:',
-      error
-    )
+    console.error('Erreur lors du chargement des préférences de cookies:', error)
   }
 
   isInitialized = true
@@ -75,10 +72,7 @@ export const usePermissions = () => {
         }
       }
     } catch (error) {
-      console.error(
-        'Erreur lors du chargement des préférences de cookies:',
-        error
-      )
+      console.error('Erreur lors du chargement des préférences de cookies:', error)
     }
     return false
   }
@@ -108,10 +102,7 @@ export const usePermissions = () => {
         )
       }
     } catch (error) {
-      console.error(
-        'Erreur lors de la sauvegarde des préférences de cookies:',
-        error
-      )
+      console.error('Erreur lors de la sauvegarde des préférences de cookies:', error)
     }
   }
 

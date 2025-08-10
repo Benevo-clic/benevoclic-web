@@ -145,23 +145,23 @@ const settings = {
   push: false, // Notifications push
   missionUpdates: true, // Mises à jour de missions
   messages: true, // Nouveaux messages
-  achievements: true, // Réalisations
-};
+  achievements: true // Réalisations
+}
 ```
 
 ### **Filtres disponibles**
 
 ```typescript
 const filters = [
-  "all", // Toutes les notifications
-  "unread", // Non lues
-  "today", // Aujourd'hui
-  "messages", // Messages
-  "events", // Événements
-  "missions", // Missions
-  "achievements", // Réalisations
-  "important", // Importantes
-];
+  'all', // Toutes les notifications
+  'unread', // Non lues
+  'today', // Aujourd'hui
+  'messages', // Messages
+  'events', // Événements
+  'missions', // Missions
+  'achievements', // Réalisations
+  'important' // Importantes
+]
 ```
 
 ## 🌐 Internationalisation

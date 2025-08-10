@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { describe, it, expect } from "vitest";
-import { mount } from "@vue/test-utils";
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
 
 const MockVolunteerAccountEdit = {
   template: `
@@ -90,135 +90,133 @@ const MockVolunteerAccountEdit = {
         </form>
       </div>
     </div>
-  `,
-};
+  `
+}
 
-describe("VolunteerAccountEdit", () => {
-  it("should render the main container", () => {
-    const wrapper = mount(MockVolunteerAccountEdit);
-    expect(
-      wrapper
-        .find(".flex.flex-col.items-center.justify-center.min-h-screen")
-        .exists(),
-    ).toBe(true);
-  });
+describe('VolunteerAccountEdit', () => {
+  it('should render the main container', () => {
+    const wrapper = mount(MockVolunteerAccountEdit)
+    expect(wrapper.find('.flex.flex-col.items-center.justify-center.min-h-screen').exists()).toBe(
+      true
+    )
+  })
 
-  it("should render the page title", () => {
-    const wrapper = mount(MockVolunteerAccountEdit);
-    expect(wrapper.find("h1").text()).toBe("Modifier le profil");
-  });
+  it('should render the page title', () => {
+    const wrapper = mount(MockVolunteerAccountEdit)
+    expect(wrapper.find('h1').text()).toBe('Modifier le profil')
+  })
 
-  it("should render the profile image section", () => {
-    const wrapper = mount(MockVolunteerAccountEdit);
-    const profileSection = wrapper.find(".flex.flex-col.items-center.mb-8");
-    expect(profileSection.exists()).toBe(true);
-    expect(profileSection.find(".w-32.h-32.rounded-full").exists()).toBe(true);
-  });
+  it('should render the profile image section', () => {
+    const wrapper = mount(MockVolunteerAccountEdit)
+    const profileSection = wrapper.find('.flex.flex-col.items-center.mb-8')
+    expect(profileSection.exists()).toBe(true)
+    expect(profileSection.find('.w-32.h-32.rounded-full').exists()).toBe(true)
+  })
 
-  it("should render the profile image upload functionality", () => {
-    const wrapper = mount(MockVolunteerAccountEdit);
-    const uploadInput = wrapper.find('input[type="file"]');
-    expect(uploadInput.exists()).toBe(true);
-    expect(uploadInput.attributes("accept")).toBe("image/*");
-  });
+  it('should render the profile image upload functionality', () => {
+    const wrapper = mount(MockVolunteerAccountEdit)
+    const uploadInput = wrapper.find('input[type="file"]')
+    expect(uploadInput.exists()).toBe(true)
+    expect(uploadInput.attributes('accept')).toBe('image/*')
+  })
 
-  it("should render the personal information section", () => {
-    const wrapper = mount(MockVolunteerAccountEdit);
+  it('should render the personal information section', () => {
+    const wrapper = mount(MockVolunteerAccountEdit)
     const personalInfo = wrapper.find(
-      ".bg-base-100.rounded-xl.shadow.p-6.grid.grid-cols-1.md\\:grid-cols-2.gap-4",
-    );
-    expect(personalInfo.exists()).toBe(true);
+      '.bg-base-100.rounded-xl.shadow.p-6.grid.grid-cols-1.md\\:grid-cols-2.gap-4'
+    )
+    expect(personalInfo.exists()).toBe(true)
 
-    const inputs = personalInfo.findAll("input");
-    expect(inputs.length).toBe(3);
-  });
+    const inputs = personalInfo.findAll('input')
+    expect(inputs.length).toBe(3)
+  })
 
-  it("should render first name and last name fields", () => {
-    const wrapper = mount(MockVolunteerAccountEdit);
-    const labels = wrapper.findAll(".label-text.text-base-content");
-    expect(labels.length).toBeGreaterThan(0);
+  it('should render first name and last name fields', () => {
+    const wrapper = mount(MockVolunteerAccountEdit)
+    const labels = wrapper.findAll('.label-text.text-base-content')
+    expect(labels.length).toBeGreaterThan(0)
 
-    const labelTexts = labels.map((label) => label.text());
-    expect(labelTexts).toContain("Prénom");
-    expect(labelTexts).toContain("Nom");
-  });
+    const labelTexts = labels.map(label => label.text())
+    expect(labelTexts).toContain('Prénom')
+    expect(labelTexts).toContain('Nom')
+  })
 
-  it("should render birth date field", () => {
-    const wrapper = mount(MockVolunteerAccountEdit);
-    const birthDateInput = wrapper.find('input[type="date"]');
-    expect(birthDateInput.exists()).toBe(true);
-  });
+  it('should render birth date field', () => {
+    const wrapper = mount(MockVolunteerAccountEdit)
+    const birthDateInput = wrapper.find('input[type="date"]')
+    expect(birthDateInput.exists()).toBe(true)
+  })
 
-  it("should render contact information section", () => {
-    const wrapper = mount(MockVolunteerAccountEdit);
+  it('should render contact information section', () => {
+    const wrapper = mount(MockVolunteerAccountEdit)
     const contactSection = wrapper.findAll(
-      ".bg-base-100.rounded-xl.shadow.p-6.grid.grid-cols-1.md\\:grid-cols-2.gap-4",
-    )[1];
-    expect(contactSection.exists()).toBe(true);
+      '.bg-base-100.rounded-xl.shadow.p-6.grid.grid-cols-1.md\\:grid-cols-2.gap-4'
+    )[1]
+    expect(contactSection.exists()).toBe(true)
 
-    const phoneInput = contactSection.find('input[type="tel"]');
-    expect(phoneInput.exists()).toBe(true);
-  });
+    const phoneInput = contactSection.find('input[type="tel"]')
+    expect(phoneInput.exists()).toBe(true)
+  })
 
-  it("should render location information section", () => {
-    const wrapper = mount(MockVolunteerAccountEdit);
+  it('should render location information section', () => {
+    const wrapper = mount(MockVolunteerAccountEdit)
     const locationSection = wrapper.findAll(
-      ".bg-base-100.rounded-xl.shadow.p-6.grid.grid-cols-1.md\\:grid-cols-2.gap-4",
-    )[2];
-    expect(locationSection.exists()).toBe(true);
+      '.bg-base-100.rounded-xl.shadow.p-6.grid.grid-cols-1.md\\:grid-cols-2.gap-4'
+    )[2]
+    expect(locationSection.exists()).toBe(true)
 
-    const cityInput = locationSection.find('input[type="text"]');
-    expect(cityInput.exists()).toBe(true);
-  });
+    const cityInput = locationSection.find('input[type="text"]')
+    expect(cityInput.exists()).toBe(true)
+  })
 
-  it("should render bio section", () => {
-    const wrapper = mount(MockVolunteerAccountEdit);
-    const textarea = wrapper.find("textarea");
-    expect(textarea.exists()).toBe(true);
-    expect(textarea.classes()).toContain("textarea");
-    expect(textarea.classes()).toContain("textarea-bordered");
-  });
+  it('should render bio section', () => {
+    const wrapper = mount(MockVolunteerAccountEdit)
+    const textarea = wrapper.find('textarea')
+    expect(textarea.exists()).toBe(true)
+    expect(textarea.classes()).toContain('textarea')
+    expect(textarea.classes()).toContain('textarea-bordered')
+  })
 
-  it("should render action buttons", () => {
-    const wrapper = mount(MockVolunteerAccountEdit);
-    const buttons = wrapper.findAll(".btn");
-    expect(buttons.length).toBe(2);
+  it('should render action buttons', () => {
+    const wrapper = mount(MockVolunteerAccountEdit)
+    const buttons = wrapper.findAll('.btn')
+    expect(buttons.length).toBe(2)
 
-    const cancelButton = wrapper.find(".btn.btn-outline");
-    const saveButton = wrapper.find(".btn.btn-primary");
-    expect(cancelButton.exists()).toBe(true);
-    expect(saveButton.exists()).toBe(true);
-    expect(cancelButton.text()).toBe("Annuler");
-    expect(saveButton.text()).toBe("Sauvegarder");
-  });
+    const cancelButton = wrapper.find('.btn.btn-outline')
+    const saveButton = wrapper.find('.btn.btn-primary')
+    expect(cancelButton.exists()).toBe(true)
+    expect(saveButton.exists()).toBe(true)
+    expect(cancelButton.text()).toBe('Annuler')
+    expect(saveButton.text()).toBe('Sauvegarder')
+  })
 
-  it("should have proper form structure", () => {
-    const wrapper = mount(MockVolunteerAccountEdit);
-    const form = wrapper.find("form");
-    expect(form.exists()).toBe(true);
-    expect(form.classes()).toContain("space-y-6");
-  });
+  it('should have proper form structure', () => {
+    const wrapper = mount(MockVolunteerAccountEdit)
+    const form = wrapper.find('form')
+    expect(form.exists()).toBe(true)
+    expect(form.classes()).toContain('space-y-6')
+  })
 
-  it("should have proper input styling", () => {
-    const wrapper = mount(MockVolunteerAccountEdit);
-    const inputs = wrapper.findAll(".input.input-bordered");
-    expect(inputs.length).toBeGreaterThan(0);
+  it('should have proper input styling', () => {
+    const wrapper = mount(MockVolunteerAccountEdit)
+    const inputs = wrapper.findAll('.input.input-bordered')
+    expect(inputs.length).toBeGreaterThan(0)
 
-    inputs.forEach((input) => {
-      expect(input.classes()).toContain("input");
-      expect(input.classes()).toContain("input-bordered");
-    });
-  });
+    inputs.forEach(input => {
+      expect(input.classes()).toContain('input')
+      expect(input.classes()).toContain('input-bordered')
+    })
+  })
 
-  it("should have proper accessibility attributes", () => {
-    const wrapper = mount(MockVolunteerAccountEdit);
-    const inputs = wrapper.findAll("input");
-    const textarea = wrapper.find("textarea");
+  it('should have proper accessibility attributes', () => {
+    const wrapper = mount(MockVolunteerAccountEdit)
+    const inputs = wrapper.findAll('input')
+    const textarea = wrapper.find('textarea')
 
     // Check that inputs exist
-    expect(inputs.length).toBeGreaterThan(0);
+    expect(inputs.length).toBeGreaterThan(0)
 
     // Check that textarea exists
-    expect(textarea.exists()).toBe(true);
-  });
-});
+    expect(textarea.exists()).toBe(true)
+  })
+})

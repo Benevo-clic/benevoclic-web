@@ -1,160 +1,151 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import {
-  Sun as SunIcon,
-  HomeIcon,
-  HeartIcon,
-  Moon as MoonIcon,
-  Bell as BellIcon
-  , AlignJustify
-} from 'lucide-vue-next'
+  import { ref, computed, onMounted, onUnmounted } from 'vue'
+  import {
+    Sun as SunIcon,
+    HomeIcon,
+    HeartIcon,
+    Moon as MoonIcon,
+    Bell as BellIcon,
+    AlignJustify
+  } from 'lucide-vue-next'
 
-import { navigateTo } from '#app'
-import { useI18n } from 'vue-i18n'
-import { useUser } from '~/composables/auth/useUser'
-import NavigationActions from '~/components/header/utils/NavigationActions.vue'
-import DrawerContent from '~/components/header/drawer/DrawerContent.vue'
-import DrawerAppContentVolunteer from '~/components/header/drawer/components/volunteer/DrawerAppContentVolunteer.vue'
-import { useTheme } from '~/composables/useTheme'
-import DrawerAppContentAssociation from '~/components/header/drawer/components/association/DrawerAppContentAssociation.vue'
-import AssociationBottomBar from '~/components/header/AssociationBottomBar.vue'
-import type { RoleUser } from '~/common/enums/role.enum'
+  import { navigateTo } from '#app'
+  import { useI18n } from 'vue-i18n'
+  import { useUser } from '~/composables/auth/useUser'
+  import NavigationActions from '~/components/header/utils/NavigationActions.vue'
+  import DrawerContent from '~/components/header/drawer/DrawerContent.vue'
+  import DrawerAppContentVolunteer from '~/components/header/drawer/components/volunteer/DrawerAppContentVolunteer.vue'
+  import { useTheme } from '~/composables/useTheme'
+  import DrawerAppContentAssociation from '~/components/header/drawer/components/association/DrawerAppContentAssociation.vue'
+  import AssociationBottomBar from '~/components/header/AssociationBottomBar.vue'
+  import type { RoleUser } from '~/common/enums/role.enum'
 
-const auth = useUser()
-const isAuthenticated = computed(() => auth.isAuthenticated.value)
-const { t } = useI18n()
-const { toggleTheme, isDarkTheme } = useTheme()
+  const auth = useUser()
+  const isAuthenticated = computed(() => auth.isAuthenticated.value)
+  const { t } = useI18n()
+  const { toggleTheme, isDarkTheme } = useTheme()
 
-const userRole = auth.userRole
+  const userRole = auth.userRole
 
-onMounted(async () => {
-  try {
-    await auth.initializeUser()
-    if (userRole.value) {
-      role.value = userRole.value
+  onMounted(async () => {
+    try {
+      await auth.initializeUser()
+      if (userRole.value) {
+        role.value = userRole.value
+      }
+      if (auth.user.value?.avatarFileKey) {
+        img.value = auth.user.value.avatarFileKey
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error)
     }
-    if (auth.user.value?.avatarFileKey) {
-      img.value = auth.user.value.avatarFileKey
+  })
+
+  const menuOpen = ref(false)
+  const showLoginModal = ref(false)
+  const loginModal = ref<HTMLDialogElement | null>(null)
+  const isLoading = computed(() => auth.isLoading.value)
+  const isAssociationComponentAvailable = ref(true)
+  const role = ref<RoleUser>()
+  const img = ref<string>()
+
+  let mediaQuery: MediaQueryList | undefined
+  let handler: ((e: MediaQueryListEvent) => void) | undefined
+
+  const profileImageUrl = computed(() => {
+    return img.value
+  })
+
+  onUnmounted(() => {
+    if (mediaQuery && handler) {
+      mediaQuery.removeEventListener('change', handler)
     }
-  } catch (error) {
-    console.error('Error fetching user data:', error)
-  }
-})
+  })
 
-const menuOpen = ref(false)
-const showLoginModal = ref(false)
-const loginModal = ref<HTMLDialogElement | null>(null)
-const isLoading = computed(() => auth.isLoading.value)
-const isAssociationComponentAvailable = ref(true)
-const role = ref<RoleUser>()
-const img = ref<string>()
+  const props = defineProps<{
+    optionsOpen?: boolean
+  }>()
 
-let mediaQuery: MediaQueryList | undefined
-let handler: ((e: MediaQueryListEvent) => void) | undefined
-
-const profileImageUrl = computed(() => {
-  return img.value
-})
-
-onUnmounted(() => {
-  if (mediaQuery && handler) {
-    mediaQuery.removeEventListener('change', handler)
-  }
-})
-
-const props = defineProps<{
-  optionsOpen?: boolean;
-}>()
-
-const handleDrawerClose = () => {
-  menuOpen.value = !menuOpen.value
-}
-
-watch(
-  () => isAuthenticated,
-  (isAuth) => {
-    if (isAuth) {
-      showLoginModal.value = false
-    }
-  }
-)
-
-watch(
-  () => role.value,
-  (role) => {
-    isAssociationComponentAvailable.value = role !== 'ASSOCIATION'
-  }
-)
-
-onMounted(async () => {
-  try {
-    await auth.initializeUser()
-    if (role.value === 'ASSOCIATION') {
-      isAssociationComponentAvailable.value = false // Set to true to hide the placeholder
-    }
-  } catch (error) {
-    console.error('Error fetching user data:', error)
-    if (role.value === 'ASSOCIATION') {
-      isAssociationComponentAvailable.value = false
-    }
+  const handleDrawerClose = () => {
+    menuOpen.value = !menuOpen.value
   }
 
-  mediaQuery = window.matchMedia('(min-width: 1253px)')
-  handler = (e: MediaQueryListEvent) => {
-    if (e.matches) {
+  watch(
+    () => isAuthenticated,
+    isAuth => {
+      if (isAuth) {
+        showLoginModal.value = false
+      }
+    }
+  )
+
+  watch(
+    () => role.value,
+    role => {
+      isAssociationComponentAvailable.value = role !== 'ASSOCIATION'
+    }
+  )
+
+  onMounted(async () => {
+    try {
+      await auth.initializeUser()
+      if (role.value === 'ASSOCIATION') {
+        isAssociationComponentAvailable.value = false // Set to true to hide the placeholder
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error)
+      if (role.value === 'ASSOCIATION') {
+        isAssociationComponentAvailable.value = false
+      }
+    }
+
+    mediaQuery = window.matchMedia('(min-width: 1253px)')
+    handler = (e: MediaQueryListEvent) => {
+      if (e.matches) {
+        menuOpen.value = false
+      }
+    }
+    mediaQuery.addEventListener('change', handler)
+    if (mediaQuery.matches) {
       menuOpen.value = false
     }
-  }
-  mediaQuery.addEventListener('change', handler)
-  if (mediaQuery.matches) {
-    menuOpen.value = false
-  }
-})
+  })
 
-function handleNotifications () {
-  if (isAuthenticated.value) {
-    loginModal.value?.showModal()
-  } else {
-    navigateTo('/notifications')
+  function handleNotifications() {
+    if (isAuthenticated.value) {
+      loginModal.value?.showModal()
+    } else {
+      navigateTo('/notifications')
+    }
   }
-}
 
-function handleUserMenuKeydown (event: KeyboardEvent) {
-  if (event.key === 'Escape') {
-    const dropdown = event.target as HTMLElement
-    dropdown?.blur()
+  function handleUserMenuKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      const dropdown = event.target as HTMLElement
+      dropdown?.blur()
+    }
   }
-}
 
-function handleFavorites () {
-  if (!isAuthenticated.value) {
-    return
+  function handleFavorites() {
+    if (!isAuthenticated.value) {
+      return
+    }
+    navigateTo('/volunteer/activity/favorites')
   }
-  navigateTo('/volunteer/activity/favorites')
-}
 
-function handleHome () {
-  navigateTo('/')
-}
+  function handleHome() {
+    navigateTo('/')
+  }
 </script>
 
 <template>
   <client-only>
     <div class="bg-base-200">
-      <div
-        v-if="isLoading"
-        class="flex justify-center py-2"
-        role="status"
-        aria-live="polite"
-      >
+      <div v-if="isLoading" class="flex justify-center py-2" role="status" aria-live="polite">
         <span class="loading loading-dots loading-xl" aria-hidden="true" />
         <span class="sr-only">Chargement de l'application...</span>
       </div>
-      <header
-        v-else
-        role="banner"
-        aria-label="En-tête de l'application Benevoclic"
-      >
+      <header v-else role="banner" aria-label="En-tête de l'application Benevoclic">
         <!-- Login Modal -->
         <dialog
           ref="loginModal"
@@ -166,10 +157,10 @@ function handleHome () {
         >
           <div class="modal-box">
             <h3 id="login-modal-title" class="font-bold text-lg">
-              {{ t("auth.login_required") }}
+              {{ t('auth.login_required') }}
             </h3>
             <p id="login-modal-description" class="py-4">
-              {{ t("auth.login_to_access") }}
+              {{ t('auth.login_to_access') }}
             </p>
             <div class="modal-action">
               <form method="dialog">
@@ -188,9 +179,7 @@ function handleHome () {
         </dialog>
 
         <!-- Top bar -->
-        <div
-          class="bg-base-100 shadow-sm px-4 py-2 flex items-center justify-between"
-        >
+        <div class="bg-base-100 shadow-sm px-4 py-2 flex items-center justify-between">
           <div class="flex items-center gap-2">
             <NuxtLink
               to="/"
@@ -205,7 +194,7 @@ function handleHome () {
                 height="56"
                 loading="eager"
                 decoding="sync"
-              >
+              />
             </NuxtLink>
           </div>
 
@@ -217,7 +206,7 @@ function handleHome () {
                 @click="handleHome"
               >
                 <HomeIcon class="w-6 h-6" aria-hidden="true" />
-                <span>{{ t("header.volunteer.home") }}</span>
+                <span>{{ t('header.volunteer.home') }}</span>
               </button>
             </div>
             <div class="indicator hidden sm:flex mr-2">
@@ -228,7 +217,7 @@ function handleHome () {
                 @click="handleFavorites"
               >
                 <HeartIcon class="w-6 h-6" aria-hidden="true" />
-                <span>{{ t("header.volunteer.favorites") }}</span>
+                <span>{{ t('header.volunteer.favorites') }}</span>
               </button>
             </div>
             <!-- Location -->
@@ -247,15 +236,9 @@ function handleHome () {
                 @change="toggleTheme"
                 @keyup.enter="toggleTheme"
                 @keyup.space.prevent="toggleTheme"
-              >
-              <SunIcon
-                class="swap-on w-7 h-7 text-warning"
-                aria-hidden="true"
               />
-              <MoonIcon
-                class="swap-off w-7 h-7 text-base-content"
-                aria-hidden="true"
-              />
+              <SunIcon class="swap-on w-7 h-7 text-warning" aria-hidden="true" />
+              <MoonIcon class="swap-off w-7 h-7 text-base-content" aria-hidden="true" />
             </label>
 
             <!-- Notifications -->
@@ -264,9 +247,7 @@ function handleHome () {
                 v-if="isAuthenticated"
                 class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
                 aria-label="Notifications (12 nouvelles)"
-                :aria-describedby="
-                  isAuthenticated ? 'notifications-login-required' : undefined
-                "
+                :aria-describedby="isAuthenticated ? 'notifications-login-required' : undefined"
                 @click="handleNotifications"
                 @keyup.enter="handleNotifications"
                 @keyup.space.prevent="handleNotifications"
@@ -308,7 +289,7 @@ function handleHome () {
                         height="48"
                         loading="lazy"
                         decoding="async"
-                      >
+                      />
                     </div>
                   </label>
 
@@ -379,40 +360,40 @@ function handleHome () {
 </template>
 
 <style scoped>
-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-
-/* Amélioration de l'accessibilité pour les éléments interactifs */
-.btn:focus-visible,
-input:focus-visible,
-label:focus-visible {
-  outline: 2px solid #eb5577;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* Amélioration du contraste pour les utilisateurs en mode high-contrast */
-@media (prefers-contrast: more) {
-  .btn {
-    border-width: 2px;
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
   }
 
-  .indicator-item {
-    border-width: 2px;
-  }
-}
-
-/* Respect des préférences de réduction de mouvement */
-@media (prefers-reduced-motion: reduce) {
-  .loading {
-    animation: none;
+  /* Amélioration de l'accessibilité pour les éléments interactifs */
+  .btn:focus-visible,
+  input:focus-visible,
+  label:focus-visible {
+    outline: 2px solid #eb5577;
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 
-  .swap {
-    transition: none;
+  /* Amélioration du contraste pour les utilisateurs en mode high-contrast */
+  @media (prefers-contrast: more) {
+    .btn {
+      border-width: 2px;
+    }
+
+    .indicator-item {
+      border-width: 2px;
+    }
   }
-}
+
+  /* Respect des préférences de réduction de mouvement */
+  @media (prefers-reduced-motion: reduce) {
+    .loading {
+      animation: none;
+    }
+
+    .swap {
+      transition: none;
+    }
+  }
 </style>

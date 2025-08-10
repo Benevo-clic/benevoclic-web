@@ -4,17 +4,14 @@
       v-if="isLoading"
       class="fixed inset-0 bg-base-200 bg-opacity-80 z-[1000] flex items-center justify-center"
     >
-      <img src="/logo.png" alt="Chargement…" class="w-24 h-24 animate-spin">
+      <img src="/logo.png" alt="Chargement…" class="w-24 h-24 animate-spin" />
     </div>
     <div v-else class="mx-auto py-6 max-w-screen-2xl w-full">
       <client-only>
         <div class="container mx-auto px-4 w-full">
           <div class="bg-base-100 rounded-lg shadow-md p-6 w-full">
             <div class="flex flex-col items-center w-full">
-              <EventFilters
-                class="mb-4 w-full max-w-4xl"
-                @update:filters="handleFilterUpdate"
-              />
+              <EventFilters class="mb-4 w-full max-w-4xl" @update:filters="handleFilterUpdate" />
             </div>
           </div>
         </div>
@@ -23,9 +20,7 @@
       <div class="mx-auto px-4 py-5 max-w-10xl">
         <div class="bg-base-100 rounded-2xl shadow-md p-6">
           <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold">
-              Gestion des événements
-            </h2>
+            <h2 class="text-lg font-semibold">Gestion des événements</h2>
           </div>
           <ReadOnlyEventList
             :announcements="paginatedAnnouncements"
@@ -68,135 +63,130 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
-import { definePageMeta, useNavigation } from '#imports'
-import ReadOnlyEventList from '~/components/event/association/ReadOnlyEventList.vue'
-import EventFilters from '~/components/event/association/EventFilters.vue'
-import { useAnnouncement } from '~/composables/useAnnouncement'
-import { useUser } from '~/composables/auth/useUser'
-import ErrorPopup from '~/components/utils/ErrorPopup.vue'
-import type {
-  FilterAnnouncement,
-  FilterAssociationAnnouncement
-} from '~/common/interface/filter.interface'
+  import { onMounted, ref, computed } from 'vue'
+  import { definePageMeta, useNavigation } from '#imports'
+  import ReadOnlyEventList from '~/components/event/association/ReadOnlyEventList.vue'
+  import EventFilters from '~/components/event/association/EventFilters.vue'
+  import { useAnnouncement } from '~/composables/useAnnouncement'
+  import { useUser } from '~/composables/auth/useUser'
+  import ErrorPopup from '~/components/utils/ErrorPopup.vue'
+  import type {
+    FilterAnnouncement,
+    FilterAssociationAnnouncement
+  } from '~/common/interface/filter.interface'
 
-definePageMeta({
-  middleware: ['auth'],
-  layout: 'header'
-})
+  definePageMeta({
+    middleware: ['auth'],
+    layout: 'header'
+  })
 
-const announcement = useAnnouncement()
-const { getUserId, initializeUser } = useUser()
-const { navigateToRoute } = useNavigation()
+  const announcement = useAnnouncement()
+  const { getUserId, initializeUser } = useUser()
+  const { navigateToRoute } = useNavigation()
 
-const isLoading = ref(true)
-const totalItems = ref(0)
-const currentFilters = ref<FilterAssociationAnnouncement>({
-  associationId: '',
-  page: 1,
-  limit: 9
-})
+  const isLoading = ref(true)
+  const totalItems = ref(0)
+  const currentFilters = ref<FilterAssociationAnnouncement>({
+    associationId: '',
+    page: 1,
+    limit: 9
+  })
 
-onMounted(async () => {
-  await initData()
-  isLoading.value = false
-})
+  onMounted(async () => {
+    await initData()
+    isLoading.value = false
+  })
 
-const announcements = computed(() => announcement.getAnnouncements)
-const loading = computed(() => announcement.loading)
-const error = computed(() => announcement.error)
-const showErrorModal = ref(false)
-const errorType = ref<'4xx' | '5xx' | null>(null)
-const currentPage = ref(1)
-const pageSize = 9
+  const announcements = computed(() => announcement.getAnnouncements)
+  const loading = computed(() => announcement.loading)
+  const error = computed(() => announcement.error)
+  const showErrorModal = ref(false)
+  const errorType = ref<'4xx' | '5xx' | null>(null)
+  const currentPage = ref(1)
+  const pageSize = 9
 
-const paginatedAnnouncements = computed(() => {
-  return announcements.value.value || []
-})
+  const paginatedAnnouncements = computed(() => {
+    return announcements.value.value || []
+  })
 
-const totalPages = computed(() => {
-  return Math.ceil(totalItems.value / pageSize)
-})
+  const totalPages = computed(() => {
+    return Math.ceil(totalItems.value / pageSize)
+  })
 
-async function goToPage (page: number) {
-  if (page >= 1 && page <= totalPages.value) {
-    currentPage.value = page
-    currentFilters.value.page = page
-    await fetchFilteredAnnouncements()
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-}
-
-function handleReload () {
-  window.location.reload()
-}
-async function handleGoHome () {
-  await navigateToRoute('/')
-}
-
-function handleError (error: any) {
-  if (error?.response?.status >= 500 && error?.response?.status < 600) {
-    errorType.value = '5xx'
-    showErrorModal.value = true
-  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
-    errorType.value = '4xx'
-    showErrorModal.value = true
-  } else {
-    console.error('Erreur inattendue:', error)
-  }
-}
-
-async function handleFilterUpdate (filters: FilterAnnouncement) {
-  try {
-    currentPage.value = 1
-    currentFilters.value = {
-      ...currentFilters.value,
-      ...filters,
-      associationId: getUserId || '',
-      page: 1,
-      limit: pageSize
+  async function goToPage(page: number) {
+    if (page >= 1 && page <= totalPages.value) {
+      currentPage.value = page
+      currentFilters.value.page = page
+      await fetchFilteredAnnouncements()
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
-    await fetchFilteredAnnouncements()
-  } catch (error) {
-    handleError(error)
   }
-}
 
-async function fetchFilteredAnnouncements () {
-  try {
-    if (!currentFilters.value.associationId) {
-      console.warn(
-        'Association ID is not available, announcements cannot be filtered.'
-      )
-      return
+  function handleReload() {
+    window.location.reload()
+  }
+  async function handleGoHome() {
+    await navigateToRoute('/')
+  }
+
+  function handleError(error: any) {
+    if (error?.response?.status >= 500 && error?.response?.status < 600) {
+      errorType.value = '5xx'
+      showErrorModal.value = true
+    } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+      errorType.value = '4xx'
+      showErrorModal.value = true
+    } else {
+      console.error('Erreur inattendue:', error)
     }
-    const response =
-      await announcement.filterAssociationAnnouncementByAssociationId(
+  }
+
+  async function handleFilterUpdate(filters: FilterAnnouncement) {
+    try {
+      currentPage.value = 1
+      currentFilters.value = {
+        ...currentFilters.value,
+        ...filters,
+        associationId: getUserId || '',
+        page: 1,
+        limit: pageSize
+      }
+      await fetchFilteredAnnouncements()
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  async function fetchFilteredAnnouncements() {
+    try {
+      if (!currentFilters.value.associationId) {
+        console.warn('Association ID is not available, announcements cannot be filtered.')
+        return
+      }
+      const response = await announcement.filterAssociationAnnouncementByAssociationId(
         currentFilters.value
       )
-    if (response && response.meta) {
-      totalItems.value = response.meta.total
+      if (response && response.meta) {
+        totalItems.value = response.meta.total
+      }
+    } catch (error) {
+      handleError(error)
     }
-  } catch (error) {
-    handleError(error)
   }
-}
 
-async function initData () {
-  try {
-    if (!getUserId) {
-      await initializeUser()
+  async function initData() {
+    try {
+      if (!getUserId) {
+        await initializeUser()
+      }
+      if (getUserId) {
+        currentFilters.value.associationId = getUserId
+        await fetchFilteredAnnouncements()
+      } else {
+        console.warn('User ID is not available, announcements cannot be fetched.')
+      }
+    } catch (error) {
+      handleError(error)
     }
-    if (getUserId) {
-      currentFilters.value.associationId = getUserId
-      await fetchFilteredAnnouncements()
-    } else {
-      console.warn(
-        'User ID is not available, announcements cannot be fetched.'
-      )
-    }
-  } catch (error) {
-    handleError(error)
   }
-}
 </script>

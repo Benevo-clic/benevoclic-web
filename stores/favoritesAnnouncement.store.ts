@@ -1,17 +1,14 @@
 import { defineStore } from 'pinia'
-import type {
-  Announcement,
-  FavoritesAnnouncement
-} from '~/common/interface/event.interface'
+import type { Announcement, FavoritesAnnouncement } from '~/common/interface/event.interface'
 
 interface CacheItem<T> {
-  data: T;
-  timestamp: number;
-  ttl: number; // Time to live in milliseconds
+  data: T
+  timestamp: number
+  ttl: number // Time to live in milliseconds
 }
 
 interface Cache {
-  [key: string]: CacheItem<any>;
+  [key: string]: CacheItem<any>
 }
 
 export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
@@ -27,8 +24,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
 
   getters: {
     getFavorites: state => state.favorites,
-    getFavoritesAnnouncementsVolunteer: state =>
-      state.favoritesAnnouncementsVolunteer,
+    getFavoritesAnnouncementsVolunteer: state => state.favoritesAnnouncementsVolunteer,
     getFavoriteVolunteers: state => state.favoriteVolunteers,
     isLoading: state => state.loading,
     getError: state => state.error,
@@ -46,7 +42,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
 
   actions: {
     // Cache management
-    setCache<T> (key: string, data: T, ttl?: number): void {
+    setCache<T>(key: string, data: T, ttl?: number): void {
       this.cache[key] = {
         data,
         timestamp: Date.now(),
@@ -54,7 +50,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    getCacheState<T> (key: string): T | null {
+    getCacheState<T>(key: string): T | null {
       if (this.isCacheValid(key)) {
         return this.cache[key].data as T
       }
@@ -63,9 +59,9 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       return null
     },
 
-    clearCache (pattern?: string): void {
+    clearCache(pattern?: string): void {
       if (pattern) {
-        Object.keys(this.cache).forEach((key) => {
+        Object.keys(this.cache).forEach(key => {
           if (key.includes(pattern)) {
             delete this.cache[key]
           }
@@ -75,12 +71,12 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    invalidateCache (pattern?: string): void {
+    invalidateCache(pattern?: string): void {
       this.clearCache(pattern)
     },
 
     // API calls with cache
-    async fetchFavorites (volunteerId: string, announcementId: string) {
+    async fetchFavorites(volunteerId: string, announcementId: string) {
       const cacheKey = `favorites_${volunteerId}_${announcementId}`
       const cached = this.getCacheState<FavoritesAnnouncement[]>(cacheKey)
 
@@ -114,7 +110,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
         this.loading = false
       }
     },
-    async findAllFavoritesAnnouncementsByVolunteerId (volunteerId: string) {
+    async findAllFavoritesAnnouncementsByVolunteerId(volunteerId: string) {
       this.loading = true
       this.error = null
       try {
@@ -139,7 +135,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async fetchAllFavoritesOfVolunteer (volunteerId: string) {
+    async fetchAllFavoritesOfVolunteer(volunteerId: string) {
       this.loading = true
       this.error = null
       try {
@@ -164,7 +160,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async fetchFavoriteVolunteerByVolunteerId (volunteerId: string) {
+    async fetchFavoriteVolunteerByVolunteerId(volunteerId: string) {
       const cacheKey = `favorites_announcements_volunteer_${volunteerId}`
       const cached = this.getCacheState<Announcement[]>(cacheKey)
 
@@ -202,7 +198,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async fetchAllFavorites () {
+    async fetchAllFavorites() {
       const cacheKey = 'favorites_all'
       const cached = this.getCacheState<FavoritesAnnouncement[]>(cacheKey)
 
@@ -214,13 +210,10 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       this.loading = true
       this.error = null
       try {
-        this.favorites = await $fetch<FavoritesAnnouncement[]>(
-          '/api/favorites-announcement/all',
-          {
-            method: 'GET',
-            credentials: 'include'
-          }
-        )
+        this.favorites = await $fetch<FavoritesAnnouncement[]>('/api/favorites-announcement/all', {
+          method: 'GET',
+          credentials: 'include'
+        })
 
         if (!this.favorites || this.favorites.length === 0) {
           this.error = 'Aucun favori trouvé'
@@ -237,7 +230,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async fetchFavoritesByAnnouncementId (announcementId: string) {
+    async fetchFavoritesByAnnouncementId(announcementId: string) {
       const cacheKey = `favorites_announcement_${announcementId}`
       const cached = this.getCacheState<FavoritesAnnouncement[]>(cacheKey)
 
@@ -272,18 +265,15 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async addFavorite (announcementId: string, volunteerId: string) {
+    async addFavorite(announcementId: string, volunteerId: string) {
       this.loading = true
       this.error = null
       try {
-        const response = await $fetch<FavoritesAnnouncement>(
-          '/api/favorites-announcement',
-          {
-            method: 'POST',
-            credentials: 'include',
-            body: { announcementId, volunteerId }
-          }
-        )
+        const response = await $fetch<FavoritesAnnouncement>('/api/favorites-announcement', {
+          method: 'POST',
+          credentials: 'include',
+          body: { announcementId, volunteerId }
+        })
 
         this.favorites.push(response)
 
@@ -300,10 +290,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async removeByVolunteerIdAndAnnouncementId (
-      volunteerId: string,
-      announcementId: string
-    ) {
+    async removeByVolunteerIdAndAnnouncementId(volunteerId: string, announcementId: string) {
       this.loading = true
       this.error = null
       try {
@@ -316,13 +303,9 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
         )
 
         this.favorites = this.favorites.filter(
-          fav =>
-            fav.volunteerId !== volunteerId ||
-            fav.announcementId !== announcementId
+          fav => fav.volunteerId !== volunteerId || fav.announcementId !== announcementId
         )
-        this.favoriteVolunteers = this.favoriteVolunteers.filter(
-          fav => fav._id !== announcementId
-        )
+        this.favoriteVolunteers = this.favoriteVolunteers.filter(fav => fav._id !== announcementId)
 
         this.invalidateCache('favorites_')
         this.invalidateCache(`volunteer_${volunteerId}`)
@@ -335,7 +318,7 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
       }
     },
 
-    async removeAllByVolunteerId (volunteerId: string) {
+    async removeAllByVolunteerId(volunteerId: string) {
       this.loading = true
       this.error = null
       try {
@@ -345,44 +328,35 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
         })
 
         // Remove from local state
-        this.favorites = this.favorites.filter(
-          fav => fav.volunteerId !== volunteerId
-        )
+        this.favorites = this.favorites.filter(fav => fav.volunteerId !== volunteerId)
 
         // Invalidate related caches
         this.invalidateCache('favorites_')
         this.invalidateCache(`volunteer_${volunteerId}`)
       } catch (err: any) {
-        this.error =
-          err?.message || 'Erreur de suppression des favoris du volontaire'
+        this.error = err?.message || 'Erreur de suppression des favoris du volontaire'
         throw err
       } finally {
         this.loading = false
       }
     },
 
-    async removeAllByAnnouncementId (announcementId: string) {
+    async removeAllByAnnouncementId(announcementId: string) {
       this.loading = true
       this.error = null
       try {
-        await $fetch(
-          `/api/favorites-announcement/announcement/${announcementId}`,
-          {
-            method: 'DELETE',
-            credentials: 'include'
-          }
-        )
+        await $fetch(`/api/favorites-announcement/announcement/${announcementId}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        })
 
         // Remove from local state
-        this.favorites = this.favorites.filter(
-          fav => fav.announcementId !== announcementId
-        )
+        this.favorites = this.favorites.filter(fav => fav.announcementId !== announcementId)
 
         this.invalidateCache('favorites_')
         this.invalidateCache(`announcement_${announcementId}`)
       } catch (err: any) {
-        this.error =
-          err?.message || "Erreur de suppression des favoris de l'annonce"
+        this.error = err?.message || "Erreur de suppression des favoris de l'annonce"
         throw err
       } finally {
         this.loading = false
@@ -390,11 +364,11 @@ export const useFavoriteAnnouncement = defineStore('favoriteAnnouncement', {
     },
 
     // Utility methods
-    clearError (): void {
+    clearError(): void {
       this.error = null
     },
 
-    resetState (): void {
+    resetState(): void {
       this.favorites = []
       this.favoritesAnnouncementsVolunteer = []
       this.error = null

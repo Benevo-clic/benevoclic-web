@@ -6,7 +6,7 @@ import {
   type FilterAssociationAnnouncement
 } from '~/common/interface/filter.interface'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
   const config = useRuntimeConfig()
   const body = (await readBody(event)) as FilterAssociationAnnouncement
@@ -34,10 +34,7 @@ export default defineEventHandler(async (event) => {
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la récupération des annonces par association'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la récupération des annonces par association')
     }
   }
 })

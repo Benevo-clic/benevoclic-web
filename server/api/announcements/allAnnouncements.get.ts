@@ -13,10 +13,7 @@ export default defineEventHandler(async () => {
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la récupération des annonces'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la récupération des annonces')
     }
 
     throw createError({

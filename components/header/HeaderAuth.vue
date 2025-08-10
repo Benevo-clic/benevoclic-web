@@ -18,26 +18,26 @@
         height="40"
         loading="eager"
         decoding="sync"
-      >
+      />
     </NuxtLink>
   </header>
 </template>
 
 <script setup lang="ts">
-import { ArrowLeft } from 'lucide-vue-next'
-import { useUser } from '~/composables/auth/useUser'
+  import { ArrowLeft } from 'lucide-vue-next'
+  import { useUser } from '~/composables/auth/useUser'
 
-const { logout: authLogout, initializeUser } = useUser()
+  const { logout: authLogout, initializeUser } = useUser()
 
-onMounted(async () => {
-  try {
-    await initializeUser()
-  } catch (error) {
-    console.error('Error initializing user:', error)
+  onMounted(async () => {
+    try {
+      await initializeUser()
+    } catch (error) {
+      console.error('Error initializing user:', error)
+    }
+  })
+
+  async function handleLogoutUser() {
+    await authLogout()
   }
-})
-
-async function handleLogoutUser () {
-  await authLogout()
-}
 </script>

@@ -1,40 +1,38 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+  import { computed } from 'vue'
 
-const props = defineProps<{
-  modelValue: string;
-  error?: string;
-  label: string;
-  placeholder: string;
-  required?: boolean;
-  type?: string;
-  autocomplete?: string;
-}>()
+  const props = defineProps<{
+    modelValue: string
+    error?: string
+    label: string
+    placeholder: string
+    required?: boolean
+    type?: string
+    autocomplete?: string
+  }>()
 
-// eslint-disable-next-line func-call-spacing
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void;
-}>()
+  // eslint-disable-next-line func-call-spacing
+  const emit = defineEmits<{
+    (e: 'update:modelValue', value: string): void
+  }>()
 
-// Generate unique ID for accessibility
-const inputId = computed(
-  () => `input-${Math.random().toString(36).substr(2, 9)}`
-)
-const errorId = computed(() => `${inputId.value}-error`)
-const descriptionId = computed(() => `${inputId.value}-description`)
+  // Generate unique ID for accessibility
+  const inputId = computed(() => `input-${Math.random().toString(36).substr(2, 9)}`)
+  const errorId = computed(() => `${inputId.value}-error`)
+  const descriptionId = computed(() => `${inputId.value}-description`)
 
-function handleInput (e: Event) {
-  const target = e.target as HTMLInputElement
-  emit('update:modelValue', target.value)
-}
-
-function handleKeydown (e: KeyboardEvent) {
-  if (e.key === 'Enter') {
-    e.preventDefault()
-    // Émettre l'événement pour permettre la soumission du formulaire
-    emit('update:modelValue', (e.target as HTMLInputElement).value)
+  function handleInput(e: Event) {
+    const target = e.target as HTMLInputElement
+    emit('update:modelValue', target.value)
   }
-}
+
+  function handleKeydown(e: KeyboardEvent) {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      // Émettre l'événement pour permettre la soumission du formulaire
+      emit('update:modelValue', (e.target as HTMLInputElement).value)
+    }
+  }
 </script>
 
 <template>
@@ -42,11 +40,7 @@ function handleKeydown (e: KeyboardEvent) {
     <label :for="inputId" class="label">
       <span class="label-text">
         {{ props.label }}
-        <span
-          v-if="required"
-          class="text-error"
-          aria-label="Champ obligatoire"
-        >*</span>
+        <span v-if="required" class="text-error" aria-label="Champ obligatoire">*</span>
       </span>
     </label>
     <input
@@ -59,18 +53,12 @@ function handleKeydown (e: KeyboardEvent) {
       class="input input-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
       :class="{ 'input-error': error }"
       :aria-invalid="error ? 'true' : 'false'"
-      :aria-describedby="
-        props.error ? errorId : autocomplete ? descriptionId : undefined
-      "
+      :aria-describedby="props.error ? errorId : autocomplete ? descriptionId : undefined"
       :aria-required="required"
       @input="handleInput"
       @keydown="handleKeydown"
-    >
-    <div
-      v-if="autocomplete && !props.error"
-      :id="descriptionId"
-      class="text-xs text-gray-500 mt-1"
-    >
+    />
+    <div v-if="autocomplete && !props.error" :id="descriptionId" class="text-xs text-gray-500 mt-1">
       Saisissez votre {{ props.label.toLowerCase() }}
     </div>
     <div
@@ -103,32 +91,32 @@ function handleKeydown (e: KeyboardEvent) {
 </template>
 
 <style scoped>
-/* Amélioration de l'accessibilité pour les inputs */
-.input:focus-visible {
-  border-color: #eb5577;
-  box-shadow: 0 0 0 2px rgba(235, 85, 119, 0.2);
-}
-
-.input-error:focus-visible {
-  border-color: #f87272;
-  box-shadow: 0 0 0 2px rgba(248, 114, 114, 0.2);
-}
-
-/* Amélioration du contraste pour les utilisateurs en mode high-contrast */
-@media (prefers-contrast: more) {
-  .input {
-    border-width: 2px;
+  /* Amélioration de l'accessibilité pour les inputs */
+  .input:focus-visible {
+    border-color: #eb5577;
+    box-shadow: 0 0 0 2px rgba(235, 85, 119, 0.2);
   }
 
-  .label-text-alt {
-    font-weight: bold;
+  .input-error:focus-visible {
+    border-color: #f87272;
+    box-shadow: 0 0 0 2px rgba(248, 114, 114, 0.2);
   }
-}
 
-/* Respect des préférences de réduction de mouvement */
-@media (prefers-reduced-motion: reduce) {
-  .input {
-    transition: none;
+  /* Amélioration du contraste pour les utilisateurs en mode high-contrast */
+  @media (prefers-contrast: more) {
+    .input {
+      border-width: 2px;
+    }
+
+    .label-text-alt {
+      font-weight: bold;
+    }
   }
-}
+
+  /* Respect des préférences de réduction de mouvement */
+  @media (prefers-reduced-motion: reduce) {
+    .input {
+      transition: none;
+    }
+  }
 </style>

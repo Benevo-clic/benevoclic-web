@@ -2,7 +2,7 @@ import { defineEventHandler, createError } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const { announcementId } = event.context.params || {}
 
@@ -26,16 +26,12 @@ export default defineEventHandler(async (event) => {
       error
     )
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        "Erreur lors de la suppression de tous les favoris de l'annonce"
-      )
+      ApiError.handleAxios(error, "Erreur lors de la suppression de tous les favoris de l'annonce")
     }
     throw createError({
       statusCode: error.statusCode || 500,
       statusMessage:
-        error.statusMessage ||
-        "Erreur lors de la suppression de tous les favoris de l'annonce"
+        error.statusMessage || "Erreur lors de la suppression de tous les favoris de l'annonce"
     })
   }
 })

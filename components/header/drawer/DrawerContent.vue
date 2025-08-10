@@ -1,58 +1,58 @@
 <script setup lang="ts">
-import { watch, onMounted, onUnmounted } from 'vue'
-import { X } from 'lucide-vue-next'
-import DrawerAppContentVolunteer from '~/components/header/drawer/components/volunteer/DrawerAppContentVolunteer.vue'
-import DrawerAppContentAssociation from '~/components/header/drawer/components/association/DrawerAppContentAssociation.vue'
-import DrawerAppContentNoConnected from '~/components/header/drawer/components/DrawerAppContentNoConnected.vue'
+  import { watch, onMounted, onUnmounted } from 'vue'
+  import { X } from 'lucide-vue-next'
+  import DrawerAppContentVolunteer from '~/components/header/drawer/components/volunteer/DrawerAppContentVolunteer.vue'
+  import DrawerAppContentAssociation from '~/components/header/drawer/components/association/DrawerAppContentAssociation.vue'
+  import DrawerAppContentNoConnected from '~/components/header/drawer/components/DrawerAppContentNoConnected.vue'
 
-const props = defineProps({
-  isAuthenticated: Boolean,
-  menuOpen: Boolean,
-  userFirstName: String,
-  role: String
-})
-const emit = defineEmits(['closeDrawer'])
+  const props = defineProps({
+    isAuthenticated: Boolean,
+    menuOpen: Boolean,
+    userFirstName: String,
+    role: String
+  })
+  const emit = defineEmits(['closeDrawer'])
 
-const toggleBodyScroll = (disable: boolean) => {
-  if (disable) {
-    document.body.style.overflow = 'hidden'
-  } else {
-    document.body.style.overflow = ''
+  const toggleBodyScroll = (disable: boolean) => {
+    if (disable) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
   }
-}
 
-onUnmounted(() => {
-  toggleBodyScroll(false)
-})
+  onUnmounted(() => {
+    toggleBodyScroll(false)
+  })
 
-watch(
-  () => props.menuOpen,
-  (isOpen) => {
-    toggleBodyScroll(isOpen)
+  watch(
+    () => props.menuOpen,
+    isOpen => {
+      toggleBodyScroll(isOpen)
+    }
+  )
+
+  onMounted(() => {
+    if (props.menuOpen) {
+      toggleBodyScroll(true)
+    }
+  })
+
+  function handleCloseDrawer() {
+    emit('closeDrawer')
   }
-)
 
-onMounted(() => {
-  if (props.menuOpen) {
-    toggleBodyScroll(true)
+  // Gestion de la navigation clavier
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      handleCloseDrawer()
+    }
   }
-})
 
-function handleCloseDrawer () {
-  emit('closeDrawer')
-}
-
-// Gestion de la navigation clavier
-function handleKeydown (event: KeyboardEvent) {
-  if (event.key === 'Escape') {
+  // Focus trap pour le drawer
+  function handleOverlayClick() {
     handleCloseDrawer()
   }
-}
-
-// Focus trap pour le drawer
-function handleOverlayClick () {
-  handleCloseDrawer()
-}
 </script>
 
 <template>
@@ -75,31 +75,23 @@ function handleOverlayClick () {
       class="fixed top-0 right-0 h-screen w-80 max-w-[85vw] bg-gradient-to-b from-base-100 to-base-200 shadow-2xl flex flex-col z-50 text-base-content border-l border-base-300"
       role="dialog"
       aria-modal="true"
-      :aria-labelledby="
-        props.isAuthenticated ? 'drawer-title' : 'welcome-title'
-      "
-      :aria-describedby="
-        props.isAuthenticated ? 'drawer-description' : 'welcome-description'
-      "
+      :aria-labelledby="props.isAuthenticated ? 'drawer-title' : 'welcome-title'"
+      :aria-describedby="props.isAuthenticated ? 'drawer-description' : 'welcome-description'"
       @keydown="handleKeydown"
     >
       <!-- Header avec effet de verre - Toujours visible -->
-      <div
-        class="flex-shrink-0 bg-base-100/80 backdrop-blur-md border-b border-base-300"
-      >
+      <div class="flex-shrink-0 bg-base-100/80 backdrop-blur-md border-b border-base-300">
         <div class="flex items-center justify-between p-4">
           <h2
             :id="props.isAuthenticated ? 'drawer-title' : 'welcome-title'"
             class="text-lg font-semibold text-base-content"
           >
-            {{ props.isAuthenticated ? "Menu" : "Bienvenue" }}
+            {{ props.isAuthenticated ? 'Menu' : 'Bienvenue' }}
           </h2>
           <button
             class="btn btn-ghost btn-circle btn-sm hover:bg-base-300 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             :aria-label="
-              props.isAuthenticated
-                ? 'Fermer le menu'
-                : 'Fermer le panneau de bienvenue'
+              props.isAuthenticated ? 'Fermer le menu' : 'Fermer le panneau de bienvenue'
             "
             @click="handleCloseDrawer"
           >
@@ -107,15 +99,13 @@ function handleOverlayClick () {
           </button>
         </div>
         <div
-          :id="
-            props.isAuthenticated ? 'drawer-description' : 'welcome-description'
-          "
+          :id="props.isAuthenticated ? 'drawer-description' : 'welcome-description'"
           class="sr-only"
         >
           {{
             props.isAuthenticated
-              ? "Menu de navigation principal"
-              : "Panneau de bienvenue et navigation"
+              ? 'Menu de navigation principal'
+              : 'Panneau de bienvenue et navigation'
           }}
         </div>
       </div>
@@ -148,49 +138,49 @@ function handleOverlayClick () {
 </template>
 
 <style scoped>
-/* Respect des préférences de réduction de mouvement */
-@media (prefers-reduced-motion: reduce) {
+  /* Respect des préférences de réduction de mouvement */
+  @media (prefers-reduced-motion: reduce) {
+    .fade-enter-active,
+    .fade-leave-active,
+    .slide-enter-active,
+    .slide-leave-active {
+      transition: none;
+    }
+  }
+
   .fade-enter-active,
-  .fade-leave-active,
+  .fade-leave-active {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
+
   .slide-enter-active,
   .slide-leave-active {
-    transition: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.slide-enter-from,
-.slide-leave-to {
-  transform: translateX(100%);
-}
-
-/* Amélioration du focus pour l'accessibilité */
-aside:focus-visible {
-  outline: 2px solid #eb5577;
-  outline-offset: 2px;
-}
-
-/* Amélioration du contraste pour les utilisateurs en mode high-contrast */
-@media (prefers-contrast: more) {
-  aside {
-    border-left: 3px solid #eb5577;
+  .slide-enter-from,
+  .slide-leave-to {
+    transform: translateX(100%);
   }
 
-  .btn-ghost:hover {
-    background-color: #eb5577 !important;
-    color: white !important;
+  /* Amélioration du focus pour l'accessibilité */
+  aside:focus-visible {
+    outline: 2px solid #eb5577;
+    outline-offset: 2px;
   }
-}
+
+  /* Amélioration du contraste pour les utilisateurs en mode high-contrast */
+  @media (prefers-contrast: more) {
+    aside {
+      border-left: 3px solid #eb5577;
+    }
+
+    .btn-ghost:hover {
+      background-color: #eb5577 !important;
+      color: white !important;
+    }
+  }
 </style>

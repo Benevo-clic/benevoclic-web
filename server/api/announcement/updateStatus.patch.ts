@@ -3,7 +3,7 @@ import { defineEventHandler, readBody, getCookie } from 'h3'
 import type { Announcement } from '~/common/interface/event.interface'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const body = await readBody(event)
   const token = getCookie(event, 'auth_token')
   const config = useRuntimeConfig()
@@ -29,10 +29,7 @@ export default defineEventHandler(async (event) => {
     return announcement.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        "Erreur lors de la mise à jour du statut de l'annonce"
-      )
+      ApiError.handleAxios(error, "Erreur lors de la mise à jour du statut de l'annonce")
     }
   }
 })

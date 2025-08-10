@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
-  >
+  <div class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
     <div
       class="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-2xl relative"
       style="max-height: 90vh; overflow-y: auto"
@@ -12,15 +10,13 @@
       >
         ✕
       </button>
-      <h2 class="text-xl font-bold mb-4">
-        {{ form._id ? "Modifier" : "Créer" }} une annonce
-      </h2>
+      <h2 class="text-xl font-bold mb-4">{{ form._id ? 'Modifier' : 'Créer' }} une annonce</h2>
       <form @submit.prevent="save">
         <div
           class="w-full h-80 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer relative overflow-hidden"
           :class="{
             'bg-base-200': !coverPhotoPreview,
-            'p-0': coverPhotoPreview,
+            'p-0': coverPhotoPreview
           }"
           @click="triggerFileInput"
         >
@@ -31,7 +27,7 @@
             accept="image/*"
             aria-label="Champ de saisie"
             @change="handleFileChange"
-          >
+          />
 
           <div v-if="!coverPhotoPreview" class="text-center p-6">
             <svg
@@ -48,12 +44,8 @@
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <p class="mt-2 text-sm text-gray-500">
-              Cliquez pour ajouter une photo de couverture
-            </p>
-            <p class="text-xs text-gray-400">
-              JPG, PNG, GIF jusqu'à 10MB
-            </p>
+            <p class="mt-2 text-sm text-gray-500">Cliquez pour ajouter une photo de couverture</p>
+            <p class="text-xs text-gray-400">JPG, PNG, GIF jusqu'à 10MB</p>
           </div>
 
           <img
@@ -61,7 +53,7 @@
             :src="coverPhotoPreview"
             class="w-full h-full object-cover"
             alt="Cover preview"
-          >
+          />
 
           <button
             v-if="coverPhotoPreview"
@@ -93,7 +85,7 @@
             class="input input-bordered w-full"
             required
             aria-label="Champ de saisie"
-          >
+          />
         </div>
         <div class="mb-2">
           <label class="block mb-1">Description</label>
@@ -113,7 +105,7 @@
               class="input input-bordered w-full"
               required
               aria-label="Champ de saisie"
-            >
+            />
           </div>
           <div class="flex-1">
             <label class="block mb-1">Heure</label>
@@ -123,7 +115,7 @@
               class="input input-bordered w-full"
               required
               aria-label="Champ de saisie"
-            >
+            />
           </div>
         </div>
         <div class="mb-2 flex gap-2">
@@ -136,11 +128,9 @@
               class="input input-bordered w-full"
               :class="{ 'input-error': maxParticipantsError }"
               aria-label="Nombre"
-            >
+            />
             <p v-if="maxParticipantsError" class="text-error text-xs mt-1">
-              Doit être ≥ au nombre de participants déjà inscrits ({{
-                minParticipants
-              }})
+              Doit être ≥ au nombre de participants déjà inscrits ({{ minParticipants }})
             </p>
           </div>
           <div class="flex-1">
@@ -152,11 +142,9 @@
               class="input input-bordered w-full"
               :class="{ 'input-error': maxVolunteersError }"
               aria-label="Nombre"
-            >
+            />
             <p v-if="maxVolunteersError" class="text-error text-xs mt-1">
-              Doit être ≥ au nombre de bénévoles déjà inscrits ({{
-                minVolunteers
-              }})
+              Doit être ≥ au nombre de bénévoles déjà inscrits ({{ minVolunteers }})
             </p>
           </div>
         </div>
@@ -166,7 +154,7 @@
             v-model="tagsInput"
             class="input input-bordered w-full"
             aria-label="Champ de saisie"
-          >
+          />
         </div>
         <AddressInput
           :initial-address="form.addressAnnouncement?.address"
@@ -179,7 +167,7 @@
               v-model="form.addressAnnouncement!.city"
               class="input input-bordered w-full"
               aria-label="Champ de saisie"
-            >
+            />
           </div>
           <div>
             <label class="block mb-1">Code postal</label>
@@ -187,7 +175,7 @@
               v-model="form.addressAnnouncement!.postalCode"
               class="input input-bordered w-full"
               aria-label="Champ de saisie"
-            >
+            />
           </div>
           <div>
             <label class="block mb-1">Pays</label>
@@ -195,7 +183,7 @@
               v-model="form.addressAnnouncement!.country"
               class="input input-bordered w-full"
               aria-label="Champ de saisie"
-            >
+            />
           </div>
         </div>
 
@@ -208,28 +196,16 @@
             class="select select-bordered w-full"
             aria-label="Sélection"
           >
-            <option
-              v-for="status in statusOptions"
-              :key="status.value"
-              :value="status.value"
-            >
+            <option v-for="status in statusOptions" :key="status.value" :value="status.value">
               {{ status.label }}
             </option>
           </select>
         </div>
         <div class="flex gap-2 mt-4">
-          <button
-            class="btn btn-primary flex-1"
-            type="submit"
-            :disabled="isFormInvalid"
-          >
+          <button class="btn btn-primary flex-1" type="submit" :disabled="isFormInvalid">
             Enregistrer
           </button>
-          <button
-            class="btn btn-ghost flex-1"
-            type="button"
-            @click="$emit('close')"
-          >
+          <button class="btn btn-ghost flex-1" type="button" @click="$emit('close')">
             Annuler
           </button>
         </div>
@@ -245,250 +221,244 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
-import type { Announcement } from '~/common/interface/event.interface'
-import { EventStatus } from '~/common/enums/event.enum'
-import { useAnnouncement } from '~/composables/useAnnouncement'
-import { useNavigation } from '~/composables/useNavigation'
-import ErrorPopup from '~/components/utils/ErrorPopup.vue'
-import AddressInput from '~/components/common/AddressInput.vue'
+  import { ref, watch, computed } from 'vue'
+  import type { Announcement } from '~/common/interface/event.interface'
+  import { EventStatus } from '~/common/enums/event.enum'
+  import { useAnnouncement } from '~/composables/useAnnouncement'
+  import { useNavigation } from '~/composables/useNavigation'
+  import ErrorPopup from '~/components/utils/ErrorPopup.vue'
+  import AddressInput from '~/components/common/AddressInput.vue'
 
-const props = defineProps<{ announcement: Announcement | null }>()
-const emit = defineEmits(['close', 'saved'])
-const announcement = useAnnouncement()
-const { navigateToRoute } = useNavigation()
+  const props = defineProps<{ announcement: Announcement | null }>()
+  const emit = defineEmits(['close', 'saved'])
+  const announcement = useAnnouncement()
+  const { navigateToRoute } = useNavigation()
 
-const showErrorModal = ref(false)
-const errorType = ref<'4xx' | '5xx' | null>(null)
+  const showErrorModal = ref(false)
+  const errorType = ref<'4xx' | '5xx' | null>(null)
 
-function handleReload () {
-  window.location.reload()
-}
-function handleGoHome () {
-  navigateToRoute('/association/events/association/manage')
-}
-
-const form = ref<Partial<Announcement>>({
-  nameEvent: '',
-  description: '',
-  dateEvent: '',
-  hoursEvent: '',
-  tags: [],
-  addressAnnouncement: { address: '', city: '', postalCode: '', country: '' },
-  locationAnnouncement: {
-    type: 'Point',
-    coordinates: [0, 0]
-  },
-  status: EventStatus.INACTIVE,
-  maxParticipants: 0,
-  maxVolunteers: 0
-})
-const tagsInput = ref('')
-const imageFile = ref<File | null>(null)
-const coverPhotoPreview = ref<string | null>(null)
-const fileInput = ref<HTMLInputElement | null>(null)
-
-const statusOptions = Object.values(EventStatus).map(status => ({
-  label: status,
-  value: status
-}))
-
-const minParticipants = computed(() => props.announcement?.nbParticipants ?? 0)
-const minVolunteers = computed(() => props.announcement?.nbVolunteers ?? 0)
-
-const maxParticipantsError = computed(
-  () =>
-    form.value.maxParticipants !== undefined &&
-    form.value.maxParticipants < minParticipants.value
-)
-
-const maxVolunteersError = computed(
-  () =>
-    form.value.maxVolunteers !== undefined &&
-    form.value.maxVolunteers < minVolunteers.value
-)
-
-function handleError (error: any) {
-  if (error?.response?.status >= 500 && error?.response?.status < 600) {
-    errorType.value = '5xx'
-    showErrorModal.value = true
-  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
-    errorType.value = '4xx'
-    showErrorModal.value = true
-  } else {
-    console.error('Erreur inattendue:', error)
+  function handleReload() {
+    window.location.reload()
   }
-}
+  function handleGoHome() {
+    navigateToRoute('/association/events/association/manage')
+  }
 
-const isFormInvalid = computed(
-  () => maxParticipantsError.value || maxVolunteersError.value
-)
-
-const selectAddress = (address: {
-  properties: {
-    address: string;
-    city: string;
-    postcode: string;
-  };
-  geometry: {
-    coordinates: [number, number];
-  };
-}) => {
-  form.value = {
-    ...form.value,
-    addressAnnouncement: {
-      address: address.properties.address,
-      city: address.properties.city,
-      postalCode: address.properties.postcode,
-      country: 'France'
-    },
+  const form = ref<Partial<Announcement>>({
+    nameEvent: '',
+    description: '',
+    dateEvent: '',
+    hoursEvent: '',
+    tags: [],
+    addressAnnouncement: { address: '', city: '', postalCode: '', country: '' },
     locationAnnouncement: {
       type: 'Point',
-      coordinates: [
-        address.geometry.coordinates[0],
-        address.geometry.coordinates[1]
-      ]
+      coordinates: [0, 0]
+    },
+    status: EventStatus.INACTIVE,
+    maxParticipants: 0,
+    maxVolunteers: 0
+  })
+  const tagsInput = ref('')
+  const imageFile = ref<File | null>(null)
+  const coverPhotoPreview = ref<string | null>(null)
+  const fileInput = ref<HTMLInputElement | null>(null)
+
+  const statusOptions = Object.values(EventStatus).map(status => ({
+    label: status,
+    value: status
+  }))
+
+  const minParticipants = computed(() => props.announcement?.nbParticipants ?? 0)
+  const minVolunteers = computed(() => props.announcement?.nbVolunteers ?? 0)
+
+  const maxParticipantsError = computed(
+    () =>
+      form.value.maxParticipants !== undefined && form.value.maxParticipants < minParticipants.value
+  )
+
+  const maxVolunteersError = computed(
+    () => form.value.maxVolunteers !== undefined && form.value.maxVolunteers < minVolunteers.value
+  )
+
+  function handleError(error: any) {
+    if (error?.response?.status >= 500 && error?.response?.status < 600) {
+      errorType.value = '5xx'
+      showErrorModal.value = true
+    } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+      errorType.value = '4xx'
+      showErrorModal.value = true
+    } else {
+      console.error('Erreur inattendue:', error)
     }
   }
-}
 
-watch(
-  () => props.announcement,
-  (a) => {
-    if (a) {
-      form.value = {
-        ...a,
-        tags: a.tags ? [...a.tags] : [],
-        addressAnnouncement: {
-          address: a.addressAnnouncement?.address || '',
-          city: a.addressAnnouncement?.city || '',
-          postalCode: a.addressAnnouncement?.postalCode || '',
-          country: a.addressAnnouncement?.country || ''
-        },
-        locationAnnouncement: a.locationAnnouncement || {
-          type: 'Point',
-          coordinates: [0, 0]
-        },
-        status: a.status || EventStatus.INACTIVE,
-        maxParticipants: a.maxParticipants ?? 0,
-        maxVolunteers: a.maxVolunteers ?? 0
+  const isFormInvalid = computed(() => maxParticipantsError.value || maxVolunteersError.value)
+
+  const selectAddress = (address: {
+    properties: {
+      address: string
+      city: string
+      postcode: string
+    }
+    geometry: {
+      coordinates: [number, number]
+    }
+  }) => {
+    form.value = {
+      ...form.value,
+      addressAnnouncement: {
+        address: address.properties.address,
+        city: address.properties.city,
+        postalCode: address.properties.postcode,
+        country: 'France'
+      },
+      locationAnnouncement: {
+        type: 'Point',
+        coordinates: [address.geometry.coordinates[0], address.geometry.coordinates[1]]
       }
-      tagsInput.value = a.tags ? a.tags.join(', ') : ''
-      if (a.announcementImage) {
-        coverPhotoPreview.value = a.announcementImage
+    }
+  }
+
+  watch(
+    () => props.announcement,
+    a => {
+      if (a) {
+        form.value = {
+          ...a,
+          tags: a.tags ? [...a.tags] : [],
+          addressAnnouncement: {
+            address: a.addressAnnouncement?.address || '',
+            city: a.addressAnnouncement?.city || '',
+            postalCode: a.addressAnnouncement?.postalCode || '',
+            country: a.addressAnnouncement?.country || ''
+          },
+          locationAnnouncement: a.locationAnnouncement || {
+            type: 'Point',
+            coordinates: [0, 0]
+          },
+          status: a.status || EventStatus.INACTIVE,
+          maxParticipants: a.maxParticipants ?? 0,
+          maxVolunteers: a.maxVolunteers ?? 0
+        }
+        tagsInput.value = a.tags ? a.tags.join(', ') : ''
+        if (a.announcementImage) {
+          coverPhotoPreview.value = a.announcementImage
+        } else {
+          coverPhotoPreview.value = null
+        }
       } else {
+        form.value = {
+          _id: '',
+          nameEvent: '',
+          description: '',
+          dateEvent: '',
+          hoursEvent: '',
+          tags: [],
+          addressAnnouncement: {
+            address: '',
+            city: '',
+            postalCode: '',
+            country: ''
+          },
+          locationAnnouncement: {
+            type: 'Point',
+            coordinates: [0, 0]
+          },
+          status: EventStatus.INACTIVE,
+          maxParticipants: 0,
+          maxVolunteers: 0
+        }
+        tagsInput.value = ''
         coverPhotoPreview.value = null
       }
-    } else {
-      form.value = {
-        _id: '',
-        nameEvent: '',
-        description: '',
-        dateEvent: '',
-        hoursEvent: '',
-        tags: [],
-        addressAnnouncement: {
-          address: '',
-          city: '',
-          postalCode: '',
-          country: ''
-        },
-        locationAnnouncement: {
-          type: 'Point',
-          coordinates: [0, 0]
-        },
-        status: EventStatus.INACTIVE,
-        maxParticipants: 0,
-        maxVolunteers: 0
-      }
-      tagsInput.value = ''
-      coverPhotoPreview.value = null
-    }
-  },
-  { immediate: true }
-)
+    },
+    { immediate: true }
+  )
 
-const triggerFileInput = () => {
-  fileInput.value?.click()
-}
-
-const handleFileChange = async (event: Event) => {
-  try {
-    const file = (event.target as HTMLInputElement).files?.[0]
-    if (!file) { return }
-    imageFile.value = file
-    await announcement.uploadImageCover(file)
-    const reader = new FileReader()
-    reader.onload = () => {
-      coverPhotoPreview.value = reader.result as string
-    }
-    reader.readAsDataURL(file)
-  } catch (error) {
-    handleError(error)
+  const triggerFileInput = () => {
+    fileInput.value?.click()
   }
-}
 
-const removeCoverPhoto = () => {
-  coverPhotoPreview.value = null
-  imageFile.value = null
-  if (fileInput.value) {
-    fileInput.value.value = ''
-  }
-}
-
-async function save () {
-  try {
-    form.value.tags = tagsInput.value
-      .split(',')
-      .map((t: string) => t.trim())
-      .filter(Boolean)
-
-    if (form.value._id && props.announcement) {
-      const updatedFields: any = {}
-      const original = props.announcement
-      const keys: (keyof Announcement)[] = [
-        'nameEvent',
-        'description',
-        'dateEvent',
-        'hoursEvent',
-        'status',
-        'maxParticipants',
-        'maxVolunteers'
-      ]
-
-      for (const key of keys) {
-        if (form.value[key] !== original[key]) {
-          updatedFields[key] = form.value[key]
-        }
-      }
-      if (JSON.stringify(form.value.tags) !== JSON.stringify(original.tags)) {
-        updatedFields.tags = form.value.tags
-      }
-      if (
-        JSON.stringify(form.value.addressAnnouncement) !==
-        JSON.stringify(original.addressAnnouncement)
-      ) {
-        updatedFields.addressAnnouncement = form.value.addressAnnouncement
-      }
-      if (
-        JSON.stringify(form.value.locationAnnouncement) !==
-        JSON.stringify(original.locationAnnouncement)
-      ) {
-        updatedFields.locationAnnouncement = form.value.locationAnnouncement
-      }
-      try {
-        if (Object.keys(updatedFields).length > 0) {
-          await announcement.updateAnnouncement(form.value._id, updatedFields)
-        }
-      } catch (error: any) {
-        handleError(error)
+  const handleFileChange = async (event: Event) => {
+    try {
+      const file = (event.target as HTMLInputElement).files?.[0]
+      if (!file) {
         return
       }
+      imageFile.value = file
+      await announcement.uploadImageCover(file)
+      const reader = new FileReader()
+      reader.onload = () => {
+        coverPhotoPreview.value = reader.result as string
+      }
+      reader.readAsDataURL(file)
+    } catch (error) {
+      handleError(error)
     }
-
-    emit('saved')
-  } catch (error) {
-    console.error('Erreur lors de la sauvegarde:', error)
   }
-}
+
+  const removeCoverPhoto = () => {
+    coverPhotoPreview.value = null
+    imageFile.value = null
+    if (fileInput.value) {
+      fileInput.value.value = ''
+    }
+  }
+
+  async function save() {
+    try {
+      form.value.tags = tagsInput.value
+        .split(',')
+        .map((t: string) => t.trim())
+        .filter(Boolean)
+
+      if (form.value._id && props.announcement) {
+        const updatedFields: any = {}
+        const original = props.announcement
+        const keys: (keyof Announcement)[] = [
+          'nameEvent',
+          'description',
+          'dateEvent',
+          'hoursEvent',
+          'status',
+          'maxParticipants',
+          'maxVolunteers'
+        ]
+
+        for (const key of keys) {
+          if (form.value[key] !== original[key]) {
+            updatedFields[key] = form.value[key]
+          }
+        }
+        if (JSON.stringify(form.value.tags) !== JSON.stringify(original.tags)) {
+          updatedFields.tags = form.value.tags
+        }
+        if (
+          JSON.stringify(form.value.addressAnnouncement) !==
+          JSON.stringify(original.addressAnnouncement)
+        ) {
+          updatedFields.addressAnnouncement = form.value.addressAnnouncement
+        }
+        if (
+          JSON.stringify(form.value.locationAnnouncement) !==
+          JSON.stringify(original.locationAnnouncement)
+        ) {
+          updatedFields.locationAnnouncement = form.value.locationAnnouncement
+        }
+        try {
+          if (Object.keys(updatedFields).length > 0) {
+            await announcement.updateAnnouncement(form.value._id, updatedFields)
+          }
+        } catch (error: any) {
+          handleError(error)
+          return
+        }
+      }
+
+      emit('saved')
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde:', error)
+    }
+  }
 </script>

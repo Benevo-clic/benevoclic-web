@@ -1,221 +1,235 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import PhoneForm from '../../volunteer/form/PhoneForm.vue'
-import CityForm from '../../volunteer/form/CityForm.vue'
-import PostalCodeForm from '../../volunteer/form/PostalCodeForm.vue'
-import BioForm from '../../volunteer/form/BioForm.vue'
-import AssociationNameForm from './AssociationNameForm.vue'
-import AssociationTypeForm from './AssociationTypeForm.vue'
-import { useAssociationAuth } from '~/composables/useAssociation'
-import type {
-  CreateAssociationDto,
-  FormFieldsAssociation
-} from '~/common/interface/register.interface'
-import { useUser } from '~/composables/auth/useUser'
-import ErrorPopup from '~/components/utils/ErrorPopup.vue'
-import { useNavigation } from '~/composables/useNavigation'
-import { useAuthStore } from '~/stores/auth/auth.store'
+  import { ref, reactive } from 'vue'
+  import PhoneForm from '../../volunteer/form/PhoneForm.vue'
+  import CityForm from '../../volunteer/form/CityForm.vue'
+  import PostalCodeForm from '../../volunteer/form/PostalCodeForm.vue'
+  import BioForm from '../../volunteer/form/BioForm.vue'
+  import AssociationNameForm from './AssociationNameForm.vue'
+  import AssociationTypeForm from './AssociationTypeForm.vue'
+  import { useAssociationAuth } from '~/composables/useAssociation'
+  import type {
+    CreateAssociationDto,
+    FormFieldsAssociation
+  } from '~/common/interface/register.interface'
+  import { useUser } from '~/composables/auth/useUser'
+  import ErrorPopup from '~/components/utils/ErrorPopup.vue'
+  import { useNavigation } from '~/composables/useNavigation'
+  import { useAuthStore } from '~/stores/auth/auth.store'
 
-const { user, updateIsCompleted } = useUser()
-const authStore = useAuthStore()
+  const { user, updateIsCompleted } = useUser()
+  const authStore = useAuthStore()
 
-const { registerAssociation } = useAssociationAuth()
-const { navigateToRoute } = useNavigation()
+  const { registerAssociation } = useAssociationAuth()
+  const { navigateToRoute } = useNavigation()
 
-const showErrorModal = ref(false)
-const errorType = ref<'4xx' | '5xx' | null>(null)
+  const showErrorModal = ref(false)
+  const errorType = ref<'4xx' | '5xx' | null>(null)
 
-function handleReload () {
-  window.location.reload()
-}
-function handleGoHome () {
-  authStore.deleteCookies()
-  navigateToRoute('/')
-}
-
-interface Step {
-  component: Component;
-  field: keyof FormFieldsAssociation;
-  validate: (value: string) => string;
-}
-
-// eslint-disable-next-line func-call-spacing
-const emit = defineEmits<{
-  (e: 'submit', isSend: boolean): void;
-  (e: 'currentStep', step: number): void;
-}>()
-
-function handleError (error: any) {
-  if (error?.response?.status >= 500 && error?.response?.status < 600) {
-    errorType.value = '5xx'
-    showErrorModal.value = true
-  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
-    errorType.value = '4xx'
-    showErrorModal.value = true
-  } else {
-    console.error('Erreur inattendue:', error)
+  function handleReload() {
+    window.location.reload()
   }
-}
+  function handleGoHome() {
+    authStore.deleteCookies()
+    navigateToRoute('/')
+  }
 
-const formData = reactive<FormFieldsAssociation>({
-  associationName: '',
-  phone: '',
-  bio: '',
-  city: '',
-  postalCode: '',
-  country: 'France',
-  type: ''
-})
+  interface Step {
+    component: Component
+    field: keyof FormFieldsAssociation
+    validate: (value: string) => string
+  }
 
-const errors = reactive<Record<keyof FormFieldsAssociation, string>>({
-  associationName: '',
-  phone: '',
-  bio: '',
-  city: '',
-  postalCode: '',
-  country: '',
-  type: ''
-})
+  // eslint-disable-next-line func-call-spacing
+  const emit = defineEmits<{
+    (e: 'submit', isSend: boolean): void
+    (e: 'currentStep', step: number): void
+  }>()
 
-const currentStep = ref(0)
-
-const steps: Step[] = [
-  {
-    component: AssociationNameForm,
-    field: 'associationName',
-    validate: (value: string) => {
-      if (!value) { return "Le nom de l'association est requis" }
-      if (value.length < 2) { return 'Le nom doit contenir au moins 2 caractères' }
-      return ''
+  function handleError(error: any) {
+    if (error?.response?.status >= 500 && error?.response?.status < 600) {
+      errorType.value = '5xx'
+      showErrorModal.value = true
+    } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+      errorType.value = '4xx'
+      showErrorModal.value = true
+    } else {
+      console.error('Erreur inattendue:', error)
     }
-  },
-  {
-    component: PhoneForm,
-    field: 'phone',
-    validate: (value: string) => {
-      if (!value) { return 'Le téléphone est requis' }
-      if (!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(value)) {
-        return 'Format de téléphone invalide'
+  }
+
+  const formData = reactive<FormFieldsAssociation>({
+    associationName: '',
+    phone: '',
+    bio: '',
+    city: '',
+    postalCode: '',
+    country: 'France',
+    type: ''
+  })
+
+  const errors = reactive<Record<keyof FormFieldsAssociation, string>>({
+    associationName: '',
+    phone: '',
+    bio: '',
+    city: '',
+    postalCode: '',
+    country: '',
+    type: ''
+  })
+
+  const currentStep = ref(0)
+
+  const steps: Step[] = [
+    {
+      component: AssociationNameForm,
+      field: 'associationName',
+      validate: (value: string) => {
+        if (!value) {
+          return "Le nom de l'association est requis"
+        }
+        if (value.length < 2) {
+          return 'Le nom doit contenir au moins 2 caractères'
+        }
+        return ''
       }
-      return ''
+    },
+    {
+      component: PhoneForm,
+      field: 'phone',
+      validate: (value: string) => {
+        if (!value) {
+          return 'Le téléphone est requis'
+        }
+        if (!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(value)) {
+          return 'Format de téléphone invalide'
+        }
+        return ''
+      }
+    },
+    {
+      component: AssociationTypeForm,
+      field: 'type',
+      validate: (value: string) => {
+        if (!value) {
+          return "Le type d'association est requis"
+        }
+        return ''
+      }
+    },
+    {
+      component: CityForm,
+      field: 'city',
+      validate: (value: string) => {
+        if (!value) {
+          return 'La ville est requise'
+        }
+        if (value.length < 2) {
+          return 'La ville doit contenir au moins 2 caractères'
+        }
+        return ''
+      }
+    },
+    {
+      component: PostalCodeForm,
+      field: 'postalCode',
+      validate: (value: string) => {
+        if (!value) {
+          return 'Le code postal est requis'
+        }
+        if (!/^[0-9]{5}$/.test(value)) {
+          return 'Le code postal doit contenir 5 chiffres'
+        }
+        return ''
+      }
+    },
+    {
+      component: BioForm,
+      field: 'bio',
+      validate: (value: string) => {
+        if (value.length < 10) {
+          return 'La description doit contenir au moins 10 caractères'
+        }
+        return ''
+      }
     }
-  },
-  {
-    component: AssociationTypeForm,
-    field: 'type',
-    validate: (value: string) => {
-      if (!value) { return "Le type d'association est requis" }
-      return ''
+  ]
+
+  const loading = ref(false)
+  const isError = ref(false)
+
+  function validateCurrentStep(): boolean {
+    const step = steps[currentStep.value]
+    const error = step.validate(formData[step.field] as string)
+    errors[step.field] = error
+    return !error
+  }
+
+  function handleInput(field: keyof FormFieldsAssociation, value: string) {
+    formData[field] = value
+    errors[field] = ''
+  }
+
+  function next() {
+    if (!validateCurrentStep()) {
+      return
     }
-  },
-  {
-    component: CityForm,
-    field: 'city',
-    validate: (value: string) => {
-      if (!value) { return 'La ville est requise' }
-      if (value.length < 2) { return 'La ville doit contenir au moins 2 caractères' }
-      return ''
-    }
-  },
-  {
-    component: PostalCodeForm,
-    field: 'postalCode',
-    validate: (value: string) => {
-      if (!value) { return 'Le code postal est requis' }
-      if (!/^[0-9]{5}$/.test(value)) { return 'Le code postal doit contenir 5 chiffres' }
-      return ''
-    }
-  },
-  {
-    component: BioForm,
-    field: 'bio',
-    validate: (value: string) => {
-      if (value.length < 10) { return 'La description doit contenir au moins 10 caractères' }
-      return ''
+
+    if (currentStep.value < steps.length - 1) {
+      currentStep.value++
+      emit('currentStep', (currentStep.value / steps.length) * 100)
+    } else {
+      submitForm()
     }
   }
-]
 
-const loading = ref(false)
-const isError = ref(false)
-
-function validateCurrentStep (): boolean {
-  const step = steps[currentStep.value]
-  const error = step.validate(formData[step.field] as string)
-  errors[step.field] = error
-  return !error
-}
-
-function handleInput (field: keyof FormFieldsAssociation, value: string) {
-  formData[field] = value
-  errors[field] = ''
-}
-
-function next () {
-  if (!validateCurrentStep()) { return }
-
-  if (currentStep.value < steps.length - 1) {
-    currentStep.value++
-    emit('currentStep', (currentStep.value / steps.length) * 100)
-  } else {
-    submitForm()
-  }
-}
-
-function prev () {
-  if (currentStep.value > 0) {
-    currentStep.value--
-    emit('currentStep', (currentStep.value / steps.length) * 100)
-  }
-}
-
-async function submitForm () {
-  loading.value = true
-  isError.value = false
-  try {
-    if (!user.value?.userId) {
-      throw new Error('User not authenticated')
+  function prev() {
+    if (currentStep.value > 0) {
+      currentStep.value--
+      emit('currentStep', (currentStep.value / steps.length) * 100)
     }
-    await registerAssociation({
-      email: user.value?.email,
-      associationName: formData.associationName,
-      phone: formData.phone,
-      bio: formData.bio,
-      city: formData.city,
-      postalCode: formData.postalCode,
-      country: formData.country,
-      type: formData.type
-    } as CreateAssociationDto)
-
-    await updateIsCompleted(user.value?.userId, true)
-
-    emit('submit', true)
-  } catch (error) {
-    isError.value = true
-    handleError(error)
-  } finally {
-    loading.value = false
   }
-}
+
+  async function submitForm() {
+    loading.value = true
+    isError.value = false
+    try {
+      if (!user.value?.userId) {
+        throw new Error('User not authenticated')
+      }
+      await registerAssociation({
+        email: user.value?.email,
+        associationName: formData.associationName,
+        phone: formData.phone,
+        bio: formData.bio,
+        city: formData.city,
+        postalCode: formData.postalCode,
+        country: formData.country,
+        type: formData.type
+      } as CreateAssociationDto)
+
+      await updateIsCompleted(user.value?.userId, true)
+
+      emit('submit', true)
+    } catch (error) {
+      isError.value = true
+      handleError(error)
+    } finally {
+      loading.value = false
+    }
+  }
 </script>
 
 <template>
   <div class="w-full max-w-md mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-2">
-      🚀 Enregistrement de votre association
-    </h1>
-    <p class="text-base text-gray-600 mb-4">
-      Complétez les informations étape par étape 😊
-    </p>
+    <h1 class="text-3xl font-bold mb-2">🚀 Enregistrement de votre association</h1>
+    <p class="text-base text-gray-600 mb-4">Complétez les informations étape par étape 😊</p>
 
     <keep-alive>
       <component
         :is="steps[currentStep].component"
         :model-value="formData[steps[currentStep].field]"
         :error="errors[steps[currentStep].field]"
-        @update:model-value="
-          (value: string) => handleInput(steps[currentStep].field, value)
-        "
+        @update:model-value="(value: string) => handleInput(steps[currentStep].field, value)"
       />
     </keep-alive>
 
@@ -230,13 +244,11 @@ async function submitForm () {
 
       <button :disabled="loading" class="btn btn-primary" @click="next">
         <span v-if="loading" class="loading loading-spinner mr-2" />
-        {{ currentStep < steps.length - 1 ? "Suivant" : "Envoyer" }}
+        {{ currentStep < steps.length - 1 ? 'Suivant' : 'Envoyer' }}
       </button>
     </div>
 
-    <p v-if="isError" class="text-red-600 mt-4">
-      Une erreur est survenue. Réessayez plus tard.
-    </p>
+    <p v-if="isError" class="text-red-600 mt-4">Une erreur est survenue. Réessayez plus tard.</p>
     <ErrorPopup
       :show-error-modal="showErrorModal"
       :error-type="errorType"

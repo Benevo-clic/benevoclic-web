@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { describe, it, expect } from "vitest";
-import { mount } from "@vue/test-utils";
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
 
 const MockVolunteerAnnouncementDetail = {
   template: `
@@ -119,127 +119,111 @@ const MockVolunteerAnnouncementDetail = {
         </div>
       </div>
     </div>
-  `,
-};
+  `
+}
 
-describe("VolunteerAnnouncementDetail", () => {
-  it("should render the main container", () => {
-    const wrapper = mount(MockVolunteerAnnouncementDetail);
-    expect(wrapper.find(".relative").exists()).toBe(true);
-    expect(
-      wrapper.find(".container.mx-auto.px-2.md\\:px-4.py-6.max-w-4xl").exists(),
-    ).toBe(true);
-  });
+describe('VolunteerAnnouncementDetail', () => {
+  it('should render the main container', () => {
+    const wrapper = mount(MockVolunteerAnnouncementDetail)
+    expect(wrapper.find('.relative').exists()).toBe(true)
+    expect(wrapper.find('.container.mx-auto.px-2.md\\:px-4.py-6.max-w-4xl').exists()).toBe(true)
+  })
 
-  it("should render the cover image section", () => {
-    const wrapper = mount(MockVolunteerAnnouncementDetail);
-    const coverSection = wrapper.find(
-      ".relative.w-full.aspect-\\[3\\/1\\].rounded-2xl",
-    );
-    expect(coverSection.exists()).toBe(true);
-  });
+  it('should render the cover image section', () => {
+    const wrapper = mount(MockVolunteerAnnouncementDetail)
+    const coverSection = wrapper.find('.relative.w-full.aspect-\\[3\\/1\\].rounded-2xl')
+    expect(coverSection.exists()).toBe(true)
+  })
 
-  it("should render the status badge", () => {
-    const wrapper = mount(MockVolunteerAnnouncementDetail);
-    const statusBadge = wrapper.find(".badge.badge-primary");
-    expect(statusBadge.exists()).toBe(true);
-    expect(statusBadge.text()).toBe("ACTIVE");
-  });
+  it('should render the status badge', () => {
+    const wrapper = mount(MockVolunteerAnnouncementDetail)
+    const statusBadge = wrapper.find('.badge.badge-primary')
+    expect(statusBadge.exists()).toBe(true)
+    expect(statusBadge.text()).toBe('ACTIVE')
+  })
 
-  it("should render the association section", () => {
-    const wrapper = mount(MockVolunteerAnnouncementDetail);
-    const associationSection = wrapper.find(
-      ".bg-base-100.rounded-xl.shadow-lg.p-6.mb-6",
-    );
-    expect(associationSection.exists()).toBe(true);
-    expect(associationSection.find(".text-base.font-semibold").text()).toBe(
-      "Association Test",
-    );
-  });
+  it('should render the association section', () => {
+    const wrapper = mount(MockVolunteerAnnouncementDetail)
+    const associationSection = wrapper.find('.bg-base-100.rounded-xl.shadow-lg.p-6.mb-6')
+    expect(associationSection.exists()).toBe(true)
+    expect(associationSection.find('.text-base.font-semibold').text()).toBe('Association Test')
+  })
 
-  it("should render the association avatar", () => {
-    const wrapper = mount(MockVolunteerAnnouncementDetail);
-    const avatar = wrapper.find(".avatar.placeholder");
-    expect(avatar.exists()).toBe(true);
-  });
+  it('should render the association avatar', () => {
+    const wrapper = mount(MockVolunteerAnnouncementDetail)
+    const avatar = wrapper.find('.avatar.placeholder')
+    expect(avatar.exists()).toBe(true)
+  })
 
-  it("should render the follow button", () => {
-    const wrapper = mount(MockVolunteerAnnouncementDetail);
-    const followButton = wrapper.find(".btn.btn-sm.btn-primary");
-    expect(followButton.exists()).toBe(true);
-    expect(followButton.text()).toContain("Adhérer");
-  });
+  it('should render the follow button', () => {
+    const wrapper = mount(MockVolunteerAnnouncementDetail)
+    const followButton = wrapper.find('.btn.btn-sm.btn-primary')
+    expect(followButton.exists()).toBe(true)
+    expect(followButton.text()).toContain('Adhérer')
+  })
 
-  it("should render the main event information", () => {
-    const wrapper = mount(MockVolunteerAnnouncementDetail);
-    const mainInfo = wrapper.findAll(
-      ".bg-base-100.rounded-xl.shadow-lg.p-6.mb-6",
-    )[1];
-    expect(mainInfo.exists()).toBe(true);
-    expect(mainInfo.find("h1").text()).toBe("Événement Test");
-  });
+  it('should render the main event information', () => {
+    const wrapper = mount(MockVolunteerAnnouncementDetail)
+    const mainInfo = wrapper.findAll('.bg-base-100.rounded-xl.shadow-lg.p-6.mb-6')[1]
+    expect(mainInfo.exists()).toBe(true)
+    expect(mainInfo.find('h1').text()).toBe('Événement Test')
+  })
 
-  it("should render event details with icons", () => {
-    const wrapper = mount(MockVolunteerAnnouncementDetail);
-    const details = wrapper.find(
-      ".flex.flex-wrap.gap-2.text-sm.text-base-content\\/70",
-    );
-    expect(details.exists()).toBe(true);
+  it('should render event details with icons', () => {
+    const wrapper = mount(MockVolunteerAnnouncementDetail)
+    const details = wrapper.find('.flex.flex-wrap.gap-2.text-sm.text-base-content\\/70')
+    expect(details.exists()).toBe(true)
 
-    const detailItems = details.findAll("span");
-    expect(detailItems.length).toBe(3);
-  });
+    const detailItems = details.findAll('span')
+    expect(detailItems.length).toBe(3)
+  })
 
-  it("should render event tags", () => {
-    const wrapper = mount(MockVolunteerAnnouncementDetail);
-    const tags = wrapper.findAll(".badge.badge-outline.text-sm");
-    expect(tags.length).toBe(2);
-    expect(tags[0].text()).toBe("Tag 1");
-    expect(tags[1].text()).toBe("Tag 2");
-  });
+  it('should render event tags', () => {
+    const wrapper = mount(MockVolunteerAnnouncementDetail)
+    const tags = wrapper.findAll('.badge.badge-outline.text-sm')
+    expect(tags.length).toBe(2)
+    expect(tags[0].text()).toBe('Tag 1')
+    expect(tags[1].text()).toBe('Tag 2')
+  })
 
-  it("should render statistics", () => {
-    const wrapper = mount(MockVolunteerAnnouncementDetail);
-    const stats = wrapper.find(".flex.gap-4.mt-4.mb-2");
-    expect(stats.exists()).toBe(true);
+  it('should render statistics', () => {
+    const wrapper = mount(MockVolunteerAnnouncementDetail)
+    const stats = wrapper.find('.flex.gap-4.mt-4.mb-2')
+    expect(stats.exists()).toBe(true)
 
-    const statItems = stats.findAll(".flex.items-center.gap-1.text-xs");
-    expect(statItems.length).toBe(2);
-  });
+    const statItems = stats.findAll('.flex.items-center.gap-1.text-xs')
+    expect(statItems.length).toBe(2)
+  })
 
-  it("should render event details section", () => {
-    const wrapper = mount(MockVolunteerAnnouncementDetail);
-    const detailsSections = wrapper.findAll(
-      ".bg-base-100.rounded-xl.shadow-lg.p-6.mb-6",
-    );
-    expect(detailsSections.length).toBeGreaterThan(0);
-  });
+  it('should render event details section', () => {
+    const wrapper = mount(MockVolunteerAnnouncementDetail)
+    const detailsSections = wrapper.findAll('.bg-base-100.rounded-xl.shadow-lg.p-6.mb-6')
+    expect(detailsSections.length).toBeGreaterThan(0)
+  })
 
-  it("should render action buttons", () => {
-    const wrapper = mount(MockVolunteerAnnouncementDetail);
-    const actionsSection = wrapper.find(
-      ".bg-base-100.rounded-xl.shadow-lg.p-6:last-child",
-    );
-    expect(actionsSection.exists()).toBe(true);
-    expect(actionsSection.find("h2").text()).toBe("Actions");
+  it('should render action buttons', () => {
+    const wrapper = mount(MockVolunteerAnnouncementDetail)
+    const actionsSection = wrapper.find('.bg-base-100.rounded-xl.shadow-lg.p-6:last-child')
+    expect(actionsSection.exists()).toBe(true)
+    expect(actionsSection.find('h2').text()).toBe('Actions')
 
-    const buttons = actionsSection.findAll(".btn");
-    expect(buttons.length).toBe(3);
-  });
+    const buttons = actionsSection.findAll('.btn')
+    expect(buttons.length).toBe(3)
+  })
 
-  it("should have proper button styling", () => {
-    const wrapper = mount(MockVolunteerAnnouncementDetail);
-    const buttons = wrapper.findAll(".btn");
+  it('should have proper button styling', () => {
+    const wrapper = mount(MockVolunteerAnnouncementDetail)
+    const buttons = wrapper.findAll('.btn')
 
-    buttons.forEach((button) => {
-      expect(button.classes()).toContain("btn");
-    });
-  });
+    buttons.forEach(button => {
+      expect(button.classes()).toContain('btn')
+    })
+  })
 
-  it("should render event description", () => {
-    const wrapper = mount(MockVolunteerAnnouncementDetail);
-    const description = wrapper.find(".mb-3.text-base-content\\/90");
-    expect(description.exists()).toBe(true);
-    expect(description.text()).toBe("Description de l'événement test");
-  });
-});
+  it('should render event description', () => {
+    const wrapper = mount(MockVolunteerAnnouncementDetail)
+    const description = wrapper.find('.mb-3.text-base-content\\/90')
+    expect(description.exists()).toBe(true)
+    expect(description.text()).toBe("Description de l'événement test")
+  })
+})

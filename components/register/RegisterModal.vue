@@ -1,23 +1,23 @@
 <script setup lang="ts">
-const props = defineProps<{
-  isAssociation: boolean;
-}>()
+  const props = defineProps<{
+    isAssociation: boolean
+  }>()
 
-const registerModal = ref<HTMLDialogElement | null>(null)
-const isRegisterMode = ref(false)
+  const registerModal = ref<HTMLDialogElement | null>(null)
+  const isRegisterMode = ref(false)
 
-function handleRegister () {
-  if (registerModal.value) {
-    registerModal.value.showModal()
-    isRegisterMode.value = true
-  } else {
-    console.log('registerModal est null')
+  function handleRegister() {
+    if (registerModal.value) {
+      registerModal.value.showModal()
+      isRegisterMode.value = true
+    } else {
+      console.log('registerModal est null')
+    }
   }
-}
 
-defineExpose({
-  openRegisterModal: handleRegister
-})
+  defineExpose({
+    openRegisterModal: handleRegister
+  })
 </script>
 
 <template>
@@ -30,5 +30,5 @@ defineExpose({
 </template>
 
 <style scoped>
-/* Centrage vertical et horizontal */
+  /* Centrage vertical et horizontal */
 </style>

@@ -22,67 +22,61 @@
         :aria-label="`${percent.toFixed(1)}% complété`"
       />
     </div>
-    <div
-      :id="`progress-description-${uniqueId}`"
-      class="text-xs text-gray-500"
-      aria-live="polite"
-    >
+    <div :id="`progress-description-${uniqueId}`" class="text-xs text-gray-500" aria-live="polite">
       {{ covered }} / {{ planned }} ({{ percent.toFixed(1) }}%)
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+  import { computed } from 'vue'
 
-const props = defineProps<{
-  title: string;
-  covered: number;
-  planned: number;
-}>()
+  const props = defineProps<{
+    title: string
+    covered: number
+    planned: number
+  }>()
 
-// Generate unique ID for accessibility
-const uniqueId = Math.random().toString(36).substr(2, 9)
+  // Generate unique ID for accessibility
+  const uniqueId = Math.random().toString(36).substr(2, 9)
 
-const percent = computed(() =>
-  props.planned ? (props.covered / props.planned) * 100 : 0
-)
+  const percent = computed(() => (props.planned ? (props.covered / props.planned) * 100 : 0))
 </script>
 
 <style scoped>
-/* Amélioration de l'accessibilité pour les barres de progression */
-[role="progressbar"] {
-  position: relative;
-}
-
-[role="progressbar"]:focus-visible {
-  outline: 2px solid #eb5577;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* Amélioration du contraste pour les utilisateurs en mode high-contrast */
-@media (prefers-contrast: more) {
-  .bg-gray-200 {
-    border: 1px solid currentColor;
+  /* Amélioration de l'accessibilité pour les barres de progression */
+  [role='progressbar'] {
+    position: relative;
   }
 
-  .bg-blue-500 {
-    border: 1px solid currentColor;
+  [role='progressbar']:focus-visible {
+    outline: 2px solid #eb5577;
+    outline-offset: 2px;
+    border-radius: 4px;
   }
-}
 
-/* Respect des préférences de réduction de mouvement */
-@media (prefers-reduced-motion: reduce) {
-  .transition-all {
-    transition: none;
-  }
-}
+  /* Amélioration du contraste pour les utilisateurs en mode high-contrast */
+  @media (prefers-contrast: more) {
+    .bg-gray-200 {
+      border: 1px solid currentColor;
+    }
 
-/* Amélioration de la visibilité pour les utilisateurs daltoniens */
-@media (prefers-contrast: more) {
-  .bg-blue-500 {
-    background-color: #000 !important;
+    .bg-blue-500 {
+      border: 1px solid currentColor;
+    }
   }
-}
+
+  /* Respect des préférences de réduction de mouvement */
+  @media (prefers-reduced-motion: reduce) {
+    .transition-all {
+      transition: none;
+    }
+  }
+
+  /* Amélioration de la visibilité pour les utilisateurs daltoniens */
+  @media (prefers-contrast: more) {
+    .bg-blue-500 {
+      background-color: #000 !important;
+    }
+  }
 </style>

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { defineEventHandler, readBody, getCookie } from 'h3'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
   const config = useRuntimeConfig()
   const body = await readBody(event)
@@ -24,10 +24,7 @@ export default defineEventHandler(async (event) => {
     return participantInfo.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la suppression du participant'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la suppression du participant')
     }
   }
 })

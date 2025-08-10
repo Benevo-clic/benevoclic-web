@@ -1,172 +1,146 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import AdminHeader from '~/components/admin/AdminHeader.vue'
-import { useAnnouncement } from '~/composables/useAnnouncement'
+  import { ref, computed, onMounted } from 'vue'
+  import AdminHeader from '~/components/admin/AdminHeader.vue'
+  import { useAnnouncement } from '~/composables/useAnnouncement'
 
-interface AnnouncementRow {
-  _id: string;
-  nameEvent: string;
-  associationName: string;
-  status: 'ACTIVE' | 'INACTIVE' | 'COMPLETED';
-}
-
-const announcement = useAnnouncement()
-
-const announcements = computed<AnnouncementRow[]>(
-  () =>
-    (announcement.getAnnouncements.value || []) as unknown as AnnouncementRow[]
-)
-const displayed = ref<AnnouncementRow[]>([])
-const status = ref<'' | AnnouncementRow['status']>('')
-const loading = computed(() => announcement.loading.value)
-
-// Search by ID
-const searchId = ref('')
-const noResultMsg = ref('')
-
-// Edit modal state
-const isEditOpen = ref(false)
-const editable = ref<Partial<AnnouncementRow> | null>(null)
-
-async function load () {
-  try {
-    await announcement.fetchAllAnnouncements()
-    displayed.value = announcements.value
-    if (status.value) {
-      displayed.value = displayed.value.filter(
-        a => a.status === status.value
-      )
-    }
-    noResultMsg.value = ''
-  } catch (e) {
-    displayed.value = []
+  interface AnnouncementRow {
+    _id: string
+    nameEvent: string
+    associationName: string
+    status: 'ACTIVE' | 'INACTIVE' | 'COMPLETED'
   }
-}
 
-async function reset () {
-  status.value = ''
-  searchId.value = ''
-  noResultMsg.value = ''
-  await load()
-}
+  const announcement = useAnnouncement()
 
-async function searchById () {
-  try {
-    if (!searchId.value) {
-      await load()
-      return
+  const announcements = computed<AnnouncementRow[]>(
+    () => (announcement.getAnnouncements.value || []) as unknown as AnnouncementRow[]
+  )
+  const displayed = ref<AnnouncementRow[]>([])
+  const status = ref<'' | AnnouncementRow['status']>('')
+  const loading = computed(() => announcement.loading.value)
+
+  // Search by ID
+  const searchId = ref('')
+  const noResultMsg = ref('')
+
+  // Edit modal state
+  const isEditOpen = ref(false)
+  const editable = ref<Partial<AnnouncementRow> | null>(null)
+
+  async function load() {
+    try {
+      await announcement.fetchAllAnnouncements()
+      displayed.value = announcements.value
+      if (status.value) {
+        displayed.value = displayed.value.filter(a => a.status === status.value)
+      }
+      noResultMsg.value = ''
+    } catch (e) {
+      displayed.value = []
     }
-    const item = await announcement.fetchAnnouncementById(searchId.value)
-    displayed.value = item ? [item as unknown as AnnouncementRow] : []
-    if (!item) {
+  }
+
+  async function reset() {
+    status.value = ''
+    searchId.value = ''
+    noResultMsg.value = ''
+    await load()
+  }
+
+  async function searchById() {
+    try {
+      if (!searchId.value) {
+        await load()
+        return
+      }
+      const item = await announcement.fetchAnnouncementById(searchId.value)
+      displayed.value = item ? [item as unknown as AnnouncementRow] : []
+      if (!item) {
+        noResultMsg.value = `Aucun résultat pour l'ID ${searchId.value}`
+      }
+    } catch (e) {
+      displayed.value = []
       noResultMsg.value = `Aucun résultat pour l'ID ${searchId.value}`
     }
-  } catch (e) {
-    displayed.value = []
-    noResultMsg.value = `Aucun résultat pour l'ID ${searchId.value}`
   }
-}
 
-async function updateStatus (id: string, newStatus: AnnouncementRow['status']) {
-  try {
-    await announcement.updateStatus(id, newStatus)
-    const row = displayed.value.find(a => a._id === id)
-    if (row) {
-      row.status = newStatus
-    }
-  } catch (e) {
-    console.error('Erreur mise à jour statut annonce:', e)
-  }
-}
-
-function openEdit (a: AnnouncementRow) {
-  editable.value = { ...a }
-  isEditOpen.value = true
-}
-
-async function saveEdit () {
-  if (!editable.value?._id) {
-    return
-  }
-  try {
-    await announcement.updateAnnouncement(
-      editable.value._id as string,
-      {
-        nameEvent: editable.value.nameEvent,
-        status: editable.value.status
-      } as any
-    )
-    const row = displayed.value.find(a => a._id === editable.value?._id)
-    if (row) {
-      if (editable.value.nameEvent) {
-        row.nameEvent = editable.value.nameEvent
+  async function updateStatus(id: string, newStatus: AnnouncementRow['status']) {
+    try {
+      await announcement.updateStatus(id, newStatus)
+      const row = displayed.value.find(a => a._id === id)
+      if (row) {
+        row.status = newStatus
       }
-      if (editable.value.status) {
-        row.status = editable.value.status as AnnouncementRow['status']
-      }
+    } catch (e) {
+      console.error('Erreur mise à jour statut annonce:', e)
     }
-    isEditOpen.value = false
-  } catch (e) {
-    console.error('Erreur lors de la mise à jour:', e)
   }
-}
 
-async function remove (id: string) {
-  if (!confirm('Confirmer la suppression de cette annonce ?')) {
-    return
+  function openEdit(a: AnnouncementRow) {
+    editable.value = { ...a }
+    isEditOpen.value = true
   }
-  try {
-    await announcement.removeAnnouncement(id)
-    displayed.value = displayed.value.filter(a => a._id !== id)
-  } catch (e) {
-    console.error('Erreur lors de la suppression:', e)
-  }
-}
 
-onMounted(async () => {
-  await load()
-})
+  async function saveEdit() {
+    if (!editable.value?._id) {
+      return
+    }
+    try {
+      await announcement.updateAnnouncement(
+        editable.value._id as string,
+        {
+          nameEvent: editable.value.nameEvent,
+          status: editable.value.status
+        } as any
+      )
+      const row = displayed.value.find(a => a._id === editable.value?._id)
+      if (row) {
+        if (editable.value.nameEvent) {
+          row.nameEvent = editable.value.nameEvent
+        }
+        if (editable.value.status) {
+          row.status = editable.value.status as AnnouncementRow['status']
+        }
+      }
+      isEditOpen.value = false
+    } catch (e) {
+      console.error('Erreur lors de la mise à jour:', e)
+    }
+  }
+
+  async function remove(id: string) {
+    if (!confirm('Confirmer la suppression de cette annonce ?')) {
+      return
+    }
+    try {
+      await announcement.removeAnnouncement(id)
+      displayed.value = displayed.value.filter(a => a._id !== id)
+    } catch (e) {
+      console.error('Erreur lors de la suppression:', e)
+    }
+  }
+
+  onMounted(async () => {
+    await load()
+  })
 </script>
 
 <template>
   <div>
     <AdminHeader />
     <section class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-      <h1 class="text-2xl font-bold mb-6">
-        Gestion des annonces
-      </h1>
+      <h1 class="text-2xl font-bold mb-6">Gestion des annonces</h1>
 
       <div class="flex flex-col sm:flex-row gap-2 mb-4">
-        <select
-          v-model="status"
-          class="select select-bordered select-sm w-full sm:w-48"
-        >
-          <option value="">
-            Tous les statuts
-          </option>
-          <option value="ACTIVE">
-            ACTIVE
-          </option>
-          <option value="INACTIVE">
-            INACTIVE
-          </option>
-          <option value="COMPLETED">
-            COMPLETED
-          </option>
+        <select v-model="status" class="select select-bordered select-sm w-full sm:w-48">
+          <option value="">Tous les statuts</option>
+          <option value="ACTIVE">ACTIVE</option>
+          <option value="INACTIVE">INACTIVE</option>
+          <option value="COMPLETED">COMPLETED</option>
         </select>
         <div class="flex gap-2">
-          <button
-            class="btn btn-primary btn-sm"
-            :disabled="loading"
-            @click="load"
-          >
-            Filtrer
-          </button>
-          <button
-            class="btn btn-outline btn-sm"
-            :disabled="loading"
-            @click="reset"
-          >
+          <button class="btn btn-primary btn-sm" :disabled="loading" @click="load">Filtrer</button>
+          <button class="btn btn-outline btn-sm" :disabled="loading" @click="reset">
             Réinitialiser
           </button>
         </div>
@@ -176,10 +150,8 @@ onMounted(async () => {
             class="input input-bordered input-sm"
             placeholder="Rechercher par ID"
             @keyup.enter="searchById"
-          >
-          <button class="btn btn-sm" :disabled="loading" @click="searchById">
-            Chercher
-          </button>
+          />
+          <button class="btn btn-sm" :disabled="loading" @click="searchById">Chercher</button>
         </div>
       </div>
 
@@ -209,30 +181,15 @@ onMounted(async () => {
                 <span class="badge badge-outline">{{ a.status }}</span>
               </td>
               <td class="flex flex-wrap gap-2">
-                <button
-                  class="btn btn-xs"
-                  @click="updateStatus(a._id, 'ACTIVE')"
-                >
-                  ACTIVE
-                </button>
-                <button
-                  class="btn btn-xs"
-                  @click="updateStatus(a._id, 'INACTIVE')"
-                >
+                <button class="btn btn-xs" @click="updateStatus(a._id, 'ACTIVE')">ACTIVE</button>
+                <button class="btn btn-xs" @click="updateStatus(a._id, 'INACTIVE')">
                   INACTIVE
                 </button>
-                <button
-                  class="btn btn-xs"
-                  @click="updateStatus(a._id, 'COMPLETED')"
-                >
+                <button class="btn btn-xs" @click="updateStatus(a._id, 'COMPLETED')">
                   COMPLETED
                 </button>
-                <button class="btn btn-outline btn-xs" @click="openEdit(a)">
-                  Éditer
-                </button>
-                <button class="btn btn-error btn-xs" @click="remove(a._id)">
-                  Supprimer
-                </button>
+                <button class="btn btn-outline btn-xs" @click="openEdit(a)">Éditer</button>
+                <button class="btn btn-error btn-xs" @click="remove(a._id)">Supprimer</button>
               </td>
             </tr>
           </tbody>
@@ -241,7 +198,7 @@ onMounted(async () => {
           v-if="!loading && displayed.length === 0"
           class="text-center py-8 text-base-content/70"
         >
-          {{ noResultMsg || "Aucune annonce" }}
+          {{ noResultMsg || 'Aucune annonce' }}
         </div>
       </div>
     </section>
@@ -249,34 +206,22 @@ onMounted(async () => {
     <!-- Edit Modal -->
     <div v-if="isEditOpen" class="modal modal-open">
       <div class="modal-box max-w-xl">
-        <h3 class="font-bold text-lg mb-4">
-          Modifier l'annonce
-        </h3>
+        <h3 class="font-bold text-lg mb-4">Modifier l'annonce</h3>
         <div class="form-control mb-3">
           <label class="label"><span class="label-text">Nom</span></label>
-          <input v-model="editable!.nameEvent" class="input input-bordered">
+          <input v-model="editable!.nameEvent" class="input input-bordered" />
         </div>
         <div class="form-control mb-3">
           <label class="label"><span class="label-text">Statut</span></label>
           <select v-model="editable!.status" class="select select-bordered">
-            <option value="ACTIVE">
-              ACTIVE
-            </option>
-            <option value="INACTIVE">
-              INACTIVE
-            </option>
-            <option value="COMPLETED">
-              COMPLETED
-            </option>
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="INACTIVE">INACTIVE</option>
+            <option value="COMPLETED">COMPLETED</option>
           </select>
         </div>
         <div class="modal-action">
-          <button class="btn" @click="isEditOpen = false">
-            Annuler
-          </button>
-          <button class="btn btn-primary" @click="saveEdit">
-            Enregistrer
-          </button>
+          <button class="btn" @click="isEditOpen = false">Annuler</button>
+          <button class="btn btn-primary" @click="saveEdit">Enregistrer</button>
         </div>
       </div>
       <div class="modal-backdrop" @click="isEditOpen = false" />
@@ -285,9 +230,9 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-}
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
 </style>

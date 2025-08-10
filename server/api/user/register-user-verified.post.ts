@@ -5,7 +5,7 @@ import { ApiError } from '~/utils/ErrorHandler'
 // Cache pour éviter les appels multiples
 const processingUsers = new Set<string>()
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const body = await readBody(event)
 
@@ -14,9 +14,7 @@ export default defineEventHandler(async (event) => {
 
     // Vérifier si l'utilisateur est déjà en cours de traitement
     if (processingUsers.has(userKey)) {
-      console.log(
-        `[API] User ${body.email} already being processed, skipping...`
-      )
+      console.log(`[API] User ${body.email} already being processed, skipping...`)
       return { uid: body.email, message: 'User already being processed' }
     }
 
@@ -44,8 +42,7 @@ export default defineEventHandler(async (event) => {
     }
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage:
-        error.statusMessage || "Erreur lors de l'enregistrement vérifié"
+      statusMessage: error.statusMessage || "Erreur lors de l'enregistrement vérifié"
     })
   }
 })

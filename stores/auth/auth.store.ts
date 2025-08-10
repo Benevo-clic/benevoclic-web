@@ -8,27 +8,21 @@ import {
   sendPasswordResetEmail
 } from 'firebase/auth'
 import { RoleUser } from '~/common/enums/role.enum'
-import {
-  loginWithGoogle as firebaseLoginWithGoogle,
-  useUserStore
-} from '~/stores/user/user.store'
-import type {
-  RegisterEmailVerifiedResponse,
-  RegisterPayload
-} from '~/common/types/register.type'
+import { loginWithGoogle as firebaseLoginWithGoogle, useUserStore } from '~/stores/user/user.store'
+import type { RegisterEmailVerifiedResponse, RegisterPayload } from '~/common/types/register.type'
 
 interface AuthState {
-  idToken: string | null;
-  refreshToken: string | null;
-  idUser: string | null;
-  isConnected: boolean;
-  email: string;
-  loading: boolean;
-  error: string | null;
-  unsubscribe: (() => void) | null;
-  isVerified: boolean;
-  tempPassword: string;
-  role: RoleUser | null;
+  idToken: string | null
+  refreshToken: string | null
+  idUser: string | null
+  isConnected: boolean
+  email: string
+  loading: boolean
+  error: string | null
+  unsubscribe: (() => void) | null
+  isVerified: boolean
+  tempPassword: string
+  role: RoleUser | null
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -60,7 +54,7 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    hydrate () {
+    hydrate() {
       this.idToken = useCookie('auth_token').value || null
       this.refreshToken = useCookie('refresh_token').value || null
       this.idUser = useCookie('id_user').value || null
@@ -68,7 +62,7 @@ export const useAuthStore = defineStore('auth', {
       this.isConnected = isConnectedRaw === 'true' || isConnectedRaw === true
     },
 
-    async login (payload: { email: string; password: string; role: RoleUser }) {
+    async login(payload: { email: string; password: string; role: RoleUser }) {
       this.loading = true
       this.error = null
 
@@ -76,9 +70,7 @@ export const useAuthStore = defineStore('auth', {
         const $fetch = useRequestFetch()
         if (process.client) {
           try {
-            const { usePermissions } = await import(
-              '~/composables/usePermissions'
-            )
+            const { usePermissions } = await import('~/composables/usePermissions')
             const { hasPermission } = usePermissions()
 
             if (!hasPermission('canAuthenticate')) {
@@ -88,10 +80,7 @@ export const useAuthStore = defineStore('auth', {
             }
           } catch (err) {
             if (process.dev) {
-              console.warn(
-                'Impossible de vérifier les permissions de cookies:',
-                err
-              )
+              console.warn('Impossible de vérifier les permissions de cookies:', err)
             }
           }
         }
@@ -127,17 +116,11 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async goToPageAfterLogin (payload: {
-      role: RoleUser;
-      password: string;
-      email: string;
-    }) {
+    async goToPageAfterLogin(payload: { role: RoleUser; password: string; email: string }) {
       const auth = getAuth()
       const userStore = useUserStore()
       if (!auth.currentUser) {
-        throw new Error(
-          'Aucun utilisateur connecté pour envoyer la vérification par email.'
-        )
+        throw new Error('Aucun utilisateur connecté pour envoyer la vérification par email.')
       }
 
       if (!auth.currentUser?.emailVerified) {
@@ -186,7 +169,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async getPageRole () {
+    async getPageRole() {
       try {
         const userStore = useUserStore()
         await userStore.fetchUser()
@@ -219,25 +202,17 @@ export const useAuthStore = defineStore('auth', {
         }
       } catch (error) {
         if (process.dev) {
-          console.error(
-            "Erreur lors de la récupération de l'utilisateur:",
-            error
-          )
+          console.error("Erreur lors de la récupération de l'utilisateur:", error)
         }
         await this.logout()
       }
     },
 
-    async sendEmailVerification (payload: {
-      role: RoleUser;
-      tempPassword: string;
-    }) {
+    async sendEmailVerification(payload: { role: RoleUser; tempPassword: string }) {
       const auth = getAuth()
 
       if (!auth.currentUser) {
-        throw new Error(
-          'Aucun utilisateur connecté pour envoyer la vérification par email.'
-        )
+        throw new Error('Aucun utilisateur connecté pour envoyer la vérification par email.')
       }
 
       if (auth.currentUser.emailVerified) {
@@ -283,7 +258,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    startEmailVerificationListener (payload: RegisterPayload) {
+    startEmailVerificationListener(payload: RegisterPayload) {
       const auth = getAuth()
 
       // Ajouter un flag pour éviter les appels multiples
@@ -294,7 +269,7 @@ export const useAuthStore = defineStore('auth', {
         return
       }
 
-      this.unsubscribe = onIdTokenChanged(auth, async (user) => {
+      this.unsubscribe = onIdTokenChanged(auth, async user => {
         if (user) {
           await user.reload()
 
@@ -320,10 +295,7 @@ export const useAuthStore = defineStore('auth', {
                 })
               } catch (error) {
                 if (process.dev) {
-                  console.error(
-                    "Erreur lors de l'enregistrement vérifié:",
-                    error
-                  )
+                  console.error("Erreur lors de l'enregistrement vérifié:", error)
                 }
                 this.isVerified = false
                 return
@@ -336,7 +308,7 @@ export const useAuthStore = defineStore('auth', {
         }
       })
     },
-    async callRegisterEmailVerified (payload: RegisterPayload) {
+    async callRegisterEmailVerified(payload: RegisterPayload) {
       // Vérifier si l'appel est déjà en cours
       if (this.loading) {
         if (process.dev) {
@@ -378,7 +350,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async registerWithEmailPassword (payload: RegisterPayload) {
+    async registerWithEmailPassword(payload: RegisterPayload) {
       const auth = getAuth()
       try {
         const userCredential = await createUserWithEmailAndPassword(
@@ -389,10 +361,7 @@ export const useAuthStore = defineStore('auth', {
         await sendEmailVerification(userCredential.user)
 
         if (process.dev) {
-          console.log(
-            '✅ Inscription réussie, email de vérification envoyé',
-            payload
-          )
+          console.log('✅ Inscription réussie, email de vérification envoyé', payload)
         }
         if (process.dev) {
           console.log('Utilisateur créé avec succès:', userCredential.user)
@@ -404,10 +373,7 @@ export const useAuthStore = defineStore('auth', {
           role: payload.role
         })
         if (process.dev) {
-          console.log(
-            '✅ Inscription réussie, email de vérification envoyé',
-            payload
-          )
+          console.log('✅ Inscription réussie, email de vérification envoyé', payload)
         }
         return userCredential.user.emailVerified
       } catch (error: any) {
@@ -417,22 +383,21 @@ export const useAuthStore = defineStore('auth', {
     },
 
     // Nettoyage lors de la destruction du store
-    cleanup () {
+    cleanup() {
       if (this.unsubscribe) {
         this.unsubscribe()
         this.unsubscribe = null
       }
     },
 
-    async forgotPassword (email: string) {
+    async forgotPassword(email: string) {
       this.loading = true
       this.error = null
       try {
         const auth = getAuth()
         await sendPasswordResetEmail(auth, email)
       } catch (e: any) {
-        this.error =
-          e?.message || 'Erreur lors de la réinitialisation du mot de passe'
+        this.error = e?.message || 'Erreur lors de la réinitialisation du mot de passe'
         throw e
       } finally {
         this.loading = false
@@ -440,7 +405,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     // Login Google
-    async loginWithGoogle (
+    async loginWithGoogle(
       role: RoleUser,
       isRegisterMode: boolean = false,
       termsAccepted: boolean = false
@@ -452,9 +417,7 @@ export const useAuthStore = defineStore('auth', {
         // Vérifier les permissions de cookies côté client
         if (process.client) {
           try {
-            const { usePermissions } = await import(
-              '~/composables/usePermissions'
-            )
+            const { usePermissions } = await import('~/composables/usePermissions')
             const { hasPermission } = usePermissions()
 
             if (!hasPermission('canAuthenticate')) {
@@ -463,17 +426,13 @@ export const useAuthStore = defineStore('auth', {
               throw new Error('Cookies essentiels non acceptés')
             }
           } catch (err) {
-            console.warn(
-              'Impossible de vérifier les permissions de cookies:',
-              err
-            )
+            console.warn('Impossible de vérifier les permissions de cookies:', err)
           }
         }
 
         // Vérifier l'acceptation des conditions générales
         if (isRegisterMode && !termsAccepted) {
-          this.error =
-            "Vous devez accepter les conditions générales d'utilisation pour continuer."
+          this.error = "Vous devez accepter les conditions générales d'utilisation pour continuer."
           throw new Error('Conditions générales non acceptées')
         }
 
@@ -505,7 +464,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async callRegisterGoogle (idToken: string, role: RoleUser) {
+    async callRegisterGoogle(idToken: string, role: RoleUser) {
       const $fetch = useRequestFetch()
       await $fetch('/api/user/register-google', {
         method: 'POST',
@@ -515,11 +474,7 @@ export const useAuthStore = defineStore('auth', {
       })
     },
 
-    async fetchUserGoogle (body: {
-      idToken: string;
-      refreshToken: string;
-      uid: string;
-    }) {
+    async fetchUserGoogle(body: { idToken: string; refreshToken: string; uid: string }) {
       const $fetch = useRequestFetch()
       await $fetch(`/api/user/${body.uid}/update-connected/${true}`, {
         method: 'PATCH',
@@ -529,7 +484,7 @@ export const useAuthStore = defineStore('auth', {
       })
     },
 
-    async deleteCookies () {
+    async deleteCookies() {
       try {
         const $fetch = useRequestFetch()
         await $fetch('/api/auth/deleteCookies', {
@@ -557,7 +512,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     // Logout
-    async logout () {
+    async logout() {
       this.loading = true
       this.error = null
       try {
@@ -575,7 +530,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async refreshTokens () {
+    async refreshTokens() {
       try {
         this.error = null
         const $fetch = useRequestFetch()
@@ -589,7 +544,7 @@ export const useAuthStore = defineStore('auth', {
         await this.logout()
       }
     },
-    resetCookies () {
+    resetCookies() {
       const tempPwdCookie = useCookie<string>('tempPassword')
       const roleCookie = useCookie<string>('userRole')
       const emailCookie = useCookie<string>('email')
@@ -606,7 +561,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     // Initialisation globale (à appeler dans le middleware)
-    async initAuth () {
+    async initAuth() {
       this.hydrate()
       if (this.idToken && this.isConnected) {
         // Récupérer les données utilisateur via user. Store

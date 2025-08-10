@@ -6,9 +6,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-base-100 rounded-xl shadow-lg p-6">
           <div class="flex items-center gap-4">
-            <div
-              class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center"
-            >
+            <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6 text-primary"
@@ -28,18 +26,14 @@
               <p class="text-2xl font-bold text-base-content">
                 {{ stats.totalReports }}
               </p>
-              <p class="text-base-content/70">
-                Tickets de support
-              </p>
+              <p class="text-base-content/70">Tickets de support</p>
             </div>
           </div>
         </div>
 
         <div class="bg-base-100 rounded-xl shadow-lg p-6">
           <div class="flex items-center gap-4">
-            <div
-              class="w-12 h-12 bg-warning/10 rounded-xl flex items-center justify-center"
-            >
+            <div class="w-12 h-12 bg-warning/10 rounded-xl flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6 text-warning"
@@ -59,18 +53,14 @@
               <p class="text-2xl font-bold text-base-content">
                 {{ stats.pendingReports }}
               </p>
-              <p class="text-base-content/70">
-                En attente
-              </p>
+              <p class="text-base-content/70">En attente</p>
             </div>
           </div>
         </div>
 
         <div class="bg-base-100 rounded-xl shadow-lg p-6">
           <div class="flex items-center gap-4">
-            <div
-              class="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center"
-            >
+            <div class="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6 text-success"
@@ -90,9 +80,7 @@
               <p class="text-2xl font-bold text-base-content">
                 {{ stats.resolvedReports }}
               </p>
-              <p class="text-base-content/70">
-                Résolus
-              </p>
+              <p class="text-base-content/70">Résolus</p>
             </div>
           </div>
         </div>
@@ -100,60 +88,28 @@
 
       <div class="bg-base-100 rounded-xl shadow-lg p-6">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-xl font-bold text-base-content">
-            Tickets de support
-          </h2>
-          <button
-            class="btn btn-primary btn-sm"
-            :disabled="loading"
-            @click="refreshReports"
-          >
+          <h2 class="text-xl font-bold text-base-content">Tickets de support</h2>
+          <button class="btn btn-primary btn-sm" :disabled="loading" @click="refreshReports">
             <span v-if="loading" class="loading loading-spinner loading-sm" />
             Actualiser
           </button>
         </div>
 
         <div class="flex gap-4 mb-6">
-          <select
-            v-model="filter.status"
-            class="select select-bordered select-sm"
-          >
-            <option value="">
-              Tous les statuts
-            </option>
-            <option value="PENDING">
-              En attente
-            </option>
-            <option value="IN_PROGRESS">
-              En cours
-            </option>
-            <option value="RESOLVED">
-              Résolu
-            </option>
-            <option value="REJECTED">
-              Rejeté
-            </option>
+          <select v-model="filter.status" class="select select-bordered select-sm">
+            <option value="">Tous les statuts</option>
+            <option value="PENDING">En attente</option>
+            <option value="IN_PROGRESS">En cours</option>
+            <option value="RESOLVED">Résolu</option>
+            <option value="REJECTED">Rejeté</option>
           </select>
 
-          <select
-            v-model="filter.type"
-            class="select select-bordered select-sm"
-          >
-            <option value="">
-              Tous les types
-            </option>
-            <option value="ANNOUNCEMENT">
-              Annonce
-            </option>
-            <option value="TECHNICAL">
-              Technique
-            </option>
-            <option value="USER_FEEDBACK">
-              Feedback
-            </option>
-            <option value="OTHER">
-              Autre
-            </option>
+          <select v-model="filter.type" class="select select-bordered select-sm">
+            <option value="">Tous les types</option>
+            <option value="ANNOUNCEMENT">Annonce</option>
+            <option value="TECHNICAL">Technique</option>
+            <option value="USER_FEEDBACK">Feedback</option>
+            <option value="OTHER">Autre</option>
           </select>
 
           <div class="flex items-center gap-2 ml-auto">
@@ -162,15 +118,9 @@
               class="input input-bordered input-sm"
               placeholder="Rechercher par ID"
               @keyup.enter="searchById"
-            >
-            <button class="btn btn-sm" :disabled="loading" @click="searchById">
-              Chercher
-            </button>
-            <button
-              class="btn btn-outline btn-sm"
-              :disabled="loading"
-              @click="resetSearch"
-            >
+            />
+            <button class="btn btn-sm" :disabled="loading" @click="searchById">Chercher</button>
+            <button class="btn btn-outline btn-sm" :disabled="loading" @click="resetSearch">
               Réinitialiser
             </button>
           </div>
@@ -202,19 +152,13 @@
                   {{ report.description }}
                 </td>
                 <td>
-                  <span
-                    class="badge"
-                    :class="getStatusBadgeClass(report.status)"
-                  >{{ report.status }}</span>
+                  <span class="badge" :class="getStatusBadgeClass(report.status)">{{
+                    report.status
+                  }}</span>
                 </td>
                 <td>{{ formatDate(report.createdAt) }}</td>
                 <td>
-                  <button
-                    class="btn btn-sm btn-primary"
-                    @click="viewReport(report)"
-                  >
-                    Voir
-                  </button>
+                  <button class="btn btn-sm btn-primary" @click="viewReport(report)">Voir</button>
                 </td>
               </tr>
             </tbody>
@@ -241,7 +185,7 @@
             </svg>
           </div>
           <p class="text-base-content/60">
-            {{ noResultMsg || "Aucun ticket trouvé" }}
+            {{ noResultMsg || 'Aucun ticket trouvé' }}
           </p>
         </div>
       </div>
@@ -252,10 +196,7 @@
             <h3 class="text-xl font-bold text-base-content">
               Ticket #{{ selectedReport._id?.slice(-8) }}
             </h3>
-            <button
-              class="btn btn-sm btn-circle btn-ghost"
-              @click="selectedReport = null"
-            >
+            <button class="btn btn-sm btn-circle btn-ghost" @click="selectedReport = null">
               ✕
             </button>
           </div>
@@ -263,20 +204,13 @@
           <div class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h4 class="font-semibold mb-2">
-                  Informations
-                </h4>
+                <h4 class="font-semibold mb-2">Informations</h4>
                 <div class="space-y-2 text-sm">
                   <div><strong>Type:</strong> {{ selectedReport.type }}</div>
-                  <div>
-                    <strong>Catégorie:</strong> {{ selectedReport.category }}
-                  </div>
+                  <div><strong>Catégorie:</strong> {{ selectedReport.category }}</div>
                   <div>
                     <strong>Statut:</strong>
-                    <span
-                      class="badge ml-2"
-                      :class="getStatusBadgeClass(selectedReport.status)"
-                    >
+                    <span class="badge ml-2" :class="getStatusBadgeClass(selectedReport.status)">
                       {{ selectedReport.status }}
                     </span>
                   </div>
@@ -288,30 +222,26 @@
               </div>
 
               <div>
-                <h4 class="font-semibold mb-2">
-                  Utilisateur
-                </h4>
+                <h4 class="font-semibold mb-2">Utilisateur</h4>
                 <div class="space-y-2 text-sm">
                   <div>
                     <strong>Email:</strong>
-                    {{ selectedReport.userEmail || "Non renseigné" }}
+                    {{ selectedReport.userEmail || 'Non renseigné' }}
                   </div>
                   <div>
                     <strong>Page:</strong>
-                    {{ selectedReport.pageUrl || "Non renseigné" }}
+                    {{ selectedReport.pageUrl || 'Non renseigné' }}
                   </div>
                   <div>
                     <strong>Navigateur:</strong>
-                    {{ selectedReport.browserInfo || "Non renseigné" }}
+                    {{ selectedReport.browserInfo || 'Non renseigné' }}
                   </div>
                 </div>
               </div>
             </div>
 
             <div>
-              <h4 class="font-semibold mb-2">
-                Description
-              </h4>
+              <h4 class="font-semibold mb-2">Description</h4>
               <div class="bg-base-200 rounded-lg p-4">
                 {{ selectedReport.description }}
               </div>
@@ -349,166 +279,159 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import type { SupportReport } from '~/stores/admin/admin.store'
-import AdminHeader from '~/components/admin/AdminHeader.vue'
-import { useAdmin } from '~/composables/useAdmin'
+  import { ref, computed, onMounted } from 'vue'
+  import type { SupportReport } from '~/stores/admin/admin.store'
+  import AdminHeader from '~/components/admin/AdminHeader.vue'
+  import { useAdmin } from '~/composables/useAdmin'
 
-const admin = useAdmin()
+  const admin = useAdmin()
 
-const loading = computed(() => admin.loading.value)
-const displayed = ref<SupportReport[]>([])
-const reports = computed<SupportReport[]>(() => admin.reports.value)
-const selectedReport = ref<SupportReport | null>(null)
-const stats = ref({ totalReports: 0, pendingReports: 0, resolvedReports: 0 })
+  const loading = computed(() => admin.loading.value)
+  const displayed = ref<SupportReport[]>([])
+  const reports = computed<SupportReport[]>(() => admin.reports.value)
+  const selectedReport = ref<SupportReport | null>(null)
+  const stats = ref({ totalReports: 0, pendingReports: 0, resolvedReports: 0 })
 
-const filter = ref<{
-  status: SupportReport['status'] | '';
-  type: SupportReport['type'] | '';
-}>({ status: '', type: '' })
-const searchId = ref('')
-const noResultMsg = ref<string>('')
+  const filter = ref<{
+    status: SupportReport['status'] | ''
+    type: SupportReport['type'] | ''
+  }>({ status: '', type: '' })
+  const searchId = ref('')
+  const noResultMsg = ref<string>('')
 
-const filteredReports = computed<SupportReport[]>(() => {
-  let list = displayed.value
-  if (filter.value.status) {
-    list = list.filter(r => r.status === filter.value.status)
-  }
-  if (filter.value.type) {
-    list = list.filter(r => r.type === filter.value.type)
-  }
-  return list
-})
-
-async function loadReports () {
-  await admin.fetchReports()
-  displayed.value = reports.value
-  noResultMsg.value = ''
-  updateStats()
-}
-
-function updateStats () {
-  stats.value.totalReports = filteredReports.value.length
-  stats.value.pendingReports = filteredReports.value.filter(
-    r => r.status === 'PENDING'
-  ).length
-  stats.value.resolvedReports = filteredReports.value.filter(
-    r => r.status === 'RESOLVED'
-  ).length
-}
-
-async function refreshReports () {
-  await loadReports()
-}
-
-function viewReport (report: SupportReport) {
-  selectedReport.value = report
-}
-
-async function updateStatus (
-  reportId: string,
-  newStatus: SupportReport['status']
-) {
-  try {
-    await admin.updateReportStatus(reportId, newStatus)
-    const row = displayed.value.find(r => r._id === reportId)
-    if (row) {
-      row.status = newStatus
+  const filteredReports = computed<SupportReport[]>(() => {
+    let list = displayed.value
+    if (filter.value.status) {
+      list = list.filter(r => r.status === filter.value.status)
     }
-    if (selectedReport.value && selectedReport.value._id === reportId) {
-      selectedReport.value.status = newStatus
+    if (filter.value.type) {
+      list = list.filter(r => r.type === filter.value.type)
     }
-    updateStats()
-  } catch (error) {
-    console.error('Erreur lors de la mise à jour du statut:', error)
-  }
-}
-
-async function searchById () {
-  try {
-    if (!searchId.value) {
-      await loadReports()
-      return
-    }
-    const report = await admin.fetchReportById(searchId.value)
-    displayed.value = report ? [report] : []
-    updateStats()
-    if (!report) {
-      noResultMsg.value = `Aucun résultat pour l'ID ${searchId.value}`
-      console.warn('Ticket non trouvé pour ID:', searchId.value)
-    }
-  } catch (e) {
-    displayed.value = []
-    updateStats()
-    noResultMsg.value = `Aucun résultat pour l'ID ${searchId.value}`
-  }
-}
-
-function resetSearch () {
-  searchId.value = ''
-  noResultMsg.value = ''
-  displayed.value = reports.value
-  updateStats()
-}
-
-function getStatusBadgeClass (status: SupportReport['status']) {
-  switch (status) {
-    case 'PENDING':
-      return 'badge-warning'
-    case 'IN_PROGRESS':
-      return 'badge-info'
-    case 'RESOLVED':
-      return 'badge-success'
-    case 'REJECTED':
-      return 'badge-neutral'
-    default:
-      return 'badge-primary'
-  }
-}
-
-function formatDate (dateString?: string) {
-  if (!dateString) {
-    return 'N/A'
-  }
-  return new Date(dateString).toLocaleDateString('fr-FR', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+    return list
   })
-}
 
-onMounted(async () => {
-  await loadReports()
-})
+  async function loadReports() {
+    await admin.fetchReports()
+    displayed.value = reports.value
+    noResultMsg.value = ''
+    updateStats()
+  }
 
-definePageMeta({
-  middleware: ['auth']
-})
+  function updateStats() {
+    stats.value.totalReports = filteredReports.value.length
+    stats.value.pendingReports = filteredReports.value.filter(r => r.status === 'PENDING').length
+    stats.value.resolvedReports = filteredReports.value.filter(r => r.status === 'RESOLVED').length
+  }
+
+  async function refreshReports() {
+    await loadReports()
+  }
+
+  function viewReport(report: SupportReport) {
+    selectedReport.value = report
+  }
+
+  async function updateStatus(reportId: string, newStatus: SupportReport['status']) {
+    try {
+      await admin.updateReportStatus(reportId, newStatus)
+      const row = displayed.value.find(r => r._id === reportId)
+      if (row) {
+        row.status = newStatus
+      }
+      if (selectedReport.value && selectedReport.value._id === reportId) {
+        selectedReport.value.status = newStatus
+      }
+      updateStats()
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du statut:', error)
+    }
+  }
+
+  async function searchById() {
+    try {
+      if (!searchId.value) {
+        await loadReports()
+        return
+      }
+      const report = await admin.fetchReportById(searchId.value)
+      displayed.value = report ? [report] : []
+      updateStats()
+      if (!report) {
+        noResultMsg.value = `Aucun résultat pour l'ID ${searchId.value}`
+        console.warn('Ticket non trouvé pour ID:', searchId.value)
+      }
+    } catch (e) {
+      displayed.value = []
+      updateStats()
+      noResultMsg.value = `Aucun résultat pour l'ID ${searchId.value}`
+    }
+  }
+
+  function resetSearch() {
+    searchId.value = ''
+    noResultMsg.value = ''
+    displayed.value = reports.value
+    updateStats()
+  }
+
+  function getStatusBadgeClass(status: SupportReport['status']) {
+    switch (status) {
+      case 'PENDING':
+        return 'badge-warning'
+      case 'IN_PROGRESS':
+        return 'badge-info'
+      case 'RESOLVED':
+        return 'badge-success'
+      case 'REJECTED':
+        return 'badge-neutral'
+      default:
+        return 'badge-primary'
+    }
+  }
+
+  function formatDate(dateString?: string) {
+    if (!dateString) {
+      return 'N/A'
+    }
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
+  onMounted(async () => {
+    await loadReports()
+  })
+
+  definePageMeta({
+    middleware: ['auth']
+  })
 </script>
 
 <style scoped>
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-}
-.modal {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.modal-box {
-  background: var(--fallback-b1, oklch(var(--b1) / 1));
-  border-radius: 0.5rem;
-  box-shadow:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  max-height: 90vh;
-  overflow-y: auto;
-}
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-box {
+    background: var(--fallback-b1, oklch(var(--b1) / 1));
+    border-radius: 0.5rem;
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
 </style>

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-const emit = defineEmits(['changeLanguage'])
-const props = defineProps<{
-  showLanguageMenu: boolean;
-}>()
-const changeLanguage = (lang: string, flag: string) => {
-  emit('changeLanguage', lang, flag)
-}
+  const emit = defineEmits(['changeLanguage'])
+  const props = defineProps<{
+    showLanguageMenu: boolean
+  }>()
+  const changeLanguage = (lang: string, flag: string) => {
+    emit('changeLanguage', lang, flag)
+  }
 </script>
 
 <template>
@@ -15,19 +15,13 @@ const changeLanguage = (lang: string, flag: string) => {
   >
     <ul class="menu menu-compact">
       <li>
-        <button class="w-full text-left" @click="changeLanguage('fr', '🇫🇷')">
-          🇫🇷 Français
-        </button>
+        <button class="w-full text-left" @click="changeLanguage('fr', '🇫🇷')">🇫🇷 Français</button>
       </li>
       <li>
-        <button class="w-full text-left" @click="changeLanguage('en', '🇬🇧')">
-          🇬🇧 English
-        </button>
+        <button class="w-full text-left" @click="changeLanguage('en', '🇬🇧')">🇬🇧 English</button>
       </li>
       <li>
-        <button class="w-full text-left" @click="changeLanguage('es', '🇪🇸')">
-          🇪🇸 Español
-        </button>
+        <button class="w-full text-left" @click="changeLanguage('es', '🇪🇸')">🇪🇸 Español</button>
       </li>
     </ul>
   </div>

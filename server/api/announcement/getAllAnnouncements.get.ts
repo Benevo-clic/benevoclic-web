@@ -7,21 +7,15 @@ export default defineEventHandler(async () => {
   const config = useRuntimeConfig()
 
   try {
-    const response = await axios.get<Announcement>(
-      `${config.private.api_base_url}/announcements`,
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        }
+    const response = await axios.get<Announcement>(`${config.private.api_base_url}/announcements`, {
+      headers: {
+        'Content-Type': 'application/json'
       }
-    )
+    })
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
-        error,
-        'Erreur lors de la récupération des annonces'
-      )
+      ApiError.handleAxios(error, 'Erreur lors de la récupération des annonces')
     }
   }
 })

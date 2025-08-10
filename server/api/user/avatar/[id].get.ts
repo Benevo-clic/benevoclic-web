@@ -2,7 +2,7 @@ import { defineEventHandler, createError, getCookie } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
     const { id } = event.context.params || {}
 
@@ -26,8 +26,7 @@ export default defineEventHandler(async (event) => {
     }
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage:
-        error.statusMessage || "Erreur lors de la récupération de l'avatar"
+      statusMessage: error.statusMessage || "Erreur lors de la récupération de l'avatar"
     })
   }
 })

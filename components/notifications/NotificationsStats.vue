@@ -2,7 +2,7 @@
   <div class="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6">
     <div class="flex items-center justify-between mb-6">
       <h3 class="text-lg font-semibold text-base-content">
-        {{ $t("notifications.statistics") }}
+        {{ $t('notifications.statistics') }}
       </h3>
       <div class="flex gap-2">
         <button
@@ -15,7 +15,7 @@
           focus:ring-offset-2
           @click="timeRange = 'week'"
         >
-          {{ $t("notifications.stats.week") }}
+          {{ $t('notifications.stats.week') }}
         </button>
         <button
           class="btn btn-xs"
@@ -27,7 +27,7 @@
           focus:ring-offset-2
           @click="timeRange = 'month'"
         >
-          {{ $t("notifications.stats.month") }}
+          {{ $t('notifications.stats.month') }}
         </button>
       </div>
     </div>
@@ -41,7 +41,7 @@
           {{ stats.total }}
         </div>
         <div class="stat-desc text-sm text-base-content/70">
-          {{ $t("notifications.total_notifications") }}
+          {{ $t('notifications.total_notifications') }}
         </div>
         <div class="stat-desc text-xs text-success mt-1">
           <TrendingUp class="w-3 h-3 inline mr-1" />
@@ -56,11 +56,11 @@
           {{ stats.unread }}
         </div>
         <div class="stat-desc text-sm text-base-content/70">
-          {{ $t("notifications.unread_notifications") }}
+          {{ $t('notifications.unread_notifications') }}
         </div>
         <div class="stat-desc text-xs text-warning mt-1">
           <AlertCircle class="w-3 h-3 inline mr-1" />
-          {{ $t("notifications.stats.requires_attention") }}
+          {{ $t('notifications.stats.requires_attention') }}
         </div>
       </div>
 
@@ -71,11 +71,11 @@
           {{ stats.today }}
         </div>
         <div class="stat-desc text-sm text-base-content/70">
-          {{ $t("notifications.today") }}
+          {{ $t('notifications.today') }}
         </div>
         <div class="stat-desc text-xs text-success mt-1">
           <Clock class="w-3 h-3 inline mr-1" />
-          {{ $t("notifications.stats.recent") }}
+          {{ $t('notifications.stats.recent') }}
         </div>
       </div>
     </div>
@@ -83,7 +83,7 @@
     <!-- Répartition par type -->
     <div class="mb-6">
       <h4 class="text-md font-medium text-base-content mb-3">
-        {{ $t("notifications.stats.by_type") }}
+        {{ $t('notifications.stats.by_type') }}
       </h4>
       <div class="space-y-2">
         <div
@@ -96,11 +96,7 @@
               class="w-8 h-8 rounded-full flex items-center justify-center"
               :class="type.bgColor"
             >
-              <component
-                :is="type.icon"
-                class="w-4 h-4"
-                :class="type.iconColor"
-              />
+              <component :is="type.icon" class="w-4 h-4" :class="type.iconColor" />
             </div>
             <div>
               <div class="font-medium text-base-content">
@@ -115,9 +111,7 @@
             <div class="font-semibold text-base-content">
               {{ type.count }}
             </div>
-            <div class="text-xs text-base-content/50">
-              {{ type.percentage }}%
-            </div>
+            <div class="text-xs text-base-content/50">{{ type.percentage }}%</div>
           </div>
         </div>
       </div>
@@ -126,7 +120,7 @@
     <!-- Activité récente -->
     <div>
       <h4 class="text-md font-medium text-base-content mb-3">
-        {{ $t("notifications.stats.recent_activity") }}
+        {{ $t('notifications.stats.recent_activity') }}
       </h4>
       <div class="space-y-2">
         <div
@@ -150,168 +144,168 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import {
-  TrendingUp,
-  AlertCircle,
-  Clock,
-  MessageSquare,
-  Calendar,
-  Award,
-  MapPin,
-  Bell
-} from 'lucide-vue-next'
+  import { ref, computed, watch } from 'vue'
+  import {
+    TrendingUp,
+    AlertCircle,
+    Clock,
+    MessageSquare,
+    Calendar,
+    Award,
+    MapPin,
+    Bell
+  } from 'lucide-vue-next'
 
-// Props
-const props = defineProps<{
-  notifications: any[];
-}>()
+  // Props
+  const props = defineProps<{
+    notifications: any[]
+  }>()
 
-// State
-const timeRange = ref<'week' | 'month'>('week')
+  // State
+  const timeRange = ref<'week' | 'month'>('week')
 
-// Computed
-const stats = computed(() => {
-  const total = props.notifications.length
-  const unread = props.notifications.filter(n => !n.read).length
-  const today = props.notifications.filter((n) => {
-    const today = new Date()
-    const notificationDate = new Date(n.date)
-    return notificationDate.toDateString() === today.toDateString()
-  }).length
+  // Computed
+  const stats = computed(() => {
+    const total = props.notifications.length
+    const unread = props.notifications.filter(n => !n.read).length
+    const today = props.notifications.filter(n => {
+      const today = new Date()
+      const notificationDate = new Date(n.date)
+      return notificationDate.toDateString() === today.toDateString()
+    }).length
 
-  // Calculer l'augmentation (mock data)
-  const increase = Math.floor(Math.random() * 20) + 5
+    // Calculer l'augmentation (mock data)
+    const increase = Math.floor(Math.random() * 20) + 5
 
-  return { total, unread, today, increase }
-})
-
-const typeStats = computed(() => {
-  const types = ['message', 'event', 'mission', 'achievement', 'alert']
-  const total = props.notifications.length
-
-  return types
-    .map((type) => {
-      const count = props.notifications.filter(n => n.type === type).length
-      const percentage = total > 0 ? Math.round((count / total) * 100) : 0
-
-      const typeConfig = {
-        message: {
-          name: 'Messages',
-          icon: MessageSquare,
-          bgColor: 'bg-info/20',
-          iconColor: 'text-info'
-        },
-        event: {
-          name: 'Événements',
-          icon: Calendar,
-          bgColor: 'bg-primary/20',
-          iconColor: 'text-primary'
-        },
-        mission: {
-          name: 'Missions',
-          icon: MapPin,
-          bgColor: 'bg-accent/20',
-          iconColor: 'text-accent'
-        },
-        achievement: {
-          name: 'Réalisations',
-          icon: Award,
-          bgColor: 'bg-success/20',
-          iconColor: 'text-success'
-        },
-        alert: {
-          name: 'Alertes',
-          icon: AlertCircle,
-          bgColor: 'bg-warning/20',
-          iconColor: 'text-warning'
-        }
-      }[type] || {
-        name: 'Autres',
-        icon: Bell,
-        bgColor: 'bg-base-300',
-        iconColor: 'text-base-content'
-      }
-
-      return {
-        name: typeConfig.name,
-        description: `${count} notification${count !== 1 ? 's' : ''}`,
-        count,
-        percentage,
-        icon: typeConfig.icon,
-        bgColor: typeConfig.bgColor,
-        iconColor: typeConfig.iconColor
-      }
-    })
-    .filter(item => item.count > 0)
-})
-
-const recentActivity = computed(() => {
-  // Simuler une activité récente basée sur les notifications
-  const activities = []
-
-  if (stats.value.unread > 0) {
-    activities.push({
-      id: 1,
-      description: `${stats.value.unread} notification${stats.value.unread !== 1 ? 's' : ''} non lue${stats.value.unread !== 1 ? 's' : ''}`,
-      time: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
-      color: 'bg-warning'
-    })
-  }
-
-  if (stats.value.today > 0) {
-    activities.push({
-      id: 2,
-      description: `${stats.value.today} notification${stats.value.today !== 1 ? 's' : ''} reçue${stats.value.today !== 1 ? 's' : ''} aujourd'hui`,
-      time: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-      color: 'bg-success'
-    })
-  }
-
-  activities.push({
-    id: 3,
-    description: 'Dernière actualisation',
-    time: new Date(),
-    color: 'bg-info'
+    return { total, unread, today, increase }
   })
 
-  return activities.slice(0, 3)
-})
+  const typeStats = computed(() => {
+    const types = ['message', 'event', 'mission', 'achievement', 'alert']
+    const total = props.notifications.length
 
-// Methods
-function formatTime (date: Date): string {
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffMins = Math.floor(diffMs / (1000 * 60))
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
+    return types
+      .map(type => {
+        const count = props.notifications.filter(n => n.type === type).length
+        const percentage = total > 0 ? Math.round((count / total) * 100) : 0
 
-  if (diffMins < 60) {
-    return `Il y a ${diffMins} minute${diffMins !== 1 ? 's' : ''}`
-  } else if (diffHours < 24) {
-    return `Il y a ${diffHours} heure${diffHours !== 1 ? 's' : ''}`
-  } else {
-    return date.toLocaleDateString('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
+        const typeConfig = {
+          message: {
+            name: 'Messages',
+            icon: MessageSquare,
+            bgColor: 'bg-info/20',
+            iconColor: 'text-info'
+          },
+          event: {
+            name: 'Événements',
+            icon: Calendar,
+            bgColor: 'bg-primary/20',
+            iconColor: 'text-primary'
+          },
+          mission: {
+            name: 'Missions',
+            icon: MapPin,
+            bgColor: 'bg-accent/20',
+            iconColor: 'text-accent'
+          },
+          achievement: {
+            name: 'Réalisations',
+            icon: Award,
+            bgColor: 'bg-success/20',
+            iconColor: 'text-success'
+          },
+          alert: {
+            name: 'Alertes',
+            icon: AlertCircle,
+            bgColor: 'bg-warning/20',
+            iconColor: 'text-warning'
+          }
+        }[type] || {
+          name: 'Autres',
+          icon: Bell,
+          bgColor: 'bg-base-300',
+          iconColor: 'text-base-content'
+        }
+
+        return {
+          name: typeConfig.name,
+          description: `${count} notification${count !== 1 ? 's' : ''}`,
+          count,
+          percentage,
+          icon: typeConfig.icon,
+          bgColor: typeConfig.bgColor,
+          iconColor: typeConfig.iconColor
+        }
+      })
+      .filter(item => item.count > 0)
+  })
+
+  const recentActivity = computed(() => {
+    // Simuler une activité récente basée sur les notifications
+    const activities = []
+
+    if (stats.value.unread > 0) {
+      activities.push({
+        id: 1,
+        description: `${stats.value.unread} notification${stats.value.unread !== 1 ? 's' : ''} non lue${stats.value.unread !== 1 ? 's' : ''}`,
+        time: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
+        color: 'bg-warning'
+      })
+    }
+
+    if (stats.value.today > 0) {
+      activities.push({
+        id: 2,
+        description: `${stats.value.today} notification${stats.value.today !== 1 ? 's' : ''} reçue${stats.value.today !== 1 ? 's' : ''} aujourd'hui`,
+        time: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
+        color: 'bg-success'
+      })
+    }
+
+    activities.push({
+      id: 3,
+      description: 'Dernière actualisation',
+      time: new Date(),
+      color: 'bg-info'
     })
-  }
-}
 
-// Watchers
-watch(timeRange, (newRange) => {
-  // Ici, vous pourriez filtrer les données selon la période sélectionnée
-  console.log('Période sélectionnée:', newRange)
-})
+    return activities.slice(0, 3)
+  })
+
+  // Methods
+  function formatTime(date: Date): string {
+    const now = new Date()
+    const diffMs = now.getTime() - date.getTime()
+    const diffMins = Math.floor(diffMs / (1000 * 60))
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
+
+    if (diffMins < 60) {
+      return `Il y a ${diffMins} minute${diffMins !== 1 ? 's' : ''}`
+    } else if (diffHours < 24) {
+      return `Il y a ${diffHours} heure${diffHours !== 1 ? 's' : ''}`
+    } else {
+      return date.toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    }
+  }
+
+  // Watchers
+  watch(timeRange, newRange => {
+    // Ici, vous pourriez filtrer les données selon la période sélectionnée
+    console.log('Période sélectionnée:', newRange)
+  })
 </script>
 
 <style scoped>
-.stat {
-  transition: all 0.2s ease-in-out;
-}
+  .stat {
+    transition: all 0.2s ease-in-out;
+  }
 
-.stat:hover {
-  transform: translateY(-2px);
-}
+  .stat:hover {
+    transform: translateY(-2px);
+  }
 </style>

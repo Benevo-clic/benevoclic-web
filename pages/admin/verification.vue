@@ -1,66 +1,64 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useUser } from '~/composables/auth/useUser'
+  import { ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { useUser } from '~/composables/auth/useUser'
 
-interface StatusMessage {
-  type: 'success' | 'warning' | 'error';
-  text: string;
-}
-
-const router = useRouter()
-const userUse = useUser()
-const refreshing = ref(false)
-const statusMessage = ref<StatusMessage | null>(null)
-
-async function refreshPage () {
-  refreshing.value = true
-  statusMessage.value = null
-
-  try {
-    // Appeler l'API pour vérifier le statut d'approbation
-    const response = await userUse.checkAdminApprovalStatus()
-
-    if (response) {
-      statusMessage.value = {
-        type: 'success',
-        text: 'Votre compte est approuvé ! Vous allez être redirigé vers le dashboard.'
-      }
-
-      // Rediriger vers le dashboard après un délai
-      setTimeout(() => {
-        router.push('/admin')
-      }, 2000)
-    } else {
-      statusMessage.value = {
-        type: 'warning',
-        text: "Votre compte n'a pas encore été approuvé. Veuillez patienter ou contacter un super administrateur."
-      }
-    }
-  } catch (error: any) {
-    console.error('Erreur lors de la vérification:', error)
-    statusMessage.value = {
-      type: 'error',
-      text:
-        error?.data?.message ||
-        'Erreur lors de la vérification. Veuillez réessayer.'
-    }
-  } finally {
-    refreshing.value = false
+  interface StatusMessage {
+    type: 'success' | 'warning' | 'error'
+    text: string
   }
-}
 
-function goToLogin () {
-  router.push('/admin/login')
-}
+  const router = useRouter()
+  const userUse = useUser()
+  const refreshing = ref(false)
+  const statusMessage = ref<StatusMessage | null>(null)
 
-function goToHome () {
-  router.push('/')
-}
+  async function refreshPage() {
+    refreshing.value = true
+    statusMessage.value = null
 
-definePageMeta({
-  title: 'Vérification Admin'
-})
+    try {
+      // Appeler l'API pour vérifier le statut d'approbation
+      const response = await userUse.checkAdminApprovalStatus()
+
+      if (response) {
+        statusMessage.value = {
+          type: 'success',
+          text: 'Votre compte est approuvé ! Vous allez être redirigé vers le dashboard.'
+        }
+
+        // Rediriger vers le dashboard après un délai
+        setTimeout(() => {
+          router.push('/admin')
+        }, 2000)
+      } else {
+        statusMessage.value = {
+          type: 'warning',
+          text: "Votre compte n'a pas encore été approuvé. Veuillez patienter ou contacter un super administrateur."
+        }
+      }
+    } catch (error: any) {
+      console.error('Erreur lors de la vérification:', error)
+      statusMessage.value = {
+        type: 'error',
+        text: error?.data?.message || 'Erreur lors de la vérification. Veuillez réessayer.'
+      }
+    } finally {
+      refreshing.value = false
+    }
+  }
+
+  function goToLogin() {
+    router.push('/admin/login')
+  }
+
+  function goToHome() {
+    router.push('/')
+  }
+
+  definePageMeta({
+    title: 'Vérification Admin'
+  })
 </script>
 
 <template>
@@ -88,14 +86,11 @@ definePageMeta({
             </svg>
           </div>
 
-          <h1 class="text-2xl font-bold text-base-content mb-3">
-            Compte en attente d'approbation
-          </h1>
+          <h1 class="text-2xl font-bold text-base-content mb-3">Compte en attente d'approbation</h1>
 
           <p class="text-base-content/70 leading-relaxed">
-            Votre compte administrateur a été créé avec succès, mais il
-            nécessite une approbation par un super administrateur avant de
-            pouvoir accéder au dashboard.
+            Votre compte administrateur a été créé avec succès, mais il nécessite une approbation
+            par un super administrateur avant de pouvoir accéder au dashboard.
           </p>
         </div>
 
@@ -117,14 +112,10 @@ definePageMeta({
               />
             </svg>
             <div>
-              <h3 class="font-semibold text-base-content mb-1">
-                Que se passe-t-il maintenant ?
-              </h3>
+              <h3 class="font-semibold text-base-content mb-1">Que se passe-t-il maintenant ?</h3>
               <ul class="text-sm text-base-content/70 space-y-1">
                 <li>• Un super administrateur va examiner votre demande</li>
-                <li>
-                  • Vous recevrez une notification par email une fois approuvé
-                </li>
+                <li>• Vous recevrez une notification par email une fois approuvé</li>
                 <li>• Vous pourrez alors vous connecter normalement</li>
               </ul>
             </div>
@@ -133,15 +124,8 @@ definePageMeta({
 
         <!-- Actions -->
         <div class="space-y-4">
-          <button
-            class="btn btn-primary w-full"
-            :disabled="refreshing"
-            @click="refreshPage"
-          >
-            <span
-              v-if="refreshing"
-              class="loading loading-spinner loading-sm"
-            />
+          <button class="btn btn-primary w-full" :disabled="refreshing" @click="refreshPage">
+            <span v-if="refreshing" class="loading loading-spinner loading-sm" />
             <svg
               v-else
               xmlns="http://www.w3.org/2000/svg"
@@ -157,9 +141,7 @@ definePageMeta({
                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
               />
             </svg>
-            {{
-              refreshing ? "Vérification en cours..." : "Vérifier l'approbation"
-            }}
+            {{ refreshing ? 'Vérification en cours...' : "Vérifier l'approbation" }}
           </button>
 
           <button class="btn btn-outline btn-neutral w-full" @click="goToLogin">
@@ -183,9 +165,7 @@ definePageMeta({
 
         <!-- Lien vers l'accueil -->
         <div class="mt-6 text-center">
-          <button class="link link-neutral text-sm" @click="goToHome">
-            ← Retour à l'accueil
-          </button>
+          <button class="link link-neutral text-sm" @click="goToHome">← Retour à l'accueil</button>
         </div>
 
         <!-- Message de statut -->
@@ -195,7 +175,7 @@ definePageMeta({
           :class="{
             'bg-success/10 text-success': statusMessage.type === 'success',
             'bg-warning/10 text-warning': statusMessage.type === 'warning',
-            'bg-error/10 text-error': statusMessage.type === 'error',
+            'bg-error/10 text-error': statusMessage.type === 'error'
           }"
         >
           {{ statusMessage.text }}
@@ -206,18 +186,18 @@ definePageMeta({
 </template>
 
 <style scoped>
-/* Animation pour l'icône d'attente */
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
+  /* Animation pour l'icône d'attente */
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
   }
-  50% {
-    opacity: 0.5;
-  }
-}
 
-.w-20.h-20 svg {
-  animation: pulse 2s ease-in-out infinite;
-}
+  .w-20.h-20 svg {
+    animation: pulse 2s ease-in-out infinite;
+  }
 </style>
