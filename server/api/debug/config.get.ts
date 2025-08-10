@@ -1,25 +1,32 @@
 import { defineEventHandler } from 'h3'
+import { getConfig, validateConfig } from '~/utils/config'
 
 export default defineEventHandler(async event => {
-  const config = useRuntimeConfig()
+  const config = getConfig()
+  const validation = validateConfig()
 
   return {
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV,
-    runtimeConfig: {
-      private: {
-        api_base_url: config.private.api_base_url,
-        api_sirene_url: config.private.api_sirene_url,
-        api_sirene_key: config.private.api_sirene_key ? 'DÉFINIE' : 'NON DÉFINIE'
+    config: {
+      api: {
+        baseUrl: config.api.baseUrl,
+        sireneUrl: config.api.sireneUrl,
+        sireneKey: config.api.sireneKey ? 'DÉFINIE' : 'NON DÉFINIE'
       },
-      public: {
-        siteUrl: config.public.siteUrl,
-        firebaseConfig: {
-          apiKey: config.public.firebaseConfig.apiKey ? 'DÉFINIE' : 'NON DÉFINIE',
-          authDomain: config.public.firebaseConfig.authDomain,
-          projectId: config.public.firebaseConfig.projectId
-        }
+      firebase: {
+        apiKey: config.firebase.apiKey ? 'DÉFINIE' : 'NON DÉFINIE',
+        authDomain: config.firebase.authDomain,
+        projectId: config.firebase.projectId
+      },
+      server: {
+        nodeEnv: config.server.nodeEnv,
+        port: config.server.port
       }
+    },
+    validation: {
+      isValid: validation.isValid,
+      errors: validation.errors
     },
     processEnv: {
       API_BASE_URL: process.env.API_BASE_URL,
