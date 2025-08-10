@@ -1,3 +1,5 @@
+import { getConfig } from '~/utils/config'
+
 export default defineNuxtPlugin(() => {
   if (process.client) {
     const initFirebase = async () => {
@@ -6,10 +8,25 @@ export default defineNuxtPlugin(() => {
         const { getAuth, GoogleAuthProvider, browserPopupRedirectResolver } = await import(
           'firebase/auth'
         )
-        const config = useRuntimeConfig()
-        const firebaseConfig = config.public.firebaseConfig
+
+        const config = getConfig()
+        const firebaseConfig = {
+          apiKey: config.firebase.apiKey,
+          authDomain: config.firebase.authDomain,
+          projectId: config.firebase.projectId,
+          storageBucket: config.firebase.storageBucket,
+          messagingSenderId: config.firebase.messagingSenderId,
+          appId: config.firebase.appId,
+          measurementId: config.firebase.measurementId
+        }
+
+        console.log(
+          '🔍 Debug - Configuration Firebase via getConfig() (permissions):',
+          firebaseConfig
+        )
+
         if (!firebaseConfig.apiKey || !firebaseConfig.authDomain) {
-          console.log('Configuration Firebase manquante ou invalide', firebaseConfig)
+          console.log('❌ Configuration Firebase manquante ou invalide', firebaseConfig)
           throw new Error('Configuration Firebase manquante ou invalide')
         }
 

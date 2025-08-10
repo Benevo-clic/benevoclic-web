@@ -1,3 +1,5 @@
+import { getConfig } from '~/utils/config'
+
 export default defineNuxtPlugin(() => {
   // Ce plugin s'exécute uniquement côté client
   if (process.client) {
@@ -9,10 +11,22 @@ export default defineNuxtPlugin(() => {
           'firebase/auth'
         )
 
-        const config = useRuntimeConfig()
-        const firebaseConfig = config.public.firebaseConfig
+        // Utiliser getConfig() qui fonctionne côté client et serveur
+        const config = getConfig()
+        const firebaseConfig = {
+          apiKey: config.firebase.apiKey,
+          authDomain: config.firebase.authDomain,
+          projectId: config.firebase.projectId,
+          storageBucket: config.firebase.storageBucket,
+          messagingSenderId: config.firebase.messagingSenderId,
+          appId: config.firebase.appId,
+          measurementId: config.firebase.measurementId
+        }
+
+        console.log('🔍 Debug - Configuration Firebase via getConfig():', firebaseConfig)
+
         if (!firebaseConfig.apiKey || !firebaseConfig.authDomain) {
-          console.log('Configuration Firebase manquante ou invalide', firebaseConfig)
+          console.log('❌ Configuration Firebase manquante ou invalide', firebaseConfig)
           throw new Error('Configuration Firebase manquante ou invalide')
         }
 
@@ -20,7 +34,7 @@ export default defineNuxtPlugin(() => {
         const auth = getAuth(app)
         const provider = new GoogleAuthProvider()
 
-        console.log("Firebase de base initialisé pour l'authentification")
+        console.log("✅ Firebase de base initialisé pour l'authentification")
 
         return {
           auth,
@@ -28,7 +42,7 @@ export default defineNuxtPlugin(() => {
           resolver: browserPopupRedirectResolver
         }
       } catch (error) {
-        console.error("Erreur lors de l'initialisation de Firebase de base:", error)
+        console.error("❌ Erreur lors de l'initialisation de Firebase de base:", error)
         return null
       }
     }
