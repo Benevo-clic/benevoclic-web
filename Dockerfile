@@ -8,9 +8,6 @@ COPY package*.json ./
 # Disable the use of global .npmrc file
 RUN npm ci --no-global
 
-# Copier le fichier .env s'il existe
-COPY .env.production ./.env
-
 # Copier le reste des fichiers
 COPY . .
 
@@ -22,15 +19,15 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-# Définir les variables d'environnement
+# Définir les variables d'environnement par défaut
 ENV NODE_ENV=production \
     PORT=5482
 
 # Copier uniquement les fichiers nécessaires depuis l'étape de build
 COPY --from=builder /app/.output ./
 
-# Copier le fichier .env pour le runtime
-COPY --from=builder /app/.env ./
+# Copier le fichier .env par défaut (optionnel)
+COPY --from=builder /app/.env.production ./.env
 
 # Exposer le port configuré
 EXPOSE ${PORT}
@@ -38,5 +35,9 @@ EXPOSE ${PORT}
 # Utilisateur non-root pour la sécurité
 USER node
 
+# Script de démarrage pour gérer les variables d'environnement
+COPY --from=builder /app/scripts/start.sh ./start.sh
+RUN chmod +x ./start.sh
+
 # Commande de démarrage
-CMD ["node", "server/index.mjs"]
+CMD ["./start.sh"]
