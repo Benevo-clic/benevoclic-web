@@ -53,6 +53,11 @@
     await navigateToRoute('/')
   }
 
+  const handleNavigate = (path: string) => {
+    navigateTo(path)
+    emit('closeDrawer')
+  }
+
   async function changeLanguage(lo: 'fr' | 'en' | 'es', flagEmoji: string) {
     await setLocale(lo)
     showLanguageMenu.value = false
@@ -145,10 +150,7 @@
                   ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
                   : 'hover:bg-base-200 hover:shadow-sm'
               ]"
-              @click="
-                navigateTo('/volunteer/account/profile')
-                emit('closeDrawer')
-              "
+              @click="handleNavigate('/volunteer/account/profile')"
             >
               <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
                 <UserRound class="w-4 h-4" />
@@ -163,10 +165,7 @@
                   ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
                   : 'hover:bg-base-200 hover:shadow-sm'
               ]"
-              @click="
-                navigateTo('/volunteer/account/edit')
-                emit('closeDrawer')
-              "
+              @click="handleNavigate('/volunteer/account/edit')"
             >
               <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
                 <Pencil class="w-4 h-4" />
@@ -181,10 +180,7 @@
                   ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
                   : 'hover:bg-base-200 hover:shadow-sm'
               ]"
-              @click="
-                navigateTo('/volunteer/account/settings')
-                emit('closeDrawer')
-              "
+              @click="handleNavigate('/volunteer/account/settings')"
             >
               <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
                 <Settings class="w-4 h-4" />
@@ -208,10 +204,7 @@
                   : 'hover:bg-base-200 hover:shadow-sm'
               ]"
               aria-label="Aller à l'accueil bénévole"
-              @click="
-                navigateTo('/volunteer')
-                emit('closeDrawer')
-              "
+              @click="handleNavigate('/volunteer')"
             >
               <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
                 <HomeIcon class="w-4 h-4" aria-hidden="true" />
@@ -225,10 +218,7 @@
                   ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
                   : 'hover:bg-base-200 hover:shadow-sm'
               ]"
-              @click="
-                navigateTo('/volunteer/activity/missions')
-                emit('closeDrawer')
-              "
+              @click="handleNavigate('/volunteer/activity/missions')"
             >
               <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
                 <Box class="w-4 h-4" />
@@ -243,10 +233,7 @@
                   ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
                   : 'hover:bg-base-200 hover:shadow-sm'
               ]"
-              @click="
-                navigateTo('/volunteer/activity/participations')
-                emit('closeDrawer')
-              "
+              @click="handleNavigate('/volunteer/activity/participations')"
             >
               <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
                 <ClipboardList class="w-4 h-4" />
@@ -261,10 +248,7 @@
                   ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
                   : 'hover:bg-base-200 hover:shadow-sm'
               ]"
-              @click="
-                navigateTo('/volunteer/activity/favorites')
-                emit('closeDrawer')
-              "
+              @click="handleNavigate('/volunteer/activity/favorites')"
             >
               <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
                 <HeartIcon class="w-4 h-4" />
@@ -279,10 +263,7 @@
                   ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
                   : 'hover:bg-base-200 hover:shadow-sm'
               ]"
-              @click="
-                navigateTo('/volunteer/activity/history')
-                emit('closeDrawer')
-              "
+              @click="handleNavigate('/volunteer/activity/history')"
             >
               <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
                 <Clock class="w-4 h-4" />
@@ -305,10 +286,7 @@
                   ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
                   : 'hover:bg-base-200 hover:shadow-sm'
               ]"
-              @click="
-                navigateTo('/notifications')
-                emit('closeDrawer')
-              "
+              @click="handleNavigate('/notifications')"
             >
               <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
                 <Bell class="w-4 h-4" />
@@ -325,10 +303,7 @@
                   ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
                   : 'hover:bg-base-200 hover:shadow-sm'
               ]"
-              @click="
-                navigateTo('/help')
-                emit('closeDrawer')
-              "
+              @click="handleNavigate('/help')"
             >
               <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
                 <CircleHelp class="w-4 h-4" />

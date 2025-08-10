@@ -265,10 +265,7 @@
                           ? 'bg-primary/20 text-primary'
                           : 'hover:bg-base-200'
                       ]"
-                      @click="
-                        applyStatus(statusOption.value)
-                        showStatusMenu = false
-                      "
+                      @click="handleStatus(statusOption.value)"
                     >
                       <input
                         type="radio"
@@ -380,13 +377,7 @@
               <label class="label">
                 <span class="label-text font-medium">Filtres avancés</span>
               </label>
-              <button
-                class="btn btn-outline w-full"
-                @click="
-                  showAdvancedFilters = true
-                  closeMobileFilters()
-                "
-              >
+              <button class="btn btn-outline w-full" @click="handleAdvancedFilters">
                 <SlidersHorizontal class="w-4 h-4 mr-2" />
                 Configurer les filtres avancés
               </button>
@@ -429,10 +420,7 @@
                           ? 'bg-primary/20 text-primary'
                           : 'hover:bg-base-200'
                       ]"
-                      @click="
-                        applyEventStatus(eventOption.value as 'NOW' | 'PAST' | 'UPCOMING')
-                        showEventsMenu = false
-                      "
+                      @click="handleEventStatus(eventOption.value as 'NOW' | 'PAST' | 'UPCOMING')"
                     >
                       <input
                         type="radio"
@@ -759,6 +747,21 @@
       hoursEventTo: undefined
     }
     applyFilters()
+  }
+
+  const handleStatus = (value: AnnouncementStatus) => {
+    applyStatus(value)
+    showStatusMenu.value = false
+  }
+
+  const handleEventStatus = (value: 'NOW' | 'PAST' | 'UPCOMING') => {
+    applyEventStatus(value)
+    showEventsMenu.value = false
+  }
+
+  const handleAdvancedFilters = () => {
+    showAdvancedFilters.value = true
+    closeMobileFilters()
   }
 
   // Watchers

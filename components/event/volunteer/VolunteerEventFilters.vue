@@ -278,10 +278,7 @@
                               ? 'bg-primary/20 text-primary'
                               : 'hover:bg-base-200'
                           ]"
-                          @click="
-                            applySort(sortOption.value)
-                            showSortMenu = false
-                          "
+                          @click="handleSort(sortOption.value)"
                         >
                           <input
                             type="radio"
@@ -335,10 +332,7 @@
                               ? 'bg-primary/20 text-primary'
                               : 'hover:bg-base-200'
                           ]"
-                          @click="
-                            applyStatus(statusOption.value)
-                            showStatusMenu = false
-                          "
+                          @click="handleStatus(statusOption.value)"
                         >
                           <input
                             type="radio"
@@ -439,13 +433,7 @@
                   <label class="label">
                     <span class="label-text font-medium">Filtres avancés</span>
                   </label>
-                  <button
-                    class="btn btn-outline w-full"
-                    @click="
-                      showAdvancedFilters = true
-                      closeMobileFilters()
-                    "
-                  >
+                  <button class="btn btn-outline w-full" @click="handleAdvancedFilters">
                     <SlidersHorizontal class="w-4 h-4 mr-2" />
                     Configurer les filtres avancés
                   </button>
@@ -1218,6 +1206,21 @@
 
   const toggleTagsMenu = () => {
     showTagsMenu.value = !showTagsMenu.value
+  }
+
+  const handleSort = (value: SortOption) => {
+    applySort(value)
+    showSortMenu.value = false
+  }
+
+  const handleStatus = (value: AnnouncementStatus) => {
+    applyStatus(value)
+    showStatusMenu.value = false
+  }
+
+  const handleAdvancedFilters = () => {
+    showAdvancedFilters.value = true
+    closeMobileFilters()
   }
 </script>
 
