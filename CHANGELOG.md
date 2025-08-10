@@ -1,4 +1,11 @@
 ## [Unreleased]
+## [1.10.0] - 2025-08-10
+
+### 🚀 Ajouté
+- enhance Firebase configuration handling for client-side and server-side access
+
+---
+
 ## [1.9.1] - 2025-08-10
 
 ### 🐛 Corrigé
