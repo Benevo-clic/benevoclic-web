@@ -26,18 +26,11 @@ ENV NODE_ENV=production \
 # Copier uniquement les fichiers nécessaires depuis l'étape de build
 COPY --from=builder /app/.output ./
 
-# Copier le fichier .env par défaut (optionnel)
-COPY --from=builder /app/.env.production ./.env
-
 # Exposer le port configuré
 EXPOSE ${PORT}
 
 # Utilisateur non-root pour la sécurité
 USER node
 
-# Script de démarrage pour gérer les variables d'environnement
-COPY --from=builder /app/scripts/start.sh ./start.sh
-RUN chmod +x ./start.sh
-
 # Commande de démarrage
-CMD ["./start.sh"]
+CMD ["node", "server/index.mjs"]
