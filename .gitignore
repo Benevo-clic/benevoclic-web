@@ -24,3 +24,4 @@ logs
 .env.production
 !.env.example
 .envrc
+.env.production.example
