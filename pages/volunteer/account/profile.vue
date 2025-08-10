@@ -117,6 +117,7 @@
   import { useAnnouncement } from '~/composables/useAnnouncement'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import { useNavigation } from '~/composables/useNavigation'
+  import type {AssociationVolunteerFollow, InfoAssociation} from "~/common/interface/volunteer.interface";
 
   definePageMeta({
     middleware: ['auth'],
@@ -124,7 +125,8 @@
   })
 
   const auth = useUser()
-  const { volunteer: user, getVolunteerInfo } = useVolunteerAuth()
+
+  const { volunteer: user, getVolunteerInfo , getAssociationsFollowingList} = useVolunteerAuth()
   const announcementStore = useAnnouncement()
   const { navigateToRoute } = useNavigation()
 
@@ -140,6 +142,23 @@
 
   onMounted(async () => {
     await initData()
+  })
+
+  const associationsFollowing = computed<AssociationVolunteerFollow[] | null>(
+      () => getAssociationsFollowingList
+  )
+
+  const nbAssociations = computed(() => {
+    if (!associationsFollowing.value) {
+      return []
+    }
+    const list: InfoAssociation[] = associationsFollowing.value.map(
+        (a: AssociationVolunteerFollow) => ({
+          id: a.associationId,
+          name: a.associationName
+        })
+    )
+    return list.length
   })
 
   async function initData() {
@@ -159,9 +178,7 @@
     return auth.user.value?.avatarFileKey
   })
 
-  const nbAssociations = computed(() => user.value?.myAssociations?.length ?? 0)
   const nbEvents = computed(() => {
-    // On compte le nombre d'annonces où le bénévole est dans participants
     return (announcementStore.getAnnouncements.value || []).filter(a =>
       a.participants?.some(p => p.id === user.value?.volunteerId)
     ).length
