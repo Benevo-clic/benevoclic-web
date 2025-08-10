@@ -1,4 +1,12 @@
 ## [Unreleased]
+## [1.2.0] - 2025-08-10
+
+### 🚀 Ajouté
+- update Dockerfile to copy production environment variables (#19)
+- add AssociationsList component and update profile and associati… (#18)
+
+---
+
 ## [1.1.0] - 2025-08-10
 
 ### 🚀 Ajouté
