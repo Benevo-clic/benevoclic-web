@@ -117,7 +117,10 @@
   import { useAnnouncement } from '~/composables/useAnnouncement'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import { useNavigation } from '~/composables/useNavigation'
-  import type {AssociationVolunteerFollow, InfoAssociation} from "~/common/interface/volunteer.interface";
+  import type {
+    AssociationVolunteerFollow,
+    InfoAssociation
+  } from '~/common/interface/volunteer.interface'
 
   definePageMeta({
     middleware: ['auth'],
@@ -126,7 +129,7 @@
 
   const auth = useUser()
 
-  const { volunteer: user, getVolunteerInfo , getAssociationsFollowingList} = useVolunteerAuth()
+  const { volunteer: user, getVolunteerInfo, getAssociationsFollowingList } = useVolunteerAuth()
   const announcementStore = useAnnouncement()
   const { navigateToRoute } = useNavigation()
 
@@ -145,7 +148,7 @@
   })
 
   const associationsFollowing = computed<AssociationVolunteerFollow[] | null>(
-      () => getAssociationsFollowingList
+    () => getAssociationsFollowingList
   )
 
   const nbAssociations = computed(() => {
@@ -153,10 +156,10 @@
       return []
     }
     const list: InfoAssociation[] = associationsFollowing.value.map(
-        (a: AssociationVolunteerFollow) => ({
-          id: a.associationId,
-          name: a.associationName
-        })
+      (a: AssociationVolunteerFollow) => ({
+        id: a.associationId,
+        name: a.associationName
+      })
     )
     return list.length
   })

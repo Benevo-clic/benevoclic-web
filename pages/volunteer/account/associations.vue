@@ -21,7 +21,10 @@
           />
         </div>
       </div>
-      <AssociationsList  @right-action="handleRemoveVolunteer"  :associations="filteredAssociations"/>
+      <AssociationsList
+        @right-action="handleRemoveVolunteer"
+        :associations="filteredAssociations"
+      />
     </div>
     <ErrorPopup
       :show-error-modal="showErrorModal"
@@ -44,7 +47,7 @@
   import { useUser } from '~/composables/auth/useUser'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import { useNavigation } from '~/composables/useNavigation'
-  import AssociationsList from "~/components/event/volunteer/AssociationsList.vue";
+  import AssociationsList from '~/components/event/volunteer/AssociationsList.vue'
 
   definePageMeta({
     middleware: ['auth'],
