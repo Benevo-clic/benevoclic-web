@@ -78,7 +78,25 @@ export async function login(
 
 export default defineEventHandler(async event => {
   const body = await readBody(event)
-  const config = useRuntimeConfig()
+
+  // Utiliser process.env directement au lieu de useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+
+  // Debug: Afficher les variables d'environnement
+  console.log("🔍 Debug - Variables d'environnement (user/login.post.ts):", {
+    api_base_url: apiBaseUrl
+  })
+
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
 
   try {
     const loginResponse = await login(
@@ -86,7 +104,7 @@ export default defineEventHandler(async event => {
         email: body.email,
         password: body.password
       },
-      config.private.api_base_url
+      apiBaseUrl
     )
     setCookies(event, loginResponse)
     return loginResponse

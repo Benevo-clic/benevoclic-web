@@ -1,4 +1,4 @@
-import { defineEventHandler, getQuery, getCookie } from 'h3'
+import { defineEventHandler, getCookie } from 'h3'
 import axios from 'axios'
 import { Announcement } from '~/common/interface/event.interface'
 import { ApiError } from '~/utils/ErrorHandler'
@@ -6,7 +6,17 @@ import { ApiError } from '~/utils/ErrorHandler'
 export default defineEventHandler(async event => {
   const associationId = event.context.params?.id
   const token = getCookie(event, 'auth_token')
-  const config = useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
   if (!associationId) {
     throw createError({
       statusCode: 400,
@@ -16,7 +26,7 @@ export default defineEventHandler(async event => {
 
   try {
     const response = await axios.get<Announcement>(
-      `${config.private.api_base_url}/announcements/association/${associationId}`,
+      `${apiBaseUrl}/announcements/association/${associationId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

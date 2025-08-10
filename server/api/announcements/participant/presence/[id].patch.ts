@@ -1,17 +1,27 @@
-import { defineEventHandler, getQuery, getCookie, readBody } from 'h3'
+import { defineEventHandler, getCookie, readBody } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 import type { InfoVolunteer } from '~/common/interface/event.interface'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
-  const config = useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
   const body = (await readBody(event)) as InfoVolunteer
   const announcementId = event.context.params?.id
 
   try {
     const response = await axios.patch(
-      `${config.private.api_base_url}/announcements/participant/presence/${announcementId}`,
+      `${apiBaseUrl}/announcements/participant/presence/${announcementId}`,
       {
         ...body
       },

@@ -4,12 +4,11 @@ import { ApiError } from '~/utils/ErrorHandler'
 import { FilterAnnouncement, FilterAnnouncementResponse } from '~/common/interface/filter.interface'
 
 export default defineEventHandler(async event => {
-  const token = getCookie(event, 'auth_token')
-  const config = useRuntimeConfig()
   const body = (await readBody(event)) as FilterAnnouncement
 
-  // Vérification de la configuration
-  if (!config.private.api_base_url) {
+  const apiBaseUrl = process.env.API_BASE_URL
+
+  if (!apiBaseUrl) {
     throw createError({
       statusCode: 500,
       statusMessage: 'Configuration Error',
@@ -28,7 +27,7 @@ export default defineEventHandler(async event => {
       delete payload.tags
     }
 
-    const url = `${config.private.api_base_url}/announcements/filter`
+    const url = `${apiBaseUrl}/announcements/filter`
 
     const response = await axios.post<FilterAnnouncementResponse>(
       url,

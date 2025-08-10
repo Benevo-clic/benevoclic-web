@@ -5,10 +5,20 @@ import { ApiError } from '~/utils/ErrorHandler'
 export default defineEventHandler(async event => {
   const body = await readBody(event)
   const token = getCookie(event, 'auth_token')
-  const config = useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
 
   try {
-    const url = `${config.private.api_base_url}/announcements/register/participant/${body.announcementId}`
+    const url = `${apiBaseUrl}/announcements/register/participant/${body.announcementId}`
     const participant = {
       id: body.id,
       name: body.name

@@ -5,13 +5,23 @@ import type { InfoVolunteer } from '~/common/interface/event.interface'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
-  const config = useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
   const body = (await readBody(event)) as InfoVolunteer
   const query = getQuery(event) as { announcementId: string }
 
   try {
     const response = await axios.patch(
-      `${config.private.api_base_url}/announcements/presence/volunteer/${query.announcementId}`,
+      `${apiBaseUrl}/announcements/presence/volunteer/${query.announcementId}`,
       {
         ...body
       },

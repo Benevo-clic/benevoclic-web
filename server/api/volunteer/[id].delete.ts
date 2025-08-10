@@ -1,12 +1,21 @@
 // server/api/volunteer/[id].delete.ts
 import { defineEventHandler, getCookie, createError } from 'h3'
 import axios from 'axios'
-import { useRuntimeConfig } from '#imports'
 import { deleteCookies } from '~/server/api/auth/logout.post'
 import { ApiError } from '~/utils/ErrorHandler'
 
 export default defineEventHandler(async event => {
-  const config = useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
   const token = getCookie(event, 'auth_token')
   if (!token) {
     throw createError({ statusCode: 401, statusMessage: 'Token manquant' })
@@ -23,7 +32,7 @@ export default defineEventHandler(async event => {
 
   try {
     const { data: removeData } = await axios.delete<{ volunteerId: string }>(
-      `${config.private.api_base_url}/volunteer/${id}`,
+      `${apiBaseUrl}/volunteer/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`

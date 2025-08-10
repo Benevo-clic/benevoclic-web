@@ -6,7 +6,17 @@ import { ApiError } from '~/utils/ErrorHandler'
 export default defineEventHandler(async event => {
   const body = (await readBody(event)) as CreateAnnouncementDto
   const token = getCookie(event, 'auth_token')
-  const config = useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
 
   try {
     const form: CreateAnnouncementDto = {
@@ -25,7 +35,7 @@ export default defineEventHandler(async event => {
       maxVolunteers: body.maxVolunteers
     }
 
-    const url = `${config.private.api_base_url}/announcements/createAnnouncement`
+    const url = `${apiBaseUrl}/announcements/createAnnouncement`
 
     const newAnnouncement = await axios.post(
       url,

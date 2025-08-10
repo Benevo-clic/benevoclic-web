@@ -9,8 +9,18 @@ export default defineEventHandler(async event => {
 
     const token = getCookie(event, 'auth_token')
 
-    const config = useRuntimeConfig()
-    const url = `${config.private.api_base_url}/favorites-announcement/volunteer/announcements/${volunteerId}`
+    const apiBaseUrl = process.env.API_BASE_URL
+    if (!apiBaseUrl) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Configuration Error',
+        data: {
+          message: 'API_BASE_URL is not configured',
+          details: 'Please check your environment variables'
+        }
+      })
+    }
+    const url = `${apiBaseUrl}/favorites-announcement/volunteer/announcements/${volunteerId}`
 
     const response = await axios.get<Announcement[]>(url, {
       headers: {

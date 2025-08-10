@@ -3,7 +3,19 @@ import { createError, defineEventHandler, getCookie } from 'h3'
 export default defineEventHandler(async event => {
   try {
     const token = getCookie(event, 'auth_token')
-    const config = useRuntimeConfig()
+    const apiBaseUrl = process.env.API_BASE_URL
+
+    if (!apiBaseUrl) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Configuration Error',
+        data: {
+          message: 'API_BASE_URL is not configured',
+          details: 'Please check your environment variables'
+        }
+      })
+    }
+
     const { adminId } = event.context.params || {}
 
     if (!token) {
@@ -13,7 +25,7 @@ export default defineEventHandler(async event => {
       })
     }
 
-    return await $fetch(`${config.private.api_base_url}/admin/${adminId}/check-approval-status`, {
+    return await $fetch(`${apiBaseUrl}/admin/${adminId}/check-approval-status`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`

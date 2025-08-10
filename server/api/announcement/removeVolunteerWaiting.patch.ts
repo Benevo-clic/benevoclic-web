@@ -5,10 +5,20 @@ import { ApiError } from '~/utils/ErrorHandler'
 export default defineEventHandler(async event => {
   const query = getQuery(event)
   const token = getCookie(event, 'auth_token')
-  const config = useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
 
   try {
-    const url = `${config.private.api_base_url}/announcements/unregister/volunteerWaiting/${query.volunteerId}/${query.announcementId}`
+    const url = `${apiBaseUrl}/announcements/unregister/volunteerWaiting/${query.volunteerId}/${query.announcementId}`
     const volunteerInfo = await axios.patch(
       url,
       {},
