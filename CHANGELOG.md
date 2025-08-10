@@ -1,4 +1,11 @@
 ## [Unreleased]
+## [1.4.0] - 2025-08-10
+
+### 🚀 Ajouté
+- update Dockerfile to simplify startup command and remove unnecessary scripts (#23)
+
+---
+
 ## [1.3.0] - 2025-08-10
 
 ### 🚀 Ajouté
