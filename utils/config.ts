@@ -1,7 +1,3 @@
-/**
- * Utilitaire pour gérer les variables d'environnement
- * Utilise process.env directement car useRuntimeConfig() ne fonctionne pas au runtime
- */
 
 export const getConfig = () => {
   return {

@@ -170,6 +170,7 @@ export default defineNuxtConfig({
 
   plugins: [
     { src: '~/plugins/runtime-config.server.ts', mode: 'server' },
+    { src: '~/plugins/debug-runtime-config.client.ts', mode: 'client' },
     { src: '~/plugins/firebase-init.client.ts', mode: 'client' },
     { src: '~/plugins/init-permissions.client.ts', mode: 'client' },
     { src: '~/plugins/firebase-permissions.client.ts', mode: 'client' },
