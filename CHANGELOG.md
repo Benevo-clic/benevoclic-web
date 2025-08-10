@@ -1,4 +1,14 @@
 ## [Unreleased]
+## [1.9.0] - 2025-08-10
+
+### 🚀 Ajouté
+- add debug plugin and improve Firebase client-side configuration
+
+### 🐛 Corrigé
+- clean up console log formatting and improve environment variable checks in test scripts
+
+---
+
 ## [1.8.0] - 2025-08-10
 
 ### 🚀 Ajouté
