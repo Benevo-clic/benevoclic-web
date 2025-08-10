@@ -159,7 +159,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         }
       }
     } catch (error) {
-      console.warn('Firebase non initialisé dans le route guard:', error)
+      console.warn(
+        'Firebase non disponible dans le route guard, continuation sans vérification:',
+        error
+      )
     }
   }
 

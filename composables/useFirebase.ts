@@ -1,5 +1,3 @@
-import { getConfig } from '~/utils/config'
-
 export const useFirebase = () => {
   let firebaseApp: any = null
   let firebaseAuth: any = null
@@ -16,24 +14,18 @@ export const useFirebase = () => {
         'firebase/auth'
       )
 
-      // Utiliser getConfig() qui fonctionne côté client et serveur
-      const config = getConfig()
+      // Configuration Firebase directe (sans dépendre des variables d'environnement)
       const firebaseConfig = {
-        apiKey: config.firebase.apiKey,
-        authDomain: config.firebase.authDomain,
-        projectId: config.firebase.projectId,
-        storageBucket: config.firebase.storageBucket,
-        messagingSenderId: config.firebase.messagingSenderId,
-        appId: config.firebase.appId,
-        measurementId: config.firebase.measurementId
+        apiKey: 'AIzaSyAGAry8cF7Ma1aZxhTXvK5dMjjNFZdgKew',
+        authDomain: 'benevoclic-85ddc.firebaseapp.com',
+        projectId: 'benevoclic-85ddc',
+        storageBucket: 'benevoclic-85ddc.firebasestorage.app',
+        messagingSenderId: '538379400989',
+        appId: '1:538379400989:web:980ce02f88b4512ba993f4',
+        measurementId: 'G-F7YS4B0QZ8'
       }
 
-      console.log('🔍 Debug - Configuration Firebase via composable:', firebaseConfig)
-
-      if (!firebaseConfig.apiKey || !firebaseConfig.authDomain) {
-        console.log('❌ Configuration Firebase manquante ou invalide', firebaseConfig)
-        throw new Error('Configuration Firebase manquante ou invalide')
-      }
+      console.log('🔍 Debug - Configuration Firebase directe:', firebaseConfig)
 
       firebaseApp = initializeApp(firebaseConfig)
       firebaseAuth = getAuth(firebaseApp)

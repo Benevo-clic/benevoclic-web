@@ -170,7 +170,6 @@ export default defineNuxtConfig({
 
   plugins: [
     { src: '~/plugins/runtime-config.server.ts', mode: 'server' },
-    { src: '~/plugins/firebase-composable.client.ts', mode: 'client' },
     { src: '~/plugins/init-permissions.client.ts', mode: 'client' },
     { src: '~/plugins/permissions.client.ts', mode: 'client' },
     { src: '~/plugins/maplibre.client.ts', mode: 'client' }

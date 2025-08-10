@@ -12,6 +12,8 @@
         console.log('✅ Firebase initialisé via app.vue')
       } catch (error) {
         console.error("❌ Erreur lors de l'initialisation Firebase via app.vue:", error)
+        // En cas d'erreur, on continue sans Firebase
+        console.log("⚠️ L'application continuera sans Firebase")
       }
     })
   }
