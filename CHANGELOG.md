@@ -1,4 +1,11 @@
 ## [Unreleased]
+## [1.7.0] - 2025-08-10
+
+### 🚀 Ajouté
+- replace runtime config with environment variable for API base URL (#29)
+
+---
+
 ## [1.6.0] - 2025-08-10
 
 ### 🚀 Ajouté
