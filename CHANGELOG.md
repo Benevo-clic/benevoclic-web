@@ -1,4 +1,11 @@
 ## [Unreleased]
+## [1.11.3] - 2025-08-10
+
+### 🐛 Corrigé
+- streamline Firebase configuration handling for server-side usage
+
+---
+
 ## [1.11.2] - 2025-08-10
 
 ### 🐛 Corrigé
