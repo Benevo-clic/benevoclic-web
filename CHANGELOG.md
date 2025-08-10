@@ -1,4 +1,12 @@
 ## [Unreleased]
+## [1.11.0] - 2025-08-10
+
+### 🚀 Ajouté
+- implement Firebase composables for improved initialization and authentication handling
+- implement Firebase composables for improved initialization and authentication handling
+
+---
+
 ## [1.10.0] - 2025-08-10
 
 ### 🚀 Ajouté
