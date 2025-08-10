@@ -97,10 +97,6 @@ export const useAnnouncementStore = defineStore('announcement', {
     },
 
     async fetchAllAnnouncements() {
-      // if (this.isCacheValid && this.announcements.length > 0) {
-      //   return this.announcements;
-      // }
-
       this.loading = true
       this.error = null
       try {

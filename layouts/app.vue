@@ -4,9 +4,6 @@
     aria-label="Benevoclic - Application de bénévolat"
     class="min-h-screen flex flex-col"
   >
-    <!-- Liens de saut pour la navigation clavier -->
-    <AccessibleNavigation />
-
     <!-- Loading state -->
     <div
       v-if="isLoading"
@@ -54,7 +51,6 @@
   import Header from '~/components/header/Header.vue'
   import CookieConsent from '~/components/CookieConsent.vue'
   import GlobalPermissionAlert from '~/components/utils/GlobalPermissionAlert.vue'
-  import AccessibleNavigation from '~/components/utils/AccessibleNavigation.vue'
 
   const { initializeUser } = useUser()
   const isLoading = ref(true)
