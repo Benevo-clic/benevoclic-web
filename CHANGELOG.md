@@ -1,4 +1,14 @@
 ## [Unreleased]
+## [1.3.0] - 2025-08-10
+
+### 🚀 Ajouté
+- update deployment scripts and Dockerfile to improve environment variable handling (#20)
+
+### 🐛 Corrigé
+- add missing newline at end of deploy.yml for proper script execution (#21)
+
+---
+
 ## [1.2.0] - 2025-08-10
 
 ### 🚀 Ajouté
