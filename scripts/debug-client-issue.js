@@ -6,7 +6,7 @@
  */
 
 console.log('🔍 Diagnostic du problème côté client')
-console.log('=' .repeat(50))
+console.log('='.repeat(50))
 
 // Simuler les variables d'environnement (comme dans le conteneur)
 process.env.FIREBASE_API_KEY = 'AIzaSyAGAry8cF7Ma1aZxhTXvK5dMjjNFZdgKew'
@@ -25,7 +25,7 @@ const simulateNuxtBuildTime = () => {
     FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN ? 'DÉFINIE' : 'NON DÉFINIE',
     FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID ? 'DÉFINIE' : 'NON DÉFINIE'
   })
-  
+
   // Ceci simule ce que Nuxt génère dans le runtimeConfig.public
   return {
     public: {
@@ -45,26 +45,26 @@ const simulateNuxtBuildTime = () => {
 // Simuler ce que les plugins voient côté client
 const simulateClientSide = () => {
   console.log('\n🎯 Simulation côté client:')
-  
+
   // Simuler useRuntimeConfig() côté client
   const config = simulateNuxtBuildTime()
   const firebaseConfig = config.public.firebaseConfig
-  
+
   console.log('📋 Configuration reçue par les plugins:')
   console.log(JSON.stringify(firebaseConfig, null, 2))
-  
+
   // Test de validation (comme dans vos plugins)
   const isValid = firebaseConfig.apiKey && firebaseConfig.authDomain && firebaseConfig.projectId
-  
+
   console.log('\n✅ Configuration Firebase valide:', isValid)
-  
+
   if (!isValid) {
     console.log('❌ Variables manquantes:')
     if (!firebaseConfig.apiKey) console.log('   - apiKey: vide')
     if (!firebaseConfig.authDomain) console.log('   - authDomain: vide')
     if (!firebaseConfig.projectId) console.log('   - projectId: vide')
   }
-  
+
   return isValid
 }
 
@@ -76,10 +76,10 @@ console.log('\n📊 Analyse du problème:')
 console.log('=======================')
 
 if (clientSideValid) {
-  console.log('✅ Si ce test passe, le problème vient d\'ailleurs')
+  console.log("✅ Si ce test passe, le problème vient d'ailleurs")
 } else {
   console.log('❌ PROBLÈME IDENTIFIÉ:')
-  console.log('   Les variables d\'environnement ne sont pas disponibles')
+  console.log("   Les variables d'environnement ne sont pas disponibles")
   console.log('   au moment du build de Nuxt.')
   console.log('')
   console.log('🔧 Solutions possibles:')

@@ -196,7 +196,8 @@ export default defineNuxtConfig({
         apiKey: process.env.FIREBASE_API_KEY || 'AIzaSyAGAry8cF7Ma1aZxhTXvK5dMjjNFZdgKew',
         authDomain: process.env.FIREBASE_AUTH_DOMAIN || 'benevoclic-85ddc.firebaseapp.com',
         projectId: process.env.FIREBASE_PROJECT_ID || 'benevoclic-85ddc',
-        storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'benevoclic-85ddc.firebasestorage.app',
+        storageBucket:
+          process.env.FIREBASE_STORAGE_BUCKET || 'benevoclic-85ddc.firebasestorage.app',
         messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || '538379400989',
         appId: process.env.FIREBASE_APP_ID || '1:538379400989:web:980ce02f88b4512ba993f4',
         measurementId: process.env.FIREBASE_MEASUREMENT_ID || 'G-F7YS4B0QZ8'
