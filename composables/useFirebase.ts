@@ -29,19 +29,17 @@ export const useFirebase = () => {
           appId: runtimeConfig.public.firebaseConfig.appId,
           measurementId: runtimeConfig.public.firebaseConfig.measurementId
         }
+        console.log('🔍 Debug - Configuration Firebase via useRuntimeConfig')
       } else {
-        // Côté serveur, utiliser process.env
         console.log('🔍 Debug - Configuration Firebase via process.env')
-        console.log('🔍 Debug - process.env:', process.env)
 
         firebaseConfig = {
-          apiKey: process.env.FIREBASE_API_KEY || 'AIzaSyAGAry8cF7Ma1aZxhTXvK5dMjjNFZdgKew',
-          authDomain: process.env.FIREBASE_AUTH_DOMAIN || 'benevoclic-85ddc.firebaseapp.com',
-          projectId: process.env.FIREBASE_PROJECT_ID || 'benevoclic-85ddc',
-          storageBucket:
-            process.env.FIREBASE_STORAGE_BUCKET || 'benevoclic-85ddc.firebasestorage.app',
-          messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || '538379400989',
-          appId: process.env.FIREBASE_APP_ID || '1:538379400989:web:980ce02f88b4512ba993f4',
+          apiKey: process.env.FIREBASE_API_KEY,
+          authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+          projectId: process.env.FIREBASE_PROJECT_ID,
+          storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+          messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+          appId: process.env.FIREBASE_APP_ID,
           measurementId: process.env.FIREBASE_MEASUREMENT_ID || 'G-F7YS4B0QZ8'
         }
       }
@@ -51,8 +49,6 @@ export const useFirebase = () => {
       firebaseApp = initializeApp(firebaseConfig)
       firebaseAuth = getAuth(firebaseApp)
       firebaseProvider = new GoogleAuthProvider()
-
-      console.log('✅ Firebase initialisé via composable')
 
       return { app: firebaseApp, auth: firebaseAuth, provider: firebaseProvider }
     } catch (error) {
