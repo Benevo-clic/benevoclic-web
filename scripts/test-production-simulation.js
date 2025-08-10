@@ -6,7 +6,7 @@
  */
 
 console.log('🔍 Simulation de la production - Test des variables Firebase')
-console.log('=' .repeat(70))
+console.log('='.repeat(70))
 
 // Simuler les variables d'environnement de production (comme dans votre VPS)
 process.env.FIREBASE_API_KEY = 'AIzaSyAGAry8cF7Ma1aZxhTXvK5dMjjNFZdgKew'
@@ -37,51 +37,57 @@ const simulateUseRuntimeConfig = () => {
 // Simuler vos plugins Firebase
 const simulateFirebaseInitPlugin = () => {
   console.log('🔥 Simulation du plugin firebase-init.client.ts')
-  
+
   try {
     const config = simulateUseRuntimeConfig()
     const firebaseConfig = config.public.firebaseConfig
-    
+
     console.log('📋 Configuration reçue:', JSON.stringify(firebaseConfig, null, 2))
-    
+
     if (!firebaseConfig.apiKey || !firebaseConfig.authDomain) {
       console.log('❌ Configuration Firebase manquante ou invalide', firebaseConfig)
       throw new Error('Configuration Firebase manquante ou invalide')
     }
-    
+
     console.log('✅ Configuration Firebase valide - Firebase peut être initialisé')
     return true
   } catch (error) {
-    console.error('❌ Erreur lors de l\'initialisation de Firebase de base:', error.message)
+    console.error("❌ Erreur lors de l'initialisation de Firebase de base:", error.message)
     return false
   }
 }
 
 const simulateFirebasePermissionsPlugin = () => {
   console.log('\n🔥 Simulation du plugin firebase-permissions.client.ts')
-  
+
   try {
     const config = simulateUseRuntimeConfig()
     const firebaseConfig = config.public.firebaseConfig
-    
+
     if (!firebaseConfig.apiKey || !firebaseConfig.authDomain) {
       console.log('❌ Configuration Firebase manquante ou invalide', firebaseConfig)
       throw new Error('Configuration Firebase manquante ou invalide')
     }
-    
+
     console.log('✅ Configuration Firebase valide - Firebase avec permissions peut être initialisé')
     return true
   } catch (error) {
-    console.error('❌ Erreur lors de l\'initialisation de Firebase avec permissions:', error.message)
+    console.error("❌ Erreur lors de l'initialisation de Firebase avec permissions:", error.message)
     return false
   }
 }
 
 // Tests
-console.log('🔧 Variables d\'environnement simulées:')
+console.log("🔧 Variables d'environnement simulées:")
 console.log('FIREBASE_API_KEY:', process.env.FIREBASE_API_KEY ? '✅ DÉFINIE' : '❌ NON DÉFINIE')
-console.log('FIREBASE_AUTH_DOMAIN:', process.env.FIREBASE_AUTH_DOMAIN ? '✅ DÉFINIE' : '❌ NON DÉFINIE')
-console.log('FIREBASE_PROJECT_ID:', process.env.FIREBASE_PROJECT_ID ? '✅ DÉFINIE' : '❌ NON DÉFINIE')
+console.log(
+  'FIREBASE_AUTH_DOMAIN:',
+  process.env.FIREBASE_AUTH_DOMAIN ? '✅ DÉFINIE' : '❌ NON DÉFINIE'
+)
+console.log(
+  'FIREBASE_PROJECT_ID:',
+  process.env.FIREBASE_PROJECT_ID ? '✅ DÉFINIE' : '❌ NON DÉFINIE'
+)
 
 console.log('\n🎯 Tests des plugins:')
 const initResult = simulateFirebaseInitPlugin()
