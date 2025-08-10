@@ -4,7 +4,17 @@ import { ApiError } from '~/utils/ErrorHandler'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
-  const config = useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
   const { id } = getQuery(event) as { id?: string }
   const body = await readBody(event)
   if (!id) {
@@ -19,7 +29,7 @@ export default defineEventHandler(async event => {
 
   try {
     const response = await axios.patch(
-      `${config.private.api_base_url}/volunteer/${id}`,
+      `${apiBaseUrl}/volunteer/${id}`,
       {
         ...body
       },

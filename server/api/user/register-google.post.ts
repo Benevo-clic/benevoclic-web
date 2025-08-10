@@ -7,8 +7,18 @@ export default defineEventHandler(async event => {
     const body = await readBody(event)
 
     // Appel au service backend
-    const config = useRuntimeConfig()
-    const url = `${config.private.api_base_url}/user/register-google`
+    const apiBaseUrl = process.env.API_BASE_URL
+    if (!apiBaseUrl) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Configuration Error',
+        data: {
+          message: 'API_BASE_URL is not configured',
+          details: 'Please check your environment variables'
+        }
+      })
+    }
+    const url = `${apiBaseUrl}/user/register-google`
 
     const response = await axios.post(url, body, {
       headers: {

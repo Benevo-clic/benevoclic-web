@@ -7,8 +7,19 @@ export default defineEventHandler(async event => {
   const id = getRouterParam(event, 'id')
   const body = await readBody<{ status: string }>(event)
 
-  const config = useRuntimeConfig()
-  const url = `${config.private.api_base_url}/support/reports/${id}/status`
+  const apiBaseUrl = process.env.API_BASE_URL
+
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
+  const url = `${apiBaseUrl}/support/reports/${id}/status`
 
   try {
     const response = await axios.patch(url, body, {

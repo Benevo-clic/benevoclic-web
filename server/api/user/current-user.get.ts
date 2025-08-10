@@ -6,7 +6,17 @@ import { ApiError } from '~/utils/ErrorHandler'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
-  const config = useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
 
   if (!token) {
     throw createError({
@@ -16,14 +26,11 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const currentUser = await axios.get<UserInfo>(
-      `${config.private.api_base_url}/user/current-user`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+    const currentUser = await axios.get<UserInfo>(`${apiBaseUrl}/user/current-user`, {
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-    )
+    })
 
     if (!currentUser) {
       throw createError({

@@ -6,7 +6,17 @@ export default defineEventHandler(async event => {
   const body = await readBody(event)
   const volunteerId = body.volunteerId as string
   const announcementId = body.announcementId as string
-  const config = useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
   const token = getCookie(event, 'auth_token')
 
   if (!volunteerId || !announcementId) {
@@ -17,7 +27,7 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const url = `${config.private.api_base_url}/favorites-announcement/${volunteerId}/${announcementId}`
+    const url = `${apiBaseUrl}/favorites-announcement/${volunteerId}/${announcementId}`
     const response = await axios.delete(url, {
       headers: {
         'Content-Type': 'application/json',

@@ -1,11 +1,21 @@
-import { defineEventHandler, readBody, createError, getCookie, readMultipartFormData } from 'h3'
+import { defineEventHandler, createError, getCookie, readMultipartFormData } from 'h3'
 import axios from 'axios'
 import FormData from 'form-data'
 import { ApiError } from '~/utils/ErrorHandler'
 import type { UserInfo } from '~/common/types/auth.type'
 
 export default defineEventHandler(async event => {
-  const config = useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
   const token = getCookie(event, 'auth_token')
 
   const { id } = event.context.params as { id?: string }
@@ -41,7 +51,7 @@ export default defineEventHandler(async event => {
   form.append('file', data, { filename, contentType: mimeType })
 
   try {
-    const url = `${config.private.api_base_url}/user/${id}/update-avatar`
+    const url = `${apiBaseUrl}/user/${id}/update-avatar`
     const { data: user } = await axios.patch<UserInfo>(url, form, {
       headers: {
         ...form.getHeaders(),

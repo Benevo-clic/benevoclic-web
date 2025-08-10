@@ -1,27 +1,28 @@
 export default defineNuxtPlugin(() => {
-  // Ce plugin s'exécute uniquement côté client
   if (process.client) {
-    // Initialiser Firebase de manière asynchrone
     const initFirebase = async () => {
       try {
-        // Vérifier si Firebase est déjà initialisé
-        const config = useRuntimeConfig()
-        if (!config.public.firebaseConfig) {
-          console.warn('Configuration Firebase manquante')
-          return null
-        }
-
-        // Initialiser Firebase de base d'abord (pour l'authentification)
         const { initializeApp } = await import('firebase/app')
         const { getAuth, GoogleAuthProvider, browserPopupRedirectResolver } = await import(
           'firebase/auth'
         )
+        const firebaseConfig = {
+          apiKey: process.env.API_KEY,
+          authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+          projectId: process.env.FIREBASE_PROJECT_ID,
+          storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+          messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+          appId: process.env.FIREBASE_APP_ID
+        }
+        if (!firebaseConfig.apiKey || !firebaseConfig.authDomain) {
+          console.log('Configuration Firebase manquante ou invalide', firebaseConfig)
+          throw new Error('Configuration Firebase manquante ou invalide')
+        }
 
-        const app = initializeApp(config.public.firebaseConfig)
+        const app = initializeApp(firebaseConfig)
         const auth = getAuth(app)
         const provider = new GoogleAuthProvider()
 
-        // Essayer de charger les permissions, sinon utiliser des valeurs par défaut sécurisées
         let canUseAnalytics = false
         let canUseThirdParty = false
 

@@ -5,7 +5,17 @@ import { ApiError } from '~/utils/ErrorHandler'
 export default defineEventHandler(async event => {
   const associationId = event.context.params?.id
   const token = getCookie(event, 'auth_token')
-  const config = useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
 
   if (!associationId) {
     throw createError({
@@ -15,14 +25,11 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    await axios.delete<void>(
-      `${config.private.api_base_url}/announcements/association/${associationId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+    await axios.delete<void>(`${apiBaseUrl}/announcements/association/${associationId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-    )
+    })
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
       ApiError.handleAxios(error, 'Erreur lors de la suppression de l’annonce')

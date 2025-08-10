@@ -8,7 +8,17 @@ import { ApiError } from '~/utils/ErrorHandler'
 
 export default defineEventHandler(async event => {
   const body = await readBody(event)
-  const config = useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
 
   if (!body || !body.idToken) {
     return { error: 'Token manquant' }
@@ -24,7 +34,7 @@ export default defineEventHandler(async event => {
   }
 
   const response = await axios.post<RegisterUserGoogleResponse>(
-    `${config.private.api_base_url}/user/register-google`,
+    `${apiBaseUrl}/user/register-google`,
     {
       idToken: body.idToken,
       role: body.role

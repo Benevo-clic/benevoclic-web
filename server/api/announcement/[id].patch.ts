@@ -5,12 +5,22 @@ import { ApiError } from '~/utils/ErrorHandler'
 export default defineEventHandler(async event => {
   const announcementId = event.context.params?.id
   const token = getCookie(event, 'auth_token')
-  const config = useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
   const body = await readBody(event)
 
   try {
     const response = await axios.patch(
-      `${config.private.api_base_url}/announcements/${announcementId}`,
+      `${apiBaseUrl}/announcements/${announcementId}`,
       {
         ...body
       },

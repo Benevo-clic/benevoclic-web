@@ -7,8 +7,18 @@ export default defineEventHandler(async event => {
     const { volunteerId } = event.context.params || {}
     const token = getCookie(event, 'auth_token')
 
-    const config = useRuntimeConfig()
-    const url = `${config.private.api_base_url}/association/volunteer-list/${volunteerId}`
+    const apiBaseUrl = process.env.API_BASE_URL
+    if (!apiBaseUrl) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Configuration Error',
+        data: {
+          message: 'API_BASE_URL is not configured',
+          details: 'Please check your environment variables'
+        }
+      })
+    }
+    const url = `${apiBaseUrl}/association/volunteer-list/${volunteerId}`
 
     const response = await axios.get(url, {
       headers: {
