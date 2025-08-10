@@ -8,6 +8,13 @@ export default defineEventHandler(async event => {
   const config = useRuntimeConfig()
   const body = (await readBody(event)) as FilterAnnouncement
 
+  // Debug: Afficher la configuration pour diagnostiquer
+  console.log('🔍 Debug - Configuration runtime:', {
+    api_base_url: config.private.api_base_url,
+    api_sirene_url: config.private.api_sirene_url,
+    api_sirene_key: config.private.api_sirene_key ? 'DÉFINIE' : 'NON DÉFINIE'
+  })
+
   // Vérification de la configuration
   if (!config.private.api_base_url) {
     throw createError({
@@ -15,7 +22,14 @@ export default defineEventHandler(async event => {
       statusMessage: 'Configuration Error',
       data: {
         message: 'API_BASE_URL is not configured',
-        details: 'Please check your environment variables'
+        details: 'Please check your environment variables',
+        debug: {
+          config_private: Object.keys(config.private),
+          env_vars: {
+            API_BASE_URL: process.env.API_BASE_URL,
+            NODE_ENV: process.env.NODE_ENV
+          }
+        }
       }
     })
   }
