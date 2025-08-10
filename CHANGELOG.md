@@ -1,4 +1,11 @@
 ## [Unreleased]
+## [1.5.0] - 2025-08-10
+
+### 🚀 Ajouté
+- add runtime configuration endpoint to expose environment and AP… (#25)
+
+---
+
 ## [1.4.0] - 2025-08-10
 
 ### 🚀 Ajouté
