@@ -8,8 +8,26 @@ import {
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
-  const config = useRuntimeConfig()
   const body = (await readBody(event)) as FilterAssociationAnnouncement
+
+  // Utiliser process.env directement au lieu de useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+
+  // Debug: Afficher les variables d'environnement
+  console.log("🔍 Debug - Variables d'environnement (association.post.ts):", {
+    api_base_url: apiBaseUrl
+  })
+
+  if (!apiBaseUrl) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Configuration Error',
+      data: {
+        message: 'API_BASE_URL is not configured',
+        details: 'Please check your environment variables'
+      }
+    })
+  }
 
   try {
     const payload: any = {
@@ -19,7 +37,7 @@ export default defineEventHandler(async event => {
       delete payload.tags
     }
     const response = await axios.post<FilterAnnouncementResponse>(
-      `${config.private.api_base_url}/announcements/filter/association`,
+      `${apiBaseUrl}/announcements/filter/association`,
       {
         ...payload
       },
