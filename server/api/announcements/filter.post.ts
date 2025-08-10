@@ -5,18 +5,22 @@ import { FilterAnnouncement, FilterAnnouncementResponse } from '~/common/interfa
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
-  const config = useRuntimeConfig()
   const body = (await readBody(event)) as FilterAnnouncement
 
-  // Debug: Afficher la configuration pour diagnostiquer
-  console.log('🔍 Debug - Configuration runtime:', {
-    api_base_url: config.private.api_base_url,
-    api_sirene_url: config.private.api_sirene_url,
-    api_sirene_key: config.private.api_sirene_key ? 'DÉFINIE' : 'NON DÉFINIE'
+  // Utiliser process.env directement au lieu de useRuntimeConfig()
+  const apiBaseUrl = process.env.API_BASE_URL
+  const apiSireneUrl = process.env.API_SIRENE_URL
+  const apiSireneKey = process.env.API_SIRENE_KEY
+
+  // Debug: Afficher les variables d'environnement
+  console.log("🔍 Debug - Variables d'environnement:", {
+    api_base_url: apiBaseUrl,
+    api_sirene_url: apiSireneUrl,
+    api_sirene_key: apiSireneKey ? 'DÉFINIE' : 'NON DÉFINIE'
   })
 
   // Vérification de la configuration
-  if (!config.private.api_base_url) {
+  if (!apiBaseUrl) {
     throw createError({
       statusCode: 500,
       statusMessage: 'Configuration Error',
@@ -24,10 +28,10 @@ export default defineEventHandler(async event => {
         message: 'API_BASE_URL is not configured',
         details: 'Please check your environment variables',
         debug: {
-          config_private: Object.keys(config.private),
           env_vars: {
             API_BASE_URL: process.env.API_BASE_URL,
-            NODE_ENV: process.env.NODE_ENV
+            NODE_ENV: process.env.NODE_ENV,
+            PORT: process.env.PORT
           }
         }
       }
@@ -42,7 +46,7 @@ export default defineEventHandler(async event => {
       delete payload.tags
     }
 
-    const url = `${config.private.api_base_url}/announcements/filter`
+    const url = `${apiBaseUrl}/announcements/filter`
 
     const response = await axios.post<FilterAnnouncementResponse>(
       url,
