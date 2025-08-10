@@ -324,6 +324,8 @@ jobs:
 
       - name: Commit and push changes
         run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add package.json CHANGELOG.md
           git commit -m "chore: bump version to ${{ needs.analyze-commits.outputs.new_version }} and update CHANGELOG"
           git push origin main
