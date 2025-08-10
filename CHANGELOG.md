@@ -1,4 +1,11 @@
 ## [Unreleased]
+## [1.7.1] - 2025-08-10
+
+### 🐛 Corrigé
+- migrate environment variables from useRuntimeConfig to process.env for server-side and fix Firebase client-side config
+
+---
+
 ## [1.7.0] - 2025-08-10
 
 ### 🚀 Ajouté
