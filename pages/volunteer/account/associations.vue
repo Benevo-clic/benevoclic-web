@@ -21,7 +21,10 @@
           />
         </div>
       </div>
-      <VolunteersList :volunteers="filteredAssociations" @right-action="handleRemoveVolunteer" />
+      <AssociationsList
+        @right-action="handleRemoveVolunteer"
+        :associations="filteredAssociations"
+      />
     </div>
     <ErrorPopup
       :show-error-modal="showErrorModal"
@@ -35,13 +38,16 @@
 <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue'
   import { Search } from 'lucide-vue-next'
-  import VolunteersList from '~/components/event/association/VolunteersList.vue'
   import { useVolunteerAuth } from '~/composables/useVolunteer'
   import { useVolunteerAuthStore } from '~/stores/volunteer.store'
-  import type { AssociationVolunteerFollow } from '~/common/interface/volunteer.interface'
+  import type {
+    AssociationVolunteerFollow,
+    InfoAssociation
+  } from '~/common/interface/volunteer.interface'
   import { useUser } from '~/composables/auth/useUser'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import { useNavigation } from '~/composables/useNavigation'
+  import AssociationsList from '~/components/event/volunteer/AssociationsList.vue'
 
   definePageMeta({
     middleware: ['auth'],
@@ -90,10 +96,12 @@
     if (!associationsFollowing.value) {
       return []
     }
-    const list = associationsFollowing.value.map((a: AssociationVolunteerFollow) => ({
-      id: a.associationId,
-      name: a.associationName
-    }))
+    const list: InfoAssociation[] = associationsFollowing.value.map(
+      (a: AssociationVolunteerFollow) => ({
+        id: a.associationId,
+        name: a.associationName
+      })
+    )
     if (!search.value.trim()) {
       return list
     }

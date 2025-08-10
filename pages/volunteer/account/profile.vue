@@ -41,22 +41,42 @@
       </div>
 
       <!-- Statistiques -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8 items-stretch"
+      >
         <NuxtLink to="/volunteer/account/associations">
-          <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
-            <span class="text-2xl font-bold text-primary">{{ nbAssociations }}</span>
+          <div
+            class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center justify-center h-full"
+          >
+            <span class="text-2xl font-bold text-primary">{{ associationsFollowing?.length }}</span>
             <span class="text-xs text-base-content/70">Associations</span>
           </div>
         </NuxtLink>
-        <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
-          <span class="text-2xl font-bold text-primary">{{ nbEvents }}</span>
+
+        <div
+          class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center justify-center h-full"
+        >
+          <span class="text-2xl font-bold text-primary">{{ nbParticipants }}</span>
           <span class="text-xs text-base-content/70">Événements participés</span>
         </div>
-        <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
+
+        <div
+          class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center justify-center h-full"
+        >
+          <span class="text-2xl font-bold text-primary">{{ nbVolunteerAnnouncements }}</span>
+          <span class="text-xs text-base-content/70">Bénévolats proposés</span>
+        </div>
+
+        <div
+          class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center justify-center h-full"
+        >
           <span class="text-2xl font-bold text-primary">{{ user?.city || '-' }}</span>
           <span class="text-xs text-base-content/70">Ville</span>
         </div>
-        <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
+
+        <div
+          class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center justify-center h-full"
+        >
           <span class="text-2xl font-bold text-primary">{{ user?.postalCode || '-' }}</span>
           <span class="text-xs text-base-content/70">Code postal</span>
         </div>
@@ -117,6 +137,7 @@
   import { useAnnouncement } from '~/composables/useAnnouncement'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import { useNavigation } from '~/composables/useNavigation'
+  import type { AssociationVolunteerFollow } from '~/common/interface/volunteer.interface'
 
   definePageMeta({
     middleware: ['auth'],
@@ -124,12 +145,23 @@
   })
 
   const auth = useUser()
-  const { volunteer: user, getVolunteerInfo } = useVolunteerAuth()
+
+  const {
+    volunteer: user,
+    getVolunteerInfo,
+    getVolunteerAnnouncements,
+    getAllAssociationsFollowingList
+  } = useVolunteerAuth()
   const announcementStore = useAnnouncement()
   const { navigateToRoute } = useNavigation()
 
   const showErrorModal = ref(false)
   const errorType = ref<'4xx' | '5xx' | null>(null)
+  const associationsFollowing = ref<AssociationVolunteerFollow[]>()
+
+  const nbParticipants = ref<number[]>(0)
+
+  let nbVolunteerAnnouncements = ref<number>(0)
 
   function handleReload() {
     window.location.reload()
@@ -149,6 +181,14 @@
       }
       if (auth.getUserId) {
         await getVolunteerInfo()
+        const volunteers = await getVolunteerAnnouncements(auth.getUserId)
+        nbVolunteerAnnouncements.value = volunteers.filter(a =>
+          a.volunteers?.some(p => p.id === auth.getUserId)
+        ).length
+        nbParticipants.value = volunteers.filter(a =>
+          a.participants?.some(p => p.id === auth.getUserId)
+        ).length
+        associationsFollowing.value = await getAllAssociationsFollowingList(auth.getUserId)
       }
     } catch (error) {
       handleError(error)
@@ -157,14 +197,6 @@
 
   const profileImageUrl = computed(() => {
     return auth.user.value?.avatarFileKey
-  })
-
-  const nbAssociations = computed(() => user.value?.myAssociations?.length ?? 0)
-  const nbEvents = computed(() => {
-    // On compte le nombre d'annonces où le bénévole est dans participants
-    return (announcementStore.getAnnouncements.value || []).filter(a =>
-      a.participants?.some(p => p.id === user.value?.volunteerId)
-    ).length
   })
 
   function calculateAge(birthdate: string): number {
