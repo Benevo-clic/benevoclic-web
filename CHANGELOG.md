@@ -1,4 +1,11 @@
 ## [Unreleased]
+## [1.8.0] - 2025-08-10
+
+### 🚀 Ajouté
+- add scripts for client-side environment variable checks and deployment process
+
+---
+
 ## [1.7.1] - 2025-08-10
 
 ### 🐛 Corrigé
