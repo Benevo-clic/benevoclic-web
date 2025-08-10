@@ -46,6 +46,14 @@ jobs:
             set -e
             echo "🚀 Déploiement Web Benevoclic (Docker Compose)"
 
+            # Debug: Vérifier les variables d'environnement reçues
+            echo "🔍 Variables d'environnement reçues :"
+            echo "API_BASE_URL: ${API_BASE_URL:-NON DÉFINIE}"
+            echo "NODE_ENV: ${NODE_ENV:-NON DÉFINIE}"
+            echo "PORT: ${PORT:-NON DÉFINIE}"
+            echo "FIREBASE_API_KEY: ${FIREBASE_API_KEY:0:10}..." # Afficher seulement les 10 premiers caractères
+            echo ""
+
             mkdir -p ~/benevoclicWeb
             cd ~/benevoclicWeb
 
@@ -81,6 +89,11 @@ jobs:
               benevoclic-network:
                 external: true
             EOL
+
+            # Debug: Vérifier le contenu du fichier docker-compose généré
+            echo "🔍 Contenu du fichier docker-compose.web.yml généré :"
+            cat docker-compose.web.yml
+            echo ""
 
             echo "🛑 Arrêt du service web"
             docker compose -f docker-compose.web.yml down || true
