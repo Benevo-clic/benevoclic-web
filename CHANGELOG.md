@@ -1,4 +1,11 @@
 ## [Unreleased]
+## [1.11.1] - 2025-08-10
+
+### 🐛 Corrigé
+- improve error handling and logging for Firebase initialization and usage
+
+---
+
 ## [1.11.0] - 2025-08-10
 
 ### 🚀 Ajouté
