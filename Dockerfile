@@ -30,7 +30,7 @@ ENV NODE_ENV=production \
 COPY --from=builder /app/.output ./
 
 # Copier le fichier .env pour le runtime
-COPY --from=builder /app/.env ./
+COPY --from=builder /app/.env.production ./
 
 # Exposer le port configuré
 EXPOSE ${PORT}
