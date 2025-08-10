@@ -1,4 +1,12 @@
 ## [Unreleased]
+## [1.9.1] - 2025-08-10
+
+### 🐛 Corrigé
+- correct console log formatting and improve Firebase configuration handling in debug scripts
+- add fallback values for Firebase config in nuxt.config.ts to ensure client-side access
+
+---
+
 ## [1.9.0] - 2025-08-10
 
 ### 🚀 Ajouté
