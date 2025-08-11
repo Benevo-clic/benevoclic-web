@@ -3,12 +3,15 @@ import { useCookie, useRequestFetch } from '#app'
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  getIdTokenResult,
+  GoogleAuthProvider,
+  signInWithPopup,
   onIdTokenChanged,
   sendEmailVerification,
   sendPasswordResetEmail
 } from 'firebase/auth'
 import { RoleUser } from '~/common/enums/role.enum'
-import { loginWithGoogle as firebaseLoginWithGoogle, useUserStore } from '~/stores/user/user.store'
+import { useUserStore } from '~/stores/user/user.store'
 import type { RegisterEmailVerifiedResponse, RegisterPayload } from '~/common/types/register.type'
 
 export interface LoginResponse {
@@ -27,6 +30,7 @@ interface AuthState {
   loading: boolean
   error: string | null
   unsubscribe: (() => void) | null
+  _authInFlight: boolean
   isVerified: boolean
   tempPassword: string
   role: RoleUser | null
@@ -41,6 +45,7 @@ export const useAuthStore = defineStore('auth', {
     loading: false,
     email: '',
     isVerified: false,
+    _authInFlight: false,
     error: null,
     unsubscribe: null,
     tempPassword: '',
@@ -261,10 +266,9 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    startEmailVerificationListener(payload: RegisterPayload) {
+    async startEmailVerificationListener(payload: RegisterPayload) {
       const auth = getAuth()
 
-      // Ajouter un flag pour éviter les appels multiples
       if (this.isVerified) {
         if (process.dev) {
           console.log("Email déjà vérifié, arrêt de l'écouteur")
@@ -407,78 +411,149 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    // Login Google
-    async loginWithGoogle(
-      role: RoleUser,
-      isRegisterMode: boolean = false,
-      termsAccepted: boolean = false
-    ) {
+    async firebaseRefreshGoogleSession() {
       this.loading = true
       this.error = null
-
       try {
-        // Vérifier les permissions de cookies côté client
-        if (process.client) {
-          try {
-            const { usePermissions } = await import('~/composables/usePermissions')
-            const { hasPermission } = usePermissions()
+        if (!process.client) return null
 
-            if (!hasPermission('canAuthenticate')) {
-              this.error =
-                'Vous devez accepter les cookies essentiels pour vous connecter. Veuillez paramétrer vos préférences de cookies.'
-              throw new Error('Cookies essentiels non acceptés')
-            }
-          } catch (err) {
-            console.warn('Impossible de vérifier les permissions de cookies:', err)
-          }
-        }
+        const auth = getAuth()
+        const user = auth.currentUser
+        if (!user) return null
 
-        // Vérifier l'acceptation des conditions générales
-        if (isRegisterMode && !termsAccepted) {
-          this.error = "Vous devez accepter les conditions générales d'utilisation pour continuer."
-          throw new Error('Conditions générales non acceptées')
-        }
-
-        const user = await firebaseLoginWithGoogle()
-        const idToken = await user.getIdToken()
+        const idToken = await user.getIdToken(true)
+        const tokenResult = await getIdTokenResult(user)
         const refreshToken = user.refreshToken
-        const payload = idToken.split('.')[1]
-        const decodedPayload = JSON.parse(atob(payload))
 
-        if (decodedPayload.role) {
-          await this.fetchUserGoogle({
-            idToken,
-            refreshToken: user.refreshToken,
-            uid: user.uid
-          })
-        } else {
-          console.log(
-            'Rôle non trouvé dans le token, enregistrement nécessaire',
-            idToken,
-            refreshToken,
-            payload
-          )
-          await this.callRegisterGoogle(idToken, role)
+        return {
+          idToken,
+          refreshToken,
+          uid: user.uid,
+          roleDecode: (tokenResult.claims?.role as RoleUser | undefined) ?? null
         }
-
-        this.hydrate()
-        await this.getPageRole()
       } catch (e: any) {
-        this.error = e?.data?.message || e?.message || 'Erreur Google'
+        this.error = e?.message || 'Erreur de session Google'
         throw e
       } finally {
         this.loading = false
       }
     },
 
+    async firebaseLoginWithGoogleOnce() {
+      this.loading = true
+      this.error = null
+      try {
+        if (!process.client) throw new Error('Client requis')
+
+        const auth = getAuth()
+        const provider = new GoogleAuthProvider()
+        provider.setCustomParameters({ prompt: 'select_account' }) // optionnel
+
+        const cred = await signInWithPopup(auth, provider)
+        const user = cred.user
+
+        const idToken = await user.getIdToken()
+        const tokenResult = await getIdTokenResult(user)
+        const refreshToken = user.refreshToken
+
+        return {
+          idToken,
+          refreshToken,
+          uid: user.uid,
+          roleDecode: (tokenResult.claims?.role as RoleUser | undefined) ?? null
+        }
+      } catch (e: any) {
+        this.error = e?.message || 'Erreur de connexion Google'
+        throw e
+      } finally {
+        this.loading = false
+      }
+    },
+
+    // Login Google
+    async loginWithGoogle(
+      roleUser: RoleUser,
+      isRegisterMode: boolean = false,
+      termsAccepted: boolean = false
+    ) {
+      if (this._authInFlight) return
+      this._authInFlight = true
+
+      this.loading = true
+      this.error = null
+
+      try {
+        // 1) Vérifier cookies essentiels
+        if (process.client) {
+          try {
+            const { usePermissions } = await import('~/composables/usePermissions')
+            const { hasPermission } = usePermissions()
+            if (!hasPermission('canAuthenticate')) {
+              const msg =
+                'Vous devez accepter les cookies essentiels pour vous connecter. Veuillez paramétrer vos préférences de cookies.'
+              this.error = msg
+              throw new Error('Cookies essentiels non acceptés')
+            }
+          } catch (err) {
+            if (process.dev) console.warn('Impossible de vérifier les permissions de cookies:', err)
+          }
+        }
+
+        // 2) CGU si inscription
+        if (isRegisterMode && !termsAccepted) {
+          const msg = "Vous devez accepter les conditions générales d'utilisation pour continuer."
+          this.error = msg
+          throw new Error('Conditions générales non acceptées')
+        }
+
+        let session = await this.firebaseRefreshGoogleSession()
+
+        if (!session || !session.idToken) {
+          session = await this.firebaseLoginWithGoogleOnce()
+        }
+
+        if (!session.roleDecode) {
+          await this.callRegisterGoogle(session.idToken, roleUser)
+
+          session = await this.firebaseRefreshGoogleSession()
+          if (!session?.roleDecode) {
+            session = await this.firebaseRefreshGoogleSession()
+            if (!session?.roleDecode) {
+              throw new Error(
+                'Vos droits ne sont pas encore disponibles. Merci de réessayer dans quelques secondes.'
+              )
+            }
+          }
+        }
+
+        await this.fetchUserGoogle({
+          idToken: session.idToken,
+          refreshToken: session.refreshToken,
+          uid: session.uid
+        })
+
+        this.hydrate()
+        await this.getPageRole()
+
+        return true
+      } catch (e: any) {
+        this.error = e?.data?.message || e?.message || 'Erreur Google'
+        throw e
+      } finally {
+        this.loading = false
+        this._authInFlight = false
+      }
+    },
+
     async callRegisterGoogle(idToken: string, role: RoleUser) {
       const $fetch = useRequestFetch()
-      await $fetch('/api/user/register-google', {
+      const response = await $fetch('/api/user/register-google', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: { idToken, role }
       })
+      return response.idUser
     },
 
     async fetchUserGoogle(body: { idToken: string; refreshToken: string; uid: string }) {
