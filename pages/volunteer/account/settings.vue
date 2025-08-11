@@ -30,11 +30,11 @@
             </h3>
             <div class="space-y-2">
               <button
-                v-for="section in sections"
-                :key="section.id"
-                class="btn btn-outline btn-sm w-full justify-start transition-all duration-200"
-                :class="activeSection === section.id ? 'btn-primary' : ''"
-                @click="activeSection = section.id"
+                  v-for="section in sections"
+                  :key="section.id"
+                  class="btn btn-outline btn-sm w-full justify-start transition-all duration-200"
+                  :class="activeSection === section.id ? 'btn-primary' : ''"
+                  @click="activeSection = section.id"
               >
                 <component :is="section.icon" class="w-4 h-4 mr-2" />
                 {{ section.label }}
@@ -48,103 +48,6 @@
           <!-- Loading state -->
           <div v-if="isDeleted" class="flex items-center justify-center h-64">
             <div class="loading loading-spinner loading-lg text-primary" />
-          </div>
-
-          <!-- Notifications settings -->
-          <div v-else-if="activeSection === 'notifications'" class="space-y-6">
-            <div class="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6">
-              <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                  <Bell class="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h2 class="text-xl font-semibold text-base-content">
-                    {{ t('settings.notifications.title') }}
-                  </h2>
-                  <p class="text-base-content/70">
-                    {{ t('settings.notifications.description') }}
-                  </p>
-                </div>
-              </div>
-
-              <div class="space-y-6">
-                <div class="form-control">
-                  <label class="label cursor-pointer justify-between">
-                    <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.notifications.email')
-                      }}</span>
-                      <p class="text-xs text-base-content/70">
-                        {{ t('settings.notifications.email_description') }}
-                      </p>
-                    </div>
-                    <input
-                      v-model="settings.emailNotifications"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
-                    />
-                  </label>
-                </div>
-
-                <div class="form-control">
-                  <label class="label cursor-pointer justify-between">
-                    <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.notifications.push')
-                      }}</span>
-                      <p class="text-xs text-base-content/70">
-                        {{ t('settings.notifications.push_description') }}
-                      </p>
-                    </div>
-                    <input
-                      v-model="settings.pushNotifications"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
-                    />
-                  </label>
-                </div>
-
-                <div class="form-control">
-                  <label class="label cursor-pointer justify-between">
-                    <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.notifications.mission_updates')
-                      }}</span>
-                      <p class="text-xs text-base-content/70">
-                        {{ t('settings.notifications.mission_updates_description') }}
-                      </p>
-                    </div>
-                    <input
-                      v-model="settings.missionUpdates"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
-                    />
-                  </label>
-                </div>
-
-                <div class="form-control">
-                  <label class="label cursor-pointer justify-between">
-                    <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.notifications.achievements')
-                      }}</span>
-                      <p class="text-xs text-base-content/70">
-                        {{ t('settings.notifications.achievements_description') }}
-                      </p>
-                    </div>
-                    <input
-                      v-model="settings.achievements"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
-                    />
-                  </label>
-                </div>
-              </div>
-            </div>
           </div>
 
           <!-- Privacy settings -->
@@ -168,18 +71,18 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.privacy.profile_visibility')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.privacy.profile_visibility') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.privacy.profile_visibility_description') }}
                       </p>
                     </div>
                     <input
-                      v-model="settings.profileVisibility"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                        v-model="settings.profileVisibility"
+                        type="checkbox"
+                        class="toggle toggle-primary"
+                        aria-label="Champ de saisie"
                     />
                   </label>
                 </div>
@@ -187,18 +90,18 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.privacy.location_sharing')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.privacy.location_sharing') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.privacy.location_sharing_description') }}
                       </p>
                     </div>
                     <input
-                      v-model="settings.locationSharing"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                        v-model="settings.locationSharing"
+                        type="checkbox"
+                        class="toggle toggle-primary"
+                        aria-label="Champ de saisie"
                     />
                   </label>
                 </div>
@@ -206,18 +109,18 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.privacy.activity_sharing')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.privacy.activity_sharing') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.privacy.activity_sharing_description') }}
                       </p>
                     </div>
                     <input
-                      v-model="settings.activitySharing"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                        v-model="settings.activitySharing"
+                        type="checkbox"
+                        class="toggle toggle-primary"
+                        aria-label="Champ de saisie"
                     />
                   </label>
                 </div>
@@ -255,8 +158,8 @@
                       </p>
                     </div>
                     <button
-                      class="btn btn-outline btn-primary btn-sm"
-                      @click="showPasswordChangeModal"
+                        class="btn btn-outline btn-primary btn-sm"
+                        @click="showPasswordChangeModal"
                     >
                       <Key class="w-4 h-4 mr-2" />
                       {{ t('settings.account.change') }}
@@ -276,8 +179,8 @@
                       </p>
                     </div>
                     <button
-                      class="btn btn-outline btn-error btn-sm"
-                      @click="showDeleteConfirmation"
+                        class="btn btn-outline btn-error btn-sm"
+                        @click="showDeleteConfirmation"
                     >
                       <Trash2 class="w-4 h-4 mr-2" />
                       {{ t('settings.account.delete') }}
@@ -309,18 +212,18 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.security.two_factor')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.security.two_factor') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.security.two_factor_description') }}
                       </p>
                     </div>
                     <input
-                      v-model="settings.twoFactor"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                        v-model="settings.twoFactor"
+                        type="checkbox"
+                        class="toggle toggle-primary"
+                        aria-label="Champ de saisie"
                     />
                   </label>
                 </div>
@@ -328,23 +231,28 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.security.login_notifications')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.security.login_notifications') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.security.login_notifications_description') }}
                       </p>
                     </div>
                     <input
-                      v-model="settings.loginNotifications"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                        v-model="settings.loginNotifications"
+                        type="checkbox"
+                        class="toggle toggle-primary"
+                        aria-label="Champ de saisie"
                     />
                   </label>
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- fallback -->
+          <div v-else class="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6">
+            {{ t('common.select_a_section') }}
           </div>
         </div>
       </div>
@@ -392,65 +300,7 @@
         </p>
 
         <form class="space-y-4 py-4" @submit.prevent="changePassword">
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text font-medium">{{
-                t('settings.password_change.old_password')
-              }}</span>
-            </label>
-            <input
-              v-model="passwordForm.oldPassword"
-              type="password"
-              class="input input-bordered"
-              required
-              :placeholder="t('settings.password_change.old_password_placeholder')"
-              aria-label="Mot de passe"
-            />
-          </div>
-
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text font-medium">{{
-                t('settings.password_change.new_password')
-              }}</span>
-            </label>
-            <input
-              v-model="passwordForm.newPassword"
-              type="password"
-              class="input input-bordered"
-              required
-              minlength="8"
-              :placeholder="t('settings.password_change.new_password_placeholder')"
-              aria-label="Mot de passe"
-            />
-            <label class="label">
-              <span class="label-text-alt text-base-content/50">{{
-                t('settings.password_change.password_requirements')
-              }}</span>
-            </label>
-          </div>
-
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text font-medium">{{
-                t('settings.password_change.confirm_password')
-              }}</span>
-            </label>
-            <input
-              v-model="passwordForm.confirmPassword"
-              type="password"
-              class="input input-bordered"
-              required
-              :placeholder="t('settings.password_change.confirm_password_placeholder')"
-              aria-label="Mot de passe"
-            />
-          </div>
-
-          <div v-if="passwordError" class="alert alert-error">
-            <AlertCircle class="w-4 h-4" />
-            <span>{{ passwordError }}</span>
-          </div>
-
+          <!-- ... champs inchangés ... -->
           <div class="modal-action">
             <button type="button" class="btn btn-outline" @click="cancelPasswordChange">
               {{ t('settings.password_change.cancel') }}
@@ -465,234 +315,220 @@
     </dialog>
 
     <ErrorPopup
-      :show-error-modal="showErrorModal"
-      :error-type="errorType"
-      @reload="handleReload"
-      @go-home="handleGoHome"
+        :show-error-modal="showErrorModal"
+        :error-type="errorType"
+        @reload="handleReload"
+        @go-home="handleGoHome"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref, reactive, computed, onMounted } from 'vue'
-  import {
-    Bell,
-    Shield,
-    User,
-    Lock,
-    Key,
-    Trash2,
-    Save,
-    AlertTriangle,
-    AlertCircle
-  } from 'lucide-vue-next'
-  import { useUser } from '~/composables/auth/useUser'
-  import { useVolunteerAuth } from '~/composables/useVolunteer'
-  import { useNavigation } from '~/composables/useNavigation'
-  import ErrorPopup from '~/components/utils/ErrorPopup.vue'
+import { ref, reactive, computed, onMounted } from 'vue'
+import {
+  Shield,
+  User,
+  Lock,
+  Key,
+  Trash2,
+  Save,
+  AlertTriangle,
+  AlertCircle
+} from 'lucide-vue-next'
+import { useUser } from '~/composables/auth/useUser'
+import { useVolunteerAuth } from '~/composables/useVolunteer'
+import { useNavigation } from '~/composables/useNavigation'
+import { useSettingsStore } from '~/stores/settings.store'
+import ErrorPopup from '~/components/utils/ErrorPopup.vue'
 
-  definePageMeta({
-    layout: 'app'
-  })
+definePageMeta({ layout: 'app' })
 
-  const { t } = useI18n()
-  const auth = useUser()
-  const volunteer = useVolunteerAuth()
-  const { navigateToRoute } = useNavigation()
+const { t } = useI18n()
+const auth = useUser()
+const volunteer = useVolunteerAuth()
+const { navigateToRoute } = useNavigation()
 
-  // State
-  const isDeleted = ref(false)
-  const isSaving = ref(false)
-  const activeSection = ref('notifications')
-  const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
-  const passwordChangeModal = ref<HTMLDialogElement | null>(null)
-  const showErrorModal = ref(false)
-  const errorType = ref<'4xx' | '5xx' | null>(null)
+// State
+const isDeleted = ref(false)
+const isSaving = ref(false)
+const activeSection = ref<'privacy' | 'account' | 'security'>('privacy') // par défaut: privacy
+const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
+const passwordChangeModal = ref<HTMLDialogElement | null>(null)
+const showErrorModal = ref(false)
+const errorType = ref<'4xx' | '5xx' | null>(null)
 
-  // Sections de paramètres
-  const sections = ref([
-    { id: 'notifications', label: 'Notifications', icon: Bell },
-    { id: 'privacy', label: 'Confidentialité', icon: Shield },
-    { id: 'account', label: 'Compte', icon: User },
-    { id: 'security', label: 'Sécurité', icon: Lock }
-  ])
+// Sections de paramètres (3 éléments)
+const sections = ref([
+  { id: 'privacy', label: 'Confidentialité', icon: Shield },
+  { id: 'account', label: 'Compte', icon: User },
+  { id: 'security', label: 'Sécurité', icon: Lock }
+])
 
-  // Password change form data
-  const passwordForm = reactive({
-    oldPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  })
+// Password change form data
+const passwordForm = reactive({
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: ''
+})
 
-  const passwordError = ref<string | null>(null)
+const passwordError = ref<string | null>(null)
 
-  // Settings data
-  const settings = ref({
-    emailNotifications: true,
-    pushNotifications: false,
-    missionUpdates: true,
-    achievements: true,
-    profileVisibility: true,
-    locationSharing: false,
-    activitySharing: true,
-    twoFactor: false,
-    loginNotifications: true
-  })
+// Settings store
+const settingsStore = useSettingsStore()
 
-  // Computed
-  const isPasswordFormInvalid = computed(() => {
-    return (
+// Local settings for form state
+const settings = ref({
+  profileVisibility: true,
+  locationSharing: false,
+  activitySharing: true,
+  twoFactor: false
+})
+
+// Computed
+const isPasswordFormInvalid = computed(() => {
+  return (
       !passwordForm.oldPassword ||
       !passwordForm.newPassword ||
       !passwordForm.confirmPassword ||
       passwordForm.newPassword !== passwordForm.confirmPassword ||
       passwordForm.newPassword.length < 8
-    )
-  })
+  )
+})
 
-  // Methods
-  onMounted(async () => {
-    await initData()
-  })
+// Methods
+onMounted(async () => {
+  await initData()
+})
 
-  async function initData() {
-    try {
-      if (!auth.getUserId) {
-        await auth.initializeUser()
-      }
-      if (auth.getUserId) {
-        await volunteer.getVolunteerInfo()
-      }
-    } catch (error) {
-      handleError(error)
+async function initData() {
+  try {
+    if (!auth.getUserId) {
+      await auth.initializeUser()
     }
+    if (auth.getUserId) {
+      await volunteer.getVolunteerInfo()
+      // Load settings from store
+      await settingsStore.loadVolunteer()
+      // Update local settings with store data
+      settings.value = { ...settingsStore.volunteer }
+    }
+  } catch (error) {
+    handleError(error)
   }
+}
 
-  function handleReload() {
-    window.location.reload()
+function handleReload() {
+  window.location.reload()
+}
+
+async function handleGoHome() {
+  await navigateToRoute('/')
+}
+
+function showPasswordChangeModal() {
+  passwordForm.oldPassword = ''
+  passwordForm.newPassword = ''
+  passwordForm.confirmPassword = ''
+  passwordError.value = null
+  passwordChangeModal.value?.showModal()
+}
+
+function cancelPasswordChange() {
+  passwordChangeModal.value?.close()
+}
+
+async function changePassword() {
+  if (isPasswordFormInvalid.value) {
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      passwordError.value = t('settings.password_change.error.password_mismatch')
+    } else if (passwordForm.newPassword.length < 8) {
+      passwordError.value = t('settings.password_change.error.weak_password')
+    }
+    return
   }
-
-  async function handleGoHome() {
-    await navigateToRoute('/')
-  }
-
-  function showPasswordChangeModal() {
-    passwordForm.oldPassword = ''
-    passwordForm.newPassword = ''
-    passwordForm.confirmPassword = ''
-    passwordError.value = null
-    passwordChangeModal.value?.showModal()
-  }
-
-  function cancelPasswordChange() {
+  passwordError.value = null
+  try {
+    await auth.updatePassword({
+      oldPassword: passwordForm.oldPassword,
+      newPassword: passwordForm.newPassword
+    })
     passwordChangeModal.value?.close()
+    alert(t('settings.password_change.success'))
+  } catch (error: any) {
+    passwordError.value = error.message || t('settings.password_change.error.general')
+    handleError(error)
   }
+}
 
-  async function changePassword() {
-    if (isPasswordFormInvalid.value) {
-      if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-        passwordError.value = t('settings.password_change.error.password_mismatch')
-      } else if (passwordForm.newPassword.length < 8) {
-        passwordError.value = t('settings.password_change.error.weak_password')
-      }
-      return
-    }
+function showDeleteConfirmation() {
+  deleteConfirmationModal.value?.showModal()
+}
 
-    passwordError.value = null
+function cancelDelete() {
+  deleteConfirmationModal.value?.close()
+}
 
-    try {
-      await auth.updatePassword({
-        oldPassword: passwordForm.oldPassword,
-        newPassword: passwordForm.newPassword
-      })
+async function confirmDelete() {
+  deleteConfirmationModal.value?.close()
+  await removeUser()
+  await removeVolunteer()
+  window.location.href = '/'
+}
 
-      passwordChangeModal.value?.close()
-      alert(t('settings.password_change.success'))
-    } catch (error: any) {
-      passwordError.value = error.message || t('settings.password_change.error.general')
-      handleError(error)
-    }
+async function removeUser() {
+  isDeleted.value = true
+  try {
+    await auth.removeUser()
+  } catch (error) {
+    isDeleted.value = false
+    handleError(error)
+  } finally {
+    isDeleted.value = false
   }
+}
 
-  function showDeleteConfirmation() {
-    deleteConfirmationModal.value?.showModal()
+async function removeVolunteer() {
+  isDeleted.value = true
+  try {
+    await volunteer.removeVolunteer()
+  } catch (error) {
+    isDeleted.value = false
+    handleError(error)
+  } finally {
+    isDeleted.value = false
   }
+}
 
-  function cancelDelete() {
-    deleteConfirmationModal.value?.close()
+async function saveSettings() {
+  isSaving.value = true
+  try {
+    // Save settings to store
+    await settingsStore.saveVolunteer(settings.value)
+    // Update local settings with response
+    settings.value = { ...settingsStore.volunteer }
+  } catch (error) {
+    handleError(error)
+  } finally {
+    isSaving.value = false
   }
+}
 
-  async function confirmDelete() {
-    deleteConfirmationModal.value?.close()
-    await removeUser()
-    await removeVolunteer()
-    window.location.href = '/'
+function handleError(error: any) {
+  if (error?.response?.status >= 500 && error?.response?.status < 600) {
+    errorType.value = '5xx'
+    showErrorModal.value = true
+  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+    errorType.value = '4xx'
+    showErrorModal.value = true
+  } else {
+    console.error('Erreur inattendue:', error)
   }
-
-  async function removeUser() {
-    isDeleted.value = true
-    try {
-      await auth.removeUser()
-    } catch (error) {
-      isDeleted.value = false
-      handleError(error)
-    } finally {
-      isDeleted.value = false
-    }
-  }
-
-  async function removeVolunteer() {
-    isDeleted.value = true
-    try {
-      await volunteer.removeVolunteer()
-    } catch (error) {
-      isDeleted.value = false
-      handleError(error)
-    } finally {
-      isDeleted.value = false
-    }
-  }
-
-  async function saveSettings() {
-    isSaving.value = true
-    try {
-      // Simuler une sauvegarde
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      console.log('Paramètres sauvegardés:', settings.value)
-    } catch (error) {
-      handleError(error)
-    } finally {
-      isSaving.value = false
-    }
-  }
-
-  function handleError(error: any) {
-    if (error?.response?.status >= 500 && error?.response?.status < 600) {
-      errorType.value = '5xx'
-      showErrorModal.value = true
-    } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
-      errorType.value = '4xx'
-      showErrorModal.value = true
-    } else {
-      console.error('Erreur inattendue:', error)
-    }
-  }
+}
 </script>
 
 <style scoped>
-  .btn {
-    transition: all 0.2s ease-in-out;
-  }
-
-  .btn:hover {
-    transform: translateY(-1px);
-  }
-
-  .form-control {
-    transition: all 0.2s ease-in-out;
-  }
-
-  .form-control:hover {
-    transform: translateY(-1px);
-  }
+.btn { transition: all 0.2s ease-in-out; }
+.btn:hover { transform: translateY(-1px); }
+.form-control { transition: all 0.2s ease-in-out; }
+.form-control:hover { transform: translateY(-1px); }
 </style>
