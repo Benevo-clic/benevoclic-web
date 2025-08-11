@@ -10,9 +10,7 @@ export const useFirebase = () => {
 
     try {
       const { initializeApp } = await import('firebase/app')
-      const { getAuth, GoogleAuthProvider, browserPopupRedirectResolver } = await import(
-        'firebase/auth'
-      )
+      const { getAuth, GoogleAuthProvider } = await import('firebase/auth')
 
       // Configuration Firebase via variables d'environnement
       let firebaseConfig
@@ -29,10 +27,7 @@ export const useFirebase = () => {
           appId: runtimeConfig.public.firebaseConfig.appId,
           measurementId: runtimeConfig.public.firebaseConfig.measurementId
         }
-        console.log('🔍 Debug - Configuration Firebase via useRuntimeConfig')
       } else {
-        console.log('🔍 Debug - Configuration Firebase via process.env')
-
         firebaseConfig = {
           apiKey: process.env.FIREBASE_API_KEY,
           authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -40,11 +35,9 @@ export const useFirebase = () => {
           storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
           messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
           appId: process.env.FIREBASE_APP_ID,
-          measurementId: process.env.FIREBASE_MEASUREMENT_ID || 'G-F7YS4B0QZ8'
+          measurementId: process.env.FIREBASE_MEASUREMENT_ID
         }
       }
-
-      console.log('🔍 Debug - Configuration Firebase directe:', firebaseConfig)
 
       firebaseApp = initializeApp(firebaseConfig)
       firebaseAuth = getAuth(firebaseApp)

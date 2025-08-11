@@ -6,8 +6,6 @@ export default defineEventHandler(async event => {
   try {
     const { id } = event.context.params || {}
 
-    const token = getCookie(event, 'auth_token')
-
     const apiBaseUrl = process.env.API_BASE_URL
     if (!apiBaseUrl) {
       throw createError({
@@ -23,7 +21,6 @@ export default defineEventHandler(async event => {
 
     const response = await axios.get(url, {
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     })

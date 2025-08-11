@@ -12,7 +12,7 @@ import { ApiError } from '~/utils/ErrorHandler'
 export interface LoginResponse {
   idUser: string
   idToken: string
-  refreshToken: string
+  refreshToken?: string
   expiresIn?: string
 }
 
@@ -34,7 +34,7 @@ export function setCookies(event: H3Event<EventHandlerRequest>, loginResponse: L
       maxAge: 60 * 60 * 24 * 30 // 30 jours
     })
 
-    setCookie(event, 'refresh_token', loginResponse.refreshToken, {
+    setCookie(event, 'refresh_token', <string>loginResponse.refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'none',

@@ -199,7 +199,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return navigateTo('/')
   }
 
-  // Utilisateur connecté, récupérer ses données si nécessaire
   if (!userStore.user) {
     try {
       await userStore.fetchUser()
@@ -215,7 +214,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return navigateTo(getHomePageForRole(userRole, locale))
   }
 
-  // Gestion explicite des routes de transition
   if (
     ['/auth/registerVolunteer', '/auth/registerAssociation'].includes(getPathWithoutLocale(to.path))
   ) {
@@ -230,7 +228,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return
   }
 
-  // Vérifier si le profil est complété
   if (userStore.user && !userStore.user.isCompleted) {
     const locale = getLocaleFromPath(to.path)
 

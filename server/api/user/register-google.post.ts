@@ -1,7 +1,12 @@
-import { defineEventHandler, readBody, createError } from 'h3'
+import { defineEventHandler, readBody, createError, setCookie } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
+export interface RegisterUserGoogle {
+  idUser: string
+  token: string
+  expiresIn: number
+}
 export default defineEventHandler(async event => {
   try {
     const body = await readBody(event)
@@ -20,7 +25,7 @@ export default defineEventHandler(async event => {
     }
     const url = `${apiBaseUrl}/user/register-google`
 
-    const response = await axios.post(url, body, {
+    const response = await axios.post<RegisterUserGoogle>(url, body, {
       headers: {
         'Content-Type': 'application/json'
       }

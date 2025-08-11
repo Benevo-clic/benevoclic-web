@@ -35,7 +35,6 @@ export default defineEventHandler(async event => {
     })
   }
 
-  console.log('Déconnexion en cours...')
   try {
     await axios.post(
       `${apiBaseUrl}/user/logout`,

@@ -1,10 +1,10 @@
-import { defineEventHandler, createError, readBody, getCookie } from 'h3'
+import { defineEventHandler, createError, getCookie } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 import { deleteCookies } from '~/server/api/auth/logout.post'
 
 export default defineEventHandler(async event => {
-  const body = await readBody(event)
+  const { id } = event.context.params || {}
   const token = getCookie(event, 'auth_token')
   const apiBaseUrl = process.env.API_BASE_URL
   if (!apiBaseUrl) {
@@ -19,7 +19,7 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const removeResponse = await axios.delete(`${apiBaseUrl}/user/${body.uid}`, {
+    const removeResponse = await axios.delete(`${apiBaseUrl}/user/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

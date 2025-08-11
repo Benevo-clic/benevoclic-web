@@ -44,6 +44,24 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
       this._lastFetch = 0
     },
 
+    async getVolunteerInfoById(volunteerId: string) {
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch<VolunteerInfo>(`/api/volunteer/${volunteerId}`, {
+          method: 'GET',
+          credentials: 'include'
+        })
+
+        return response as VolunteerInfo
+      } catch (err: any) {
+        this.error = err?.message || 'Erreur de récupération des informations du bénévole'
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+
     async getVolunteerInfo() {
       const user = useUserStore().getUser
       if (
@@ -317,7 +335,6 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
             credentials: 'include'
           }
         )
-
         return response as Announcement[]
       } catch (err: any) {
         this.error = err?.message || 'Erreur de récupération des annonces du bénévole'

@@ -237,6 +237,25 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
         this.loading = false
       }
     },
+
+    async getAssociationById(associationId: string) {
+      this.loading = true
+      this.error = null
+      try {
+        const response = await $fetch<AssociationInfo>(`/api/association/by-id/${associationId}`, {
+          method: 'GET',
+          credentials: 'include'
+        })
+
+        return response as AssociationInfo
+      } catch (err: any) {
+        this.error = err?.message || "Erreur de récupération de l'association"
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+
     async removeAssociation() {
       this.loading = true
       this.error = null

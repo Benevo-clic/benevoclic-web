@@ -11,6 +11,13 @@ import { RoleUser } from '~/common/enums/role.enum'
 import { loginWithGoogle as firebaseLoginWithGoogle, useUserStore } from '~/stores/user/user.store'
 import type { RegisterEmailVerifiedResponse, RegisterPayload } from '~/common/types/register.type'
 
+export interface LoginResponse {
+  idUser: string
+  idToken: string
+  refreshToken: string
+  expiresIn?: string
+}
+
 interface AuthState {
   idToken: string | null
   refreshToken: string | null
@@ -177,9 +184,12 @@ export const useAuthStore = defineStore('auth', {
         const isCompleted = userStore.user?.isCompleted
         const role = userStore.getRole as RoleUser | undefined
 
+        console.log('Rôle de l’utilisateur:', role)
+
         if (!isCompleted) {
           switch (role) {
             case RoleUser.VOLUNTEER:
+              console.log('Redirection vers la page d’inscription du volontaire')
               return navigateTo('/auth/registerVolunteer')
             case RoleUser.ASSOCIATION:
               return navigateTo('/auth/registerAssociation')
@@ -235,18 +245,11 @@ export const useAuthStore = defineStore('auth', {
         await sendEmailVerification(auth.currentUser)
         this.$patch({ isVerified: false })
 
-        if (process.dev) {
-          console.log('✅ Email de vérification envoyé, écoute en cours...')
-        }
         await this.startEmailVerificationListener({
           email: auth.currentUser.email || '',
           password: (this.tempPassword as string) || payload.tempPassword,
           role: (this.role as RoleUser) || payload.role
         })
-
-        if (process.dev) {
-          console.log('✅ Email de vérification envoyé avec succès')
-        }
       } catch (error: any) {
         if (process.dev) {
           console.error("❌ Erreur lors de l'envoi de la vérification:", error)
@@ -438,23 +441,27 @@ export const useAuthStore = defineStore('auth', {
 
         const user = await firebaseLoginWithGoogle()
         const idToken = await user.getIdToken()
+        const refreshToken = user.refreshToken
         const payload = idToken.split('.')[1]
         const decodedPayload = JSON.parse(atob(payload))
 
         if (decodedPayload.role) {
-          // Utilisateur déjà enregistré, on met à jour le statut côté backend
           await this.fetchUserGoogle({
             idToken,
             refreshToken: user.refreshToken,
             uid: user.uid
           })
         } else {
-          // Première connexion, on enregistre l'utilisateur
+          console.log(
+            'Rôle non trouvé dans le token, enregistrement nécessaire',
+            idToken,
+            refreshToken,
+            payload
+          )
           await this.callRegisterGoogle(idToken, role)
         }
-        this.hydrate()
 
-        // Attend que getPageRole() termine
+        this.hydrate()
         await this.getPageRole()
       } catch (e: any) {
         this.error = e?.data?.message || e?.message || 'Erreur Google'

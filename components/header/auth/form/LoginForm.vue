@@ -131,7 +131,7 @@
       } else {
         await auth.loginWithGoogle(
           isAssociation.value ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER,
-          isRegisterMode.value, // Passer le mode (inscription/connexion)
+          isRegisterMode.value,
           termsAccepted.value
         )
         isError.value = false

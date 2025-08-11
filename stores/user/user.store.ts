@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useNuxtApp, useRequestFetch } from '#app'
+import { useRequestFetch } from '#app'
 import type { User } from 'firebase/auth'
 import {
   signInWithPopup,
@@ -278,10 +278,13 @@ export const useUserStore = defineStore('user', {
       }
       try {
         const $fetch = useRequestFetch()
+        console.log('Suppression du compte utilisateur:', this.user.userId)
         const response = await $fetch<{ success?: boolean }>(`/api/user/${this.user?.userId}`, {
           method: 'DELETE',
           credentials: 'include'
         })
+
+        console.log('Réponse de la suppression du compte:', response)
 
         if (response.success) {
           this.user = null
