@@ -1,4 +1,11 @@
 ## [Unreleased]
+## [1.12.1] - 2025-08-11
+
+### 🐛 Corrigé
+- enhance Google authentication flow with session management and e… (#31)
+
+---
+
 ## [1.12.0] - 2025-08-11
 
 ### 🚀 Ajouté
