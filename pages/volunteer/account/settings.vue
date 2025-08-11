@@ -30,11 +30,11 @@
             </h3>
             <div class="space-y-2">
               <button
-                  v-for="section in sections"
-                  :key="section.id"
-                  class="btn btn-outline btn-sm w-full justify-start transition-all duration-200"
-                  :class="activeSection === section.id ? 'btn-primary' : ''"
-                  @click="activeSection = section.id"
+                v-for="section in sections"
+                :key="section.id"
+                class="btn btn-outline btn-sm w-full justify-start transition-all duration-200"
+                :class="activeSection === section.id ? 'btn-primary' : ''"
+                @click="activeSection = section.id"
               >
                 <component :is="section.icon" class="w-4 h-4 mr-2" />
                 {{ section.label }}
@@ -79,10 +79,10 @@
                       </p>
                     </div>
                     <input
-                        v-model="settings.profileVisibility"
-                        type="checkbox"
-                        class="toggle toggle-primary"
-                        aria-label="Champ de saisie"
+                      v-model="settings.profileVisibility"
+                      type="checkbox"
+                      class="toggle toggle-primary"
+                      aria-label="Champ de saisie"
                     />
                   </label>
                 </div>
@@ -98,10 +98,10 @@
                       </p>
                     </div>
                     <input
-                        v-model="settings.locationSharing"
-                        type="checkbox"
-                        class="toggle toggle-primary"
-                        aria-label="Champ de saisie"
+                      v-model="settings.locationSharing"
+                      type="checkbox"
+                      class="toggle toggle-primary"
+                      aria-label="Champ de saisie"
                     />
                   </label>
                 </div>
@@ -117,10 +117,10 @@
                       </p>
                     </div>
                     <input
-                        v-model="settings.activitySharing"
-                        type="checkbox"
-                        class="toggle toggle-primary"
-                        aria-label="Champ de saisie"
+                      v-model="settings.activitySharing"
+                      type="checkbox"
+                      class="toggle toggle-primary"
+                      aria-label="Champ de saisie"
                     />
                   </label>
                 </div>
@@ -158,8 +158,8 @@
                       </p>
                     </div>
                     <button
-                        class="btn btn-outline btn-primary btn-sm"
-                        @click="showPasswordChangeModal"
+                      class="btn btn-outline btn-primary btn-sm"
+                      @click="showPasswordChangeModal"
                     >
                       <Key class="w-4 h-4 mr-2" />
                       {{ t('settings.account.change') }}
@@ -179,8 +179,8 @@
                       </p>
                     </div>
                     <button
-                        class="btn btn-outline btn-error btn-sm"
-                        @click="showDeleteConfirmation"
+                      class="btn btn-outline btn-error btn-sm"
+                      @click="showDeleteConfirmation"
                     >
                       <Trash2 class="w-4 h-4 mr-2" />
                       {{ t('settings.account.delete') }}
@@ -220,10 +220,10 @@
                       </p>
                     </div>
                     <input
-                        v-model="settings.twoFactor"
-                        type="checkbox"
-                        class="toggle toggle-primary"
-                        aria-label="Champ de saisie"
+                      v-model="settings.twoFactor"
+                      type="checkbox"
+                      class="toggle toggle-primary"
+                      aria-label="Champ de saisie"
                     />
                   </label>
                 </div>
@@ -239,10 +239,10 @@
                       </p>
                     </div>
                     <input
-                        v-model="settings.loginNotifications"
-                        type="checkbox"
-                        class="toggle toggle-primary"
-                        aria-label="Champ de saisie"
+                      v-model="settings.loginNotifications"
+                      type="checkbox"
+                      class="toggle toggle-primary"
+                      aria-label="Champ de saisie"
                     />
                   </label>
                 </div>
@@ -315,220 +315,225 @@
     </dialog>
 
     <ErrorPopup
-        :show-error-modal="showErrorModal"
-        :error-type="errorType"
-        @reload="handleReload"
-        @go-home="handleGoHome"
+      :show-error-modal="showErrorModal"
+      :error-type="errorType"
+      @reload="handleReload"
+      @go-home="handleGoHome"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
-import {
-  Shield,
-  User,
-  Lock,
-  Key,
-  Trash2,
-  Save,
-  AlertTriangle,
-  AlertCircle
-} from 'lucide-vue-next'
-import { useUser } from '~/composables/auth/useUser'
-import { useVolunteerAuth } from '~/composables/useVolunteer'
-import { useNavigation } from '~/composables/useNavigation'
-import { useSettingsStore } from '~/stores/settings.store'
-import ErrorPopup from '~/components/utils/ErrorPopup.vue'
+  import { ref, reactive, computed, onMounted } from 'vue'
+  import { Shield, User, Lock, Key, Trash2, Save, AlertTriangle } from 'lucide-vue-next'
+  import { useUser } from '~/composables/auth/useUser'
+  import { useVolunteerAuth } from '~/composables/useVolunteer'
+  import { useNavigation } from '~/composables/useNavigation'
+  import { useSettingsStore } from '~/stores/settings.store'
+  import ErrorPopup from '~/components/utils/ErrorPopup.vue'
 
-definePageMeta({ layout: 'app' })
+  definePageMeta({ layout: 'app' })
 
-const { t } = useI18n()
-const auth = useUser()
-const volunteer = useVolunteerAuth()
-const { navigateToRoute } = useNavigation()
+  const { t } = useI18n()
+  const auth = useUser()
+  const volunteer = useVolunteerAuth()
+  const { navigateToRoute } = useNavigation()
 
-// State
-const isDeleted = ref(false)
-const isSaving = ref(false)
-const activeSection = ref<'privacy' | 'account' | 'security'>('privacy') // par défaut: privacy
-const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
-const passwordChangeModal = ref<HTMLDialogElement | null>(null)
-const showErrorModal = ref(false)
-const errorType = ref<'4xx' | '5xx' | null>(null)
+  // State
+  const isDeleted = ref(false)
+  const isSaving = ref(false)
+  const activeSection = ref<'privacy' | 'account' | 'security'>('privacy') // par défaut: privacy
+  const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
+  const passwordChangeModal = ref<HTMLDialogElement | null>(null)
+  const showErrorModal = ref(false)
+  const errorType = ref<'4xx' | '5xx' | null>(null)
 
-// Sections de paramètres (3 éléments)
-const sections = ref([
-  { id: 'privacy', label: 'Confidentialité', icon: Shield },
-  { id: 'account', label: 'Compte', icon: User },
-  { id: 'security', label: 'Sécurité', icon: Lock }
-])
+  // Sections de paramètres (3 éléments)
+  const sections = ref([
+    { id: 'privacy', label: 'Confidentialité', icon: Shield },
+    { id: 'account', label: 'Compte', icon: User },
+    { id: 'security', label: 'Sécurité', icon: Lock }
+  ])
 
-// Password change form data
-const passwordForm = reactive({
-  oldPassword: '',
-  newPassword: '',
-  confirmPassword: ''
-})
+  // Password change form data
+  const passwordForm = reactive({
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  })
 
-const passwordError = ref<string | null>(null)
+  const passwordError = ref<string | null>(null)
 
-// Settings store
-const settingsStore = useSettingsStore()
+  // Settings store
+  const settingsStore = useSettingsStore()
 
-// Local settings for form state
-const settings = ref({
-  profileVisibility: true,
-  locationSharing: false,
-  activitySharing: true,
-  twoFactor: false
-})
+  // Local settings for form state
+  const settings = ref({
+    profileVisibility: true,
+    locationSharing: false,
+    activitySharing: true,
+    twoFactor: false
+  })
 
-// Computed
-const isPasswordFormInvalid = computed(() => {
-  return (
+  // Computed
+  const isPasswordFormInvalid = computed(() => {
+    return (
       !passwordForm.oldPassword ||
       !passwordForm.newPassword ||
       !passwordForm.confirmPassword ||
       passwordForm.newPassword !== passwordForm.confirmPassword ||
       passwordForm.newPassword.length < 8
-  )
-})
+    )
+  })
 
-// Methods
-onMounted(async () => {
-  await initData()
-})
+  // Methods
+  onMounted(async () => {
+    await initData()
+  })
 
-async function initData() {
-  try {
-    if (!auth.getUserId) {
-      await auth.initializeUser()
+  async function initData() {
+    try {
+      if (!auth.getUserId) {
+        await auth.initializeUser()
+      }
+      if (auth.getUserId) {
+        await volunteer.getVolunteerInfo()
+        // Load settings from store
+        await settingsStore.loadVolunteer()
+        // Update local settings with store data
+        settings.value = { ...settingsStore.volunteer }
+      }
+    } catch (error) {
+      handleError(error)
     }
-    if (auth.getUserId) {
-      await volunteer.getVolunteerInfo()
-      // Load settings from store
-      await settingsStore.loadVolunteer()
-      // Update local settings with store data
-      settings.value = { ...settingsStore.volunteer }
-    }
-  } catch (error) {
-    handleError(error)
   }
-}
 
-function handleReload() {
-  window.location.reload()
-}
-
-async function handleGoHome() {
-  await navigateToRoute('/')
-}
-
-function showPasswordChangeModal() {
-  passwordForm.oldPassword = ''
-  passwordForm.newPassword = ''
-  passwordForm.confirmPassword = ''
-  passwordError.value = null
-  passwordChangeModal.value?.showModal()
-}
-
-function cancelPasswordChange() {
-  passwordChangeModal.value?.close()
-}
-
-async function changePassword() {
-  if (isPasswordFormInvalid.value) {
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      passwordError.value = t('settings.password_change.error.password_mismatch')
-    } else if (passwordForm.newPassword.length < 8) {
-      passwordError.value = t('settings.password_change.error.weak_password')
-    }
-    return
+  function handleReload() {
+    window.location.reload()
   }
-  passwordError.value = null
-  try {
-    await auth.updatePassword({
-      oldPassword: passwordForm.oldPassword,
-      newPassword: passwordForm.newPassword
-    })
+
+  async function handleGoHome() {
+    await navigateToRoute('/')
+  }
+
+  function showPasswordChangeModal() {
+    passwordForm.oldPassword = ''
+    passwordForm.newPassword = ''
+    passwordForm.confirmPassword = ''
+    passwordError.value = null
+    passwordChangeModal.value?.showModal()
+  }
+
+  function cancelPasswordChange() {
     passwordChangeModal.value?.close()
-    alert(t('settings.password_change.success'))
-  } catch (error: any) {
-    passwordError.value = error.message || t('settings.password_change.error.general')
-    handleError(error)
   }
-}
 
-function showDeleteConfirmation() {
-  deleteConfirmationModal.value?.showModal()
-}
-
-function cancelDelete() {
-  deleteConfirmationModal.value?.close()
-}
-
-async function confirmDelete() {
-  deleteConfirmationModal.value?.close()
-  await removeUser()
-  await removeVolunteer()
-  window.location.href = '/'
-}
-
-async function removeUser() {
-  isDeleted.value = true
-  try {
-    await auth.removeUser()
-  } catch (error) {
-    isDeleted.value = false
-    handleError(error)
-  } finally {
-    isDeleted.value = false
+  async function changePassword() {
+    if (isPasswordFormInvalid.value) {
+      if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+        passwordError.value = t('settings.password_change.error.password_mismatch')
+      } else if (passwordForm.newPassword.length < 8) {
+        passwordError.value = t('settings.password_change.error.weak_password')
+      }
+      return
+    }
+    passwordError.value = null
+    try {
+      await auth.updatePassword({
+        oldPassword: passwordForm.oldPassword,
+        newPassword: passwordForm.newPassword
+      })
+      passwordChangeModal.value?.close()
+      alert(t('settings.password_change.success'))
+    } catch (error: any) {
+      passwordError.value = error.message || t('settings.password_change.error.general')
+      handleError(error)
+    }
   }
-}
 
-async function removeVolunteer() {
-  isDeleted.value = true
-  try {
-    await volunteer.removeVolunteer()
-  } catch (error) {
-    isDeleted.value = false
-    handleError(error)
-  } finally {
-    isDeleted.value = false
+  function showDeleteConfirmation() {
+    deleteConfirmationModal.value?.showModal()
   }
-}
 
-async function saveSettings() {
-  isSaving.value = true
-  try {
-    // Save settings to store
-    await settingsStore.saveVolunteer(settings.value)
-    // Update local settings with response
-    settings.value = { ...settingsStore.volunteer }
-  } catch (error) {
-    handleError(error)
-  } finally {
-    isSaving.value = false
+  function cancelDelete() {
+    deleteConfirmationModal.value?.close()
   }
-}
 
-function handleError(error: any) {
-  if (error?.response?.status >= 500 && error?.response?.status < 600) {
-    errorType.value = '5xx'
-    showErrorModal.value = true
-  } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
-    errorType.value = '4xx'
-    showErrorModal.value = true
-  } else {
-    console.error('Erreur inattendue:', error)
+  async function confirmDelete() {
+    deleteConfirmationModal.value?.close()
+    await removeUser()
+    await removeVolunteer()
+    window.location.href = '/'
   }
-}
+
+  async function removeUser() {
+    isDeleted.value = true
+    try {
+      await auth.removeUser()
+    } catch (error) {
+      isDeleted.value = false
+      handleError(error)
+    } finally {
+      isDeleted.value = false
+    }
+  }
+
+  async function removeVolunteer() {
+    isDeleted.value = true
+    try {
+      await volunteer.removeVolunteer()
+    } catch (error) {
+      isDeleted.value = false
+      handleError(error)
+    } finally {
+      isDeleted.value = false
+    }
+  }
+
+  async function saveSettings() {
+    isSaving.value = true
+    try {
+      // Save settings to store - only pass the modifiable fields
+      const modifiableSettings = {
+        profileVisibility: settings.value.profileVisibility,
+        locationSharing: settings.value.locationSharing,
+        activitySharing: settings.value.activitySharing,
+        twoFactor: settings.value.twoFactor
+      }
+      await settingsStore.saveVolunteer(modifiableSettings)
+      // Update local settings with response
+      settings.value = { ...settingsStore.volunteer }
+    } catch (error) {
+      handleError(error)
+    } finally {
+      isSaving.value = false
+    }
+  }
+
+  function handleError(error: any) {
+    if (error?.response?.status >= 500 && error?.response?.status < 600) {
+      errorType.value = '5xx'
+      showErrorModal.value = true
+    } else if (error?.response?.status >= 400 && error?.response?.status < 500) {
+      errorType.value = '4xx'
+      showErrorModal.value = true
+    } else {
+      console.error('Erreur inattendue:', error)
+    }
+  }
 </script>
 
 <style scoped>
-.btn { transition: all 0.2s ease-in-out; }
-.btn:hover { transform: translateY(-1px); }
-.form-control { transition: all 0.2s ease-in-out; }
-.form-control:hover { transform: translateY(-1px); }
+  .btn {
+    transition: all 0.2s ease-in-out;
+  }
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+  .form-control {
+    transition: all 0.2s ease-in-out;
+  }
+  .form-control:hover {
+    transform: translateY(-1px);
+  }
 </style>

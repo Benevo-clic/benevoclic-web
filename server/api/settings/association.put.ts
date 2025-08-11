@@ -1,12 +1,11 @@
 import axios from 'axios'
-import {createError} from "h3";
-import {ApiError} from "~/utils/ErrorHandler";
-import {getCookie, readBody} from 'h3'
-import {defineEventHandler} from 'h3'
+import { createError } from 'h3'
+import { ApiError } from '~/utils/ErrorHandler'
+import { getCookie, readBody } from 'h3'
+import { defineEventHandler } from 'h3'
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   try {
-
     const token = getCookie(event, 'auth_token')
 
     const apiBaseUrl = process.env.API_BASE_URL
@@ -21,7 +20,7 @@ export default defineEventHandler(async (event) => {
       })
     }
     const body = await readBody(event)
-    
+
     const response = await axios.put(`${apiBaseUrl}/settings/association`, body, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -29,7 +28,7 @@ export default defineEventHandler(async (event) => {
       },
       withCredentials: true
     })
-    
+
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
@@ -38,7 +37,7 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: error.statusCode || 500,
       statusMessage:
-          error.statusMessage || 'Erreur lors de la récupération de toutes les associations'
+        error.statusMessage || 'Erreur lors de la récupération de toutes les associations'
     })
   }
 })

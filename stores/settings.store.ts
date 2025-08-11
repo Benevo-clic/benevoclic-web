@@ -58,17 +58,10 @@ export const useSettingsStore = defineStore('settings', {
       this.isLoading = true
       this.error = null
       try {
-        const data = payload ?? this.volunteer
-        // Filtrer les champs autorisés pour le DTO
-        const body = {
-          profileVisibility: data.profileVisibility,
-          locationSharing: data.locationSharing,
-          activitySharing: data.activitySharing,
-          twoFactor: data.twoFactor
-        }
-        this.volunteer = await $fetch('/api/settings/volunteer', { 
-          method: 'PUT', 
-          body 
+        const body = payload ?? this.volunteer
+        this.volunteer = await $fetch('/api/settings/volunteer', {
+          method: 'PUT',
+          body
         })
       } catch (error: any) {
         this.error = error.message || 'Erreur lors de la sauvegarde des paramètres'
@@ -95,23 +88,10 @@ export const useSettingsStore = defineStore('settings', {
       this.isLoading = true
       this.error = null
       try {
-        const data = payload ?? this.association
-        // Filtrer les champs autorisés pour le DTO
-        const body = {
-          profileVisibility: data.profileVisibility,
-          contactInfoVisibility: data.contactInfoVisibility,
-          eventVisibility: data.eventVisibility,
-          volunteerListVisibility: data.volunteerListVisibility,
-          twoFactor: data.twoFactor,
-          loginNotifications: data.loginNotifications,
-          siretVerification: data.siretVerification,
-          autoApproveVolunteers: data.autoApproveVolunteers,
-          volunteerLimits: data.volunteerLimits,
-          eventApproval: data.eventApproval
-        }
-        this.association = await $fetch('/api/settings/association', { 
-          method: 'PUT', 
-          body 
+        const body = payload ?? this.association
+        this.association = await $fetch('/api/settings/association', {
+          method: 'PUT',
+          body
         })
       } catch (error: any) {
         this.error = error.message || 'Erreur lors de la sauvegarde des paramètres'
