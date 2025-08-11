@@ -152,14 +152,13 @@
     getVolunteerAnnouncements,
     getAllAssociationsFollowingList
   } = useVolunteerAuth()
-  const announcementStore = useAnnouncement()
   const { navigateToRoute } = useNavigation()
 
   const showErrorModal = ref(false)
   const errorType = ref<'4xx' | '5xx' | null>(null)
   const associationsFollowing = ref<AssociationVolunteerFollow[]>()
 
-  const nbParticipants = ref<number[]>(0)
+  const nbParticipants = ref<number>(0)
 
   let nbVolunteerAnnouncements = ref<number>(0)
 

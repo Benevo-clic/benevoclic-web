@@ -4,15 +4,17 @@
   >
     <!-- Avatar à gauche -->
     <div class="flex-shrink-0 flex items-start">
-      <div v-if="loading" class="avatar placeholder">
+      <div v-if="loading" class="avatar placeholder cursor-pointer" @click="openUserModal">
         <div
-          class="w-16 h-16 rounded-full bg-base-300 text-base-content ring-2 ring-primary ring-offset-2 ring-offset-base-100"
+          class="w-16 h-16 rounded-full bg-base-300 text-base-content ring-2 ring-primary ring-offset-2 ring-offset-base-100 hover:ring-4 transition-all duration-200"
         >
           <span class="loading loading-spinner loading-sm" />
         </div>
       </div>
-      <div v-else-if="userInfo?.avatarFileKey" class="avatar">
-        <div class="w-16 h-16 rounded-full ring-2 ring-primary ring-offset-2 ring-offset-base-100">
+      <div v-else-if="userInfo?.avatarFileKey" class="avatar cursor-pointer" @click="openUserModal">
+        <div
+          class="w-16 h-16 rounded-full ring-2 ring-primary ring-offset-2 ring-offset-base-100 hover:ring-4 transition-all duration-200"
+        >
           <img
             :src="profileImageUrl"
             :alt="`Photo de ${participant.volunteerName}`"
@@ -24,9 +26,9 @@
           />
         </div>
       </div>
-      <div v-else class="avatar placeholder">
+      <div v-else class="avatar placeholder cursor-pointer" @click="openUserModal">
         <div
-          class="w-16 h-16 rounded-full bg-base-300 text-base-content ring-2 ring-primary ring-offset-2 ring-offset-base-100 flex items-center justify-center"
+          class="w-16 h-16 rounded-full bg-base-300 text-base-content ring-2 ring-primary ring-offset-2 ring-offset-base-100 flex items-center justify-center hover:ring-4 transition-all duration-200"
         >
           <span class="text-xl font-bold">{{
             participant.volunteerName.charAt(0).toUpperCase()
@@ -87,6 +89,14 @@
       :loading="loading"
       @confirm="handlePresenceConfirm"
     />
+
+    <!-- Modal de détails utilisateur -->
+    <UserDetailsModal
+      :is-open="showUserModal"
+      :user-id="participant.volunteerId"
+      @close="closeUserModal"
+      :profile-image-url="profileImageUrl"
+    />
   </div>
 </template>
 
@@ -96,6 +106,7 @@
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import { useNavigation } from '~/composables/useNavigation'
   import PresenceModal from '~/components/event/association/PresenceModal.vue'
+  import UserDetailsModal from '~/components/common/UserDetailsModal.vue'
 
   interface Participant {
     volunteerId: string
@@ -120,13 +131,15 @@
   }>()
 
   const { navigateToRoute } = useNavigation()
-  const { getUserById } = useUser()
+  const { fetchUser, getUserById } = useUser()
   const userInfo = ref<UserInfo | null>(null)
+  const otherUserId = ref<UserInfo | null>(null)
   const loading = ref(false)
   const presenceModalRef = ref<InstanceType<typeof PresenceModal> | null>(null)
 
   const showErrorModal = ref(false)
   const errorType = ref<'4xx' | '5xx' | null>(null)
+  const showUserModal = ref(false)
 
   function handleReload() {
     window.location.reload()
@@ -136,7 +149,7 @@
   }
 
   const profileImageUrl = computed(() => {
-    return userInfo.value?.avatarFileKey
+    return otherUserId.value?.avatarFileKey
   })
 
   function handleError(error: any) {
@@ -158,7 +171,8 @@
 
     loading.value = true
     try {
-      userInfo.value = await getUserById(props.participant.volunteerId)
+      userInfo.value = await fetchUser()
+      otherUserId.value = await getUserById(props.participant.volunteerId)
     } catch (error) {
       handleError(error)
       return
@@ -174,6 +188,14 @@
   function handlePresenceConfirm(id: string, isPresent: boolean) {
     emit('presenceAction', id, isPresent)
     presenceModalRef.value?.closeModal()
+  }
+
+  function openUserModal() {
+    showUserModal.value = true
+  }
+
+  function closeUserModal() {
+    showUserModal.value = false
   }
 
   onMounted(() => {

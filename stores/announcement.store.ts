@@ -83,9 +83,6 @@ export const useAnnouncementStore = defineStore('announcement', {
 
         if (!this.announcements || this.announcements.length === 0) {
           this.error = 'Aucune annonce trouvée'
-          if (process.dev) {
-            console.log(`Aucune annonce trouvée pour associationId: ${id}`)
-          }
         }
         this._updateCache()
         return this.announcements

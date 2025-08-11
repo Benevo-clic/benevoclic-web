@@ -1,41 +1,43 @@
-import { defineEventHandler, createError } from 'h3'
+import { defineEventHandler, createError, getCookie } from 'h3'
 import axios from 'axios'
 import { ApiError } from '~/utils/ErrorHandler'
 
 export default defineEventHandler(async event => {
   try {
-    const { id } = event.context.params || {}
+    const userId = getRouterParam(event, 'id')
 
-    const token = getCookie(event, 'auth_token')
-
-    const apiBaseUrl = process.env.API_BASE_URL
-    if (!apiBaseUrl) {
+    if (!userId) {
       throw createError({
-        statusCode: 500,
-        statusMessage: 'Configuration Error',
-        data: {
-          message: 'API_BASE_URL is not configured',
-          details: 'Please check your environment variables'
-        }
+        statusCode: 400,
+        statusMessage: 'ID utilisateur requis'
       })
     }
-    const url = `${apiBaseUrl}/user/${id}`
 
-    const response = await axios.get(url, {
+    const apiBaseUrl = process.env.API_BASE_URL || 'https://api.www.benevoclic.fr'
+
+    // Récupérer les détails de l'utilisateur depuis l'API
+    const response = await $fetch(`${apiBaseUrl}/user/${userId}`, {
+      method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     })
 
-    return response.data
-  } catch (error: any) {
-    if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, "Erreur lors de la récupération de l'utilisateur")
+    return {
+      success: true,
+      data: response
     }
+  } catch (error: any) {
+    console.error('Erreur lors de la récupération des détails utilisateur:', error)
+
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.statusMessage || "Erreur lors de la récupération de l'utilisateur"
+      statusMessage:
+        error.statusMessage || 'Erreur lors de la récupération des détails utilisateur',
+      data: {
+        message: error.message || 'Erreur inattendue',
+        details: error.data || error
+      }
     })
   }
 })

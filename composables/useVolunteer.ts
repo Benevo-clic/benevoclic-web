@@ -11,6 +11,7 @@ export const useVolunteerAuth = () => {
     registerVolunteer: volunteerStore.registerVolunteer,
     getNumberOfVolunteers: volunteerStore.getNumberOfVolunteers,
     getVolunteerInfo: volunteerStore.getVolunteerInfo,
+    getVolunteerInfoById: volunteerStore.getVolunteerInfoById,
     updateVolunteer: volunteerStore.updateVolunteer,
     removeVolunteer: volunteerStore.removeVolunteer,
     getAssociationToWaitingList: volunteerStore.getAssociationToWaitingList,

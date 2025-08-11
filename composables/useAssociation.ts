@@ -11,6 +11,7 @@ export const useAssociationAuth = () => {
     registerAssociation: associationStore.registerAssociation,
     getNumberOfAssociations: associationStore.getNumberOfAssociations,
     getAssociationInfo: associationStore.getAssociationInfo,
+    getAssociationById: associationStore.getAssociationById,
     getAssociationInfoBySiret: associationStore.getAssociationInfoBySiret,
     removeAssociation: associationStore.removeAssociation,
     addVolunteerToAssociation: associationStore.addVolunteerToAssociation,
