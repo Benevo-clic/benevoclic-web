@@ -46,7 +46,10 @@
         <!-- Contenu principal -->
         <div class="lg:col-span-3">
           <!-- Notifications settings -->
-          <div v-if="activeSection === 'notifications'" class="space-y-6">
+          <div v-if="isDeleted" class="flex items-center justify-center h-64">
+            <div class="loading loading-spinner loading-lg text-primary" />
+          </div>
+          <div v-else-if="activeSection === 'notifications'" class="space-y-6">
             <div class="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6">
               <div class="flex items-center gap-3 mb-6">
                 <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
@@ -653,6 +656,7 @@
 
   // State
   const isSaving = ref(false)
+  const isDeleted = ref(false)
   const activeSection = ref('notifications')
   const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
   const passwordChangeModal = ref<HTMLDialogElement | null>(null)
@@ -788,22 +792,31 @@
     deleteConfirmationModal.value?.close()
     await removeUser()
     await removeAssociation()
-    await navigateToRoute('/')
+    window.location.href = '/'
   }
 
   async function removeAssociation() {
+    isDeleted.value = true
     try {
       await association.removeAssociation()
-    } catch (error: any) {
+    } catch (error) {
+      isDeleted.value = false
       handleError(error)
+    } finally {
+      isDeleted.value = false
     }
   }
 
   async function removeUser() {
+    isDeleted.value = true
+
     try {
       await auth.removeUser()
     } catch (error) {
+      isDeleted.value = false
       handleError(error)
+    } finally {
+      isDeleted.value = false
     }
   }
 
