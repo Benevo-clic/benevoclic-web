@@ -1,17 +1,40 @@
 import { defineStore } from 'pinia'
 
+export interface AssociationSettings {
+  profileVisibility: boolean
+  contactInfoVisibility: boolean
+  eventVisibility: boolean
+  volunteerListVisibility: boolean
+  twoFactor: boolean
+  loginNotifications: boolean
+  siretVerification: boolean
+  autoApproveVolunteers: boolean
+  volunteerLimits: boolean
+  participantLimits: boolean
+  eventApproval: boolean
+}
+
+export interface VolunteerSettings {
+  profileVisibility: boolean
+  locationSharing: boolean
+  activitySharing: boolean
+  twoFactor: boolean
+}
+
+interface SettingsState {
+  volunteer: VolunteerSettings
+  association: AssociationSettings
+  isLoading: boolean
+  error: string | null
+}
+
 export const useSettingsStore = defineStore('settings', {
-  state: () => ({
+  state: (): SettingsState => ({
     volunteer: {
       profileVisibility: true,
       locationSharing: false,
       activitySharing: true,
       twoFactor: false
-    } as {
-      profileVisibility: boolean
-      locationSharing: boolean
-      activitySharing: boolean
-      twoFactor: boolean
     },
     association: {
       profileVisibility: true,
@@ -23,18 +46,8 @@ export const useSettingsStore = defineStore('settings', {
       siretVerification: true,
       autoApproveVolunteers: false,
       volunteerLimits: true,
+      participantLimits: true,
       eventApproval: true
-    } as {
-      profileVisibility: boolean
-      contactInfoVisibility: boolean
-      eventVisibility: boolean
-      volunteerListVisibility: boolean
-      twoFactor: boolean
-      loginNotifications: boolean
-      siretVerification: boolean
-      autoApproveVolunteers: boolean
-      volunteerLimits: boolean
-      eventApproval: boolean
     },
     isLoading: false,
     error: null as string | null
@@ -45,7 +58,10 @@ export const useSettingsStore = defineStore('settings', {
       this.isLoading = true
       this.error = null
       try {
-        this.volunteer = await $fetch('/api/settings/volunteer')
+        this.volunteer = await $fetch('/api/settings/volunteer', {
+          method: 'GET',
+          credentials: 'include'
+        })
       } catch (error: any) {
         this.error = error.message || 'Erreur lors du chargement des paramètres'
         throw error
@@ -54,17 +70,51 @@ export const useSettingsStore = defineStore('settings', {
       }
     },
 
-    async saveVolunteer(payload?: Partial<typeof this.volunteer>) {
+    async getVolunteerSettings(volunteerId: string) {
+      this.isLoading = true
+      this.error = null
+      try {
+        this.volunteer = await $fetch(`/api/settings/volunteer/${volunteerId}`, {
+          method: 'GET',
+          credentials: 'include'
+        })
+      } catch (error: any) {
+        this.error = error.message || 'Erreur lors du chargement des paramètres du bénévole'
+        throw error
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    async saveVolunteer(payload?: Partial<VolunteerSettings>) {
       this.isLoading = true
       this.error = null
       try {
         const body = payload ?? this.volunteer
         this.volunteer = await $fetch('/api/settings/volunteer', {
           method: 'PUT',
-          body
+          body,
+          credentials: 'include'
         })
       } catch (error: any) {
         this.error = error.message || 'Erreur lors de la sauvegarde des paramètres'
+        throw error
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    async getAssociationSettings(associationId: string) {
+      this.isLoading = true
+      this.error = null
+      try {
+        this.association = await $fetch(`/api/settings/association/${associationId}`, {
+          method: 'GET',
+          credentials: 'include'
+        })
+        return this.association
+      } catch (error: any) {
+        this.error = error.message || "Erreur lors du chargement des paramètres de l'association"
         throw error
       } finally {
         this.isLoading = false
@@ -75,7 +125,10 @@ export const useSettingsStore = defineStore('settings', {
       this.isLoading = true
       this.error = null
       try {
-        this.association = await $fetch('/api/settings/association')
+        this.association = await $fetch('/api/settings/association', {
+          method: 'GET',
+          credentials: 'include'
+        })
       } catch (error: any) {
         this.error = error.message || 'Erreur lors du chargement des paramètres'
         throw error
@@ -84,14 +137,15 @@ export const useSettingsStore = defineStore('settings', {
       }
     },
 
-    async saveAssociation(payload?: Partial<typeof this.association>) {
+    async saveAssociation(payload?: Partial<AssociationSettings>) {
       this.isLoading = true
       this.error = null
       try {
         const body = payload ?? this.association
         this.association = await $fetch('/api/settings/association', {
           method: 'PUT',
-          body
+          body,
+          credentials: 'include'
         })
       } catch (error: any) {
         this.error = error.message || 'Erreur lors de la sauvegarde des paramètres'

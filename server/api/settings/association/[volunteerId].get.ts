@@ -1,12 +1,11 @@
 import axios from 'axios'
 import { createError } from 'h3'
 import { ApiError } from '~/utils/ErrorHandler'
-import { getCookie } from 'h3'
 import { defineEventHandler } from 'h3'
 
 export default defineEventHandler(async event => {
   try {
-    const token = getCookie(event, 'auth_token')
+    const { volunteerId } = event.context.params || {}
 
     const apiBaseUrl = process.env.API_BASE_URL
     if (!apiBaseUrl) {
@@ -20,9 +19,8 @@ export default defineEventHandler(async event => {
       })
     }
 
-    const response = await axios.get(`${apiBaseUrl}/settings/volunteer`, {
+    const response = await axios.get(`${apiBaseUrl}/settings/volunteer/${volunteerId}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     })

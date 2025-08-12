@@ -360,6 +360,24 @@
                     />
                   </label>
                 </div>
+                <div class="form-control">
+                  <label class="label cursor-pointer justify-between">
+                    <div>
+                      <span class="label-text font-medium">{{
+                        t('settings.organization.participant_limits')
+                      }}</span>
+                      <p class="text-xs text-base-content/70">
+                        {{ t('settings.organization.participant_limits_description') }}
+                      </p>
+                    </div>
+                    <input
+                      v-model="settings.participantLimits"
+                      type="checkbox"
+                      class="toggle toggle-primary"
+                      aria-label="Champ de saisie"
+                    />
+                  </label>
+                </div>
 
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
@@ -579,6 +597,7 @@
     siretVerification: true,
     autoApproveVolunteers: false,
     volunteerLimits: true,
+    participantLimits: false,
     eventApproval: true
   })
 
@@ -720,6 +739,7 @@
         siretVerification: settings.value.siretVerification,
         autoApproveVolunteers: settings.value.autoApproveVolunteers,
         volunteerLimits: settings.value.volunteerLimits,
+        participantLimits: settings.value.participantLimits,
         eventApproval: settings.value.eventApproval
       }
       await settingsStore.saveAssociation(modifiableSettings)

@@ -20,7 +20,7 @@ export default defineEventHandler(async event => {
   const participant = getRouterParam(event, 'participant')
 
   try {
-    const url = `${apiBaseUrl}/announcements/unregister/participant/${participant}/${announcementId}`
+    const url = `${apiBaseUrl}/announcements/participant/unregister/${participant}/${announcementId}`
 
     const participantInfo = await axios.patch(
       url,
