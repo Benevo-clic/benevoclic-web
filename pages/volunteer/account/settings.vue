@@ -35,6 +35,7 @@
                 class="btn btn-outline btn-sm w-full justify-start transition-all duration-200"
                 :class="activeSection === section.id ? 'btn-primary' : ''"
                 @click="activeSection = section.id"
+                aria-label="Naviguer vers la section de paramètres"
               >
                 <component :is="section.icon" class="w-4 h-4 mr-2" />
                 {{ section.label }}
@@ -46,8 +47,19 @@
         <!-- Contenu principal -->
         <div class="lg:col-span-3">
           <!-- Loading state -->
-          <div v-if="isDeleted" class="flex items-center justify-center h-64">
-            <div class="loading loading-spinner loading-lg text-primary" />
+          <div
+            v-if="isDeleting"
+            class="fixed inset-0 bg-base-200 bg-opacity-90 z-[1000] flex items-center justify-center backdrop-blur-sm"
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+          >
+            <div class="flex flex-col items-center space-y-4">
+              <img src="/logo.png" alt="" class="w-16 h-16 sm:w-20 sm:h-20 animate-spin" />
+              <div class="text-base-content opacity-70 text-sm sm:text-base">
+                Suppression en cours…
+              </div>
+            </div>
           </div>
 
           <!-- Privacy settings -->
@@ -227,25 +239,6 @@
                     />
                   </label>
                 </div>
-
-                <div class="form-control">
-                  <label class="label cursor-pointer justify-between">
-                    <div>
-                      <span class="label-text font-medium">
-                        {{ t('settings.security.login_notifications') }}
-                      </span>
-                      <p class="text-xs text-base-content/70">
-                        {{ t('settings.security.login_notifications_description') }}
-                      </p>
-                    </div>
-                    <input
-                      v-model="settings.loginNotifications"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
-                    />
-                  </label>
-                </div>
               </div>
             </div>
           </div>
@@ -339,17 +332,18 @@
   const volunteer = useVolunteerAuth()
   const { navigateToRoute } = useNavigation()
 
-  // State
-  const isDeleted = ref(false)
+  type SectionId = 'privacy' | 'account' | 'security'
+  type Section = { id: SectionId; label: string; icon: any }
   const isSaving = ref(false)
-  const activeSection = ref<'privacy' | 'account' | 'security'>('privacy') // par défaut: privacy
+  const activeSection = ref<SectionId>('privacy')
   const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
   const passwordChangeModal = ref<HTMLDialogElement | null>(null)
   const showErrorModal = ref(false)
   const errorType = ref<'4xx' | '5xx' | null>(null)
+  const isDeleting = ref(false)
 
   // Sections de paramètres (3 éléments)
-  const sections = ref([
+  const sections = ref<Section[]>([
     { id: 'privacy', label: 'Confidentialité', icon: Shield },
     { id: 'account', label: 'Compte', icon: User },
     { id: 'security', label: 'Sécurité', icon: Lock }
@@ -459,34 +453,26 @@
     deleteConfirmationModal.value?.close()
   }
 
-  async function confirmDelete() {
-    deleteConfirmationModal.value?.close()
-    await removeUser()
-    await removeVolunteer()
-    window.location.href = '/'
-  }
-
   async function removeUser() {
-    isDeleted.value = true
-    try {
-      await auth.removeUser()
-    } catch (error) {
-      isDeleted.value = false
-      handleError(error)
-    } finally {
-      isDeleted.value = false
-    }
+    return await auth.removeUser()
   }
 
-  async function removeVolunteer() {
-    isDeleted.value = true
+  async function confirmDelete() {
+    if (isDeleting.value) return
+    isDeleting.value = true
+
     try {
-      await volunteer.removeVolunteer()
-    } catch (error) {
-      isDeleted.value = false
-      handleError(error)
+      deleteConfirmationModal.value?.close()
+      await removeUser()
+      if (typeof window !== 'undefined') {
+        window.location.replace('/')
+        return
+      }
+    } catch (err) {
+      handleError(err)
+      isDeleting.value = false
     } finally {
-      isDeleted.value = false
+      isDeleting.value = false
     }
   }
 

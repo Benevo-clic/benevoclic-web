@@ -149,7 +149,7 @@ export const useUserStore = defineStore('user', {
           this.error = 'Utilisateur non trouvé'
         }
 
-        return response.data
+        return response
       } catch (err: any) {
         this.error = err?.message || "Erreur de récupération de l'utilisateur"
         throw err
@@ -279,14 +279,12 @@ export const useUserStore = defineStore('user', {
       try {
         const $fetch = useRequestFetch()
         console.log('Suppression du compte utilisateur:', this.user.userId)
-        const response = await $fetch<{ success?: boolean }>(`/api/user/${this.user?.userId}`, {
+        const response = await $fetch<{ uid: string }>(`/api/user/${this.user?.userId}`, {
           method: 'DELETE',
           credentials: 'include'
         })
 
-        console.log('Réponse de la suppression du compte:', response)
-
-        if (response.success) {
+        if (response.uid === this.user?.userId) {
           this.user = null
           this.invalidateUserCache()
         }

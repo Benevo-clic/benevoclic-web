@@ -19,7 +19,7 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const removeResponse = await axios.delete(`${apiBaseUrl}/user/${id}`, {
+    const removeResponse = await axios.delete<{ uid: string }>(`${apiBaseUrl}/user/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -29,6 +29,8 @@ export default defineEventHandler(async event => {
     }
 
     deleteCookies(event)
+
+    return removeResponse.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
       ApiError.handleAxios(error, 'Erreur lors de la suppression de l’utilisateur')

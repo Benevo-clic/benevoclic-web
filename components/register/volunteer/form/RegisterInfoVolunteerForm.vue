@@ -15,11 +15,13 @@
   import { useNavigation } from '~/composables/useNavigation'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import { useAuthStore } from '@/stores/auth/auth.store'
+  import { useSettingsStore } from '~/stores/settings.store'
 
   const { user, updateIsCompleted } = useUser()
   const authStore = useAuthStore()
   const { registerVolunteer } = useVolunteerAuth()
   const { navigateToRoute } = useNavigation()
+  const settingsStore = useSettingsStore()
 
   const showErrorModal = ref(false)
   const errorType = ref<'4xx' | '5xx' | null>(null)
@@ -208,15 +210,26 @@
     }
   }
 
-  async function submitForm() {
+  // Utilitaire : retire les champs vides/indéfinis pour alléger le payload
+  function compact<T extends Record<string, any>>(obj: T): T {
+    const out: Record<string, any> = {}
+    for (const [k, v] of Object.entries(obj)) {
+      if (v !== '' && v !== undefined && v !== null) out[k] = v
+    }
+    return out as T
+  }
+
+  const submitForm = async (): Promise<void> => {
+    if (loading.value) return // évite les doubles soumissions
     loading.value = true
     isError.value = false
+
     try {
-      if (!user.value || !user.value.email) {
-        throw new Error('User is not authenticated or email is missing')
-      }
-      await registerVolunteer({
-        email: user.value?.email,
+      const u = user.value
+      if (!u?.email) throw new Error('User is not authenticated or email is missing')
+
+      const payload = compact({
+        email: u.email,
         lastName: formData.lastName,
         firstName: formData.firstName,
         phone: formData.phone,
@@ -224,14 +237,19 @@
         city: formData.city,
         postalCode: formData.postalCode,
         bio: formData.bio
-      } as CreateVolunteerDto)
+      }) satisfies CreateVolunteerDto
 
-      await updateIsCompleted(user.value.userId, true)
+      // 1) Création/inscription du volontaire
+      await registerVolunteer(payload)
+
+      // 2) Ces deux opérations peuvent se faire en parallèle
+      await Promise.all([updateIsCompleted(u.userId, true), settingsStore.loadVolunteer()])
+
       emit('submit', true)
-    } catch (error) {
-      console.error('Error submitting form:', error)
+    } catch (err) {
+      console.error('Error submitting form:', err)
       isError.value = true
-      handleError(error)
+      handleError(err)
     } finally {
       loading.value = false
     }

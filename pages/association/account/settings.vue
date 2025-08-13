@@ -45,8 +45,20 @@
 
         <!-- Contenu principal -->
         <div class="lg:col-span-3">
-          <div v-if="isDeleted" class="flex items-center justify-center h-64">
-            <div class="loading loading-spinner loading-lg text-primary" />
+          <!-- Loader global pendant la suppression -->
+          <div
+            v-if="isDeleting"
+            class="fixed inset-0 bg-base-200 bg-opacity-90 z-[1000] flex items-center justify-center backdrop-blur-sm"
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+          >
+            <div class="flex flex-col items-center space-y-4">
+              <img src="/logo.png" alt="" class="w-16 h-16 sm:w-20 sm:h-20 animate-spin" />
+              <div class="text-base-content opacity-70 text-sm sm:text-base">
+                Suppression en cours…
+              </div>
+            </div>
           </div>
 
           <!-- Privacy settings -->
@@ -70,9 +82,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.privacy.profile_visibility')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.privacy.profile_visibility') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.privacy.profile_visibility_description_association') }}
                       </p>
@@ -89,9 +101,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.privacy.contact_info')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.privacy.contact_info') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.privacy.contact_info_description') }}
                       </p>
@@ -108,9 +120,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.privacy.event_visibility')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.privacy.event_visibility') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.privacy.event_visibility_description') }}
                       </p>
@@ -127,9 +139,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.privacy.volunteer_list')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.privacy.volunteer_list') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.privacy.volunteer_list_description') }}
                       </p>
@@ -248,9 +260,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.security.two_factor')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.security.two_factor') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.security.two_factor_description') }}
                       </p>
@@ -267,9 +279,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.security.login_notifications')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.security.login_notifications') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.security.login_notifications_description') }}
                       </p>
@@ -286,9 +298,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.security.siret_verification')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.security.siret_verification') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.security.siret_verification_description') }}
                       </p>
@@ -326,9 +338,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.organization.auto_approve_volunteers')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.organization.auto_approve_volunteers') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.organization.auto_approve_volunteers_description') }}
                       </p>
@@ -345,9 +357,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.organization.volunteer_limits')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.organization.volunteer_limits') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.organization.volunteer_limits_description') }}
                       </p>
@@ -360,12 +372,13 @@
                     />
                   </label>
                 </div>
+
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.organization.participant_limits')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.organization.participant_limits') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.organization.participant_limits_description') }}
                       </p>
@@ -382,9 +395,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.organization.event_approval')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.organization.event_approval') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.organization.event_approval_description') }}
                       </p>
@@ -400,6 +413,7 @@
               </div>
             </div>
           </div>
+          <!-- /main content -->
         </div>
       </div>
     </div>
@@ -422,7 +436,7 @@
           <button class="btn btn-outline" @click="cancelDelete">
             {{ t('settings.delete_confirmation.cancel') }}
           </button>
-          <button class="btn btn-error" @click="confirmDelete">
+          <button class="btn btn-error" :disabled="isDeleting" @click="confirmDelete">
             <Trash2 class="w-4 h-4 mr-2" />
             {{ t('settings.delete_confirmation.confirm') }}
           </button>
@@ -448,9 +462,9 @@
         <form class="space-y-4 py-4" @submit.prevent="changePassword">
           <div class="form-control">
             <label class="label">
-              <span class="label-text font-medium">{{
-                t('settings.password_change.old_password')
-              }}</span>
+              <span class="label-text font-medium">
+                {{ t('settings.password_change.old_password') }}
+              </span>
             </label>
             <input
               v-model="passwordForm.oldPassword"
@@ -464,9 +478,9 @@
 
           <div class="form-control">
             <label class="label">
-              <span class="label-text font-medium">{{
-                t('settings.password_change.new_password')
-              }}</span>
+              <span class="label-text font-medium">
+                {{ t('settings.password_change.new_password') }}
+              </span>
             </label>
             <input
               v-model="passwordForm.newPassword"
@@ -478,9 +492,9 @@
               aria-label="Mot de passe"
             />
             <label class="label">
-              <span class="label-text-alt text-base-content/50">{{
-                t('settings.password_change.password_requirements')
-              }}</span>
+              <span class="label-text-alt text-base-content/50">
+                {{ t('settings.password_change.password_requirements') }}
+              </span>
             </label>
           </div>
 
@@ -559,7 +573,6 @@
 
   // State
   const isSaving = ref(false)
-  const isDeleted = ref(false)
   const activeSection = ref<'privacy' | 'account' | 'security' | 'organization'>('privacy')
   const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
   const passwordChangeModal = ref<HTMLDialogElement | null>(null)
@@ -693,35 +706,28 @@
     deleteConfirmationModal.value?.close()
   }
 
-  async function confirmDelete() {
-    deleteConfirmationModal.value?.close()
-    await removeUser()
-    await removeAssociation()
-    window.location.href = '/'
-  }
-
-  async function removeAssociation() {
-    isDeleted.value = true
-    try {
-      await association.removeAssociation()
-    } catch (error) {
-      isDeleted.value = false
-      handleError(error)
-    } finally {
-      isDeleted.value = false
-    }
-  }
+  const isDeleting = ref(false)
 
   async function removeUser() {
-    isDeleted.value = true
+    return await auth.removeUser()
+  }
+
+  async function confirmDelete() {
+    if (isDeleting.value) return
+    isDeleting.value = true
 
     try {
-      await auth.removeUser()
-    } catch (error) {
-      isDeleted.value = false
-      handleError(error)
+      deleteConfirmationModal.value?.close()
+      await removeUser()
+      if (typeof window !== 'undefined') {
+        window.location.replace('/')
+        return
+      }
+    } catch (err) {
+      handleError(err)
+      isDeleting.value = false
     } finally {
-      isDeleted.value = false
+      isDeleting.value = false
     }
   }
 
@@ -744,7 +750,6 @@
       }
       await settingsStore.saveAssociation(modifiableSettings)
 
-      console.log('Settings saved:', modifiableSettings.eventVisibility)
       if (association.association.value?.associationId)
         await association.updateAnnouncementVisibility(
           association.association.value?.associationId,

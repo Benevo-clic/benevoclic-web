@@ -1,21 +1,26 @@
 <template>
   <div v-if="isOpen" class="modal modal-open">
     <div
-      class="modal-box max-w-2xl bg-gradient-to-br from-base-100 to-base-200 shadow-2xl border border-base-300"
+      class="modal-box w-11/12 sm:max-w-2xl bg-gradient-to-br from-base-100 to-base-200 shadow-2xl border border-base-300 max-h-[85dvh] overflow-y-auto p-4 sm:p-6"
     >
       <!-- Header avec bouton fermer -->
-      <div class="flex justify-between items-start mb-6 pb-4 border-b border-base-300">
-        <div>
+      <div
+        class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4 sm:mb-6 pb-3 sm:pb-4 border-b border-base-300"
+      >
+        <div class="min-w-0">
           <h3
-            class="font-bold text-xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+            class="font-bold text-lg sm:text-xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
           >
             Détails du profil
           </h3>
-          <p class="text-sm text-gray-500 mt-1">Informations complètes de l'utilisateur</p>
+          <p class="text-xs sm:text-sm text-gray-500 mt-1 break-words">
+            Informations complètes de l'utilisateur
+          </p>
         </div>
         <button
           @click="closeModal"
-          class="btn btn-sm btn-circle btn-ghost hover:bg-base-300 transition-all duration-200"
+          aria-label="Fermer"
+          class="btn btn-sm btn-circle btn-ghost self-end sm:self-auto hover:bg-base-300 transition-all duration-200"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -56,12 +61,12 @@
       <!-- Affichage pour un volontaire -->
       <div v-else-if="volunteerDetails" class="space-y-6">
         <!-- Section Avatar et Informations de base -->
-        <div class="flex items-start space-x-6">
+        <div class="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
           <!-- Avatar -->
           <div class="flex-shrink-0">
             <div v-if="props.profileImageUrl" class="avatar">
               <div
-                class="w-24 h-24 rounded-full ring-4 ring-primary ring-offset-2 ring-offset-base-100 shadow-lg hover:ring-6 transition-all duration-300"
+                class="w-20 h-20 sm:w-24 sm:h-24 rounded-full ring-4 ring-primary ring-offset-2 ring-offset-base-100 shadow-lg transition-all duration-300"
               >
                 <img
                   :src="props.profileImageUrl"
@@ -73,9 +78,9 @@
             </div>
             <div v-else class="avatar placeholder">
               <div
-                class="w-24 h-24 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 text-primary ring-4 ring-primary ring-offset-2 ring-offset-base-100 flex items-center justify-center shadow-lg hover:ring-6 transition-all duration-300"
+                class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 text-primary ring-4 ring-primary ring-offset-2 ring-offset-base-100 flex items-center justify-center shadow-lg transition-all duration-300"
               >
-                <span class="text-3xl font-bold">
+                <span class="text-2xl sm:text-3xl font-bold">
                   {{ volunteerDetails.firstName?.charAt(0)?.toUpperCase() || '?' }}
                 </span>
               </div>
@@ -83,8 +88,8 @@
           </div>
 
           <!-- Informations de base -->
-          <div class="flex-1">
-            <h2 class="text-2xl font-bold mb-2">
+          <div class="flex-1 min-w-0">
+            <h2 class="text-xl sm:text-2xl font-bold mb-2 truncate">
               {{ volunteerDetails.firstName || '' }} {{ volunteerDetails.lastName || '' }}
             </h2>
 
@@ -104,8 +109,8 @@
             </div>
 
             <!-- Informations de contact (conditionnelles) -->
-            <div v-if="volunteerSettings?.profileVisibility" class="space-y-2 text-sm">
-              <div v-if="volunteerDetails.email" class="flex items-center space-x-2">
+            <div v-if="volunteerSettings?.profileVisibility" class="space-y-2 text-sm break-words">
+              <div v-if="volunteerDetails.email" class="flex items-center gap-2 min-w-0">
                 <svg
                   class="w-4 h-4 text-gray-500"
                   fill="none"
@@ -119,10 +124,10 @@
                     d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                   />
                 </svg>
-                <span>{{ volunteerDetails.email }}</span>
+                <span class="truncate">{{ volunteerDetails.email }}</span>
               </div>
 
-              <div v-if="volunteerDetails.phone" class="flex items-center space-x-2">
+              <div v-if="volunteerDetails.phone" class="flex items-center gap-2">
                 <svg
                   class="w-4 h-4 text-gray-500"
                   fill="none"
@@ -136,10 +141,10 @@
                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                   />
                 </svg>
-                <span>{{ volunteerDetails.phone }}</span>
+                <span class="break-words">{{ volunteerDetails.phone }}</span>
               </div>
 
-              <div v-if="volunteerDetails.birthDate" class="flex items-center space-x-2">
+              <div v-if="volunteerDetails.birthDate" class="flex items-center gap-2">
                 <svg
                   class="w-4 h-4 text-gray-500"
                   fill="none"
@@ -150,7 +155,7 @@
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                   />
                 </svg>
                 <span>{{ formatDate(volunteerDetails.birthDate) }}</span>
@@ -165,7 +170,7 @@
           class="border-t pt-4"
         >
           <h4 class="font-semibold mb-2">À propos</h4>
-          <p class="text-gray-700 leading-relaxed">{{ volunteerDetails.bio }}</p>
+          <p class="text-gray-700 leading-relaxed break-words">{{ volunteerDetails.bio }}</p>
         </div>
 
         <!-- Section Localisation (conditionnelle) -->
@@ -177,7 +182,7 @@
           class="border-t pt-4"
         >
           <h4 class="font-semibold mb-2">Localisation</h4>
-          <div class="flex items-start space-x-2">
+          <div class="flex items-start gap-2">
             <svg
               class="w-4 h-4 text-gray-500 mt-0.5"
               fill="none"
@@ -197,7 +202,7 @@
                 d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
               />
             </svg>
-            <span class="text-gray-700">
+            <span class="text-gray-700 break-words">
               {{ [volunteerDetails.city, volunteerDetails.country].filter(Boolean).join(', ') }}
               {{ volunteerDetails.postalCode ? `(${volunteerDetails.postalCode})` : '' }}
             </span>
@@ -207,9 +212,9 @@
         <!-- Section Statistiques (conditionnelle) -->
         <div v-if="volunteerSettings?.profileVisibility" class="border-t pt-4">
           <h4 class="font-semibold mb-3">Statistiques</h4>
-          <div class="grid grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <div
-              class="stat bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-4 border border-primary/20"
+              class="stat bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-3 sm:p-4 border border-primary/20"
             >
               <div class="stat-figure text-primary">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -221,14 +226,16 @@
                   />
                 </svg>
               </div>
-              <div class="stat-title text-sm font-medium text-gray-600">Participations</div>
-              <div class="stat-value text-2xl font-bold text-primary">
+              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">
+                Participations
+              </div>
+              <div class="stat-value text-xl sm:text-2xl font-bold text-primary">
                 {{ volunteerDetails.nbParticipations || 0 }}
               </div>
             </div>
 
             <div
-              class="stat bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-xl p-4 border border-secondary/20"
+              class="stat bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-xl p-3 sm:p-4 border border-secondary/20"
             >
               <div class="stat-figure text-secondary">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -240,14 +247,14 @@
                   />
                 </svg>
               </div>
-              <div class="stat-title text-sm font-medium text-gray-600">Missions</div>
-              <div class="stat-value text-2xl font-bold text-secondary">
+              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">Missions</div>
+              <div class="stat-value text-xl sm:text-2xl font-bold text-secondary">
                 {{ volunteerDetails.nbVolunteers || 0 }}
               </div>
             </div>
 
             <div
-              class="stat bg-gradient-to-br from-accent/10 to-accent/5 rounded-xl p-4 border border-accent/20"
+              class="stat bg-gradient-to-br from-accent/10 to-accent/5 rounded-xl p-3 sm:p-4 border border-accent/20"
             >
               <div class="stat-figure text-accent">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -259,8 +266,10 @@
                   />
                 </svg>
               </div>
-              <div class="stat-title text-sm font-medium text-gray-600">Associations</div>
-              <div class="stat-value text-2xl font-bold text-accent">
+              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">
+                Associations
+              </div>
+              <div class="stat-value text-xl sm:text-2xl font-bold text-accent">
                 {{ volunteerDetails.nbAssociations || 0 }}
               </div>
             </div>
@@ -270,7 +279,7 @@
         <!-- Section Statut (conditionnelle) -->
         <div v-if="volunteerSettings?.profileVisibility" class="border-t pt-4">
           <h4 class="font-semibold mb-3">Statut</h4>
-          <div class="flex flex-wrap gap-3">
+          <div class="flex flex-wrap gap-2 sm:gap-3">
             <span
               v-if="volunteerDetails.isOnline"
               class="badge badge-success shadow-md hover:shadow-lg transition-all duration-200"
@@ -333,7 +342,7 @@
         <!-- Section Informations système (conditionnelle) -->
         <div v-if="volunteerSettings?.profileVisibility" class="border-t pt-4">
           <h4 class="font-semibold mb-2">Informations système</h4>
-          <div class="grid grid-cols-2 gap-4 text-sm">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm">
             <div>
               <span class="font-medium">Créé le:</span>
               <p class="text-gray-600">{{ formatDate(volunteerDetails.createdAt || '') }}</p>
@@ -349,12 +358,12 @@
       <!-- Affichage pour une association -->
       <div v-else-if="associationDetails" class="space-y-6">
         <!-- Section Avatar et Informations de base -->
-        <div class="flex items-start space-x-6">
+        <div class="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
           <!-- Avatar -->
           <div class="flex-shrink-0">
             <div v-if="props.profileImageUrl" class="avatar">
               <div
-                class="w-24 h-24 rounded-full ring-4 ring-primary ring-offset-2 ring-offset-base-100 shadow-lg hover:ring-6 transition-all duration-300"
+                class="w-20 h-20 sm:w-24 sm:h-24 rounded-full ring-4 ring-primary ring-offset-2 ring-offset-base-100 shadow-lg transition-all duration-300"
               >
                 <img
                   :src="props.profileImageUrl"
@@ -366,9 +375,9 @@
             </div>
             <div v-else class="avatar placeholder">
               <div
-                class="w-24 h-24 rounded-full bg-gradient-to-br from-secondary/20 to-primary/20 text-secondary ring-4 ring-secondary ring-offset-2 ring-offset-base-100 flex items-center justify-center shadow-lg hover:ring-6 transition-all duration-300"
+                class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-secondary/20 to-primary/20 text-secondary ring-4 ring-secondary ring-offset-2 ring-offset-base-100 flex items-center justify-center shadow-lg transition-all duration-300"
               >
-                <span class="text-3xl font-bold">
+                <span class="text-2xl sm:text-3xl font-bold">
                   {{ associationDetails.associationName?.charAt(0)?.toUpperCase() || '?' }}
                 </span>
               </div>
@@ -376,8 +385,8 @@
           </div>
 
           <!-- Informations de base -->
-          <div class="flex-1">
-            <h2 class="text-2xl font-bold mb-2">
+          <div class="flex-1 min-w-0">
+            <h2 class="text-xl sm:text-2xl font-bold mb-2 truncate">
               {{ associationDetails.associationName || '' }}
             </h2>
 
@@ -405,8 +414,11 @@
             </div>
 
             <!-- Informations de contact (conditionnelles) -->
-            <div v-if="associationSettings?.contactInfoVisibility" class="space-y-2 text-sm">
-              <div v-if="associationDetails.email" class="flex items-center space-x-2">
+            <div
+              v-if="associationSettings?.contactInfoVisibility"
+              class="space-y-2 text-sm break-words"
+            >
+              <div v-if="associationDetails.email" class="flex items-center gap-2 min-w-0">
                 <svg
                   class="w-4 h-4 text-gray-500"
                   fill="none"
@@ -420,10 +432,10 @@
                     d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                   />
                 </svg>
-                <span>{{ associationDetails.email }}</span>
+                <span class="truncate">{{ associationDetails.email }}</span>
               </div>
 
-              <div v-if="associationDetails.phone" class="flex items-center space-x-2">
+              <div v-if="associationDetails.phone" class="flex items-center gap-2">
                 <svg
                   class="w-4 h-4 text-gray-500"
                   fill="none"
@@ -437,7 +449,7 @@
                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                   />
                 </svg>
-                <span>{{ associationDetails.phone }}</span>
+                <span class="break-words">{{ associationDetails.phone }}</span>
               </div>
             </div>
           </div>
@@ -449,7 +461,7 @@
           class="border-t pt-4"
         >
           <h4 class="font-semibold mb-2">À propos</h4>
-          <p class="text-gray-700 leading-relaxed">{{ associationDetails.bio }}</p>
+          <p class="text-gray-700 leading-relaxed break-words">{{ associationDetails.bio }}</p>
         </div>
 
         <!-- Section Localisation (conditionnelle) -->
@@ -461,7 +473,7 @@
           class="border-t pt-4"
         >
           <h4 class="font-semibold mb-2">Localisation</h4>
-          <div class="flex items-start space-x-2">
+          <div class="flex items-start gap-2">
             <svg
               class="w-4 h-4 text-gray-500 mt-0.5"
               fill="none"
@@ -481,7 +493,7 @@
                 d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
               />
             </svg>
-            <span class="text-gray-700">
+            <span class="text-gray-700 break-words">
               {{ [associationDetails.city, associationDetails.country].filter(Boolean).join(', ') }}
               {{ associationDetails.postalCode ? `(${associationDetails.postalCode})` : '' }}
             </span>
@@ -491,10 +503,10 @@
         <!-- Section Statistiques (conditionnelles) -->
         <div v-if="associationSettings?.profileVisibility" class="border-t pt-4">
           <h4 class="font-semibold mb-3">Statistiques</h4>
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div
               v-if="associationSettings?.volunteerListVisibility"
-              class="stat bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-4 border border-primary/20"
+              class="stat bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-3 sm:p-4 border border-primary/20"
             >
               <div class="stat-figure text-primary">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -506,14 +518,14 @@
                   />
                 </svg>
               </div>
-              <div class="stat-title text-sm font-medium text-gray-600">Volontaires</div>
-              <div class="stat-value text-2xl font-bold text-primary">
+              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">Volontaires</div>
+              <div class="stat-value text-xl sm:text-2xl font-bold text-primary">
                 {{ associationDetails.volunteers || 0 }}
               </div>
             </div>
 
             <div
-              class="stat bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-xl p-4 border border-secondary/20"
+              class="stat bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-xl p-3 sm:p-4 border border-secondary/20"
             >
               <div class="stat-figure text-secondary">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -525,8 +537,8 @@
                   />
                 </svg>
               </div>
-              <div class="stat-title text-sm font-medium text-gray-600">Annonces</div>
-              <div class="stat-value text-2xl font-bold text-secondary">
+              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">Annonces</div>
+              <div class="stat-value text-xl sm:text-2xl font-bold text-secondary">
                 {{ associationDetails.announcements || 0 }}
               </div>
             </div>
@@ -536,7 +548,7 @@
         <!-- Section Statut (conditionnelle) -->
         <div v-if="associationSettings?.profileVisibility" class="border-t pt-4">
           <h4 class="font-semibold mb-3">Statut</h4>
-          <div class="flex flex-wrap gap-3">
+          <div class="flex flex-wrap gap-2 sm:gap-3">
             <span
               v-if="associationDetails.isOnline"
               class="badge badge-success shadow-md hover:shadow-lg transition-all duration-200"
@@ -599,7 +611,7 @@
         <!-- Section Informations système (conditionnelle) -->
         <div v-if="associationSettings?.profileVisibility" class="border-t pt-4">
           <h4 class="font-semibold mb-2">Informations système</h4>
-          <div class="grid grid-cols-2 gap-4 text-sm">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm">
             <div>
               <span class="font-medium">Créé le:</span>
               <p class="text-gray-600">{{ formatDate(associationDetails.createdAt || '') }}</p>
@@ -613,21 +625,23 @@
       </div>
 
       <!-- Footer -->
-      <div class="modal-action pt-6 border-t border-base-300">
-        <button
-          @click="closeModal"
-          class="btn btn-primary shadow-lg hover:shadow-xl transition-all duration-200"
-        >
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-          Fermer
-        </button>
+      <div class="modal-action pt-4 sm:pt-6 border-t border-base-300">
+        <div class="flex flex-wrap gap-2">
+          <button
+            @click="closeModal"
+            class="btn btn-primary w-full sm:w-auto shadow-lg hover:shadow-xl transition-all duration-200"
+          >
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+            Fermer
+          </button>
+        </div>
       </div>
     </div>
 
@@ -745,9 +759,7 @@
     return new Date(dateString).toLocaleDateString('fr-FR', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      day: 'numeric'
     })
   }
 
@@ -902,5 +914,9 @@
 <style scoped>
   .modal-backdrop {
     @apply fixed inset-0 bg-black bg-opacity-50;
+  }
+  /* (optionnel) Mitigation iOS pour la hauteur du viewport */
+  :root {
+    height: 100%;
   }
 </style>
