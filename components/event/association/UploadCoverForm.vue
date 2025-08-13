@@ -66,7 +66,6 @@
 </script>
 
 <template>
-  <!-- Cover Photo Upload Section -->
   <div class="w-full mb-6">
     <div
       class="w-full h-80 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer relative overflow-hidden"

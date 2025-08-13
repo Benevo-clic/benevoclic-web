@@ -290,7 +290,9 @@
       "auto_approve_volunteers": "Approbation automatique des volontaires",
       "auto_approve_volunteers_description": "Approuver automatiquement les demandes de volontaires",
       "volunteer_limits": "Limites de volontaires",
+      "participant_limits": "Limites de participants",
       "volunteer_limits_description": "Définir des limites sur le nombre de volontaires par événement",
+      "participant_limits_description": "Définir des limites sur le nombre de participants par événement",
       "event_approval": "Approbation d'événements",
       "event_approval_description": "Exiger une approbation pour les nouveaux événements"
     },

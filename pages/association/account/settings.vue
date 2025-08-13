@@ -45,123 +45,8 @@
 
         <!-- Contenu principal -->
         <div class="lg:col-span-3">
-          <!-- Notifications settings -->
           <div v-if="isDeleted" class="flex items-center justify-center h-64">
             <div class="loading loading-spinner loading-lg text-primary" />
-          </div>
-          <div v-else-if="activeSection === 'notifications'" class="space-y-6">
-            <div class="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6">
-              <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                  <Bell class="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h2 class="text-xl font-semibold text-base-content">
-                    {{ t('settings.notifications.title') }}
-                  </h2>
-                  <p class="text-base-content/70">
-                    {{ t('settings.notifications.description_association') }}
-                  </p>
-                </div>
-              </div>
-
-              <div class="space-y-6">
-                <div class="form-control">
-                  <label class="label cursor-pointer justify-between">
-                    <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.notifications.email')
-                      }}</span>
-                      <p class="text-xs text-base-content/70">
-                        {{ t('settings.notifications.email_description_association') }}
-                      </p>
-                    </div>
-                    <input
-                      v-model="settings.emailNotifications"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
-                    />
-                  </label>
-                </div>
-
-                <div class="form-control">
-                  <label class="label cursor-pointer justify-between">
-                    <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.notifications.push')
-                      }}</span>
-                      <p class="text-xs text-base-content/70">
-                        {{ t('settings.notifications.push_description') }}
-                      </p>
-                    </div>
-                    <input
-                      v-model="settings.pushNotifications"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
-                    />
-                  </label>
-                </div>
-
-                <div class="form-control">
-                  <label class="label cursor-pointer justify-between">
-                    <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.notifications.volunteer_requests')
-                      }}</span>
-                      <p class="text-xs text-base-content/70">
-                        {{ t('settings.notifications.volunteer_requests_description') }}
-                      </p>
-                    </div>
-                    <input
-                      v-model="settings.volunteerRequests"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
-                    />
-                  </label>
-                </div>
-
-                <div class="form-control">
-                  <label class="label cursor-pointer justify-between">
-                    <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.notifications.event_updates')
-                      }}</span>
-                      <p class="text-xs text-base-content/70">
-                        {{ t('settings.notifications.event_updates_description') }}
-                      </p>
-                    </div>
-                    <input
-                      v-model="settings.eventUpdates"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
-                    />
-                  </label>
-                </div>
-
-                <div class="form-control">
-                  <label class="label cursor-pointer justify-between">
-                    <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.notifications.analytics')
-                      }}</span>
-                      <p class="text-xs text-base-content/70">
-                        {{ t('settings.notifications.analytics_description') }}
-                      </p>
-                    </div>
-                    <input
-                      v-model="settings.analytics"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
-                    />
-                  </label>
-                </div>
-              </div>
-            </div>
           </div>
 
           <!-- Privacy settings -->
@@ -475,6 +360,24 @@
                     />
                   </label>
                 </div>
+                <div class="form-control">
+                  <label class="label cursor-pointer justify-between">
+                    <div>
+                      <span class="label-text font-medium">{{
+                        t('settings.organization.participant_limits')
+                      }}</span>
+                      <p class="text-xs text-base-content/70">
+                        {{ t('settings.organization.participant_limits_description') }}
+                      </p>
+                    </div>
+                    <input
+                      v-model="settings.participantLimits"
+                      type="checkbox"
+                      class="toggle toggle-primary"
+                      aria-label="Champ de saisie"
+                    />
+                  </label>
+                </div>
 
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
@@ -627,7 +530,6 @@
 <script setup lang="ts">
   import { ref, reactive, computed, onMounted } from 'vue'
   import {
-    Bell,
     Shield,
     Building2,
     Lock,
@@ -642,6 +544,7 @@
   import { useUser } from '~/composables/auth/useUser'
   import { useAssociationAuth } from '~/composables/useAssociation'
   import { useNavigation } from '~/composables/useNavigation'
+  import { useSettingsStore } from '~/stores/settings.store'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
 
   definePageMeta({
@@ -657,19 +560,18 @@
   // State
   const isSaving = ref(false)
   const isDeleted = ref(false)
-  const activeSection = ref('notifications')
+  const activeSection = ref<'privacy' | 'account' | 'security' | 'organization'>('privacy')
   const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
   const passwordChangeModal = ref<HTMLDialogElement | null>(null)
   const showErrorModal = ref(false)
   const errorType = ref<'4xx' | '5xx' | null>(null)
 
-  // Sections de paramètres
+  // Sections de paramètres (4 éléments)
   const sections = ref([
-    { id: 'notifications', label: 'Notifications', icon: Bell },
-    { id: 'privacy', label: 'Confidentialité', icon: Shield },
-    { id: 'account', label: 'Compte', icon: Building2 },
-    { id: 'security', label: 'Sécurité', icon: Lock },
-    { id: 'organization', label: 'Organisation', icon: Users }
+    { id: 'privacy' as const, label: 'Confidentialité', icon: Shield },
+    { id: 'account' as const, label: 'Compte', icon: Building2 },
+    { id: 'security' as const, label: 'Sécurité', icon: Lock },
+    { id: 'organization' as const, label: 'Organisation', icon: Users }
   ])
 
   // Password change form data
@@ -681,13 +583,11 @@
 
   const passwordError = ref<string | null>(null)
 
-  // Settings data
+  // Settings store
+  const settingsStore = useSettingsStore()
+
+  // Local settings for form state
   const settings = ref({
-    emailNotifications: true,
-    pushNotifications: false,
-    volunteerRequests: true,
-    eventUpdates: true,
-    analytics: true,
     profileVisibility: true,
     contactInfoVisibility: false,
     eventVisibility: true,
@@ -697,6 +597,7 @@
     siretVerification: true,
     autoApproveVolunteers: false,
     volunteerLimits: true,
+    participantLimits: false,
     eventApproval: true
   })
 
@@ -727,6 +628,10 @@
     if (!association.association.value) {
       await association.getAssociationInfo()
     }
+    // Load settings from store
+    await settingsStore.loadAssociation()
+    // Update local settings with store data
+    settings.value = { ...settingsStore.association }
   }
 
   function handleReload() {
@@ -823,9 +728,30 @@
   async function saveSettings() {
     isSaving.value = true
     try {
-      // Simuler une sauvegarde
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      console.log('Paramètres sauvegardés:', settings.value)
+      // Save settings to store - only pass the modifiable fields
+      const modifiableSettings = {
+        profileVisibility: settings.value.profileVisibility,
+        contactInfoVisibility: settings.value.contactInfoVisibility,
+        eventVisibility: settings.value.eventVisibility,
+        volunteerListVisibility: settings.value.volunteerListVisibility,
+        twoFactor: settings.value.twoFactor,
+        loginNotifications: settings.value.loginNotifications,
+        siretVerification: settings.value.siretVerification,
+        autoApproveVolunteers: settings.value.autoApproveVolunteers,
+        volunteerLimits: settings.value.volunteerLimits,
+        participantLimits: settings.value.participantLimits,
+        eventApproval: settings.value.eventApproval
+      }
+      await settingsStore.saveAssociation(modifiableSettings)
+
+      console.log('Settings saved:', modifiableSettings.eventVisibility)
+      if (association.association.value?.associationId)
+        await association.updateAnnouncementVisibility(
+          association.association.value?.associationId,
+          modifiableSettings.eventVisibility
+        )
+      // Update local settings with response
+      settings.value = { ...settingsStore.association }
     } catch (error) {
       handleError(error)
     } finally {

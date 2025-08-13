@@ -151,16 +151,14 @@
         <div class="flex gap-4 mt-4 mb-2">
           <div class="flex items-center gap-1 text-xs">
             <Users class="h-4 w-4 text-primary" />
-            <span class="font-medium"
-              >{{ announcement?.nbParticipants }}/{{ announcement?.maxParticipants }}</span
-            >
+            <span class="font-medium">{{
+              ParticipantAvailable(announcement as Announcement)
+            }}</span>
             <span class="text-base-content/60">participants</span>
           </div>
           <div class="flex items-center gap-1 text-xs">
             <HeartHandshake class="h-4 w-4 text-secondary" />
-            <span class="font-medium"
-              >{{ announcement?.nbVolunteers }}/{{ announcement?.maxVolunteers }}</span
-            >
+            <span class="font-medium">{{ volunteerAvailable(announcement as Announcement) }}</span>
             <span class="text-base-content/60">bénévoles</span>
           </div>
         </div>
@@ -470,7 +468,7 @@
     UserCheck,
     AlertTriangle
   } from 'lucide-vue-next'
-  import { definePageMeta, useNavigation, useNuxtApp } from '#imports'
+  import { definePageMeta, useNavigation, useNuxtApp, useSettingsStore } from '#imports'
   import { EventStatus } from '~/common/enums/event.enum'
   import { useAnnouncement } from '~/composables/useAnnouncement'
   import { useVolunteerAuth } from '~/composables/useVolunteer'
@@ -479,12 +477,14 @@
   import ReportModal from '~/components/utils/ReportModal.vue'
   import NotificationToast from '~/components/utils/NotificationToast.vue'
   import { useUser } from '~/composables/auth/useUser'
+  import type { Announcement } from '~/common/interface/event.interface'
 
   const route = useRoute()
   const announcementUse = useAnnouncement()
   const volunteerUse = useVolunteerAuth()
   const user = useUser()
   const { navigateToRoute } = useNavigation()
+
   const loading = ref(true)
   const loadingVolunteer = computed(() => announcementUse.loading.value)
   const announcement = announcementUse.getCurrentAnnouncement
@@ -538,6 +538,20 @@
   const userEmail = computed(() => {
     return volunteerEmail
   })
+
+  function volunteerAvailable(announcement: Announcement): string {
+    if (announcement.maxVolunteers !== -1) {
+      return `${announcement?.nbVolunteers}/${announcement?.maxVolunteers}`
+    }
+    return `${announcement?.nbVolunteers}`
+  }
+
+  function ParticipantAvailable(announcement: Announcement): string {
+    if (announcement.maxParticipants !== -1) {
+      return `${announcement?.nbParticipants}/${announcement?.maxParticipants}`
+    }
+    return `${announcement?.nbParticipants}`
+  }
 
   function openReportModal() {
     showReportModal.value = true
@@ -666,12 +680,18 @@
   const remainingParticipants = computed(() => {
     const max = announcement.value?.maxParticipants || 0
     const current = announcement.value?.nbParticipants || 0
+    if (announcement.value?.maxParticipants === -1) {
+      return 1
+    }
     return Math.max(0, max - current)
   })
 
   const remainingVolunteers = computed(() => {
     const max = announcement.value?.maxVolunteers || 0
     const current = announcement.value?.nbVolunteers || 0
+    if (announcement.value?.maxVolunteers === -1) {
+      return 1
+    }
     return Math.max(0, max - current)
   })
 

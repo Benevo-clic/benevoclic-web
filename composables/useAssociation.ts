@@ -16,6 +16,7 @@ export const useAssociationAuth = () => {
     removeAssociation: associationStore.removeAssociation,
     addVolunteerToAssociation: associationStore.addVolunteerToAssociation,
     removeVolunteerFromAssociation: associationStore.removeVolunteerFromAssociation,
+    updateAnnouncementVisibility: associationStore.updateAnnouncementVisibility,
     removeAssociationVolunteerWaiting: associationStore.removeAssociationVolunteerWaiting,
     updateAssociation: associationStore.updateAssociation,
     clearCache: associationStore.clearCache

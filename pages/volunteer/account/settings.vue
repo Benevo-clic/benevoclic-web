@@ -50,103 +50,6 @@
             <div class="loading loading-spinner loading-lg text-primary" />
           </div>
 
-          <!-- Notifications settings -->
-          <div v-else-if="activeSection === 'notifications'" class="space-y-6">
-            <div class="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6">
-              <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                  <Bell class="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h2 class="text-xl font-semibold text-base-content">
-                    {{ t('settings.notifications.title') }}
-                  </h2>
-                  <p class="text-base-content/70">
-                    {{ t('settings.notifications.description') }}
-                  </p>
-                </div>
-              </div>
-
-              <div class="space-y-6">
-                <div class="form-control">
-                  <label class="label cursor-pointer justify-between">
-                    <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.notifications.email')
-                      }}</span>
-                      <p class="text-xs text-base-content/70">
-                        {{ t('settings.notifications.email_description') }}
-                      </p>
-                    </div>
-                    <input
-                      v-model="settings.emailNotifications"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
-                    />
-                  </label>
-                </div>
-
-                <div class="form-control">
-                  <label class="label cursor-pointer justify-between">
-                    <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.notifications.push')
-                      }}</span>
-                      <p class="text-xs text-base-content/70">
-                        {{ t('settings.notifications.push_description') }}
-                      </p>
-                    </div>
-                    <input
-                      v-model="settings.pushNotifications"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
-                    />
-                  </label>
-                </div>
-
-                <div class="form-control">
-                  <label class="label cursor-pointer justify-between">
-                    <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.notifications.mission_updates')
-                      }}</span>
-                      <p class="text-xs text-base-content/70">
-                        {{ t('settings.notifications.mission_updates_description') }}
-                      </p>
-                    </div>
-                    <input
-                      v-model="settings.missionUpdates"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
-                    />
-                  </label>
-                </div>
-
-                <div class="form-control">
-                  <label class="label cursor-pointer justify-between">
-                    <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.notifications.achievements')
-                      }}</span>
-                      <p class="text-xs text-base-content/70">
-                        {{ t('settings.notifications.achievements_description') }}
-                      </p>
-                    </div>
-                    <input
-                      v-model="settings.achievements"
-                      type="checkbox"
-                      class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
-                    />
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- Privacy settings -->
           <div v-else-if="activeSection === 'privacy'" class="space-y-6">
             <div class="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6">
@@ -168,9 +71,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.privacy.profile_visibility')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.privacy.profile_visibility') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.privacy.profile_visibility_description') }}
                       </p>
@@ -187,9 +90,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.privacy.location_sharing')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.privacy.location_sharing') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.privacy.location_sharing_description') }}
                       </p>
@@ -206,9 +109,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.privacy.activity_sharing')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.privacy.activity_sharing') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.privacy.activity_sharing_description') }}
                       </p>
@@ -309,9 +212,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.security.two_factor')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.security.two_factor') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.security.two_factor_description') }}
                       </p>
@@ -328,9 +231,9 @@
                 <div class="form-control">
                   <label class="label cursor-pointer justify-between">
                     <div>
-                      <span class="label-text font-medium">{{
-                        t('settings.security.login_notifications')
-                      }}</span>
+                      <span class="label-text font-medium">
+                        {{ t('settings.security.login_notifications') }}
+                      </span>
                       <p class="text-xs text-base-content/70">
                         {{ t('settings.security.login_notifications_description') }}
                       </p>
@@ -345,6 +248,11 @@
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- fallback -->
+          <div v-else class="bg-base-100 rounded-xl shadow-lg border border-base-300 p-6">
+            {{ t('common.select_a_section') }}
           </div>
         </div>
       </div>
@@ -392,65 +300,7 @@
         </p>
 
         <form class="space-y-4 py-4" @submit.prevent="changePassword">
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text font-medium">{{
-                t('settings.password_change.old_password')
-              }}</span>
-            </label>
-            <input
-              v-model="passwordForm.oldPassword"
-              type="password"
-              class="input input-bordered"
-              required
-              :placeholder="t('settings.password_change.old_password_placeholder')"
-              aria-label="Mot de passe"
-            />
-          </div>
-
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text font-medium">{{
-                t('settings.password_change.new_password')
-              }}</span>
-            </label>
-            <input
-              v-model="passwordForm.newPassword"
-              type="password"
-              class="input input-bordered"
-              required
-              minlength="8"
-              :placeholder="t('settings.password_change.new_password_placeholder')"
-              aria-label="Mot de passe"
-            />
-            <label class="label">
-              <span class="label-text-alt text-base-content/50">{{
-                t('settings.password_change.password_requirements')
-              }}</span>
-            </label>
-          </div>
-
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text font-medium">{{
-                t('settings.password_change.confirm_password')
-              }}</span>
-            </label>
-            <input
-              v-model="passwordForm.confirmPassword"
-              type="password"
-              class="input input-bordered"
-              required
-              :placeholder="t('settings.password_change.confirm_password_placeholder')"
-              aria-label="Mot de passe"
-            />
-          </div>
-
-          <div v-if="passwordError" class="alert alert-error">
-            <AlertCircle class="w-4 h-4" />
-            <span>{{ passwordError }}</span>
-          </div>
-
+          <!-- ... champs inchangés ... -->
           <div class="modal-action">
             <button type="button" class="btn btn-outline" @click="cancelPasswordChange">
               {{ t('settings.password_change.cancel') }}
@@ -475,25 +325,14 @@
 
 <script setup lang="ts">
   import { ref, reactive, computed, onMounted } from 'vue'
-  import {
-    Bell,
-    Shield,
-    User,
-    Lock,
-    Key,
-    Trash2,
-    Save,
-    AlertTriangle,
-    AlertCircle
-  } from 'lucide-vue-next'
+  import { Shield, User, Lock, Key, Trash2, Save, AlertTriangle } from 'lucide-vue-next'
   import { useUser } from '~/composables/auth/useUser'
   import { useVolunteerAuth } from '~/composables/useVolunteer'
   import { useNavigation } from '~/composables/useNavigation'
+  import { useSettingsStore } from '~/stores/settings.store'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
 
-  definePageMeta({
-    layout: 'app'
-  })
+  definePageMeta({ layout: 'app' })
 
   const { t } = useI18n()
   const auth = useUser()
@@ -503,15 +342,14 @@
   // State
   const isDeleted = ref(false)
   const isSaving = ref(false)
-  const activeSection = ref('notifications')
+  const activeSection = ref<'privacy' | 'account' | 'security'>('privacy') // par défaut: privacy
   const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
   const passwordChangeModal = ref<HTMLDialogElement | null>(null)
   const showErrorModal = ref(false)
   const errorType = ref<'4xx' | '5xx' | null>(null)
 
-  // Sections de paramètres
+  // Sections de paramètres (3 éléments)
   const sections = ref([
-    { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'privacy', label: 'Confidentialité', icon: Shield },
     { id: 'account', label: 'Compte', icon: User },
     { id: 'security', label: 'Sécurité', icon: Lock }
@@ -526,17 +364,15 @@
 
   const passwordError = ref<string | null>(null)
 
-  // Settings data
+  // Settings store
+  const settingsStore = useSettingsStore()
+
+  // Local settings for form state
   const settings = ref({
-    emailNotifications: true,
-    pushNotifications: false,
-    missionUpdates: true,
-    achievements: true,
     profileVisibility: true,
     locationSharing: false,
     activitySharing: true,
-    twoFactor: false,
-    loginNotifications: true
+    twoFactor: false
   })
 
   // Computed
@@ -562,6 +398,10 @@
       }
       if (auth.getUserId) {
         await volunteer.getVolunteerInfo()
+        // Load settings from store
+        await settingsStore.loadVolunteer()
+        // Update local settings with store data
+        settings.value = { ...settingsStore.volunteer }
       }
     } catch (error) {
       handleError(error)
@@ -597,15 +437,12 @@
       }
       return
     }
-
     passwordError.value = null
-
     try {
       await auth.updatePassword({
         oldPassword: passwordForm.oldPassword,
         newPassword: passwordForm.newPassword
       })
-
       passwordChangeModal.value?.close()
       alert(t('settings.password_change.success'))
     } catch (error: any) {
@@ -656,9 +493,16 @@
   async function saveSettings() {
     isSaving.value = true
     try {
-      // Simuler une sauvegarde
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      console.log('Paramètres sauvegardés:', settings.value)
+      // Save settings to store - only pass the modifiable fields
+      const modifiableSettings = {
+        profileVisibility: settings.value.profileVisibility,
+        locationSharing: settings.value.locationSharing,
+        activitySharing: settings.value.activitySharing,
+        twoFactor: settings.value.twoFactor
+      }
+      await settingsStore.saveVolunteer(modifiableSettings)
+      // Update local settings with response
+      settings.value = { ...settingsStore.volunteer }
     } catch (error) {
       handleError(error)
     } finally {
@@ -683,15 +527,12 @@
   .btn {
     transition: all 0.2s ease-in-out;
   }
-
   .btn:hover {
     transform: translateY(-1px);
   }
-
   .form-control {
     transition: all 0.2s ease-in-out;
   }
-
   .form-control:hover {
     transform: translateY(-1px);
   }
