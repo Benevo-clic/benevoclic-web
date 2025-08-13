@@ -172,7 +172,8 @@ export default defineNuxtConfig({
     { src: '~/plugins/permissions.client.ts', mode: 'client' },
     { src: '~/plugins/maplibre.client.ts', mode: 'client' },
     { src: '~/plugins/init-user.client.ts', mode: 'client' },
-    { src: '~/plugins/refresh-token.client.ts', mode: 'client' }
+    { src: '~/plugins/refresh-token.client.ts', mode: 'client' },
+    { src: '~/plugins/session-init.client.ts', mode: 'client' }
   ],
   build: {
     transpile: ['defu']

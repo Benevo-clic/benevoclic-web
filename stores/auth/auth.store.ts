@@ -5,10 +5,10 @@ import {
   getAuth,
   getIdTokenResult,
   GoogleAuthProvider,
-  signInWithPopup,
   onIdTokenChanged,
   sendEmailVerification,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  signInWithPopup
 } from 'firebase/auth'
 import { RoleUser } from '~/common/enums/role.enum'
 import { useUserStore } from '~/stores/user/user.store'
@@ -114,6 +114,18 @@ export const useAuthStore = defineStore('auth', {
         }
         this.isConnected = true
         this.hydrate()
+
+        // Sauvegarder la session après connexion réussie
+        if (process.client) {
+          try {
+            const { useSessionStore } = await import('~/stores/session.store')
+            const sessionStore = useSessionStore()
+            await sessionStore.saveCurrentSession()
+          } catch (sessionError) {
+            console.warn('⚠️ Erreur lors de la sauvegarde de session:', sessionError)
+          }
+        }
+
         await this.goToPageAfterLogin({
           role: payload.role,
           password: payload.password,
@@ -501,8 +513,7 @@ export const useAuthStore = defineStore('auth', {
 
         // 2) CGU si inscription
         if (isRegisterMode && !termsAccepted) {
-          const msg = "Vous devez accepter les conditions générales d'utilisation pour continuer."
-          this.error = msg
+          this.error = "Vous devez accepter les conditions générales d'utilisation pour continuer."
           throw new Error('Conditions générales non acceptées')
         }
 
@@ -533,6 +544,18 @@ export const useAuthStore = defineStore('auth', {
         })
 
         this.hydrate()
+
+        // Sauvegarder la session après connexion Google réussie
+        if (process.client) {
+          try {
+            const { useSessionStore } = await import('~/stores/session.store')
+            const sessionStore = useSessionStore()
+            await sessionStore.saveCurrentSession()
+          } catch (sessionError) {
+            console.warn('⚠️ Erreur lors de la sauvegarde de session Google:', sessionError)
+          }
+        }
+
         await this.getPageRole()
 
         return true
@@ -587,6 +610,18 @@ export const useAuthStore = defineStore('auth', {
         userStore.user = null
         userStore.clearUserCache()
         this.resetCookies()
+
+        // Nettoyer la session persistante
+        if (process.client) {
+          try {
+            const { useSessionStore } = await import('~/stores/session.store')
+            const sessionStore = useSessionStore()
+            await sessionStore.clearSession()
+          } catch (sessionError) {
+            console.warn('⚠️ Erreur lors du nettoyage de session:', sessionError)
+          }
+        }
+
         if (process.client) {
           window.location.href = '/'
         }

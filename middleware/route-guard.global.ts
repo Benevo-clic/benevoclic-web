@@ -173,7 +173,21 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const authStore = useAuthStore()
   const userStore = useUserStore()
 
+  // Vérifier la session persistante si pas de cookie de connexion
   if (!useCookie('isConnected').value) {
+    try {
+      const { useSessionStore } = await import('~/stores/session.store')
+      const sessionStore = useSessionStore()
+
+      // Tenter de restaurer la session depuis le stockage
+      const restored = await sessionStore.restoreSession()
+      if (restored) {
+        console.log('✅ Session restaurée dans le middleware')
+      }
+    } catch (sessionError) {
+      console.warn('⚠️ Erreur lors de la restauration de session dans le middleware:', sessionError)
+    }
+
     await authStore.initAuth()
   }
 
