@@ -31,6 +31,7 @@
     "a11y:audit": "lighthouse http://localhost:5482 --config=./lighthouserc.a11y.js --output=html --output-path=./lighthouse-reports/a11y-report.html",
     "test:cls": "node scripts/test-cls.js",
     "test:session": "node scripts/test-session-persistence.js",
+    "test:cookie": "node scripts/test-cookie-isconnected.js",
     "audit:all": "npm run audit:lighthouse && npm run audit:seo && npm run audit:a11y",
     "lint": "eslint utils/** stores/**",
     "lint:fix": "eslint utils/** stores/** --fix",

@@ -174,7 +174,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const userStore = useUserStore()
 
   // Vérifier la session persistante si pas de cookie de connexion
-  if (!useCookie('isConnected').value) {
+  const isConnectedCookie = useCookie('isConnected')
+  if (!isConnectedCookie.value) {
     try {
       const { useSessionStore } = await import('~/stores/session.store')
       const sessionStore = useSessionStore()
@@ -183,6 +184,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       const restored = await sessionStore.restoreSession()
       if (restored) {
         console.log('✅ Session restaurée dans le middleware')
+        // Re-vérifier le cookie après restauration
+        if (isConnectedCookie.value) {
+          console.log('🍪 Cookie isConnected maintenant présent après restauration')
+        }
       }
     } catch (sessionError) {
       console.warn('⚠️ Erreur lors de la restauration de session dans le middleware:', sessionError)
@@ -191,7 +196,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     await authStore.initAuth()
   }
 
-  if (!useCookie('isConnected').value) {
+  // Vérifier à nouveau le cookie après restauration
+  if (!isConnectedCookie.value) {
     const pathWithoutLocale = getPathWithoutLocale(to.path)
 
     if (BASE_ROUTE_CONFIG.public.includes(pathWithoutLocale)) {
