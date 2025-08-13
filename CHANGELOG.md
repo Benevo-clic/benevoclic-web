@@ -1,4 +1,11 @@
 ## [Unreleased]
+## [1.14.0] - 2025-08-13
+
+### 🚀 Ajouté
+- implement session management with persistence and restoration capabilities (#34)
+
+---
+
 ## [1.13.1] - 2025-08-13
 
 ### 🐛 Corrigé
