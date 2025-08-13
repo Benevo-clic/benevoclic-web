@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { $fetch } from 'ofetch'
 
 export interface AssociationSettings {
   profileVisibility: boolean
@@ -70,7 +71,7 @@ export const useSettingsStore = defineStore('settings', {
       }
     },
 
-    async getVolunteerSettings(volunteerId: string) {
+    async getVolunteerSettings(volunteerId: string): Promise<Partial<VolunteerSettings>> {
       this.isLoading = true
       this.error = null
       try {
@@ -78,6 +79,7 @@ export const useSettingsStore = defineStore('settings', {
           method: 'GET',
           credentials: 'include'
         })
+        return this.volunteer
       } catch (error: any) {
         this.error = error.message || 'Erreur lors du chargement des paramètres du bénévole'
         throw error
@@ -104,7 +106,7 @@ export const useSettingsStore = defineStore('settings', {
       }
     },
 
-    async getAssociationSettings(associationId: string) {
+    async getAssociationSettings(associationId: string): Promise<Partial<AssociationSettings>> {
       this.isLoading = true
       this.error = null
       try {

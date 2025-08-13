@@ -149,7 +149,7 @@ export const useUserStore = defineStore('user', {
           this.error = 'Utilisateur non trouvé'
         }
 
-        return response
+        return response.data
       } catch (err: any) {
         this.error = err?.message || "Erreur de récupération de l'utilisateur"
         throw err

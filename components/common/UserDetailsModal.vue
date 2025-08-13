@@ -33,12 +33,21 @@
         <span class="loading loading-spinner loading-lg"></span>
       </div>
 
+      <!-- Message si le profil est privé -->
+      <div v-else-if="isProfilePrivate" class="flex justify-center items-center py-8">
+        <div class="text-center">
+          <div class="text-6xl mb-4"></div>
+          <h3 class="text-lg font-semibold mb-2">Profil privé</h3>
+          <p class="text-gray-600">Ce profil n'est pas visible publiquement.</p>
+        </div>
+      </div>
+
       <div
         v-else-if="!volunteerDetails && !associationDetails"
         class="flex justify-center items-center py-8"
       >
         <div class="text-center">
-          <div class="text-6xl mb-4">😕</div>
+          <div class="text-6xl mb-4"></div>
           <h3 class="text-lg font-semibold mb-2">Utilisateur non trouvé</h3>
           <p class="text-gray-600">Impossible de charger les détails de cet utilisateur.</p>
         </div>
@@ -94,8 +103,8 @@
               Volontaire
             </div>
 
-            <!-- Informations de contact -->
-            <div class="space-y-2 text-sm">
+            <!-- Informations de contact (conditionnelles) -->
+            <div v-if="volunteerSettings?.profileVisibility" class="space-y-2 text-sm">
               <div v-if="volunteerDetails.email" class="flex items-center space-x-2">
                 <svg
                   class="w-4 h-4 text-gray-500"
@@ -150,14 +159,23 @@
           </div>
         </div>
 
-        <!-- Section Bio -->
-        <div v-if="volunteerDetails.bio" class="border-t pt-4">
+        <!-- Section Bio (conditionnelle) -->
+        <div
+          v-if="volunteerDetails.bio && volunteerSettings?.profileVisibility"
+          class="border-t pt-4"
+        >
           <h4 class="font-semibold mb-2">À propos</h4>
           <p class="text-gray-700 leading-relaxed">{{ volunteerDetails.bio }}</p>
         </div>
 
-        <!-- Section Localisation -->
-        <div v-if="volunteerDetails.city || volunteerDetails.country" class="border-t pt-4">
+        <!-- Section Localisation (conditionnelle) -->
+        <div
+          v-if="
+            (volunteerDetails.city || volunteerDetails.country) &&
+            volunteerSettings?.profileVisibility
+          "
+          class="border-t pt-4"
+        >
           <h4 class="font-semibold mb-2">Localisation</h4>
           <div class="flex items-start space-x-2">
             <svg
@@ -186,8 +204,8 @@
           </div>
         </div>
 
-        <!-- Section Statistiques -->
-        <div class="border-t pt-4">
+        <!-- Section Statistiques (conditionnelle) -->
+        <div v-if="volunteerSettings?.profileVisibility" class="border-t pt-4">
           <h4 class="font-semibold mb-3">Statistiques</h4>
           <div class="grid grid-cols-3 gap-4">
             <div
@@ -249,8 +267,8 @@
           </div>
         </div>
 
-        <!-- Section Statut -->
-        <div class="border-t pt-4">
+        <!-- Section Statut (conditionnelle) -->
+        <div v-if="volunteerSettings?.profileVisibility" class="border-t pt-4">
           <h4 class="font-semibold mb-3">Statut</h4>
           <div class="flex flex-wrap gap-3">
             <span
@@ -312,8 +330,8 @@
           </div>
         </div>
 
-        <!-- Section Informations système -->
-        <div class="border-t pt-4">
+        <!-- Section Informations système (conditionnelle) -->
+        <div v-if="volunteerSettings?.profileVisibility" class="border-t pt-4">
           <h4 class="font-semibold mb-2">Informations système</h4>
           <div class="grid grid-cols-2 gap-4 text-sm">
             <div>
@@ -386,8 +404,8 @@
               {{ associationDetails.type }}
             </div>
 
-            <!-- Informations de contact -->
-            <div class="space-y-2 text-sm">
+            <!-- Informations de contact (conditionnelles) -->
+            <div v-if="associationSettings?.contactInfoVisibility" class="space-y-2 text-sm">
               <div v-if="associationDetails.email" class="flex items-center space-x-2">
                 <svg
                   class="w-4 h-4 text-gray-500"
@@ -425,14 +443,23 @@
           </div>
         </div>
 
-        <!-- Section Bio -->
-        <div v-if="associationDetails.bio" class="border-t pt-4">
+        <!-- Section Bio (conditionnelle) -->
+        <div
+          v-if="associationDetails.bio && associationSettings?.profileVisibility"
+          class="border-t pt-4"
+        >
           <h4 class="font-semibold mb-2">À propos</h4>
           <p class="text-gray-700 leading-relaxed">{{ associationDetails.bio }}</p>
         </div>
 
-        <!-- Section Localisation -->
-        <div v-if="associationDetails.city || associationDetails.country" class="border-t pt-4">
+        <!-- Section Localisation (conditionnelle) -->
+        <div
+          v-if="
+            (associationDetails.city || associationDetails.country) &&
+            associationSettings?.profileVisibility
+          "
+          class="border-t pt-4"
+        >
           <h4 class="font-semibold mb-2">Localisation</h4>
           <div class="flex items-start space-x-2">
             <svg
@@ -461,11 +488,12 @@
           </div>
         </div>
 
-        <!-- Section Statistiques -->
-        <div class="border-t pt-4">
+        <!-- Section Statistiques (conditionnelles) -->
+        <div v-if="associationSettings?.profileVisibility" class="border-t pt-4">
           <h4 class="font-semibold mb-3">Statistiques</h4>
           <div class="grid grid-cols-2 gap-4">
             <div
+              v-if="associationSettings?.volunteerListVisibility"
               class="stat bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-4 border border-primary/20"
             >
               <div class="stat-figure text-primary">
@@ -505,8 +533,8 @@
           </div>
         </div>
 
-        <!-- Section Statut -->
-        <div class="border-t pt-4">
+        <!-- Section Statut (conditionnelle) -->
+        <div v-if="associationSettings?.profileVisibility" class="border-t pt-4">
           <h4 class="font-semibold mb-3">Statut</h4>
           <div class="flex flex-wrap gap-3">
             <span
@@ -568,8 +596,8 @@
           </div>
         </div>
 
-        <!-- Section Informations système -->
-        <div class="border-t pt-4">
+        <!-- Section Informations système (conditionnelle) -->
+        <div v-if="associationSettings?.profileVisibility" class="border-t pt-4">
           <h4 class="font-semibold mb-2">Informations système</h4>
           <div class="grid grid-cols-2 gap-4 text-sm">
             <div>
@@ -610,7 +638,7 @@
 
 <script setup lang="ts">
   import { useUser } from '~/composables/auth/useUser'
-  import { useAssociationAuth, useVolunteerAuth } from '#imports'
+  import { useAssociationAuth, useSettingsStore, useVolunteerAuth } from '#imports'
 
   export interface VolunteerDetails {
     volunteerId: string
@@ -654,6 +682,16 @@
     updatedAt: string
   }
 
+  export interface AssociationSettings {
+    profileVisibility: boolean
+    contactInfoVisibility: boolean
+    volunteerListVisibility: boolean
+  }
+
+  export interface VolunteerSettings {
+    profileVisibility: boolean
+  }
+
   interface Props {
     isOpen: boolean
     userId?: string
@@ -671,11 +709,25 @@
   const user = useUser()
   const volunteer = useVolunteerAuth()
   const association = useAssociationAuth()
+  const settings = useSettingsStore()
 
   const loading = ref(false)
   const volunteerDetails = ref<VolunteerDetails | null>(null)
   const associationDetails = ref<AssociationDetails | null>(null)
+  const associationSettings = ref<AssociationSettings | null>(null)
+  const volunteerSettings = ref<VolunteerSettings | null>(null)
   const profileImageUrl = ref('')
+
+  // Computed pour vérifier si le profil est privé
+  const isProfilePrivate = computed(() => {
+    if (volunteerDetails.value && volunteerSettings.value) {
+      return !volunteerSettings.value.profileVisibility
+    }
+    if (associationDetails.value && associationSettings.value) {
+      return !associationSettings.value.profileVisibility
+    }
+    return false
+  })
 
   // Computed pour l'URL de l'image de profil
   const computedProfileImageUrl = computed(() => {
@@ -711,9 +763,14 @@
       // Réinitialiser les données
       volunteerDetails.value = null
       associationDetails.value = null
+      volunteerSettings.value = null
+      associationSettings.value = null
 
       // Récupérer les informations de base de l'utilisateur
       const userInfo = await user.getUserById(props.userId)
+
+      console.log('User info:', userInfo)
+      console.log('role', userInfo.role)
 
       if (!userInfo) {
         console.error('User not found')
@@ -722,6 +779,10 @@
 
       if (userInfo.role === 'VOLUNTEER') {
         const detailsVolunteer = await volunteer.getVolunteerInfoById(props.userId)
+        const setting = await settings.getVolunteerSettings(props.userId)
+        volunteerSettings.value = {
+          profileVisibility: setting?.profileVisibility || false
+        }
 
         // Chargement des statistiques avec gestion d'erreur
         let nbParticipations = 0
@@ -734,8 +795,6 @@
             props.userId
           )
 
-          console.log(volunteers)
-          console.log(associationsFollowing)
           nbVolunteers =
             volunteers.filter(a => a.volunteers?.some(p => p.id === props.userId)).length || 0
 
@@ -771,8 +830,13 @@
         }
       } else if (userInfo.role === 'ASSOCIATION') {
         const detailsAssociation = await association.getAssociationById(props.userId)
+        const setting = await settings.getAssociationSettings(props.userId)
+        associationSettings.value = {
+          profileVisibility: setting?.profileVisibility || false,
+          contactInfoVisibility: setting?.contactInfoVisibility || false,
+          volunteerListVisibility: setting?.volunteerListVisibility || false
+        }
 
-        // Chargement des statistiques avec gestion d'erreur
         let nbAnnouncements = 0
 
         try {

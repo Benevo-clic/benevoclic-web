@@ -19,7 +19,7 @@ export default defineEventHandler(async event => {
       })
     }
 
-    const response = await axios.get(`${apiBaseUrl}/settings/volunteer/${associationId}`, {
+    const response = await axios.get(`${apiBaseUrl}/settings/association/${associationId}`, {
       headers: {
         'Content-Type': 'application/json'
       }
