@@ -743,6 +743,13 @@
         eventApproval: settings.value.eventApproval
       }
       await settingsStore.saveAssociation(modifiableSettings)
+
+      console.log('Settings saved:', modifiableSettings.eventVisibility)
+      if (association.association.value?.associationId)
+        await association.updateAnnouncementVisibility(
+          association.association.value?.associationId,
+          modifiableSettings.eventVisibility
+        )
       // Update local settings with response
       settings.value = { ...settingsStore.association }
     } catch (error) {

@@ -3,6 +3,7 @@ import type { ApiResponseSubset, AssociationInfo } from '~/common/interface/asso
 import type { CreateAssociationDto } from '~/common/interface/register.interface'
 import { useUserStore } from '~/stores/user/user.store'
 import { useAuthStore } from '@/stores/auth/auth.store'
+import { $fetch } from 'ofetch'
 
 export const useAssociationAuthStore = defineStore('associationAuth', {
   state: () => ({
@@ -211,6 +212,28 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
         this.loading = false
       }
     },
+    async updateAnnouncementVisibility(associationId: string, eventVisibility: boolean) {
+      this.loading = true
+      this.error = null
+      try {
+        const payload = {
+          associationId,
+          eventVisibility
+        }
+        console.log('Updating announcement visibility:', payload)
+        await $fetch(`/api/announcements/updateAnnouncementVisibility`, {
+          method: 'PATCH',
+          credentials: 'include',
+          body: payload
+        })
+      } catch (err: any) {
+        this.error = err?.message || "Erreur de mise à jour de la visibilité de l'annonce"
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+
     async removeAssociationVolunteerWaiting(associationId: string, volunteerId: string) {
       this.loading = true
       this.error = null

@@ -429,6 +429,7 @@ export const useAnnouncementStore = defineStore('announcement', {
         this.loading = false
       }
     },
+
     async updateStatus(announcementId: string, status: string) {
       this.loading = true
       this.error = null
