@@ -1,4 +1,11 @@
 ## [Unreleased]
+## [1.15.0] - 2025-08-13
+
+### 🚀 Ajouté
+- enhance session management with cookie handling for connection state (#35)
+
+---
+
 ## [1.14.0] - 2025-08-13
 
 ### 🚀 Ajouté
