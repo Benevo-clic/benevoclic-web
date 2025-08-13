@@ -1,4 +1,11 @@
 ## [Unreleased]
+## [1.13.1] - 2025-08-13
+
+### 🐛 Corrigé
+- implement user and association deletion functionality with improved error handling (#33)
+
+---
+
 ## [1.13.0] - 2025-08-13
 
 ### 🚀 Ajouté
