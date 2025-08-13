@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useSessionPersistence, type SessionData } from '~/composables/useSessionPersistence'
+import { useCookie } from '#app'
 
 interface SessionState {
   isSessionValid: boolean
@@ -111,6 +112,13 @@ export const useSessionStore = defineStore('session', {
         authStore.idUser = sessionData.idUser
         authStore.isConnected = sessionData.isConnected
 
+        // Mettre à jour le cookie isConnected côté client
+        if (process.client && sessionData.isConnected) {
+          const isConnectedCookie = useCookie<string>('isConnected')
+          isConnectedCookie.value = 'true'
+          console.log('🍪 Cookie isConnected mis à jour côté client')
+        }
+
         // Restaurer les données utilisateur si disponibles
         if (sessionData.userData && !userStore.user) {
           userStore.user = sessionData.userData
@@ -199,13 +207,22 @@ export const useSessionStore = defineStore('session', {
         const { clearSession } = useSessionPersistence()
         await clearSession()
 
+        // Nettoyer l'état local
         this.isSessionValid = false
         this.lastActivity = 0
         this.backgroundTime = 0
         this.error = null
 
-        console.log('✅ Session nettoyée')
+        // Supprimer le cookie isConnected côté client
+        if (process.client) {
+          const isConnectedCookie = useCookie<string>('isConnected')
+          isConnectedCookie.value = ''
+          console.log('🍪 Cookie isConnected supprimé côté client')
+        }
+
+        console.log('✅ Session nettoyée avec succès')
       } catch (error: any) {
+        this.error = error.message
         console.error('❌ Erreur lors du nettoyage de session:', error)
       }
     },
