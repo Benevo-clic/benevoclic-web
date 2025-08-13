@@ -15,12 +15,14 @@
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import { useNavigation } from '~/composables/useNavigation'
   import { useAuthStore } from '~/stores/auth/auth.store'
+  import { useSettingsStore } from '~/stores/settings.store'
 
   const { user, updateIsCompleted } = useUser()
   const authStore = useAuthStore()
 
   const { registerAssociation } = useAssociationAuth()
   const { navigateToRoute } = useNavigation()
+  const settingsStore = useSettingsStore()
 
   const showErrorModal = ref(false)
   const errorType = ref<'4xx' | '5xx' | null>(null)
@@ -189,15 +191,28 @@
     }
   }
 
-  async function submitForm() {
+  // util: enlève les champs vides/undefined/null
+  function compact<T extends Record<string, any>>(obj: T): T {
+    const out: Record<string, any> = {}
+    for (const [k, v] of Object.entries(obj)) {
+      if (v !== '' && v !== undefined && v !== null) out[k] = v
+    }
+    return out as T
+  }
+
+  const submitForm = async (): Promise<void> => {
+    if (loading.value) return // évite la double soumission
     loading.value = true
     isError.value = false
+
     try {
-      if (!user.value?.userId) {
-        throw new Error('User not authenticated')
+      const u = user.value
+      if (!u?.userId || !u?.email) {
+        throw new Error('User not authenticated or email missing')
       }
-      await registerAssociation({
-        email: user.value?.email,
+
+      const payload = compact({
+        email: u.email,
         associationName: formData.associationName,
         phone: formData.phone,
         bio: formData.bio,
@@ -205,14 +220,17 @@
         postalCode: formData.postalCode,
         country: formData.country,
         type: formData.type
-      } as CreateAssociationDto)
+      }) satisfies CreateAssociationDto
 
-      await updateIsCompleted(user.value?.userId, true)
+      await registerAssociation(payload)
+
+      await Promise.all([updateIsCompleted(u.userId, true), settingsStore.loadAssociation()])
 
       emit('submit', true)
-    } catch (error) {
+    } catch (err) {
+      console.error('Error submitting association form:', err)
       isError.value = true
-      handleError(error)
+      handleError(err)
     } finally {
       loading.value = false
     }

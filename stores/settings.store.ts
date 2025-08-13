@@ -71,6 +71,22 @@ export const useSettingsStore = defineStore('settings', {
       }
     },
 
+    async deleteVolunteerSettings() {
+      this.isLoading = true
+      this.error = null
+      try {
+        await $fetch('/api/settings/volunteer', {
+          method: 'DELETE',
+          credentials: 'include'
+        })
+      } catch (error: any) {
+        this.error = error.message || 'Erreur lors de la suppression des paramètres du bénévole'
+        throw error
+      } finally {
+        this.isLoading = false
+      }
+    },
+
     async getVolunteerSettings(volunteerId: string): Promise<Partial<VolunteerSettings>> {
       this.isLoading = true
       this.error = null
@@ -133,6 +149,23 @@ export const useSettingsStore = defineStore('settings', {
         })
       } catch (error: any) {
         this.error = error.message || 'Erreur lors du chargement des paramètres'
+        throw error
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    async deleteAssociationSettings() {
+      this.isLoading = true
+      this.error = null
+      try {
+        await $fetch('/api/settings/association', {
+          method: 'DELETE',
+          credentials: 'include'
+        })
+      } catch (error: any) {
+        this.error =
+          error.message || "Erreur lors de la suppression des paramètres de l'association"
         throw error
       } finally {
         this.isLoading = false

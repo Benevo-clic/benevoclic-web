@@ -1,6 +1,5 @@
-import { defineEventHandler, createError, getCookie } from 'h3'
+import { defineEventHandler, createError } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
 
 export default defineEventHandler(async event => {
   try {
@@ -15,18 +14,18 @@ export default defineEventHandler(async event => {
 
     const apiBaseUrl = process.env.API_BASE_URL || 'https://api.www.benevoclic.fr'
 
-    // Récupérer les détails de l'utilisateur depuis l'API
-    const response = await $fetch(`${apiBaseUrl}/user/${userId}`, {
-      method: 'GET',
+    await axios.get(`${apiBaseUrl}/user/${userId}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    const response = await axios.get(`${apiBaseUrl}/user/${userId}`, {
       headers: {
         'Content-Type': 'application/json'
       }
     })
 
-    return {
-      success: true,
-      data: response
-    }
+    return response.data
   } catch (error: any) {
     console.error('Erreur lors de la récupération des détails utilisateur:', error)
 
