@@ -1,9 +1,8 @@
 <script setup lang="ts">
-  import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+  import { ref, watch, onMounted, onUnmounted } from 'vue'
   import { navigateTo, useRoute } from '#app'
   import {
     Pencil,
-    Bell,
     CircleHelp,
     UserRound,
     ClipboardList,
@@ -246,23 +245,6 @@
             {{ t('drawer-content.notifications_support.title') }}
           </h4>
           <div class="space-y-1">
-            <button
-              :class="[
-                'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
-                isActive('/notifications')
-                  ? 'bg-primary/20 text-primary border-l-4 border-primary shadow-sm'
-                  : 'hover:bg-base-200 hover:shadow-sm'
-              ]"
-              @click="goTo('/notifications')"
-            >
-              <div class="p-2 rounded-lg bg-base-200 group-hover:bg-base-300 transition-colors">
-                <Bell class="w-4 h-4" />
-              </div>
-              <span class="font-medium">{{
-                t('drawer-content.notifications_support.notifications')
-              }}</span>
-            </button>
-
             <button
               :class="[
                 'group flex items-center gap-3 p-3 rounded-xl transition-all duration-200 w-full text-left',
