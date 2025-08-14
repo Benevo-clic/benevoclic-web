@@ -161,16 +161,12 @@
       <div class="flex gap-6 mb-4 text-sm" role="group" aria-label="Statistiques de participation">
         <div class="flex items-center gap-2" aria-label="Nombre de participants">
           <Users class="h-4 w-4 text-primary" aria-hidden="true" />
-          <span class="font-medium"
-            >{{ announcement.nbParticipants }}/{{ announcement.maxParticipants }}</span
-          >
+          <span class="font-medium">{{ ParticipantAvailable(announcement as Announcement) }}</span>
           <span class="text-base-content/60">participants</span>
         </div>
         <div class="flex items-center gap-2" aria-label="Nombre de bénévoles">
           <HeartHandshake class="h-4 w-4 text-secondary" aria-hidden="true" />
-          <span class="font-medium"
-            >{{ announcement.nbVolunteers }}/{{ announcement.maxVolunteers }}</span
-          >
+          <span class="font-medium"> {{ volunteerAvailable(announcement as Announcement) }} </span>
           <span class="text-base-content/60">bénévoles</span>
         </div>
       </div>
@@ -275,6 +271,20 @@
       return
     }
     navigateTo(`/volunteer/events/announcement/${props.announcement._id}`)
+  }
+
+  function volunteerAvailable(announcement: Announcement): string {
+    if (announcement.maxVolunteers !== -1) {
+      return `${announcement?.nbVolunteers}/${announcement?.maxVolunteers}`
+    }
+    return `${announcement?.nbVolunteers}`
+  }
+
+  function ParticipantAvailable(announcement: Announcement): string {
+    if (announcement.maxParticipants !== -1) {
+      return `${announcement?.nbParticipants}/${announcement?.maxParticipants}`
+    }
+    return `${announcement?.nbParticipants}`
   }
 
   function filterByTag(tag: string) {

@@ -85,17 +85,17 @@
       <div class="flex gap-6 mb-4 text-sm">
         <div class="flex items-center gap-2">
           <Users class="h-4 w-4 text-primary" />
-          <span class="font-medium"
-            >{{ announcement.nbParticipants }}/{{ announcement.maxParticipants }}</span
-          >
+          <span class="font-medium">
+            {{ ParticipantAvailable(announcement) }}
+          </span>
           <span class="text-base-content/60">participants</span>
         </div>
 
         <div class="flex items-center gap-2">
           <HeartHandshake class="h-4 w-4 text-secondary" />
-          <span class="font-medium"
-            >{{ announcement.nbVolunteers }}/{{ announcement.maxVolunteers }}</span
-          >
+          <span class="font-medium">
+            {{ volunteerAvailable(announcement) }}
+          </span>
           <span class="text-base-content/60">bénévoles</span>
         </div>
       </div>
@@ -171,6 +171,20 @@
         return 'badge-primary'
     }
   })
+
+  function volunteerAvailable(announcement: Announcement): string {
+    if (announcement.maxVolunteers !== -1) {
+      return `${announcement?.nbVolunteers}/${announcement?.maxVolunteers}`
+    }
+    return `${announcement?.nbVolunteers}`
+  }
+
+  function ParticipantAvailable(announcement: Announcement): string {
+    if (announcement.maxParticipants !== -1) {
+      return `${announcement?.nbParticipants}/${announcement?.maxParticipants}`
+    }
+    return `${announcement?.nbParticipants}`
+  }
 
   const coverImageUrl = computed(() => {
     return props.announcement.announcementImage

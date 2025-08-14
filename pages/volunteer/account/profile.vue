@@ -134,7 +134,6 @@
   import { UserRound, Mail, Phone, MapPin } from 'lucide-vue-next'
   import { useUser } from '~/composables/auth/useUser'
   import { useVolunteerAuth } from '~/composables/useVolunteer'
-  import { useAnnouncement } from '~/composables/useAnnouncement'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import { useNavigation } from '~/composables/useNavigation'
   import type { AssociationVolunteerFollow } from '~/common/interface/volunteer.interface'

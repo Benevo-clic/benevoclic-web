@@ -182,13 +182,13 @@ export const useAuthStore = defineStore('auth', {
       } else {
         switch (role) {
           case RoleUser.VOLUNTEER:
-            return navigateTo('/volunteer')
+            return (window.location.href = '/volunteer')
           case RoleUser.ASSOCIATION:
-            return navigateTo('/association/dashboard')
+            return (window.location.href = '/association/dashboard')
           case RoleUser.ADMIN:
-            return navigateTo('/admin')
+            return (window.location.href = '/admin')
           default:
-            return '/'
+            return (window.location.href = '/')
         }
       }
     },
@@ -218,13 +218,13 @@ export const useAuthStore = defineStore('auth', {
         } else {
           switch (role) {
             case RoleUser.VOLUNTEER:
-              return navigateTo('/volunteer')
+              return (window.location.href = '/volunteer')
             case RoleUser.ASSOCIATION:
-              return navigateTo('/association/dashboard')
+              return (window.location.href = '/association/dashboard')
             case RoleUser.ADMIN:
-              return navigateTo('/admin')
+              return (window.location.href = '/admin')
             default:
-              return navigateTo('/')
+              return (window.location.href = '/')
           }
         }
       } catch (error) {

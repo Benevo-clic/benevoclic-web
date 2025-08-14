@@ -26,6 +26,7 @@
   const { toggleTheme, isDarkTheme } = useTheme()
 
   const userRole = auth.userRole
+  const userInfo = computed(() => auth.user.value)
 
   onMounted(async () => {
     try {
@@ -34,7 +35,7 @@
         role.value = userRole.value
       }
       if (auth.user.value?.avatarFileKey) {
-        img.value = auth.user.value.avatarFileKey
+        imgProfile.value = auth.user.value.avatarFileKey
       }
     } catch (error) {
       console.error('Error fetching user data:', error)
@@ -47,13 +48,13 @@
   const isLoading = computed(() => auth.isLoading.value)
   const isAssociationComponentAvailable = ref(true)
   const role = ref<RoleUser>()
-  const img = ref<string>()
+  const imgProfile = ref<string>()
 
   let mediaQuery: MediaQueryList | undefined
   let handler: ((e: MediaQueryListEvent) => void) | undefined
 
   const profileImageUrl = computed(() => {
-    return img.value
+    return imgProfile.value
   })
 
   onUnmounted(() => {
@@ -134,7 +135,7 @@
   }
 
   function handleHome() {
-    navigateTo('/')
+    window.location.href = '/volunteer'
   }
 </script>
 
@@ -201,6 +202,7 @@
           <div class="flex items-center gap-3">
             <div class="indicator hidden sm:flex mr-2">
               <button
+                v-if="isAuthenticated && role === 'VOLUNTEER'"
                 class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
                 aria-label="Aller à l'accueil bénévole"
                 @click="handleHome"
@@ -211,7 +213,7 @@
             </div>
             <div class="indicator hidden sm:flex mr-2">
               <button
-                v-if="isAuthenticated"
+                v-if="isAuthenticated && role === 'VOLUNTEER'"
                 class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
                 aria-label="Voir mes favoris"
                 @click="handleFavorites"
@@ -282,9 +284,12 @@
                   >
                     <div class="w-11/12 rounded-full overflow-hidden">
                       <img
-                        :src="profileImageUrl"
+                        :src="
+                          profileImageUrl ||
+                          `https://api.dicebear.com/6.x/initials/svg?seed=${encodeURIComponent(userInfo?.email || 'User')}`
+                        "
                         alt="Photo de profil utilisateur"
-                        class="w-12 h-12 rounded-full object-cover"
+                        class="w-full h-full object-cover rounded-full"
                         width="48"
                         height="48"
                         loading="lazy"

@@ -11,7 +11,11 @@
           <span class="loading loading-spinner loading-sm" />
         </div>
       </div>
-      <div v-else-if="userInfo?.avatarFileKey" class="avatar cursor-pointer" @click="openUserModal">
+      <div
+        v-else-if="otherUserId?.avatarFileKey"
+        class="avatar cursor-pointer"
+        @click="openUserModal"
+      >
         <div
           class="w-16 h-16 rounded-full ring-2 ring-primary ring-offset-2 ring-offset-base-100 hover:ring-4 transition-all duration-200"
         >
@@ -43,15 +47,13 @@
         <h4 class="font-semibold text-base-content text-lg truncate">
           {{ participant.volunteerName }}
         </h4>
-        <p class="text-sm text-base-content/70 truncate">
-          {{ userInfo?.email || 'Email non disponible' }}
-        </p>
       </div>
       <!-- Boutons en bas -->
       <div class="flex gap-2 mt-auto">
         <button
           v-if="props.participant.isPresent === undefined"
           class="btn btn-sm btn-outline flex-1"
+          @click="openUserModal"
         >
           Détails
         </button>
