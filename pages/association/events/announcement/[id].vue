@@ -243,7 +243,7 @@
                 </div>
                 <div class="stat-title">Participants</div>
                 <div class="stat-value text-primary">
-                  {{ announcement?.nbParticipants }}/{{ announcement?.maxParticipants }}
+                  {{ ParticipantAvailable(announcement as Announcement) }}
                 </div>
                 <div class="stat-desc">Personnes inscrites à l'événement</div>
               </div>
@@ -255,7 +255,7 @@
                 </div>
                 <div class="stat-title">Bénévoles</div>
                 <div class="stat-value text-secondary">
-                  {{ announcement?.nbVolunteers }}/{{ announcement?.maxVolunteers }}
+                  {{ volunteerAvailable(announcement as Announcement) }}
                 </div>
                 <div class="stat-desc">Personnes aidant à l'organisation</div>
               </div>
@@ -429,6 +429,7 @@
   import { useAnnouncement } from '~/composables/useAnnouncement'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import PresenceListModal from '~/components/event/association/PresenceListModal.vue'
+  import type { Announcement } from '~/common/interface/event.interface'
   const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
   const { t } = useI18n()
 
@@ -480,6 +481,20 @@
   onMounted(async () => {
     await initData()
   })
+
+  function volunteerAvailable(announcement: Announcement): string {
+    if (announcement.maxVolunteers !== -1) {
+      return `${announcement?.nbVolunteers}/${announcement?.maxVolunteers}`
+    }
+    return `${announcement?.nbVolunteers}`
+  }
+
+  function ParticipantAvailable(announcement: Announcement): string {
+    if (announcement.maxParticipants !== -1) {
+      return `${announcement?.nbParticipants}/${announcement?.maxParticipants}`
+    }
+    return `${announcement?.nbParticipants}`
+  }
 
   async function initData() {
     try {
