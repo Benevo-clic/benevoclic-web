@@ -5,7 +5,6 @@
     HomeIcon,
     HeartIcon,
     Moon as MoonIcon,
-    Bell as BellIcon,
     AlignJustify
   } from 'lucide-vue-next'
 
@@ -244,28 +243,28 @@
             </label>
 
             <!-- Notifications -->
-            <div class="indicator hidden sm:flex mr-2">
-              <button
-                v-if="isAuthenticated"
-                class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-                aria-label="Notifications (12 nouvelles)"
-                :aria-describedby="isAuthenticated ? 'notifications-login-required' : undefined"
-                @click="handleNotifications"
-                @keyup.enter="handleNotifications"
-                @keyup.space.prevent="handleNotifications"
-              >
-                <span
-                  class="indicator-item badge badge-primary text-base-content"
-                  aria-label="12 notifications"
-                >
-                  12
-                </span>
-                <BellIcon class="w-6 h-6" aria-hidden="true" />
-              </button>
-              <div id="notifications-login-required" class="sr-only">
-                Connexion requise pour accéder aux notifications
-              </div>
-            </div>
+            <!--            <div class="indicator hidden sm:flex mr-2">-->
+            <!--              <button-->
+            <!--                v-if="isAuthenticated"-->
+            <!--                class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"-->
+            <!--                aria-label="Notifications (12 nouvelles)"-->
+            <!--                :aria-describedby="isAuthenticated ? 'notifications-login-required' : undefined"-->
+            <!--                @click="handleNotifications"-->
+            <!--                @keyup.enter="handleNotifications"-->
+            <!--                @keyup.space.prevent="handleNotifications"-->
+            <!--              >-->
+            <!--                <span-->
+            <!--                  class="indicator-item badge badge-primary text-base-content"-->
+            <!--                  aria-label="12 notifications"-->
+            <!--                >-->
+            <!--                  12-->
+            <!--                </span>-->
+            <!--                <BellIcon class="w-6 h-6" aria-hidden="true" />-->
+            <!--              </button>-->
+            <!--              <div id="notifications-login-required" class="sr-only">-->
+            <!--                Connexion requise pour accéder aux notifications-->
+            <!--              </div>-->
+            <!--            </div>-->
             <div class="hidden sm:flex items-center gap-6">
               <div v-if="!isAuthenticated" class="flex items-center gap-2">
                 <HeaderAuthModalAuth />

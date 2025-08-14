@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, onBeforeUnmount } from 'vue'
   import { useAnnouncementStore } from '~/stores/announcement.store'
   import type { CreateAnnouncementDto } from '~/common/interface/event.interface'
   import { useAnnouncement } from '~/composables/useAnnouncement'
@@ -19,6 +19,26 @@
 
   const emit = defineEmits(['closeModal'])
 
+  /** clés pour forcer le remontage des sous-composants */
+  const modalInstanceKey = ref(0)
+  const eventFormKey = ref(0)
+  const coverFormKey = ref(0)
+
+  function resetState() {
+    isRegistered.value = false
+    showErrorModal.value = false
+    errorType.value = null
+
+    // @ts-expect-error: selon ton store
+    if (typeof store.reset === 'function') store.reset()
+
+    if ('currentAnnouncement' in store) store.currentAnnouncement = null
+
+    modalInstanceKey.value++
+    eventFormKey.value++
+    coverFormKey.value++
+  }
+
   const handleSubmit = async (formData: CreateAnnouncementDto) => {
     try {
       await announcementAuth.createAnnouncement(formData)
@@ -29,10 +49,12 @@
   }
 
   const closeModal = () => {
+    resetState()
     emit('closeModal')
   }
 
   const submitCover = () => {
+    resetState()
     emit('closeModal')
     navigateToRoute('/association/dashboard')
   }
@@ -41,6 +63,7 @@
     window.location.reload()
   }
   function handleGoHome() {
+    resetState()
     navigateToRoute('/association/dashboard')
   }
 
@@ -63,26 +86,34 @@
       handleError(error)
     }
   }
+
+  onBeforeUnmount(() => {
+    resetState()
+  })
 </script>
 
 <template>
-  <div class="min-h-[85vh] items-center justify-center gap-8 px-4 py-6">
+  <div :key="modalInstanceKey" class="min-h-[85vh] items-center justify-center gap-8 px-4 py-6">
     <h2 class="text-2xl font-bold mb-6 text-center">
       {{ store.currentAnnouncement ? "Modifier l'événement" : 'Créer un nouvel événement' }}
     </h2>
 
     <EventForm
       v-if="!isRegistered"
+      :key="eventFormKey"
       :announcement="store.currentAnnouncement"
       @submit="handleSubmit"
       @cancel="closeModal"
     />
+
     <UploadCoverForm
       v-else
+      :key="coverFormKey"
       @ignore="closeModal"
       @finish="submitCover"
       @submit-cover="handleFileChange"
     />
+
     <ErrorPopup
       :show-error-modal="showErrorModal"
       :error-type="errorType"
