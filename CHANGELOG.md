@@ -1,4 +1,11 @@
 ## [Unreleased]
+## [1.17.0] - 2025-08-14
+
+### 🚀 Ajouté
+- enhance announcement participant and volunteer display logic (#37)
+
+---
+
 ## [1.16.0] - 2025-08-14
 
 ### 🚀 Ajouté
