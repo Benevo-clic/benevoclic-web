@@ -7,13 +7,6 @@ export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
   const apiBaseUrl = process.env.API_BASE_URL
 
-  console.log('=== DASHBOARD API DEBUG ===')
-  console.log('Association ID:', associationId)
-  console.log('Token exists:', !!token)
-  console.log('Token length:', token ? token.length : 0)
-  console.log('API Base URL:', apiBaseUrl)
-  console.log('==========================')
-
   if (!apiBaseUrl) {
     throw createError({
       statusCode: 500,
