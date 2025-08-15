@@ -17,7 +17,9 @@
   }>()
 
   // Generate unique ID for accessibility
-  const inputId = computed(() => `input-${Math.random().toString(36).substr(2, 9)}`)
+  const inputId = computed(
+    () => `base-form-field-${props.label?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'input'}`
+  )
   const errorId = computed(() => `${inputId.value}-error`)
   const descriptionId = computed(() => `${inputId.value}-description`)
 

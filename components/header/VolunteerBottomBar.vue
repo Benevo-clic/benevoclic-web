@@ -19,8 +19,8 @@
   const { patchCurrentFilter } = useAnnouncement()
 
   // Generate unique IDs for accessibility
-  const searchInputId = `search-input-${Math.random().toString(36).substr(2, 9)}`
-  const recentSearchesId = `recent-searches-${Math.random().toString(36).substr(2, 9)}`
+  const searchInputId = 'volunteer-search-input'
+  const recentSearchesId = 'volunteer-recent-searches'
 
   const handleSearch = () => {
     if (searchQuery.value.trim()) {
