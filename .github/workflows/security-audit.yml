@@ -1,0 +1,99 @@
+name: Security Audit
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Exécution hebdomadaire le dimanche à 2h du matin
+    - cron: '0 2 * * 0'
+
+jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run security audit
+        run: npm run audit:security
+
+      - name: Run ESLint security check
+        run: npm run lint:security
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-audit-report
+          path: security-audit-report.json
+
+      - name: Comment PR with security findings
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const reportPath = 'security-audit-report.json';
+
+            if (fs.existsSync(reportPath)) {
+              const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+              
+              let comment = '## 🔒 Rapport d\'Audit de Sécurité\n\n';
+              comment += `**Date:** ${new Date(report.timestamp).toLocaleString()}\n\n`;
+              comment += '### 📊 Résumé\n';
+              comment += `- 🚨 Critique: ${report.summary.critical}\n`;
+              comment += `- ⚠️ Élevé: ${report.summary.high}\n`;
+              comment += `- ⚡ Moyen: ${report.summary.medium}\n`;
+              comment += `- ℹ️ Faible: ${report.summary.low}\n\n`;
+              
+              if (report.issues.length > 0) {
+                comment += '### 🚨 Issues Détectées\n\n';
+                report.issues.slice(0, 10).forEach((issue, index) => {
+                  comment += `${index + 1}. **[${issue.severity}]** ${issue.pattern}\n`;
+                  comment += `   - Fichier: \`${issue.file}\`\n`;
+                  comment += `   - Description: ${issue.description}\n`;
+                  comment += `   - Occurrences: ${issue.count}\n\n`;
+                });
+                
+                if (report.issues.length > 10) {
+                  comment += `*... et ${report.issues.length - 10} autres issues*\n\n`;
+                }
+              } else {
+                comment += '### ✅ Aucune issue de sécurité détectée\n\n';
+              }
+              
+              comment += '### 💡 Recommandations\n';
+              if (report.summary.critical > 0) {
+                comment += '- 🚨 **CRITIQUE:** Corrigez immédiatement les issues critiques\n';
+              }
+              if (report.summary.high > 0) {
+                comment += '- ⚠️ **ÉLEVÉ:** Traitez en priorité les issues de sécurité élevées\n';
+              }
+              if (report.summary.medium > 0) {
+                comment += '- ⚡ **MOYEN:** Planifiez la correction des issues moyennes\n';
+              }
+              comment += '- 🔧 Utilisez `npm run lint:fix` pour corriger automatiquement certaines issues\n';
+              comment += '- 📚 Consultez la documentation de sécurité pour plus d\'informations\n';
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
