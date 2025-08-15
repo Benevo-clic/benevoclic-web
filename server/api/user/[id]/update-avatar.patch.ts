@@ -3,7 +3,6 @@ import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import FormData from 'form-data'
 import { ApiError } from '~/utils/error-handler'
-import type { UserInfo } from '~/common/types/auth.type'
 
 export default defineEventHandler(async event => {
   const apiBaseUrl = process.env.API_BASE_URL

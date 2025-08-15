@@ -2,7 +2,6 @@ import { defineEventHandler, getCookie, readBody } from 'h3'
 import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
-import { Announcement } from '~/common/interface/event.interface'
 
 export default defineEventHandler(async event => {
   const announcementId = event.context.params?.id

@@ -38,8 +38,6 @@ export default defineEventHandler(async event => {
 
     return response.data
   } catch (error: any) {
-    console.error('Erreur API Nuxt :', error)
-
     if (axios.isAxiosError(error)) {
       await ApiError.handleAxios(
         error,

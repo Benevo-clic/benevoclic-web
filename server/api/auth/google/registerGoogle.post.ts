@@ -6,7 +6,6 @@ import axios from 'axios'
 import { setCookies } from '~/server/api/auth/login.post'
 import type { RegisterGooglePayload, RegisterUserGoogleResponse } from '~/common/types/auth.type'
 import { ApiError } from '~/utils/error-handler'
-import { EnvValidator } from '~/utils/env-validator'
 
 export default defineEventHandler(async event => {
   const body = await readBody(event)
@@ -34,7 +33,7 @@ export default defineEventHandler(async event => {
     return { error: "Erreur d'initialisation Firebase" }
   }
 
-  const response = await RetryManager.post(
+  const response = await RetryManager.post<RegisterUserGoogleResponse>(
     `${apiBaseUrl}/user/register-google`,
     {
       idToken: body.idToken,
@@ -74,7 +73,6 @@ export default defineEventHandler(async event => {
       refreshToken
     }
   } catch (error) {
-    console.error("Erreur lors de l'authentification avec token personnalisé:", error)
     if (axios.isAxiosError(error)) {
       await ApiError.handleAxios(error, "Erreur lors de l'authentification avec Google")
     }

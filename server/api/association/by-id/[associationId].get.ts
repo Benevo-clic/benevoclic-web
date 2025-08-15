@@ -1,4 +1,4 @@
-import { defineEventHandler, createError, getCookie } from 'h3'
+import { defineEventHandler, createError } from 'h3'
 import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'

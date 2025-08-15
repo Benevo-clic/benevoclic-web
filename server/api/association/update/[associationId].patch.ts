@@ -34,10 +34,8 @@ export default defineEventHandler(async event => {
       }
     })
 
-    console.log('✅ Response received:', response.data)
     return response.data
   } catch (error: any) {
-    console.error('❌ Error in association/update/[associationId].patch.ts:', error)
     if (axios.isAxiosError(error)) {
       await ApiError.handleAxios(error, "Erreur lors de la mise à jour de l'association")
     }

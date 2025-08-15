@@ -1,7 +1,6 @@
 import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { defineEventHandler, createError } from 'h3'
-import { Announcement } from '~/common/interface/event.interface'
 import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async () => {

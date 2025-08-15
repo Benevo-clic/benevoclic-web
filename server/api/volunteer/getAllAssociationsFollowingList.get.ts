@@ -1,7 +1,6 @@
 import { defineEventHandler, getCookie } from 'h3'
 import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
-import type { AssociationVolunteerFollow } from '~/common/interface/volunteer.interface'
 import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {

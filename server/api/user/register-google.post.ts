@@ -26,7 +26,7 @@ export default defineEventHandler(async event => {
     }
     const url = `${apiBaseUrl}/user/register-google`
 
-    const response = await RetryManager.post(url, body, {
+    const response = await RetryManager.post<RegisterUserGoogle>(url, body, {
       headers: {
         'Content-Type': 'application/json'
       },
