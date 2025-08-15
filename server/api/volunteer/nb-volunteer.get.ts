@@ -5,10 +5,8 @@ import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   try {
-    // Récupérer le token depuis les headers
     const token = getCookie(event, 'auth_token')
 
-    // Appel au service backend
     const apiBaseUrl = process.env.API_BASE_URL
     if (!apiBaseUrl) {
       throw createError({

@@ -115,6 +115,13 @@ export const useAnnouncementStore = defineStore('announcement', {
     },
 
     async fetchAnnouncementById(id: string) {
+      const cached = this._announcementsCache.get(id)
+
+      if (cached && this.isCacheValid) {
+        this.currentAnnouncement = cached
+        return cached
+      }
+
       this.loading = true
       this.error = null
       try {
@@ -122,6 +129,10 @@ export const useAnnouncementStore = defineStore('announcement', {
           method: 'GET',
           credentials: 'include'
         })
+
+        if (this.currentAnnouncement?._id) {
+          this._announcementsCache.set(this.currentAnnouncement._id, this.currentAnnouncement)
+        }
 
         this.currentAnnouncement = response
 

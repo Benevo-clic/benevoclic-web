@@ -7,7 +7,6 @@ export default defineEventHandler(async event => {
   try {
     const body = await readBody(event)
 
-    // Appel au service backend
     const apiBaseUrl = process.env.API_BASE_URL
     if (!apiBaseUrl) {
       throw createError({

@@ -1,4 +1,3 @@
-// server/api/user/[id]/update-avatar.patch.ts
 import { defineEventHandler, readMultipartFormData, getCookie, createError } from 'h3'
 import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'

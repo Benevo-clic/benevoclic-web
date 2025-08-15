@@ -1,4 +1,3 @@
-// server/api/user/[id]/update-avatar.patch.ts
 import { defineEventHandler, readMultipartFormData, getCookie, createError } from 'h3'
 import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
@@ -60,7 +59,6 @@ export default defineEventHandler(async event => {
   form.append('file', data, { filename, contentType: mimeType })
 
   try {
-    // 5️⃣ Proxy PATCH vers ton backend NestJS
     const url = `${apiBaseUrl}/announcements/coverAnnouncement/${announcementId}`
 
     const { data: announcement } = await RetryManager.patch(url, form, {

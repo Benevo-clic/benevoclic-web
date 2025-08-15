@@ -22,10 +22,6 @@ export default defineEventHandler(async event => {
       })
     }
     const url = `${apiBaseUrl}/association/volunteer-waiting/register/${associationId}`
-    console.log(
-      `Registering volunteer in waiting list for association ${associationId} with body:`,
-      body
-    )
 
     const response = await RetryManager.patch(url, body, {
       headers: {

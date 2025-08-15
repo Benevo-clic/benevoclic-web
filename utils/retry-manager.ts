@@ -53,8 +53,6 @@ export class RetryManager {
       }
 
       try {
-        // this.logSuccess(requestConfig, response, attempt, requestId)
-
         return await axios.request<T>(requestConfig)
       } catch (error: any) {
         const isLastAttempt = attempt === retryConfig.maxRetries!
@@ -152,19 +150,6 @@ export class RetryManager {
 
   private static generateRequestId(): string {
     return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-  }
-
-  private static logSuccess(
-    config: AxiosRequestConfig,
-    response: AxiosResponse,
-    attempt: number,
-    requestId: string
-  ) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(
-        `✅ ${config.method?.toUpperCase()} ${config.url} - Tentative ${attempt + 1} - ${response.status}`
-      )
-    }
   }
 
   private static logError(

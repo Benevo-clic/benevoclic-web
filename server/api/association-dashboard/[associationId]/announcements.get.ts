@@ -4,9 +4,9 @@ import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
-  const associationId = event.context.params?.associationId
   const token = getCookie(event, 'auth_token')
   const apiBaseUrl = process.env.API_BASE_URL
+  const associationId = event.context.params?.associationId
 
   if (!apiBaseUrl) {
     throw createError({

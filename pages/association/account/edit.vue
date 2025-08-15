@@ -228,7 +228,6 @@
     layout: 'app'
   })
 
-  // Configuration SEO spécifique à la page
   useHead({
     title: 'Modifier le profil - Benevoclic',
     meta: [
@@ -244,7 +243,7 @@
           'Modifiez les informations de votre association : nom, type, coordonnées et description.'
       },
       { property: 'og:type', content: 'website' },
-      { name: 'robots', content: 'noindex, nofollow' } // Page privée
+      { name: 'robots', content: 'noindex, nofollow' }
     ]
   })
 
@@ -368,14 +367,12 @@
             alertStatus.value = null
           }, 1000 * 3)
         } catch (error) {
-          // Show error alert
           alertStatus.value = 'error'
           alertMessage.value =
             t('drawer-content.account.profile_update_error') ||
             'Error updating profile image. Please try again.'
           handleError(error)
 
-          // Auto-hide alert after 10 seconds
           setTimeout(() => {
             alertStatus.value = null
           }, 1000 * 3)

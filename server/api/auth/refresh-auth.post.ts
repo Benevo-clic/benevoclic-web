@@ -41,7 +41,7 @@ export default defineEventHandler(async event => {
       return
     }
 
-    const loginResponse = await RetryManager.post(
+    const loginResponse = await RetryManager.post<LoginResponse>(
       `${apiBaseUrl}/user/refresh`,
       {
         refreshToken

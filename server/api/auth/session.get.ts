@@ -1,6 +1,5 @@
 import { defineEventHandler, getCookie, createError } from 'h3'
 import { RetryManager } from '~/utils/retry-manager'
-import axios from 'axios'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')

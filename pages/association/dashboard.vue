@@ -14,15 +14,12 @@
     layout: 'header'
   })
 
-  // Composables
   const { getUserId, initializeUser, user } = useUser()
   const {
     fetchDashboard,
-    dashboardData,
     loadingDashboard,
     error,
     mainMetrics,
-    performanceData,
     recommendations,
     timeSeriesChartData,
     pieChartData,
@@ -35,10 +32,8 @@
     isLoadingAny
   } = useAssociationDashboard()
 
-  // Computed pour obtenir l'ID de l'association
   const associationId = computed(() => user.value?.userId || null)
 
-  // Reactive state
   const dateRange = ref({ from: '2024-01-01', to: '2025-12-31' })
   const chartType = ref<'bar' | 'line'>('bar')
   const activeTab = ref('overview')
@@ -47,7 +42,6 @@
   const refreshInterval = ref<NodeJS.Timeout | null>(null)
   const isAutoRefreshActive = ref(false)
 
-  // Computed properties
   const currentFilter = computed(() => ({
     startDate: dateRange.value.from,
     endDate: dateRange.value.to
@@ -86,7 +80,6 @@
     }))
   })
 
-  // Methods
   async function initData() {
     try {
       if (!getUserId) {
@@ -132,7 +125,6 @@
   }
 
   function startAutoRefresh() {
-    // Refresh data every 5 minutes
     refreshInterval.value = setInterval(refreshData, 2 * 60 * 1000)
     isAutoRefreshActive.value = true
   }
@@ -145,7 +137,6 @@
     isAutoRefreshActive.value = false
   }
 
-  // Watchers
   watch(
     dateRange,
     async () => {
@@ -156,7 +147,6 @@
     { deep: true }
   )
 
-  // Lifecycle
   onMounted(async () => {
     await initData()
     startAutoRefresh()
@@ -171,7 +161,6 @@
   <div
     class="min-h-screen bg-gradient-to-br from-base-100 via-base-100 to-base-200 overflow-x-hidden"
   >
-    <!-- Loading overlay -->
     <div
       v-if="isLoading"
       class="fixed inset-0 bg-base-200/90 z-[1000] flex items-center justify-center backdrop-blur-sm"
@@ -184,7 +173,6 @@
       </div>
     </div>
 
-    <!-- Main container -->
     <div class="container mx-auto max-w-screen-2xl px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
       <!-- Header section -->
       <div class="mb-6 sm:mb-8">
@@ -224,7 +212,6 @@
               <span class="hidden sm:inline">Actualiser</span>
             </button>
 
-            <!-- Auto-refresh toggle button -->
             <div class="flex items-center gap-2">
               <label class="label cursor-pointer gap-2">
                 <span class="label-text text-xs sm:text-sm hidden sm:inline">Auto-refresh</span>
@@ -241,12 +228,10 @@
         </div>
       </div>
 
-      <!-- Date Range Picker (layout compact & 2 colonnes en desktop) -->
       <div
         class="card bg-base-100 rounded-xl sm:rounded-2xl shadow-lg px-4 py-3 sm:px-5 sm:py-4 lg:px-6 lg:py-5 mb-6 sm:mb-8 border border-base-300"
       >
         <div class="grid gap-4 sm:gap-5 lg:gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
-          <!-- Bloc gauche : titre + texte -->
           <div class="min-w-0">
             <h2
               class="text-base sm:text-lg font-semibold text-base-content mb-1 sm:mb-2 leading-tight"
@@ -258,7 +243,6 @@
             </p>
           </div>
 
-          <!-- Bloc droit : DateRangePicker (compact & sans débordement) -->
           <div class="w-full lg:w-auto lg:shrink-0 min-w-0">
             <div class="w-full max-w-full lg:max-w-none">
               <div class="sm:inline-flex sm:items-center sm:gap-3">
@@ -272,7 +256,6 @@
         </div>
       </div>
 
-      <!-- Error state -->
       <div v-if="error" class="alert alert-error mb-6 break-words">
         <svg
           class="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0"
@@ -294,7 +277,6 @@
         </div>
       </div>
 
-      <!-- Tabs Navigation -->
       <div class="tabs tabs-boxed bg-base-200 mb-7">
         <a
           @click="activeTab = 'overview'"
@@ -319,11 +301,8 @@
         </a>
       </div>
 
-      <!-- Overview Tab -->
       <div v-if="activeTab === 'overview' && hasData">
-        <!-- Key Metrics Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
-          <!-- Total Announcements -->
           <div
             class="stat bg-base-100 rounded-xl shadow-lg border border-base-300 p-4 sm:p-6 w-full"
           >
@@ -349,7 +328,6 @@
             </div>
           </div>
 
-          <!-- Total Participants -->
           <div
             class="stat bg-base-100 rounded-xl shadow-lg border border-base-300 p-4 sm:p-6 w-full"
           >
@@ -375,7 +353,6 @@
             </div>
           </div>
 
-          <!-- Total Volunteers -->
           <div
             class="stat bg-base-100 rounded-xl shadow-lg border border-base-300 p-4 sm:p-6 w-full"
           >
@@ -401,7 +378,6 @@
             </div>
           </div>
 
-          <!-- Engagement Rate -->
           <div
             class="stat bg-base-100 rounded-xl shadow-lg border border-base-300 p-4 sm:p-6 w-full"
           >
@@ -428,9 +404,7 @@
           </div>
         </div>
 
-        <!-- Charts Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
-          <!-- Évolution des événements -->
           <div
             class="bg-base-100 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-base-300 w-full overflow-hidden"
           >

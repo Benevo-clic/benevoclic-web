@@ -2,22 +2,13 @@ import { defineEventHandler, getCookie, readBody } from 'h3'
 import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
-import {
-  FilterAnnouncementResponse,
-  type FilterAssociationAnnouncement
-} from '~/common/interface/filter.interface'
+import { type FilterAssociationAnnouncement } from '~/common/interface/filter.interface'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
   const body = (await readBody(event)) as FilterAssociationAnnouncement
 
-  // Utiliser process.env directement au lieu de useRuntimeConfig()
   const apiBaseUrl = process.env.API_BASE_URL
-
-  // Debug: Afficher les variables d'environnement
-  console.log("🔍 Debug - Variables d'environnement (association.post.ts):", {
-    api_base_url: apiBaseUrl
-  })
 
   if (!apiBaseUrl) {
     throw createError({

@@ -19,7 +19,6 @@
 
   const emit = defineEmits(['closeModal'])
 
-  /** clés pour forcer le remontage des sous-composants */
   const modalInstanceKey = ref(0)
   const eventFormKey = ref(0)
   const coverFormKey = ref(0)

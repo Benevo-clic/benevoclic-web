@@ -23,7 +23,7 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    await RetryManager.post(
+    await RetryManager.post<RegisterResponse>(
       `${apiBaseUrl}/user/register-user-verified`,
       {
         email: body.email,

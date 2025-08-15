@@ -1,7 +1,6 @@
 import { defineEventHandler, readBody } from 'h3'
 import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
-import type { RegisterUserGoogleResponse } from '~/common/types/auth.type'
 import { setCookies } from '~/server/api/auth/login.post'
 import { ApiError } from '~/utils/error-handler'
 
