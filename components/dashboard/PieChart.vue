@@ -31,8 +31,8 @@
   const canvas = ref<HTMLCanvasElement>()
   let chart: Chart | null = null
 
-  // Generate unique ID for accessibility using component instance
-  const uniqueId = 'piechart'
+  // Generate unique ID for accessibility
+  const uniqueId = Math.random().toString(36).substr(2, 9)
 
   // Computed description for screen readers
   const chartDescription = computed(() => {
