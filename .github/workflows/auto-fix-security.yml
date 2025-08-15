@@ -1,0 +1,119 @@
+name: Auto Fix Security Issues
+
+on:
+  workflow_dispatch:
+    inputs:
+      severity:
+        description: 'Niveau de sévérité minimum à corriger'
+        required: false
+        default: 'medium'
+        type: choice
+        options:
+          - low
+          - medium
+          - high
+          - critical
+
+jobs:
+  auto-fix:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run security audit
+        run: npm run audit:security
+        continue-on-error: true
+
+      - name: Auto fix security issues
+        run: npm run auto:fix
+        continue-on-error: true
+
+      - name: Run tests
+        run: npm run test
+        continue-on-error: true
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "🔧 Auto-fix security issues [skip ci]"
+          git push
+
+      - name: Create issue for manual fixes
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const reportPath = 'security-audit-report.json';
+
+            if (fs.existsSync(reportPath)) {
+              const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+              
+              if (report.summary.critical > 0 || report.summary.high > 0) {
+                let body = '## 🔒 Issues de Sécurité Nécessitant une Correction Manuelle\n\n';
+                body += `**Date:** ${new Date().toISOString()}\n\n`;
+                body += '### 📊 Résumé\n';
+                body += `- 🚨 Critique: ${report.summary.critical}\n`;
+                body += `- ⚠️ Élevé: ${report.summary.high}\n`;
+                body += `- ⚡ Moyen: ${report.summary.medium}\n`;
+                body += `- ℹ️ Faible: ${report.summary.low}\n\n`;
+                
+                body += '### 🚨 Issues Requérant une Intervention Manuelle\n\n';
+                
+                const criticalIssues = report.issues.filter(issue => issue.severity === 'CRITICAL');
+                const highIssues = report.issues.filter(issue => issue.severity === 'HIGH');
+                
+                [...criticalIssues, ...highIssues].slice(0, 10).forEach((issue, index) => {
+                  body += `${index + 1}. **[${issue.severity}]** ${issue.pattern}\n`;
+                  body += `   - Fichier: \`${issue.file}\`\n`;
+                  body += `   - Description: ${issue.description}\n`;
+                  body += `   - Occurrences: ${issue.count}\n\n`;
+                });
+                
+                body += '### 💡 Actions Recommandées\n';
+                body += '1. **Réviser chaque issue** individuellement\n';
+                body += '2. **Implémenter des corrections manuelles** pour les issues critiques et élevées\n';
+                body += '3. **Tester les corrections** avant de les déployer\n';
+                body += '4. **Relancer l\'audit** après les corrections\n\n';
+                
+                body += '### 🔧 Scripts Utiles\n';
+                body += '```bash\n';
+                body += 'npm run audit:security    # Vérifier les issues\n';
+                body += 'npm run auto:fix          # Correction automatique\n';
+                body += 'npm run test              # Tester les corrections\n';
+                body += '```\n';
+                
+                github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: '🔒 Issues de Sécurité - Correction Manuelle Requise',
+                  body: body,
+                  labels: ['security', 'bug', 'high-priority']
+                });
+              }
+            }

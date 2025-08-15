@@ -5,8 +5,8 @@
  * Usage: node scripts/security-audit.js
  */
 
-import { readFileSync, statSync, readdirSync, writeFileSync } from 'fs'
-import { join, extname, dirname } from 'path'
+import { readdirSync, readFileSync, statSync, writeFileSync } from 'fs'
+import { dirname, extname, join } from 'path'
 import { execSync } from 'child_process'
 import { fileURLToPath } from 'url'
 
@@ -45,7 +45,7 @@ const securityPatterns = [
   },
   {
     name: 'SQL Injection risk',
-    pattern: /query\s*\(\s*['"`][^'"`]*\$\{[^}]*\}[^'"`]*['"`]/g,
+    pattern: /query\s*\(\s*['"`][^'"`]*\$\{[^}]*}[^'"`]*['"`]/g,
     severity: 'HIGH',
     description: "Risque d'injection SQL avec template literals"
   },
@@ -80,6 +80,11 @@ function scanFile(filePath) {
     const content = readFileSync(filePath, 'utf8')
 
     securityPatterns.forEach(pattern => {
+      // Exclure les patterns de détection eux-mêmes (faux positifs)
+      if (filePath.includes('scripts/security-audit.js') && pattern.name === 'Eval usage') {
+        return
+      }
+
       const matches = content.match(pattern.pattern)
       if (matches) {
         issues.push({
@@ -143,7 +148,7 @@ function runEslintSecurity() {
 }
 
 function generateReport(issues, eslintResults) {
-  const report = {
+  return {
     timestamp: new Date().toISOString(),
     summary: {
       totalIssues: issues.length,
@@ -155,8 +160,6 @@ function generateReport(issues, eslintResults) {
     issues: issues,
     eslintResults: eslintResults
   }
-
-  return report
 }
 
 function printReport(report) {

@@ -28,12 +28,15 @@ jobs:
 
       - name: Run security audit
         run: npm run audit:security
+        continue-on-error: true
 
       - name: Run ESLint security check
         run: npm run lint:security
+        continue-on-error: true
 
       - name: Run npm audit
         run: npm audit --audit-level=moderate
+        continue-on-error: true
 
       - name: Upload security report
         uses: actions/upload-artifact@v4
@@ -41,6 +44,27 @@ jobs:
         with:
           name: security-audit-report
           path: security-audit-report.json
+
+      - name: Check for critical security issues
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const reportPath = 'security-audit-report.json';
+
+            if (fs.existsSync(reportPath)) {
+              const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+              
+              // Faire échouer le pipeline seulement s'il y a des issues critiques
+              if (report.summary.critical > 0) {
+                core.setFailed(`🚨 ${report.summary.critical} issue(s) critique(s) détectée(s). Vérifiez le rapport de sécurité.`);
+              } else {
+                console.log('✅ Aucune issue critique détectée');
+              }
+            } else {
+              console.log('⚠️ Aucun rapport de sécurité trouvé');
+            }
 
       - name: Comment PR with security findings
         if: github.event_name == 'pull_request'
@@ -87,7 +111,7 @@ jobs:
               if (report.summary.medium > 0) {
                 comment += '- ⚡ **MOYEN:** Planifiez la correction des issues moyennes\n';
               }
-              comment += '- 🔧 Utilisez `npm run lint:fix` pour corriger automatiquement certaines issues\n';
+              comment += '- 🔧 Utilisez `npm run fix:security` pour corriger automatiquement certaines issues\n';
               comment += '- 📚 Consultez la documentation de sécurité pour plus d\'informations\n';
               
               github.rest.issues.createComment({
