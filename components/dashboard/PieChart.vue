@@ -177,15 +177,25 @@
     }
   }
 
-  @media (min-width: 641px) and (max-width: 1024px) {
+  @media (min-width: 641px) {
     canvas {
-      max-height: 250px;
+      max-height: 450px;
     }
   }
 
   @media (min-width: 1025px) {
     canvas {
-      max-height: 300px;
+      max-height: 350px;
+    }
+  }
+  @media (min-width: 1280px) {
+    canvas {
+      max-height: 450px;
+    }
+  }
+  @media (min-width: 1536px) {
+    canvas {
+      max-height: 550px;
     }
   }
 </style>
