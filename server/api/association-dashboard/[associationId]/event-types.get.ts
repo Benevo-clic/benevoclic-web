@@ -1,6 +1,6 @@
 import { defineEventHandler, getCookie, getQuery } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const associationId = event.context.params?.associationId
@@ -56,13 +56,14 @@ export default defineEventHandler(async event => {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 5000
     })
 
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
+      await ApiError.handleAxios(
         error,
         "Erreur lors de la récupération des statistiques par type d'événement"
       )

@@ -1,5 +1,4 @@
 import { defineEventHandler, readBody, createError, getCookie } from 'h3'
-import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
 
@@ -23,19 +22,18 @@ export default defineEventHandler(async event => {
     }
     const url = `${apiBaseUrl}/association/update/${associationId}`
 
-    const response = await RetryManager.patch(url, body, {
+    const response = await axios.patch(url, body, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      retry: {
-        timeout: 10000, // 10 secondes
-        maxRetries: 3 // 3 tentatives
-      }
+      timeout: 5000
     })
 
+    console.log('✅ Response received:', response.data)
     return response.data
   } catch (error: any) {
+    console.error('❌ Error in association/update/[associationId].patch.ts:', error)
     if (axios.isAxiosError(error)) {
       await ApiError.handleAxios(error, "Erreur lors de la mise à jour de l'association")
     }

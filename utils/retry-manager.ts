@@ -1,5 +1,5 @@
-import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import axios from 'axios'
+import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ErrorHandler } from './error-handler'
 import { SessionCleaner } from './session-cleaner'
 
@@ -53,7 +53,11 @@ export class RetryManager {
       }
 
       try {
-        return await axios.request<T>(requestConfig)
+        const response = await axios.request<T>(requestConfig)
+
+        this.logSuccess(requestConfig, response, attempt, requestId)
+
+        return response
       } catch (error: any) {
         const isLastAttempt = attempt === retryConfig.maxRetries!
         const elapsedTime = Date.now() - startTime
@@ -122,15 +126,6 @@ export class RetryManager {
     return this.request<T>({ ...config, method: 'DELETE', url }, context)
   }
 
-  static async patch<T = any>(
-    url: string,
-    data?: any,
-    config?: RequestConfig,
-    context?: { endpoint?: string; userId?: string; action?: string }
-  ): Promise<AxiosResponse<T>> {
-    return this.request<T>({ ...config, method: 'PATCH', url, data }, context)
-  }
-
   private static calculateDelay(attempt: number, config: RetryConfig): number {
     const delay = config.baseDelay! * Math.pow(2, attempt)
 
@@ -150,6 +145,19 @@ export class RetryManager {
 
   private static generateRequestId(): string {
     return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+  }
+
+  private static logSuccess(
+    config: AxiosRequestConfig,
+    response: AxiosResponse,
+    attempt: number,
+    requestId: string
+  ) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(
+        `✅ ${config.method?.toUpperCase()} ${config.url} - Tentative ${attempt + 1} - ${response.status}`
+      )
+    }
   }
 
   private static logError(
@@ -242,9 +250,5 @@ export class RetryManager {
     }
 
     return 'session_expired'
-  }
-
-  static isAxiosError(error: any): boolean {
-    return axios.isAxiosError(error)
   }
 }

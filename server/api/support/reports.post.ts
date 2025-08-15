@@ -36,10 +36,7 @@ export default defineEventHandler(async event => {
       method: 'POST',
       body,
       headers,
-      retry: {
-        timeout: 10000, // 10 secondes
-        maxRetries: 3 // 3 tentatives
-      }
+      timeout: 5000
     })
   } catch (error: any) {
     console.error('Erreur lors de la création du signalement:', error)

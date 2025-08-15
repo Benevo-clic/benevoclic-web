@@ -1,3 +1,8 @@
+/**
+ * Gestionnaire de nettoyage de session utilisateur
+ * Supprime tous les tokens et données de session en cas d'échec critique
+ */
+
 export class SessionCleaner {
   static async cleanUserSession(): Promise<void> {
     try {
@@ -10,6 +15,8 @@ export class SessionCleaner {
       await this.clearIndexedDB()
 
       this.redirectToHome()
+
+      console.log('🧹 Session utilisateur nettoyée avec succès')
     } catch (error) {
       console.error('❌ Erreur lors du nettoyage de session:', error)
       this.redirectToHome()

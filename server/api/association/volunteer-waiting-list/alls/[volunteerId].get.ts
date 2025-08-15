@@ -1,5 +1,4 @@
 import { defineEventHandler, createError, getCookie } from 'h3'
-import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
 
@@ -23,21 +22,20 @@ export default defineEventHandler(async event => {
     }
     const url = `${apiBaseUrl}/association/volunteer-waiting-list/alls/${volunteerId}`
 
-    const response = await RetryManager.get(url, {
+    const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      retry: {
-        timeout: 10000, // 10 secondes
-        maxRetries: 3 // 3 tentatives
-      }
+      timeout: 5000
     })
 
     console.log('Réponse de l’API Nest :', response.data)
 
     return response.data
   } catch (error: any) {
+    console.error('Erreur API Nuxt :', error)
+
     if (axios.isAxiosError(error)) {
       await ApiError.handleAxios(
         error,

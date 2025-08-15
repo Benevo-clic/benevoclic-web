@@ -1,6 +1,6 @@
-import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { defineEventHandler, readBody, getCookie } from 'h3'
+import type { Announcement } from '~/common/interface/event.interface'
 import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
@@ -24,7 +24,7 @@ export default defineEventHandler(async event => {
     const status = {
       status: body.status
     }
-    const announcement = await RetryManager.patch(
+    const announcement = await axios.patch<Announcement>(
       url,
       {
         ...status
@@ -34,10 +34,7 @@ export default defineEventHandler(async event => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        retry: {
-          timeout: 10000, // 10 secondes
-          maxRetries: 3 // 3 tentatives
-        }
+        timeout: 5000
       }
     )
 

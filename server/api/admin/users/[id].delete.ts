@@ -1,5 +1,4 @@
 import { defineEventHandler, getCookie, getRouterParam, createError } from 'h3'
-import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
 
@@ -21,12 +20,9 @@ export default defineEventHandler(async event => {
   const url = `${apiBaseUrl}/user/${id}`
 
   try {
-    const response = await RetryManager.delete(url, {
+    const response = await axios.delete(url, {
       headers: { Authorization: `Bearer ${token}` },
-      retry: {
-        timeout: 10000, // 10 secondes
-        maxRetries: 3 // 3 tentatives
-      }
+      timeout: 5000
     })
     return response.data
   } catch (error: any) {

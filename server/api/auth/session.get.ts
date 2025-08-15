@@ -1,5 +1,5 @@
 import { defineEventHandler, getCookie, createError } from 'h3'
-import { RetryManager } from '~/utils/retry-manager'
+import axios from 'axios'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
@@ -24,14 +24,11 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const response = await RetryManager.get(`${apiBaseUrl}/auth/session`, {
+    const response = await axios.get(`${apiBaseUrl}/auth/session`, {
       headers: {
         Authorization: `Bearer ${token}`
       },
-      retry: {
-        timeout: 10000, // 10 secondes
-        maxRetries: 3 // 3 tentatives
-      }
+      timeout: 5000
     })
 
     return response.data

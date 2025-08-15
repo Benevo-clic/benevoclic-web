@@ -1,5 +1,4 @@
 import { defineEventHandler, deleteCookie, H3Event, EventHandlerRequest, getCookie } from 'h3'
-import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
 
@@ -37,17 +36,14 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    await RetryManager.post(
+    await axios.post(
       `${apiBaseUrl}/user/logout`,
       {},
       {
         headers: {
           Authorization: `Bearer ${token}`
         },
-        retry: {
-          timeout: 10000, // 10 secondes
-          maxRetries: 3 // 3 tentatives
-        }
+        timeout: 5000
       }
     )
 

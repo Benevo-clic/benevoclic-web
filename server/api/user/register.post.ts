@@ -1,5 +1,4 @@
 import { defineEventHandler, readBody, createError } from 'h3'
-import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
 
@@ -7,6 +6,7 @@ export default defineEventHandler(async event => {
   try {
     const body = await readBody(event)
 
+    // Appel au service backend
     const apiBaseUrl = process.env.API_BASE_URL
     if (!apiBaseUrl) {
       throw createError({
@@ -20,14 +20,11 @@ export default defineEventHandler(async event => {
     }
     const url = `${apiBaseUrl}/user/register`
 
-    const response = await RetryManager.post(url, body, {
+    const response = await axios.post(url, body, {
       headers: {
         'Content-Type': 'application/json'
       },
-      retry: {
-        timeout: 10000, // 10 secondes
-        maxRetries: 3 // 3 tentatives
-      }
+      timeout: 5000
     })
 
     return response.data

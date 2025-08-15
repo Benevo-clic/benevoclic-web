@@ -1,6 +1,6 @@
-import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { defineEventHandler, createError } from 'h3'
+import { Announcement } from '~/common/interface/event.interface'
 import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async () => {
@@ -17,12 +17,12 @@ export default defineEventHandler(async () => {
   }
 
   try {
-    const response = await RetryManager.get(`${apiBaseUrl}/announcements/allAnnouncements`, {
-      retry: {
-        timeout: 10000, // 10 secondes
-        maxRetries: 3 // 3 tentatives
+    const response = await axios.get<Announcement[]>(
+      `${apiBaseUrl}/announcements/allAnnouncements`,
+      {
+        timeout: 5000
       }
-    })
+    )
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {

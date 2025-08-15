@@ -1,5 +1,4 @@
 import { defineEventHandler, createError, readBody } from 'h3'
-import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
 import { setCookies } from '~/server/api/auth/login.post'
@@ -22,7 +21,7 @@ export default defineEventHandler(async event => {
     return { error: 'Token manquant' }
   }
   try {
-    const response = await RetryManager.patch(
+    const response = await axios.patch<RegisterUserGoogleResponse>(
       `${apiBaseUrl}/user/${body.uid}/update-connected/${true}`,
       {},
       {
@@ -30,10 +29,7 @@ export default defineEventHandler(async event => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${body.idToken}`
         },
-        retry: {
-          timeout: 10000, // 10 secondes
-          maxRetries: 3 // 3 tentatives
-        }
+        timeout: 5000
       }
     )
 

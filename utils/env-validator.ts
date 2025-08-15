@@ -4,6 +4,7 @@ export class EnvValidator {
     API_SIRENE_URL: "URL de l'API Sirene",
     API_SIRENE_KEY: 'Clé API Sirene',
 
+    // Firebase Configuration
     FIREBASE_API_KEY: 'Clé API Firebase',
     FIREBASE_AUTH_DOMAIN: "Domaine d'authentification Firebase",
     FIREBASE_PROJECT_ID: 'ID du projet Firebase',
@@ -65,6 +66,8 @@ export class EnvValidator {
         `⚠️ Avertissements de configuration:\n${warnings.map(w => `  - ${w}`).join('\n')}`
       )
     }
+
+    console.log("✅ Configuration des variables d'environnement validée")
   }
 
   /**

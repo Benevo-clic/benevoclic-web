@@ -1,7 +1,7 @@
 import { defineEventHandler, getCookie, readBody } from 'h3'
-import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
+import { Announcement } from '~/common/interface/event.interface'
 
 export default defineEventHandler(async event => {
   const announcementId = event.context.params?.id
@@ -20,7 +20,7 @@ export default defineEventHandler(async event => {
   const body = await readBody(event)
 
   try {
-    const response = await RetryManager.patch(
+    const response = await axios.patch<Partial<Announcement>>(
       `${apiBaseUrl}/announcements/${announcementId}`,
       {
         ...body
@@ -30,10 +30,7 @@ export default defineEventHandler(async event => {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        retry: {
-          timeout: 10000, // 10 secondes
-          maxRetries: 3 // 3 tentatives
-        }
+        timeout: 5000
       }
     )
     return response.data

@@ -1,4 +1,3 @@
-import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { defineEventHandler } from 'h3'
 import { ApiError } from '~/utils/error-handler'
@@ -26,14 +25,11 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    await RetryManager.delete(`${apiBaseUrl}/announcements/${announcementId}`, {
+    await axios.delete<void>(`${apiBaseUrl}/announcements/${announcementId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       },
-      retry: {
-        timeout: 10000, // 10 secondes
-        maxRetries: 3 // 3 tentatives
-      }
+      timeout: 5000
     })
   } catch (error: any) {
     if (axios.isAxiosError(error)) {

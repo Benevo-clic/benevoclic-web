@@ -1,5 +1,4 @@
 import { createError, defineEventHandler, getCookie } from 'h3'
-import { RetryManager } from '~/utils/retry-manager'
 
 export default defineEventHandler(async event => {
   try {
@@ -26,16 +25,16 @@ export default defineEventHandler(async event => {
       })
     }
 
-    return await RetryManager.get(`${apiBaseUrl}/admin/${adminId}/check-approval-status`, {
+    return await $fetch(`${apiBaseUrl}/admin/${adminId}/check-approval-status`, {
+      method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`
       },
-      retry: {
-        timeout: 10000, // 10 secondes
-        maxRetries: 3 // 3 tentatives
-      }
+      timeout: 5000
     })
   } catch (error: any) {
+    console.error("Erreur lors de la vérification du statut d'approbation:", error)
+
     if (error.statusCode) {
       throw createError({
         statusCode: error.statusCode,

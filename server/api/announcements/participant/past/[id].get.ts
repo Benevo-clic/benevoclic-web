@@ -1,5 +1,4 @@
 import { defineEventHandler, getCookie } from 'h3'
-import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
 
@@ -26,16 +25,13 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const { data } = await RetryManager.get(
+    const { data } = await axios.get(
       `${apiBaseUrl}/announcements/participant/past/${volunteerId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`
         },
-        retry: {
-          timeout: 10000, // 10 secondes
-          maxRetries: 3 // 3 tentatives
-        }
+        timeout: 5000
       }
     )
     return data

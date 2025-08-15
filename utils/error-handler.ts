@@ -2,6 +2,11 @@ import type { AxiosError } from 'axios'
 import { createError } from 'h3'
 import { SessionCleaner } from './session-cleaner'
 
+/**
+ * Gestionnaire d'erreur centralisé pour l'application
+ * Fournit une gestion cohérente des erreurs avec logs structurés
+ */
+
 export interface ErrorContext {
   endpoint?: string
   userId?: string
@@ -14,16 +19,25 @@ export class ErrorHandler {
   private static errorCounts = new Map<string, number>()
   private static readonly MAX_ERRORS_PER_MINUTE = 10
 
+  /**
+   * Gère une erreur avec contexte et logging structuré
+   */
   static handle(error: any, context: ErrorContext = {}): never {
     const errorInfo = this.extractErrorInfo(error, context)
 
+    // Log structuré
     this.logError(errorInfo)
 
+    // Métriques
     this.recordError(errorInfo)
 
+    // Retour utilisateur approprié
     throw this.createUserFriendlyError(errorInfo)
   }
 
+  /**
+   * Gère spécifiquement les erreurs Axios
+   */
   static async handleAxios(
     err: AxiosError,
     userMessage = "Erreur lors de l'appel à l'API",
@@ -31,17 +45,24 @@ export class ErrorHandler {
   ): Promise<never> {
     const errorInfo = this.extractAxiosErrorInfo(err, userMessage, context)
 
+    // Log structuré
     this.logError(errorInfo)
 
+    // Métriques
     this.recordError(errorInfo)
 
+    // Vérifier si une déconnexion forcée est nécessaire
     if (this.shouldForceLogout(err, context)) {
       await SessionCleaner.forceLogout(this.getLogoutReason(err))
     }
 
+    // Retour utilisateur approprié
     throw this.createAxiosErrorResponse(errorInfo)
   }
 
+  /**
+   * Extrait les informations d'erreur
+   */
   private static extractErrorInfo(error: any, context: ErrorContext) {
     return {
       message: error?.message || 'Erreur inconnue',
@@ -57,6 +78,9 @@ export class ErrorHandler {
     }
   }
 
+  /**
+   * Extrait les informations d'erreur Axios
+   */
   private static extractAxiosErrorInfo(
     err: AxiosError,
     userMessage: string,
@@ -84,6 +108,9 @@ export class ErrorHandler {
     }
   }
 
+  /**
+   * Log structuré des erreurs
+   */
   private static logError(errorInfo: any) {
     const logEntry = {
       timestamp: errorInfo.context.timestamp,

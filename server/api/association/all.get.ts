@@ -1,5 +1,4 @@
 import { defineEventHandler, createError } from 'h3'
-import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
 
@@ -20,15 +19,12 @@ export default defineEventHandler(async event => {
     }
     const url = `${apiBaseUrl}/association/all`
 
-    const response = await RetryManager.get(url, {
+    const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      retry: {
-        timeout: 10000, // 10 secondes
-        maxRetries: 3 // 3 tentatives
-      }
+      timeout: 5000
     })
 
     return response.data

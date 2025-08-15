@@ -1,7 +1,5 @@
 import { defineEventHandler, getCookie, createError } from 'h3'
 import { UserInfo } from '~/common/types/auth.type'
-import { RetryManager } from '~/utils/retry-manager'
-import { ApiError } from '~/utils/error-handler'
 import axios from 'axios'
 
 export default defineEventHandler(async event => {
@@ -33,14 +31,11 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const response = await RetryManager.get<UserInfo>(`${apiBaseUrl}/user/current-user`, {
+    const response = await axios.get<UserInfo>(`${apiBaseUrl}/user/current-user`, {
       headers: {
         Authorization: `Bearer ${token}`
       },
-      retry: {
-        timeout: 10000, // 10 secondes
-        maxRetries: 3 // 3 tentatives
-      }
+      timeout: 5000
     })
 
     if (!response.data) {
@@ -57,8 +52,28 @@ export default defineEventHandler(async event => {
 
     return response.data
   } catch (error: any) {
-    if (axios.isAxiosError(error)) {
-      await ApiError.handleAxios(error, 'Erreur lors de la récupération de l’utilisateur actuel')
+    // Gérer les erreurs sans retry pour éviter la boucle infinie
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      throw createError({
+        statusCode: error.response.status,
+        statusMessage: error.response.statusText,
+        data: {
+          message: 'Token invalide',
+          error: error.response.statusText,
+          statusCode: error.response.status
+        }
+      })
     }
+
+    // Pour les autres erreurs
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      data: {
+        message: 'Erreur lors de la récupération des données utilisateur',
+        error: error.message,
+        statusCode: 500
+      }
+    })
   }
 })

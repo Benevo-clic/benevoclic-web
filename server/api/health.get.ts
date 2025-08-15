@@ -2,6 +2,11 @@ import { defineEventHandler } from 'h3'
 import { RetryManager } from '~/utils/retry-manager'
 import { EnvValidator } from '~/utils/env-validator'
 
+/**
+ * Endpoint de health check pour surveiller l'état des services
+ * Vérifie la connectivité avec l'API backend et les services externes
+ */
+
 interface HealthCheck {
   status: 'ok' | 'error' | 'warning'
   message: string
@@ -22,6 +27,7 @@ export default defineEventHandler(async (): Promise<HealthResponse> => {
   const checks: Record<string, HealthCheck> = {}
 
   try {
+    // 1. Vérification des variables d'environnement
     const envStart = Date.now()
     try {
       EnvValidator.validateRequired()
@@ -40,17 +46,13 @@ export default defineEventHandler(async (): Promise<HealthResponse> => {
       }
     }
 
+    // 2. Vérification de la connectivité API backend
     const apiStart = Date.now()
     try {
       const config = EnvValidator.getConfig()
       const response = await RetryManager.get(
         `${config.api.baseUrl}/health`,
-        {
-          retry: {
-            maxRetries: 3,
-            timeout: 10000 // 10 secondes
-          }
-        },
+        { retry: { maxRetries: 1, timeout: 5000 } },
         { endpoint: 'health', action: 'api-check' }
       )
 
@@ -69,9 +71,11 @@ export default defineEventHandler(async (): Promise<HealthResponse> => {
       }
     }
 
+    // 3. Vérification de la connectivité Firebase
     const firebaseStart = Date.now()
     try {
       const config = EnvValidator.getConfig()
+      // Test simple de configuration Firebase
       if (config.firebase.apiKey && config.firebase.projectId) {
         checks.firebase = {
           status: 'ok',

@@ -1,6 +1,6 @@
 import { defineEventHandler, getCookie } from 'h3'
-import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
+import type { AssociationVolunteerFollow } from '~/common/interface/volunteer.interface'
 import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
@@ -25,16 +25,13 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const { data } = await RetryManager.get(
+    const { data } = await axios.get<AssociationVolunteerFollow[]>(
       `${apiBaseUrl}/api/v2/association/${volunteerId}/AllAssociationsVolunteerFromWaitingList`,
       {
         headers: {
           Authorization: `Bearer ${token}`
         },
-        retry: {
-          timeout: 10000, // 10 secondes
-          maxRetries: 3 // 3 tentatives
-        }
+        timeout: 5000
       }
     )
 
