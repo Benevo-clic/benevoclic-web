@@ -557,7 +557,7 @@
         body: supportForm.value
       })
 
-      console.log('Support request submitted:', response)
+      process.env.NODE_ENV !== 'production' && console.log('Support request submitted:', response)
 
       // Reset form
       supportForm.value = {
@@ -575,7 +575,8 @@
       // Show success message
       alert(t('help.contact.success_message'))
     } catch (error) {
-      console.error('Error submitting support request:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Error submitting support request:', error)
       alert(t('help.contact.error_message'))
     } finally {
       submitting.value = false

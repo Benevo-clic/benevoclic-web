@@ -29,7 +29,8 @@ export default defineEventHandler(async event => {
   try {
     app = initializeApp(config.public.firebaseConfig)
   } catch (error) {
-    console.error("Erreur lors de l'initialisation de Firebase côté serveur:", error)
+    process.env.NODE_ENV !== 'production' &&
+      console.error("Erreur lors de l'initialisation de Firebase côté serveur:", error)
     return { error: "Erreur d'initialisation Firebase" }
   }
 

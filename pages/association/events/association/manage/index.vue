@@ -137,7 +137,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
     }
   }
 
@@ -160,7 +160,8 @@
   async function fetchFilteredAnnouncements() {
     try {
       if (!currentFilters.value.associationId) {
-        console.warn('Association ID is not available, announcements cannot be filtered.')
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('Association ID is not available, announcements cannot be filtered.')
         return
       }
       const response = await announcement.filterAssociationAnnouncementByAssociationId(
@@ -183,7 +184,8 @@
         currentFilters.value.associationId = getUserId
         await fetchFilteredAnnouncements()
       } else {
-        console.warn('User ID is not available, announcements cannot be fetched.')
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('User ID is not available, announcements cannot be fetched.')
       }
     } catch (error) {
       handleError(error)

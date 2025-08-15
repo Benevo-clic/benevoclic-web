@@ -320,7 +320,7 @@
 
   function handleSearch(searchData: any) {
     // In a real app, this would make an API call with the search parameters
-    console.log('Searching with:', searchData)
+    process.env.NODE_ENV !== 'production' && console.log('Searching with:', searchData)
     currentSearch.value = searchData
     searchPerformed.value = true
 

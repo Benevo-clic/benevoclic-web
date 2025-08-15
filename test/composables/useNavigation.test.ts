@@ -144,7 +144,8 @@ const mockUseNavigation = () => {
   const navigateToRoute = async path => {
     const authStore = mockAuthStore
     if (!authStore.isConnected && !ROUTE_CONFIG.public.includes(path)) {
-      console.log(`🔍 Utilisateur non connecté, redirection vers la page de connexion`)
+      process.env.NODE_ENV !== 'production' &&
+        console.log(`🔍 Utilisateur non connecté, redirection vers la page de connexion`)
       return mockNavigateTo('/')
     }
     if (!useCookie('isConnected').value) {

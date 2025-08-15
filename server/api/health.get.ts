@@ -198,11 +198,12 @@ export default defineEventHandler(async (): Promise<HealthResponse> => {
 
   // Log du statut
   if (globalStatus === 'unhealthy') {
-    console.error('🚨 Health check: UNHEALTHY', response)
+    process.env.NODE_ENV !== 'production' && console.error('🚨 Health check: UNHEALTHY', response)
   } else if (globalStatus === 'degraded') {
-    console.warn('⚠️ Health check: DEGRADED', response)
+    process.env.NODE_ENV !== 'production' && console.warn('⚠️ Health check: DEGRADED', response)
   } else {
-    console.log('✅ Health check: HEALTHY', { duration: Date.now() - startTime })
+    process.env.NODE_ENV !== 'production' &&
+      console.log('✅ Health check: HEALTHY', { duration: Date.now() - startTime })
   }
 
   return response

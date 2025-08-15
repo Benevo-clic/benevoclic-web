@@ -34,7 +34,7 @@ const MockRegisterModal = {
       if (this.registerModal) {
         this.isRegisterMode = true
       } else {
-        console.log('registerModal est null')
+        process.env.NODE_ENV !== 'production' && console.log('registerModal est null')
       }
     },
 

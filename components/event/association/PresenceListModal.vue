@@ -216,7 +216,8 @@
 
       emit('update')
     } catch (error) {
-      console.error('Error updating presence status:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Error updating presence status:', error)
     }
   }
 

@@ -583,7 +583,7 @@
         resetLocation.value = true
       }
     } catch (error) {
-      console.error('Error getting user location:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Error getting user location:', error)
     }
   }
 
@@ -1087,7 +1087,8 @@
       showHistory.value = false
       localStorage.removeItem(FILTER_HISTORY_KEY)
 
-      console.log('Applying history filter:', filters.value)
+      process.env.NODE_ENV !== 'production' &&
+        console.log('Applying history filter:', filters.value)
       emit('filter', filters.value)
     }
   }

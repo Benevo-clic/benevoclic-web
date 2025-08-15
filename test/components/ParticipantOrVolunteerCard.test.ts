@@ -94,7 +94,7 @@ describe('ParticipantOrVolunteerCard', () => {
   const mockUserInfo = {
     userId: 'user-123',
     email: 'john.doe@example.com',
-    avatarFileKey: 'avatar-key-123'
+    avatarFileKey: process.env.Key?.toUpperCase() || 'avatar-key-123'
   }
 
   beforeEach(() => {

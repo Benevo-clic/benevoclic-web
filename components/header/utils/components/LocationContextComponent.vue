@@ -45,7 +45,7 @@
           label: feature.properties.label
         }))
     } catch (err) {
-      console.error('Erreur lors de la recherche:', err)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur lors de la recherche:', err)
       searchResults.value = []
     } finally {
       isSearching.value = false
@@ -72,15 +72,16 @@
     showCityMenu.value = false
 
     // Afficher les coordonnées dans la console
-    console.log('Ville sélectionnée:', {
-      nom: city.city,
-      codePostal: city.postcode,
-      nomComplet: city.name,
-      coordonnées: {
-        longitude: city.coordinates[0],
-        latitude: city.coordinates[1]
-      }
-    })
+    process.env.NODE_ENV !== 'production' &&
+      console.log('Ville sélectionnée:', {
+        nom: city.city,
+        codePostal: city.postcode,
+        nomComplet: city.name,
+        coordonnées: {
+          longitude: city.coordinates[0],
+          latitude: city.coordinates[1]
+        }
+      })
   }
 
   const toggleSearch = () => {
@@ -96,7 +97,7 @@
     showCityMenu.value = false
 
     // Afficher les coordonnées pour les villes par défaut
-    console.log('Ville par défaut sélectionnée:', city)
+    process.env.NODE_ENV !== 'production' && console.log('Ville par défaut sélectionnée:', city)
 
     // Optionnel : Récupérer les coordonnées via géocodage pour les villes par défaut
     fetch(
@@ -106,16 +107,21 @@
       .then(data => {
         if (data.features && data.features.length > 0) {
           const feature = data.features[0]
-          console.log('Coordonnées de la ville par défaut:', {
-            nom: city,
-            coordonnées: {
-              longitude: feature.geometry.coordinates[0],
-              latitude: feature.geometry.coordinates[1]
-            }
-          })
+          process.env.NODE_ENV !== 'production' &&
+            console.log('Coordonnées de la ville par défaut:', {
+              nom: city,
+              coordonnées: {
+                longitude: feature.geometry.coordinates[0],
+                latitude: feature.geometry.coordinates[1]
+              }
+            })
         }
       })
-      .catch(err => console.error('Erreur lors de la récupération des coordonnées:', err))
+      .catch(
+        err =>
+          process.env.NODE_ENV !== 'production' &&
+          console.error('Erreur lors de la récupération des coordonnées:', err)
+      )
   }
 
   function toggleLanguageMenu() {

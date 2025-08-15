@@ -68,10 +68,11 @@ export const useSessionStore = defineStore('session', {
         this.isSessionValid = true
         this.lastActivity = Date.now()
 
-        console.log('✅ Session sauvegardée avec succès')
+        process.env.NODE_ENV !== 'production' && console.log('✅ Session sauvegardée avec succès')
       } catch (error: any) {
         this.error = error.message
-        console.error('❌ Erreur lors de la sauvegarde de session:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.error('❌ Erreur lors de la sauvegarde de session:', error)
         throw error
       } finally {
         this.isLoading = false
@@ -95,13 +96,13 @@ export const useSessionStore = defineStore('session', {
         const sessionData = savedSession || (await restoreSession())
 
         if (!sessionData) {
-          console.log('ℹ️ Aucune session à restaurer')
+          process.env.NODE_ENV !== 'production' && console.log('ℹ️ Aucune session à restaurer')
           return false
         }
 
         // Vérifier la validité de la session
         if (sessionData.expiresAt <= Date.now()) {
-          console.log('❌ Session expirée')
+          process.env.NODE_ENV !== 'production' && console.log('❌ Session expirée')
           await this.clearSession()
           return false
         }
@@ -116,7 +117,8 @@ export const useSessionStore = defineStore('session', {
         if (process.client && sessionData.isConnected) {
           const isConnectedCookie = useCookie<string>('isConnected')
           isConnectedCookie.value = 'true'
-          console.log('🍪 Cookie isConnected mis à jour côté client')
+          process.env.NODE_ENV !== 'production' &&
+            console.log('🍪 Cookie isConnected mis à jour côté client')
         }
 
         // Restaurer les données utilisateur si disponibles
@@ -129,11 +131,12 @@ export const useSessionStore = defineStore('session', {
         this.lastActivity = sessionData.lastActivity
         this.backgroundTime = 0
 
-        console.log('✅ Session restaurée avec succès')
+        process.env.NODE_ENV !== 'production' && console.log('✅ Session restaurée avec succès')
         return true
       } catch (error: any) {
         this.error = error.message
-        console.error('❌ Erreur lors de la restauration de session:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.error('❌ Erreur lors de la restauration de session:', error)
         return false
       } finally {
         this.isLoading = false
@@ -151,18 +154,19 @@ export const useSessionStore = defineStore('session', {
         const userStore = useUserStore()
         const sessionApi = useSessionApi()
 
-        console.log('🔄 Rafraîchissement de session...')
+        process.env.NODE_ENV !== 'production' && console.log('🔄 Rafraîchissement de session...')
 
         // Vérifier si l'utilisateur est connecté
         if (!authStore.isAuthenticated) {
-          console.log('❌ Utilisateur non authentifié')
+          process.env.NODE_ENV !== 'production' && console.log('❌ Utilisateur non authentifié')
           return false
         }
 
         // Vérifier la session côté serveur
         const sessionValid = await sessionApi.isSessionValid()
         if (!sessionValid) {
-          console.log('🔄 Session invalide, tentative de rafraîchissement...')
+          process.env.NODE_ENV !== 'production' &&
+            console.log('🔄 Session invalide, tentative de rafraîchissement...')
           await sessionApi.refreshSession()
         }
 
@@ -171,7 +175,8 @@ export const useSessionStore = defineStore('session', {
 
         // Restaurer l'état utilisateur si nécessaire
         if (!userStore.user) {
-          console.log('🔄 Restauration des données utilisateur...')
+          process.env.NODE_ENV !== 'production' &&
+            console.log('🔄 Restauration des données utilisateur...')
           await userStore.fetchUser()
         }
 
@@ -183,10 +188,11 @@ export const useSessionStore = defineStore('session', {
         // Sauvegarder la session mise à jour
         await this.saveCurrentSession()
 
-        console.log('✅ Session rafraîchie avec succès')
+        process.env.NODE_ENV !== 'production' && console.log('✅ Session rafraîchie avec succès')
         return true
       } catch (error: any) {
-        console.error('❌ Erreur lors du rafraîchissement de session:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.error('❌ Erreur lors du rafraîchissement de session:', error)
 
         // En cas d'erreur, déconnecter l'utilisateur
         try {
@@ -194,7 +200,8 @@ export const useSessionStore = defineStore('session', {
           const authStore = useAuthStore()
           await authStore.logout()
         } catch (logoutError) {
-          console.error('❌ Erreur lors de la déconnexion:', logoutError)
+          process.env.NODE_ENV !== 'production' &&
+            console.error('❌ Erreur lors de la déconnexion:', logoutError)
         }
 
         return false
@@ -217,13 +224,15 @@ export const useSessionStore = defineStore('session', {
         if (process.client) {
           const isConnectedCookie = useCookie<string>('isConnected')
           isConnectedCookie.value = ''
-          console.log('🍪 Cookie isConnected supprimé côté client')
+          process.env.NODE_ENV !== 'production' &&
+            console.log('🍪 Cookie isConnected supprimé côté client')
         }
 
-        console.log('✅ Session nettoyée avec succès')
+        process.env.NODE_ENV !== 'production' && console.log('✅ Session nettoyée avec succès')
       } catch (error: any) {
         this.error = error.message
-        console.error('❌ Erreur lors du nettoyage de session:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.error('❌ Erreur lors du nettoyage de session:', error)
       }
     },
 

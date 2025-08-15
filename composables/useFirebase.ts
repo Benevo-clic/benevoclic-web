@@ -45,7 +45,8 @@ export const useFirebase = () => {
 
       return { app: firebaseApp, auth: firebaseAuth, provider: firebaseProvider }
     } catch (error) {
-      console.error("❌ Erreur lors de l'initialisation de Firebase via composable:", error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error("❌ Erreur lors de l'initialisation de Firebase via composable:", error)
       throw error
     }
   }
@@ -63,10 +64,11 @@ export const useFirebase = () => {
       canUseAnalytics = hasPermission('canUseAnalytics')
       canUseThirdParty = hasPermission('canUseThirdParty')
     } catch (error) {
-      console.warn(
-        'Permissions non disponibles, utilisation des valeurs par défaut sécurisées:',
-        error
-      )
+      process.env.NODE_ENV !== 'production' &&
+        console.warn(
+          'Permissions non disponibles, utilisation des valeurs par défaut sécurisées:',
+          error
+        )
       canUseAnalytics = false
       canUseThirdParty = false
     }
@@ -79,13 +81,15 @@ export const useFirebase = () => {
         const analyticsSupported = await isSupported()
         if (analyticsSupported) {
           analytics = getAnalytics(app)
-          console.log('Firebase Analytics activé')
+          process.env.NODE_ENV !== 'production' && console.log('Firebase Analytics activé')
         }
       } catch (error) {
-        console.warn('Firebase Analytics non disponible:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('Firebase Analytics non disponible:', error)
       }
     } else {
-      console.log('Firebase Analytics désactivé - cookies analytiques non acceptés')
+      process.env.NODE_ENV !== 'production' &&
+        console.log('Firebase Analytics désactivé - cookies analytiques non acceptés')
     }
 
     return {

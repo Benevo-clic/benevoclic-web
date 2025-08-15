@@ -305,11 +305,12 @@
 
       // Gestion des erreurs de la carte
       map.value.on('error', (e: any) => {
-        console.warn('MapLibre error:', e)
+        process.env.NODE_ENV !== 'production' && console.warn('MapLibre error:', e)
 
         // Si c'est une erreur de worker, essayer de réinitialiser sans workers
         if (e.error && e.error.message && e.error.message.includes('Worker')) {
-          console.log('Attempting to reinitialize map without workers...')
+          process.env.NODE_ENV !== 'production' &&
+            console.log('Attempting to reinitialize map without workers...')
           if (map.value) {
             map.value.remove()
           }
@@ -321,11 +322,13 @@
         // Si c'est une erreur de tuile, compter et basculer si nécessaire
         if (e.error && e.error.message && e.error.message.includes('Failed to fetch') && e.tile) {
           tileErrorCount.value++
-          console.log(`Tile loading error (${tileErrorCount.value}/${maxTileErrors})`)
+          process.env.NODE_ENV !== 'production' &&
+            console.log(`Tile loading error (${tileErrorCount.value}/${maxTileErrors})`)
 
           // Si trop d'erreurs et qu'on n'a pas encore basculé, essayer les tuiles alternatives
           if (tileErrorCount.value >= maxTileErrors && !hasSwitchedTiles.value) {
-            console.log('Too many tile errors, switching to alternative tile source...')
+            process.env.NODE_ENV !== 'production' &&
+              console.log('Too many tile errors, switching to alternative tile source...')
             hasSwitchedTiles.value = true
             switchToAlternativeTiles()
           }
@@ -334,13 +337,14 @@
 
       // Gestion spécifique des erreurs de source
       map.value.on('sourcedataerror', (e: any) => {
-        console.warn('Source data error:', e)
+        process.env.NODE_ENV !== 'production' && console.warn('Source data error:', e)
         if (e.sourceId === 'osm') {
-          console.log('OpenStreetMap source error, tiles may not be loading properly')
+          process.env.NODE_ENV !== 'production' &&
+            console.log('OpenStreetMap source error, tiles may not be loading properly')
         }
       })
     } catch (error) {
-      console.error('Error initializing map:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Error initializing map:', error)
       // Fallback: afficher un message d'erreur à l'utilisateur
       if (mapContainer.value) {
         mapContainer.value.innerHTML = `
@@ -383,9 +387,10 @@
         attribution: '© CartoDB, © Thunderforest'
       })
 
-      console.log('Switched to alternative tile source')
+      process.env.NODE_ENV !== 'production' && console.log('Switched to alternative tile source')
     } catch (error) {
-      console.error('Error switching to alternative tiles:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Error switching to alternative tiles:', error)
     }
   }
 
@@ -403,7 +408,8 @@
           try {
             addCityMarkers()
           } catch (error) {
-            console.error('Error adding city markers:', error)
+            process.env.NODE_ENV !== 'production' &&
+              console.error('Error adding city markers:', error)
           }
         })
 
@@ -414,12 +420,13 @@
               resetToCities()
             }
           } catch (error) {
-            console.error('Error handling map click:', error)
+            process.env.NODE_ENV !== 'production' &&
+              console.error('Error handling map click:', error)
           }
         })
       }
     } catch (error) {
-      console.error('Error in onMounted:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Error in onMounted:', error)
     }
   })
 
@@ -443,12 +450,13 @@
                 addCityMarkers()
               }
             } catch (error) {
-              console.error('Error in map load event:', error)
+              process.env.NODE_ENV !== 'production' &&
+                console.error('Error in map load event:', error)
             }
           })
         }
       } catch (error) {
-        console.error('Error in locations watcher:', error)
+        process.env.NODE_ENV !== 'production' && console.error('Error in locations watcher:', error)
       }
     },
     { deep: true }

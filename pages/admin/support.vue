@@ -343,7 +343,8 @@
       }
       updateStats()
     } catch (error) {
-      console.error('Erreur lors de la mise à jour du statut:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur lors de la mise à jour du statut:', error)
     }
   }
 
@@ -358,7 +359,8 @@
       updateStats()
       if (!report) {
         noResultMsg.value = `Aucun résultat pour l'ID ${searchId.value}`
-        console.warn('Ticket non trouvé pour ID:', searchId.value)
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('Ticket non trouvé pour ID:', searchId.value)
       }
     } catch (e) {
       displayed.value = []

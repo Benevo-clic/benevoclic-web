@@ -422,7 +422,8 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      console.error("Erreur lors de la participation du volontaire à l'événement:", error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error("Erreur lors de la participation du volontaire à l'événement:", error)
     }
   }
 

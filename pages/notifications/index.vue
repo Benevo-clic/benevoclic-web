@@ -309,7 +309,8 @@
     setTimeout(() => {
       isSaving.value = false
       // Ici, vous feriez un appel API pour sauvegarder les paramètres
-      console.log('Paramètres sauvegardés:', settings.value)
+      process.env.NODE_ENV !== 'production' &&
+        console.log('Paramètres sauvegardés:', settings.value)
     }, 1000)
   }
 
@@ -321,7 +322,7 @@
   function applyQuickFilter(filter: string) {
     activeQuickFilter.value = filter
     // Ici, vous pourriez passer le filtre au composant NotificationsList
-    console.log('Filtre appliqué:', filter)
+    process.env.NODE_ENV !== 'production' && console.log('Filtre appliqué:', filter)
   }
 
   onMounted(() => {

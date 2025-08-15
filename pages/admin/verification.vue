@@ -38,7 +38,8 @@
         }
       }
     } catch (error: any) {
-      console.error('Erreur lors de la vérification:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur lors de la vérification:', error)
       statusMessage.value = {
         type: 'error',
         text: error?.data?.message || 'Erreur lors de la vérification. Veuillez réessayer.'

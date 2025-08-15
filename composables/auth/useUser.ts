@@ -27,7 +27,7 @@ export const useUser = () => {
       return userStore.getUser as UserInfo
     } catch (error: any) {
       initializationError.value = error?.message || "Erreur lors de l'initialisation"
-      console.error("Erreur d'initialisation:", error)
+      process.env.NODE_ENV !== 'production' && console.error("Erreur d'initialisation:", error)
     }
   }
 
@@ -41,7 +41,7 @@ export const useUser = () => {
       userStore.clearUserCache()
       return await userStore.fetchUser()
     } catch (error: any) {
-      console.error('Erreur lors du refresh:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur lors du refresh:', error)
       throw error
     }
   }

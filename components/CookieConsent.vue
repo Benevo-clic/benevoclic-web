@@ -226,7 +226,8 @@
       const currentPrefs = permissionsComposable.cookiePreferences.value
       localPreferences.value = { ...currentPrefs }
     } catch (err) {
-      console.warn('Impossible de charger les préférences de cookies:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Impossible de charger les préférences de cookies:', err)
     }
   }
 
@@ -238,7 +239,8 @@
       acceptAllCookies()
       showBanner.value = false
     } catch (err) {
-      console.warn("Impossible d'accepter tous les cookies:", err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn("Impossible d'accepter tous les cookies:", err)
     }
   }
 
@@ -249,7 +251,8 @@
       rejectNonEssentialCookies()
       showBanner.value = false
     } catch (err) {
-      console.warn('Impossible de refuser les cookies non essentiels:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Impossible de refuser les cookies non essentiels:', err)
     }
   }
 
@@ -270,7 +273,8 @@
       showBanner.value = false
       closeSettings()
     } catch (err) {
-      console.warn('Impossible de sauvegarder les paramètres:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Impossible de sauvegarder les paramètres:', err)
     }
   }
 
@@ -317,7 +321,8 @@
         { immediate: true }
       )
     } catch (err) {
-      console.warn("Impossible d'initialiser le système de permissions:", err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn("Impossible d'initialiser le système de permissions:", err)
     }
 
     // Ajouter un écouteur d'événement pour ouvrir les paramètres depuis le footer

@@ -11,7 +11,8 @@ export class SessionCleaner {
 
       this.redirectToHome()
     } catch (error) {
-      console.error('❌ Erreur lors du nettoyage de session:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('❌ Erreur lors du nettoyage de session:', error)
       this.redirectToHome()
     }
   }
@@ -23,7 +24,8 @@ export class SessionCleaner {
         credentials: 'include'
       })
     } catch (error) {
-      console.warn('⚠️ Impossible de supprimer les cookies serveur:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('⚠️ Impossible de supprimer les cookies serveur:', error)
     }
 
     if (process.client) {
@@ -75,7 +77,8 @@ export class SessionCleaner {
           localStorage.removeItem(key)
         })
       } catch (error) {
-        console.warn('⚠️ Impossible de nettoyer localStorage:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('⚠️ Impossible de nettoyer localStorage:', error)
       }
     }
   }
@@ -85,7 +88,8 @@ export class SessionCleaner {
       try {
         sessionStorage.clear()
       } catch (error) {
-        console.warn('⚠️ Impossible de nettoyer sessionStorage:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('⚠️ Impossible de nettoyer sessionStorage:', error)
       }
     }
   }
@@ -103,11 +107,13 @@ export class SessionCleaner {
               deleteRequest.onerror = reject
             })
           } catch (error) {
-            console.warn(`⚠️ Impossible de supprimer IndexedDB ${dbName}:`, error)
+            process.env.NODE_ENV !== 'production' &&
+              console.warn(`⚠️ Impossible de supprimer IndexedDB ${dbName}:`, error)
           }
         }
       } catch (error) {
-        console.warn('⚠️ Impossible de nettoyer IndexedDB:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('⚠️ Impossible de nettoyer IndexedDB:', error)
       }
     }
   }
@@ -117,7 +123,8 @@ export class SessionCleaner {
       try {
         window.location.href = '/'
       } catch (error) {
-        console.error("❌ Impossible de rediriger vers l'accueil:", error)
+        process.env.NODE_ENV !== 'production' &&
+          console.error("❌ Impossible de rediriger vers l'accueil:", error)
         // Fallback : recharger la page
         window.location.reload()
       }
@@ -125,7 +132,7 @@ export class SessionCleaner {
   }
 
   static async forceLogout(reason: string = 'session_expired'): Promise<void> {
-    console.warn(`🚨 Déconnexion forcée: ${reason}`)
+    process.env.NODE_ENV !== 'production' && console.warn(`🚨 Déconnexion forcée: ${reason}`)
 
     if (process.client) {
       this.showLogoutNotification(reason)
@@ -170,7 +177,8 @@ export class SessionCleaner {
           }
         }, 5000)
       } catch (error) {
-        console.warn("⚠️ Impossible d'afficher la notification:", error)
+        process.env.NODE_ENV !== 'production' &&
+          console.warn("⚠️ Impossible d'afficher la notification:", error)
       }
     }
   }

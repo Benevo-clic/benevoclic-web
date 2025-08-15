@@ -11,9 +11,10 @@ export default defineNuxtPlugin(async () => {
       // Charger les préférences existantes
       loadCookiePreferences()
 
-      console.log('Permissions initialisées avec succès')
+      process.env.NODE_ENV !== 'production' && console.log('Permissions initialisées avec succès')
     } catch (error) {
-      console.error("Erreur lors de l'initialisation des permissions:", error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error("Erreur lors de l'initialisation des permissions:", error)
     }
   }
 })

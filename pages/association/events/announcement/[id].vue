@@ -469,7 +469,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
     }
   }
 
@@ -666,7 +666,8 @@
     if (announcement.value) {
       presenceModalRef.value?.showModal()
     } else {
-      console.warn('No announcement available to manage presence.')
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('No announcement available to manage presence.')
     }
   }
 

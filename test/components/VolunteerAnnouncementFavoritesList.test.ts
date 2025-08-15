@@ -56,7 +56,7 @@ const MockVolunteerAnnouncementFavoritesList = {
         this.errorType = '4xx'
         this.showErrorModal = true
       } else {
-        console.error('Erreur inattendue:', error)
+        process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
       }
     },
     async refreshFavorites() {

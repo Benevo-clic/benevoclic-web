@@ -33,7 +33,7 @@
     try {
       await initializeUser()
     } catch (error) {
-      console.error('Error initializing user:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Error initializing user:', error)
     }
   })
 

@@ -10,7 +10,8 @@ export default defineNuxtPlugin(() => {
     }
   }
 
-  console.log('🚀 Initialisation du système de persistance de session...')
+  process.env.NODE_ENV !== 'production' &&
+    console.log('🚀 Initialisation du système de persistance de session...')
 
   // Initialisation asynchrone
   ;(async () => {
@@ -24,24 +25,28 @@ export default defineNuxtPlugin(() => {
       const { restoreSession } = useSessionPersistence()
 
       // Restaurer la session au démarrage
-      console.log('🔄 Tentative de restauration de session...')
+      process.env.NODE_ENV !== 'production' &&
+        console.log('🔄 Tentative de restauration de session...')
       const savedSession = await restoreSession()
 
       if (savedSession) {
-        console.log('📦 Session trouvée, restauration...')
+        process.env.NODE_ENV !== 'production' && console.log('📦 Session trouvée, restauration...')
         const restored = await sessionStore.restoreSession(savedSession)
 
         if (restored) {
-          console.log('✅ Session restaurée avec succès au démarrage')
+          process.env.NODE_ENV !== 'production' &&
+            console.log('✅ Session restaurée avec succès au démarrage')
         } else {
-          console.log('❌ Échec de la restauration de session')
+          process.env.NODE_ENV !== 'production' &&
+            console.log('❌ Échec de la restauration de session')
         }
       } else {
-        console.log('ℹ️ Aucune session à restaurer')
+        process.env.NODE_ENV !== 'production' && console.log('ℹ️ Aucune session à restaurer')
       }
 
       // Initialiser la gestion de visibilité de page
-      console.log('👁️ Initialisation de la gestion de visibilité...')
+      process.env.NODE_ENV !== 'production' &&
+        console.log('👁️ Initialisation de la gestion de visibilité...')
       usePageVisibility()
 
       // Sauvegarder la session périodiquement (toutes les 5 minutes)
@@ -56,16 +61,19 @@ export default defineNuxtPlugin(() => {
                 await sessionStore.saveCurrentSession()
               }
             } catch (error) {
-              console.warn('⚠️ Erreur lors de la sauvegarde périodique:', error)
+              process.env.NODE_ENV !== 'production' &&
+                console.warn('⚠️ Erreur lors de la sauvegarde périodique:', error)
             }
           },
           5 * 60 * 1000
         ) // 5 minutes
       }
 
-      console.log('✅ Système de persistance de session initialisé')
+      process.env.NODE_ENV !== 'production' &&
+        console.log('✅ Système de persistance de session initialisé')
     } catch (error) {
-      console.error("❌ Erreur lors de l'initialisation du système de session:", error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error("❌ Erreur lors de l'initialisation du système de session:", error)
     }
   })()
 

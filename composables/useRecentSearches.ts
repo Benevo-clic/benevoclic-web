@@ -19,7 +19,8 @@ export function useRecentSearches() {
         cachedSearches = parsedSearches
         return parsedSearches
       } catch (error) {
-        console.warn('Erreur lors du chargement des recherches récentes:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('Erreur lors du chargement des recherches récentes:', error)
         cachedSearches = []
         return []
       }
@@ -36,7 +37,8 @@ export function useRecentSearches() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(searches))
         cachedSearches = searches
       } catch (error) {
-        console.warn('Erreur lors de la sauvegarde des recherches récentes:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('Erreur lors de la sauvegarde des recherches récentes:', error)
       }
     }
   }
@@ -69,7 +71,8 @@ export function useRecentSearches() {
       try {
         localStorage.removeItem(STORAGE_KEY)
       } catch (error) {
-        console.warn('Erreur lors de la suppression des recherches récentes:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('Erreur lors de la suppression des recherches récentes:', error)
       }
     }
   }

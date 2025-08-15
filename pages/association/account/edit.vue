@@ -314,7 +314,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
     }
   }
 
@@ -401,7 +401,7 @@
       alertMessage.value =
         t('drawer-content.account.profile_update_error') ||
         'Error updating profile. Please try again.'
-      console.error('Error updating profile:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Error updating profile:', error)
       handleError(error)
       setTimeout(() => {
         alertStatus.value = null

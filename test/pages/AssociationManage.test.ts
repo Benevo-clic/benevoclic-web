@@ -216,7 +216,8 @@ const MockAssociationManage = {
     async fetchFilteredAnnouncements() {
       try {
         if (!this.currentFilters.associationId) {
-          console.warn('Association ID is not available, announcements cannot be filtered.')
+          process.env.NODE_ENV !== 'production' &&
+            console.warn('Association ID is not available, announcements cannot be filtered.')
           return
         }
         // Mock implementation

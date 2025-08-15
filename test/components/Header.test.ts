@@ -280,7 +280,7 @@ describe('Header', () => {
       const homeButton = wrapper.findAll('button').find(btn => btn.text().includes('🏠'))
       if (!homeButton.exists()) {
         // Affiche le HTML pour debug si le bouton n'est pas trouvé
-        console.log(wrapper.html())
+        process.env.NODE_ENV !== 'production' && console.log(wrapper.html())
       }
       expect(homeButton.exists()).toBe(true)
     })

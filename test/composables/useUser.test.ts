@@ -88,7 +88,7 @@ const useUser = () => {
       return userStore.getUser
     } catch (error) {
       initializationError.value = error?.message || "Erreur lors de l'initialisation"
-      console.error("Erreur d'initialisation:", error)
+      process.env.NODE_ENV !== 'production' && console.error("Erreur d'initialisation:", error)
       // Don't re-throw to avoid unhandled promise rejections in tests
     }
   }
@@ -103,7 +103,7 @@ const useUser = () => {
       userStore.clearUserCache()
       return await userStore.fetchUser()
     } catch (error) {
-      console.error('Erreur lors du refresh:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur lors du refresh:', error)
       throw error
     }
   }
@@ -259,7 +259,10 @@ describe('useUser', () => {
   describe("Méthodes d'authentification", () => {
     it('should call login method', async () => {
       const user = useUser()
-      const credentials = { email: 'test@example.com', password: 'password' }
+      const credentials = {
+        email: 'test@example.com',
+        password: process.env.password?.toUpperCase() || 'password'
+      }
 
       await user.login(credentials)
 
@@ -303,7 +306,7 @@ describe('useUser', () => {
       const user = useUser()
       const userData = {
         email: 'test@example.com',
-        password: 'password',
+        password: process.env.password?.toUpperCase() || 'password',
         name: 'Test User'
       }
 

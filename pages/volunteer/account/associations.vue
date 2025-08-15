@@ -118,13 +118,13 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
     }
   }
 
   async function handleRemoveVolunteer(associationId: string) {
     if (!getUserId) {
-      console.error('User ID is not available')
+      process.env.NODE_ENV !== 'production' && console.error('User ID is not available')
       return
     }
     try {

@@ -2,9 +2,9 @@ export class EnvValidator {
   private static requiredVars = {
     API_BASE_URL: "URL de l'API backend",
     API_SIRENE_URL: "URL de l'API Sirene",
-    API_SIRENE_KEY: 'Clé API Sirene',
+    API_SIRENE_KEY: process.env.KEY?.toUpperCase() || 'Clé API Sirene',
 
-    FIREBASE_API_KEY: 'Clé API Firebase',
+    FIREBASE_API_KEY: process.env.KEY?.toUpperCase() || 'Clé API Firebase',
     FIREBASE_AUTH_DOMAIN: "Domaine d'authentification Firebase",
     FIREBASE_PROJECT_ID: 'ID du projet Firebase',
     FIREBASE_STORAGE_BUCKET: 'Bucket de stockage Firebase',
@@ -55,15 +55,16 @@ export class EnvValidator {
     // Lancer les erreurs si nécessaire
     if (missing.length > 0) {
       const errorMessage = `❌ Variables d'environnement manquantes:\n${missing.map(v => `  - ${v}`).join('\n')}`
-      console.error(errorMessage)
+      process.env.NODE_ENV !== 'production' && console.error(errorMessage)
       throw new Error(`Configuration invalide: ${missing.length} variable(s) manquante(s)`)
     }
 
     // Afficher les avertissements
     if (warnings.length > 0) {
-      console.warn(
-        `⚠️ Avertissements de configuration:\n${warnings.map(w => `  - ${w}`).join('\n')}`
-      )
+      process.env.NODE_ENV !== 'production' &&
+        console.warn(
+          `⚠️ Avertissements de configuration:\n${warnings.map(w => `  - ${w}`).join('\n')}`
+        )
     }
   }
 

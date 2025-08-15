@@ -203,7 +203,8 @@
       if (getUserId) {
         announcements.value = await useVolunteer.getPastVolunteerAnnouncement(getUserId)
       } else {
-        console.warn('User ID is not available, announcements cannot be fetched.')
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('User ID is not available, announcements cannot be fetched.')
       }
     } catch (error) {
       handleError(error)
@@ -258,7 +259,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
     }
   }
 

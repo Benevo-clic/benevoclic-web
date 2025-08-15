@@ -374,7 +374,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
     }
   }
 
@@ -506,7 +506,7 @@
 
       emit('saved')
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur lors de la sauvegarde:', error)
     }
   }
 </script>

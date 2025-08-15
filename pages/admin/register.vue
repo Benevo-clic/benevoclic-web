@@ -142,7 +142,8 @@
         })
       }
     } catch (error: any) {
-      console.error("❌ Erreur lors de l'inscription admin:", error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error("❌ Erreur lors de l'inscription admin:", error)
       errorMessage.value = error?.data?.message || "Une erreur est survenue lors de l'inscription"
     } finally {
       loading.value = false

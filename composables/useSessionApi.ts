@@ -32,7 +32,8 @@ export const useSessionApi = () => {
         credentials: 'include'
       })
     } catch (error: any) {
-      console.error('❌ Erreur lors de la vérification de session:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('❌ Erreur lors de la vérification de session:', error)
       throw error
     }
   }
@@ -45,7 +46,8 @@ export const useSessionApi = () => {
         credentials: 'include'
       })
     } catch (error: any) {
-      console.error('❌ Erreur lors du rafraîchissement de session:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('❌ Erreur lors du rafraîchissement de session:', error)
       throw error
     }
   }

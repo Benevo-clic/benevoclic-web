@@ -70,10 +70,12 @@
       loadCookiePreferences()
       canUseLocation.value = hasPermission('canUseLocation')
       if (!canUseLocation.value) {
-        console.log('Cookies de personnalisation non acceptés - géolocalisation désactivée')
+        process.env.NODE_ENV !== 'production' &&
+          console.log('Cookies de personnalisation non acceptés - géolocalisation désactivée')
       }
     } catch (err) {
-      console.warn('Impossible de vérifier les permissions de géolocalisation:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Impossible de vérifier les permissions de géolocalisation:', err)
       canUseLocation.value = false
     }
   }
@@ -92,10 +94,10 @@
           lon: location.longitude.toString()
         }
       } else {
-        console.log('Aucune position obtenue')
+        process.env.NODE_ENV !== 'production' && console.log('Aucune position obtenue')
       }
     } catch (error) {
-      console.error('Error getting user location:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Error getting user location:', error)
     }
   }
 
@@ -134,7 +136,8 @@
         })
         .slice(0, 5)
     } catch (error) {
-      console.error('Erreur lors de la recherche de villes:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur lors de la recherche de villes:', error)
       locationSearchResults.value = []
     }
   }
@@ -191,7 +194,8 @@
       }
       emits('update:filters', filterAnnouncement)
     } catch (error) {
-      console.error('Erreur lors de la mise à jour du filtre de localisation:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur lors de la mise à jour du filtre de localisation:', error)
     }
   }
 
@@ -228,7 +232,8 @@
       await checkLocationPermissions()
       await initLocation()
     } catch (error) {
-      console.error("Erreur lors de l'initialisation de la géolocalisation:", error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error("Erreur lors de l'initialisation de la géolocalisation:", error)
     }
   })
 

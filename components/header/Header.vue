@@ -37,7 +37,7 @@
         imgProfile.value = auth.user.value.avatarFileKey
       }
     } catch (error) {
-      console.error('Error fetching user data:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Error fetching user data:', error)
     }
   })
 
@@ -93,7 +93,7 @@
         isAssociationComponentAvailable.value = false // Set to true to hide the placeholder
       }
     } catch (error) {
-      console.error('Error fetching user data:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Error fetching user data:', error)
       if (role.value === 'ASSOCIATION') {
         isAssociationComponentAvailable.value = false
       }

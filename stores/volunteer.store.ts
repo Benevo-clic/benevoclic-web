@@ -222,7 +222,8 @@ export const useVolunteerAuthStore = defineStore('volunteerAuth', {
           }
         )
 
-        console.log('Response from addVolunteerToWaitingListAssociation:', response)
+        process.env.NODE_ENV !== 'production' &&
+          console.log('Response from addVolunteerToWaitingListAssociation:', response)
 
         await this.getVolunteerInfo()
         return response

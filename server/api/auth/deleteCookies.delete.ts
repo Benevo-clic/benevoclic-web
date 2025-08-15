@@ -42,7 +42,8 @@ export default defineEventHandler(async event => {
       message: 'Tous les cookies de session ont été supprimés'
     }
   } catch (error) {
-    console.error('❌ Erreur lors de la suppression des cookies:', error)
+    process.env.NODE_ENV !== 'production' &&
+      console.error('❌ Erreur lors de la suppression des cookies:', error)
     return {
       success: false,
       message: 'Erreur lors de la suppression des cookies'

@@ -489,12 +489,13 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.error = null
       try {
         ///// moi
-        console.log(
-          'Updating participant presence for announcement ID:',
-          id,
-          'with data:',
-          participant
-        )
+        process.env.NODE_ENV !== 'production' &&
+          console.log(
+            'Updating participant presence for announcement ID:',
+            id,
+            'with data:',
+            participant
+          )
         const response = await $fetch<Announcement>(
           `/api/announcements/participant/presence/${id}`,
           {

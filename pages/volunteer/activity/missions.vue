@@ -261,7 +261,8 @@
       if (getUserId) {
         announcements.value = await useVolunteer.getVolunteerAnnouncements(getUserId)
       } else {
-        console.warn('User ID is not available, announcements cannot be fetched.')
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('User ID is not available, announcements cannot be fetched.')
       }
     } catch (error) {
       handleError(error)
@@ -277,7 +278,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
     }
   }
 
@@ -305,7 +306,8 @@
       } else if (isVolunteerInWaitingList(announcement)) {
         await announcementUse.removeVolunteerWaiting(announcement._id, getUserId)
       } else {
-        console.warn("L'utilisateur n'est pas dans la liste des participants ou en attente.")
+        process.env.NODE_ENV !== 'production' &&
+          console.warn("L'utilisateur n'est pas dans la liste des participants ou en attente.")
         return
       }
       announcements.value = announcements.value.filter(a => a._id !== announcement._id)

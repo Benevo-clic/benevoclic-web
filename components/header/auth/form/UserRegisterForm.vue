@@ -67,7 +67,7 @@
       isEmailVerified.value = true
       emit('emailVerified', isEmailVerified.value)
     } catch (error) {
-      console.error('Erreur de connexion:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur de connexion:', error)
       errorMessage.value = "Une erreur est survenue lors de l'inscription."
       isEmailVerified.value = false
       emit('emailVerified', isEmailVerified.value)

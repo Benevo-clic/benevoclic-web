@@ -55,7 +55,8 @@
       try {
         emit('finish')
       } catch (error) {
-        console.error('Error uploading cover image:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.error('Error uploading cover image:', error)
       } finally {
         isUploading.value = false
       }

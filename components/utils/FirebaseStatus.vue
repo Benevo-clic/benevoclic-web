@@ -76,7 +76,8 @@
         analyticsReady.value = !!(firebase as any).analytics && (firebase as any).analyticsEnabled
       }
     } catch (error) {
-      console.error('Erreur lors de la vérification de Firebase:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur lors de la vérification de Firebase:', error)
     }
   })
 
