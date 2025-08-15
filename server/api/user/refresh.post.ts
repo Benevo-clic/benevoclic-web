@@ -6,6 +6,7 @@ import {
   getCookie,
   setCookie
 } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { LoginResponse } from '~/common/types/auth.type'
 import { ApiError } from '~/utils/error-handler'
@@ -40,7 +41,7 @@ export default defineEventHandler(async event => {
       return
     }
 
-    const loginResponse = await axios.post<LoginResponse>(
+    const loginResponse = await RetryManager.post(
       `${apiBaseUrl}/user/refresh`,
       {
         refreshToken
@@ -49,7 +50,10 @@ export default defineEventHandler(async event => {
         headers: {
           'Content-Type': 'application/json'
         },
-        timeout: 5000
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
+        }
       }
     )
 

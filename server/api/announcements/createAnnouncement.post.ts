@@ -1,3 +1,4 @@
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { defineEventHandler, readBody, getCookie } from 'h3'
 import type { CreateAnnouncementDto } from '~/common/interface/event.interface'
@@ -37,7 +38,7 @@ export default defineEventHandler(async event => {
 
     const url = `${apiBaseUrl}/announcements/createAnnouncement`
 
-    const newAnnouncement = await axios.post(
+    const newAnnouncement = await RetryManager.post(
       url,
       {
         ...(form as CreateAnnouncementDto)
@@ -47,7 +48,10 @@ export default defineEventHandler(async event => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        timeout: 5000
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
+        }
       }
     )
 

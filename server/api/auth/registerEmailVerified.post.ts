@@ -1,4 +1,5 @@
 import { defineEventHandler, readBody } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { login, setCookies } from '~/server/api/auth/login.post'
 import { RegisterEmailVerifiedPayload } from '~/common/types/register.type'
@@ -22,7 +23,7 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    await axios.post<RegisterResponse>(
+    await RetryManager.post(
       `${apiBaseUrl}/user/register-user-verified`,
       {
         email: body.email,
@@ -32,7 +33,10 @@ export default defineEventHandler(async event => {
         headers: {
           'Content-Type': 'application/json'
         },
-        timeout: 5000
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
+        }
       }
     )
 

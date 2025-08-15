@@ -1,5 +1,6 @@
 import { defineEventHandler } from 'h3'
 import { RetryManager } from '~/utils/retry-manager'
+import axios from 'axios'
 import { EnvValidator } from '~/utils/env-validator'
 
 /**
@@ -52,7 +53,15 @@ export default defineEventHandler(async (): Promise<HealthResponse> => {
       const config = EnvValidator.getConfig()
       const response = await RetryManager.get(
         `${config.api.baseUrl}/health`,
-        { retry: { maxRetries: 1, timeout: 5000 } },
+        {
+          retry: {
+            maxRetries: 1,
+            retry: {
+              timeout: 10000, // 10 secondes
+              maxRetries: 3 // 3 tentatives
+            }
+          }
+        },
         { endpoint: 'health', action: 'api-check' }
       )
 

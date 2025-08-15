@@ -1,4 +1,5 @@
 import { defineEventHandler, getCookie, readBody } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
 import {
@@ -36,7 +37,7 @@ export default defineEventHandler(async event => {
     if (Array.isArray(payload.tags) && payload.tags.length === 0) {
       delete payload.tags
     }
-    const response = await axios.post<FilterAnnouncementResponse>(
+    const response = await RetryManager.post(
       `${apiBaseUrl}/announcements/filter/association`,
       {
         ...payload
@@ -46,7 +47,10 @@ export default defineEventHandler(async event => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        timeout: 5000
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
+        }
       }
     )
 

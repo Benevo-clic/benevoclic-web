@@ -1,6 +1,7 @@
 import { defineEventHandler, readBody } from 'h3'
 import { initializeApp } from '@firebase/app'
 import { getAuth, signInWithCustomToken } from '@firebase/auth'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { setCookies } from '~/server/api/auth/login.post'
 import type { RegisterGooglePayload, RegisterUserGoogleResponse } from '~/common/types/auth.type'
@@ -33,7 +34,7 @@ export default defineEventHandler(async event => {
     return { error: "Erreur d'initialisation Firebase" }
   }
 
-  const response = await axios.post<RegisterUserGoogleResponse>(
+  const response = await RetryManager.post(
     `${apiBaseUrl}/user/register-google`,
     {
       idToken: body.idToken,
@@ -43,7 +44,10 @@ export default defineEventHandler(async event => {
       headers: {
         'Content-Type': 'application/json'
       },
-      timeout: 5000
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
+      }
     }
   )
 

@@ -1,4 +1,5 @@
 import { defineEventHandler, createError } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 
 export default defineEventHandler(async event => {
@@ -14,11 +15,14 @@ export default defineEventHandler(async event => {
 
     const apiBaseUrl = process.env.API_BASE_URL
 
-    const response = await axios.get(`${apiBaseUrl}/user/${userId}`, {
+    const response = await RetryManager.get(`${apiBaseUrl}/user/${userId}`, {
       headers: {
         'Content-Type': 'application/json'
       },
-      timeout: 5000
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
+      }
     })
 
     return response.data

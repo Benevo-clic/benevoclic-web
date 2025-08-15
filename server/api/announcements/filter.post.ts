@@ -1,4 +1,5 @@
 import { defineEventHandler } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
 import { FilterAnnouncement, FilterAnnouncementResponse } from '~/common/interface/filter.interface'
@@ -48,7 +49,7 @@ export default defineEventHandler(async event => {
 
     const url = `${apiBaseUrl}/announcements/filter`
 
-    const response = await axios.post<FilterAnnouncementResponse>(
+    const response = await RetryManager.post(
       url,
       {
         ...payload
@@ -58,7 +59,10 @@ export default defineEventHandler(async event => {
         headers: {
           'Content-Type': 'application/json'
         },
-        timeout: 5000
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
+        }
       }
     )
 
