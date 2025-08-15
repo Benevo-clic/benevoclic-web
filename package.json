@@ -36,6 +36,8 @@
     "audit:security": "node scripts/security-audit.js",
     "fix:security": "node scripts/fix-security-issues.js",
     "fix:broken": "node scripts/fix-broken-files.js",
+    "setup:env": "node scripts/setup-env.js",
+    "check:env": "node scripts/check-env.js",
     "lint": "eslint . --ext .ts,.vue,.js",
     "lint:fix": "eslint . --ext .ts,.vue,.js --fix",
     "lint:security": "eslint . --ext .ts,.vue,.js --plugin security",

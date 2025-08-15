@@ -55,16 +55,15 @@ export class EnvValidator {
     // Lancer les erreurs si nécessaire
     if (missing.length > 0) {
       const errorMessage = `❌ Variables d'environnement manquantes:\n${missing.map(v => `  - ${v}`).join('\n')}`
-      process.env.NODE_ENV !== 'production' && console.error(errorMessage)
+      console.error(errorMessage)
       throw new Error(`Configuration invalide: ${missing.length} variable(s) manquante(s)`)
     }
 
     // Afficher les avertissements
     if (warnings.length > 0) {
-      process.env.NODE_ENV !== 'production' &&
-        console.warn(
-          `⚠️ Avertissements de configuration:\n${warnings.map(w => `  - ${w}`).join('\n')}`
-        )
+      console.warn(
+        `⚠️ Avertissements de configuration:\n${warnings.map(w => `  - ${w}`).join('\n')}`
+      )
     }
   }
 
