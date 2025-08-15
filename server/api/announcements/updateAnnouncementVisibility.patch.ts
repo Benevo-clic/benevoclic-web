@@ -1,7 +1,6 @@
 import { defineEventHandler, getCookie, readBody } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
-import { Announcement } from '~/common/interface/event.interface'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const body = await readBody(event)
@@ -19,10 +18,6 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    console.log(
-      `Updating announcement visibility for associationId:`,
-      JSON.stringify(body, null, 2)
-    )
     await axios.patch(
       `${apiBaseUrl}/announcements/updateAnnouncementVisibility/${body.associationId}/${body.eventVisibility}`,
       {},
@@ -30,12 +25,13 @@ export default defineEventHandler(async event => {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
-        }
+        },
+        timeout: 5000
       }
     )
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’annonce')
+      await ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’annonce')
     }
   }
 })

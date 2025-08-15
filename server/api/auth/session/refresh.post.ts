@@ -30,14 +30,13 @@ export default defineEventHandler(async event => {
       {
         headers: {
           Authorization: `Bearer ${token}`
-        }
+        },
+        timeout: 5000
       }
     )
 
-    // Si le backend a défini un cookie de session, le transmettre
     const setCookieHeader = response.headers['set-cookie']
     if (setCookieHeader) {
-      // Extraire le cookie __session et le définir
       const sessionCookie = setCookieHeader.find(cookie => cookie.includes('__session'))
       if (sessionCookie) {
         const sessionToken = sessionCookie.split(';')[0].split('=')[1]

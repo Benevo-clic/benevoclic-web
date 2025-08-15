@@ -1,24 +1,19 @@
 import { defineEventHandler, readBody, createError } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
-// Cache pour éviter les appels multiples
 const processingUsers = new Set<string>()
 
 export default defineEventHandler(async event => {
   try {
     const body = await readBody(event)
 
-    // Créer une clé unique pour cet utilisateur
     const userKey = `${body.email}-${body.role}`
 
-    // Vérifier si l'utilisateur est déjà en cours de traitement
     if (processingUsers.has(userKey)) {
-      console.log(`[API] User ${body.email} already being processed, skipping...`)
       return { uid: body.email, message: 'User already being processed' }
     }
 
-    // Ajouter l'utilisateur au cache de traitement
     processingUsers.add(userKey)
 
     try {
@@ -38,17 +33,17 @@ export default defineEventHandler(async event => {
       const response = await axios.post(url, body, {
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        timeout: 5000
       })
 
       return response.data
     } finally {
-      // Retirer l'utilisateur du cache après traitement
       processingUsers.delete(userKey)
     }
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, "Erreur lors de l'enregistrement vérifié")
+      await ApiError.handleAxios(error, "Erreur lors de l'enregistrement vérifié")
     }
     throw createError({
       statusCode: error.statusCode || 500,

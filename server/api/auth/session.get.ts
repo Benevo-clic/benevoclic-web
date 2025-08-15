@@ -27,7 +27,8 @@ export default defineEventHandler(async event => {
     const response = await axios.get(`${apiBaseUrl}/auth/session`, {
       headers: {
         Authorization: `Bearer ${token}`
-      }
+      },
+      timeout: 5000
     })
 
     return response.data

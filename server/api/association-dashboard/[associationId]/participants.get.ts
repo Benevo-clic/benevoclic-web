@@ -1,6 +1,6 @@
 import { defineEventHandler, getCookie, getQuery } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const associationId = event.context.params?.associationId
@@ -36,7 +36,6 @@ export default defineEventHandler(async event => {
     const query = getQuery(event)
     const queryParams = new URLSearchParams()
 
-    // Ajouter les paramètres de filtrage optionnels
     if (query.startDate) {
       queryParams.append('startDate', query.startDate as string)
     }
@@ -56,13 +55,17 @@ export default defineEventHandler(async event => {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 5000
     })
 
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la récupération des statistiques de participants')
+      await ApiError.handleAxios(
+        error,
+        'Erreur lors de la récupération des statistiques de participants'
+      )
     }
   }
 })

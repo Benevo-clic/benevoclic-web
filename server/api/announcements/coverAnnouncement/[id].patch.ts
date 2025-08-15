@@ -2,7 +2,7 @@
 import { defineEventHandler, readMultipartFormData, getCookie, createError } from 'h3'
 import axios from 'axios'
 import FormData from 'form-data'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const apiBaseUrl = process.env.API_BASE_URL
@@ -66,12 +66,13 @@ export default defineEventHandler(async event => {
       headers: {
         ...form.getHeaders(),
         Authorization: `Bearer ${token}`
-      }
+      },
+      timeout: 5000
     })
     return announcement
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’avatar de l’annonce')
+      await ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’avatar de l’annonce')
     }
   }
 })

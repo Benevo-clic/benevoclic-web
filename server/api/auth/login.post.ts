@@ -7,7 +7,7 @@ import {
   setCookie
 } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export interface LoginResponse {
   idUser: string
@@ -69,7 +69,8 @@ export async function login(
     {
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 5000
     }
   )
 
@@ -79,13 +80,7 @@ export async function login(
 export default defineEventHandler(async event => {
   const body = await readBody(event)
 
-  // Utiliser process.env directement au lieu de useRuntimeConfig()
   const apiBaseUrl = process.env.API_BASE_URL
-
-  // Debug: Afficher les variables d'environnement
-  console.log("🔍 Debug - Variables d'environnement (login.post.ts):", {
-    api_base_url: apiBaseUrl
-  })
 
   if (!apiBaseUrl) {
     throw createError({
@@ -110,7 +105,7 @@ export default defineEventHandler(async event => {
     return loginResponse
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la connexion')
+      await ApiError.handleAxios(error, 'Erreur lors de la connexion')
     }
   }
 })

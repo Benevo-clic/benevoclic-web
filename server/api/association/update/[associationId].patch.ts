@@ -1,6 +1,6 @@
 import { defineEventHandler, readBody, createError, getCookie } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   try {
@@ -26,7 +26,8 @@ export default defineEventHandler(async event => {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 5000
     })
 
     console.log('✅ Response received:', response.data)
@@ -34,7 +35,7 @@ export default defineEventHandler(async event => {
   } catch (error: any) {
     console.error('❌ Error in association/update/[associationId].patch.ts:', error)
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, "Erreur lors de la mise à jour de l'association")
+      await ApiError.handleAxios(error, "Erreur lors de la mise à jour de l'association")
     }
     throw createError({
       statusCode: error.statusCode || 500,

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { defineEventHandler } from 'h3'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const announcementId = event.context.params?.id
@@ -28,11 +28,12 @@ export default defineEventHandler(async event => {
     await axios.delete<void>(`${apiBaseUrl}/announcements/${announcementId}`, {
       headers: {
         Authorization: `Bearer ${token}`
-      }
+      },
+      timeout: 5000
     })
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la suppression de l’annonce')
+      await ApiError.handleAxios(error, 'Erreur lors de la suppression de l’annonce')
     }
   }
 })

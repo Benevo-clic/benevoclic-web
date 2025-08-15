@@ -1,6 +1,6 @@
 import { defineEventHandler, getCookie } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const volunteerId = event.context.params?.id
@@ -27,12 +27,17 @@ export default defineEventHandler(async event => {
   try {
     const { data } = await axios.get(
       `${apiBaseUrl}/announcements/participant/past/${volunteerId}`,
-      { headers: { Authorization: `Bearer ${token}` } }
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        timeout: 5000
+      }
     )
     return data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
+      await ApiError.handleAxios(
         error,
         'Erreur lors de la récupération des associations en attente pour le volontaire'
       )

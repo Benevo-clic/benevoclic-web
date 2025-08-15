@@ -2,7 +2,7 @@ import axios from 'axios'
 import { createError } from 'h3'
 import { getCookie } from 'h3'
 import { defineEventHandler } from 'h3'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   try {
@@ -25,7 +25,8 @@ export default defineEventHandler(async event => {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      withCredentials: true
+      withCredentials: true,
+      timeout: 5000
     })
 
     return response.data

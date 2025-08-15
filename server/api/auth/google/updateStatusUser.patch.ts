@@ -2,7 +2,7 @@ import { defineEventHandler, readBody } from 'h3'
 import axios from 'axios'
 import type { RegisterUserGoogleResponse } from '~/common/types/auth.type'
 import { setCookies } from '~/server/api/auth/login.post'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const body = await readBody(event)
@@ -28,7 +28,8 @@ export default defineEventHandler(async event => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${body.idToken}`
-        }
+        },
+        timeout: 5000
       }
     )
 
@@ -41,7 +42,7 @@ export default defineEventHandler(async event => {
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de l’authentification avec Google')
+      await ApiError.handleAxios(error, 'Erreur lors de l’authentification avec Google')
     }
   }
 })

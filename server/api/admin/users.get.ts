@@ -1,6 +1,6 @@
 import { defineEventHandler, getCookie, createError } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
@@ -19,12 +19,15 @@ export default defineEventHandler(async event => {
 
   try {
     const response = await axios.get(url, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      timeout: 5000
     })
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la récupération des utilisateurs')
+      await ApiError.handleAxios(error, 'Erreur lors de la récupération des utilisateurs')
     }
     throw createError({
       statusCode: error?.response?.status || 500,

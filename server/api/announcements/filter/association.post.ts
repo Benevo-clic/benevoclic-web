@@ -1,6 +1,6 @@
 import { defineEventHandler, getCookie, readBody } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 import {
   FilterAnnouncementResponse,
   type FilterAssociationAnnouncement
@@ -45,14 +45,18 @@ export default defineEventHandler(async event => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
-        }
+        },
+        timeout: 5000
       }
     )
 
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la récupération des annonces par association')
+      await ApiError.handleAxios(
+        error,
+        'Erreur lors de la récupération des annonces par association'
+      )
     }
   }
 })

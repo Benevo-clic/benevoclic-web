@@ -180,13 +180,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       const { useSessionStore } = await import('~/stores/session.store')
       const sessionStore = useSessionStore()
 
-      // Tenter de restaurer la session depuis le stockage
       const restored = await sessionStore.restoreSession()
       if (restored) {
-        console.log('✅ Session restaurée dans le middleware')
-        // Re-vérifier le cookie après restauration
         if (isConnectedCookie.value) {
-          console.log('🍪 Cookie isConnected maintenant présent après restauration')
         }
       }
     } catch (sessionError) {
@@ -196,7 +192,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     await authStore.initAuth()
   }
 
-  // Vérifier à nouveau le cookie après restauration
   if (!isConnectedCookie.value) {
     const pathWithoutLocale = getPathWithoutLocale(to.path)
 
@@ -211,7 +206,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       return
     }
 
-    // Si c'est une route de transition, rediriger vers login
     if (['/auth/registerVolunteer', '/auth/registerAssociation'].includes(pathWithoutLocale)) {
       return navigateTo('/')
     }
@@ -222,7 +216,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!userStore.user) {
     try {
       await userStore.fetchUser()
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.statusCode === 401 || error?.statusCode === 403) {
+        const isConnectedCookie = useCookie('isConnected')
+        if (isConnectedCookie.value) {
+          isConnectedCookie.value = null
+        }
+        return navigateTo('/')
+      }
+
       return navigateTo('/')
     }
   }

@@ -35,7 +35,8 @@ export default defineEventHandler(async event => {
     return await $fetch(`${apiBaseUrl}/support/reports`, {
       method: 'POST',
       body,
-      headers
+      headers,
+      timeout: 5000
     })
   } catch (error: any) {
     console.error('Erreur lors de la création du signalement:', error)

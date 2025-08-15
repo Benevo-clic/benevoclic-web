@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { defineEventHandler, getCookie } from 'h3'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
@@ -28,14 +28,15 @@ export default defineEventHandler(async event => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
-        }
+        },
+        timeout: 5000
       }
     )
 
     return volunteerInfo.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la suppression du volontaire')
+      await ApiError.handleAxios(error, 'Erreur lors de la suppression du volontaire')
     }
   }
 })

@@ -1,6 +1,6 @@
 import { defineEventHandler } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 import { FilterAnnouncement, FilterAnnouncementResponse } from '~/common/interface/filter.interface'
 
 export default defineEventHandler(async event => {
@@ -57,14 +57,15 @@ export default defineEventHandler(async event => {
         withCredentials: true,
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        timeout: 5000
       }
     )
 
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de l’ajout du volontaire à l’association')
+      await ApiError.handleAxios(error, 'Erreur lors de l’ajout du volontaire à l’association')
     }
   }
 })

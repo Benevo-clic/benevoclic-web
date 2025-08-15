@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { defineEventHandler, readBody, getCookie } from 'h3'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const announcementId = event.context.params?.id
@@ -33,14 +33,15 @@ export default defineEventHandler(async event => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
-        }
+        },
+        timeout: 5000
       }
     )
 
     return participantInfo.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de l’inscription au participant')
+      await ApiError.handleAxios(error, 'Erreur lors de l’inscription au participant')
     }
   }
 })

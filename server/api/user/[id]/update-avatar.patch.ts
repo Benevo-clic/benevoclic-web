@@ -1,7 +1,7 @@
 import { defineEventHandler, createError, getCookie, readMultipartFormData } from 'h3'
 import axios from 'axios'
 import FormData from 'form-data'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 import type { UserInfo } from '~/common/types/auth.type'
 
 export default defineEventHandler(async event => {
@@ -56,12 +56,13 @@ export default defineEventHandler(async event => {
       headers: {
         ...form.getHeaders(),
         Authorization: `Bearer ${token}`
-      }
+      },
+      timeout: 5000
     })
     return user
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’avatar')
+      await ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’avatar')
     }
   }
 })

@@ -1,7 +1,7 @@
 import { defineEventHandler, readBody, getCookie } from 'h3'
 import axios from 'axios'
 import { deleteCookies } from '~/server/api/auth/logout.post'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const body = await readBody(event)
@@ -22,7 +22,8 @@ export default defineEventHandler(async event => {
     const removeResponse = await axios.delete(`${apiBaseUrl}/user/${body.uid}`, {
       headers: {
         Authorization: `Bearer ${token}`
-      }
+      },
+      timeout: 5000
     })
     if (!removeResponse) {
       throw new Error("Erreur lors de la suppression de l'utilisateur")
@@ -31,7 +32,7 @@ export default defineEventHandler(async event => {
     deleteCookies(event)
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la suppression de l’utilisateur')
+      await ApiError.handleAxios(error, 'Erreur lors de la suppression de l’utilisateur')
     }
   }
 })

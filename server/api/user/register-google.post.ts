@@ -1,6 +1,6 @@
 import { defineEventHandler, readBody, createError, setCookie } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export interface RegisterUserGoogle {
   idUser: string
@@ -28,13 +28,14 @@ export default defineEventHandler(async event => {
     const response = await axios.post<RegisterUserGoogle>(url, body, {
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 5000
     })
 
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, "Erreur lors de l'enregistrement Google")
+      await ApiError.handleAxios(error, "Erreur lors de l'enregistrement Google")
     }
     throw createError({
       statusCode: error.statusCode || 500,

@@ -1,10 +1,9 @@
 import { defineEventHandler, readBody } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 import { FilterAnnouncement, FilterAnnouncementResponse } from '~/common/interface/filter.interface'
 
 export default defineEventHandler(async event => {
-  // Utiliser process.env directement au lieu de useRuntimeConfig()
   const apiBaseUrl = process.env.API_BASE_URL
 
   if (!apiBaseUrl) {
@@ -43,14 +42,15 @@ export default defineEventHandler(async event => {
       {
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        timeout: 5000
       }
     )
 
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de l’ajout du volontaire à l’association')
+      await ApiError.handleAxios(error, 'Erreur lors de l’ajout du volontaire à l’association')
     }
   }
 })

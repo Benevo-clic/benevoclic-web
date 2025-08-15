@@ -1,6 +1,6 @@
 import { defineEventHandler, createError } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   try {
@@ -25,7 +25,8 @@ export default defineEventHandler(async event => {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 5000
     })
 
     console.log('✅ Response received:', response.data)
@@ -36,7 +37,10 @@ export default defineEventHandler(async event => {
       error
     )
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, "Erreur lors de la suppression de tous les favoris de l'annonce")
+      await ApiError.handleAxios(
+        error,
+        "Erreur lors de la suppression de tous les favoris de l'annonce"
+      )
     }
     throw createError({
       statusCode: error.statusCode || 500,

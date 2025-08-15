@@ -1,6 +1,6 @@
 import { defineEventHandler, deleteCookie, H3Event, EventHandlerRequest, getCookie } from 'h3'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export function deleteCookies(event: H3Event<EventHandlerRequest>) {
   deleteCookie(event, 'auth_token', {
@@ -42,7 +42,8 @@ export default defineEventHandler(async event => {
       {
         headers: {
           Authorization: `Bearer ${token}`
-        }
+        },
+        timeout: 5000
       }
     )
 
@@ -54,7 +55,7 @@ export default defineEventHandler(async event => {
     }
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la déconnexion')
+      await ApiError.handleAxios(error, 'Erreur lors de la déconnexion')
     }
   }
 })

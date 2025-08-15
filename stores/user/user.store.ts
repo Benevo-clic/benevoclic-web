@@ -119,6 +119,13 @@ export const useUserStore = defineStore('user', {
         return this.user
       } catch (err: any) {
         this.error = err?.message || 'Erreur de récupération utilisateur'
+
+        if (err?.statusCode === 401 || err?.statusCode === 403) {
+          this._isFetching = false
+          this.loading = false
+          throw err
+        }
+
         throw err
       } finally {
         this._isFetching = false
@@ -126,7 +133,6 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    // Récupère un utilisateur par ID
     async getUserById(id: string) {
       if (this.user?.userId === id && this.isUserCacheValid && this.user) {
         return this.user
@@ -158,7 +164,6 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    // Met à jour le statut isCompleted
     async updateIsCompleted(id: string, isCompleted: boolean) {
       this.loading = true
       this.error = null
@@ -182,7 +187,6 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    // Upload photo de profil
     async uploadProfilePicture(imageBase64: string) {
       this.loading = true
       this.error = null
@@ -278,7 +282,6 @@ export const useUserStore = defineStore('user', {
       }
       try {
         const $fetch = useRequestFetch()
-        console.log('Suppression du compte utilisateur:', this.user.userId)
         const response = await $fetch<{ uid: string }>(`/api/user/${this.user?.userId}`, {
           method: 'DELETE',
           credentials: 'include'
@@ -296,7 +299,6 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    // Met à jour le mot de passe (Firebase)
     async updatePassword(payload: { oldPassword: string; newPassword: string }) {
       this.loading = true
       this.error = null

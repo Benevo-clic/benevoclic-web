@@ -2,7 +2,7 @@ import { defineEventHandler, readBody } from 'h3'
 import axios from 'axios'
 import { login, setCookies } from '~/server/api/auth/login.post'
 import { RegisterEmailVerifiedPayload } from '~/common/types/register.type'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 interface RegisterResponse {
   uid: string
 }
@@ -31,7 +31,8 @@ export default defineEventHandler(async event => {
       {
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        timeout: 5000
       }
     )
 
@@ -40,7 +41,7 @@ export default defineEventHandler(async event => {
     setCookies(event, loginResponse)
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la création du compte')
+      await ApiError.handleAxios(error, 'Erreur lors de la création du compte')
     }
   }
 })

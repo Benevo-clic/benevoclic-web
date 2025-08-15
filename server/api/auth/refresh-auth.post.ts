@@ -8,7 +8,7 @@ import {
 } from 'h3'
 import axios from 'axios'
 import { LoginResponse } from '~/common/types/auth.type'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 function setAccessTokenOnly(event: H3Event<EventHandlerRequest>, loginResponse: LoginResponse) {
   if (loginResponse.idToken) {
@@ -36,7 +36,6 @@ export default defineEventHandler(async event => {
   const refreshToken = getCookie(event, 'refresh_token')
 
   try {
-    console.log('Refreshing token...', refreshToken)
     if (!refreshToken) {
       return
     }
@@ -49,7 +48,8 @@ export default defineEventHandler(async event => {
       {
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        timeout: 5000
       }
     )
 
@@ -58,7 +58,7 @@ export default defineEventHandler(async event => {
     return loginResponse.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la récupération de l’utilisateur actuel')
+      await ApiError.handleAxios(error, 'Erreur lors de la récupération de l’utilisateur actuel')
     }
   }
 })

@@ -4,10 +4,12 @@ import { getAuth, signInWithCustomToken } from '@firebase/auth'
 import axios from 'axios'
 import { setCookies } from '~/server/api/auth/login.post'
 import type { RegisterGooglePayload, RegisterUserGoogleResponse } from '~/common/types/auth.type'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
+import { EnvValidator } from '~/utils/env-validator'
 
 export default defineEventHandler(async event => {
   const body = await readBody(event)
+  const config = useRuntimeConfig()
   const apiBaseUrl = process.env.API_BASE_URL
   if (!apiBaseUrl) {
     throw createError({
@@ -23,8 +25,6 @@ export default defineEventHandler(async event => {
   if (!body || !body.idToken) {
     return { error: 'Token manquant' }
   }
-
-  // Initialiser Firebase côté serveur
   let app
   try {
     app = initializeApp(config.public.firebaseConfig)
@@ -42,7 +42,8 @@ export default defineEventHandler(async event => {
     {
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 5000
     }
   )
 
@@ -71,7 +72,7 @@ export default defineEventHandler(async event => {
   } catch (error) {
     console.error("Erreur lors de l'authentification avec token personnalisé:", error)
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, "Erreur lors de l'authentification avec Google")
+      await ApiError.handleAxios(error, "Erreur lors de l'authentification avec Google")
     }
     return { error: "Erreur lors de l'authentification" }
   }

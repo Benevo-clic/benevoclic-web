@@ -12,23 +12,17 @@ export default defineEventHandler(async event => {
       })
     }
 
-    const apiBaseUrl = process.env.API_BASE_URL || 'https://api.www.benevoclic.fr'
+    const apiBaseUrl = process.env.API_BASE_URL
 
-    await axios.get(`${apiBaseUrl}/user/${userId}`, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
     const response = await axios.get(`${apiBaseUrl}/user/${userId}`, {
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 5000
     })
 
     return response.data
   } catch (error: any) {
-    console.error('Erreur lors de la récupération des détails utilisateur:', error)
-
     throw createError({
       statusCode: error.statusCode || 500,
       statusMessage:

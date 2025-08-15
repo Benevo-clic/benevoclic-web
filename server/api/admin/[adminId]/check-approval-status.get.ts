@@ -29,7 +29,8 @@ export default defineEventHandler(async event => {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`
-      }
+      },
+      timeout: 5000
     })
   } catch (error: any) {
     console.error("Erreur lors de la vérification du statut d'approbation:", error)
