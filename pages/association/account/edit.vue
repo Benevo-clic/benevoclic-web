@@ -215,7 +215,7 @@
 
   import { useI18n } from 'vue-i18n'
   // eslint-disable-next-line import/named
-  import { isEqual } from 'lodash'
+  import lodash from 'lodash'
   import { useUser } from '~/composables/auth/useUser'
   import { useAssociationAuth } from '~/composables/useAssociation'
   import { useNavigation } from '~/composables/useNavigation'
@@ -348,7 +348,7 @@
   })
 
   const isFormChanged = computed(() => {
-    return !isEqual(form.value, initialForm.value)
+    return !lodash.isEqual(form.value, initialForm.value)
   })
 
   function handleImageChange(event: Event) {
