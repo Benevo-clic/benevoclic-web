@@ -18,6 +18,7 @@
   const { recentSearches, addRecentSearch, clearRecentSearches } = useRecentSearches()
   const { patchCurrentFilter } = useAnnouncement()
 
+  // Generate unique IDs for accessibility
   const searchInputId = 'volunteer-search-input'
   const recentSearchesId = 'volunteer-recent-searches'
 
@@ -58,6 +59,7 @@
     }
   }
 
+  // Gestion de la navigation clavier
   function handleKeydown(event: KeyboardEvent) {
     if (event.key === 'Escape') {
       showRecentSearches.value = false
@@ -221,12 +223,14 @@
     border-radius: 4px;
   }
 
+  /* Amélioration du contraste pour les utilisateurs en mode high-contrast */
   @media (prefers-contrast: more) {
     .btn {
       border-width: 2px;
     }
   }
 
+  /* Respect des préférences de réduction de mouvement */
   @media (prefers-reduced-motion: reduce) {
     .btn {
       transition: none;

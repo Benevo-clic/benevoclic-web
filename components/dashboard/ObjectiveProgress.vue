@@ -37,8 +37,13 @@
     planned: number
   }>()
 
-  // Generate unique ID for accessibility
-  const uniqueId = Math.random().toString(36).substr(2, 9)
+  // Generate unique ID for accessibility using title hash
+  const uniqueId = computed(() => {
+    return props.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '')
+      .substring(0, 8)
+  })
 
   const percent = computed(() => (props.planned ? (props.covered / props.planned) * 100 : 0))
 </script>

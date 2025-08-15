@@ -1,12 +1,18 @@
 import { defineEventHandler, getCookie, getQuery } from 'h3'
-import { RetryManager } from '~/utils/retry-manager'
-import { ApiError } from '~/utils/error-handler'
 import axios from 'axios'
+import { ApiError } from '~/utils/ErrorHandler'
 
 export default defineEventHandler(async event => {
   const associationId = event.context.params?.associationId
   const token = getCookie(event, 'auth_token')
   const apiBaseUrl = process.env.API_BASE_URL
+
+  console.log('=== DASHBOARD API DEBUG ===')
+  console.log('Association ID:', associationId)
+  console.log('Token exists:', !!token)
+  console.log('Token length:', token ? token.length : 0)
+  console.log('API Base URL:', apiBaseUrl)
+  console.log('==========================')
 
   if (!apiBaseUrl) {
     throw createError({
@@ -53,24 +59,17 @@ export default defineEventHandler(async event => {
 
     const url = `${apiBaseUrl}/association-dashboard/${associationId}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`
 
-    const response = await RetryManager.get(url, {
+    const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
-      },
-      retry: {
-        timeout: 15000, // 15 secondes pour les dashboards
-        maxRetries: 3 // Moins de tentatives mais plus de temps
       }
     })
 
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      await ApiError.handleAxios(
-        error,
-        "Erreur lors de la récupération du dashboard de l'association"
-      )
+      ApiError.handleAxios(error, "Erreur lors de la récupération du dashboard de l'association")
     }
   }
 })

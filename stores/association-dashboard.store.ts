@@ -13,8 +13,10 @@ import type {
 
 export const useAssociationDashboardStore = defineStore('associationDashboard', {
   state: () => ({
+    // Dashboard complet
     dashboardData: null as AssociationDashboardResponseDto | null,
 
+    // Données individuelles
     announcementStats: null as AnnouncementStatsDto | null,
     participantStats: null as ParticipantStatsDto | null,
     volunteerStats: null as VolunteerStatsDto | null,
@@ -22,6 +24,7 @@ export const useAssociationDashboardStore = defineStore('associationDashboard', 
     timeSeriesData: [] as TimeSeriesDataDto[],
     eventTypeStats: [] as EventTypeStatsDto[],
 
+    // État de chargement
     loading: false,
     loadingDashboard: false,
     loadingAnnouncements: false,
@@ -31,8 +34,10 @@ export const useAssociationDashboardStore = defineStore('associationDashboard', 
     loadingTimeline: false,
     loadingEventTypes: false,
 
+    // Gestion d'erreurs
     error: null as string | null,
 
+    // Cache et filtres
     currentAssociationId: null as string | null,
     currentFilter: null as AssociationStatsFilterDto | null,
     _lastFetch: 0,
@@ -40,9 +45,11 @@ export const useAssociationDashboardStore = defineStore('associationDashboard', 
   }),
 
   getters: {
+    // Getters pour le dashboard complet
     getDashboardData: state => state.dashboardData,
     getLoadingDashboard: state => state.loadingDashboard,
 
+    // Getters pour les données individuelles
     getAnnouncementStats: state => state.announcementStats,
     getParticipantStats: state => state.participantStats,
     getVolunteerStats: state => state.volunteerStats,
@@ -50,6 +57,7 @@ export const useAssociationDashboardStore = defineStore('associationDashboard', 
     getTimeSeriesData: state => state.timeSeriesData,
     getEventTypeStats: state => state.eventTypeStats,
 
+    // Getters pour l'état de chargement
     getLoading: state => state.loading,
     getLoadingAnnouncements: state => state.loadingAnnouncements,
     getLoadingParticipants: state => state.loadingParticipants,
@@ -58,15 +66,19 @@ export const useAssociationDashboardStore = defineStore('associationDashboard', 
     getLoadingTimeline: state => state.loadingTimeline,
     getLoadingEventTypes: state => state.loadingEventTypes,
 
+    // Getters pour les erreurs
     getError: state => state.error,
 
+    // Getters pour les filtres
     getCurrentFilter: state => state.currentFilter,
     getCurrentAssociationId: state => state.currentAssociationId,
 
+    // Validation du cache
     isCacheValid: state => {
       return Date.now() - state._lastFetch < state._cacheExpiry
     },
 
+    // Données formatées pour les graphiques
     getTimeSeriesChartData: state => {
       if (!state.timeSeriesData.length) return null
 

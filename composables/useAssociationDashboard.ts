@@ -5,6 +5,7 @@ export const useAssociationDashboard = () => {
   const dashboardStore = useAssociationDashboardStore()
 
   return {
+    // Actions principales
     fetchDashboard: dashboardStore.fetchDashboard,
     fetchAnnouncementStats: dashboardStore.fetchAnnouncementStats,
     fetchParticipantStats: dashboardStore.fetchParticipantStats,
@@ -13,15 +14,18 @@ export const useAssociationDashboard = () => {
     fetchTimeSeriesData: dashboardStore.fetchTimeSeriesData,
     fetchEventTypeStats: dashboardStore.fetchEventTypeStats,
 
+    // Actions de gestion
     setCurrentFilter: dashboardStore.setCurrentFilter,
     setCurrentAssociationId: dashboardStore.setCurrentAssociationId,
     clearData: dashboardStore.clearData,
     invalidateCache: dashboardStore.invalidateCache,
     reset: dashboardStore.reset,
 
+    // Getters réactifs pour le dashboard complet
     dashboardData: computed(() => dashboardStore.getDashboardData),
     loadingDashboard: computed(() => dashboardStore.getLoadingDashboard),
 
+    // Getters réactifs pour les données individuelles
     announcementStats: computed(() => dashboardStore.getAnnouncementStats),
     participantStats: computed(() => dashboardStore.getParticipantStats),
     volunteerStats: computed(() => dashboardStore.getVolunteerStats),
@@ -29,6 +33,7 @@ export const useAssociationDashboard = () => {
     timeSeriesData: computed(() => dashboardStore.getTimeSeriesData),
     eventTypeStats: computed(() => dashboardStore.getEventTypeStats),
 
+    // Getters réactifs pour l'état de chargement
     loading: computed(() => dashboardStore.getLoading),
     loadingAnnouncements: computed(() => dashboardStore.getLoadingAnnouncements),
     loadingParticipants: computed(() => dashboardStore.getLoadingParticipants),
@@ -37,14 +42,20 @@ export const useAssociationDashboard = () => {
     loadingTimeline: computed(() => dashboardStore.getLoadingTimeline),
     loadingEventTypes: computed(() => dashboardStore.getLoadingEventTypes),
 
+    // Getters réactifs pour les erreurs et filtres
     error: computed(() => dashboardStore.getError),
     currentFilter: computed(() => dashboardStore.getCurrentFilter),
     currentAssociationId: computed(() => dashboardStore.getCurrentAssociationId),
     isCacheValid: computed(() => dashboardStore.isCacheValid),
 
+    // Getters réactifs pour les données de graphiques
     timeSeriesChartData: computed(() => dashboardStore.getTimeSeriesChartData),
     pieChartData: computed(() => dashboardStore.getPieChartData),
 
+    // Méthodes utilitaires
+    /**
+     * Récupère le dashboard complet avec gestion automatique des erreurs
+     */
     async loadDashboard(associationId: string, filter: AssociationStatsFilterDto = {}) {
       try {
         return await dashboardStore.fetchDashboard(associationId, filter)
@@ -54,6 +65,9 @@ export const useAssociationDashboard = () => {
       }
     },
 
+    /**
+     * Récupère toutes les données du dashboard en parallèle
+     */
     async loadAllDashboardData(associationId: string, filter: AssociationStatsFilterDto = {}) {
       try {
         const [
@@ -89,6 +103,9 @@ export const useAssociationDashboard = () => {
       }
     },
 
+    /**
+     * Vérifie si les données sont disponibles
+     */
     hasData: computed(() => {
       return !!(
         dashboardStore.getDashboardData ||
@@ -101,6 +118,9 @@ export const useAssociationDashboard = () => {
       )
     }),
 
+    /**
+     * Vérifie si au moins une requête est en cours
+     */
     isLoadingAny: computed(() => {
       return (
         dashboardStore.getLoadingDashboard ||
@@ -113,6 +133,9 @@ export const useAssociationDashboard = () => {
       )
     }),
 
+    /**
+     * Récupère les métriques principales pour les cartes de statistiques
+     */
     mainMetrics: computed(() => {
       const stats = dashboardStore.getAnnouncementStats
       const participantStats = dashboardStore.getParticipantStats
@@ -129,6 +152,9 @@ export const useAssociationDashboard = () => {
       }
     }),
 
+    /**
+     * Récupère les données pour les graphiques de performance
+     */
     performanceData: computed(() => {
       const stats = dashboardStore.getAnnouncementStats
       const engagementStats = dashboardStore.getEngagementStats
@@ -141,6 +167,9 @@ export const useAssociationDashboard = () => {
       }
     }),
 
+    /**
+     * Récupère les données pour les recommandations
+     */
     recommendations: computed(() => {
       const stats = dashboardStore.getAnnouncementStats
       const participantStats = dashboardStore.getParticipantStats
@@ -149,6 +178,7 @@ export const useAssociationDashboard = () => {
 
       const recommendations = []
 
+      // Recommandations basées sur le taux de completion
       if (stats?.completionRate && stats.completionRate < 70) {
         recommendations.push({
           type: 'completion',
@@ -158,6 +188,7 @@ export const useAssociationDashboard = () => {
         })
       }
 
+      // Recommandations basées sur l'engagement
       if (engagementStats?.overallEngagementRate && engagementStats.overallEngagementRate < 50) {
         recommendations.push({
           type: 'engagement',
@@ -167,6 +198,7 @@ export const useAssociationDashboard = () => {
         })
       }
 
+      // Recommandations basées sur la rétention
       if (volunteerStats?.retentionRate && volunteerStats.retentionRate < 60) {
         recommendations.push({
           type: 'retention',
