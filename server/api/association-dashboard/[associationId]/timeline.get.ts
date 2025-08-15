@@ -1,4 +1,5 @@
 import { defineEventHandler, getCookie, getQuery } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
 
@@ -52,12 +53,15 @@ export default defineEventHandler(async event => {
 
     const url = `${apiBaseUrl}/association-dashboard/${associationId}/timeline${queryParams.toString() ? `?${queryParams.toString()}` : ''}`
 
-    const response = await axios.get(url, {
+    const response = await RetryManager.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      timeout: 5000
+      retry: {
+        timeout: 15000, // 15 secondes pour les dashboards
+        maxRetries: 3 // Moins de tentatives mais plus de temps
+      }
     })
 
     return response.data

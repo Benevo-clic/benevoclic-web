@@ -1,5 +1,6 @@
 // server/api/user/[id]/update-avatar.patch.ts
 import { defineEventHandler, readMultipartFormData, getCookie, createError } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import FormData from 'form-data'
 import { ApiError } from '~/utils/error-handler'
@@ -62,12 +63,15 @@ export default defineEventHandler(async event => {
     // 5️⃣ Proxy PATCH vers ton backend NestJS
     const url = `${apiBaseUrl}/announcements/coverAnnouncement/${announcementId}`
 
-    const { data: announcement } = await axios.patch(url, form, {
+    const { data: announcement } = await RetryManager.patch(url, form, {
       headers: {
         ...form.getHeaders(),
         Authorization: `Bearer ${token}`
       },
-      timeout: 5000
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
+      }
     })
     return announcement
   } catch (error: any) {

@@ -1,4 +1,5 @@
 import { defineEventHandler, createError } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
 
@@ -17,11 +18,14 @@ export default defineEventHandler(async event => {
     }
     const url = `${apiBaseUrl}/association/nb-association`
 
-    const response = await axios.get(url, {
+    const response = await RetryManager.get(url, {
       headers: {
         'Content-Type': 'application/json'
       },
-      timeout: 5000
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
+      }
     })
 
     return response.data as { nbAssociation: number }

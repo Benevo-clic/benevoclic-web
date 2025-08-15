@@ -1,3 +1,4 @@
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { defineEventHandler, readBody } from 'h3'
 import { ApiError } from '~/utils/error-handler'
@@ -28,7 +29,7 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const response = await axios.patch(
+    const response = await RetryManager.patch(
       `${apiBaseUrl}/volunteer/${id}`,
       {
         ...body
@@ -38,7 +39,10 @@ export default defineEventHandler(async event => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        timeout: 5000
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
+        }
       }
     )
     return response.data

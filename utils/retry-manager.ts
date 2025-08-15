@@ -1,5 +1,5 @@
-import axios from 'axios'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios from 'axios'
 import { ErrorHandler } from './error-handler'
 import { SessionCleaner } from './session-cleaner'
 
@@ -53,11 +53,9 @@ export class RetryManager {
       }
 
       try {
-        const response = await axios.request<T>(requestConfig)
+        // this.logSuccess(requestConfig, response, attempt, requestId)
 
-        this.logSuccess(requestConfig, response, attempt, requestId)
-
-        return response
+        return await axios.request<T>(requestConfig)
       } catch (error: any) {
         const isLastAttempt = attempt === retryConfig.maxRetries!
         const elapsedTime = Date.now() - startTime
@@ -124,6 +122,15 @@ export class RetryManager {
     context?: { endpoint?: string; userId?: string; action?: string }
   ): Promise<AxiosResponse<T>> {
     return this.request<T>({ ...config, method: 'DELETE', url }, context)
+  }
+
+  static async patch<T = any>(
+    url: string,
+    data?: any,
+    config?: RequestConfig,
+    context?: { endpoint?: string; userId?: string; action?: string }
+  ): Promise<AxiosResponse<T>> {
+    return this.request<T>({ ...config, method: 'PATCH', url, data }, context)
   }
 
   private static calculateDelay(attempt: number, config: RetryConfig): number {
@@ -250,5 +257,9 @@ export class RetryManager {
     }
 
     return 'session_expired'
+  }
+
+  static isAxiosError(error: any): boolean {
+    return axios.isAxiosError(error)
   }
 }

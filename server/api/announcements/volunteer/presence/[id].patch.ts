@@ -1,4 +1,5 @@
 import { defineEventHandler, getCookie, readBody } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { ApiError } from '~/utils/error-handler'
 import type { InfoVolunteer } from '~/common/interface/event.interface'
@@ -20,7 +21,7 @@ export default defineEventHandler(async event => {
   const announcementId = event.context.params?.id
 
   try {
-    const response = await axios.patch(
+    const response = await RetryManager.patch(
       `${apiBaseUrl}/announcements/volunteer/presence/${announcementId}`,
       {
         ...body
@@ -30,7 +31,10 @@ export default defineEventHandler(async event => {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        timeout: 5000
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
+        }
       }
     )
     return response.data

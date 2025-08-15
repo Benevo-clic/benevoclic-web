@@ -1,8 +1,8 @@
 // server/api/user/[id]/update-avatar.patch.ts
 import { defineEventHandler, readMultipartFormData, getCookie, createError } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import FormData from 'form-data'
-import type { UserInfo } from '~/common/types/auth.type'
 import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
@@ -53,12 +53,15 @@ export default defineEventHandler(async event => {
 
   try {
     const url = `${apiBaseUrl}/user/${id}/update-avatar`
-    const { data: user } = await axios.patch<UserInfo>(url, form, {
+    const { data: user } = await RetryManager.patch(url, form, {
       headers: {
         ...form.getHeaders(),
         Authorization: `Bearer ${token}`
       },
-      timeout: 5000
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
+      }
     })
     return user
   } catch (error: any) {

@@ -115,26 +115,17 @@ export const useAnnouncementStore = defineStore('announcement', {
     },
 
     async fetchAnnouncementById(id: string) {
-      const cached = this._announcementsCache.get(id)
-
-      if (cached && this.isCacheValid) {
-        this.currentAnnouncement = cached
-        return cached
-      }
-
       this.loading = true
       this.error = null
       try {
-        this.currentAnnouncement = await $fetch<Announcement>(`/api/announcements/${id}`, {
+        const response = await $fetch<Announcement>(`/api/announcements/${id}`, {
           method: 'GET',
           credentials: 'include'
         })
 
-        if (this.currentAnnouncement?._id) {
-          this._announcementsCache.set(this.currentAnnouncement._id, this.currentAnnouncement)
-        }
+        this.currentAnnouncement = response
 
-        return this.currentAnnouncement
+        return response
       } catch (err: any) {
         this.error = err?.message || "Erreur de récupération de l'annonce"
       } finally {
@@ -486,6 +477,13 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.loading = true
       this.error = null
       try {
+        ///// moi
+        console.log(
+          'Updating participant presence for announcement ID:',
+          id,
+          'with data:',
+          participant
+        )
         const response = await $fetch<Announcement>(
           `/api/announcements/participant/presence/${id}`,
           {
