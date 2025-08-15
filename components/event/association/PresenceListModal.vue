@@ -193,7 +193,8 @@
   async function togglePresence(person: InfoVolunteer, type: 'participant' | 'volunteer') {
     try {
       const updatedPerson = {
-        ...person,
+        id: person.id,
+        name: person.name,
         isPresent: !person.isPresent
       }
 

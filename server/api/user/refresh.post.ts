@@ -6,9 +6,10 @@ import {
   getCookie,
   setCookie
 } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { LoginResponse } from '~/common/types/auth.type'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 function setAccessTokenOnly(event: H3Event<EventHandlerRequest>, loginResponse: LoginResponse) {
   if (loginResponse.idToken) {
@@ -40,7 +41,7 @@ export default defineEventHandler(async event => {
       return
     }
 
-    const loginResponse = await axios.post<LoginResponse>(
+    const loginResponse = await RetryManager.post(
       `${apiBaseUrl}/user/refresh`,
       {
         refreshToken
@@ -48,6 +49,10 @@ export default defineEventHandler(async event => {
       {
         headers: {
           'Content-Type': 'application/json'
+        },
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
         }
       }
     )
@@ -57,7 +62,7 @@ export default defineEventHandler(async event => {
     return loginResponse.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la récupération de l’utilisateur actuel')
+      await ApiError.handleAxios(error, 'Erreur lors de la récupération de l’utilisateur actuel')
     }
   }
 })

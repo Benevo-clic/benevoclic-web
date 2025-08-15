@@ -1,4 +1,5 @@
 import { defineEventHandler, getCookie, createError, setCookie } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 
 export default defineEventHandler(async event => {
@@ -24,20 +25,22 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const response = await axios.post(
+    const response = await RetryManager.post(
       `${apiBaseUrl}/auth/session/refresh`,
       {},
       {
         headers: {
           Authorization: `Bearer ${token}`
+        },
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
         }
       }
     )
 
-    // Si le backend a défini un cookie de session, le transmettre
     const setCookieHeader = response.headers['set-cookie']
     if (setCookieHeader) {
-      // Extraire le cookie __session et le définir
       const sessionCookie = setCookieHeader.find(cookie => cookie.includes('__session'))
       if (sessionCookie) {
         const sessionToken = sessionCookie.split(';')[0].split('=')[1]

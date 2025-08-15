@@ -1,42 +1,14 @@
 import { defineEventHandler } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
-import { FilterAnnouncement, FilterAnnouncementResponse } from '~/common/interface/filter.interface'
+import { ApiError } from '~/utils/error-handler'
+import { FilterAnnouncement } from '~/common/interface/filter.interface'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
   const body = (await readBody(event)) as FilterAnnouncement
 
-  // Utiliser process.env directement au lieu de useRuntimeConfig()
   const apiBaseUrl = process.env.API_BASE_URL
-  const apiSireneUrl = process.env.API_SIRENE_URL
-  const apiSireneKey = process.env.API_SIRENE_KEY
-
-  // Debug: Afficher les variables d'environnement
-  console.log("🔍 Debug - Variables d'environnement:", {
-    api_base_url: apiBaseUrl,
-    api_sirene_url: apiSireneUrl,
-    api_sirene_key: apiSireneKey ? 'DÉFINIE' : 'NON DÉFINIE'
-  })
-
-  // Vérification de la configuration
-  if (!apiBaseUrl) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Configuration Error',
-      data: {
-        message: 'API_BASE_URL is not configured',
-        details: 'Please check your environment variables',
-        debug: {
-          env_vars: {
-            API_BASE_URL: process.env.API_BASE_URL,
-            NODE_ENV: process.env.NODE_ENV,
-            PORT: process.env.PORT
-          }
-        }
-      }
-    })
-  }
 
   try {
     const payload: any = {
@@ -48,7 +20,7 @@ export default defineEventHandler(async event => {
 
     const url = `${apiBaseUrl}/announcements/filter`
 
-    const response = await axios.post<FilterAnnouncementResponse>(
+    const response = await RetryManager.post(
       url,
       {
         ...payload
@@ -57,6 +29,10 @@ export default defineEventHandler(async event => {
         withCredentials: true,
         headers: {
           'Content-Type': 'application/json'
+        },
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
         }
       }
     )
@@ -64,7 +40,7 @@ export default defineEventHandler(async event => {
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de l’ajout du volontaire à l’association')
+      await ApiError.handleAxios(error, 'Erreur lors de l’ajout du volontaire à l’association')
     }
   }
 })

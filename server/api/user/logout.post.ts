@@ -1,6 +1,7 @@
 import { defineEventHandler, H3Event, EventHandlerRequest, deleteCookie, getCookie } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export function deleteCookies(event: H3Event<EventHandlerRequest>) {
   deleteCookie(event, 'auth_token', {
@@ -36,12 +37,16 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    await axios.post(
+    await RetryManager.post(
       `${apiBaseUrl}/user/logout`,
       {},
       {
         headers: {
           Authorization: `Bearer ${token}`
+        },
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
         }
       }
     )
@@ -54,7 +59,7 @@ export default defineEventHandler(async event => {
     }
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la déconnexion')
+      await ApiError.handleAxios(error, 'Erreur lors de la déconnexion')
     }
   }
 })

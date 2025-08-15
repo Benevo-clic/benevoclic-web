@@ -1,6 +1,7 @@
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { defineEventHandler } from 'h3'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const announcementId = event.context.params?.id
@@ -25,14 +26,18 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    await axios.delete<void>(`${apiBaseUrl}/announcements/${announcementId}`, {
+    await RetryManager.delete(`${apiBaseUrl}/announcements/${announcementId}`, {
       headers: {
         Authorization: `Bearer ${token}`
+      },
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
       }
     })
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la suppression de l’annonce')
+      await ApiError.handleAxios(error, 'Erreur lors de la suppression de l’annonce')
     }
   }
 })

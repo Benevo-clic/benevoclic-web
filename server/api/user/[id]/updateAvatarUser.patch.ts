@@ -1,9 +1,8 @@
-// server/api/user/[id]/update-avatar.patch.ts
 import { defineEventHandler, readMultipartFormData, getCookie, createError } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import FormData from 'form-data'
-import type { UserInfo } from '~/common/types/auth.type'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const apiBaseUrl = process.env.API_BASE_URL
@@ -19,7 +18,6 @@ export default defineEventHandler(async event => {
   }
   const token = getCookie(event, 'auth_token')
 
-  // 1️⃣ Récupérer l’ID depuis le path param
   const { id } = event.context.params as { id?: string }
   if (!id) {
     throw createError({
@@ -28,7 +26,6 @@ export default defineEventHandler(async event => {
     })
   }
 
-  // 2️⃣ Parser le multipart/form-data
   const parts = await readMultipartFormData(event)
   if (!parts || parts.length === 0) {
     throw createError({
@@ -37,7 +34,6 @@ export default defineEventHandler(async event => {
     })
   }
 
-  // 3️⃣ Trouver la partie "file"
   const filePart = parts.find(p => p.name === 'file' && typeof (p as any).filename === 'string')
   if (!filePart) {
     throw createError({
@@ -46,7 +42,6 @@ export default defineEventHandler(async event => {
     })
   }
 
-  // 4️⃣ Reconstituer un FormData pour Axios
   const { data, filename, mimeType } = filePart as {
     data: Buffer
     filename: string
@@ -56,18 +51,21 @@ export default defineEventHandler(async event => {
   form.append('file', data, { filename, contentType: mimeType })
 
   try {
-    // 5️⃣ Proxy PATCH vers ton backend NestJS
     const url = `${apiBaseUrl}/user/${id}/update-avatar`
-    const { data: user } = await axios.patch<UserInfo>(url, form, {
+    const { data: user } = await RetryManager.patch(url, form, {
       headers: {
-        ...form.getHeaders(), // multipart/form-data; boundary=...
-        Authorization: `Bearer ${token}` // remets le token si besoin
+        ...form.getHeaders(),
+        Authorization: `Bearer ${token}`
+      },
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
       }
     })
     return user
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’avatar')
+      await ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’avatar')
     }
   }
 })

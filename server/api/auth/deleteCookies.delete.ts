@@ -1,34 +1,51 @@
-import { defineEventHandler, createError, deleteCookie, H3Event, EventHandlerRequest } from 'h3'
-
-export function deleteCookies(event: H3Event<EventHandlerRequest>) {
-  deleteCookie(event, 'auth_token', {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    path: '/'
-  })
-
-  deleteCookie(event, 'refresh_token', {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    path: '/'
-  })
-
-  deleteCookie(event, 'isConnected')
-  deleteCookie(event, 'id_user')
-  deleteCookie(event, 'userRole')
-  deleteCookie(event, 'email')
-  deleteCookie(event, 'tempPassword')
-}
+import { defineEventHandler, deleteCookie } from 'h3'
 
 export default defineEventHandler(async event => {
   try {
-    deleteCookies(event)
-  } catch (error: any) {
-    throw createError({
-      statusCode: error.statusCode || 401,
-      message: error.message || 'Échec de la déconnexion'
+    // Supprimer tous les cookies de session
+    const cookiesToDelete = [
+      'auth_token',
+      'refresh_token',
+      'session_token',
+      'user_session',
+      'firebase_token',
+      'csrf_token',
+      'token',
+      'access_token',
+      'id_token',
+      'user_token',
+      'app_token',
+      'api_token',
+      'bearer_token',
+      'jwt_token',
+      'login_token',
+      'remember_token',
+      'auth_session',
+      'isConnected',
+      'id_user',
+      'userRole',
+      'email',
+      'tempPassword'
+    ]
+
+    cookiesToDelete.forEach(cookieName => {
+      deleteCookie(event, cookieName, {
+        path: '/',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax'
+      })
     })
+
+    return {
+      success: true,
+      message: 'Tous les cookies de session ont été supprimés'
+    }
+  } catch (error) {
+    console.error('❌ Erreur lors de la suppression des cookies:', error)
+    return {
+      success: false,
+      message: 'Erreur lors de la suppression des cookies'
+    }
   }
 })

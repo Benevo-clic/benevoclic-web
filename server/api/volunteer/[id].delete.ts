@@ -1,8 +1,9 @@
 // server/api/volunteer/[id].delete.ts
 import { defineEventHandler, getCookie, createError } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { deleteCookies } from '~/server/api/auth/logout.post'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const apiBaseUrl = process.env.API_BASE_URL
@@ -31,14 +32,15 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const { data: removeData } = await axios.delete<{ volunteerId: string }>(
-      `${apiBaseUrl}/volunteer/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+    const { data: removeData } = await RetryManager.delete(`${apiBaseUrl}/volunteer/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
       }
-    )
+    })
 
     deleteCookies(event)
     return {
@@ -47,7 +49,7 @@ export default defineEventHandler(async event => {
     }
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’avatar')
+      await ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’avatar')
     }
   }
 })

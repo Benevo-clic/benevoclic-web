@@ -1,6 +1,7 @@
 import { defineEventHandler, createError, readBody } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 import { setCookies } from '~/server/api/auth/login.post'
 import type { RegisterUserGoogleResponse } from '~/common/types/auth.type'
 
@@ -21,13 +22,17 @@ export default defineEventHandler(async event => {
     return { error: 'Token manquant' }
   }
   try {
-    const response = await axios.patch<RegisterUserGoogleResponse>(
+    const response = await RetryManager.patch(
       `${apiBaseUrl}/user/${body.uid}/update-connected/${true}`,
       {},
       {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${body.idToken}`
+        },
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
         }
       }
     )
@@ -41,7 +46,7 @@ export default defineEventHandler(async event => {
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de l’authentification avec Google')
+      await ApiError.handleAxios(error, 'Erreur lors de l’authentification avec Google')
     }
   }
 })

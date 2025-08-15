@@ -243,7 +243,7 @@
                 </div>
                 <div class="stat-title">Participants</div>
                 <div class="stat-value text-primary">
-                  {{ ParticipantAvailable(announcement as Announcement) }}
+                  {{ ParticipantAvailable(announcement) }}
                 </div>
                 <div class="stat-desc">Personnes inscrites à l'événement</div>
               </div>
@@ -255,7 +255,7 @@
                 </div>
                 <div class="stat-title">Bénévoles</div>
                 <div class="stat-value text-secondary">
-                  {{ volunteerAvailable(announcement as Announcement) }}
+                  {{ volunteerAvailable(announcement) }}
                 </div>
                 <div class="stat-desc">Personnes aidant à l'organisation</div>
               </div>
@@ -441,7 +441,7 @@
   const tab = ref<'participants' | 'volunteers'>('participants')
   const presenceModalRef = ref<InstanceType<typeof PresenceListModal> | null>(null)
 
-  const announcement = computed(() => useAnnouncementAuth.getCurrentAnnouncement.value)
+  const announcement = ref<Announcement | null>(null)
 
   const profileImageUrl = computed(() => {
     return announcement.value?.associationLogo
@@ -482,18 +482,20 @@
     await initData()
   })
 
-  function volunteerAvailable(announcement: Announcement): string {
+  function volunteerAvailable(announcement: Announcement | null): string {
+    if (!announcement) return '0'
     if (announcement.maxVolunteers !== -1) {
-      return `${announcement?.nbVolunteers}/${announcement?.maxVolunteers}`
+      return `${announcement.nbVolunteers || 0}/${announcement.maxVolunteers}`
     }
-    return `${announcement?.nbVolunteers}`
+    return `${announcement.nbVolunteers || 0}`
   }
 
-  function ParticipantAvailable(announcement: Announcement): string {
+  function ParticipantAvailable(announcement: Announcement | null): string {
+    if (!announcement) return '0'
     if (announcement.maxParticipants !== -1) {
-      return `${announcement?.nbParticipants}/${announcement?.maxParticipants}`
+      return `${announcement.nbParticipants || 0}/${announcement.maxParticipants}`
     }
-    return `${announcement?.nbParticipants}`
+    return `${announcement.nbParticipants || 0}`
   }
 
   async function initData() {
@@ -511,8 +513,12 @@
   async function fetchAnnouncement() {
     try {
       useAnnouncementAuth.invalidateCache()
-      await useAnnouncementAuth.fetchAnnouncementById(route.params.id as string)
+      const response = await useAnnouncementAuth.fetchAnnouncementById(route.params.id as string)
+      if (response) {
+        announcement.value = response
+      }
       loading.value = useAnnouncementAuth.loading.value
+      return response
     } catch (error) {
       handleError(error)
     }
@@ -550,6 +556,8 @@
     }
     try {
       await useAnnouncementAuth.removeParticipant(announcement.value?._id, id)
+      announcement.value.participants =
+        announcement.value.participants?.filter(p => p.id !== id) || []
     } catch (error) {
       handleError(error)
     }
@@ -561,6 +569,7 @@
     }
     try {
       await useAnnouncementAuth.removeVolunteer(announcement.value?._id, id)
+      announcement.value.volunteers = announcement.value.volunteers?.filter(v => v.id !== id) || []
     } catch (error) {
       handleError(error)
     }
@@ -571,7 +580,6 @@
       return
     }
     try {
-      console.log(`Updating presence for participant ${id}: ${isPresent}`)
       const participant = {
         id,
         name: announcement.value.participants?.find(p => p.id === id)?.name || '',
@@ -667,7 +675,6 @@
   }
 
   async function handleModalUpdate() {
-    // Refresh the data to show updated presence status
     await fetchAnnouncement()
   }
 

@@ -21,8 +21,6 @@ const BASE_ROUTE_CONFIG = {
     '/events',
     '/announcement',
     '/announcement/[id]',
-    '/annoucement',
-    '/annoucement/[id]',
     'events',
     '/auth/login',
     '/auth/register',
@@ -34,7 +32,6 @@ const BASE_ROUTE_CONFIG = {
     '/confidentialite'
   ],
 
-  // Routes pour les volontaires
   volunteer: [
     '/volunteer',
     '/volunteer/account',
@@ -51,7 +48,6 @@ const BASE_ROUTE_CONFIG = {
     '/volunteer/events/announcement'
   ],
 
-  // Routes pour les associations
   association: [
     '/association',
     '/association/dashboard',
@@ -69,20 +65,16 @@ const BASE_ROUTE_CONFIG = {
     '/association/events/announcement'
   ],
 
-  // Routes pour les admins (si nécessaire)
   admin: ['/admin', '/dashboard']
 }
 
-// Fonction pour vérifier si une route est accessible pour un rôle
 function isRouteAccessible(path: string, role: RoleUser | null): boolean {
   const pathWithoutLocale = getPathWithoutLocale(path)
 
-  // Routes publiques toujours accessibles
   if (BASE_ROUTE_CONFIG.public.includes(pathWithoutLocale)) {
     return true
   }
 
-  // Vérifier les routes dynamiques publiques (comme /announcement/[id] ou /annoucement/[id])
   if (
     pathWithoutLocale.startsWith('/announcement/') ||
     pathWithoutLocale.startsWith('/annoucement/')
@@ -90,12 +82,10 @@ function isRouteAccessible(path: string, role: RoleUser | null): boolean {
     return true
   }
 
-  // Routes admin gérées par le middleware admin.global.ts
   if (pathWithoutLocale.startsWith('/admin')) {
-    return true // Laisser le middleware admin gérer ces routes
+    return true
   }
 
-  // Vérifier selon le rôle
   switch (role) {
     case RoleUser.VOLUNTEER:
       return BASE_ROUTE_CONFIG.volunteer.some(route => pathWithoutLocale.startsWith(route))
@@ -112,7 +102,6 @@ function isRouteAccessible(path: string, role: RoleUser | null): boolean {
   }
 }
 
-// Fonction pour obtenir la page d'accueil selon le rôle et la langue
 function getHomePageForRole(role: RoleUser | null, locale?: string): string {
   const basePath = (() => {
     switch (role) {
@@ -127,7 +116,6 @@ function getHomePageForRole(role: RoleUser | null, locale?: string): string {
     }
   })()
 
-  // Ajouter le préfixe de langue si nécessaire
   if (locale && locale !== 'fr') {
     return `/${locale}${basePath}`
   }
@@ -142,7 +130,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   if (import.meta.client) {
     try {
-      // Utiliser le nouveau composable Firebase
       const { useFirebase } = await import('~/composables/useFirebase')
       const { initializeFirebase, getAuth } = useFirebase()
 
@@ -173,20 +160,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const authStore = useAuthStore()
   const userStore = useUserStore()
 
-  // Vérifier la session persistante si pas de cookie de connexion
   const isConnectedCookie = useCookie('isConnected')
   if (!isConnectedCookie.value) {
     try {
       const { useSessionStore } = await import('~/stores/session.store')
       const sessionStore = useSessionStore()
 
-      // Tenter de restaurer la session depuis le stockage
       const restored = await sessionStore.restoreSession()
       if (restored) {
-        console.log('✅ Session restaurée dans le middleware')
-        // Re-vérifier le cookie après restauration
         if (isConnectedCookie.value) {
-          console.log('🍪 Cookie isConnected maintenant présent après restauration')
         }
       }
     } catch (sessionError) {
@@ -196,7 +178,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     await authStore.initAuth()
   }
 
-  // Vérifier à nouveau le cookie après restauration
   if (!isConnectedCookie.value) {
     const pathWithoutLocale = getPathWithoutLocale(to.path)
 
@@ -211,7 +192,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       return
     }
 
-    // Si c'est une route de transition, rediriger vers login
     if (['/auth/registerVolunteer', '/auth/registerAssociation'].includes(pathWithoutLocale)) {
       return navigateTo('/')
     }
@@ -222,7 +202,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!userStore.user) {
     try {
       await userStore.fetchUser()
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.statusCode === 401 || error?.statusCode === 403) {
+        const isConnectedCookie = useCookie('isConnected')
+        if (isConnectedCookie.value) {
+          isConnectedCookie.value = null
+        }
+        return navigateTo('/')
+      }
+
       return navigateTo('/')
     }
   }

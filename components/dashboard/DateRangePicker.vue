@@ -59,11 +59,12 @@
   const props = defineProps<{ modelValue: { from: string; to: string } }>()
   const emit = defineEmits(['update:modelValue', 'change'])
 
-  // Generate unique IDs for accessibility
-  const fromInputId = `date-from-${Math.random().toString(36).substr(2, 9)}`
-  const toInputId = `date-to-${Math.random().toString(36).substr(2, 9)}`
-  const fromDescriptionId = `from-desc-${Math.random().toString(36).substr(2, 9)}`
-  const toDescriptionId = `to-desc-${Math.random().toString(36).substr(2, 9)}`
+  // Generate unique IDs for accessibility using component instance
+  const componentId = 'daterangepicker'
+  const fromInputId = `${componentId}-from`
+  const toInputId = `${componentId}-to`
+  const fromDescriptionId = `${componentId}-from-desc`
+  const toDescriptionId = `${componentId}-to-desc`
 
   const from = ref(props.modelValue.from)
   const to = ref(props.modelValue.to)

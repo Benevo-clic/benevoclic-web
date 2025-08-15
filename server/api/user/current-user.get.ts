@@ -1,12 +1,26 @@
 import { defineEventHandler, getCookie, createError } from 'h3'
-import axios from 'axios'
 import { UserInfo } from '~/common/types/auth.type'
-import { ApiError } from '~/utils/ErrorHandler'
-// Types pour la réponse de l'API
+import { RetryManager } from '~/utils/retry-manager'
+import { ApiError } from '~/utils/error-handler'
+import axios from 'axios'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
+
+  if (!token) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+      data: {
+        message: "Token d'authentification manquant",
+        error: 'Unauthorized',
+        statusCode: 401
+      }
+    })
+  }
+
   const apiBaseUrl = process.env.API_BASE_URL
+
   if (!apiBaseUrl) {
     throw createError({
       statusCode: 500,
@@ -18,31 +32,33 @@ export default defineEventHandler(async event => {
     })
   }
 
-  if (!token) {
-    throw createError({
-      statusCode: 401,
-      message: 'Non authentifié'
-    })
-  }
-
   try {
-    const currentUser = await axios.get<UserInfo>(`${apiBaseUrl}/user/current-user`, {
+    const response = await RetryManager.get<UserInfo>(`${apiBaseUrl}/user/current-user`, {
       headers: {
         Authorization: `Bearer ${token}`
+      },
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
       }
     })
 
-    if (!currentUser) {
+    if (!response.data) {
       throw createError({
-        statusCode: 404,
-        message: 'Utilisateur non trouvé'
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        data: {
+          message: 'Données utilisateur invalides',
+          error: 'Bad Request',
+          statusCode: 400
+        }
       })
     }
 
-    return currentUser.data
+    return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la récupération de l’utilisateur actuel')
+      await ApiError.handleAxios(error, 'Erreur lors de la récupération de l’utilisateur actuel')
     }
   }
 })

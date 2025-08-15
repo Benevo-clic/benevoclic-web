@@ -1,6 +1,7 @@
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { defineEventHandler, readBody, getCookie } from 'h3'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const body = await readBody(event)
@@ -23,7 +24,7 @@ export default defineEventHandler(async event => {
       id: body.volunteerId,
       name: body.volunteerName
     }
-    const volunteerInfo = await axios.patch(
+    const volunteerInfo = await RetryManager.patch(
       url,
       {
         ...volunteer
@@ -32,6 +33,10 @@ export default defineEventHandler(async event => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
+        },
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
         }
       }
     )
@@ -39,7 +44,7 @@ export default defineEventHandler(async event => {
     return volunteerInfo.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
+      await ApiError.handleAxios(
         error,
         'Erreur lors de l’ajout du volontaire à la liste d’attente de l’association'
       )

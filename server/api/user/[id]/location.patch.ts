@@ -1,6 +1,7 @@
 import { defineEventHandler, readBody, createError } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   try {
@@ -9,7 +10,6 @@ export default defineEventHandler(async event => {
 
     const token = getCookie(event, 'auth_token')
 
-    // Appel au service backend
     const apiBaseUrl = process.env.API_BASE_URL
     if (!apiBaseUrl) {
       throw createError({
@@ -23,17 +23,21 @@ export default defineEventHandler(async event => {
     }
     const url = `${apiBaseUrl}/user/${id}/location`
 
-    const response = await axios.patch(url, body, {
+    const response = await RetryManager.patch(url, body, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
+      },
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
       }
     })
 
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la mise à jour de la localisation')
+      await ApiError.handleAxios(error, 'Erreur lors de la mise à jour de la localisation')
     }
     throw createError({
       statusCode: error.statusCode || 500,

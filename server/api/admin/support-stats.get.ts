@@ -1,6 +1,7 @@
 import { defineEventHandler, getCookie, createError } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
@@ -18,15 +19,19 @@ export default defineEventHandler(async event => {
   const url = `${apiBaseUrl}/support/stats`
 
   try {
-    const response = await axios.get(url, {
+    const response = await RetryManager.get(url, {
       headers: {
         Authorization: `Bearer ${token}`
+      },
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
       }
     })
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la récupération des statistiques support')
+      await ApiError.handleAxios(error, 'Erreur lors de la récupération des statistiques support')
     }
     throw createError({
       statusCode: error?.response?.status || 500,

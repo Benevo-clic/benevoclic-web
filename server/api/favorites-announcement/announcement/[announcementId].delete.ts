@@ -1,6 +1,7 @@
 import { defineEventHandler, createError } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   try {
@@ -21,10 +22,14 @@ export default defineEventHandler(async event => {
     }
     const url = `${apiBaseUrl}/favorites-announcement/announcement/${announcementId}`
 
-    const response = await axios.delete(url, {
+    const response = await RetryManager.delete(url, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
+      },
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
       }
     })
 
@@ -36,7 +41,10 @@ export default defineEventHandler(async event => {
       error
     )
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, "Erreur lors de la suppression de tous les favoris de l'annonce")
+      await ApiError.handleAxios(
+        error,
+        "Erreur lors de la suppression de tous les favoris de l'annonce"
+      )
     }
     throw createError({
       statusCode: error.statusCode || 500,

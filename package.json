@@ -37,7 +37,8 @@
     "lint:fix": "eslint utils/** stores/** --fix",
     "prettier:fix": "prettier -w .",
     "prettier:check": "prettier --check .",
-    "type-check": "nuxt typecheck"
+    "type-check": "nuxt typecheck",
+    "check:lodash": "grep -r \"import.*{.*}.*from.*lodash\" --include=\"*.vue\" --include=\"*.ts\" . || echo '✅ Aucun import incorrect trouvé'"
   },
   "dependencies": {
     "@iconify/vue": "^4.3.0",

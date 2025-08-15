@@ -16,8 +16,9 @@
     (e: 'update:modelValue', value: string): void
   }>()
 
-  // Generate unique ID for accessibility
-  const inputId = computed(() => `input-${Math.random().toString(36).substr(2, 9)}`)
+  const inputId = computed(
+    () => `base-form-field-${props.label?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'input'}`
+  )
   const errorId = computed(() => `${inputId.value}-error`)
   const descriptionId = computed(() => `${inputId.value}-description`)
 
@@ -29,7 +30,6 @@
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter') {
       e.preventDefault()
-      // Émettre l'événement pour permettre la soumission du formulaire
       emit('update:modelValue', (e.target as HTMLInputElement).value)
     }
   }

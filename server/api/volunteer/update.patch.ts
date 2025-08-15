@@ -1,6 +1,7 @@
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { defineEventHandler, readBody } from 'h3'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
@@ -28,7 +29,7 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const response = await axios.patch(
+    const response = await RetryManager.patch(
       `${apiBaseUrl}/volunteer/${id}`,
       {
         ...body
@@ -37,13 +38,17 @@ export default defineEventHandler(async event => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
+        },
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
         }
       }
     )
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la mise à jour du volontaire')
+      await ApiError.handleAxios(error, 'Erreur lors de la mise à jour du volontaire')
     }
   }
 })

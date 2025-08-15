@@ -1,6 +1,7 @@
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { defineEventHandler, getCookie } from 'h3'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
@@ -22,13 +23,17 @@ export default defineEventHandler(async event => {
   try {
     const url = `${apiBaseUrl}/announcements/participant/unregister/${participant}/${announcementId}`
 
-    const participantInfo = await axios.patch(
+    const participantInfo = await RetryManager.patch(
       url,
       {},
       {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
+        },
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
         }
       }
     )
@@ -36,7 +41,7 @@ export default defineEventHandler(async event => {
     return participantInfo.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la suppression du participant')
+      await ApiError.handleAxios(error, 'Erreur lors de la suppression du participant')
     }
   }
 })

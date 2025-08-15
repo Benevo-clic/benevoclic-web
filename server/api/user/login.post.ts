@@ -6,8 +6,9 @@ import {
   EventHandlerRequest,
   setCookie
 } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export interface LoginResponse {
   idUser: string
@@ -60,7 +61,7 @@ export async function login(
   payload: { email: string; password: string },
   apiBase: string | undefined
 ): Promise<LoginResponse> {
-  const response = await axios.post<LoginResponse>(
+  const response = await RetryManager.post(
     `${apiBase}/user/login`,
     {
       email: payload.email,
@@ -69,6 +70,10 @@ export async function login(
     {
       headers: {
         'Content-Type': 'application/json'
+      },
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
       }
     }
   )
@@ -79,13 +84,7 @@ export async function login(
 export default defineEventHandler(async event => {
   const body = await readBody(event)
 
-  // Utiliser process.env directement au lieu de useRuntimeConfig()
   const apiBaseUrl = process.env.API_BASE_URL
-
-  // Debug: Afficher les variables d'environnement
-  console.log("🔍 Debug - Variables d'environnement (user/login.post.ts):", {
-    api_base_url: apiBaseUrl
-  })
 
   if (!apiBaseUrl) {
     throw createError({
@@ -110,7 +109,7 @@ export default defineEventHandler(async event => {
     return loginResponse
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la connexion')
+      await ApiError.handleAxios(error, 'Erreur lors de la connexion')
     }
   }
 })

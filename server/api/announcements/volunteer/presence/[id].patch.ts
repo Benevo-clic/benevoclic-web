@@ -1,6 +1,7 @@
 import { defineEventHandler, getCookie, readBody } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 import type { InfoVolunteer } from '~/common/interface/event.interface'
 
 export default defineEventHandler(async event => {
@@ -20,7 +21,7 @@ export default defineEventHandler(async event => {
   const announcementId = event.context.params?.id
 
   try {
-    const response = await axios.patch(
+    const response = await RetryManager.patch(
       `${apiBaseUrl}/announcements/volunteer/presence/${announcementId}`,
       {
         ...body
@@ -29,13 +30,17 @@ export default defineEventHandler(async event => {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
+        },
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
         }
       }
     )
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’annonce')
+      await ApiError.handleAxios(error, 'Erreur lors de la mise à jour de l’annonce')
     }
   }
 })

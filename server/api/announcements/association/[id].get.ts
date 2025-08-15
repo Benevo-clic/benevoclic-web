@@ -1,7 +1,7 @@
 import { defineEventHandler, getCookie } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
-import { Announcement } from '~/common/interface/event.interface'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const associationId = event.context.params?.id
@@ -25,12 +25,16 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const response = await axios.get<Announcement>(
+    const response = await RetryManager.get(
       `${apiBaseUrl}/announcements/association/${associationId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
+        },
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
         }
       }
     )
@@ -38,7 +42,10 @@ export default defineEventHandler(async event => {
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la récupération des annonces par association')
+      await ApiError.handleAxios(
+        error,
+        'Erreur lors de la récupération des annonces par association'
+      )
     }
   }
 })

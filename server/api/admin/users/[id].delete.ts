@@ -1,6 +1,7 @@
 import { defineEventHandler, getCookie, getRouterParam, createError } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const token = getCookie(event, 'auth_token')
@@ -20,13 +21,17 @@ export default defineEventHandler(async event => {
   const url = `${apiBaseUrl}/user/${id}`
 
   try {
-    const response = await axios.delete(url, {
-      headers: { Authorization: `Bearer ${token}` }
+    const response = await RetryManager.delete(url, {
+      headers: { Authorization: `Bearer ${token}` },
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
+      }
     })
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, "Erreur lors de la suppression de l'utilisateur")
+      await ApiError.handleAxios(error, "Erreur lors de la suppression de l'utilisateur")
     }
     throw createError({
       statusCode: error?.response?.status || 500,

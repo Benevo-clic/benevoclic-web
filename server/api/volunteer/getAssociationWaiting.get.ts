@@ -1,6 +1,7 @@
 import { defineEventHandler, getCookie } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const apiBaseUrl = process.env.API_BASE_URL
@@ -24,14 +25,22 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    const { data } = await axios.get(
+    const { data } = await RetryManager.get(
       `${apiBaseUrl}/api/v2/association/${volunteerId}/getAssociationWaiting`,
-      { headers: { Authorization: `Bearer ${token}` } }
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
+        }
+      }
     )
     return data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(
+      await ApiError.handleAxios(
         error,
         'Erreur lors de la récupération des associations en attente pour le volontaire'
       )

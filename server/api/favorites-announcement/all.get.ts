@@ -1,6 +1,7 @@
 import { defineEventHandler, createError } from 'h3'
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   try {
@@ -19,17 +20,21 @@ export default defineEventHandler(async event => {
     }
     const url = `${apiBaseUrl}/favorites-announcement/all`
 
-    const response = await axios.get(url, {
+    const response = await RetryManager.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
+      },
+      retry: {
+        timeout: 10000, // 10 secondes
+        maxRetries: 3 // 3 tentatives
       }
     })
 
     return response.data
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la récupération de tous les favoris')
+      await ApiError.handleAxios(error, 'Erreur lors de la récupération de tous les favoris')
     }
     throw createError({
       statusCode: error.statusCode || 500,

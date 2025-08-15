@@ -1,7 +1,8 @@
+import { RetryManager } from '~/utils/retry-manager'
 import axios from 'axios'
 import { defineEventHandler, readBody, getCookie } from 'h3'
 import type { CreateAnnouncementDto } from '~/common/interface/event.interface'
-import { ApiError } from '~/utils/ErrorHandler'
+import { ApiError } from '~/utils/error-handler'
 
 export default defineEventHandler(async event => {
   const body = (await readBody(event)) as CreateAnnouncementDto
@@ -37,7 +38,7 @@ export default defineEventHandler(async event => {
 
     const url = `${apiBaseUrl}/announcements/createAnnouncement`
 
-    const newAnnouncement = await axios.post(
+    const newAnnouncement = await RetryManager.post(
       url,
       {
         ...(form as CreateAnnouncementDto)
@@ -46,6 +47,10 @@ export default defineEventHandler(async event => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
+        },
+        retry: {
+          timeout: 10000, // 10 secondes
+          maxRetries: 3 // 3 tentatives
         }
       }
     )
@@ -53,7 +58,7 @@ export default defineEventHandler(async event => {
     return newAnnouncement.data
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      ApiError.handleAxios(error, 'Erreur lors de la création de l’annonce')
+      await ApiError.handleAxios(error, 'Erreur lors de la création de l’annonce')
     }
   }
 })
