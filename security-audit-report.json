@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-08-16T02:36:01.139Z",
+  "timestamp": "2025-08-16T02:56:25.708Z",
   "summary": {
-    "totalIssues": 172,
+    "totalIssues": 173,
     "critical": 0,
     "high": 57,
-    "medium": 115,
+    "medium": 116,
     "low": 0
   },
   "issues": [
@@ -819,6 +819,13 @@
       "severity": "MEDIUM",
       "description": "Console.log peut exposer des informations sensibles en production",
       "count": 31
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/disable-codeql.js",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 34
     },
     {
       "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/fix-broken-files.js",
