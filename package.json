@@ -40,6 +40,7 @@
     "setup:env": "node scripts/setup-env.js",
     "check:env": "node scripts/check-env.js",
     "test:permissions": "node scripts/test-github-permissions.js",
+    "analyze:code": "node scripts/code-analysis.js",
     "lint": "eslint . --ext .ts,.vue,.js",
     "lint:fix": "eslint . --ext .ts,.vue,.js --fix",
     "lint:security": "eslint . --ext .ts,.vue,.js --plugin security",

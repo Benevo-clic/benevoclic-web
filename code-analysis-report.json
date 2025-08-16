@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-08-16T02:35:31.062Z",
+  "summary": {
+    "totalFiles": 591,
+    "totalLines": 94716,
+    "issues": {
+      "eslint": 1,
+      "typescript": 1,
+      "security": 0,
+      "dependencies": 1
+    }
+  }
+}
