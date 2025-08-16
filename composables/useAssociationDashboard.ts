@@ -49,7 +49,8 @@ export const useAssociationDashboard = () => {
       try {
         return await dashboardStore.fetchDashboard(associationId, filter)
       } catch (error) {
-        console.error('Erreur lors du chargement du dashboard:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.error('Erreur lors du chargement du dashboard:', error)
         throw error
       }
     },
@@ -84,7 +85,8 @@ export const useAssociationDashboard = () => {
           eventTypeStats
         }
       } catch (error) {
-        console.error('Erreur lors du chargement de toutes les données:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.error('Erreur lors du chargement de toutes les données:', error)
         throw error
       }
     },

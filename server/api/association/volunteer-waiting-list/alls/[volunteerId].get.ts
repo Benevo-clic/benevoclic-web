@@ -8,7 +8,7 @@ export default defineEventHandler(async event => {
     const { volunteerId } = event.context.params || {}
     const token = getCookie(event, 'auth_token')
 
-    console.log('volunteerId reçu :', volunteerId)
+    process.env.NODE_ENV !== 'production' && console.log('volunteerId reçu :', volunteerId)
 
     const apiBaseUrl = process.env.API_BASE_URL
     if (!apiBaseUrl) {
@@ -34,7 +34,7 @@ export default defineEventHandler(async event => {
       }
     })
 
-    console.log('Réponse de l’API Nest :', response.data)
+    process.env.NODE_ENV !== 'production' && console.log('Réponse de l’API Nest :', response.data)
 
     return response.data
   } catch (error: any) {

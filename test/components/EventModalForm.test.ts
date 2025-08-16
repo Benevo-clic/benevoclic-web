@@ -69,7 +69,7 @@ const MockEventModalForm = {
         this.errorType = '4xx'
         this.showErrorModal = true
       } else {
-        console.error('Erreur inattendue:', error)
+        process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
       }
     },
     // Méthodes mock pour simuler les appels API

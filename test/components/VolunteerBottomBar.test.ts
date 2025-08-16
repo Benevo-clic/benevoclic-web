@@ -314,7 +314,7 @@ describe('VolunteerBottomBar', () => {
 
       const homeButton = wrapper.findAll('button').find(btn => btn.text().includes('Accueil'))
       if (!homeButton.exists()) {
-        console.log('HTML du composant:', wrapper.html())
+        process.env.NODE_ENV !== 'production' && console.log('HTML du composant:', wrapper.html())
       }
       expect(homeButton.exists()).toBe(true)
       expect(homeButton.text()).toContain('Accueil')
@@ -438,7 +438,8 @@ describe('VolunteerBottomBar', () => {
 
       const clearButton = wrapper.findAll('button').find(btn => btn.text().includes('Effacer tout'))
       if (!clearButton.exists()) {
-        console.log('Bouton clear non trouvé. HTML:', wrapper.html())
+        process.env.NODE_ENV !== 'production' &&
+          console.log('Bouton clear non trouvé. HTML:', wrapper.html())
       }
       await clearButton.trigger('click')
 

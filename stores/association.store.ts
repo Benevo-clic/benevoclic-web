@@ -220,7 +220,8 @@ export const useAssociationAuthStore = defineStore('associationAuth', {
           associationId,
           eventVisibility
         }
-        console.log('Updating announcement visibility:', payload)
+        process.env.NODE_ENV !== 'production' &&
+          console.log('Updating announcement visibility:', payload)
         await $fetch(`/api/announcements/updateAnnouncementVisibility`, {
           method: 'PATCH',
           credentials: 'include',

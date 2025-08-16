@@ -69,7 +69,8 @@ const usePermissions = () => {
         }
       }
     } catch (error) {
-      console.error('Erreur lors du chargement des préférences de cookies:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur lors du chargement des préférences de cookies:', error)
     }
 
     isInitialized = true
@@ -93,7 +94,8 @@ const usePermissions = () => {
         }
       }
     } catch (error) {
-      console.error('Erreur lors du chargement des préférences de cookies:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur lors du chargement des préférences de cookies:', error)
     }
     return false
   }
@@ -121,7 +123,8 @@ const usePermissions = () => {
         )
       }
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde des préférences de cookies:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur lors de la sauvegarde des préférences de cookies:', error)
     }
   }
 

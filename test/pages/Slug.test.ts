@@ -18,7 +18,7 @@ const MockSlugPage = {
   methods: {
     goHome() {
       // Simuler la navigation
-      console.log('Navigating to home')
+      process.env.NODE_ENV !== 'production' && console.log('Navigating to home')
     }
   }
 }

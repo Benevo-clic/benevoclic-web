@@ -1,0 +1,1238 @@
+{
+  "timestamp": "2025-08-16T03:15:00.491Z",
+  "summary": {
+    "totalIssues": 175,
+    "critical": 0,
+    "high": 58,
+    "medium": 117,
+    "low": 0
+  },
+  "issues": [
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/app.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/CookieConsent.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 5
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/MultiMarkerMap.vue",
+      "pattern": "XSS via innerHTML",
+      "severity": "HIGH",
+      "description": "Utilisation dangereuse de innerHTML qui peut mener à des attaques XSS",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/MultiMarkerMap.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 14
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/common/AddressInput.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/common/UserDetailsModal.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 7
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/association/AnnouncementEditForm.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/association/AnnouncementEditForm.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/association/EventFilters.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/association/EventForm.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/association/EventModalForm.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/association/EventModalForm.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/association/ParticipantOrVolunteerCard.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/association/ParticipantsList.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/association/PresenceListModal.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/association/PresenceListModal.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/association/ReadOnlyEventList.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/association/UploadCoverForm.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/association/VolunteersList.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/noConnected/NoConnectedAnnouncementList.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/noConnected/NoConnectedAnnouncementList.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/volunteer/AssociationsList.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/volunteer/VolunteerAnnouncementFavoritesList.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/volunteer/VolunteerAnnouncementFavoritesList.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/volunteer/VolunteerAnnouncementList.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/volunteer/VolunteerAnnouncementList.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/volunteer/VolunteerEventFavoritesFilters.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/volunteer/VolunteerEventFilters.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/volunteer/VolunteerEventFilters.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 5
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/volunteer/utils/DropDownLocation.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 7
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/volunteer/utils/DropDownLocation.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/volunteer/utils/LocationButton.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 5
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/event/volunteer/utils/LocationButton.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/favorites/FavoritesList.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/header/Header.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/header/HeaderAuth.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/header/auth/form/LoginForm.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/header/auth/form/LoginForm.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/header/auth/form/UserRegisterForm.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/header/auth/form/VerifEmailForm.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 4
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/header/auth/form/VerifSiretAssociation.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/header/utils/components/LocationContextComponent.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 5
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/home/announcements.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/notifications/NotificationsList.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/notifications/NotificationsStats.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/notifications/NotificationsStats.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/register/RegisterModal.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/register/association/RegisterAssociation.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/register/association/form/AssociationTypeForm.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/register/association/form/RegisterInfoAssociationForm.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/register/volunteer/RegisterVolunteer.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/register/volunteer/form/RegisterInfoVolunteerForm.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/utils/FirebaseStatus.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/utils/GlobalPermissionAlert.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/components/utils/ReportModal.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/composables/auth/useUser.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/composables/useAssociationDashboard.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/composables/useFirebase.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 5
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/composables/useNavigation.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/composables/usePageVisibility.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 11
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/composables/usePermissions.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/composables/usePermissions.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/composables/useRecentSearches.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/composables/useRecentSearches.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/composables/useSessionApi.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/composables/useSessionPersistence.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 14
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/composables/useSessionPersistence.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/composables/useUserLocation.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 6
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/composables/useUserLocation.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/middleware/route-guard.global.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/admin/login.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/admin/manageAnnouncement.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/admin/manageUser.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/admin/register.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/admin/support.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/admin/support.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/admin/verification.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/announcement/[id].vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/association/account/edit.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/association/account/profile.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/association/account/settings.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/association/account/settings.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/association/account/volunteers.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/association/dashboard.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/association/dashboard.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/association/events/announcement/[id].vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/association/events/announcement/[id].vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/association/events/association/manage/index.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/association/events/association/requests/index.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/help/index.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/index.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 8
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/notifications/index.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/notifications/index.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/search/index.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/search/index.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/volunteer/account/associations.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/volunteer/account/edit.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/volunteer/account/profile.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/volunteer/account/settings.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/volunteer/account/settings.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/volunteer/activity/history.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/volunteer/activity/missions.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/volunteer/activity/missions.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/volunteer/activity/participations.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/volunteer/activity/participations.vue",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/volunteer/events/announcement/[id].vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 10
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/pages/volunteer/index.vue",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 8
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/plugins/env-validation.server.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 4
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/plugins/init-permissions.client.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/plugins/init-user.client.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/plugins/permissions.client.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/plugins/session-init.client.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 10
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/auto-fix-security.js",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 18
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/check-env.js",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 18
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/check-env.js",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/code-analysis.js",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 31
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/disable-codeql.js",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 34
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/fix-broken-files.js",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 11
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/fix-security-issues-v2.js",
+      "pattern": "XSS via innerHTML",
+      "severity": "HIGH",
+      "description": "Utilisation dangereuse de innerHTML qui peut mener à des attaques XSS",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/fix-security-issues-v2.js",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 16
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/fix-security-issues.js",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 11
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/security-audit.js",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 35
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/setup-env.js",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 8
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/test-github-permissions.js",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 23
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/server/api/association/volunteer/list/[volunteerId].get.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/server/api/association/volunteer-list/[volunteerId].get.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/server/api/association/volunteer-waiting-list/alls/[volunteerId].get.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/server/api/auth/deleteCookies.delete.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/server/api/auth/google/registerGoogle.post.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/server/api/favorites-announcement/announcement/[announcementId].delete.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/server/api/health.get.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/server/api/support/reports.post.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/server/api/user/register-user-verified.post.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/stores/announcement.store.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/stores/association.store.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/stores/auth/auth.store.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 18
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/stores/favoritesAnnouncement.store.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 4
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/stores/session.store.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 17
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/stores/user/user.store.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/stores/volunteer.store.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/AnnouncementEditForm.test.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/AssociationComponents.test.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/AssociationTypeForm.test.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/EventComponents.test.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/EventModalForm.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/Events.test.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/FavoritesList.test.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/Header.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/HeaderAuth.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/RegisterModal.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/RegisterVolunteer.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 5
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/VolunteerAnnouncementFavoritesList.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/VolunteerAnnouncementFavoritesList.test.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/VolunteerAnnouncementList.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/VolunteerAnnouncementList.test.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/VolunteerBottomBar.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/VolunteerEventFavoritesFilters.test.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/components/VolunteerEventFilters.test.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/composables/useNavigation.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/composables/usePermissions.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/composables/usePermissions.test.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/composables/useRecentSearches.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/composables/useRecentSearches.test.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/composables/useUser.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/composables/useUser.test.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/composables/useUserLocation.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/composables/useUserLocation.test.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/middleware/route-guard.global.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/pages/AssociationManage.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/pages/Slug.test.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/test/run-all-tests.js",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 19
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/utils/env-validator.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/utils/error-handler.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 3
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/utils/error-handler.ts",
+      "pattern": "Hardcoded secrets",
+      "severity": "HIGH",
+      "description": "Secrets potentiellement hardcodés dans le code (exclut les valeurs de test)",
+      "count": 1
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/utils/session-cleaner.ts",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 9
+    }
+  ],
+  "eslintResults": []
+}

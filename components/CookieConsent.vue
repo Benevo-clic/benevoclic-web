@@ -195,14 +195,11 @@
 <script setup lang="ts">
   import { ref, onMounted, watch } from 'vue'
 
-  // Référence au modal des paramètres
   const settingsModal = ref<HTMLDialogElement | null>(null)
   const permissionModal = ref<HTMLDialogElement | null>(null)
 
-  // État d'affichage de la bannière
   const showBanner = ref(false)
 
-  // Préférences locales pour le modal (copie des préférences actuelles)
   const localPreferences = ref({
     essential: true,
     analytics: false,
@@ -218,7 +215,6 @@
     canUseThirdParty: false
   })
 
-  // Initialiser les préférences locales
   const initLocalPreferences = async () => {
     try {
       const { usePermissions } = await import('~/composables/usePermissions')
@@ -226,11 +222,11 @@
       const currentPrefs = permissionsComposable.cookiePreferences.value
       localPreferences.value = { ...currentPrefs }
     } catch (err) {
-      console.warn('Impossible de charger les préférences de cookies:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Impossible de charger les préférences de cookies:', err)
     }
   }
 
-  // Actions utilisateur
   async function acceptAll() {
     try {
       const { usePermissions } = await import('~/composables/usePermissions')
@@ -238,7 +234,8 @@
       acceptAllCookies()
       showBanner.value = false
     } catch (err) {
-      console.warn("Impossible d'accepter tous les cookies:", err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn("Impossible d'accepter tous les cookies:", err)
     }
   }
 
@@ -249,7 +246,8 @@
       rejectNonEssentialCookies()
       showBanner.value = false
     } catch (err) {
-      console.warn('Impossible de refuser les cookies non essentiels:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Impossible de refuser les cookies non essentiels:', err)
     }
   }
 
@@ -270,7 +268,8 @@
       showBanner.value = false
       closeSettings()
     } catch (err) {
-      console.warn('Impossible de sauvegarder les paramètres:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Impossible de sauvegarder les paramètres:', err)
     }
   }
 
@@ -278,37 +277,30 @@
     permissionModal.value?.close()
   }
 
-  // Afficher le modal de permissions si nécessaire
   function showPermissionModal() {
     if (!permissions.value.canAuthenticate || !permissions.value.canUseLocation) {
       permissionModal.value?.showModal()
     }
   }
 
-  // Initialisation
   onMounted(async () => {
     try {
       const { usePermissions } = await import('~/composables/usePermissions')
       const permissionsComposable = usePermissions()
 
-      // Afficher la bannière si l'utilisateur n'a pas encore consenti
       showBanner.value = !permissionsComposable.hasConsented.value
 
-      // Initialiser les préférences locales
       await initLocalPreferences()
 
-      // Écouter les changements de permissions
       watch(
         () => permissionsComposable.permissions.value,
         newPermissions => {
           permissions.value = newPermissions
 
-          // Si l'utilisateur a consenti mais n'a pas les permissions nécessaires
           if (
             permissionsComposable.hasConsented.value &&
             (!newPermissions.canAuthenticate || !newPermissions.canUseLocation)
           ) {
-            // Afficher le modal d'alerte après un délai pour laisser le temps à l'utilisateur de voir les changements
             setTimeout(() => {
               showPermissionModal()
             }, 1000)
@@ -317,16 +309,15 @@
         { immediate: true }
       )
     } catch (err) {
-      console.warn("Impossible d'initialiser le système de permissions:", err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn("Impossible d'initialiser le système de permissions:", err)
     }
 
-    // Ajouter un écouteur d'événement pour ouvrir les paramètres depuis le footer
     window.addEventListener('openCookieSettings', () => {
       openSettings()
     })
   })
 
-  // Exposer des méthodes pour permettre de réafficher la bannière si nécessaire
   defineExpose({
     showBanner: () => {
       showBanner.value = true

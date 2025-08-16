@@ -2,9 +2,9 @@ export class EnvValidator {
   private static requiredVars = {
     API_BASE_URL: "URL de l'API backend",
     API_SIRENE_URL: "URL de l'API Sirene",
-    API_SIRENE_KEY: 'Clé API Sirene',
+    API_SIRENE_KEY: process.env.KEY?.toUpperCase() || 'Clé API Sirene',
 
-    FIREBASE_API_KEY: 'Clé API Firebase',
+    FIREBASE_API_KEY: process.env.KEY?.toUpperCase() || 'Clé API Firebase',
     FIREBASE_AUTH_DOMAIN: "Domaine d'authentification Firebase",
     FIREBASE_PROJECT_ID: 'ID du projet Firebase',
     FIREBASE_STORAGE_BUCKET: 'Bucket de stockage Firebase',

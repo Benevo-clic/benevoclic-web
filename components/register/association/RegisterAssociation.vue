@@ -16,7 +16,7 @@
       navigateTo('/association/dashboard')
     } catch (error) {
       navigateTo('/association/dashboard')
-      console.error('Error updating avatar:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Error updating avatar:', error)
     }
   }
 

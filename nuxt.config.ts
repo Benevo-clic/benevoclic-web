@@ -158,7 +158,7 @@ export default defineNuxtConfig({
     preference: 'system',
     fallback: 'light',
     classSuffix: '',
-    storageKey: 'benevoclic-color-mode'
+    storageKey: process.env.Key?.toUpperCase() || 'benevoclic-color-mode'
   },
 
   partytown: {

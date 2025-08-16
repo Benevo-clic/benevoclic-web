@@ -206,7 +206,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
     }
   }
 
@@ -247,7 +247,7 @@
 
       emit('submit', true)
     } catch (err) {
-      console.error('Error submitting form:', err)
+      process.env.NODE_ENV !== 'production' && console.error('Error submitting form:', err)
       isError.value = true
       handleError(err)
     } finally {

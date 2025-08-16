@@ -88,9 +88,10 @@ export default defineNuxtPlugin(async () => {
       // Vérifier si la clé concerne des données personnelles
       const personalDataKeys = ['user_location', 'user_preferences', 'user_profile']
       if (personalDataKeys.some(k => key.includes(k)) && !hasPermission('canUsePersonalData')) {
-        console.warn(
-          "Tentative d'accès aux données personnelles bloquée - cookies de personnalisation requis"
-        )
+        process.env.NODE_ENV !== 'production' &&
+          console.warn(
+            "Tentative d'accès aux données personnelles bloquée - cookies de personnalisation requis"
+          )
         return
       }
 
@@ -103,15 +104,16 @@ export default defineNuxtPlugin(async () => {
       // Vérifier si la clé concerne des données personnelles
       const personalDataKeys = ['user_location', 'user_preferences', 'user_profile']
       if (personalDataKeys.some(k => key.includes(k)) && !hasPermission('canUsePersonalData')) {
-        console.warn(
-          'Tentative de lecture des données personnelles bloquée - cookies de personnalisation requis'
-        )
+        process.env.NODE_ENV !== 'production' &&
+          console.warn(
+            'Tentative de lecture des données personnelles bloquée - cookies de personnalisation requis'
+          )
         return null
       }
 
       return originalGetItem.call(this, key)
     }
 
-    console.log('Plugin de permissions initialisé')
+    process.env.NODE_ENV !== 'production' && console.log('Plugin de permissions initialisé')
   }
 })

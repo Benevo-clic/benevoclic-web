@@ -259,7 +259,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
     }
   }
 

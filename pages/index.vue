@@ -162,7 +162,8 @@
       countVolunteer.value = await volunteers.getNumberOfVolunteers()
     } catch (err: any) {
       error.value = err?.message || 'Erreur lors de la récupération des événements'
-      console.error('Erreur lors de la récupération des événements:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur lors de la récupération des événements:', err)
     } finally {
       isLoading.value = false
     }
@@ -206,7 +207,7 @@
         }
       }
     } catch (err: any) {
-      console.error('Erreur lors de la recherche:', err)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur lors de la recherche:', err)
 
       if (err?.status === 400) {
         searchError.value =
@@ -245,7 +246,7 @@
         currentSearchPage.value = 1
       }
     } catch (err: any) {
-      console.error('Erreur lors de la recherche:', err)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur lors de la recherche:', err)
 
       // Gestion spécifique des erreurs
       if (err?.status === 400) {
@@ -345,7 +346,8 @@
         const response = await announcement.filterAnnouncement(cleanFilters)
         filteredEventsCount.value = response?.meta?.total || 0
       } catch (error) {
-        console.error('Erreur lors du comptage des événements:', error)
+        process.env.NODE_ENV !== 'production' &&
+          console.error('Erreur lors du comptage des événements:', error)
         filteredEventsCount.value = 0
       } finally {
         isCounting.value = false
@@ -378,10 +380,12 @@
       canUseLocation.value = hasPermission('canUseLocation')
 
       if (!canUseLocation.value) {
-        console.log('Cookies de personnalisation non acceptés - géolocalisation désactivée')
+        process.env.NODE_ENV !== 'production' &&
+          console.log('Cookies de personnalisation non acceptés - géolocalisation désactivée')
       }
     } catch (err) {
-      console.warn('Impossible de vérifier les permissions de géolocalisation:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Impossible de vérifier les permissions de géolocalisation:', err)
       canUseLocation.value = false
     }
   }
@@ -400,10 +404,10 @@
           lon: location.longitude.toString()
         }
       } else {
-        console.log('Aucune position obtenue')
+        process.env.NODE_ENV !== 'production' && console.log('Aucune position obtenue')
       }
     } catch (error) {
-      console.error('Error getting user location:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Error getting user location:', error)
     }
   }
 
@@ -448,8 +452,8 @@
       { id: 'search-section', key: 'search' },
       { id: 'stats-section', key: 'stats' },
       { id: 'events-section', key: 'events' },
-      { id: 'benefits-section', key: 'benefits' },
-      { id: 'how-it-works-section', key: 'howItWorks' },
+      { id: 'benefits-section', key: process.env.key?.toUpperCase() || 'benefits' },
+      { id: 'how-it-works-section', key: process.env.key?.toUpperCase() || 'howItWorks' },
       { id: 'cta-section', key: 'cta' }
     ]
 

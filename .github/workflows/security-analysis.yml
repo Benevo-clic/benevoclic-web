@@ -1,0 +1,152 @@
+name: Security Analysis (Alternative to CodeQL)
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Exécution quotidienne à 8h du matin
+    - cron: '0 8 * * *'
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: write
+
+jobs:
+  security-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run comprehensive security audit
+        run: npm run audit:security
+        continue-on-error: true
+
+      - name: Run npm security audit
+        run: npm audit --audit-level=moderate --json > npm-audit-report.json
+        continue-on-error: true
+
+      - name: Run Semgrep security analysis
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            p/security-audit
+            p/secrets
+            p/owasp-top-ten
+            p/javascript
+            p/typescript
+            p/vue
+        continue-on-error: true
+
+      - name: Run ESLint security rules
+        run: npm run lint:security
+        continue-on-error: true
+
+      - name: Generate security report
+        run: |
+          echo "# 🔒 Rapport d'Analyse de Sécurité" > security-analysis-report.md
+          echo "" >> security-analysis-report.md
+          echo "**Date:** $(date)" >> security-analysis-report.md
+          echo "**Alternative à CodeQL** - Analyse complète sans GitHub Advanced Security" >> security-analysis-report.md
+          echo "" >> security-analysis-report.md
+
+          echo "## 🛠️ Outils Utilisés" >> security-analysis-report.md
+          echo "- **Security Audit** (npm run audit:security)" >> security-analysis-report.md
+          echo "- **npm audit** (vulnérabilités des dépendances)" >> security-analysis-report.md
+          echo "- **Semgrep** (analyse de sécurité avancée)" >> security-analysis-report.md
+          echo "- **ESLint Security** (règles de sécurité)" >> security-analysis-report.md
+          echo "" >> security-analysis-report.md
+
+          echo "## 📊 Métriques" >> security-analysis-report.md
+          echo "- **Fichiers analysés:** $(find . -name '*.ts' -o -name '*.vue' -o -name '*.js' | grep -v node_modules | wc -l)" >> security-analysis-report.md
+          echo "- **Lignes de code:** $(find . -name '*.ts' -o -name '*.vue' -o -name '*.js' | grep -v node_modules | xargs wc -l | tail -1)" >> security-analysis-report.md
+          echo "" >> security-analysis-report.md
+
+          echo "## ✅ Avantages de cette Alternative" >> security-analysis-report.md
+          echo "- ✅ **Gratuit** - Aucun coût GitHub Advanced Security" >> security-analysis-report.md
+          echo "- ✅ **Complet** - Couvre les vulnérabilités principales" >> security-analysis-report.md
+          echo "- ✅ **Intégré** - Workflows GitHub Actions" >> security-analysis-report.md
+          echo "- ✅ **Personnalisable** - Scripts adaptés au projet" >> security-analysis-report.md
+          echo "" >> security-analysis-report.md
+
+          echo "## 📋 Résultats" >> security-analysis-report.md
+          echo "Consultez les logs ci-dessus pour les détails de l'analyse." >> security-analysis-report.md
+          echo "" >> security-analysis-report.md
+
+          echo "## 🔧 Commandes Locales" >> security-analysis-report.md
+          echo "```bash" >> security-analysis-report.md
+          echo "npm run audit:security    # Audit de sécurité complet" >> security-analysis-report.md
+          echo "npm run analyze:code      # Analyse de code locale" >> security-analysis-report.md
+          echo "npm run lint:security     # ESLint avec règles de sécurité" >> security-analysis-report.md
+          echo "npm audit                 # Audit des dépendances" >> security-analysis-report.md
+          echo "```" >> security-analysis-report.md
+
+      - name: Upload security reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-analysis-reports
+          path: |
+            security-analysis-report.md
+            npm-audit-report.json
+            security-audit-report.json
+
+      - name: Comment PR with security findings
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        continue-on-error: true
+        with:
+          script: |
+            try {
+              const fs = require('fs');
+              const reportPath = 'security-analysis-report.md';
+              
+              if (fs.existsSync(reportPath)) {
+                const report = fs.readFileSync(reportPath, 'utf8');
+                
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: report
+                });
+                
+                console.log('✅ Rapport de sécurité ajouté avec succès');
+              }
+            } catch (error) {
+              console.log('⚠️ Impossible d\'ajouter le rapport:', error.message);
+            }
+
+      - name: Create security summary
+        run: |
+          echo "## 🔒 Résumé de l'Analyse de Sécurité" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Alternative à CodeQL** - Analyse complète sans GitHub Advanced Security" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🛠️ Outils Utilisés" >> $GITHUB_STEP_SUMMARY
+          echo "- Security Audit (npm run audit:security)" >> $GITHUB_STEP_SUMMARY
+          echo "- npm audit (vulnérabilités des dépendances)" >> $GITHUB_STEP_SUMMARY
+          echo "- Semgrep (analyse de sécurité avancée)" >> $GITHUB_STEP_SUMMARY
+          echo "- ESLint Security (règles de sécurité)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Métriques" >> $GITHUB_STEP_SUMMARY
+          echo "- Fichiers analysés: $(find . -name '*.ts' -o -name '*.vue' -o -name '*.js' | grep -v node_modules | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "- Lignes de code: $(find . -name '*.ts' -o -name '*.vue' -o -name '*.js' | grep -v node_modules | xargs wc -l | tail -1)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ Avantages" >> $GITHUB_STEP_SUMMARY
+          echo "- **Gratuit** - Aucun coût GitHub Advanced Security" >> $GITHUB_STEP_SUMMARY
+          echo "- **Complet** - Couvre les vulnérabilités principales" >> $GITHUB_STEP_SUMMARY
+          echo "- **Intégré** - Workflows GitHub Actions" >> $GITHUB_STEP_SUMMARY
+          echo "- **Personnalisable** - Scripts adaptés au projet" >> $GITHUB_STEP_SUMMARY

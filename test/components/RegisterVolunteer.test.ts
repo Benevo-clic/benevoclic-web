@@ -62,16 +62,16 @@ const MockRegisterVolunteer = {
 
     async handleGoHome() {
       // Simuler la navigation
-      console.log('Navigating to home')
+      process.env.NODE_ENV !== 'production' && console.log('Navigating to home')
     },
 
     async saveBase64(base64) {
       this.imageBase64 = base64
       try {
         // Simuler la mise à jour de l'avatar
-        console.log('Avatar updated:', base64)
+        process.env.NODE_ENV !== 'production' && console.log('Avatar updated:', base64)
         // Simuler la navigation
-        console.log('Navigating to volunteer')
+        process.env.NODE_ENV !== 'production' && console.log('Navigating to volunteer')
       } catch (error) {
         this.handleError(error)
       }
@@ -80,7 +80,7 @@ const MockRegisterVolunteer = {
     skipBase64() {
       this.imageBase64 = null
       // Simuler la navigation
-      console.log('Navigating to volunteer (skipped)')
+      process.env.NODE_ENV !== 'production' && console.log('Navigating to volunteer (skipped)')
     },
 
     submitForm(value) {
@@ -99,7 +99,7 @@ const MockRegisterVolunteer = {
         this.errorType = '4xx'
         this.showErrorModal = true
       } else {
-        console.error('Erreur inattendue:', error)
+        process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
       }
     }
   }

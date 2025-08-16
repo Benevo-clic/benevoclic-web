@@ -96,9 +96,9 @@ export class ErrorHandler {
     }
 
     if (process.env.NODE_ENV === 'development') {
-      console.error('🚨 ERREUR:', logEntry)
+      process.env.NODE_ENV !== 'production' && console.error('🚨 ERREUR:', logEntry)
     } else {
-      console.error(JSON.stringify(logEntry))
+      process.env.NODE_ENV !== 'production' && console.error(JSON.stringify(logEntry))
     }
   }
 
@@ -108,7 +108,8 @@ export class ErrorHandler {
     this.errorCounts.set(errorKey, currentCount + 1)
 
     if (currentCount + 1 >= this.MAX_ERRORS_PER_MINUTE) {
-      console.warn(`⚠️ Trop d'erreurs ${errorKey}: ${currentCount + 1} en 1 minute`)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn(`⚠️ Trop d'erreurs ${errorKey}: ${currentCount + 1} en 1 minute`)
     }
   }
 

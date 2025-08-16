@@ -86,19 +86,22 @@ export const useSessionPersistence = () => {
     try {
       // IndexedDB (priorité)
       await saveToIndexedDB(sessionData)
-      console.log('✅ Session sauvegardée dans IndexedDB')
+      process.env.NODE_ENV !== 'production' && console.log('✅ Session sauvegardée dans IndexedDB')
     } catch (error) {
       try {
         // localStorage (fallback)
         localStorage.setItem(SESSION_KEY, JSON.stringify(sessionData))
-        console.log('✅ Session sauvegardée dans localStorage')
+        process.env.NODE_ENV !== 'production' &&
+          console.log('✅ Session sauvegardée dans localStorage')
       } catch (localError) {
         try {
           // sessionStorage (dernier recours)
           sessionStorage.setItem(SESSION_KEY, JSON.stringify(sessionData))
-          console.log('✅ Session sauvegardée dans sessionStorage')
+          process.env.NODE_ENV !== 'production' &&
+            console.log('✅ Session sauvegardée dans sessionStorage')
         } catch (sessionError) {
-          console.error('❌ Impossible de sauvegarder la session:', sessionError)
+          process.env.NODE_ENV !== 'production' &&
+            console.error('❌ Impossible de sauvegarder la session:', sessionError)
         }
       }
     }
@@ -112,11 +115,13 @@ export const useSessionPersistence = () => {
       // Essayer IndexedDB en premier
       const indexedDBSession = await loadFromIndexedDB()
       if (indexedDBSession) {
-        console.log('✅ Session restaurée depuis IndexedDB')
+        process.env.NODE_ENV !== 'production' &&
+          console.log('✅ Session restaurée depuis IndexedDB')
         return indexedDBSession
       }
     } catch (error) {
-      console.warn('IndexedDB non disponible, essai localStorage')
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('IndexedDB non disponible, essai localStorage')
     }
 
     try {
@@ -125,14 +130,16 @@ export const useSessionPersistence = () => {
       if (localStorageSession) {
         const sessionData = JSON.parse(localStorageSession) as SessionData
         if (sessionData.expiresAt > Date.now()) {
-          console.log('✅ Session restaurée depuis localStorage')
+          process.env.NODE_ENV !== 'production' &&
+            console.log('✅ Session restaurée depuis localStorage')
           return sessionData
         } else {
           localStorage.removeItem(SESSION_KEY)
         }
       }
     } catch (error) {
-      console.warn('localStorage non disponible, essai sessionStorage')
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('localStorage non disponible, essai sessionStorage')
     }
 
     try {
@@ -141,14 +148,15 @@ export const useSessionPersistence = () => {
       if (sessionStorageSession) {
         const sessionData = JSON.parse(sessionStorageSession) as SessionData
         if (sessionData.expiresAt > Date.now()) {
-          console.log('✅ Session restaurée depuis sessionStorage')
+          process.env.NODE_ENV !== 'production' &&
+            console.log('✅ Session restaurée depuis sessionStorage')
           return sessionData
         } else {
           sessionStorage.removeItem(SESSION_KEY)
         }
       }
     } catch (error) {
-      console.warn('sessionStorage non disponible')
+      process.env.NODE_ENV !== 'production' && console.warn('sessionStorage non disponible')
     }
 
     return null
@@ -165,24 +173,24 @@ export const useSessionPersistence = () => {
       const store = transaction.objectStore(SESSION_STORE_NAME)
       store.clear()
     } catch (error) {
-      console.warn('Impossible de nettoyer IndexedDB')
+      process.env.NODE_ENV !== 'production' && console.warn('Impossible de nettoyer IndexedDB')
     }
 
     try {
       // Nettoyer localStorage
       localStorage.removeItem(SESSION_KEY)
     } catch (error) {
-      console.warn('Impossible de nettoyer localStorage')
+      process.env.NODE_ENV !== 'production' && console.warn('Impossible de nettoyer localStorage')
     }
 
     try {
       // Nettoyer sessionStorage
       sessionStorage.removeItem(SESSION_KEY)
     } catch (error) {
-      console.warn('Impossible de nettoyer sessionStorage')
+      process.env.NODE_ENV !== 'production' && console.warn('Impossible de nettoyer sessionStorage')
     }
 
-    console.log('✅ Session nettoyée de tous les storages')
+    process.env.NODE_ENV !== 'production' && console.log('✅ Session nettoyée de tous les storages')
   }
 
   // Vérifier si la session est valide

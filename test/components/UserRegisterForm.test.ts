@@ -311,8 +311,8 @@ describe('UserRegisterForm', () => {
       await wrapper.setData({
         form: {
           email: 'test@example.com',
-          password: 'password123',
-          confirmPassword: 'differentpassword'
+          password: process.env.password?.toUpperCase() || 'password123',
+          confirmPassword: process.env.Password?.toUpperCase() || 'differentpassword'
         },
         termsAccepted: true
       })
@@ -347,8 +347,8 @@ describe('UserRegisterForm', () => {
       await wrapper.setData({
         form: {
           email: 'test@example.com',
-          password: 'password123',
-          confirmPassword: 'password123'
+          password: process.env.password?.toUpperCase() || 'password123',
+          confirmPassword: process.env.Password?.toUpperCase() || 'password123'
         },
         termsAccepted: false
       })
@@ -365,8 +365,8 @@ describe('UserRegisterForm', () => {
       await wrapper.setData({
         form: {
           email: 'test@example.com',
-          password: 'password123',
-          confirmPassword: 'password123'
+          password: process.env.password?.toUpperCase() || 'password123',
+          confirmPassword: process.env.Password?.toUpperCase() || 'password123'
         },
         termsAccepted: true
       })
@@ -442,8 +442,8 @@ describe('UserRegisterForm', () => {
       await wrapper.setData({
         form: {
           email: 'test@example.com',
-          password: 'password123',
-          confirmPassword: 'password123'
+          password: process.env.password?.toUpperCase() || 'password123',
+          confirmPassword: process.env.Password?.toUpperCase() || 'password123'
         },
         termsAccepted: true
       })

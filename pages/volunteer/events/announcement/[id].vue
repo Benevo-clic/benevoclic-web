@@ -596,7 +596,8 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      console.error("Erreur lors de la participation du volontaire à l'événement:", error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error("Erreur lors de la participation du volontaire à l'événement:", error)
     }
   }
 
@@ -737,16 +738,19 @@
 
   async function participateAsVolunteer() {
     if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
-      console.error('Aucun événement sélectionné pour la participation')
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Aucun événement sélectionné pour la participation')
       return
     }
     if (!canParticipateAsVolunteer.value) {
-      console.warn('Aucune place disponible pour participer en tant que bénévole')
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Aucune place disponible pour participer en tant que bénévole')
       return
     }
 
     if (isAlreadyVolunteerWaiting.value) {
-      console.warn('Vous êtes déjà inscrit à cet événement en tant que bénévole')
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Vous êtes déjà inscrit à cet événement en tant que bénévole')
       return
     }
 
@@ -763,13 +767,15 @@
 
   async function participateAsParticipant() {
     if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
-      console.error('Aucun événement sélectionné pour la participation')
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Aucun événement sélectionné pour la participation')
       return
     }
     if (!alreadyParticipating.value) {
-      console.log('Participation en tant que participant')
+      process.env.NODE_ENV !== 'production' && console.log('Participation en tant que participant')
     } else {
-      console.warn('Vous êtes déjà inscrit à cet événement en tant que participant')
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Vous êtes déjà inscrit à cet événement en tant que participant')
       return
     }
 
@@ -786,7 +792,8 @@
 
   async function cancelParticipation() {
     if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
-      console.error("Aucun événement sélectionné pour l'annulation de participation")
+      process.env.NODE_ENV !== 'production' &&
+        console.error("Aucun événement sélectionné pour l'annulation de participation")
       return
     }
     try {
@@ -801,9 +808,10 @@
 
   async function cancelVolunteerParticipationWaitingList() {
     if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
-      console.error(
-        "Aucun événement sélectionné pour l'annulation de participation en tant que bénévole"
-      )
+      process.env.NODE_ENV !== 'production' &&
+        console.error(
+          "Aucun événement sélectionné pour l'annulation de participation en tant que bénévole"
+        )
       return
     }
     try {
@@ -818,9 +826,10 @@
 
   async function cancelVolunteerParticipation() {
     if (!announcement.value?._id || !volunteerUse.volunteer?.value?.volunteerId) {
-      console.error(
-        "Aucun événement sélectionné pour l'annulation de participation en tant que bénévole"
-      )
+      process.env.NODE_ENV !== 'production' &&
+        console.error(
+          "Aucun événement sélectionné pour l'annulation de participation en tant que bénévole"
+        )
       return
     }
     try {

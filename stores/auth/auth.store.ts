@@ -92,7 +92,8 @@ export const useAuthStore = defineStore('auth', {
             }
           } catch (err) {
             if (process.dev) {
-              console.warn('Impossible de vérifier les permissions de cookies:', err)
+              process.env.NODE_ENV !== 'production' &&
+                console.warn('Impossible de vérifier les permissions de cookies:', err)
             }
           }
         }
@@ -122,7 +123,8 @@ export const useAuthStore = defineStore('auth', {
             const sessionStore = useSessionStore()
             await sessionStore.saveCurrentSession()
           } catch (sessionError) {
-            console.warn('⚠️ Erreur lors de la sauvegarde de session:', sessionError)
+            process.env.NODE_ENV !== 'production' &&
+              console.warn('⚠️ Erreur lors de la sauvegarde de session:', sessionError)
           }
         }
 
@@ -201,12 +203,13 @@ export const useAuthStore = defineStore('auth', {
         const isCompleted = userStore.user?.isCompleted
         const role = userStore.getRole as RoleUser | undefined
 
-        console.log('Rôle de l’utilisateur:', role)
+        process.env.NODE_ENV !== 'production' && console.log('Rôle de l’utilisateur:', role)
 
         if (!isCompleted) {
           switch (role) {
             case RoleUser.VOLUNTEER:
-              console.log('Redirection vers la page d’inscription du volontaire')
+              process.env.NODE_ENV !== 'production' &&
+                console.log('Redirection vers la page d’inscription du volontaire')
               return navigateTo('/auth/registerVolunteer')
             case RoleUser.ASSOCIATION:
               return navigateTo('/auth/registerAssociation')
@@ -229,7 +232,8 @@ export const useAuthStore = defineStore('auth', {
         }
       } catch (error) {
         if (process.dev) {
-          console.error("Erreur lors de la récupération de l'utilisateur:", error)
+          process.env.NODE_ENV !== 'production' &&
+            console.error("Erreur lors de la récupération de l'utilisateur:", error)
         }
         await this.logout()
       }
@@ -244,7 +248,8 @@ export const useAuthStore = defineStore('auth', {
 
       if (auth.currentUser.emailVerified) {
         if (process.dev) {
-          console.warn("L'email est déjà vérifié pour l'utilisateur actuel.")
+          process.env.NODE_ENV !== 'production' &&
+            console.warn("L'email est déjà vérifié pour l'utilisateur actuel.")
         }
       }
 
@@ -269,7 +274,8 @@ export const useAuthStore = defineStore('auth', {
         })
       } catch (error: any) {
         if (process.dev) {
-          console.error("❌ Erreur lors de l'envoi de la vérification:", error)
+          process.env.NODE_ENV !== 'production' &&
+            console.error("❌ Erreur lors de l'envoi de la vérification:", error)
         }
         this.error = error.message
         throw error
@@ -283,7 +289,8 @@ export const useAuthStore = defineStore('auth', {
 
       if (this.isVerified) {
         if (process.dev) {
-          console.log("Email déjà vérifié, arrêt de l'écouteur")
+          process.env.NODE_ENV !== 'production' &&
+            console.log("Email déjà vérifié, arrêt de l'écouteur")
         }
         return
       }
@@ -294,7 +301,8 @@ export const useAuthStore = defineStore('auth', {
 
           if (user.emailVerified && !this.isVerified) {
             if (process.dev) {
-              console.log('Email vérifié, traitement en cours...')
+              process.env.NODE_ENV !== 'production' &&
+                console.log('Email vérifié, traitement en cours...')
             }
 
             if (this.unsubscribe) {
@@ -314,7 +322,8 @@ export const useAuthStore = defineStore('auth', {
                 })
               } catch (error) {
                 if (process.dev) {
-                  console.error("Erreur lors de l'enregistrement vérifié:", error)
+                  process.env.NODE_ENV !== 'production' &&
+                    console.error("Erreur lors de l'enregistrement vérifié:", error)
                 }
                 this.isVerified = false
                 return
@@ -331,7 +340,7 @@ export const useAuthStore = defineStore('auth', {
       // Vérifier si l'appel est déjà en cours
       if (this.loading) {
         if (process.dev) {
-          console.log('Appel en cours, attente...')
+          process.env.NODE_ENV !== 'production' && console.log('Appel en cours, attente...')
         }
         return
       }
@@ -360,7 +369,8 @@ export const useAuthStore = defineStore('auth', {
         }
       } catch (error) {
         if (process.dev) {
-          console.error("❌ Erreur lors de l'enregistrement vérifié:", error)
+          process.env.NODE_ENV !== 'production' &&
+            console.error("❌ Erreur lors de l'enregistrement vérifié:", error)
         }
         this.error = "Une erreur est survenue lors de l'inscription"
         throw new Error("Erreur lors de l'inscription: " + error)
@@ -380,10 +390,12 @@ export const useAuthStore = defineStore('auth', {
         await sendEmailVerification(userCredential.user)
 
         if (process.dev) {
-          console.log('✅ Inscription réussie, email de vérification envoyé', payload)
+          process.env.NODE_ENV !== 'production' &&
+            console.log('✅ Inscription réussie, email de vérification envoyé', payload)
         }
         if (process.dev) {
-          console.log('Utilisateur créé avec succès:', userCredential.user)
+          process.env.NODE_ENV !== 'production' &&
+            console.log('Utilisateur créé avec succès:', userCredential.user)
         }
 
         await this.startEmailVerificationListener({
@@ -392,7 +404,8 @@ export const useAuthStore = defineStore('auth', {
           role: payload.role
         })
         if (process.dev) {
-          console.log('✅ Inscription réussie, email de vérification envoyé', payload)
+          process.env.NODE_ENV !== 'production' &&
+            console.log('✅ Inscription réussie, email de vérification envoyé', payload)
         }
         return userCredential.user.emailVerified
       } catch (error: any) {
@@ -507,7 +520,9 @@ export const useAuthStore = defineStore('auth', {
               throw new Error('Cookies essentiels non acceptés')
             }
           } catch (err) {
-            if (process.dev) console.warn('Impossible de vérifier les permissions de cookies:', err)
+            if (process.dev)
+              process.env.NODE_ENV !== 'production' &&
+                console.warn('Impossible de vérifier les permissions de cookies:', err)
           }
         }
 
@@ -552,7 +567,8 @@ export const useAuthStore = defineStore('auth', {
             const sessionStore = useSessionStore()
             await sessionStore.saveCurrentSession()
           } catch (sessionError) {
-            console.warn('⚠️ Erreur lors de la sauvegarde de session Google:', sessionError)
+            process.env.NODE_ENV !== 'production' &&
+              console.warn('⚠️ Erreur lors de la sauvegarde de session Google:', sessionError)
           }
         }
 
@@ -618,7 +634,8 @@ export const useAuthStore = defineStore('auth', {
             const sessionStore = useSessionStore()
             await sessionStore.clearSession()
           } catch (sessionError) {
-            console.warn('⚠️ Erreur lors du nettoyage de session:', sessionError)
+            process.env.NODE_ENV !== 'production' &&
+              console.warn('⚠️ Erreur lors du nettoyage de session:', sessionError)
           }
         }
 

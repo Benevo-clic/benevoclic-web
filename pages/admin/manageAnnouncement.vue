@@ -72,7 +72,8 @@
         row.status = newStatus
       }
     } catch (e) {
-      console.error('Erreur mise à jour statut annonce:', e)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur mise à jour statut annonce:', e)
     }
   }
 
@@ -104,7 +105,7 @@
       }
       isEditOpen.value = false
     } catch (e) {
-      console.error('Erreur lors de la mise à jour:', e)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur lors de la mise à jour:', e)
     }
   }
 
@@ -116,7 +117,7 @@
       await announcement.removeAnnouncement(id)
       displayed.value = displayed.value.filter(a => a._id !== id)
     } catch (e) {
-      console.error('Erreur lors de la suppression:', e)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur lors de la suppression:', e)
     }
   }
 

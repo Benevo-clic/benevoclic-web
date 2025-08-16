@@ -9,11 +9,13 @@
         const { initializeFirebase } = useFirebase()
 
         await initializeFirebase()
-        console.log('✅ Firebase initialisé via app.vue')
+        process.env.NODE_ENV !== 'production' && console.log('✅ Firebase initialisé via app.vue')
       } catch (error) {
-        console.error("❌ Erreur lors de l'initialisation Firebase via app.vue:", error)
+        process.env.NODE_ENV !== 'production' &&
+          console.error("❌ Erreur lors de l'initialisation Firebase via app.vue:", error)
         // En cas d'erreur, on continue sans Firebase
-        console.log("⚠️ L'application continuera sans Firebase")
+        process.env.NODE_ENV !== 'production' &&
+          console.log("⚠️ L'application continuera sans Firebase")
       }
     })
   }

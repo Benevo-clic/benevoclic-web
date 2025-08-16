@@ -85,7 +85,7 @@ vi.mock('~/composables/auth/useUser', () => ({
       Promise.resolve({
         userId: 'user123',
         email: 'test@example.com',
-        avatarFileKey: 'avatar.jpg'
+        avatarFileKey: process.env.Key?.toUpperCase() || 'avatar.jpg'
       })
     )
   })

@@ -100,7 +100,8 @@ export function useNavigation() {
     const authStore = useAuthStore()
     // Vérifier si l'utilisateur est connecté
     if (!authStore.isConnected) {
-      console.log('🔍 Utilisateur non connecté, redirection vers la page de connexion')
+      process.env.NODE_ENV !== 'production' &&
+        console.log('🔍 Utilisateur non connecté, redirection vers la page de connexion')
       return navigateTo('/')
     }
     if (!useCookie('isConnected').value) {

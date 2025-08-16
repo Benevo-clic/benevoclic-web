@@ -360,7 +360,8 @@
       const translation = t(key)
       return translation !== key ? translation : fallback
     } catch (error) {
-      console.warn(`Translation key not found: ${key}`, error)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn(`Translation key not found: ${key}`, error)
       return fallback
     }
   }
@@ -425,7 +426,8 @@
         body: reportData
       })
 
-      console.log('Report submitted successfully:', response)
+      process.env.NODE_ENV !== 'production' &&
+        console.log('Report submitted successfully:', response)
 
       // Reset form
       reportForm.value = {
@@ -444,7 +446,7 @@
       emit('submitted', true)
       closeModal()
     } catch (error) {
-      console.error('Error submitting report:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Error submitting report:', error)
       emit('submitted', false)
     } finally {
       submitting.value = false

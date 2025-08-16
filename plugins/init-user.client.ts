@@ -10,9 +10,11 @@ export default defineNuxtPlugin(async () => {
   if (auth.isAuthenticated && !userStore.user && !userStore.error) {
     try {
       await userStore.fetchUser()
-      console.log('✅ Utilisateur initialisé:', userStore.getUser)
+      process.env.NODE_ENV !== 'production' &&
+        console.log('✅ Utilisateur initialisé:', userStore.getUser)
     } catch (error) {
-      console.error("❌ Erreur lors de l'initialisation de l'utilisateur:", error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error("❌ Erreur lors de l'initialisation de l'utilisateur:", error)
       await auth.logout()
     }
   }

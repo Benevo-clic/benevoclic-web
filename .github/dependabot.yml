@@ -4,122 +4,118 @@
 version: 2
 updates:
   # Mises à jour npm (dépendances principales)
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Europe/Paris"
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Europe/Paris'
     open-pull-requests-limit: 10
     reviewers:
-      - "Benevo-clic"
+      - 'Benevo-clic'
     assignees:
-      - "Benevo-clic"
+      - 'Benevo-clic'
     commit-message:
-      prefix: "chore"
-      prefix-development: "chore"
-      include: "scope"
+      prefix: 'chore'
+      prefix-development: 'chore'
+      include: 'scope'
     labels:
-      - "dependencies"
-      - "npm"
+      - 'dependencies'
+      - 'npm'
     ignore:
       # Ignorer les mises à jour majeures automatiquement
-      - dependency-name: "*"
+      - dependency-name: '*'
         update-types:
-          - "version-update:semver-major"
+          - 'version-update:semver-major'
     # Autoriser les mises à jour mineures et patch automatiquement
     allow:
-      - dependency-type: "direct"
+      - dependency-type: 'direct'
         update-types:
-          - "version-update:semver-minor"
-          - "version-update:semver-patch"
-    # Demander approbation pour les mises à jour majeures
-    commit-message:
-      prefix: "chore"
-      include: "scope"
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
 
   # Mises à jour GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "tuesday"
-      time: "10:00"
-      timezone: "Europe/Paris"
+      interval: 'weekly'
+      day: 'tuesday'
+      time: '10:00'
+      timezone: 'Europe/Paris'
     open-pull-requests-limit: 5
     reviewers:
-      - "Benevo-clic"
+      - 'Benevo-clic'
     assignees:
-      - "Benevo-clic"
+      - 'Benevo-clic'
     commit-message:
-      prefix: "ci"
-      include: "scope"
+      prefix: 'ci'
+      include: 'scope'
     labels:
-      - "dependencies"
-      - "github-actions"
+      - 'dependencies'
+      - 'github-actions'
     ignore:
       # Ignorer les mises à jour majeures des actions critiques
-      - dependency-name: "actions/checkout"
+      - dependency-name: 'actions/checkout'
         update-types:
-          - "version-update:semver-major"
-      - dependency-name: "actions/setup-node"
+          - 'version-update:semver-major'
+      - dependency-name: 'actions/setup-node'
         update-types:
-          - "version-update:semver-major"
+          - 'version-update:semver-major'
 
   # Mises à jour Docker (si applicable)
-  - package-ecosystem: "docker"
-    directory: "/"
+  - package-ecosystem: 'docker'
+    directory: '/'
     schedule:
-      interval: "monthly"
-      day: "1"
-      time: "11:00"
-      timezone: "Europe/Paris"
+      interval: 'monthly'
+      day: '1'
+      time: '11:00'
+      timezone: 'Europe/Paris'
     open-pull-requests-limit: 3
     reviewers:
-      - "Benevo-clic"
+      - 'Benevo-clic'
     assignees:
-      - "Benevo-clic"
+      - 'Benevo-clic'
     commit-message:
-      prefix: "chore"
-      include: "scope"
+      prefix: 'chore'
+      include: 'scope'
     labels:
-      - "dependencies"
-      - "docker"
+      - 'dependencies'
+      - 'docker'
 
   # Configuration de sécurité
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "daily"
-      time: "08:00"
-      timezone: "Europe/Paris"
+      interval: 'daily'
+      time: '08:00'
+      timezone: 'Europe/Paris'
     open-pull-requests-limit: 5
     reviewers:
-      - "Benevo-clic"
+      - 'Benevo-clic'
     assignees:
-      - "Benevo-clic"
+      - 'Benevo-clic'
     commit-message:
-      prefix: "security"
-      include: "scope"
+      prefix: 'security'
+      include: 'scope'
     labels:
-      - "security"
-      - "dependencies"
-      - "npm"
+      - 'security'
+      - 'dependencies'
+      - 'npm'
     # Mettre à jour uniquement les vulnérabilités de sécurité
     allow:
-      - dependency-type: "direct"
+      - dependency-type: 'direct'
         update-types:
-          - "security"
+          - 'security'
     # Ignorer les autres types de mises à jour
     ignore:
-      - dependency-name: "*"
+      - dependency-name: '*'
         update-types:
-          - "version-update:semver-major"
-          - "version-update:semver-minor"
-          - "version-update:semver-patch"
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
 
 # Configuration globale
-update-schedule: "weekly"
-rebase-strategy: "auto"
-target-branch: "develop"
+update-schedule: 'weekly'
+rebase-strategy: 'auto'
+target-branch: 'develop'

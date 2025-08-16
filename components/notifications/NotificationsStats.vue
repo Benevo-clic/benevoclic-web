@@ -296,7 +296,7 @@
   // Watchers
   watch(timeRange, newRange => {
     // Ici, vous pourriez filtrer les données selon la période sélectionnée
-    console.log('Période sélectionnée:', newRange)
+    process.env.NODE_ENV !== 'production' && console.log('Période sélectionnée:', newRange)
   })
 </script>
 

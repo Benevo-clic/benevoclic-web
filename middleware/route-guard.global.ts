@@ -146,10 +146,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         }
       }
     } catch (error) {
-      console.warn(
-        'Firebase non disponible dans le route guard, continuation sans vérification:',
-        error
-      )
+      process.env.NODE_ENV !== 'production' &&
+        console.warn(
+          'Firebase non disponible dans le route guard, continuation sans vérification:',
+          error
+        )
     }
   }
 
@@ -172,7 +173,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         }
       }
     } catch (sessionError) {
-      console.warn('⚠️ Erreur lors de la restauration de session dans le middleware:', sessionError)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn(
+          '⚠️ Erreur lors de la restauration de session dans le middleware:',
+          sessionError
+        )
     }
 
     await authStore.initAuth()

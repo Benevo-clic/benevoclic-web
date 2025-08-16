@@ -71,7 +71,8 @@ const useUserLocation = () => {
 
       return location
     } catch (err) {
-      console.error('Erreur lors du chargement de la position:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur lors du chargement de la position:', err)
       return null
     }
   }
@@ -83,7 +84,8 @@ const useUserLocation = () => {
       localStorage.setItem(LOCATION_KEY, JSON.stringify(location))
       localStorage.setItem(LOCATION_TIMESTAMP_KEY, Date.now().toString())
     } catch (err) {
-      console.error('Erreur lors de la sauvegarde de la position:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur lors de la sauvegarde de la position:', err)
     }
   }
 
@@ -174,7 +176,8 @@ const useUserLocation = () => {
           location.address = feature.properties.label
         }
       } catch (geocodeError) {
-        console.warn('Erreur lors du géocodage inverse:', geocodeError)
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('Erreur lors du géocodage inverse:', geocodeError)
       }
 
       saveLocationToStorage(location)

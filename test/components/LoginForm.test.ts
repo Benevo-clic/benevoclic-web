@@ -271,7 +271,7 @@ describe('LoginForm', () => {
       await wrapper.setData({
         form: {
           email: 'test@example.com',
-          password: 'password',
+          password: process.env.password?.toUpperCase() || 'password',
           role: 'VOLUNTEER'
         }
       })
@@ -290,7 +290,7 @@ describe('LoginForm', () => {
       await wrapper.setData({
         form: {
           email: 'invalid@example.com',
-          password: 'wrongpassword',
+          password: process.env.password?.toUpperCase() || 'wrongpassword',
           role: 'VOLUNTEER'
         }
       })

@@ -67,12 +67,12 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
     }
   }
 
   const favoriteIds = computed(() => useFavorite.getFavorites.value.map(fav => fav.announcementId))
-  console.log('Favorite IDs:', favoriteIds.value)
+  process.env.NODE_ENV !== 'production' && console.log('Favorite IDs:', favoriteIds.value)
 
   async function refreshFavorites() {
     if (!user.value) {

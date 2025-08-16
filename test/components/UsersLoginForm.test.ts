@@ -358,7 +358,7 @@ describe('UsersLoginForm', () => {
         props: {
           form: {
             email: 'test@example.com',
-            password: 'password123'
+            password: process.env.password?.toUpperCase() || 'password123'
           },
           loading: true,
           isAssociation: true

@@ -15,20 +15,22 @@ export const usePageVisibility = () => {
       isPageVisible.value = true
       backgroundTime.value = now - lastVisibilityChange.value
 
-      console.log(
-        `📱 Page redevenue visible après ${Math.round(backgroundTime.value / 1000)}s en arrière-plan`
-      )
+      process.env.NODE_ENV !== 'production' &&
+        console.log(
+          `📱 Page redevenue visible après ${Math.round(backgroundTime.value / 1000)}s en arrière-plan`
+        )
 
       // Si plus de 5 minutes en arrière-plan, déclencher le rafraîchissement
       if (backgroundTime.value > 5 * 60 * 1000) {
-        console.log('🔄 Rafraîchissement de session après longue période en arrière-plan')
+        process.env.NODE_ENV !== 'production' &&
+          console.log('🔄 Rafraîchissement de session après longue période en arrière-plan')
         await refreshSessionOnVisibility()
       }
     } else {
       // Page mise en arrière-plan
       isPageVisible.value = false
       lastVisibilityChange.value = now
-      console.log('📱 Page mise en arrière-plan')
+      process.env.NODE_ENV !== 'production' && console.log('📱 Page mise en arrière-plan')
     }
   }
 
@@ -44,11 +46,12 @@ export const usePageVisibility = () => {
       const userStore = useUserStore()
       const sessionStore = useSessionStore()
 
-      console.log('🔄 Vérification de la session...')
+      process.env.NODE_ENV !== 'production' && console.log('🔄 Vérification de la session...')
 
       // Vérifier si l'utilisateur est connecté
       if (!authStore.isAuthenticated) {
-        console.log('❌ Utilisateur non authentifié, redirection vers login')
+        process.env.NODE_ENV !== 'production' &&
+          console.log('❌ Utilisateur non authentifié, redirection vers login')
         return
       }
 
@@ -57,7 +60,8 @@ export const usePageVisibility = () => {
 
       // Restaurer l'état utilisateur si nécessaire
       if (!userStore.user) {
-        console.log('🔄 Restauration des données utilisateur...')
+        process.env.NODE_ENV !== 'production' &&
+          console.log('🔄 Restauration des données utilisateur...')
         await userStore.fetchUser()
       }
 
@@ -66,9 +70,10 @@ export const usePageVisibility = () => {
       sessionStore.lastActivity = Date.now()
       sessionStore.backgroundTime = backgroundTime.value
 
-      console.log('✅ Session rafraîchie avec succès')
+      process.env.NODE_ENV !== 'production' && console.log('✅ Session rafraîchie avec succès')
     } catch (error) {
-      console.error('❌ Erreur lors du rafraîchissement de session:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('❌ Erreur lors du rafraîchissement de session:', error)
 
       // En cas d'erreur, déconnecter l'utilisateur
       try {
@@ -76,7 +81,8 @@ export const usePageVisibility = () => {
         const authStore = useAuthStore()
         await authStore.logout()
       } catch (logoutError) {
-        console.error('❌ Erreur lors de la déconnexion:', logoutError)
+        process.env.NODE_ENV !== 'production' &&
+          console.error('❌ Erreur lors de la déconnexion:', logoutError)
       }
     }
   }
@@ -120,7 +126,7 @@ export const usePageVisibility = () => {
     }
 
     isInitialized.value = true
-    console.log('✅ Gestionnaire de visibilité initialisé')
+    process.env.NODE_ENV !== 'production' && console.log('✅ Gestionnaire de visibilité initialisé')
   }
 
   // Nettoyer les événements
@@ -134,7 +140,7 @@ export const usePageVisibility = () => {
     window.removeEventListener('pageshow', handleVisibilityChange)
 
     isInitialized.value = false
-    console.log('🧹 Gestionnaire de visibilité nettoyé')
+    process.env.NODE_ENV !== 'production' && console.log('🧹 Gestionnaire de visibilité nettoyé')
   }
 
   // Initialisation automatique

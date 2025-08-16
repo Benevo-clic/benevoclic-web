@@ -213,7 +213,8 @@ const routeGuardMiddleware = async (to, from) => {
         }
       }
     } catch (error) {
-      console.warn('Firebase non initialisé dans le route guard:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Firebase non initialisé dans le route guard:', error)
     }
   }
 
@@ -250,7 +251,8 @@ const routeGuardMiddleware = async (to, from) => {
     try {
       await mockUserStore.fetchUser()
     } catch (error) {
-      console.error('❌ Erreur lors de la récupération des données utilisateur:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('❌ Erreur lors de la récupération des données utilisateur:', error)
       await mockAuthStore.logout()
       return mockNavigateTo('/')
     }
@@ -305,7 +307,7 @@ const routeGuardMiddleware = async (to, from) => {
     return mockNavigateTo(homePage)
   }
 
-  console.log('✅ Route accessible, accès autorisé')
+  process.env.NODE_ENV !== 'production' && console.log('✅ Route accessible, accès autorisé')
 }
 
 describe('Route Guard Middleware', () => {

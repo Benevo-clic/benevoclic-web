@@ -48,7 +48,8 @@
         return
       }
     } catch (err) {
-      console.warn('Impossible de vérifier les permissions de cookies:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Impossible de vérifier les permissions de cookies:', err)
     }
 
     loading.value = true
@@ -77,7 +78,7 @@
     } catch (error) {
       isError.value = true
       messageError.value = t('auth.login.error.invalid_credentials')
-      console.error('Erreur de connexion:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur de connexion:', error)
     } finally {
       loading.value = false
     }
@@ -137,7 +138,7 @@
         isError.value = false
       }
     } catch (error: any) {
-      console.error('Erreur de connexion Google:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur de connexion Google:', error)
       isError.value = true
       messageError.value = error?.message || t('auth.login.error.invalid_credentials')
     }

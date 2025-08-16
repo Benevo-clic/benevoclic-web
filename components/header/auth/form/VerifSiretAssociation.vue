@@ -51,7 +51,7 @@
       isValid.value = true
       emit('associationExists', associationExists.value)
     } catch (error) {
-      console.error('Erreur de connexion:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur de connexion:', error)
       errorMessage.value = t('auth.register.association_siret_status_error_description')
       isValid.value = false
       associationExists.value = false

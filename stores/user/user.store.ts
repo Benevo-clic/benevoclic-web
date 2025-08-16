@@ -27,7 +27,7 @@ async function getFirebase() {
     return { auth, provider }
   } catch (error) {
     if (process.dev) {
-      console.warn('Firebase non disponible:', error)
+      process.env.NODE_ENV !== 'production' && console.warn('Firebase non disponible:', error)
     }
     // En production, on peut continuer sans Firebase pour certaines fonctionnalités
     throw new Error('Firebase non initialisé - veuillez réessayer dans quelques secondes')

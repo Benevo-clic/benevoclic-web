@@ -46,7 +46,8 @@ export const useUserLocation = () => {
 
       return location
     } catch (err) {
-      console.error('Erreur lors du chargement de la position:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur lors du chargement de la position:', err)
       return null
     }
   }
@@ -61,7 +62,8 @@ export const useUserLocation = () => {
       localStorage.setItem(LOCATION_KEY, JSON.stringify(location))
       localStorage.setItem(LOCATION_TIMESTAMP_KEY, Date.now().toString())
     } catch (err) {
-      console.error('Erreur lors de la sauvegarde de la position:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur lors de la sauvegarde de la position:', err)
     }
   }
 
@@ -125,7 +127,8 @@ export const useUserLocation = () => {
         return null
       }
     } catch (err) {
-      console.warn('Impossible de vérifier les permissions de cookies:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Impossible de vérifier les permissions de cookies:', err)
     }
 
     isLoading.value = true
@@ -159,7 +162,8 @@ export const useUserLocation = () => {
           location.address = feature.properties.label
         }
       } catch (geocodeError) {
-        console.warn('Erreur lors du géocodage inverse:', geocodeError)
+        process.env.NODE_ENV !== 'production' &&
+          console.warn('Erreur lors du géocodage inverse:', geocodeError)
       }
 
       // Sauvegarder dans le storage
@@ -197,7 +201,8 @@ export const useUserLocation = () => {
       const { hasPermission } = usePermissions()
       return hasPermission('canUseLocation') && !permissionDenied.value
     } catch (err) {
-      console.warn('Impossible de vérifier les permissions de géolocalisation:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Impossible de vérifier les permissions de géolocalisation:', err)
       return false
     }
   }
@@ -241,7 +246,8 @@ export const useUserLocation = () => {
         }
       }
     } catch (err) {
-      console.warn('Impossible de vérifier les permissions au montage:', err)
+      process.env.NODE_ENV !== 'production' &&
+        console.warn('Impossible de vérifier les permissions au montage:', err)
     }
   }
 

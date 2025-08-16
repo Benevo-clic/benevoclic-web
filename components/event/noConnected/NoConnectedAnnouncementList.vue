@@ -38,6 +38,7 @@
   }>()
 
   function toggleFavorite(announcement: Announcement) {
-    console.log('Toggle favorite for announcement:', announcement._id)
+    process.env.NODE_ENV !== 'production' &&
+      console.log('Toggle favorite for announcement:', announcement._id)
   }
 </script>

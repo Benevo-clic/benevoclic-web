@@ -42,7 +42,8 @@ export default defineEventHandler(async event => {
       }
     })
   } catch (error: any) {
-    console.error('Erreur lors de la création du signalement:', error)
+    process.env.NODE_ENV !== 'production' &&
+      console.error('Erreur lors de la création du signalement:', error)
 
     if (error.statusCode) {
       throw createError({

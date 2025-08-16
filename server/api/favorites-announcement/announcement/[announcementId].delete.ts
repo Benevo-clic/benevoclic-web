@@ -33,13 +33,14 @@ export default defineEventHandler(async event => {
       }
     })
 
-    console.log('✅ Response received:', response.data)
+    process.env.NODE_ENV !== 'production' && console.log('✅ Response received:', response.data)
     return response.data
   } catch (error: any) {
-    console.error(
-      '❌ Error in favorites-announcement/announcement/[announcementId].delete.ts:',
-      error
-    )
+    process.env.NODE_ENV !== 'production' &&
+      console.error(
+        '❌ Error in favorites-announcement/announcement/[announcementId].delete.ts:',
+        error
+      )
     if (axios.isAxiosError(error)) {
       await ApiError.handleAxios(
         error,

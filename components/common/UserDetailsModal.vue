@@ -781,11 +781,11 @@
       // Récupérer les informations de base de l'utilisateur
       const userInfo = await user.getUserById(props.userId)
 
-      console.log('User info:', userInfo)
-      console.log('role', userInfo.role)
+      process.env.NODE_ENV !== 'production' && console.log('User info:', userInfo)
+      process.env.NODE_ENV !== 'production' && console.log('role', userInfo.role)
 
       if (!userInfo) {
-        console.error('User not found')
+        process.env.NODE_ENV !== 'production' && console.error('User not found')
         return
       }
 
@@ -815,7 +815,8 @@
 
           nbAssociations = associationsFollowing.length || 0
         } catch (error) {
-          console.warn('Erreur lors du chargement des statistiques:', error)
+          process.env.NODE_ENV !== 'production' &&
+            console.warn('Erreur lors du chargement des statistiques:', error)
           // Les valeurs restent à 0 par défaut
         }
 
@@ -859,7 +860,8 @@
           const announcements = await announcementStore.fetchAnnouncements(props.userId)
           nbAnnouncements = announcements?.length || 0
         } catch (error) {
-          console.warn('Erreur lors du chargement des annonces:', error)
+          process.env.NODE_ENV !== 'production' &&
+            console.warn('Erreur lors du chargement des annonces:', error)
         }
 
         associationDetails.value = {
@@ -882,12 +884,13 @@
           updatedAt: userInfo.updatedAt || ''
         }
       } else {
-        console.log('Unknown user role:', userInfo.role)
+        process.env.NODE_ENV !== 'production' && console.log('Unknown user role:', userInfo.role)
       }
 
       profileImageUrl.value = computedProfileImageUrl.value
     } catch (error) {
-      console.error('Erreur lors du chargement des détails utilisateur:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('Erreur lors du chargement des détails utilisateur:', error)
     } finally {
       loading.value = false
     }

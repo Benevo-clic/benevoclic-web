@@ -44,17 +44,19 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
     }
   }
 
   watch(
     isVerified,
     (newValue, oldValue) => {
-      console.log(' Watcher isVerified:', { oldValue, newValue })
+      process.env.NODE_ENV !== 'production' &&
+        console.log(' Watcher isVerified:', { oldValue, newValue })
 
       if (newValue === true && oldValue === false) {
-        console.log('✅ Email vérifié détecté par le watcher!')
+        process.env.NODE_ENV !== 'production' &&
+          console.log('✅ Email vérifié détecté par le watcher!')
         isEmailVerified.value = true
         error.value = ''
         stopTimer()
@@ -129,7 +131,7 @@
 
       if (currentUser.emailVerified) {
         authStore.$patch({ isVerified: true })
-        console.log('✅ Email vérifié avec succès!')
+        process.env.NODE_ENV !== 'production' && console.log('✅ Email vérifié avec succès!')
       } else {
         error.value = "L'email n'est pas encore vérifié. Vérifiez votre boîte de réception."
       }

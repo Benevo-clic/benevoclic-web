@@ -115,7 +115,8 @@
         role: RoleUser.ADMIN
       })
     } catch (error: any) {
-      console.error('❌ Erreur lors de la connexion admin:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error('❌ Erreur lors de la connexion admin:', error)
       errorMessage.value =
         error?.data?.message || error?.message || 'Email ou mot de passe incorrect'
     } finally {
