@@ -14,6 +14,11 @@ on:
           - high
           - critical
 
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
 jobs:
   auto-fix:
     runs-on: ubuntu-latest
