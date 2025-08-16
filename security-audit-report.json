@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-08-16T02:56:25.708Z",
+  "timestamp": "2025-08-16T03:15:00.491Z",
   "summary": {
-    "totalIssues": 173,
+    "totalIssues": 175,
     "critical": 0,
-    "high": 57,
-    "medium": 116,
+    "high": 58,
+    "medium": 117,
     "low": 0
   },
   "issues": [
@@ -833,6 +833,20 @@
       "severity": "MEDIUM",
       "description": "Console.log peut exposer des informations sensibles en production",
       "count": 11
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/fix-security-issues-v2.js",
+      "pattern": "XSS via innerHTML",
+      "severity": "HIGH",
+      "description": "Utilisation dangereuse de innerHTML qui peut mener à des attaques XSS",
+      "count": 2
+    },
+    {
+      "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/fix-security-issues-v2.js",
+      "pattern": "Console.log in production",
+      "severity": "MEDIUM",
+      "description": "Console.log peut exposer des informations sensibles en production",
+      "count": 16
     },
     {
       "file": "/home/20015223/Desktop/benevoclic/benevoclic-web/scripts/fix-security-issues.js",

@@ -310,6 +310,7 @@
         // Si c'est une erreur de worker, essayer de réinitialiser sans workers
         if (e.error && e.error.message && e.error.message.includes('Worker')) {
           process.env.NODE_ENV !== 'production' &&
+            process.env.NODE_ENV !== 'production' &&
             console.log('Attempting to reinitialize map without workers...')
           if (map.value) {
             map.value.remove()
@@ -347,19 +348,58 @@
       process.env.NODE_ENV !== 'production' && console.error('Error initializing map:', error)
       // Fallback: afficher un message d'erreur à l'utilisateur
       if (mapContainer.value) {
-        mapContainer.value.innerHTML = `
-        <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #f3f4f6; border-radius: 8px;">
-          <div style="text-align: center; color: #6b7280;">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 16px;">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg>
-            <p style="margin: 0; font-size: 14px;">Impossible de charger la carte</p>
-            <p style="margin: 4px 0 0 0; font-size: 12px;">Vérifiez votre connexion internet</p>
-            <button onclick="window.location.reload()" style="margin-top: 12px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;" type="button" focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2>Réessayer</button>
-          </div>
-        </div>
-      `
+        // Créer les éléments de manière sécurisée
+        const errorContainer = document.createElement('div')
+        errorContainer.style.cssText =
+          'display: flex; align-items: center; justify-content: center; height: 100%; background: #f3f4f6; border-radius: 8px;'
+
+        const errorContent = document.createElement('div')
+        errorContent.style.cssText = 'text-align: center; color: #6b7280;'
+
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+        svg.setAttribute('width', '48')
+        svg.setAttribute('height', '48')
+        svg.setAttribute('viewBox', '0 0 24 24')
+        svg.setAttribute('fill', 'none')
+        svg.setAttribute('stroke', 'currentColor')
+        svg.setAttribute('stroke-width', '2')
+        svg.style.cssText = 'margin: 0 auto 16px;'
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+        path.setAttribute('d', 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z')
+
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+        circle.setAttribute('cx', '12')
+        circle.setAttribute('cy', '10')
+        circle.setAttribute('r', '3')
+
+        svg.appendChild(path)
+        svg.appendChild(circle)
+
+        const title = document.createElement('p')
+        title.style.cssText = 'margin: 0; font-size: 14px;'
+        title.textContent = 'Impossible de charger la carte'
+
+        const subtitle = document.createElement('p')
+        subtitle.style.cssText = 'margin: 4px 0 0 0; font-size: 12px;'
+        subtitle.textContent = 'Vérifiez votre connexion internet'
+
+        const retryButton = document.createElement('button')
+        retryButton.style.cssText =
+          'margin-top: 12px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;'
+        retryButton.type = 'button'
+        retryButton.textContent = 'Réessayer'
+        retryButton.addEventListener('click', () => window.location.reload())
+
+        errorContent.appendChild(svg)
+        errorContent.appendChild(title)
+        errorContent.appendChild(subtitle)
+        errorContent.appendChild(retryButton)
+        errorContainer.appendChild(errorContent)
+
+        // Vider le conteneur et ajouter le nouveau contenu
+        mapContainer.value.innerHTML = ''
+        mapContainer.value.appendChild(errorContainer)
       }
     }
   }
@@ -387,9 +427,12 @@
         attribution: '© CartoDB, © Thunderforest'
       })
 
-      process.env.NODE_ENV !== 'production' && console.log('Switched to alternative tile source')
+      process.env.NODE_ENV !== 'production' &&
+        process.env.NODE_ENV !== 'production' &&
+        console.log('Switched to alternative tile source')
     } catch (error) {
       process.env.NODE_ENV !== 'production' &&
+        process.env.NODE_ENV !== 'production' &&
         console.error('Error switching to alternative tiles:', error)
     }
   }
@@ -409,6 +452,7 @@
             addCityMarkers()
           } catch (error) {
             process.env.NODE_ENV !== 'production' &&
+              process.env.NODE_ENV !== 'production' &&
               console.error('Error adding city markers:', error)
           }
         })
@@ -421,12 +465,15 @@
             }
           } catch (error) {
             process.env.NODE_ENV !== 'production' &&
+              process.env.NODE_ENV !== 'production' &&
               console.error('Error handling map click:', error)
           }
         })
       }
     } catch (error) {
-      process.env.NODE_ENV !== 'production' && console.error('Error in onMounted:', error)
+      process.env.NODE_ENV !== 'production' &&
+        process.env.NODE_ENV !== 'production' &&
+        console.error('Error in onMounted:', error)
     }
   })
 
@@ -451,12 +498,15 @@
               }
             } catch (error) {
               process.env.NODE_ENV !== 'production' &&
+                process.env.NODE_ENV !== 'production' &&
                 console.error('Error in map load event:', error)
             }
           })
         }
       } catch (error) {
-        process.env.NODE_ENV !== 'production' && console.error('Error in locations watcher:', error)
+        process.env.NODE_ENV !== 'production' &&
+          process.env.NODE_ENV !== 'production' &&
+          console.error('Error in locations watcher:', error)
       }
     },
     { deep: true }

@@ -35,6 +35,8 @@
     "audit:all": "npm run audit:lighthouse && npm run audit:seo && npm run audit:a11y",
     "audit:security": "node scripts/security-audit.js",
     "fix:security": "node scripts/fix-security-issues.js",
+    "fix:security:v2": "node scripts/fix-security-issues-v2.js",
+    "fix:security:v3": "node scripts/fix-security-issues-v3.js",
     "fix:broken": "node scripts/fix-broken-files.js",
     "auto:fix": "node scripts/auto-fix-security.js",
     "setup:env": "node scripts/setup-env.js",
