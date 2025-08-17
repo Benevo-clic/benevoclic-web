@@ -328,9 +328,14 @@ describe('useRecentSearches', () => {
         throw new Error('localStorage error')
       })
 
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       const searches = useRecentSearches()
 
       expect(searches.recentSearches.value).toEqual([])
+
+      consoleSpy.mockRestore()
     })
 
     it('should handle localStorage setItem errors', () => {
@@ -339,7 +344,12 @@ describe('useRecentSearches', () => {
         throw new Error('localStorage error')
       })
 
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       expect(() => searches.addRecentSearch('test search')).not.toThrow()
+
+      consoleSpy.mockRestore()
     })
 
     it('should handle localStorage removeItem errors', () => {
@@ -348,15 +358,25 @@ describe('useRecentSearches', () => {
         throw new Error('localStorage error')
       })
 
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       expect(() => searches.clearRecentSearches()).not.toThrow()
+
+      consoleSpy.mockRestore()
     })
 
     it('should handle JSON parse errors', () => {
       localStorageMock.getItem.mockReturnValue('invalid json')
 
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       const searches = useRecentSearches()
 
       expect(searches.recentSearches.value).toEqual([])
+
+      consoleSpy.mockRestore()
     })
   })
 

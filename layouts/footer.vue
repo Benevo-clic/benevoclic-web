@@ -23,10 +23,10 @@
             Accueil
           </NuxtLink>
           <NuxtLink
-            to="/dashboard"
+            to="/"
             class="link link-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
           >
-            Tableau de bord
+            Accueil
           </NuxtLink>
           <NuxtLink
             to="/association/events/association/manage"

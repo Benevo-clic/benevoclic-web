@@ -85,7 +85,7 @@
   <nav
     class="flex flex-col md:flex-row items-center justify-between gap-4"
     role="navigation"
-    aria-label="Navigation bénévole"
+    :aria-label="t('volunteerBottomBar.navigation')"
   >
     <div class="w-full md:max-w-2xl lg:max-w-3xl flex-1">
       <div class="relative">
@@ -94,9 +94,9 @@
             :id="searchInputId"
             v-model="searchQuery"
             type="text"
-            placeholder="Search for missions or associations"
+            :placeholder="t('volunteerBottomBar.searchPlaceholder')"
             class="input input-bordered w-full h-12 text-base focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Rechercher des missions ou associations"
+            :aria-label="t('volunteerBottomBar.searchLabel')"
             autocomplete="off"
             @keyup.enter="handleSearch"
             @keydown="handleKeydown"
@@ -104,7 +104,7 @@
           <button
             class="btn btn-primary h-12 ml-2 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             :aria-describedby="searchInputId"
-            aria-label="Lancer la recherche"
+            :aria-label="t('volunteerBottomBar.launchSearch')"
             @click="handleSearch"
           >
             <SearchIcon class="w-5 h-5" aria-hidden="true" />
@@ -116,11 +116,11 @@
     <div
       class="w-full md:w-auto flex justify-center md:justify-end flex-wrap text-base-content"
       role="group"
-      aria-label="Actions rapides"
+      :aria-label="t('volunteerBottomBar.quickActions')"
     >
       <button
         class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-        aria-label="Aller à l'accueil bénévole"
+        :aria-label="t('volunteerBottomBar.goHome')"
         @click="handleHome"
       >
         <HomeIcon class="w-6 h-6" aria-hidden="true" />
@@ -128,7 +128,7 @@
       </button>
       <button
         class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-        aria-label="Voir mes favoris"
+        :aria-label="t('volunteerBottomBar.viewFavorites')"
         @click="handleFavorites"
       >
         <HeartIcon class="w-6 h-6" aria-hidden="true" />
@@ -139,7 +139,7 @@
           class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1 recent-searches-button focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
           :aria-expanded="showRecentSearches"
           :aria-controls="recentSearchesId"
-          aria-label="Voir les recherches récentes"
+          :aria-label="t('volunteerBottomBar.viewRecentSearches')"
           @click.stop="toggleRecentSearches"
           @keydown="handleKeydown"
         >
@@ -162,7 +162,7 @@
             <button
               v-if="recentSearches.length > 0"
               class="btn btn-ghost btn-xs focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-              aria-label="Effacer tout l'historique"
+              :aria-label="t('volunteerBottomBar.clearHistory')"
               @click.stop="clearRecentSearches"
             >
               {{ t('search.history.clear_all') }}
@@ -173,14 +173,14 @@
             v-if="recentSearches.length > 0"
             class="max-h-60 overflow-y-auto"
             role="listbox"
-            aria-label="Recherches récentes"
+            :aria-label="t('volunteerBottomBar.recentSearches')"
           >
             <button
               v-for="(search, index) in recentSearches"
               :key="index"
               class="flex items-center justify-between w-full p-2 hover:bg-base-200 rounded-md mb-1 text-left focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
               role="option"
-              :aria-label="`Rechercher : ${search}`"
+              :aria-label="t('volunteerBottomBar.searchFor', { search })"
               @click.stop="selectRecentSearch(search)"
               @keyup.enter="selectRecentSearch(search)"
               @keyup.space.prevent="selectRecentSearch(search)"
@@ -202,7 +202,7 @@
       </div>
       <button
         class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-        aria-label="Aide et support"
+        :aria-label="t('volunteerBottomBar.helpSupport')"
         @click="navigateTo('/help')"
       >
         <HelpIcon class="w-6 h-6" aria-hidden="true" />

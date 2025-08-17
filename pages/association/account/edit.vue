@@ -58,7 +58,7 @@
           <img
             v-if="profileImageUrl"
             :src="profileImageUrl"
-            alt="Logo de l'association"
+            :alt="t('editProfile.association.logo')"
             class="w-full h-full object-cover"
             width="200"
             height="200"
@@ -78,7 +78,7 @@
               class="cursor-pointer text-white text-sm font-medium flex flex-col items-center"
             >
               <Upload class="w-6 h-6 mx-auto mb-1" />
-              Changer
+              {{ t('editProfile.change') }}
             </label>
             <input
               id="profile-image"
@@ -89,7 +89,7 @@
             />
           </div>
         </div>
-        <span class="text-base-content/70 text-sm">Logo de l'association</span>
+        <span class="text-base-content/70 text-sm">{{ t('editProfile.association.logo') }}</span>
       </div>
 
       <!-- Edit profile form -->
@@ -105,7 +105,7 @@
               v-model="form.associationName"
               type="text"
               class="input input-bordered w-full"
-              aria-label="Nom de l'association"
+              :aria-label="t('editProfile.association.name')"
             />
           </div>
           <div class="form-control w-full">
@@ -118,7 +118,7 @@
               v-model="form.type"
               type="text"
               class="input input-bordered w-full"
-              aria-label="Type d'association"
+              :aria-label="t('editProfile.association.type')"
             />
           </div>
         </div>
@@ -133,7 +133,7 @@
               v-model="form.phone"
               type="tel"
               class="input input-bordered w-full"
-              aria-label="Numéro de téléphone de l'association"
+              :aria-label="t('editProfile.association.phone')"
             />
           </div>
           <div class="form-control w-full">
@@ -146,7 +146,7 @@
               v-model="form.country"
               type="text"
               class="input input-bordered w-full"
-              aria-label="Pays de l'association"
+              :aria-label="t('editProfile.association.country')"
             />
           </div>
         </div>
@@ -161,7 +161,7 @@
               v-model="form.city"
               type="text"
               class="input input-bordered w-full"
-              aria-label="Ville de l'association"
+              :aria-label="t('editProfile.association.city')"
             />
           </div>
           <div class="form-control w-full">
@@ -174,7 +174,7 @@
               v-model="form.postalCode"
               type="text"
               class="input input-bordered w-full"
-              aria-label="Code postal de l'association"
+              :aria-label="t('editProfile.association.postalCode')"
             />
           </div>
         </div>
@@ -188,14 +188,14 @@
             <textarea
               v-model="form.bio"
               class="textarea textarea-bordered h-24 w-full"
-              aria-label="Description de l'association"
+              :aria-label="t('editProfile.association.description')"
             />
           </div>
         </div>
         <div class="flex justify-end">
           <button type="submit" class="btn btn-primary btn-wide" :disabled="!isFormChanged">
             <span v-if="isImageUploading" class="loading loading-spinner loading-xs mr-2" />
-            Sauvegarder
+            {{ t('editProfile.save') }}
           </button>
         </div>
       </form>
@@ -314,7 +314,8 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error(t('editProfile.errors.unexpected'), error)
     }
   }
 

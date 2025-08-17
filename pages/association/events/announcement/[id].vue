@@ -2,7 +2,11 @@
   <div ref="scrollContainer" class="relative">
     <!-- Loading state -->
     <div v-if="loading" class="min-h-screen flex justify-center items-center">
-      <img src="/logo.png" alt="Chargement…" class="w-24 h-24 animate-spin" />
+      <img
+        :src="'/logo.png'"
+        :alt="t('events.announcement.loading')"
+        class="w-24 h-24 animate-spin"
+      />
     </div>
 
     <!-- Content when loaded -->
@@ -16,7 +20,7 @@
           <img
             v-if="announcement?.announcementImage"
             :src="coverImageUrl"
-            alt="Photo de couverture"
+            :alt="t('events.announcement.cover_image')"
             class="object-cover w-full h-full transition-all duration-700 hover:scale-105"
           />
           <div
@@ -43,7 +47,7 @@
                 </svg>
               </div>
             </div>
-            <p class="text-sm font-medium">Aucune image disponible</p>
+            <p class="text-sm font-medium">{{ t('events.announcement.no_image') }}</p>
           </div>
         </div>
 
@@ -70,7 +74,7 @@
                   >
                     <img
                       :src="profileImageUrl"
-                      alt="Logo de l'association"
+                      :alt="t('events.announcement.association_logo')"
                       width="64"
                       height="64"
                       loading="lazy"
@@ -168,7 +172,7 @@
                   d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              Gérer les présences
+              {{ t('events.announcement.actions.manage_presence') }}
             </button>
             <button
               class="btn btn-secondary gap-2 hover:scale-105 transition-transform"
@@ -188,7 +192,7 @@
                   d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                 />
               </svg>
-              Modifier
+              {{ t('events.announcement.actions.edit') }}
             </button>
             <button
               class="btn btn-error gap-2 hover:scale-105 transition-transform"
@@ -208,7 +212,7 @@
                   d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                 />
               </svg>
-              Supprimer
+              {{ t('events.announcement.actions.delete') }}
             </button>
           </div>
         </div>
@@ -233,7 +237,7 @@
                     d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                   />
                 </svg>
-                Statistiques
+                {{ t('events.announcement.stats.title') }}
               </h2>
 
               <!-- Participants stats -->
@@ -241,11 +245,15 @@
                 <div class="stat-figure text-secondary">
                   <Users class="h-8 w-8" />
                 </div>
-                <div class="stat-title">Participants</div>
+                <div class="stat-title">
+                  {{ t('events.announcement.stats.participants.title') }}
+                </div>
                 <div class="stat-value text-primary">
                   {{ ParticipantAvailable(announcement) }}
                 </div>
-                <div class="stat-desc">Personnes inscrites à l'événement</div>
+                <div class="stat-desc">
+                  {{ t('events.announcement.stats.participants.description') }}
+                </div>
               </div>
 
               <!-- Volunteers stats -->
@@ -253,11 +261,13 @@
                 <div class="stat-figure text-secondary">
                   <HeartHandshake class="h-8 w-8" />
                 </div>
-                <div class="stat-title">Bénévoles</div>
+                <div class="stat-title">{{ t('events.announcement.stats.volunteers.title') }}</div>
                 <div class="stat-value text-secondary">
                   {{ volunteerAvailable(announcement) }}
                 </div>
-                <div class="stat-desc">Personnes aidant à l'organisation</div>
+                <div class="stat-desc">
+                  {{ t('events.announcement.stats.volunteers.description') }}
+                </div>
               </div>
             </div>
           </div>
@@ -277,7 +287,7 @@
             @click="tab = 'participants'"
           >
             <Users class="h-5 w-5" />
-            Participants
+            {{ t('events.announcement.tabs.participants') }}
           </a>
           <a
             role="tab"
@@ -288,7 +298,7 @@
             @click="tab = 'volunteers'"
           >
             <HeartHandshake class="h-5 w-5" />
-            Bénévoles
+            {{ t('events.announcement.tabs.volunteers') }}
           </a>
         </div>
 
@@ -361,7 +371,7 @@
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            aria-label="Faire défiler vers le bas"
+            :aria-label="t('events.announcement.scroll.down')"
           >
             <path
               stroke-linecap="round"
@@ -386,7 +396,7 @@
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            aria-label="Faire défiler vers le haut"
+            :aria-label="t('events.announcement.scroll.up')"
           >
             <path
               stroke-linecap="round"

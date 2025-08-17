@@ -141,7 +141,8 @@
   <div class="form-control w-full search-container">
     <label for="address-input" class="label">
       <span class="label-text"
-        >Lieu (Adresse) <span class="text-error" aria-label="Champ obligatoire">*</span></span
+        >{{ t('common.address_label') }}
+        <span class="text-error" :aria-label="t('common.required_field')">*</span></span
       >
     </label>
     <div class="relative">
@@ -177,7 +178,6 @@
     <!-- Description pour l'accessibilité -->
     <div id="address-description" class="text-sm text-base-content opacity-70 mt-1">
       {{ t('common.address_description') }}
-      Tapez au moins 3 caractères pour voir les suggestions d'adresses
     </div>
 
     <!-- Suggestions d'adresses -->

@@ -5,6 +5,8 @@
   import { useAdmin } from '~/composables/useAdmin'
   import { useAnnouncement } from '~/composables/useAnnouncement'
 
+  const { t } = useI18n()
+
   const $fetch = useRequestFetch()
   const admin = useAdmin()
   const announcement = useAnnouncement()
@@ -55,7 +57,7 @@
         announcementsCount.value = null
       }
     } catch (e: any) {
-      errorMsg.value = e?.message || 'Erreur lors du chargement du résumé'
+      errorMsg.value = e?.message || t('adminIndex.error.loading')
     } finally {
       loading.value = false
     }
@@ -72,9 +74,9 @@
       <div class="hero bg-base-100 rounded-xl shadow-sm">
         <div class="hero-content flex-col lg:flex-row gap-6 lg:gap-10">
           <div>
-            <h1 class="text-3xl lg:text-4xl font-bold">Bienvenue dans l’espace d’administration</h1>
+            <h1 class="text-3xl lg:text-4xl font-bold">{{ t('adminIndex.hero.title') }}</h1>
             <p class="py-2 text-base-content/70">
-              Surveillez l’activité de la plateforme et accédez rapidement aux outils de gestion.
+              {{ t('adminIndex.hero.description') }}
             </p>
           </div>
         </div>
@@ -101,11 +103,11 @@
               />
             </svg>
           </div>
-          <div class="stat-title">Utilisateurs</div>
+          <div class="stat-title">{{ t('adminIndex.stats.users.title') }}</div>
           <div class="stat-value">
             {{ usersCount ?? '—' }}
           </div>
-          <div class="stat-desc">Total des comptes</div>
+          <div class="stat-desc">{{ t('adminIndex.stats.users.description') }}</div>
         </div>
 
         <div class="stat bg-base-100 rounded-xl shadow">
@@ -125,12 +127,13 @@
               />
             </svg>
           </div>
-          <div class="stat-title">Tickets Support</div>
+          <div class="stat-title">{{ t('adminIndex.stats.support.title') }}</div>
           <div class="stat-value">
             {{ supportStats?.totalReports ?? '—' }}
           </div>
           <div class="stat-desc">
-            En attente: {{ supportStats?.pendingReports ?? '—' }} • Résolus:
+            {{ t('adminIndex.stats.support.pending') }}: {{ supportStats?.pendingReports ?? '—' }} •
+            {{ t('adminIndex.stats.support.resolved') }}:
             {{ supportStats?.resolvedReports ?? '—' }}
           </div>
         </div>
@@ -152,11 +155,11 @@
               />
             </svg>
           </div>
-          <div class="stat-title">Annonces</div>
+          <div class="stat-title">{{ t('adminIndex.stats.announcements.title') }}</div>
           <div class="stat-value">
             {{ announcementsCount ?? '—' }}
           </div>
-          <div class="stat-desc">Toutes les annonces</div>
+          <div class="stat-desc">{{ t('adminIndex.stats.announcements.description') }}</div>
         </div>
       </div>
 

@@ -165,14 +165,36 @@
       "language": "Langue",
       "theme": "Thème"
     },
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "menu": "Menu",
+    "welcome": "Bienvenue",
+    "closeMenu": "Fermer le menu",
+    "closeWelcomePanel": "Fermer le panneau de bienvenue",
+    "menuDescription": "Menu de navigation principal",
+    "welcomeDescription": "Panneau de bienvenue et navigation"
+  },
+  "drawerAppContentNoConnected": {
+    "welcome": "Bienvenue sur BeneVoclic",
+    "connectMessage": "Connectez-vous pour accéder à toutes les fonctionnalités",
+    "toggleTheme": "Basculer le thème"
+  },
+  "navigationActions": {
+    "label": "Actions de navigation"
   },
   "header": {
+    "loading": "Chargement de l'application...",
+    "closeModal": "Fermer la modal",
+    "homeLogo": "Accueil - Logo Benevoclic",
+    "toggleTheme": "Basculer entre le thème clair et sombre",
+    "userProfilePhoto": "Photo de profil utilisateur",
+    "openNavigationMenu": "Ouvrir le menu de navigation",
     "volunteer": {
       "home": "Accueil",
       "favorites": "Favoris",
       "recent-search": "Recherches récentes",
-      "help": "Aide"
+      "help": "Aide",
+      "goHome": "Aller à l'accueil bénévole",
+      "viewFavorites": "Voir mes favoris"
     }
   },
   "notifications": {
@@ -225,63 +247,62 @@
   },
   "settings": {
     "title": "Paramètres",
-    "subtitle": "Gérez vos préférences et votre compte",
+    "subtitle": "Gérez vos préférences et paramètres de compte",
     "subtitle_association": "Gérez les paramètres de votre association",
+    "saving": "Sauvegarde en cours...",
+    "save": "Sauvegarder",
     "navigation": "Navigation",
-    "save": "Enregistrer",
-    "saving": "Enregistrement...",
-    "notifications": {
-      "title": "Notifications",
-      "description": "Configurez vos préférences de notifications",
-      "description_association": "Configurez les notifications de votre association",
-      "email": "Notifications par e-mail",
-      "email_description": "Recevoir des notifications par e-mail",
-      "email_description_association": "Recevoir des notifications par e-mail pour votre association",
-      "push": "Notifications push",
-      "push_description": "Recevoir des notifications push sur votre appareil",
-      "mission_updates": "Mises à jour des missions",
-      "mission_updates_description": "Être notifié des changements concernant les missions",
-      "achievements": "Réalisations",
-      "achievements_description": "Être notifié de vos réalisations et badges",
-      "volunteer_requests": "Demandes de volontaires",
-      "volunteer_requests_description": "Être notifié des nouvelles demandes de volontaires",
-      "event_updates": "Mises à jour d'événements",
-      "event_updates_description": "Être notifié des changements d'événements",
-      "analytics": "Analyses",
-      "analytics_description": "Recevoir des rapports d'analyse périodiques"
+    "sections": {
+      "privacy": "Confidentialité",
+      "account": "Compte",
+      "security": "Sécurité",
+      "organization": "Organisation"
+    },
+    "navigation": {
+      "section": "Naviguer vers la section de paramètres"
+    },
+    "deletion": {
+      "inProgress": "Suppression en cours…"
+    },
+    "form": {
+      "inputField": "Champ de saisie",
+      "password": "Mot de passe"
+    },
+    "errors": {
+      "unexpected": "Erreur inattendue"
     },
     "privacy": {
       "title": "Confidentialité",
-      "description": "Contrôlez la visibilité de vos informations",
+      "description": "Contrôlez qui peut voir vos informations personnelles",
       "description_association": "Contrôlez la visibilité des informations de votre association",
       "profile_visibility": "Visibilité du profil",
-      "profile_visibility_description": "Rendre votre profil visible aux autres utilisateurs",
-      "profile_visibility_description_association": "Rendre le profil de votre association visible",
+      "profile_visibility_description": "Permettre aux autres utilisateurs de voir votre profil",
+      "profile_visibility_description_association": "Permettre aux bénévoles de voir le profil de votre association",
       "location_sharing": "Partage de localisation",
-      "location_sharing_description": "Partager votre localisation avec les organisateurs de missions",
+      "location_sharing_description": "Partager votre position pour des événements à proximité",
       "activity_sharing": "Partage d'activité",
-      "activity_sharing_description": "Partager vos activités avec la communauté",
+      "activity_sharing_description": "Permettre aux autres de voir vos participations",
       "contact_info": "Informations de contact",
-      "contact_info_description": "Afficher les informations de contact publiquement",
+      "contact_info_description": "Rendre vos coordonnées visibles aux bénévoles",
       "event_visibility": "Visibilité des événements",
-      "event_visibility_description": "Rendre vos événements visibles publiquement",
-      "volunteer_list": "Liste des volontaires",
-      "volunteer_list_description": "Afficher la liste des volontaires de votre association"
+      "event_visibility_description": "Afficher vos événements dans les recherches",
+      "volunteer_list": "Liste des bénévoles",
+      "volunteer_list_description": "Permettre aux bénévoles de voir la liste des participants"
     },
     "account": {
       "title": "Compte",
-      "description": "Gérez les paramètres de votre compte",
-      "description_association": "Gérez les paramètres de votre association",
+      "description": "Gérez les informations de votre compte",
+      "description_association": "Gérez les informations de votre association",
       "change_password": "Changer le mot de passe",
-      "change_password_description": "Modifier votre mot de passe pour plus de sécurité",
+      "change_password_description": "Mettez à jour votre mot de passe pour plus de sécurité",
+      "change": "Modifier",
       "delete_account": "Supprimer le compte",
       "delete_account_description": "Supprimer définitivement votre compte et toutes vos données",
-      "delete_account_description_association": "Supprimer définitivement votre association et toutes ses données",
+      "delete_account_description_association": "Supprimer définitivement votre association et tous vos événements",
+      "delete": "Supprimer",
       "association_info": "Informations de l'association",
-      "association_info_description": "Modifier les informations de votre association",
-      "change": "Modifier",
-      "edit": "Éditer",
-      "delete": "Supprimer"
+      "association_info_description": "Modifier les détails de votre association",
+      "edit": "Éditer"
     },
     "security": {
       "title": "Sécurité",
@@ -290,25 +311,32 @@
       "two_factor": "Authentification à deux facteurs",
       "two_factor_description": "Ajouter une couche de sécurité supplémentaire",
       "login_notifications": "Notifications de connexion",
-      "login_notifications_description": "Être notifié des nouvelles connexions",
+      "login_notifications_description": "Recevoir des alertes lors de nouvelles connexions",
       "siret_verification": "Vérification SIRET",
-      "siret_verification_description": "Activer la vérification automatique du numéro SIRET"
+      "siret_verification_description": "Vérifier automatiquement les numéros SIRET"
     },
     "organization": {
       "title": "Organisation",
-      "description": "Paramètres d'organisation pour votre association",
-      "auto_approve_volunteers": "Approbation automatique des volontaires",
-      "auto_approve_volunteers_description": "Approuver automatiquement les demandes de volontaires",
-      "volunteer_limits": "Limites de volontaires",
+      "description": "Paramètres d'organisation et de gestion",
+      "auto_approve_volunteers": "Approbation automatique des bénévoles",
+      "auto_approve_volunteers_description": "Approuver automatiquement les demandes de participation",
+      "volunteer_limits": "Limites de bénévoles",
+      "volunteer_limits_description": "Définir des limites sur le nombre de bénévoles",
       "participant_limits": "Limites de participants",
-      "volunteer_limits_description": "Définir des limites sur le nombre de volontaires par événement",
-      "participant_limits_description": "Définir des limites sur le nombre de participants par événement",
-      "event_approval": "Approbation d'événements",
+      "participant_limits_description": "Définir des limites sur le nombre de participants",
+      "event_approval": "Approbation des événements",
       "event_approval_description": "Exiger une approbation pour les nouveaux événements"
+    },
+    "delete_confirmation": {
+      "title": "Confirmer la suppression",
+      "message": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+      "message_association": "Êtes-vous sûr de vouloir supprimer votre association ? Cette action est irréversible.",
+      "cancel": "Annuler",
+      "confirm": "Confirmer la suppression"
     },
     "password_change": {
       "title": "Changer le mot de passe",
-      "message": "Entrez votre mot de passe actuel et votre nouveau mot de passe",
+      "message": "Entrez votre mot de passe actuel et choisissez un nouveau mot de passe",
       "old_password": "Mot de passe actuel",
       "old_password_placeholder": "Entrez votre mot de passe actuel",
       "new_password": "Nouveau mot de passe",
@@ -322,15 +350,143 @@
       "error": {
         "password_mismatch": "Les mots de passe ne correspondent pas",
         "weak_password": "Le mot de passe doit contenir au moins 8 caractères",
-        "general": "Une erreur est survenue lors du changement de mot de passe"
+        "general": "Erreur lors du changement de mot de passe"
+      }
+    }
+  },
+  "editProfile": {
+    "change": "Changer",
+    "save": "Sauvegarder",
+    "association": {
+      "logo": "Logo de l'association",
+      "name": "Nom de l'association",
+      "type": "Type d'association",
+      "phone": "Numéro de téléphone de l'association",
+      "country": "Pays de l'association",
+      "city": "Ville de l'association",
+      "postalCode": "Code postal de l'association",
+      "description": "Description de l'association"
+    },
+    "volunteer": {
+      "photo": "Photo de profil"
+    },
+    "form": {
+      "inputField": "Champ de saisie",
+      "textArea": "Zone de texte"
+    },
+    "errors": {
+      "unexpected": "Erreur inattendue"
+    }
+  },
+  "profile": {
+    "editProfile": "Éditer le profil",
+    "share": "Partager",
+    "notProvided": "Non renseigné",
+    "age": {
+      "years": "ans"
+    },
+    "birthDate": {
+      "notProvided": "Date de naissance non fournie"
+    },
+    "bio": {
+      "notProvided": "Aucune description."
+    },
+    "association": {
+      "logo": "Logo association",
+      "typeNotProvided": "Type non fourni"
+    },
+    "stats": {
+      "associations": "Associations",
+      "eventsParticipated": "Événements participés",
+      "volunteerOpportunities": "Bénévolats proposés",
+      "city": "Ville",
+      "postalCode": "Code postal",
+      "volunteers": "Bénévoles",
+      "announcementsCreated": "Annonces créées",
+      "createdOn": "Créée le"
+    },
+    "sections": {
+      "contact": "Contact",
+      "location": "Localisation",
+      "socialNetworks": "Réseaux sociaux"
+    },
+    "contact": {
+      "email": "Email",
+      "phone": "Téléphone"
+    },
+    "location": {
+      "country": "Pays",
+      "city": "Ville",
+      "postalCode": "Code postal"
+    },
+    "socialNetworks": {
+      "noWebsite": "Aucun site web renseigné"
+    },
+    "errors": {
+      "unexpected": "Erreur inattendue"
+    }
+  },
+  "activity": {
+    "loading": "Chargement…",
+    "loading.inProgress": "Chargement en cours...",
+    "eventDate": "Date de l'événement",
+    "location": "Localisation",
+    "details": "Détails",
+    "cancel": "Annuler",
+    "errors": {
+      "unexpected": "Erreur inattendue"
+    },
+    "missions": {
+      "description": "Gérez vos missions et participations",
+      "searchPlaceholder": "Rechercher des missions...",
+      "filters": {
+        "all": "Toutes les missions",
+        "participant": "Participe",
+        "waiting": "En attente"
+      },
+      "status": {
+        "participant": "Participe",
+        "waiting": "En attente",
+        "available": "Disponible"
+      },
+      "empty": {
+        "title": "Aucune mission trouvée",
+        "description": "Vous n'avez pas encore participé à des missions. Découvrez les événements disponibles et commencez votre aventure !"
+      },
+      "errors": {
+        "userNotInList": "L'utilisateur n'est pas dans la liste des participants ou en attente."
       }
     },
-    "delete_confirmation": {
-      "title": "Confirmer la suppression",
-      "message": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
-      "message_association": "Êtes-vous sûr de vouloir supprimer votre association ? Cette action est irréversible et supprimera tous les événements associés.",
-      "cancel": "Annuler",
-      "confirm": "Oui, supprimer"
+    "participations": {
+      "description": "Suivez vos participations à des missions",
+      "searchPlaceholder": "Rechercher des participations...",
+      "filters": {
+        "all": "Toutes les participations",
+        "active": "Active",
+        "completed": "Complet"
+      },
+      "empty": {
+        "title": "Aucune participation trouvée",
+        "description": "Vous n'avez pas encore participé à des missions. Découvrez les événements disponibles et lancez-vous !"
+      }
+    },
+    "history": {
+      "description": "Retrouvez ici toutes vos missions et participations passées",
+      "searchPlaceholder": "Rechercher dans l'historique...",
+      "filters": {
+        "all": "Toutes les activités",
+        "mission": "Missions",
+        "participation": "Participations"
+      },
+      "noDescription": "Aucune description.",
+      "empty": {
+        "title": "Aucun historique trouvé",
+        "description": "Votre historique d'activités apparaîtra ici dès que vous aurez participé à des missions."
+      },
+      "loadMore": "Charger plus"
+    },
+    "favorites": {
+      "page": "Page"
     }
   },
   "search": {
@@ -519,12 +675,1359 @@
       "announcements": "Annonces"
     }
   },
+  "userDetailsModal": {
+    "title": "Détails du profil",
+    "subtitle": "Informations complètes de l'utilisateur",
+    "close": "Fermer",
+    "close_aria_label": "Fermer",
+    "private_profile": {
+      "title": "Profil privé",
+      "description": "Ce profil n'est pas visible publiquement."
+    },
+    "user_not_found": {
+      "title": "Utilisateur non trouvé",
+      "description": "Impossible de charger les détails de cet utilisateur."
+    },
+    "badges": {
+      "volunteer": "Volontaire",
+      "association": "Association"
+    },
+    "sections": {
+      "about": "À propos",
+      "location": "Localisation",
+      "statistics": "Statistiques",
+      "status": "Statut",
+      "system_info": "Informations système"
+    },
+    "statistics": {
+      "participations": "Participations",
+      "missions": "Missions",
+      "associations": "Associations",
+      "volunteers": "Volontaires",
+      "announcements": "Annonces"
+    },
+    "status": {
+      "online": "En ligne",
+      "offline": "Hors ligne",
+      "verified": "Vérifié",
+      "disabled": "Désactivé"
+    },
+    "system_info": {
+      "created_at": "Créé le:",
+      "updated_at": "Mis à jour le:",
+      "not_available": "Non disponible"
+    }
+  },
+  "dateRangePicker": {
+    "label": "Sélectionner une période",
+    "from": {
+      "label": "Date de début",
+      "description": "Sélectionnez la date de début"
+    },
+    "to": {
+      "label": "Date de fin",
+      "description": "Sélectionnez la date de fin"
+    },
+    "filter": {
+      "button": "Filtrer",
+      "aria_label": "Appliquer le filtre de dates"
+    },
+    "validation": {
+      "error": "La date de fin doit être postérieure à la date de début"
+    }
+  },
+  "events": {
+    "manage": {
+      "loading": "Chargement…",
+      "title": "Gestion des événements",
+      "pagination": {
+        "page": "Page",
+        "of": "sur"
+      }
+    },
+    "requests": {
+      "loading": "Chargement en cours...",
+      "title": "Mes demandes",
+      "subtitle": "Gérez les demandes de bénévolat et d'adhésion à votre association",
+      "tabs": {
+        "volunteer": {
+          "full": "Demandes de bénévolat",
+          "short": "Bénévolat"
+        },
+        "association": {
+          "full": "Demandes d'adhésion",
+          "short": "Adhésion"
+        }
+      },
+      "sections": {
+        "volunteer_requests": "Demandes de bénévolat à un événement",
+        "association_requests": "Demandes d'adhésion à l'association"
+      },
+      "count": {
+        "request": "demande",
+        "requests": "demandes"
+      },
+      "empty": {
+        "volunteer": {
+          "title": "Aucune demande",
+          "description": "Aucune demande de participation pour le moment."
+        },
+        "association": {
+          "title": "Aucune demande",
+          "description": "Aucune demande d'adhésion pour le moment."
+        }
+      }
+    },
+    "announcement": {
+      "loading": "Chargement…",
+      "cover_image": "Photo de couverture",
+      "no_image": "Aucune image disponible",
+      "association_logo": "Logo de l'association",
+      "stats": {
+        "title": "Statistiques",
+        "participants": {
+          "title": "Participants",
+          "description": "Personnes inscrites à l'événement"
+        },
+        "volunteers": {
+          "title": "Bénévoles",
+          "description": "Personnes aidant à l'organisation"
+        }
+      },
+      "tabs": {
+        "participants": "Participants",
+        "volunteers": "Bénévoles"
+      },
+      "actions": {
+        "manage_presence": "Gérer les présences",
+        "edit": "Modifier",
+        "delete": "Supprimer"
+      },
+      "scroll": {
+        "down": "Faire défiler vers le bas",
+        "up": "Faire défiler vers le haut"
+      }
+    }
+  },
+  "cookieConsent": {
+    "banner": {
+      "title": "🍪 Gestion des cookies",
+      "description": "Nous utilisons des cookies pour améliorer votre expérience sur notre site. Certains sont nécessaires au fonctionnement du site, tandis que d'autres nous aident à comprendre comment vous l'utilisez. Vous pouvez accepter tous les cookies ou personnaliser vos préférences.",
+      "learn_more": "En savoir plus",
+      "customize": "Personnaliser",
+      "accept_all": "Accepter tout",
+      "reject_non_essential": "Refuser non essentiels"
+    },
+    "settings": {
+      "title": "Paramètres des cookies",
+      "essential": {
+        "title": "Cookies essentiels",
+        "description": "Ces cookies sont nécessaires au fonctionnement du site et ne peuvent pas être désactivés. Ils permettent notamment de vous authentifier et de sécuriser votre navigation.",
+        "warning": "Sans ces cookies, vous ne pourrez pas vous connecter à votre compte."
+      },
+      "personalization": {
+        "title": "Cookies de personnalisation",
+        "description": "Ces cookies nous permettent de vous proposer des contenus adaptés à vos centres d'intérêt, de mémoriser vos préférences d'affichage et d'utiliser votre localisation pour des services géolocalisés.",
+        "info": "Nécessaire pour la géolocalisation et les données personnelles."
+      },
+      "analytics": {
+        "title": "Cookies analytiques",
+        "description": "Ces cookies nous permettent de mesurer l'audience de notre site et d'améliorer son fonctionnement. Ils sont utilisés par Firebase Analytics pour générer des statistiques anonymes."
+      },
+      "third_party": {
+        "title": "Cookies tiers",
+        "description": "Ces cookies sont déposés par des services tiers comme Google Fonts ou les réseaux sociaux. Ils permettent notamment d'afficher des polices personnalisées et de partager du contenu."
+      },
+      "actions": {
+        "cancel": "Annuler",
+        "save": "Enregistrer"
+      }
+    },
+    "permissions": {
+      "title": "⚠️ Permissions requises",
+      "authentication": {
+        "title": "Authentification impossible",
+        "description": "Vous devez accepter les cookies essentiels pour vous connecter."
+      },
+      "location": {
+        "title": "Géolocalisation désactivée",
+        "description": "Acceptez les cookies de personnalisation pour utiliser la géolocalisation."
+      },
+      "actions": {
+        "close": "Fermer",
+        "configure": "Paramétrer les cookies"
+      }
+    }
+  },
   "common": {
     "placeholder_address_search": "Rechercher une adresse...",
-    "auto_complete_address": "Saisissez une adresse pour la géolocalisation",
-    "aria_label_search": "Rechercher de recherche",
+    "auto_complete_address": "street-address",
+    "aria_label_search": "Recherche d'adresse",
     "address_description": "Tapez au moins 3 caractères pour voir les suggestions d'adresses",
     "aria_label_suggestions": "Suggestions d'adresses",
-    "no_addresses_found": "Aucune adresse trouvée pour cette recherche"
+    "no_suggestions_found": "Aucune suggestion trouvée",
+    "address_label": "Lieu (Adresse)",
+    "required_field": "Champ obligatoire"
+  },
+  "multiMarkerMap": {
+    "controls": {
+      "show_all_cities": "Afficher toutes les villes",
+      "zoom_in": "Zoomer",
+      "zoom_out": "Dézoomer",
+      "switch_map_source": "Changer de source de carte"
+    },
+    "popup": {
+      "city_events": "événement",
+      "city_events_plural": "événements",
+      "click_for_details": "Cliquez pour voir les détails",
+      "date": "📅",
+      "location": "📍"
+    },
+    "error": {
+      "title": "Impossible de charger la carte",
+      "subtitle": "Vérifiez votre connexion internet",
+      "retry": "Réessayer"
+    }
+  },
+  "errorPopup": {
+    "title": "Erreur",
+    "messages": {
+      "4xx": "Cette action n'est plus possible.",
+      "5xx": "Une erreur serveur est survenue."
+    },
+    "actions": {
+      "reload": "Recharger la page",
+      "go_home": "Revenir à la gestion des annonces"
+    }
+  },
+  "permissionAlert": {
+    "actions": {
+      "configure_cookies": "Paramétrer les cookies",
+      "later": "Plus tard"
+    },
+    "close_aria_label": "Fermer la notification"
+  },
+  "eventFilters": {
+    "search": {
+      "placeholder": "Rechercher un événement...",
+      "label": "Recherche"
+    },
+    "status": {
+      "label": "Statut",
+      "options": {
+        "active": "Actif",
+        "completed": "Terminé",
+        "inactive": "Inactif"
+      }
+    },
+    "tags": {
+      "label": "Tags",
+      "add_tag": "Ajouter un tag...",
+      "new_tag_placeholder": "Nouveau tag…",
+      "add_button": "Ajouter",
+      "cancel_button": "Annuler",
+      "close_button": "Fermer",
+      "available_tags": [
+        "Urgent",
+        "Bénévolat",
+        "Formation",
+        "Événement",
+        "Collecte",
+        "Sensibilisation",
+        "Humanitaire",
+        "Environnement",
+        "Sport",
+        "Culture",
+        "Éducation",
+        "Santé"
+      ]
+    },
+    "advanced_filters": {
+      "label": "Filtres avancés",
+      "configure": "Configurer les filtres avancés"
+    },
+    "events": {
+      "label": "Événements",
+      "options": {
+        "now": "En cours",
+        "past": "Passés",
+        "upcoming": "À venir"
+      }
+    },
+    "mobile": {
+      "filters": "Filtres",
+      "reset": "Réinitialiser",
+      "apply": "Appliquer"
+    },
+    "aria_labels": {
+      "input_field": "Champ de saisie",
+      "add": "Ajouter"
+    }
+  },
+  "eventForm": {
+    "required_fields_note": "Les champs marqués d'un",
+    "are_required": "sont obligatoires.",
+    "validation_errors": {
+      "title": "Veuillez corriger les erreurs suivantes :",
+      "event_name": "Nom de l'événement",
+      "description": "Description",
+      "event_date": "Date de l'événement",
+      "event_time": "Heure de l'événement",
+      "address": "Adresse",
+      "city": "Ville",
+      "postal_code": "Code Postal",
+      "date_before_publication": "La date de l'événement ne peut pas être antérieure à la date de publication"
+    },
+    "fields": {
+      "event_name": {
+        "label": "Nom de l'événement",
+        "placeholder": "Nom de l'événement"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Description de l'événement"
+      },
+      "event_date": {
+        "label": "Date de l'événement"
+      },
+      "event_time": {
+        "label": "Heure de l'événement"
+      },
+      "city": {
+        "label": "Ville",
+        "placeholder": "Ville"
+      },
+      "postal_code": {
+        "label": "Code Postal",
+        "placeholder": "Code postal"
+      },
+      "country": {
+        "label": "Pays",
+        "placeholder": "Pays"
+      },
+      "max_participants": {
+        "label": "Nombre maximum de participants"
+      },
+      "max_volunteers": {
+        "label": "Nombre de bénévoles requis"
+      },
+      "tags": {
+        "label": "Tags",
+        "placeholder": "Ajouter un tag et appuyer sur Entrée",
+        "add_button": "Ajouter"
+      },
+      "status": {
+        "label": "Statut"
+      }
+    },
+    "actions": {
+      "cancel": "Annuler",
+      "update": "Mettre à jour",
+      "continue": "Continuer"
+    },
+    "aria_labels": {
+      "input_field": "Champ de saisie",
+      "text_area": "Zone de texte",
+      "selection": "Sélection",
+      "number": "Nombre"
+    }
+  },
+  "announcementEditForm": {
+    "title": {
+      "create": "Créer une annonce",
+      "edit": "Modifier une annonce"
+    },
+    "cover_photo": {
+      "click_to_add": "Cliquez pour ajouter une photo de couverture",
+      "file_types": "JPG, PNG, GIF jusqu'à 10MB",
+      "alt": "Aperçu de couverture"
+    },
+    "fields": {
+      "title": "Titre",
+      "description": "Description",
+      "date": "Date",
+      "time": "Heure",
+      "max_participants": "Nombre max. de participants",
+      "max_volunteers": "Nombre max. de bénévoles",
+      "unlimited": "Illimité",
+      "tags": "Tags (séparés par des virgules)",
+      "city": "Ville",
+      "postal_code": "Code postal",
+      "country": "Pays",
+      "status": "Statut"
+    },
+    "validation": {
+      "participants_error": "Doit être ≥ au nombre de participants déjà inscrits",
+      "volunteers_error": "Doit être ≥ au nombre de bénévoles déjà inscrits"
+    },
+    "actions": {
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "close": "Fermer"
+    },
+    "submit": {
+      "disabled_reasons": {
+        "errors": "Corrigez les erreurs avant d'enregistrer",
+        "no_changes": "Aucun changement détecté"
+      }
+    },
+    "aria_labels": {
+      "toggle_unlimited_participants": "Basculer illimité participants",
+      "toggle_unlimited_volunteers": "Basculer illimité bénévoles"
+    }
+  },
+  "eventModalForm": {
+    "title": {
+      "create": "Créer un nouvel événement",
+      "edit": "Modifier l'événement"
+    }
+  },
+  "readOnlyEventCard": {
+    "no_image": "Aucune image",
+    "event_image_alt": "Image de l'événement",
+    "participants": "participants",
+    "volunteers": "bénévoles",
+    "filter_by_tag": "Filtrer par tag :",
+    "details": "Détails"
+  },
+  "requestItem": {
+    "volunteer_avatar_alt": "Photo de profil du bénévole",
+    "event_context": "Pour l'événement :",
+    "association_context": "Demande d'adhésion à l'association",
+    "actions": {
+      "accept": "Accepter",
+      "refuse": "Refuser"
+    }
+  },
+  "presenceListModal": {
+    "title": "Gestion des présences",
+    "tabs": {
+      "participants": "Participants",
+      "volunteers": "Bénévoles"
+    },
+    "search": {
+      "placeholder": "Rechercher...",
+      "aria_label": "Champ de saisie"
+    },
+    "lists": {
+      "no_participants": "Aucun participant trouvé",
+      "no_volunteers": "Aucun bénévole trouvé"
+    },
+    "presence": {
+      "present": "Présent",
+      "absent": "Absent"
+    },
+    "actions": {
+      "close": "Fermer"
+    }
+  },
+  "participantOrVolunteerCard": {
+    "profile_photo_alt": "Photo de",
+    "actions": {
+      "details": "Détails",
+      "present": "Présent",
+      "mark_present": "Marquer présent",
+      "remove": "Retirer"
+    }
+  },
+  "volunteersList": {
+    "title": "Bénévoles",
+    "no_volunteers": "Aucun participant pour cette annonce"
+  },
+  "participantsList": {
+    "title": "Participants",
+    "no_participants": "Aucun participant pour cette annonce"
+  },
+  "presenceModal": {
+    "title": "Marquer la présence",
+    "message": "Souhaitez-vous marquer {name} comme {status} ?",
+    "status": {
+      "present": "présent",
+      "absent": "absent"
+    },
+    "checkbox": {
+      "present": "Présent",
+      "absent": "Absent"
+    },
+    "actions": {
+      "cancel": "Annuler",
+      "confirm": "Confirmer"
+    }
+  },
+  "eventFiltersDrawer": {
+    "title": "Filtres avancés",
+    "search": {
+      "placeholder": "Recherche...",
+      "aria_label": "Champ de saisie"
+    },
+    "tags": {
+      "placeholder": "Tags (virgules)",
+      "aria_label": "Champ de saisie"
+    },
+    "status": {
+      "aria_label": "Sélection",
+      "all_statuses": "Tous statuts",
+      "pending": "En attente",
+      "active": "Active",
+      "closed": "Clôturée"
+    },
+    "location": {
+      "city": {
+        "placeholder": "Ville",
+        "aria_label": "Champ de saisie"
+      },
+      "postal_code": {
+        "placeholder": "Code postal",
+        "aria_label": "Champ de saisie"
+      }
+    },
+    "association_type": {
+      "aria_label": "Sélection",
+      "all_types": "Tous types d'association",
+      "solidarity": "Solidaire",
+      "sport": "Sport",
+      "culture": "Culture"
+    },
+    "dates": {
+      "start_date": "Date de début",
+      "end_date": "Date de fin",
+      "start_time": "Heure de début",
+      "end_time": "Heure de fin",
+      "aria_label": "Champ de saisie"
+    },
+    "actions": {
+      "validate": "Valider",
+      "cancel": "Annuler"
+    }
+  },
+  "announcementDetails": {
+    "actions": {
+      "edit": "Modifier"
+    },
+    "location": "Lieu :",
+    "status": "Statut :",
+    "tag_aria_label": "Tag:",
+    "no_announcement": "Aucune annonce sélectionnée."
+  },
+  "readOnlyEventList": {
+    "illustration_alt": "Illustration",
+    "error_message": "Une erreur est survenue:",
+    "announcements_count": "annonces"
+  },
+  "uploadCoverForm": {
+    "file_input": {
+      "aria_label": "Champ de saisie"
+    },
+    "upload_area": {
+      "click_to_add": "Cliquez pour ajouter une photo de couverture",
+      "file_types": "JPG, PNG, GIF jusqu'à 10MB"
+    },
+    "preview": {
+      "alt": "Aperçu de la couverture"
+    },
+    "actions": {
+      "ignore": "Ignorer",
+      "finish": "Terminer"
+    }
+  },
+  "homePage": {
+    "search": {
+      "label": "Rechercher un événement",
+      "placeholder": "Rechercher par nom d'événement, description, nom d'association...",
+      "button": {
+        "find_events": "Trouver des événements",
+        "searching": "Recherche en cours...",
+        "search": "Rechercher"
+      },
+      "reset": {
+        "desktop": "Réinitialiser",
+        "mobile": "Reset"
+      }
+    },
+    "results": {
+      "title": "Résultats de recherche",
+      "count": {
+        "events_found": "événement trouvé",
+        "events_found_plural": "événements trouvés",
+        "result": "résultat",
+        "results": "résultats"
+      },
+      "filters": {
+        "active": "Filtres actifs",
+        "mobile": "Filtres"
+      }
+    },
+    "close_results": "Fermer les résultats de recherche"
+  },
+  "volunteerEventFilters": {
+    "labels": {
+      "advancedFilters": "Filtres avancés",
+      "unknownLocation": "Localisation inconnue",
+      "announcementType": "Type d'annonce",
+      "filters": "Filtres"
+    },
+    "buttons": {
+      "configureAdvancedFilters": "Configurer les filtres avancés",
+      "reset": "Réinitialiser",
+      "apply": "Appliquer"
+    },
+    "placeholders": {
+      "newType": "Nouveau type…"
+    },
+    "map": "Carte",
+    "sort": {
+      "label": "Trier par",
+      "aria_label": "Champ de saisie"
+    },
+    "sortOptions": {
+      "dateEventAsc": "Date d'événement (croissant)",
+      "dateEventDesc": "Date d'événement (décroissant)",
+      "datePublicationDesc": "Date de publication (récent)"
+    },
+    "status": {
+      "label": "Statut"
+    },
+    "statusOptions": {
+      "active": "Actif",
+      "completed": "Terminé"
+    },
+    "actions": {
+      "add_type": "Autre",
+      "cancel": "Annuler"
+    }
+  },
+  "searchPanel": {
+    "title": "Recherche",
+    "search": {
+      "label": "Rechercher",
+      "placeholder": "Entrez vos mots-clés...",
+      "button": "Lancer la recherche",
+      "description": "Trouvez des événements, missions et organisations"
+    },
+    "filters": {
+      "heading": "Filtres",
+      "category": {
+        "label": "Catégorie",
+        "aria_label": "Filtrer par catégorie",
+        "all": "Toutes les catégories",
+        "environmental": "Environnement",
+        "humanitarian": "Humanitaire",
+        "education": "Éducation",
+        "health": "Santé",
+        "community": "Communauté"
+      }
+    },
+    "labels": {
+      "period": "Période",
+      "type": "Type",
+      "startDate": "Date de début",
+      "endDate": "Date de fin",
+      "location": "Localisation"
+    },
+    "options": {
+      "anytime": "N'importe quand",
+      "today": "Aujourd'hui",
+      "thisWeek": "Cette semaine",
+      "thisMonth": "Ce mois",
+      "nextMonth": "Mois prochain",
+      "custom": "Période personnalisée",
+      "allTypes": "Tous les types",
+      "missions": "Missions",
+      "organizations": "Organisations",
+      "events": "Événements",
+      "allLocations": "Toutes les localisations"
+    },
+    "buttons": {
+      "reset": "Réinitialiser",
+      "search": "Rechercher"
+    },
+    "aria": {
+      "filterByPeriod": "Filtrer par période",
+      "filterByType": "Filtrer par type",
+      "filterByLocation": "Filtrer par localisation",
+      "selectStartDate": "Sélectionner la date de début",
+      "selectEndDate": "Sélectionner la date de fin",
+      "searchActions": "Actions de recherche",
+      "resetAllFilters": "Réinitialiser tous les filtres",
+      "searchWithCurrentFilters": "Lancer la recherche avec les filtres actuels"
+    },
+    "legend": {
+      "customPeriod": "Période personnalisée"
+    }
+  },
+  "volunteerPage": {
+    "search": {
+      "title": "Trouvez l'événement qui vous correspond",
+      "description": "Utilisez notre moteur de recherche avancé pour trouver des événements qui correspondent à vos besoins, que vous souhaitiez aider ou participer.",
+      "label": "Rechercher un événement",
+      "placeholder": "Rechercher par nom d'événement, description, nom d'association...",
+      "button": {
+        "find_events": "Trouver des événements",
+        "searching": "Recherche en cours...",
+        "search": "Rechercher"
+      },
+      "reset": {
+        "desktop": "Réinitialiser",
+        "mobile": "Reset"
+      }
+    },
+    "results": {
+      "title": "Résultats de recherche",
+      "count": {
+        "events_found": "événement trouvé",
+        "events_found_plural": "événements trouvés",
+        "result": "résultat",
+        "results": "résultats"
+      }
+    },
+    "close_results": "Fermer les résultats de recherche"
+  },
+  "searchPage": {
+    "title": "Résultats de recherche",
+    "description": {
+      "with_results": "résultats trouvés pour",
+      "no_search": "Utilisez le panneau de recherche pour trouver des missions et organisations"
+    },
+    "tabs": {
+      "all": "Tous",
+      "missions": "Missions",
+      "organizations": "Organisations",
+      "aria_labels": {
+        "filter_results": "Filtrer les résultats",
+        "all_results": "Tous les résultats",
+        "missions_only": "Missions uniquement",
+        "organizations_only": "Organisations uniquement"
+      }
+    },
+    "results": {
+      "mission": "Mission",
+      "organization": "Organisation",
+      "favorites": {
+        "add": "Ajouter aux favoris",
+        "remove": "Retirer des favoris"
+      },
+      "view_profile": "Voir le profil"
+    },
+    "no_results": {
+      "title": "Aucun résultat trouvé",
+      "description": "Essayez d'ajuster vos critères de recherche"
+    },
+    "start_search": {
+      "title": "Commencez à rechercher",
+      "description": "Utilisez le panneau de recherche pour trouver des missions et organisations"
+    }
+  },
+  "hero": {
+    "title": {
+      "main": "Faites la différence avec",
+      "brand": "Benevoclic"
+    },
+    "description": "Découvrez des événements et missions qui correspondent à vos compétences, vos centres d'intérêt et vos disponibilités. Que vous soyez bénévole ou personne dans le besoin, rejoignez une communauté engagée et participez à des projets solidaires.",
+    "actions": {
+      "discover_events": "Découvrir les événements",
+      "learn_more": "En savoir plus"
+    },
+    "image": {
+      "alt": "Bénévoles en action"
+    }
+  },
+  "associationDashboard": {
+    "title": "Tableau de bord",
+    "actions": {
+      "refresh": "Actualiser",
+      "auto_refresh": {
+        "label": "Auto-refresh",
+        "mobile": "Auto"
+      }
+    },
+    "period_analysis": {
+      "title": "Période d'analyse",
+      "description": "Sélectionnez la période pour analyser vos données"
+    },
+    "error": {
+      "title": "Erreur de chargement",
+      "message": "Une erreur est survenue lors du chargement des données"
+    },
+    "tabs": {
+      "overview": "Vue d'ensemble",
+      "analytics": "Analyses détaillées",
+      "recommendations": "Recommandations"
+    }
+  },
+  "adminLogin": {
+    "title": "Connexion Admin",
+    "subtitle": "Accédez à votre espace d'administration",
+    "form": {
+      "email": {
+        "label": "Email"
+      },
+      "password": {
+        "label": "Mot de passe",
+        "placeholder": "••••••••"
+      },
+      "submit": {
+        "loading": "Connexion en cours...",
+        "default": "Se connecter"
+      }
+    },
+    "links": {
+      "no_account": "Pas encore de compte admin ?",
+      "create_account": "Créer un compte",
+      "back_home": "← Retour à l'accueil"
+    }
+  },
+  "adminIndex": {
+    "hero": {
+      "title": "Bienvenue dans l'espace d'administration",
+      "description": "Surveillez l'activité de la plateforme et accédez rapidement aux outils de gestion."
+    },
+    "stats": {
+      "users": {
+        "title": "Utilisateurs",
+        "description": "Total des comptes"
+      },
+      "support": {
+        "title": "Tickets Support",
+        "pending": "En attente",
+        "resolved": "Résolus"
+      },
+      "announcements": {
+        "title": "Annonces",
+        "description": "Toutes les annonces"
+      }
+    },
+    "error": {
+      "loading": "Erreur lors du chargement du résumé"
+    }
+  },
+  "adminManageUser": {
+    "title": "Gestion des utilisateurs",
+    "search": {
+      "placeholder": "Rechercher par ID ou email",
+      "button": "Rechercher",
+      "reset": "Réinitialiser"
+    },
+    "table": {
+      "headers": {
+        "id": "ID",
+        "email": "Email",
+        "role": "Rôle",
+        "actions": "Actions"
+      },
+      "actions": {
+        "delete": "Supprimer"
+      }
+    },
+    "confirm": {
+      "delete": "Confirmer la suppression de cet utilisateur ?"
+    },
+    "empty": "Aucun utilisateur"
+  },
+  "adminManageAnnouncement": {
+    "title": "Gestion des annonces",
+    "filters": {
+      "all_statuses": "Tous les statuts",
+      "filter": "Filtrer",
+      "reset": "Réinitialiser"
+    },
+    "search": {
+      "placeholder": "Rechercher par ID",
+      "button": "Chercher"
+    },
+    "table": {
+      "headers": {
+        "id": "ID",
+        "name": "Nom",
+        "association": "Association",
+        "status": "Statut",
+        "actions": "Actions"
+      },
+      "actions": {
+        "edit": "Éditer",
+        "delete": "Supprimer"
+      }
+    },
+    "confirm": {
+      "delete": "Confirmer la suppression de cette annonce ?"
+    },
+    "empty": "Aucune annonce",
+    "no_result": "Aucun résultat pour l'ID {id}",
+    "modal": {
+      "title": "Modifier l'annonce",
+      "name": "Nom",
+      "status": "Statut",
+      "cancel": "Annuler",
+      "save": "Enregistrer"
+    }
+  },
+  "volunteerAnnouncement": {
+    "cover": {
+      "alt": "Photo de couverture",
+      "no_image": "Aucune image",
+      "not_exists": "Cette annonce n'existe plus"
+    },
+    "association": {
+      "logo_alt": "Logo association",
+      "join": "Adhérer",
+      "leave": "Quitter"
+    },
+    "announcement": {
+      "notFound": "Cette annonce n'existe plus",
+      "noImage": "Aucune image"
+    },
+    "event": {
+      "participants": "participants",
+      "volunteers": "bénévoles"
+    },
+    "participation": {
+      "title": "Participer à cet événement",
+      "volunteer": "Bénévole",
+      "participate": "Participer",
+      "waiting": "En attente",
+      "cancel": "Annuler",
+      "full": "Complet"
+    },
+    "report": {
+      "title": "Signaler cette annonce",
+      "successMessage": "Votre signalement a été envoyé avec succès. Nous l'examinerons dans les plus brefs délais.",
+      "errorMessage": "Une erreur est survenue lors de l'envoi du signalement. Veuillez réessayer."
+    },
+    "location": {
+      "title": "Localisation",
+      "viewOnMap": "Voir sur la carte"
+    },
+    "practicalInfo": {
+      "title": "Informations pratiques",
+      "dateTime": "Date et heure",
+      "address": "Adresse",
+      "places": "Places disponibles",
+      "participants": "participants",
+      "volunteers": "bénévoles",
+      "eventType": "Type d'événement",
+      "general": "Général"
+    }
+  },
+  "announcement": {
+    "cover": {
+      "alt": "Photo de couverture",
+      "no_image": "Aucune image",
+      "not_exists": "Cette annonce n'existe plus"
+    },
+    "association": {
+      "logo_alt": "Logo association"
+    },
+    "login": {
+      "title": "Connectez-vous pour participer",
+      "description": "Vous devez être connecté pour participer à cet événement",
+      "button": "Se connecter"
+    },
+    "announcementNotFound": "Cette annonce n'existe plus",
+    "noImage": "Aucune image",
+    "participants": "participants",
+    "volunteers": "bénévoles",
+    "participate": "Participer à cet événement",
+    "volunteer": "Bénévole",
+    "location": "Localisation",
+    "viewOnMap": "Voir sur la carte",
+    "practicalInfo": "Informations pratiques",
+    "dateAndTime": "Date et heure",
+    "address": "Adresse",
+    "availablePlaces": "Places disponibles",
+    "eventType": "Type d'événement",
+    "general": "Général"
+  },
+  "volunteerAssociations": {
+    "title": "Associations que je suis",
+    "search": {
+      "placeholder": "Rechercher une association...",
+      "aria_label": "Champ de saisie"
+    }
+  },
+  "howItWorks": {
+    "title": "Comment ça marche ?",
+    "description": "Participer à un événement ou rejoindre une mission n'a jamais été aussi simple. Suivez ces étapes pour trouver l'événement qui vous correspond, que vous soyez bénévole ou personne à la recherche d'aide.",
+    "steps": {
+      "step1": {
+        "title": "Trouvez un événement",
+        "description": "Parcourez les annonces ou utilisez les filtres pour trouver un événement qui correspond à vos besoins ou compétences."
+      },
+      "step2": {
+        "title": "Inscrivez-vous en quelques clics",
+        "description": "Inscrivez-vous à l'événement directement via la plateforme. Vous pouvez préciser votre rôle (bénévole ou participant) et ajouter un message."
+      },
+      "step3": {
+        "title": "Participez",
+        "description": "Une fois votre inscription confirmée, vous recevrez tous les détails pour participer à l'événement, que ce soit en tant que bénévole ou bénéficiaire."
+      }
+    }
+  },
+  "advantage": {
+    "title": "Pourquoi rejoindre Benevoclic ?",
+    "description": "Notre plateforme permet aux associations de promouvoir leurs événements et de connecter à la fois les bénévoles et les personnes dans le besoin avec des actions solidaires qui leur correspondent.",
+    "cards": {
+      "find": {
+        "title": "Trouvez facilement",
+        "description": "Accédez à des milliers d'événements et de missions filtrés selon vos besoins, préférences et votre localisation, que vous cherchiez à aider ou à participer."
+      },
+      "time": {
+        "title": "Gérez votre temps",
+        "description": "Choisissez des missions adaptées à vos disponibilités, qu'il s'agisse d'un engagement ponctuel ou régulier."
+      },
+      "skills": {
+        "title": "Développez vos compétences",
+        "description": "Mettez en pratique vos talents ou acquérez de nouvelles compétences valorisables dans votre parcours."
+      },
+      "community": {
+        "title": "Rejoignez une communauté",
+        "description": "Connectez-vous avec d'autres bénévoles partageant vos valeurs et élargissez votre réseau."
+      },
+      "impact": {
+        "title": "Faites la différence",
+        "description": "Contribuez concrètement à des causes qui vous tiennent à cœur et ayez un impact positif sur la société."
+      },
+      "security": {
+        "title": "Sécurité garantie",
+        "description": "Toutes les associations sont vérifiées et les missions sont encadrées pour assurer votre sécurité."
+      }
+    }
+  },
+  "announcements": {
+    "title": "Événements à venir",
+    "description": "Découvrez les prochains événements et rejoignez-les en tant que bénévole ou participant.",
+    "no_events": {
+      "alt": "Aucun événement trouvé",
+      "message": "Aucun événement à venir pour le moment."
+    }
+  },
+  "statistics": {
+    "title": "Benevoclic en chiffres",
+    "description": "Rejoignez notre communauté grandissante et participez à des événements qui font la différence.",
+    "cards": {
+      "events": {
+        "title": "Événements",
+        "description": "Événements disponibles sur notre plateforme pour vous engager et faire la différence."
+      },
+      "associations": {
+        "title": "Associations",
+        "description": "Associations actives qui proposent des missions et événements variés."
+      },
+      "volunteers": {
+        "title_singular": "Bénévole & participant",
+        "title_plural": "Bénévoles & participants",
+        "description": "Nombre de bénévoles et participants engagés dans des actions solidaires."
+      }
+    }
+  },
+  "cta": {
+    "title": "Prêt à participer ?",
+    "description": "Des centaines d'associations proposent des événements pour tous. Trouvez dès maintenant un événement qui vous correspond, que vous souhaitiez aider comme bénévole ou participer comme bénéficiaire.",
+    "button": "Découvrir les événements"
+  },
+  "volunteerAnnouncementCard": {
+    "aria": {
+      "event_details": "Voir les détails de l'événement {eventName} organisé par {associationName}",
+      "event_image": "Image de l'événement : {eventName}",
+      "no_event_image": "Aucune image d'événement",
+      "no_image_available": "Aucune image disponible pour cet événement",
+      "remove_favorites": "Retirer des favoris",
+      "add_favorites": "Ajouter aux favoris",
+      "association_logo": "Logo de {associationName}",
+      "no_association_logo": "Aucun logo d'association",
+      "event_date_time": "Date et heure de l'événement",
+      "event_location": "Lieu de l'événement",
+      "participation_stats": "Statistiques de participation",
+      "participants_count": "Nombre de participants",
+      "volunteers_count": "Nombre de bénévoles",
+      "event_tags": "Tags de l'événement",
+      "filter_by_tag": "Filtrer par tag : {tag}"
+    },
+    "content": {
+      "no_image": "Aucune image",
+      "organizer": "Organisateur",
+      "association": "Association",
+      "participants": "participants",
+      "volunteers": "bénévoles",
+      "details": "Détails"
+    }
+  },
+  "volunteerAnnouncementList": {
+    "illustration": {
+      "alt": "Illustration"
+    },
+    "announcements_count": "{count} annonces"
+  },
+  "volunteerAnnouncementFavoritesList": {
+    "illustration": {
+      "alt": "Illustration"
+    },
+    "favorites_count": "{count} annonces"
+  },
+  "associationsList": {
+    "title": "Bénévoles",
+    "no_participants": "Aucun participant pour cette annonce"
+  },
+  "volunteerEventFavoritesFilters": {
+    "sort": {
+      "button": "Trier par",
+      "aria_label": "Champ de saisie"
+    },
+    "options": {
+      "date_event_asc": "Date d'événement (croissant)",
+      "date_event_desc": "Date d'événement (décroissant)",
+      "date_publication_desc": "Date de publication (récent)"
+    }
+  },
+  "registerInfoVolunteerForm": {
+    "title": "🚀 On démarre l'aventure",
+    "subtitle": "Dis-nous un peu sur toi étape par étape 😊",
+    "actions": {
+      "previous": "Précédent",
+      "next": "Suivant",
+      "submit": "Envoyer"
+    },
+    "error": {
+      "general": "Une erreur est survenue. Réessayez plus tard."
+    },
+    "validation": {
+      "lastName": {
+        "required": "Le nom est requis",
+        "min_length": "Le nom doit contenir au moins 2 caractères"
+      },
+      "firstName": {
+        "required": "Le prénom est requis",
+        "min_length": "Le prénom doit contenir au moins 2 caractères"
+      },
+      "phone": {
+        "required": "Le téléphone est requis",
+        "invalid_format": "Format de téléphone invalide"
+      },
+      "birthDate": {
+        "required": "La date de naissance est requise"
+      },
+      "city": {
+        "required": "La ville est requise",
+        "min_length": "La ville doit contenir au moins 2 caractères"
+      },
+      "postalCode": {
+        "required": "Le code postal est requis",
+        "invalid_format": "Le code postal doit contenir 5 chiffres"
+      },
+      "bio": {
+        "min_length": "La bio doit contenir au moins 10 caractères"
+      }
+    }
+  },
+  "baseFormField": {
+    "aria": {
+      "required_field": "Champ obligatoire"
+    },
+    "description": "Saisissez votre {field}"
+  },
+  "nameFirstNameForm": {
+    "title": "Vos informations personnelles",
+    "fields": {
+      "lastName": "Nom",
+      "firstName": "Prénom"
+    },
+    "placeholders": {
+      "lastName": "Ex: Dupont",
+      "firstName": "Ex: Jean"
+    }
+  },
+  "phoneForm": {
+    "label": "Téléphone",
+    "placeholder": "Ex: 0612345678"
+  },
+  "birthDateForm": {
+    "label": "Date de naissance",
+    "aria_label": "Champ de saisie"
+  },
+  "cityForm": {
+    "label": "Ville",
+    "placeholder": "Ex: Paris"
+  },
+  "postalCodeForm": {
+    "label": "Code postal",
+    "placeholder": "Ex: 75001"
+  },
+  "bioForm": {
+    "label": "Bio",
+    "description": "Présente-toi en quelques mots (facultatif)",
+    "placeholder": "Ex. Passionné·e de bénévolat et de musique",
+    "aria_label": "Zone de texte"
+  },
+  "registerInfoAssociationForm": {
+    "title": "Enregistrement de votre association",
+    "subtitle": "Complétez les informations étape par étape 😊",
+    "buttons": {
+      "previous": "Précédent",
+      "next": "Suivant",
+      "submit": "Envoyer"
+    },
+    "errorMessage": "Une erreur est survenue. Réessayez plus tard.",
+    "validation": {
+      "associationNameRequired": "Le nom de l'association est requis",
+      "associationNameMinLength": "Le nom doit contenir au moins 2 caractères",
+      "phoneRequired": "Le téléphone est requis",
+      "phoneInvalidFormat": "Format de téléphone invalide",
+      "associationTypeRequired": "Le type d'association est requis",
+      "cityRequired": "La ville est requise",
+      "cityMinLength": "La ville doit contenir au moins 2 caractères",
+      "postalCodeRequired": "Le code postal est requis",
+      "postalCodeInvalidFormat": "Le code postal doit contenir 5 chiffres",
+      "bioMinLength": "La description doit contenir au moins 10 caractères"
+    }
+  },
+  "dropDownLocation": {
+    "labels": {
+      "searchCity": "Rechercher une ville",
+      "results": "Résultats",
+      "selectedCities": "Villes sélectionnées",
+      "myPosition": "Ma position",
+      "myCurrentPosition": "Ma position actuelle",
+      "locationDisabled": "Géolocalisation désactivée",
+      "searchRadius": "Rayon de recherche",
+      "withinRadius": "Dans un rayon de"
+    },
+    "placeholders": {
+      "searchCity": "Rechercher une ville..."
+    },
+    "notes": {
+      "onlyFirstCity": "Note: Seule la première ville est prise en compte."
+    },
+    "messages": {
+      "cookiePermission": "Acceptez les cookies de personnalisation pour utiliser votre position."
+    },
+    "buttons": {
+      "cookieSettings": "Paramétrer les cookies",
+      "clear": "Effacer",
+      "apply": "Valider"
+    },
+    "units": {
+      "km": "km"
+    },
+    "active": "(active)",
+    "detectedPosition": "Position détectée",
+    "aria": {
+      "removeCity": "Supprimer la ville",
+      "useCurrentPosition": "Utiliser ma position actuelle",
+      "citySearch": "Recherche de ville",
+      "searchRadius": "Rayon de recherche"
+    }
+  },
+  "advancedFilters": {
+    "title": "Filtres avancés",
+    "sections": {
+      "eventDate": "Date de l'événement",
+      "eventTime": "Heure de l'événement",
+      "publicationDate": "Date de publication"
+    },
+    "labels": {
+      "from": "Du:",
+      "to": "Au:",
+      "fromTime": "De:",
+      "toTime": "À:"
+    },
+    "aria": {
+      "inputField": "Champ de saisie"
+    }
+  },
+  "locationButton": {
+    "labels": {
+      "place": "Lieu",
+      "searchCity": "Rechercher une ville",
+      "results": "Résultats",
+      "selectedCities": "Villes sélectionnées",
+      "myPosition": "Ma position",
+      "myCurrentPosition": "Ma position actuelle"
+    },
+    "placeholders": {
+      "searchCity": "Rechercher une ville..."
+    },
+    "note": "Seule la première ville est prise en compte.",
+    "active": "(active)",
+    "detectedPosition": "Position détectée",
+    "aria": {
+      "placeSelector": "Sélecteur de lieu",
+      "citySearch": "Recherche de ville",
+      "removeCity": "Supprimer la ville",
+      "useCurrentPosition": "Utiliser ma position actuelle"
+    }
+  },
+  "filterActive": {
+    "labels": {
+      "activeFilters": "Filtres actifs",
+      "eventDate": "Date événement",
+      "eventTime": "Heure événement",
+      "publicationDate": "Date publication"
+    },
+    "status": {
+      "active": "Actif",
+      "completed": "Terminé",
+      "inactive": "Inactif"
+    },
+    "stateEvent": {
+      "now": "En cours",
+      "past": "Terminé",
+      "upcoming": "À venir"
+    },
+    "sort": {
+      "dateEventAsc": "Date événement (croissant)",
+      "dateEventDesc": "Date événement (décroissant)",
+      "datePublicationDesc": "Date publication (récent)"
+    },
+    "interval": {
+      "lastHour": "Dernière heure",
+      "last5Hours": "5 dernières heures",
+      "lastDay": "Dernière journée",
+      "lastWeek": "Dernière semaine",
+      "lastMonth": "Dernier mois"
+    },
+    "buttons": {
+      "clearAll": "Tout effacer"
+    }
+  },
+  "volunteerBottomBar": {
+    "searchPlaceholder": "Rechercher des missions ou associations",
+    "searchLabel": "Rechercher des missions ou associations",
+    "launchSearch": "Lancer la recherche",
+    "navigation": "Navigation bénévole",
+    "quickActions": "Actions rapides",
+    "goHome": "Aller à l'accueil bénévole",
+    "viewFavorites": "Voir mes favoris",
+    "viewRecentSearches": "Voir les recherches récentes",
+    "clearHistory": "Effacer tout l'historique",
+    "recentSearches": "Recherches récentes",
+    "searchFor": "Rechercher : {search}",
+    "helpSupport": "Aide et support"
+  },
+  "index": {
+    "skipToMainContent": "Passer au contenu principal",
+    "volunteerHomePage": "Page d'accueil Bénévole",
+    "errors": {
+      "fetchEvents": "Erreur lors de la récupération des événements",
+      "search": "Erreur lors de la recherche",
+      "invalidSearchCriteria": "Les critères de recherche ne sont pas valides. Veuillez vérifier vos filtres.",
+      "serverError": "Erreur serveur. Veuillez réessayer plus tard.",
+      "countEvents": "Erreur lors du comptage des événements"
+    },
+    "location": {
+      "myCurrentPosition": "Ma position actuelle",
+      "detectedPosition": "Position détectée",
+      "noPositionObtained": "Aucune position obtenue",
+      "cookiesNotAccepted": "Cookies de personnalisation non acceptés - géolocalisation désactivée",
+      "cannotCheckPermissions": "Impossible de vérifier les permissions de géolocalisation"
+    },
+    "pagination": {
+      "searchNavigation": "Navigation des pages de recherche",
+      "controls": "Contrôles de pagination",
+      "goToPreviousPage": "Aller à la page précédente (page {page})",
+      "previousPage": "Page précédente",
+      "currentPage": "Page actuelle",
+      "currentPageLabel": "Page actuelle :",
+      "pageInfo": "Page {current} / {total}",
+      "goToNextPage": "Aller à la page suivante (page {page})",
+      "nextPage": "Page suivante"
+    }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="text-lg font-bold mb-4">Bénévoles</h3>
+    <h3 class="text-lg font-bold mb-4">{{ t('associationsList.title') }}</h3>
     <div v-if="props.associations && props.associations.length">
       <ParticipantOrVolunteerCard
         v-for="association in props.associations"
@@ -34,13 +34,15 @@
           </svg>
         </div>
       </div>
-      <p class="text-sm font-medium">Aucun participant pour cette annonce</p>
+      <p class="text-sm font-medium">{{ t('associationsList.no_participants') }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import ParticipantOrVolunteerCard from '~/components/event/association/ParticipantOrVolunteerCard.vue'
+
+  const { t } = useI18n()
 
   interface InfoAssociation {
     id: string

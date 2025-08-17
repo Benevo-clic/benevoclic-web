@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import { computed } from 'vue'
 
+  const { t } = useI18n()
+
   const props = defineProps<{
     modelValue: string
     error?: string
@@ -40,7 +42,12 @@
     <label :for="inputId" class="label">
       <span class="label-text">
         {{ props.label }}
-        <span v-if="required" class="text-error" aria-label="Champ obligatoire">*</span>
+        <span
+          v-if="required"
+          class="text-error"
+          :aria-label="t('baseFormField.aria.required_field')"
+          >*</span
+        >
       </span>
     </label>
     <input
@@ -59,7 +66,7 @@
       @keydown="handleKeydown"
     />
     <div v-if="autocomplete && !props.error" :id="descriptionId" class="text-xs text-gray-500 mt-1">
-      Saisissez votre {{ props.label.toLowerCase() }}
+      {{ t('baseFormField.description', { field: props.label.toLowerCase() }) }}
     </div>
     <div
       v-if="props.error"

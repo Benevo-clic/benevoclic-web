@@ -11,15 +11,15 @@
           <h3
             class="font-bold text-lg sm:text-xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
           >
-            Détails du profil
+            {{ t('userDetailsModal.title') }}
           </h3>
           <p class="text-xs sm:text-sm text-gray-500 mt-1 break-words">
-            Informations complètes de l'utilisateur
+            {{ t('userDetailsModal.subtitle') }}
           </p>
         </div>
         <button
           @click="closeModal"
-          aria-label="Fermer"
+          :aria-label="t('userDetailsModal.close_aria_label')"
           class="btn btn-sm btn-circle btn-ghost self-end sm:self-auto hover:bg-base-300 transition-all duration-200"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,8 +42,10 @@
       <div v-else-if="isProfilePrivate" class="flex justify-center items-center py-8">
         <div class="text-center">
           <div class="text-6xl mb-4"></div>
-          <h3 class="text-lg font-semibold mb-2">Profil privé</h3>
-          <p class="text-gray-600">Ce profil n'est pas visible publiquement.</p>
+          <h3 class="text-lg font-semibold mb-2">
+            {{ t('userDetailsModal.private_profile.title') }}
+          </h3>
+          <p class="text-gray-600">{{ t('userDetailsModal.private_profile.description') }}</p>
         </div>
       </div>
 
@@ -53,8 +55,10 @@
       >
         <div class="text-center">
           <div class="text-6xl mb-4"></div>
-          <h3 class="text-lg font-semibold mb-2">Utilisateur non trouvé</h3>
-          <p class="text-gray-600">Impossible de charger les détails de cet utilisateur.</p>
+          <h3 class="text-lg font-semibold mb-2">
+            {{ t('userDetailsModal.user_not_found.title') }}
+          </h3>
+          <p class="text-gray-600">{{ t('userDetailsModal.user_not_found.description') }}</p>
         </div>
       </div>
 
@@ -105,7 +109,7 @@
                   d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                 />
               </svg>
-              Volontaire
+              {{ t('userDetailsModal.badges.volunteer') }}
             </div>
 
             <!-- Informations de contact (conditionnelles) -->
@@ -169,7 +173,7 @@
           v-if="volunteerDetails.bio && volunteerSettings?.profileVisibility"
           class="border-t pt-4"
         >
-          <h4 class="font-semibold mb-2">À propos</h4>
+          <h4 class="font-semibold mb-2">{{ t('userDetailsModal.sections.about') }}</h4>
           <p class="text-gray-700 leading-relaxed break-words">{{ volunteerDetails.bio }}</p>
         </div>
 
@@ -181,7 +185,7 @@
           "
           class="border-t pt-4"
         >
-          <h4 class="font-semibold mb-2">Localisation</h4>
+          <h4 class="font-semibold mb-2">{{ t('userDetailsModal.sections.location') }}</h4>
           <div class="flex items-start gap-2">
             <svg
               class="w-4 h-4 text-gray-500 mt-0.5"
@@ -211,7 +215,7 @@
 
         <!-- Section Statistiques (conditionnelle) -->
         <div v-if="volunteerSettings?.profileVisibility" class="border-t pt-4">
-          <h4 class="font-semibold mb-3">Statistiques</h4>
+          <h4 class="font-semibold mb-3">{{ t('userDetailsModal.sections.statistics') }}</h4>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <div
               class="stat bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-3 sm:p-4 border border-primary/20"
@@ -227,7 +231,7 @@
                 </svg>
               </div>
               <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">
-                Participations
+                {{ t('userDetailsModal.statistics.participations') }}
               </div>
               <div class="stat-value text-xl sm:text-2xl font-bold text-primary">
                 {{ volunteerDetails.nbParticipations || 0 }}
@@ -247,7 +251,9 @@
                   />
                 </svg>
               </div>
-              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">Missions</div>
+              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">
+                {{ t('userDetailsModal.statistics.missions') }}
+              </div>
               <div class="stat-value text-xl sm:text-2xl font-bold text-secondary">
                 {{ volunteerDetails.nbVolunteers || 0 }}
               </div>
@@ -267,7 +273,7 @@
                 </svg>
               </div>
               <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">
-                Associations
+                {{ t('userDetailsModal.statistics.associations') }}
               </div>
               <div class="stat-value text-xl sm:text-2xl font-bold text-accent">
                 {{ volunteerDetails.nbAssociations || 0 }}
@@ -278,7 +284,7 @@
 
         <!-- Section Statut (conditionnelle) -->
         <div v-if="volunteerSettings?.profileVisibility" class="border-t pt-4">
-          <h4 class="font-semibold mb-3">Statut</h4>
+          <h4 class="font-semibold mb-3">{{ t('userDetailsModal.sections.status') }}</h4>
           <div class="flex flex-wrap gap-2 sm:gap-3">
             <span
               v-if="volunteerDetails.isOnline"
@@ -292,7 +298,7 @@
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              En ligne
+              {{ t('userDetailsModal.status.online') }}
             </span>
             <span
               v-else
@@ -306,7 +312,7 @@
                   d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"
                 />
               </svg>
-              Hors ligne
+              {{ t('userDetailsModal.status.offline') }}
             </span>
             <span
               v-if="volunteerDetails.isVerified"
@@ -320,7 +326,7 @@
                   d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              Vérifié
+              {{ t('userDetailsModal.status.verified') }}
             </span>
             <span
               v-if="volunteerDetails.disabled"
@@ -334,21 +340,21 @@
                   d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"
                 />
               </svg>
-              Désactivé
+              {{ t('userDetailsModal.status.disabled') }}
             </span>
           </div>
         </div>
 
         <!-- Section Informations système (conditionnelle) -->
         <div v-if="volunteerSettings?.profileVisibility" class="border-t pt-4">
-          <h4 class="font-semibold mb-2">Informations système</h4>
+          <h4 class="font-semibold mb-2">{{ t('userDetailsModal.sections.system_info') }}</h4>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm">
             <div>
-              <span class="font-medium">Créé le:</span>
+              <span class="font-medium">{{ t('userDetailsModal.system_info.created_at') }}</span>
               <p class="text-gray-600">{{ formatDate(volunteerDetails.createdAt || '') }}</p>
             </div>
             <div>
-              <span class="font-medium">Mis à jour le:</span>
+              <span class="font-medium">{{ t('userDetailsModal.system_info.updated_at') }}</span>
               <p class="text-gray-600">{{ formatDate(volunteerDetails.updatedAt || '') }}</p>
             </div>
           </div>
@@ -402,7 +408,7 @@
                   d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                 />
               </svg>
-              Association
+              {{ t('userDetailsModal.badges.association') }}
             </div>
 
             <!-- Type d'association -->
@@ -460,7 +466,7 @@
           v-if="associationDetails.bio && associationSettings?.profileVisibility"
           class="border-t pt-4"
         >
-          <h4 class="font-semibold mb-2">À propos</h4>
+          <h4 class="font-semibold mb-2">{{ t('userDetailsModal.sections.about') }}</h4>
           <p class="text-gray-700 leading-relaxed break-words">{{ associationDetails.bio }}</p>
         </div>
 
@@ -472,7 +478,7 @@
           "
           class="border-t pt-4"
         >
-          <h4 class="font-semibold mb-2">Localisation</h4>
+          <h4 class="font-semibold mb-2">{{ t('userDetailsModal.sections.location') }}</h4>
           <div class="flex items-start gap-2">
             <svg
               class="w-4 h-4 text-gray-500 mt-0.5"
@@ -502,7 +508,7 @@
 
         <!-- Section Statistiques (conditionnelles) -->
         <div v-if="associationSettings?.profileVisibility" class="border-t pt-4">
-          <h4 class="font-semibold mb-3">Statistiques</h4>
+          <h4 class="font-semibold mb-3">{{ t('userDetailsModal.sections.statistics') }}</h4>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div
               v-if="associationSettings?.volunteerListVisibility"
@@ -518,7 +524,9 @@
                   />
                 </svg>
               </div>
-              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">Volontaires</div>
+              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">
+                {{ t('userDetailsModal.statistics.volunteers') }}
+              </div>
               <div class="stat-value text-xl sm:text-2xl font-bold text-primary">
                 {{ associationDetails.volunteers || 0 }}
               </div>
@@ -537,7 +545,9 @@
                   />
                 </svg>
               </div>
-              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">Annonces</div>
+              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">
+                {{ t('userDetailsModal.statistics.announcements') }}
+              </div>
               <div class="stat-value text-xl sm:text-2xl font-bold text-secondary">
                 {{ associationDetails.announcements || 0 }}
               </div>
@@ -547,7 +557,7 @@
 
         <!-- Section Statut (conditionnelle) -->
         <div v-if="associationSettings?.profileVisibility" class="border-t pt-4">
-          <h4 class="font-semibold mb-3">Statut</h4>
+          <h4 class="font-semibold mb-3">{{ t('userDetailsModal.sections.status') }}</h4>
           <div class="flex flex-wrap gap-2 sm:gap-3">
             <span
               v-if="associationDetails.isOnline"
@@ -561,7 +571,7 @@
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              En ligne
+              {{ t('userDetailsModal.status.online') }}
             </span>
             <span
               v-else
@@ -575,7 +585,7 @@
                   d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"
                 />
               </svg>
-              Hors ligne
+              {{ t('userDetailsModal.status.offline') }}
             </span>
             <span
               v-if="associationDetails.isVerified"
@@ -589,7 +599,7 @@
                   d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              Vérifié
+              {{ t('userDetailsModal.status.verified') }}
             </span>
             <span
               v-if="associationDetails.disabled"
@@ -603,21 +613,21 @@
                   d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"
                 />
               </svg>
-              Désactivé
+              {{ t('userDetailsModal.status.disabled') }}
             </span>
           </div>
         </div>
 
         <!-- Section Informations système (conditionnelle) -->
         <div v-if="associationSettings?.profileVisibility" class="border-t pt-4">
-          <h4 class="font-semibold mb-2">Informations système</h4>
+          <h4 class="font-semibold mb-2">{{ t('userDetailsModal.sections.system_info') }}</h4>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm">
             <div>
-              <span class="font-medium">Créé le:</span>
+              <span class="font-medium">{{ t('userDetailsModal.system_info.created_at') }}</span>
               <p class="text-gray-600">{{ formatDate(associationDetails.createdAt || '') }}</p>
             </div>
             <div>
-              <span class="font-medium">Mis à jour le:</span>
+              <span class="font-medium">{{ t('userDetailsModal.system_info.updated_at') }}</span>
               <p class="text-gray-600">{{ formatDate(associationDetails.updatedAt || '') }}</p>
             </div>
           </div>
@@ -639,7 +649,7 @@
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-            Fermer
+            {{ t('userDetailsModal.close') }}
           </button>
         </div>
       </div>
@@ -653,6 +663,8 @@
 <script setup lang="ts">
   import { useUser } from '~/composables/auth/useUser'
   import { useAssociationAuth, useSettingsStore, useVolunteerAuth } from '#imports'
+
+  const { t } = useI18n()
 
   export interface VolunteerDetails {
     volunteerId: string
@@ -755,7 +767,7 @@
 
   // Fonction pour formater les dates
   const formatDate = (dateString: string) => {
-    if (!dateString) return 'Non disponible'
+    if (!dateString) return t('userDetailsModal.system_info.not_available')
     return new Date(dateString).toLocaleDateString('fr-FR', {
       year: 'numeric',
       month: 'long',

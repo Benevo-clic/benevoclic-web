@@ -2,6 +2,8 @@
   import { ref, watch } from 'vue'
   import { X } from 'lucide-vue-next'
 
+  const { t } = useI18n()
+
   const props = defineProps({
     open: Boolean,
     filters: Object
@@ -45,7 +47,7 @@
       class="fixed top-0 right-0 h-screen w-full max-w-md bg-base-100 shadow-lg flex flex-col z-50 text-base-content"
     >
       <div class="flex items-center justify-between pt-2 pl-2 pr-2 pb-2">
-        <span class="font-bold text-lg">Filtres avancés</span>
+        <span class="font-bold text-lg">{{ t('eventFiltersDrawer.title') }}</span>
         <button class="btn btn-ghost btn-square" @click="handleClose">
           <X class="w-6 h-6" />
         </button>
@@ -54,83 +56,89 @@
         <input
           v-model="localFilters.search"
           type="text"
-          placeholder="Recherche..."
+          :placeholder="t('eventFiltersDrawer.search.placeholder')"
           class="input input-bordered w-full"
-          aria-label="Champ de saisie"
+          :aria-label="t('eventFiltersDrawer.search.aria_label')"
         />
         <input
           v-model="localFilters.tags"
           type="text"
-          placeholder="Tags (virgules)"
+          :placeholder="t('eventFiltersDrawer.tags.placeholder')"
           class="input input-bordered w-full"
-          aria-label="Champ de saisie"
+          :aria-label="t('eventFiltersDrawer.tags.aria_label')"
         />
         <select
           v-model="localFilters.status"
           class="select select-bordered w-full"
-          aria-label="Sélection"
+          :aria-label="t('eventFiltersDrawer.status.aria_label')"
         >
-          <option value="">Tous statuts</option>
-          <option value="PENDING">En attente</option>
-          <option value="ACTIVE">Active</option>
-          <option value="CLOSED">Clôturée</option>
+          <option value="">{{ t('eventFiltersDrawer.status.all_statuses') }}</option>
+          <option value="PENDING">{{ t('eventFiltersDrawer.status.pending') }}</option>
+          <option value="ACTIVE">{{ t('eventFiltersDrawer.status.active') }}</option>
+          <option value="CLOSED">{{ t('eventFiltersDrawer.status.closed') }}</option>
         </select>
         <input
           v-model="localFilters.city"
           type="text"
-          placeholder="Ville"
+          :placeholder="t('eventFiltersDrawer.location.city.placeholder')"
           class="input input-bordered w-full"
-          aria-label="Champ de saisie"
+          :aria-label="t('eventFiltersDrawer.location.city.aria_label')"
         />
         <input
           v-model="localFilters.postalCode"
           type="text"
-          placeholder="Code postal"
+          :placeholder="t('eventFiltersDrawer.location.postal_code.placeholder')"
           class="input input-bordered w-full"
-          aria-label="Champ de saisie"
+          :aria-label="t('eventFiltersDrawer.location.postal_code.aria_label')"
         />
         <select
           v-model="localFilters.associationType"
           class="select select-bordered w-full"
-          aria-label="Sélection"
+          :aria-label="t('eventFiltersDrawer.association_type.aria_label')"
         >
-          <option value="">Tous types d'association</option>
-          <option value="solidaire">Solidaire</option>
-          <option value="sport">Sport</option>
-          <option value="culture">Culture</option>
+          <option value="">{{ t('eventFiltersDrawer.association_type.all_types') }}</option>
+          <option value="solidaire">
+            {{ t('eventFiltersDrawer.association_type.solidarity') }}
+          </option>
+          <option value="sport">{{ t('eventFiltersDrawer.association_type.sport') }}</option>
+          <option value="culture">{{ t('eventFiltersDrawer.association_type.culture') }}</option>
         </select>
-        <label class="block text-sm mb-1">Date de début</label>
+        <label class="block text-sm mb-1">{{ t('eventFiltersDrawer.dates.start_date') }}</label>
         <input
           v-model="localFilters.dateStart"
           type="date"
           class="input input-bordered w-full"
-          aria-label="Champ de saisie"
+          :aria-label="t('eventFiltersDrawer.dates.aria_label')"
         />
-        <label class="block text-sm mb-1">Date de fin</label>
+        <label class="block text-sm mb-1">{{ t('eventFiltersDrawer.dates.end_date') }}</label>
         <input
           v-model="localFilters.dateEnd"
           type="date"
           class="input input-bordered w-full"
-          aria-label="Champ de saisie"
+          :aria-label="t('eventFiltersDrawer.dates.aria_label')"
         />
-        <label class="block text-sm mb-1">Heure de début</label>
+        <label class="block text-sm mb-1">{{ t('eventFiltersDrawer.dates.start_time') }}</label>
         <input
           v-model="localFilters.timeStart"
           type="time"
           class="input input-bordered w-full"
-          aria-label="Champ de saisie"
+          :aria-label="t('eventFiltersDrawer.dates.aria_label')"
         />
-        <label class="block text-sm mb-1">Heure de fin</label>
+        <label class="block text-sm mb-1">{{ t('eventFiltersDrawer.dates.end_time') }}</label>
         <input
           v-model="localFilters.timeEnd"
           type="time"
           class="input input-bordered w-full"
-          aria-label="Champ de saisie"
+          :aria-label="t('eventFiltersDrawer.dates.aria_label')"
         />
       </div>
       <div class="p-4 flex gap-2">
-        <button class="btn btn-primary flex-1" @click="handleValidate">Valider</button>
-        <button class="btn btn-ghost flex-1" @click="handleClose">Annuler</button>
+        <button class="btn btn-primary flex-1" @click="handleValidate">
+          {{ t('eventFiltersDrawer.actions.validate') }}
+        </button>
+        <button class="btn btn-ghost flex-1" @click="handleClose">
+          {{ t('eventFiltersDrawer.actions.cancel') }}
+        </button>
       </div>
     </aside>
   </transition>

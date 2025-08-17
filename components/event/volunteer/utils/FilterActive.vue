@@ -9,6 +9,8 @@
     SortOption
   } from '~/common/interface/filter.interface'
 
+  const { t } = useI18n()
+
   const props = defineProps<{
     filters: {
       status?: AnnouncementStatus | undefined
@@ -93,11 +95,11 @@
   const getStatusLabel = (status: AnnouncementStatus) => {
     switch (status) {
       case 'ACTIVE':
-        return 'Actif'
+        return t('filterActive.status.active')
       case 'COMPLETED':
-        return 'Terminé'
+        return t('filterActive.status.completed')
       case 'INACTIVE':
-        return 'Inactif'
+        return t('filterActive.status.inactive')
       default:
         return status
     }
@@ -106,11 +108,11 @@
   const getStateEventLabel = (state: AnnouncementState) => {
     switch (state) {
       case 'NOW':
-        return 'En cours'
+        return t('filterActive.stateEvent.now')
       case 'PAST':
-        return 'Terminé'
+        return t('filterActive.stateEvent.past')
       case 'UPCOMING':
-        return 'À venir'
+        return t('filterActive.stateEvent.upcoming')
       default:
         return state
     }
@@ -119,11 +121,11 @@
   const getSortLabel = (sort: SortOption) => {
     switch (sort) {
       case 'dateEvent_asc':
-        return 'Date événement (croissant)'
+        return t('filterActive.sort.dateEventAsc')
       case 'dateEvent_desc':
-        return 'Date événement (décroissant)'
+        return t('filterActive.sort.dateEventDesc')
       case 'datePublication_desc':
-        return 'Date publication (récent)'
+        return t('filterActive.sort.datePublicationDesc')
       default:
         return sort
     }
@@ -132,15 +134,15 @@
   const getIntervalLabel = (interval: PublicationInterval) => {
     switch (interval) {
       case '1h':
-        return 'Dernière heure'
+        return t('filterActive.interval.lastHour')
       case '5h':
-        return '5 dernières heures'
+        return t('filterActive.interval.last5Hours')
       case '1d':
-        return 'Dernière journée'
+        return t('filterActive.interval.lastDay')
       case '1w':
-        return 'Dernière semaine'
+        return t('filterActive.interval.lastWeek')
       case '1M':
-        return 'Dernier mois'
+        return t('filterActive.interval.lastMonth')
       default:
         return interval
     }
@@ -226,7 +228,7 @@
   <div v-if="props.hasActiveFilters" class="mb-4 p-4 bg-base-200 rounded-lg border border-base-300">
     <h4 class="text-sm font-medium mb-3 text-base-content/70 flex items-center gap-2">
       <SlidersHorizontal class="w-4 h-4" />
-      Filtres actifs:
+      {{ t('filterActive.labels.activeFilters') }}:
     </h4>
     <div class="flex flex-wrap gap-2">
       <!-- Statut -->
@@ -274,7 +276,7 @@
         v-if="props.filters.dateEventFrom || props.filters.dateEventTo"
         class="badge badge-warning gap-1"
       >
-        Date événement
+        {{ t('filterActive.labels.eventDate') }}
         <button class="btn btn-ghost btn-xs p-0 h-4 w-4" @click="removeDateEvent">
           <X class="w-3 h-3" />
         </button>
@@ -285,7 +287,7 @@
         v-if="props.filters.hoursEventFrom || props.filters.hoursEventTo"
         class="badge badge-warning gap-1"
       >
-        Heure événement
+        {{ t('filterActive.labels.eventTime') }}
         <button class="btn btn-ghost btn-xs p-0 h-4 w-4" @click="removeHoursEvent">
           <X class="w-3 h-3" />
         </button>
@@ -296,7 +298,7 @@
         v-if="props.filters.datePublicationFrom || props.filters.datePublicationTo"
         class="badge badge-error gap-1"
       >
-        Date publication
+        {{ t('filterActive.labels.publicationDate') }}
         <button class="btn btn-ghost btn-xs p-0 h-4 w-4" @click="removeDatePublication">
           <X class="w-3 h-3" />
         </button>
@@ -322,15 +324,7 @@
       </div>
 
       <!-- Bouton tout effacer -->
-      <button
-        class="btn btn-outline btn-xs"
-        type="button"
-        focus:outline-none
-        focus:ring-2
-        focus:ring-primary
-        focus:ring-offset-2
-        @click="resetFilters"
-      >
+      <button class="btn btn-outline btn-xs" type="button" @click="resetFilters">
         Tout effacer
       </button>
     </div>

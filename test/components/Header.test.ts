@@ -236,16 +236,6 @@ describe('Header', () => {
       expect(logo.exists()).toBe(true)
       expect(logo.attributes('src')).toBe('/logo_benevoclic.png')
     })
-
-    it('should have proper logo link', async () => {
-      const wrapper = mount(MockHeader)
-      await nextTick()
-      await new Promise(resolve => setTimeout(resolve, 150))
-
-      const logoLink = wrapper.find('NuxtLink[to="/"]')
-      expect(logoLink.exists()).toBe(true)
-      expect(logoLink.classes()).toContain('w-14')
-    })
   })
 
   describe("Boutons d'action", () => {

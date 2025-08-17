@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import BaseFormField from './BaseFormField.vue'
 
+  const { t } = useI18n()
+
   const props = defineProps<{
     modelValue: string
     error?: string
@@ -16,8 +18,8 @@
   <BaseFormField
     :model-value="props.modelValue"
     :error="props.error"
-    label="Ville"
-    placeholder="Ex: Paris"
+    :label="t('cityForm.label')"
+    :placeholder="t('cityForm.placeholder')"
     @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>

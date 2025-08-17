@@ -26,14 +26,16 @@
                 />
               </svg>
             </div>
-            <p class="text-sm font-medium">Cette annonce n'existe plus</p>
+            <p class="text-sm font-medium">
+              {{ t('volunteerAnnouncement.announcement.notFound') }}
+            </p>
           </div>
         </div>
 
         <img
           v-else-if="announcement?.announcementImage"
           :src="coverImageUrl"
-          alt="Photo de couverture"
+          :alt="t('volunteerAnnouncement.cover.alt')"
           class="object-cover w-full h-full transition-transform duration-500"
         />
         <div
@@ -58,7 +60,7 @@
               </svg>
             </div>
           </div>
-          <p class="text-sm font-medium">Aucune image</p>
+          <p class="text-sm font-medium">{{ t('volunteerAnnouncement.announcement.noImage') }}</p>
         </div>
         <!-- Status badge overlay -->
         <div class="absolute top-3 right-3">
@@ -75,7 +77,7 @@
         <div class="flex items-center gap-3 mb-2">
           <div v-if="announcement?.associationLogo" class="avatar">
             <div class="ring-primary ring-offset-base-100 w-14 rounded-full ring-2 ring-offset-2">
-              <img :src="profileImageUrl" alt="Logo association" />
+              <img :src="profileImageUrl" :alt="t('volunteerAnnouncement.association.logo_alt')" />
             </div>
           </div>
           <div v-else class="avatar placeholder">
@@ -106,7 +108,7 @@
               <UserPlus v-if="!isFollowing" class="w-4 h-4 mr-1" />
               <Clock v-else-if="isFollowingPending" class="w-4 h-4 mr-1" />
               <UserCheck v-else class="w-4 h-4 mr-1" />
-              {{ followButtonHoverText }}
+              {{ followButtonText }}
             </button>
           </div>
         </div>
@@ -154,19 +156,23 @@
             <span class="font-medium">{{
               ParticipantAvailable(announcement as Announcement)
             }}</span>
-            <span class="text-base-content/60">participants</span>
+            <span class="text-base-content/60">{{
+              t('volunteerAnnouncement.event.participants')
+            }}</span>
           </div>
           <div class="flex items-center gap-1 text-xs">
             <HeartHandshake class="h-4 w-4 text-secondary" />
             <span class="font-medium">{{ volunteerAvailable(announcement as Announcement) }}</span>
-            <span class="text-base-content/60">bénévoles</span>
+            <span class="text-base-content/60">{{
+              t('volunteerAnnouncement.event.volunteers')
+            }}</span>
           </div>
         </div>
       </div>
 
       <!-- Boutons d'action de participation -->
       <div class="bg-base-100 rounded-xl shadow-lg p-6 mb-6">
-        <h2 class="text-xl font-bold mb-4">Participer à cet événement</h2>
+        <h2 class="text-xl font-bold mb-4">{{ t('volunteerAnnouncement.participation.title') }}</h2>
         <div v-if="loadingVolunteer" class="flex justify-center items-center">
           <span class="loading loading-spinner loading-md" />
         </div>
@@ -180,10 +186,10 @@
             @keyup.space.prevent="cancelVolunteerParticipationWaitingList"
           >
             <HeartHandshake class="w-5 h-5 mr-2" />
-            Bénévole
+            {{ t('volunteerAnnouncement.participation.volunteer') }}
             <span
               class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >En attente</span
+              >{{ t('volunteerAnnouncement.participation.waiting') }}</span
             >
           </button>
           <button
@@ -194,10 +200,10 @@
             @keyup.space.prevent="cancelVolunteerParticipation"
           >
             <HeartHandshake class="w-5 h-5 mr-2" />
-            Bénévole
+            {{ t('volunteerAnnouncement.participation.volunteer') }}
             <span
               class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >Annuler</span
+              >{{ t('volunteerAnnouncement.participation.cancel') }}</span
             >
           </button>
           <button
@@ -209,11 +215,11 @@
             @keyup.space.prevent="participateAsVolunteer"
           >
             <HeartHandshake class="w-5 h-5 mr-2" />
-            Bénévole
+            {{ t('volunteerAnnouncement.participation.volunteer') }}
             <span
               v-if="!canParticipateAsVolunteer"
               class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >Complet</span
+              >{{ t('volunteerAnnouncement.participation.full') }}</span
             >
           </button>
           <button
@@ -225,11 +231,11 @@
             @keyup.space.prevent="participateAsParticipant"
           >
             <Users class="w-5 h-5 mr-2" />
-            Participer
+            {{ t('volunteerAnnouncement.participation.participate') }}
             <span
               v-if="!canParticipateAsParticipant"
               class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >Complet</span
+              >{{ t('volunteerAnnouncement.participation.full') }}</span
             >
           </button>
           <button
@@ -240,10 +246,10 @@
             @keyup.space.prevent="cancelParticipation"
           >
             <Users class="w-5 h-5 mr-2" />
-            Participer
+            {{ t('volunteerAnnouncement.participation.participate') }}
             <span
               class="badge badge focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >Annuler</span
+              >{{ t('volunteerAnnouncement.participation.cancel') }}</span
             >
           </button>
         </div>
@@ -260,7 +266,7 @@
             @keyup.space.prevent="openReportModal"
           >
             <AlertTriangle class="w-4 h-4 mr-2" />
-            Signaler cette annonce
+            {{ t('volunteerAnnouncement.report.title') }}
           </button>
         </div>
       </div>
@@ -271,7 +277,7 @@
       <div class="bg-base-100 rounded-xl shadow-lg p-6 mb-6">
         <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
           <MapPin class="w-5 h-5 text-primary" />
-          Localisation
+          {{ t('volunteerAnnouncement.location.title') }}
         </h3>
         <div class="h-64 md:h-80 rounded-lg overflow-hidden bg-base-200 relative">
           <!-- Placeholder pour la carte -->
@@ -311,7 +317,7 @@
             @keyup.space.prevent="openInGoogleMaps"
           >
             <ExternalLink class="w-4 h-4 mr-1" />
-            Voir sur la carte
+            {{ t('volunteerAnnouncement.location.viewOnMap') }}
           </button>
         </div>
       </div>
@@ -320,24 +326,23 @@
       <div class="bg-base-100 rounded-xl shadow-lg p-6 mb-6">
         <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
           <Info class="w-5 h-5 text-primary" />
-          Informations pratiques
+          {{ t('volunteerAnnouncement.practicalInfo.title') }}
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="space-y-3">
             <div class="flex items-center gap-3">
               <Calendar class="w-5 h-5 text-primary" />
               <div>
-                <p class="font-medium">Date et heure</p>
+                <p class="font-medium">{{ t('volunteerAnnouncement.practicalInfo.dateTime') }}</p>
                 <p class="text-sm text-base-content/70">
-                  {{ formatDate(announcement?.dateEvent) }} à
-                  {{ announcement?.hoursEvent }}
+                  {{ formatDate(announcement?.dateEvent) }} {{ announcement?.hoursEvent }}
                 </p>
               </div>
             </div>
             <div class="flex items-center gap-3">
               <MapPin class="w-5 h-5 text-primary" />
               <div>
-                <p class="font-medium">Adresse</p>
+                <p class="font-medium">{{ t('volunteerAnnouncement.practicalInfo.address') }}</p>
                 <p class="text-sm text-base-content/70">
                   {{ announcement?.addressAnnouncement?.address }}
                 </p>
@@ -352,18 +357,24 @@
             <div class="flex items-center gap-3">
               <Users class="w-5 h-5 text-primary" />
               <div>
-                <p class="font-medium">Places disponibles</p>
+                <p class="font-medium">{{ t('volunteerAnnouncement.practicalInfo.places') }}</p>
                 <p class="text-sm text-base-content/70">
-                  {{ remainingParticipants }} participants, {{ remainingVolunteers }} bénévoles
+                  {{ remainingParticipants }}
+                  {{ t('volunteerAnnouncement.practicalInfo.participants') }},
+                  {{ remainingVolunteers }}
+                  {{ t('volunteerAnnouncement.practicalInfo.volunteers') }}
                 </p>
               </div>
             </div>
             <div class="flex items-center gap-3">
               <Tag class="w-5 h-5 text-primary" />
               <div>
-                <p class="font-medium">Type d'événement</p>
+                <p class="font-medium">{{ t('volunteerAnnouncement.practicalInfo.eventType') }}</p>
                 <p class="text-sm text-base-content/70">
-                  {{ announcement?.tags?.join(', ') || 'Général' }}
+                  {{
+                    announcement?.tags?.join(', ') ||
+                    t('volunteerAnnouncement.practicalInfo.general')
+                  }}
                 </p>
               </div>
             </div>
@@ -371,59 +382,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Modal pour les photos -->
-
-    <!-- Indicateur scroll bas -->
-    <transition name="fade">
-      <div
-        v-if="showScrollDown"
-        class="fixed left-1/2 -translate-x-1/2 bottom-4 z-50 flex flex-col items-center pointer-events-none select focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-      >
-        <div class="bg-base-200/80 rounded-full shadow p-2 animate-bounce">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-7 w-7 text-primary"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-label="Faire défiler vers le bas"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </div>
-      </div>
-    </transition>
-    <!-- Indicateur scroll haut -->
-    <transition name="fade">
-      <div
-        v-if="showScrollUp"
-        class="fixed left-1/2 -translate-x-1/2 top-4 z-50 flex flex-col items-center pointer-events-none select focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-      >
-        <div class="bg-base-200/80 rounded-full shadow p-2 animate-bounce rotate-180">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-7 w-7 text-primary"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-label="Faire défiler vers le haut"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </div>
-      </div>
-    </transition>
 
     <ErrorPopup
       :show-error-modal="showErrorModal"
@@ -479,6 +437,8 @@
   import { useUser } from '~/composables/auth/useUser'
   import type { Announcement } from '~/common/interface/event.interface'
 
+  const { t } = useI18n()
+
   const route = useRoute()
   const announcementUse = useAnnouncement()
   const volunteerUse = useVolunteerAuth()
@@ -506,24 +466,20 @@
 
   const hovering = ref(false)
 
-  const followButtonHoverText = computed(() => {
-    if (isFollowingPending.value) {
-      return hovering.value ? 'Annuler ma demande' : 'Attente de validation'
-    }
-    if (isFollowing.value) {
-      return hovering.value ? 'Se retirer' : 'Adhérent'
-    }
-    return 'Adhérer'
-  })
-
   const followButtonClass = computed(() => {
     if (isFollowingPending.value) {
       return 'btn-warning'
     }
-    if (isFollowing.value) {
-      return 'btn-success'
+    return isFollowing.value ? 'btn-success' : 'btn-primary'
+  })
+
+  const followButtonText = computed(() => {
+    if (isFollowingPending.value) {
+      return t('volunteerAnnouncement.association.leave')
     }
-    return 'btn-primary'
+    return isFollowing.value
+      ? t('volunteerAnnouncement.association.leave')
+      : t('volunteerAnnouncement.association.join')
   })
 
   // Modal de signalement
@@ -576,15 +532,9 @@
 
   function handleReportSubmitted(success: boolean) {
     if (success) {
-      showNotificationToast(
-        "Votre signalement a été envoyé avec succès. Nous l'examinerons dans les plus brefs délais.",
-        'success'
-      )
+      showNotificationToast(t('volunteerAnnouncement.report.successMessage'), 'success')
     } else {
-      showNotificationToast(
-        "Une erreur est survenue lors de l'envoi du signalement. Veuillez réessayer.",
-        'error'
-      )
+      showNotificationToast(t('volunteerAnnouncement.report.errorMessage'), 'error')
     }
   }
 

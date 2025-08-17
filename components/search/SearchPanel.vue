@@ -1,21 +1,21 @@
 <template>
   <div class="bg-base-100 rounded-lg shadow-md p-4" role="search" aria-label="Panneau de recherche">
     <h2 id="search-panel-heading" class="text-xl font-semibold mb-4 text-base-content">
-      Recherche
+      {{ t('searchPanel.title') }}
     </h2>
 
     <!-- Search form -->
     <form class="space-y-4" aria-labelledby="search-panel-heading" @submit.prevent="performSearch">
       <div class="form-control">
         <label for="search-input" class="label">
-          <span class="label-text text-base-content">Rechercher</span>
+          <span class="label-text text-base-content">{{ t('searchPanel.search.label') }}</span>
         </label>
         <div class="input-group">
           <input
             id="search-input"
             v-model="searchQuery"
             type="text"
-            placeholder="Rechercher des missions, organisations..."
+            :placeholder="t('searchPanel.search.placeholder')"
             class="input input-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             aria-describedby="search-description"
             autocomplete="off"
@@ -24,51 +24,57 @@
           <button
             type="submit"
             class="btn btn-square focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Lancer la recherche"
+            :aria-label="t('searchPanel.search.button')"
             @click="performSearch"
           >
             <Search class="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
         <div id="search-description" class="text-sm text-base-content opacity-70 mt-1">
-          Tapez vos mots-clés pour trouver des missions et organisations
+          {{ t('searchPanel.search.description') }}
         </div>
       </div>
 
       <!-- Filters -->
       <fieldset class="grid grid-cols-1 md:grid-cols-2 gap-4" aria-labelledby="filters-heading">
-        <legend id="filters-heading" class="sr-only">Filtres de recherche</legend>
+        <legend id="filters-heading" class="sr-only">{{ t('searchPanel.filters.heading') }}</legend>
 
         <div class="form-control">
           <label for="category-select" class="label">
-            <span class="label-text text-base-content">Catégorie</span>
+            <span class="label-text text-base-content">{{
+              t('searchPanel.filters.category.label')
+            }}</span>
           </label>
           <select
             id="category-select"
             v-model="filters.category"
             class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Filtrer par catégorie"
+            :aria-label="t('searchPanel.filters.category.aria_label')"
           >
-            <option value="">Toutes les catégories</option>
-            <option value="environmental">Environnement</option>
-            <option value="humanitarian">Humanitaire</option>
-            <option value="education">Éducation</option>
-            <option value="health">Santé</option>
-            <option value="community">Communauté</option>
+            <option value="">{{ t('searchPanel.filters.category.all') }}</option>
+            <option value="environmental">
+              {{ t('searchPanel.filters.category.environmental') }}
+            </option>
+            <option value="humanitarian">
+              {{ t('searchPanel.filters.category.humanitarian') }}
+            </option>
+            <option value="education">{{ t('searchPanel.filters.category.education') }}</option>
+            <option value="health">{{ t('searchPanel.filters.category.health') }}</option>
+            <option value="community">{{ t('searchPanel.filters.category.community') }}</option>
           </select>
         </div>
 
         <div class="form-control">
           <label for="location-select" class="label">
-            <span class="label-text text-base-content">Localisation</span>
+            <span class="label-text text-base-content">{{ t('searchPanel.labels.location') }}</span>
           </label>
           <select
             id="location-select"
             v-model="filters.location"
             class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Filtrer par localisation"
+            :aria-label="t('searchPanel.aria.filterByLocation')"
           >
-            <option value="">Toutes les localisations</option>
+            <option value="">{{ t('searchPanel.options.allLocations') }}</option>
             <option value="paris">Paris</option>
             <option value="lyon">Lyon</option>
             <option value="marseille">Marseille</option>
@@ -79,37 +85,37 @@
 
         <div class="form-control">
           <label for="date-range-select" class="label">
-            <span class="label-text text-base-content">Période</span>
+            <span class="label-text text-base-content">{{ t('searchPanel.labels.period') }}</span>
           </label>
           <select
             id="date-range-select"
             v-model="filters.dateRange"
             class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Filtrer par période"
+            :aria-label="t('searchPanel.aria.filterByPeriod')"
           >
-            <option value="">N'importe quand</option>
-            <option value="today">Aujourd'hui</option>
-            <option value="this-week">Cette semaine</option>
-            <option value="this-month">Ce mois</option>
-            <option value="next-month">Mois prochain</option>
-            <option value="custom">Période personnalisée</option>
+            <option value="">{{ t('searchPanel.options.anytime') }}</option>
+            <option value="today">{{ t('searchPanel.options.today') }}</option>
+            <option value="this-week">{{ t('searchPanel.options.thisWeek') }}</option>
+            <option value="this-month">{{ t('searchPanel.options.thisMonth') }}</option>
+            <option value="next-month">{{ t('searchPanel.options.nextMonth') }}</option>
+            <option value="custom">{{ t('searchPanel.options.custom') }}</option>
           </select>
         </div>
 
         <div class="form-control">
           <label for="type-select" class="label">
-            <span class="label-text text-base-content">Type</span>
+            <span class="label-text text-base-content">{{ t('searchPanel.labels.type') }}</span>
           </label>
           <select
             id="type-select"
             v-model="filters.type"
             class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Filtrer par type"
+            :aria-label="t('searchPanel.aria.filterByType')"
           >
-            <option value="">Tous les types</option>
-            <option value="missions">Missions</option>
-            <option value="organizations">Organisations</option>
-            <option value="events">Événements</option>
+            <option value="">{{ t('searchPanel.options.allTypes') }}</option>
+            <option value="missions">{{ t('searchPanel.options.missions') }}</option>
+            <option value="organizations">{{ t('searchPanel.options.organizations') }}</option>
+            <option value="events">{{ t('searchPanel.options.events') }}</option>
           </select>
         </div>
       </fieldset>
@@ -120,52 +126,60 @@
         class="grid grid-cols-1 md:grid-cols-2 gap-4"
         aria-labelledby="custom-date-heading"
       >
-        <legend id="custom-date-heading" class="sr-only">Période personnalisée</legend>
+        <legend id="custom-date-heading" class="sr-only">
+          {{ t('searchPanel.legend.customPeriod') }}
+        </legend>
 
         <div class="form-control">
           <label for="start-date" class="label">
-            <span class="label-text text-base-content">Date de début</span>
+            <span class="label-text text-base-content">{{
+              t('searchPanel.labels.startDate')
+            }}</span>
           </label>
           <input
             id="start-date"
             v-model="filters.startDate"
             type="date"
             class="input input-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Sélectionner la date de début"
+            :aria-label="t('searchPanel.aria.selectStartDate')"
           />
         </div>
 
         <div class="form-control">
           <label for="end-date" class="label">
-            <span class="label-text text-base-content">Date de fin</span>
+            <span class="label-text text-base-content">{{ t('searchPanel.labels.endDate') }}</span>
           </label>
           <input
             id="end-date"
             v-model="filters.endDate"
             type="date"
             class="input input-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Sélectionner la date de fin"
+            :aria-label="t('searchPanel.aria.selectEndDate')"
           />
         </div>
       </fieldset>
 
       <!-- Action buttons -->
-      <div class="flex justify-end gap-2" role="group" aria-label="Actions de recherche">
+      <div
+        class="flex justify-end gap-2"
+        role="group"
+        :aria-label="t('searchPanel.aria.searchActions')"
+      >
         <button
           type="button"
           class="btn btn-outline focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-          aria-label="Réinitialiser tous les filtres"
+          :aria-label="t('searchPanel.aria.resetAllFilters')"
           @click="resetFilters"
         >
-          Réinitialiser
+          {{ t('searchPanel.buttons.reset') }}
         </button>
         <button
           type="submit"
           class="btn btn-primary focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-          aria-label="Lancer la recherche avec les filtres actuels"
+          :aria-label="t('searchPanel.aria.searchWithCurrentFilters')"
           @click="performSearch"
         >
-          Rechercher
+          {{ t('searchPanel.buttons.search') }}
         </button>
       </div>
     </form>
@@ -175,6 +189,8 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import { Search } from 'lucide-vue-next'
+
+  const { t } = useI18n()
 
   const emit = defineEmits(['search'])
 

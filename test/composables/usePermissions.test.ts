@@ -492,16 +492,26 @@ describe('usePermissions', () => {
         thirdParty: false
       }
 
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       expect(() => permissions.saveCookiePreferences(preferences)).not.toThrow()
+
+      consoleSpy.mockRestore()
     })
 
     it('should handle JSON parse errors', () => {
       const permissions = usePermissions()
       localStorageMock.getItem.mockReturnValue('invalid json')
 
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       const result = permissions.loadCookiePreferences()
 
       expect(result).toBe(false)
+
+      consoleSpy.mockRestore()
     })
   })
 
@@ -519,6 +529,9 @@ describe('usePermissions', () => {
       // S'assurer que localStorage ne lance pas d'erreurs
       localStorageMock.setItem.mockImplementation(() => {})
       localStorageMock.removeItem.mockImplementation(() => {})
+
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
       const permissions = usePermissions()
 
@@ -538,6 +551,8 @@ describe('usePermissions', () => {
 
       expect(permissions.hasConsented.value).toBe(false)
       expect(permissions.hasPermission('canUseAnalytics')).toBe(false)
+
+      consoleSpy.mockRestore()
     })
 
     it('should handle specific cookie acceptance', () => {
@@ -554,6 +569,9 @@ describe('usePermissions', () => {
       localStorageMock.setItem.mockImplementation(() => {})
       localStorageMock.removeItem.mockImplementation(() => {})
 
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       const permissions = usePermissions()
 
       // Accept only analytics
@@ -562,6 +580,8 @@ describe('usePermissions', () => {
       expect(permissions.hasPermission('canUseAnalytics')).toBe(true)
       expect(permissions.hasPermission('canUseLocation')).toBe(false)
       expect(permissions.hasPermission('canAuthenticate')).toBe(true) // essential is always true
+
+      consoleSpy.mockRestore()
     })
   })
 })

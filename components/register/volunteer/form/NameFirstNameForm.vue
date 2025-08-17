@@ -2,6 +2,8 @@
   import { computed } from 'vue'
   import BaseFormField from './BaseFormField.vue'
 
+  const { t } = useI18n()
+
   const props = defineProps<{
     modelValue: string
     error?: string
@@ -34,20 +36,20 @@
 
 <template>
   <div>
-    <h3 class="text-lg font-medium mb-2">Vos informations personnelles</h3>
+    <h3 class="text-lg font-medium mb-2">{{ t('nameFirstNameForm.title') }}</h3>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <BaseFormField
         :model-value="name"
         :error="error && name === '' ? error : ''"
-        label="Nom"
-        placeholder="Ex: Dupont"
+        :label="t('nameFirstNameForm.fields.lastName')"
+        :placeholder="t('nameFirstNameForm.placeholders.lastName')"
         @update:model-value="updateName"
       />
       <BaseFormField
         :model-value="firstName"
         :error="props.error && firstName === '' ? props.error : ''"
-        label="Prénom"
-        placeholder="Ex: Jean"
+        :label="t('nameFirstNameForm.fields.firstName')"
+        :placeholder="t('nameFirstNameForm.placeholders.firstName')"
         @update:model-value="updateFirstName"
       />
     </div>

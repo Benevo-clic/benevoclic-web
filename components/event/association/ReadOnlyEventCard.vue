@@ -9,7 +9,7 @@
         <img
           v-if="announcement.announcementImage"
           :src="coverImageUrl"
-          alt="Image de l'événement"
+          :alt="t('readOnlyEventCard.event_image_alt')"
           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div
@@ -34,7 +34,7 @@
               </svg>
             </div>
           </div>
-          <p class="text-sm font-medium">Aucune image</p>
+          <p class="text-sm font-medium">{{ t('readOnlyEventCard.no_image') }}</p>
         </div>
       </figure>
 
@@ -88,7 +88,7 @@
           <span class="font-medium">
             {{ ParticipantAvailable(announcement) }}
           </span>
-          <span class="text-base-content/60">participants</span>
+          <span class="text-base-content/60">{{ t('readOnlyEventCard.participants') }}</span>
         </div>
 
         <div class="flex items-center gap-2">
@@ -96,7 +96,7 @@
           <span class="font-medium">
             {{ volunteerAvailable(announcement) }}
           </span>
-          <span class="text-base-content/60">bénévoles</span>
+          <span class="text-base-content/60">{{ t('readOnlyEventCard.volunteers') }}</span>
         </div>
       </div>
 
@@ -110,7 +110,7 @@
             class="badge badge-outline text-sm hover:badge-primary transition-colors text-base-content border-base-content focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-1"
             tabindex="0"
             role="button"
-            :aria-label="`Filtrer par tag : ${tag}`"
+            :aria-label="`${t('readOnlyEventCard.filter_by_tag')} ${tag}`"
           >
             <span class="text-base-content/70 group-hover:text-primary transition-colors">{{
               tag
@@ -127,7 +127,7 @@
         <div
           class="btn btn-primary btn-sm gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         >
-          Détails
+          {{ t('readOnlyEventCard.details') }}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-4 w-4"
@@ -154,6 +154,8 @@
   import { navigateTo } from '#app'
   import type { Announcement } from '~/common/interface/event.interface'
   import { EventStatus } from '~/common/enums/event.enum'
+
+  const { t } = useI18n()
 
   const props = defineProps<{
     announcement: Announcement

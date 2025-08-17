@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import { ref } from 'vue'
 
+  const { t } = useI18n()
+
   // eslint-disable-next-line func-call-spacing
   const emit = defineEmits<{
     (e: 'ignore'): void
@@ -78,7 +80,7 @@
         type="file"
         class="hidden"
         accept="image/*"
-        aria-label="Champ de saisie"
+        :aria-label="t('uploadCoverForm.file_input.aria_label')"
         @change="handleFileChange"
       />
 
@@ -97,15 +99,17 @@
             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
           />
         </svg>
-        <p class="mt-2 text-sm text-gray-500">Cliquez pour ajouter une photo de couverture</p>
-        <p class="text-xs text-gray-400">JPG, PNG, GIF jusqu'à 10MB</p>
+        <p class="mt-2 text-sm text-gray-500">
+          {{ t('uploadCoverForm.upload_area.click_to_add') }}
+        </p>
+        <p class="text-xs text-gray-400">{{ t('uploadCoverForm.upload_area.file_types') }}</p>
       </div>
 
       <img
         v-if="coverPhotoPreview"
         :src="coverPhotoPreview"
         class="w-full h-full object-cover"
-        alt="Cover preview"
+        :alt="t('uploadCoverForm.preview.alt')"
       />
 
       <button
@@ -133,14 +137,16 @@
 
     <!-- Action Buttons -->
     <div class="flex justify-end space-x-4 mt-6">
-      <button type="button" class="btn btn-ghost" @click="handleIgnore">Ignorer</button>
+      <button type="button" class="btn btn-ghost" @click="handleIgnore">
+        {{ t('uploadCoverForm.actions.ignore') }}
+      </button>
       <button
         type="button"
         class="btn btn-primary"
         :class="{ loading: isUploading }"
         @click="handleFinish"
       >
-        Terminer
+        {{ t('uploadCoverForm.actions.finish') }}
       </button>
     </div>
   </div>

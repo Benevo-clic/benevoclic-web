@@ -26,14 +26,14 @@
                 />
               </svg>
             </div>
-            <p class="text-sm font-medium">Cette annonce n'existe plus</p>
+            <p class="text-sm font-medium">{{ t('announcement.announcementNotFound') }}</p>
           </div>
         </div>
 
         <img
           v-else-if="announcement?.announcementImage"
           :src="coverImageUrl"
-          alt="Photo de couverture"
+          :alt="t('announcement.cover.alt')"
           class="object-cover w-full h-full transition-transform duration-500"
         />
         <div
@@ -58,7 +58,7 @@
               </svg>
             </div>
           </div>
-          <p class="text-sm font-medium">Aucune image</p>
+          <p class="text-sm font-medium">{{ t('announcement.noImage') }}</p>
         </div>
         <!-- Status badge overlay -->
         <div class="absolute top-3 right-3">
@@ -75,7 +75,7 @@
         <div class="flex items-center gap-3 mb-2">
           <div v-if="announcement?.associationLogo" class="avatar">
             <div class="ring-primary ring-offset-base-100 w-14 rounded-full ring-2 ring-offset-2">
-              <img :src="profileImageUrl" alt="Logo association" />
+              <img :src="profileImageUrl" :alt="t('announcement.association.logo_alt')" />
             </div>
           </div>
           <div v-else class="avatar placeholder">
@@ -148,21 +148,21 @@
             <span class="font-medium"
               >{{ announcement?.nbParticipants }}/{{ announcement?.maxParticipants }}</span
             >
-            <span class="text-base-content/60">participants</span>
+            <span class="text-base-content/60">{{ t('announcement.participants') }}</span>
           </div>
           <div class="flex items-center gap-1 text-xs">
             <HeartHandshake class="h-4 w-4 text-secondary" />
             <span class="font-medium"
               >{{ announcement?.nbVolunteers }}/{{ announcement?.maxVolunteers }}</span
             >
-            <span class="text-base-content/60">bénévoles</span>
+            <span class="text-base-content/60">{{ t('announcement.volunteers') }}</span>
           </div>
         </div>
       </div>
 
       <!-- Boutons d'action de participation -->
       <div class="bg-base-100 rounded-xl shadow-lg p-6 mb-6">
-        <h2 class="text-xl font-bold mb-4">Participer à cet événement</h2>
+        <h2 class="text-xl font-bold mb-4">{{ t('announcement.participate') }}</h2>
         <div v-if="loadingVolunteer" class="flex justify-center items-center">
           <span class="loading loading-spinner loading-md" />
         </div>
@@ -172,14 +172,14 @@
             :disabled="true"
           >
             <HeartHandshake class="w-5 h-5 mr-2" />
-            Bénévole
+            {{ t('announcement.volunteer') }}
           </button>
           <button
             class="btn btn-neutral flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             :disabled="true"
           >
             <Users class="w-5 h-5 mr-2" />
-            Participer
+            {{ t('announcement.participate') }}
           </button>
         </div>
       </div>
@@ -190,7 +190,7 @@
       <div class="bg-base-100 rounded-xl shadow-lg p-6 mb-6">
         <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
           <MapPin class="w-5 h-5 text-primary" />
-          Localisation
+          {{ t('announcement.location') }}
         </h3>
         <div class="h-64 md:h-80 rounded-lg overflow-hidden bg-base-200 relative">
           <!-- Placeholder pour la carte -->
@@ -230,7 +230,7 @@
             @keyup.space.prevent="openInGoogleMaps"
           >
             <ExternalLink class="w-4 h-4 mr-1" />
-            Voir sur la carte
+            {{ t('announcement.viewOnMap') }}
           </button>
         </div>
       </div>
@@ -239,14 +239,14 @@
       <div class="bg-base-100 rounded-xl shadow-lg p-6 mb-6">
         <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
           <Info class="w-5 h-5 text-primary" />
-          Informations pratiques
+          {{ t('announcement.practicalInfo') }}
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="space-y-3">
             <div class="flex items-center gap-3">
               <Calendar class="w-5 h-5 text-primary" />
               <div>
-                <p class="font-medium">Date et heure</p>
+                <p class="font-medium">{{ t('announcement.dateAndTime') }}</p>
                 <p class="text-sm text-base-content/70">
                   {{ formatDate(announcement?.dateEvent) }} à
                   {{ announcement?.hoursEvent }}
@@ -256,7 +256,7 @@
             <div class="flex items-center gap-3">
               <MapPin class="w-5 h-5 text-primary" />
               <div>
-                <p class="font-medium">Adresse</p>
+                <p class="font-medium">{{ t('announcement.address') }}</p>
                 <p class="text-sm text-base-content/70">
                   {{ announcement?.addressAnnouncement?.address }}
                 </p>
@@ -271,18 +271,19 @@
             <div class="flex items-center gap-3">
               <Users class="w-5 h-5 text-primary" />
               <div>
-                <p class="font-medium">Places disponibles</p>
+                <p class="font-medium">{{ t('announcement.availablePlaces') }}</p>
                 <p class="text-sm text-base-content/70">
-                  {{ remainingParticipants }} participants, {{ remainingVolunteers }} bénévoles
+                  {{ remainingParticipants }} {{ t('announcement.participants') }},
+                  {{ remainingVolunteers }} {{ t('announcement.volunteers') }}
                 </p>
               </div>
             </div>
             <div class="flex items-center gap-3">
               <Tag class="w-5 h-5 text-primary" />
               <div>
-                <p class="font-medium">Type d'événement</p>
+                <p class="font-medium">{{ t('announcement.eventType') }}</p>
                 <p class="text-sm text-base-content/70">
-                  {{ announcement?.tags?.join(', ') || 'Général' }}
+                  {{ announcement?.tags?.join(', ') || t('announcement.general') }}
                 </p>
               </div>
             </div>
@@ -354,7 +355,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted, computed, onUnmounted } from 'vue'
+  import { ref, onMounted, computed, onUnmounted, watch, nextTick } from 'vue'
   import { useRoute } from 'vue-router'
   import {
     HeartHandshake,
@@ -365,17 +366,26 @@
     ExternalLink,
     Info,
     Tag,
-    UserPlus
+    UserPlus,
+    UserCheck,
+    AlertTriangle
   } from 'lucide-vue-next'
-  import { definePageMeta, useNavigation, useNuxtApp } from '#imports'
+  import { definePageMeta, useNavigation, useNuxtApp, useSettingsStore } from '#imports'
   import { EventStatus } from '~/common/enums/event.enum'
   import { useAnnouncement } from '~/composables/useAnnouncement'
-  import type { AssociationVolunteerFollow } from '~/common/interface/volunteer.interface'
+  import type { Announcement } from '~/common/interface/event.interface'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
+  import ReportModal from '~/components/utils/ReportModal.vue'
+  import NotificationToast from '~/components/utils/NotificationToast.vue'
+  import { useUser } from '~/composables/auth/useUser'
+
+  const { t } = useI18n()
 
   const route = useRoute()
   const announcementUse = useAnnouncement()
+  const user = useUser()
   const { navigateToRoute } = useNavigation()
+
   const loading = ref(true)
   const loadingVolunteer = computed(() => announcementUse.loading.value)
   const announcement = announcementUse.getCurrentAnnouncement

@@ -3,6 +3,8 @@
   import { ref, watch, computed } from 'vue'
   import type { FilterAnnouncement } from '~/common/interface/filter.interface'
 
+  const { t } = useI18n()
+
   const props = defineProps<{
     showAdvancedFilters: boolean
     filters: Partial<FilterAnnouncement>
@@ -129,7 +131,7 @@
           <div class="flex flex-col h-full">
             <!-- Header -->
             <div class="flex justify-between items-center p-6 border-b border-base-300">
-              <h3 class="text-lg font-semibold">Filtres avancés</h3>
+              <h3 class="text-lg font-semibold">{{ t('advancedFilters.title') }}</h3>
               <button class="btn btn-ghost btn-sm" @click="disableAdvancedFilters">
                 <X class="w-5 h-5" />
               </button>
@@ -141,28 +143,32 @@
                 <!-- Date de l'événement -->
                 <div class="card bg-base-200 shadow-sm">
                   <div class="card-body p-4">
-                    <h4 class="font-medium mb-3">Date de l'événement</h4>
+                    <h4 class="font-medium mb-3">{{ t('advancedFilters.sections.eventDate') }}</h4>
                     <div class="space-y-3">
                       <div>
                         <label class="label">
-                          <span class="label-text text-sm">Du:</span>
+                          <span class="label-text text-sm">{{
+                            t('advancedFilters.labels.from')
+                          }}</span>
                         </label>
                         <input
                           v-model="localFilters.dateEventFrom"
                           type="date"
                           class="input input-bordered input-sm w-full"
-                          aria-label="Champ de saisie"
+                          :aria-label="t('advancedFilters.aria.inputField')"
                         />
                       </div>
                       <div>
                         <label class="label">
-                          <span class="label-text text-sm">Au:</span>
+                          <span class="label-text text-sm">{{
+                            t('advancedFilters.labels.to')
+                          }}</span>
                         </label>
                         <input
                           v-model="localFilters.dateEventTo"
                           type="date"
                           class="input input-bordered input-sm w-full"
-                          aria-label="Champ de saisie"
+                          :aria-label="t('advancedFilters.aria.inputField')"
                         />
                       </div>
                     </div>
@@ -172,28 +178,32 @@
                 <!-- Heure de l'événement -->
                 <div class="card bg-base-200 shadow-sm">
                   <div class="card-body p-4">
-                    <h4 class="font-medium mb-3">Heure de l'événement</h4>
+                    <h4 class="font-medium mb-3">{{ t('advancedFilters.sections.eventTime') }}</h4>
                     <div class="space-y-3">
                       <div>
                         <label class="label">
-                          <span class="label-text text-sm">De:</span>
+                          <span class="label-text text-sm">{{
+                            t('advancedFilters.labels.fromTime')
+                          }}</span>
                         </label>
                         <input
                           v-model="localFilters.hoursEventFrom"
                           type="time"
                           class="input input-bordered input-sm w-full"
-                          aria-label="Champ de saisie"
+                          :aria-label="t('advancedFilters.aria.inputField')"
                         />
                       </div>
                       <div>
                         <label class="label">
-                          <span class="label-text text-sm">À:</span>
+                          <span class="label-text text-sm">{{
+                            t('advancedFilters.labels.toTime')
+                          }}</span>
                         </label>
                         <input
                           v-model="localFilters.hoursEventTo"
                           type="time"
                           class="input input-bordered input-sm w-full"
-                          aria-label="Champ de saisie"
+                          :aria-label="t('advancedFilters.aria.inputField')"
                         />
                       </div>
                     </div>
@@ -203,28 +213,34 @@
                 <!-- Date de publication -->
                 <div class="card bg-base-200 shadow-sm">
                   <div class="card-body p-4">
-                    <h4 class="font-medium mb-3">Date de publication</h4>
+                    <h4 class="font-medium mb-3">
+                      {{ t('advancedFilters.sections.publicationDate') }}
+                    </h4>
                     <div class="space-y-3">
                       <div>
                         <label class="label">
-                          <span class="label-text text-sm">Du:</span>
+                          <span class="label-text text-sm">{{
+                            t('advancedFilters.labels.from')
+                          }}</span>
                         </label>
                         <input
                           v-model="localFilters.datePublicationFrom"
                           type="date"
                           class="input input-bordered input-sm w-full"
-                          aria-label="Champ de saisie"
+                          :aria-label="t('advancedFilters.aria.inputField')"
                         />
                       </div>
                       <div>
                         <label class="label">
-                          <span class="label-text text-sm">Au:</span>
+                          <span class="label-text text-sm">{{
+                            t('advancedFilters.labels.to')
+                          }}</span>
                         </label>
                         <input
                           v-model="localFilters.datePublicationTo"
                           type="date"
                           class="input input-bordered input-sm w-full"
-                          aria-label="Champ de saisie"
+                          :aria-label="t('advancedFilters.aria.inputField')"
                         />
                       </div>
                     </div>

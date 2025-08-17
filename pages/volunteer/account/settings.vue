@@ -35,7 +35,7 @@
                 class="btn btn-outline btn-sm w-full justify-start transition-all duration-200"
                 :class="activeSection === section.id ? 'btn-primary' : ''"
                 @click="activeSection = section.id"
-                aria-label="Naviguer vers la section de paramètres"
+                :aria-label="t('settings.navigation.section')"
               >
                 <component :is="section.icon" class="w-4 h-4 mr-2" />
                 {{ section.label }}
@@ -57,7 +57,7 @@
             <div class="flex flex-col items-center space-y-4">
               <img src="/logo.png" alt="" class="w-16 h-16 sm:w-20 sm:h-20 animate-spin" />
               <div class="text-base-content opacity-70 text-sm sm:text-base">
-                Suppression en cours…
+                {{ t('settings.deletion.inProgress') }}
               </div>
             </div>
           </div>
@@ -94,7 +94,7 @@
                       v-model="settings.profileVisibility"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -113,7 +113,7 @@
                       v-model="settings.locationSharing"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -132,7 +132,7 @@
                       v-model="settings.activitySharing"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -235,7 +235,7 @@
                       v-model="settings.twoFactor"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -344,9 +344,9 @@
 
   // Sections de paramètres (3 éléments)
   const sections = ref<Section[]>([
-    { id: 'privacy', label: 'Confidentialité', icon: Shield },
-    { id: 'account', label: 'Compte', icon: User },
-    { id: 'security', label: 'Sécurité', icon: Lock }
+    { id: 'privacy', label: t('settings.sections.privacy'), icon: Shield },
+    { id: 'account', label: t('settings.sections.account'), icon: User },
+    { id: 'security', label: t('settings.sections.security'), icon: Lock }
   ])
 
   // Password change form data
@@ -504,7 +504,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error(t('settings.errors.unexpected'), error)
     }
   }
 </script>

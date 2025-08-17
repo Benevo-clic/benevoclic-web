@@ -5,8 +5,8 @@
       class="fixed inset-0 bg-base-200 bg-opacity-90 z-[1000] flex items-center justify-center backdrop-blur-sm"
     >
       <div class="flex flex-col items-center space-y-4">
-        <img src="/logo.png" alt="Chargement…" class="w-20 h-20 animate-spin" />
-        <div class="text-base-content opacity-70">Chargement en cours...</div>
+        <img src="/logo.png" :alt="t('activity.loading')" class="w-20 h-20 animate-spin" />
+        <div class="text-base-content opacity-70">{{ t('activity.loading.inProgress') }}</div>
       </div>
     </div>
     <div v-else class="container mx-auto px-4 py-8 max-w-7xl">
@@ -15,7 +15,7 @@
         <h1 class="text-3xl font-bold text-base-content mb-2">
           {{ t('drawer-content.activity.my_participations') }}
         </h1>
-        <p class="text-base-content opacity-70">Suivez vos participations à des missions</p>
+        <p class="text-base-content opacity-70">{{ t('activity.participations.description') }}</p>
       </div>
 
       <!-- Filter and search -->
@@ -25,7 +25,7 @@
             <input
               v-model="searchQuery"
               type="text"
-              placeholder="Rechercher des participations..."
+              :placeholder="t('activity.participations.searchPlaceholder')"
               class="input input-bordered w-full pl-12 pr-4 h-12 bg-base-200 border-base-300 focus:border-primary transition-all duration-300"
               aria-label="Champ de saisie"
             />
@@ -39,9 +39,11 @@
               class="select select-bordered w-full h-12 bg-base-200 border-base-300 focus:border-primary transition-all duration-300"
               aria-label="Sélection"
             >
-              <option value="all">Toutes les participations</option>
-              <option value="active">Active</option>
-              <option value="completed">Complet</option>
+              <option value="all">{{ t('activity.participations.filters.all') }}</option>
+              <option value="active">{{ t('activity.participations.filters.active') }}</option>
+              <option value="completed">
+                {{ t('activity.participations.filters.completed') }}
+              </option>
             </select>
           </div>
         </div>
@@ -92,7 +94,9 @@
                     <p class="text-sm font-medium text-base-content">
                       {{ participation.dateEvent }}
                     </p>
-                    <p class="text-xs text-base-content opacity-60">Date de l'événement</p>
+                    <p class="text-xs text-base-content opacity-60">
+                      {{ t('activity.eventDate') }}
+                    </p>
                   </div>
                 </div>
                 <div class="flex items-center gap-3">
@@ -103,7 +107,7 @@
                     <p class="text-sm font-medium text-base-content">
                       {{ participation.addressAnnouncement?.city }}
                     </p>
-                    <p class="text-xs text-base-content opacity-60">Localisation</p>
+                    <p class="text-xs text-base-content opacity-60">{{ t('activity.location') }}</p>
                   </div>
                 </div>
               </div>
@@ -114,7 +118,7 @@
                   class="btn btn-primary flex-1 group-hover:btn-secondary transition-all duration-300"
                   @click="goDetail(participation._id)"
                 >
-                  <span>Détails</span>
+                  <span>{{ t('activity.details') }}</span>
                   <svg
                     class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300"
                     fill="none"
@@ -134,7 +138,7 @@
                   class="btn btn-error btn-outline flex-1"
                   @click="cancelParticipation(participation._id)"
                 >
-                  Annuler
+                  {{ t('activity.cancel') }}
                 </button>
               </div>
             </div>
@@ -148,10 +152,11 @@
             >
               <ClipboardList class="w-12 h-12 text-base-content opacity-40" />
             </div>
-            <h3 class="text-2xl font-bold text-base-content mb-3">Aucune participation trouvée</h3>
+            <h3 class="text-2xl font-bold text-base-content mb-3">
+              {{ t('activity.participations.empty.title') }}
+            </h3>
             <p class="text-base-content opacity-70 mb-8 leading-relaxed">
-              Vous n'avez pas encore participé à des missions. Découvrez les événements disponibles
-              et lancez-vous !
+              {{ t('activity.participations.empty.description') }}
             </p>
           </div>
         </div>
@@ -261,7 +266,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error(t('activity.errors.unexpected'), error)
     }
   }
 

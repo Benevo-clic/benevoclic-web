@@ -4,11 +4,13 @@
     role="group"
     aria-labelledby="date-range-label"
   >
-    <label id="date-range-label" class="sr-only">Sélectionner une période</label>
+    <label id="date-range-label" class="sr-only">{{ t('dateRangePicker.label') }}</label>
 
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1 sm:flex-none">
       <div class="form-control">
-        <label :for="fromInputId" class="label label-text sr-only">Date de début</label>
+        <label :for="fromInputId" class="label label-text sr-only">{{
+          t('dateRangePicker.from.label')
+        }}</label>
         <input
           :id="fromInputId"
           v-model="from"
@@ -17,12 +19,16 @@
           :aria-describedby="fromDescriptionId"
           @keydown="handleKeydown"
         />
-        <div :id="fromDescriptionId" class="sr-only">Sélectionnez la date de début</div>
+        <div :id="fromDescriptionId" class="sr-only">
+          {{ t('dateRangePicker.from.description') }}
+        </div>
       </div>
 
       <span class="hidden sm:inline text-base-content opacity-70" aria-hidden="true">—</span>
       <div class="form-control">
-        <label :for="toInputId" class="label label-text sr-only">Date de fin</label>
+        <label :for="toInputId" class="label label-text sr-only">{{
+          t('dateRangePicker.to.label')
+        }}</label>
         <input
           :id="toInputId"
           v-model="to"
@@ -31,30 +37,32 @@
           :aria-describedby="toDescriptionId"
           @keydown="handleKeydown"
         />
-        <div :id="toDescriptionId" class="sr-only">Sélectionnez la date de fin</div>
+        <div :id="toDescriptionId" class="sr-only">{{ t('dateRangePicker.to.description') }}</div>
       </div>
     </div>
 
     <button
       class="btn btn-sm btn-primary w-full sm:w-auto sm:ml-2 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-      aria-label="Appliquer le filtre de dates"
+      :aria-label="t('dateRangePicker.filter.aria_label')"
       :disabled="!isValidRange"
       :aria-describedby="!isValidRange ? 'range-error' : undefined"
       @click="emitRange"
       @keyup.enter="emitRange"
       @keyup.space.prevent="emitRange"
     >
-      Filtrer
+      {{ t('dateRangePicker.filter.button') }}
     </button>
 
     <div v-if="!isValidRange" id="range-error" class="sr-only">
-      La date de fin doit être postérieure à la date de début
+      {{ t('dateRangePicker.validation.error') }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import { ref, watch, computed } from 'vue'
+
+  const { t } = useI18n()
 
   const props = defineProps<{ modelValue: { from: string; to: string } }>()
   const emit = defineEmits(['update:modelValue', 'change'])

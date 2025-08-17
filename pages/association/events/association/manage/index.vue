@@ -4,7 +4,7 @@
       v-if="isLoading"
       class="fixed inset-0 bg-base-200 bg-opacity-80 z-[1000] flex items-center justify-center"
     >
-      <img src="/logo.png" alt="Chargement…" class="w-24 h-24 animate-spin" />
+      <img :src="'/logo.png'" :alt="t('events.manage.loading')" class="w-24 h-24 animate-spin" />
     </div>
     <div v-else class="mx-auto py-6 max-w-screen-2xl w-full">
       <client-only>
@@ -20,7 +20,7 @@
       <div class="mx-auto px-4 py-5 max-w-10xl">
         <div class="bg-base-100 rounded-2xl shadow-md p-6">
           <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold">Gestion des événements</h2>
+            <h2 class="text-lg font-semibold">{{ t('events.manage.title') }}</h2>
           </div>
           <ReadOnlyEventList
             :announcements="paginatedAnnouncements"
@@ -39,7 +39,8 @@
                 «
               </button>
               <button class="join-item btn" disabled>
-                Page {{ currentPage }} / {{ totalPages }}
+                {{ t('events.manage.pagination.page') }} {{ currentPage }}
+                {{ t('events.manage.pagination.of') }} {{ totalPages }}
               </button>
               <button
                 class="join-item btn"
@@ -74,6 +75,8 @@
     FilterAnnouncement,
     FilterAssociationAnnouncement
   } from '~/common/interface/filter.interface'
+
+  const { t } = useI18n()
 
   definePageMeta({
     middleware: ['auth'],

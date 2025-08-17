@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="text-lg font-bold mb-4">Participants</h3>
+    <h3 class="text-lg font-bold mb-4">{{ t('participantsList.title') }}</h3>
     <div v-if="props.participants && props.participants.length" class="space-y-3">
       <!-- Optimisation avec v-memo basé sur les propriétés importantes -->
       <ParticipantOrVolunteerCard
@@ -32,13 +32,15 @@
           </svg>
         </div>
       </div>
-      <p class="text-sm font-medium">Aucun participant pour cette annonce</p>
+      <p class="text-sm font-medium">{{ t('participantsList.no_participants') }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import ParticipantOrVolunteerCard from './ParticipantOrVolunteerCard.vue'
+
+  const { t } = useI18n()
 
   interface Participant {
     id: string

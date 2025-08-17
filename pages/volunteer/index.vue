@@ -9,6 +9,8 @@
     useAssociationAuth,
     navigateTo
   } from '#imports'
+
+  const { t } = useI18n()
   import { useUserLocation } from '~/composables/useUserLocation'
   import VolunteerEventFilters from '~/components/event/volunteer/VolunteerEventFilters.vue'
   import type { Announcement } from '~/common/interface/event.interface'
@@ -19,6 +21,7 @@
   import CtaComponent from '~/components/home/ctaComponent.vue'
   import HowItWorks from '~/components/home/HowItWorks.vue'
   import { useFavoritesAnnouncement } from '~/composables/useFavoritesAnnouncement'
+  import Hero from '~/components/home/hero.vue'
 
   definePageMeta({
     middleware: ['auth'],
@@ -553,59 +556,20 @@
       role="main"
       aria-label="Page d'accueil Bénévole"
     >
+      <Hero :start-searching="startSearching" />
       <!-- Section Hero -->
-      <Transition name="fade-slide" mode="out-in">
-        <section
-          v-if="!startSearching"
-          id="hero-section"
-          class="hero min-h-[70vh] bg-gradient-to-br from-primary/10 to-secondary/10 py-16 px-4 flex items-center relative"
-        >
-          <div class="max-w-6xl mx-auto w-full">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div class="space-y-6 slide-in-left visible">
-                <h1 class="text-4xl md:text-5xl font-bold text-base-content">
-                  Faites la différence avec
-                  <span class="text-primary">Benevoclic</span>
-                </h1>
-                <p class="text-lg text-base-content/80 max-w-xl">
-                  Découvrez des événements et missions qui correspondent à vos compétences, vos
-                  centres d'intérêt et vos disponibilités. Que vous soyez bénévole ou personne dans
-                  le besoin, rejoignez une communauté engagée et participez à des projets
-                  solidaires.
-                </p>
-                <div class="flex flex-wrap gap-4">
-                  <NuxtLink to="#search-section" class="btn btn-primary group">
-                    Découvrir les événements
-                    <ArrowRight
-                      class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300"
-                    />
-                  </NuxtLink>
-                  <button class="btn btn-outline hover:scale-105 transition-transform duration-300">
-                    En savoir plus
-                  </button>
-                </div>
-              </div>
-              <div class="relative slide-in-right visible delay-400 hidden lg:block">
-                <img
-                  src="/images/volunteer-info.png"
-                  alt="Bénévoles en action"
-                  class="w-full h-auto rounded-xl shadow-xl transform hover:scale-[1.02] transition-transform duration-500"
-                  loading="lazy"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-      </Transition>
 
       <!-- Section Recherche Rapide -->
       <section id="search-section" class="py-12 px-4 bg-base-100">
         <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-10 slide-in-up" :class="{ visible: isVisible.search }">
-            <h2 class="text-3xl font-bold mb-4">Trouvez l'événement qui vous correspond</h2>
+          <div
+            class="text-center mb-10 slide-in-up"
+            :class="{ visible: isVisible.search }"
+            v-if="!startSearching"
+          >
+            <h2 class="text-3xl font-bold mb-4">{{ t('volunteerPage.search.title') }}</h2>
             <p class="text-base-content/70 max-w-2xl mx-auto">
-              Utilisez notre moteur de recherche avancé pour trouver des événements qui
-              correspondent à vos besoins, que vous souhaitiez aider ou participer.
+              {{ t('volunteerPage.search.description') }}
             </p>
           </div>
 
@@ -616,7 +580,7 @@
           >
             <div class="form-control mb-6">
               <label class="label">
-                <span class="label-text font-medium">Rechercher un événement</span>
+                <span class="label-text font-medium">{{ t('volunteerPage.search.label') }}</span>
               </label>
               <div class="relative">
                 <Search
@@ -625,7 +589,7 @@
                 <input
                   v-model="searchQuery"
                   type="text"
-                  placeholder="Rechercher par nom d'événement, description, nom d'association..."
+                  :placeholder="t('volunteerPage.search.placeholder')"
                   class="input input-bordered w-full pl-10 focus:border-primary transition-colors duration-300"
                   @keyup.enter="() => searchEvents()"
                 />
@@ -640,14 +604,19 @@
                 <div v-if="isCounting" class="loading loading-spinner loading-sm" />
                 <span v-else class="font-medium">
                   <span class="hidden sm:inline"
-                    >{{ filteredEventsCount }} événement{{
-                      filteredEventsCount !== 1 ? 's' : ''
-                    }}
-                    trouvé{{ filteredEventsCount !== 1 ? 's' : '' }}</span
+                    >{{ filteredEventsCount }}
+                    {{
+                      filteredEventsCount !== 1
+                        ? t('volunteerPage.results.count.events_found_plural')
+                        : t('volunteerPage.results.count.events_found')
+                    }}</span
                   >
                   <span class="sm:hidden"
-                    >{{ filteredEventsCount }} résultat{{
-                      filteredEventsCount !== 1 ? 's' : ''
+                    >{{ filteredEventsCount }}
+                    {{
+                      filteredEventsCount !== 1
+                        ? t('volunteerPage.results.count.results')
+                        : t('volunteerPage.results.count.result')
                     }}</span
                   >
                 </span>
@@ -667,9 +636,15 @@
                 />
                 <div v-else class="loading loading-spinner loading-sm mr-2" />
                 <span class="hidden sm:inline">{{
-                  searchLoading ? 'Recherche en cours...' : 'Trouver des événements'
+                  searchLoading
+                    ? t('volunteerPage.search.button.searching')
+                    : t('volunteerPage.search.button.find_events')
                 }}</span>
-                <span class="sm:hidden">{{ searchLoading ? 'Recherche...' : 'Rechercher' }}</span>
+                <span class="sm:hidden">{{
+                  searchLoading
+                    ? t('volunteerPage.search.button.searching')
+                    : t('volunteerPage.search.button.search')
+                }}</span>
               </button>
 
               <button
@@ -678,8 +653,8 @@
                 @click="resetAllFilters"
               >
                 <X class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
-                <span class="hidden sm:inline">Réinitialiser</span>
-                <span class="sm:hidden">Reset</span>
+                <span class="hidden sm:inline">{{ t('volunteerPage.search.reset.desktop') }}</span>
+                <span class="sm:hidden">{{ t('volunteerPage.search.reset.mobile') }}</span>
               </button>
             </div>
           </div>
@@ -695,7 +670,9 @@
               class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6"
             >
               <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
-                <h3 class="text-xl sm:text-2xl font-bold">Résultats de recherche</h3>
+                <h3 class="text-xl sm:text-2xl font-bold">
+                  {{ t('volunteerPage.results.title') }}
+                </h3>
                 <div class="flex flex-wrap gap-2">
                   <div class="badge badge-primary text-xs sm:text-sm">
                     {{ searchTotalAnnouncements }} résultat{{
@@ -711,7 +688,7 @@
               </div>
               <button
                 class="btn btn-ghost btn-sm self-end sm:self-auto"
-                aria-label="Fermer les résultats de recherche"
+                :aria-label="t('volunteerPage.close_results')"
                 @click="closeSearchResults"
               >
                 <X class="w-4 h-4 sm:w-5 sm:h-5" />

@@ -17,6 +17,8 @@
   import { useAuthStore } from '~/stores/auth/auth.store'
   import { useSettingsStore } from '~/stores/settings.store'
 
+  const { t } = useI18n()
+
   const { user, updateIsCompleted } = useUser()
   const authStore = useAuthStore()
 
@@ -87,10 +89,10 @@
       field: 'associationName',
       validate: (value: string) => {
         if (!value) {
-          return "Le nom de l'association est requis"
+          return t('registerInfoAssociationForm.validation.associationNameRequired')
         }
         if (value.length < 2) {
-          return 'Le nom doit contenir au moins 2 caractères'
+          return t('registerInfoAssociationForm.validation.associationNameMinLength')
         }
         return ''
       }
@@ -100,10 +102,10 @@
       field: 'phone',
       validate: (value: string) => {
         if (!value) {
-          return 'Le téléphone est requis'
+          return t('registerInfoAssociationForm.validation.phoneRequired')
         }
         if (!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(value)) {
-          return 'Format de téléphone invalide'
+          return t('registerInfoAssociationForm.validation.phoneInvalidFormat')
         }
         return ''
       }
@@ -113,7 +115,7 @@
       field: 'type',
       validate: (value: string) => {
         if (!value) {
-          return "Le type d'association est requis"
+          return t('registerInfoAssociationForm.validation.associationTypeRequired')
         }
         return ''
       }
@@ -123,10 +125,10 @@
       field: 'city',
       validate: (value: string) => {
         if (!value) {
-          return 'La ville est requise'
+          return t('registerInfoAssociationForm.validation.cityRequired')
         }
         if (value.length < 2) {
-          return 'La ville doit contenir au moins 2 caractères'
+          return t('registerInfoAssociationForm.validation.cityMinLength')
         }
         return ''
       }
@@ -136,10 +138,10 @@
       field: 'postalCode',
       validate: (value: string) => {
         if (!value) {
-          return 'Le code postal est requis'
+          return t('registerInfoAssociationForm.validation.postalCodeRequired')
         }
         if (!/^[0-9]{5}$/.test(value)) {
-          return 'Le code postal doit contenir 5 chiffres'
+          return t('registerInfoAssociationForm.validation.postalCodeInvalidFormat')
         }
         return ''
       }
@@ -149,7 +151,7 @@
       field: 'bio',
       validate: (value: string) => {
         if (value.length < 10) {
-          return 'La description doit contenir au moins 10 caractères'
+          return t('registerInfoAssociationForm.validation.bioMinLength')
         }
         return ''
       }
@@ -240,8 +242,8 @@
 
 <template>
   <div class="w-full max-w-md mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-2">🚀 Enregistrement de votre association</h1>
-    <p class="text-base text-gray-600 mb-4">Complétez les informations étape par étape 😊</p>
+    <h1 class="text-3xl font-bold mb-2">🚀 {{ t('registerInfoAssociationForm.title') }}</h1>
+    <p class="text-base text-gray-600 mb-4">{{ t('registerInfoAssociationForm.subtitle') }}</p>
 
     <keep-alive>
       <component
@@ -258,16 +260,24 @@
         class="btn btn-secondary disabled:cursor-not-allowed"
         @click="prev"
       >
-        <span class="text-secondary-content font-bold">Précédent</span>
+        <span class="text-secondary-content font-bold">{{
+          t('registerInfoAssociationForm.buttons.previous')
+        }}</span>
       </button>
 
       <button :disabled="loading" class="btn btn-primary" @click="next">
         <span v-if="loading" class="loading loading-spinner mr-2" />
-        {{ currentStep < steps.length - 1 ? 'Suivant' : 'Envoyer' }}
+        {{
+          currentStep < steps.length - 1
+            ? t('registerInfoAssociationForm.buttons.next')
+            : t('registerInfoAssociationForm.buttons.submit')
+        }}
       </button>
     </div>
 
-    <p v-if="isError" class="text-red-600 mt-4">Une erreur est survenue. Réessayez plus tard.</p>
+    <p v-if="isError" class="text-red-600 mt-4">
+      {{ t('registerInfoAssociationForm.errorMessage') }}
+    </p>
     <ErrorPopup
       :show-error-modal="showErrorModal"
       :error-type="errorType"

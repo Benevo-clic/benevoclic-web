@@ -55,7 +55,11 @@
           </p>
         </div>
         <div class="flex-shrink-0">
-          <button class="btn btn-ghost btn-xs" @click="closeAlert">
+          <button
+            class="btn btn-ghost btn-xs"
+            :aria-label="t('permissionAlert.close_aria_label')"
+            @click="closeAlert"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-4 w-4"
@@ -75,9 +79,11 @@
       </div>
       <div v-if="showActions" class="mt-3 flex gap-2">
         <button class="btn btn-primary btn-xs" @click="openCookieSettings">
-          Paramétrer les cookies
+          {{ t('permissionAlert.actions.configure_cookies') }}
         </button>
-        <button class="btn btn-ghost btn-xs" @click="closeAlert">Plus tard</button>
+        <button class="btn btn-ghost btn-xs" @click="closeAlert">
+          {{ t('permissionAlert.actions.later') }}
+        </button>
       </div>
     </div>
   </div>
@@ -85,6 +91,8 @@
 
 <script setup lang="ts">
   import { ref, computed, onMounted } from 'vue'
+
+  const { t } = useI18n()
 
   interface Props {
     type?: 'warning' | 'info' | 'error'

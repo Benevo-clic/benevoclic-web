@@ -22,9 +22,9 @@
           <input
             v-model="filters.nameEvent"
             type="text"
-            placeholder="Rechercher un événement..."
+            :placeholder="t('eventFilters.search.placeholder')"
             class="input input-bordered input-sm w-64 pr-10"
-            aria-label="Champ de saisie"
+            :aria-label="t('eventFilters.aria_labels.input_field')"
             @input="applyFilters"
           />
           <Search
@@ -40,7 +40,7 @@
             :class="filters.status ? 'btn-primary' : 'btn-outline'"
           >
             <CircleDot class="w-4 h-4" />
-            Statut
+            {{ t('eventFilters.status.label') }}
             <ChevronRight class="w-3 h-3" />
           </button>
           <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
@@ -50,7 +50,7 @@
                   type="checkbox"
                   :checked="filters.status === statusOption.value"
                   class="checkbox checkbox-xs mr-2"
-                  aria-label="Champ de saisie"
+                  :aria-label="t('eventFilters.aria_labels.input_field')"
                 />
                 {{ statusOption.label }}
               </a>
@@ -66,7 +66,7 @@
             @click="toggleTagsDropdown"
           >
             <Tag class="w-4 h-4" />
-            <span>Tags</span>
+            <span>{{ t('eventFilters.tags.label') }}</span>
             <ChevronRight class="w-3 h-3" />
           </button>
 
@@ -82,7 +82,7 @@
                     type="checkbox"
                     :checked="selectedTags.includes(tag)"
                     class="checkbox checkbox-xs mr-2"
-                    aria-label="Champ de saisie"
+                    :aria-label="t('eventFilters.aria_labels.input_field')"
                   />
                   {{ tag }}
                 </a>
@@ -93,7 +93,7 @@
                   @click.stop="openCustomTagInput"
                 >
                   <Plus class="w-4 h-4 mr-2" />
-                  <span>Ajouter un tag...</span>
+                  <span>{{ t('eventFilters.tags.add_tag') }}</span>
                 </button>
               </li>
               <li v-else>
@@ -103,15 +103,15 @@
                     v-model="customTag"
                     type="text"
                     class="input input-sm input-bordered w-full"
-                    placeholder="Nouveau tag…"
-                    aria-label="Champ de saisie"
+                    :placeholder="t('eventFilters.tags.new_tag_placeholder')"
+                    :aria-label="t('eventFilters.aria_labels.input_field')"
                     @keydown.enter.prevent="addCustomTag"
                   />
                   <button
                     class="btn btn-sm btn-ghost"
-                    title="Annuler"
+                    :title="t('eventFilters.tags.cancel_button')"
                     type="button"
-                    aria-label="Fermer"
+                    :aria-label="t('eventFilters.tags.close_button')"
                     @click="cancelCustomTagInput"
                   >
                     ✕
@@ -129,7 +129,7 @@
           @click="showAdvancedFilters = true"
         >
           <SlidersHorizontal class="w-4 h-4" />
-          Filtres avancés
+          {{ t('eventFilters.advanced_filters.label') }}
         </button>
 
         <!-- Filtre rapide événements -->
@@ -140,7 +140,7 @@
             :class="filters.stateEvent ? 'btn-info' : 'btn-outline'"
           >
             <Clock class="w-4 h-4" />
-            Événements
+            {{ t('eventFilters.events.label') }}
             <ChevronRight class="w-3 h-3" />
           </button>
           <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
@@ -150,9 +150,9 @@
                   type="checkbox"
                   :checked="filters.stateEvent === 'NOW'"
                   class="checkbox checkbox-xs mr-2"
-                  aria-label="Champ de saisie"
+                  :aria-label="t('eventFilters.aria_labels.input_field')"
                 />
-                En cours
+                {{ t('eventFilters.events.options.now') }}
               </a>
             </li>
             <li>
@@ -161,9 +161,9 @@
                   type="checkbox"
                   :checked="filters.stateEvent === 'PAST'"
                   class="checkbox checkbox-xs mr-2"
-                  aria-label="Champ de saisie"
+                  :aria-label="t('eventFilters.aria_labels.input_field')"
                 />
-                Passés
+                {{ t('eventFilters.events.options.past') }}
               </a>
             </li>
             <li>
@@ -172,9 +172,9 @@
                   type="checkbox"
                   :checked="filters.stateEvent === 'UPCOMING'"
                   class="checkbox checkbox-xs mr-2"
-                  aria-label="Champ de saisie"
+                  :aria-label="t('eventFilters.aria_labels.input_field')"
                 />
-                À venir
+                {{ t('eventFilters.events.options.upcoming') }}
               </a>
             </li>
           </ul>
@@ -188,7 +188,7 @@
           @click="openMobileFilters"
         >
           <SlidersHorizontal class="w-4 h-4" />
-          <span class="text-sm">Filtres</span>
+          <span class="text-sm">{{ t('eventFilters.mobile.filters') }}</span>
         </button>
       </div>
 
@@ -200,7 +200,7 @@
         <!-- Drawer -->
         <div class="absolute right-0 top-0 h-full w-80 bg-base-100 shadow-xl p-4 overflow-y-auto">
           <div class="flex justify-between items-center mb-6">
-            <h3 class="text-lg font-bold">Filtres</h3>
+            <h3 class="text-lg font-bold">{{ t('eventFilters.mobile.filters') }}</h3>
             <button class="btn btn-ghost btn-sm" @click="closeMobileFilters">
               <X class="w-5 h-5" />
             </button>
@@ -211,15 +211,15 @@
             <!-- Recherche -->
             <div class="form-control">
               <label class="label">
-                <span class="label-text font-medium">Recherche</span>
+                <span class="label-text font-medium">{{ t('eventFilters.search.label') }}</span>
               </label>
               <div class="relative">
                 <input
                   v-model="filters.nameEvent"
                   type="text"
-                  placeholder="Rechercher un événement..."
+                  :placeholder="t('eventFilters.search.placeholder')"
                   class="input input-bordered w-full pr-10"
-                  aria-label="Champ de saisie"
+                  :aria-label="t('eventFilters.aria_labels.input_field')"
                   @input="applyFilters"
                 />
                 <Search
@@ -231,7 +231,7 @@
             <!-- Statut -->
             <div class="form-control">
               <label class="label">
-                <span class="label-text font-medium">Statut</span>
+                <span class="label-text font-medium">{{ t('eventFilters.status.label') }}</span>
               </label>
               <div class="relative">
                 <button
@@ -271,7 +271,7 @@
                         type="radio"
                         :checked="filters.status === statusOption.value"
                         class="radio radio-sm radio-primary"
-                        aria-label="Champ de saisie"
+                        :aria-label="t('eventFilters.aria_labels.input_field')"
                       />
                       <span class="text-sm">{{ statusOption.label }}</span>
                     </button>
@@ -283,7 +283,7 @@
             <!-- Tags -->
             <div class="form-control">
               <label class="label">
-                <span class="label-text font-medium">Tags</span>
+                <span class="label-text font-medium">{{ t('eventFilters.tags.label') }}</span>
               </label>
               <div class="relative">
                 <button
@@ -323,7 +323,7 @@
                         type="checkbox"
                         :checked="selectedTags.includes(tag)"
                         class="checkbox checkbox-sm checkbox-primary"
-                        aria-label="Champ de saisie"
+                        :aria-label="t('eventFilters.aria_labels.input_field')"
                       />
                       <span class="text-sm">{{ tag }}</span>
                     </button>
@@ -336,7 +336,9 @@
                           @click="openCustomTagInput"
                         >
                           <Plus class="w-4 h-4" />
-                          <span class="text-sm font-medium">Ajouter un tag...</span>
+                          <span class="text-sm font-medium">{{
+                            t('eventFilters.tags.add_tag')
+                          }}</span>
                         </button>
                       </div>
                       <div v-else class="flex items-center gap-2 p-2">
@@ -345,14 +347,14 @@
                           v-model="customTag"
                           type="text"
                           class="input input-sm input-bordered flex-1"
-                          placeholder="Nouveau tag…"
-                          aria-label="Champ de saisie"
+                          :placeholder="t('eventFilters.tags.new_tag_placeholder')"
+                          :aria-label="t('eventFilters.aria_labels.input_field')"
                           @keydown.enter.prevent="addCustomTag"
                         />
                         <button
                           class="btn btn-sm btn-primary"
                           type="button"
-                          aria-label="Ajouter"
+                          :aria-label="t('eventFilters.aria_labels.add')"
                           @click="addCustomTag"
                         >
                           +
@@ -360,7 +362,7 @@
                         <button
                           class="btn btn-sm btn-ghost"
                           type="button"
-                          aria-label="Fermer"
+                          :aria-label="t('eventFilters.tags.close_button')"
                           @click="cancelCustomTagInput"
                         >
                           ✕
@@ -375,18 +377,20 @@
             <!-- Filtres avancés -->
             <div class="form-control">
               <label class="label">
-                <span class="label-text font-medium">Filtres avancés</span>
+                <span class="label-text font-medium">{{
+                  t('eventFilters.advanced_filters.label')
+                }}</span>
               </label>
               <button class="btn btn-outline w-full" @click="handleAdvancedFilters">
                 <SlidersHorizontal class="w-4 h-4 mr-2" />
-                Configurer les filtres avancés
+                {{ t('eventFilters.advanced_filters.configure') }}
               </button>
             </div>
 
             <!-- Événements -->
             <div class="form-control">
               <label class="label">
-                <span class="label-text font-medium">Événements</span>
+                <span class="label-text font-medium">{{ t('eventFilters.events.label') }}</span>
               </label>
               <div class="relative">
                 <button
@@ -426,7 +430,7 @@
                         type="radio"
                         :checked="filters.stateEvent === eventOption.value"
                         class="radio radio-sm radio-primary"
-                        aria-label="Champ de saisie"
+                        :aria-label="t('eventFilters.aria_labels.input_field')"
                       />
                       <span class="text-sm">{{ eventOption.label }}</span>
                     </button>
@@ -438,10 +442,10 @@
             <!-- Actions -->
             <div class="flex gap-2 pt-4 border-t border-base-300">
               <button class="btn btn-ghost flex-1" type="button" @click="resetFilters">
-                Réinitialiser
+                {{ t('eventFilters.mobile.reset') }}
               </button>
               <button class="btn btn-primary flex-1" type="button" @click="closeMobileFilters">
-                Appliquer
+                {{ t('eventFilters.mobile.apply') }}
               </button>
             </div>
           </div>
@@ -481,6 +485,8 @@
     AnnouncementState
   } from '~/common/interface/filter.interface'
 
+  const { t } = useI18n()
+
   // Props et emits
   // eslint-disable-next-line func-call-spacing
   const emit = defineEmits<{
@@ -517,9 +523,9 @@
 
   // Options
   const statusOptions = ref([
-    { value: 'ACTIVE' as AnnouncementStatus, label: 'Actif' },
-    { value: 'COMPLETED' as AnnouncementStatus, label: 'Terminé' },
-    { value: 'INACTIVE' as AnnouncementStatus, label: 'Inactif' }
+    { value: 'ACTIVE' as AnnouncementStatus, label: t('eventFilters.status.options.active') },
+    { value: 'COMPLETED' as AnnouncementStatus, label: t('eventFilters.status.options.completed') },
+    { value: 'INACTIVE' as AnnouncementStatus, label: t('eventFilters.status.options.inactive') }
   ])
 
   const availableTags = ref([
@@ -538,9 +544,9 @@
   ])
 
   const eventOptions = ref([
-    { value: 'NOW', label: 'En cours' },
-    { value: 'PAST', label: 'Passés' },
-    { value: 'UPCOMING', label: 'À venir' }
+    { value: 'NOW', label: t('eventFilters.events.options.now') },
+    { value: 'PAST', label: t('eventFilters.events.options.past') },
+    { value: 'UPCOMING', label: t('eventFilters.events.options.upcoming') }
   ])
 
   // Filtres avancés temporaires
@@ -658,12 +664,12 @@
   // Labels
   const getStatusLabel = () => {
     const statusOption = statusOptions.value.find(s => s.value === filters.value.status)
-    return statusOption ? statusOption.label : 'Statut'
+    return statusOption ? statusOption.label : t('eventFilters.status.label')
   }
 
   const getTagsLabel = () => {
     if (selectedTags.value.length === 0) {
-      return 'Tags'
+      return t('eventFilters.tags.label')
     }
     if (selectedTags.value.length === 1) {
       return selectedTags.value[0]
@@ -673,7 +679,7 @@
 
   const getEventsLabel = () => {
     const eventOption = eventOptions.value.find(e => e.value === filters.value.stateEvent)
-    return eventOption ? eventOption.label : 'Événements'
+    return eventOption ? eventOption.label : t('eventFilters.events.label')
   }
 
   // Filtres avancés

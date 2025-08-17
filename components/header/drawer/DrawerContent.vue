@@ -5,6 +5,8 @@
   import DrawerAppContentAssociation from '~/components/header/drawer/components/association/DrawerAppContentAssociation.vue'
   import DrawerAppContentNoConnected from '~/components/header/drawer/components/DrawerAppContentNoConnected.vue'
 
+  const { t } = useI18n()
+
   const props = defineProps({
     isAuthenticated: Boolean,
     menuOpen: Boolean,
@@ -86,12 +88,14 @@
             :id="props.isAuthenticated ? 'drawer-title' : 'welcome-title'"
             class="text-lg font-semibold text-base-content"
           >
-            {{ props.isAuthenticated ? 'Menu' : 'Bienvenue' }}
+            {{ props.isAuthenticated ? t('drawerContent.menu') : t('drawerContent.welcome') }}
           </h2>
           <button
             class="btn btn-ghost btn-circle btn-sm hover:bg-base-300 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             :aria-label="
-              props.isAuthenticated ? 'Fermer le menu' : 'Fermer le panneau de bienvenue'
+              props.isAuthenticated
+                ? t('drawerContent.closeMenu')
+                : t('drawerContent.closeWelcomePanel')
             "
             @click="handleCloseDrawer"
           >
@@ -104,8 +108,8 @@
         >
           {{
             props.isAuthenticated
-              ? 'Menu de navigation principal'
-              : 'Panneau de bienvenue et navigation'
+              ? t('drawerContent.menuDescription')
+              : t('drawerContent.welcomeDescription')
           }}
         </div>
       </div>

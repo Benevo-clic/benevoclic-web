@@ -6,8 +6,12 @@
       class="fixed inset-0 bg-base-200 bg-opacity-90 z-[1000] flex items-center justify-center backdrop-blur-sm"
     >
       <div class="flex flex-col items-center space-y-4">
-        <img src="/logo.png" alt="Chargement…" class="w-20 h-20 animate-spin" />
-        <div class="text-base-content opacity-70">Chargement en cours...</div>
+        <img
+          :src="'/logo.png'"
+          :alt="t('events.requests.loading')"
+          class="w-20 h-20 animate-spin"
+        />
+        <div class="text-base-content opacity-70">{{ t('events.requests.loading') }}</div>
       </div>
     </div>
 
@@ -15,9 +19,11 @@
     <div class="container mx-auto px-4 py-8 max-w-6xl">
       <!-- Header section -->
       <div class="mb-8">
-        <h1 class="text-3xl md:text-4xl font-bold text-base-content mb-2">Mes demandes</h1>
+        <h1 class="text-3xl md:text-4xl font-bold text-base-content mb-2">
+          {{ t('events.requests.title') }}
+        </h1>
         <p class="text-base-content opacity-70">
-          Gérez les demandes de bénévolat et d'adhésion à votre association
+          {{ t('events.requests.subtitle') }}
         </p>
       </div>
 
@@ -42,8 +48,8 @@
                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span class="hidden sm:inline">Demandes de bénévolat</span>
-              <span class="sm:hidden">Bénévolat</span>
+              <span class="hidden sm:inline">{{ t('events.requests.tabs.volunteer.full') }}</span>
+              <span class="sm:hidden">{{ t('events.requests.tabs.volunteer.short') }}</span>
             </div>
           </button>
           <button
@@ -64,8 +70,8 @@
                   d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                 />
               </svg>
-              <span class="hidden sm:inline">Demandes d'adhésion</span>
-              <span class="sm:hidden">Adhésion</span>
+              <span class="hidden sm:inline">{{ t('events.requests.tabs.association.full') }}</span>
+              <span class="sm:hidden">{{ t('events.requests.tabs.association.short') }}</span>
             </div>
           </button>
         </div>
@@ -77,12 +83,17 @@
         <div v-if="tab === 'event'" class="space-y-6">
           <div class="flex items-center justify-between flex-wrap gap-2">
             <h2 class="text-xl font-semibold text-base-content">
-              Demandes de bénévolat à un événement
+              {{ t('events.requests.sections.volunteer_requests') }}
             </h2>
             <div
               class="badge badge-primary badge-md font-semibold px-4 py-2 rounded-full whitespace-nowrap"
             >
-              {{ eventRequests.length }} demande{{ eventRequests.length > 1 ? 's' : '' }}
+              {{ eventRequests.length }}
+              {{
+                eventRequests.length > 1
+                  ? t('events.requests.count.requests')
+                  : t('events.requests.count.request')
+              }}
             </div>
           </div>
 
@@ -120,9 +131,11 @@
                 />
               </svg>
             </div>
-            <h3 class="text-lg font-medium text-base-content mb-2">Aucune demande</h3>
+            <h3 class="text-lg font-medium text-base-content mb-2">
+              {{ t('events.requests.empty.volunteer.title') }}
+            </h3>
             <p class="text-base-content opacity-70">
-              Aucune demande de participation pour le moment.
+              {{ t('events.requests.empty.volunteer.description') }}
             </p>
           </div>
         </div>
@@ -131,13 +144,16 @@
         <div v-else class="space-y-6">
           <div class="flex items-center justify-between flex-wrap gap-2">
             <h2 class="text-xl font-semibold text-base-content">
-              Demandes d'adhésion à l'association
+              {{ t('events.requests.sections.association_requests') }}
             </h2>
             <div
               class="badge badge-primary badge-md font-semibold px-4 py-2 rounded-full whitespace-nowrap"
             >
-              {{ associationRequests.length }} demande{{
-                associationRequests.length > 1 ? 's' : ''
+              {{ associationRequests.length }}
+              {{
+                associationRequests.length > 1
+                  ? t('events.requests.count.requests')
+                  : t('events.requests.count.request')
               }}
             </div>
           </div>
@@ -175,8 +191,12 @@
                 />
               </svg>
             </div>
-            <h3 class="text-lg font-medium text-base-content mb-2">Aucune demande</h3>
-            <p class="text-base-content opacity-70">Aucune demande d'adhésion pour le moment.</p>
+            <h3 class="text-lg font-medium text-base-content mb-2">
+              {{ t('events.requests.empty.association.title') }}
+            </h3>
+            <p class="text-base-content opacity-70">
+              {{ t('events.requests.empty.association.description') }}
+            </p>
           </div>
         </div>
       </div>
@@ -199,6 +219,8 @@
   import { useUser } from '~/composables/auth/useUser'
   import { useAssociationAuth } from '~/composables/useAssociation'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
+
+  const { t } = useI18n()
 
   definePageMeta({
     middleware: ['auth'],
