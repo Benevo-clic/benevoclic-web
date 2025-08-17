@@ -410,5 +410,23 @@
       "updated_at": "Updated on:",
       "not_available": "Not available"
     }
+  },
+  "dateRangePicker": {
+    "label": "Select a period",
+    "from": {
+      "label": "Start date",
+      "description": "Select start date"
+    },
+    "to": {
+      "label": "End date",
+      "description": "Select end date"
+    },
+    "filter": {
+      "button": "Filter",
+      "aria_label": "Apply date filter"
+    },
+    "validation": {
+      "error": "End date must be after start date"
+    }
   }
 }

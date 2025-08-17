@@ -569,5 +569,23 @@
       "updated_at": "Mis à jour le:",
       "not_available": "Non disponible"
     }
+  },
+  "dateRangePicker": {
+    "label": "Sélectionner une période",
+    "from": {
+      "label": "Date de début",
+      "description": "Sélectionnez la date de début"
+    },
+    "to": {
+      "label": "Date de fin",
+      "description": "Sélectionnez la date de fin"
+    },
+    "filter": {
+      "button": "Filtrer",
+      "aria_label": "Appliquer le filtre de dates"
+    },
+    "validation": {
+      "error": "La date de fin doit être postérieure à la date de début"
+    }
   }
 }
