@@ -168,11 +168,19 @@
     "logout": "Se déconnecter"
   },
   "header": {
+    "loading": "Chargement de l'application...",
+    "closeModal": "Fermer la modal",
+    "homeLogo": "Accueil - Logo Benevoclic",
+    "toggleTheme": "Basculer entre le thème clair et sombre",
+    "userProfilePhoto": "Photo de profil utilisateur",
+    "openNavigationMenu": "Ouvrir le menu de navigation",
     "volunteer": {
       "home": "Accueil",
       "favorites": "Favoris",
       "recent-search": "Recherches récentes",
-      "help": "Aide"
+      "help": "Aide",
+      "goHome": "Aller à l'accueil bénévole",
+      "viewFavorites": "Voir mes favoris"
     }
   },
   "notifications": {
@@ -1743,6 +1751,9 @@
       "searchRadius": "Rayon de recherche",
       "withinRadius": "Dans un rayon de"
     },
+    "placeholders": {
+      "searchCity": "Rechercher une ville..."
+    },
     "notes": {
       "onlyFirstCity": "Note: Seule la première ville est prise en compte."
     },
@@ -1761,7 +1772,9 @@
     "detectedPosition": "Position détectée",
     "aria": {
       "removeCity": "Supprimer la ville",
-      "useCurrentPosition": "Utiliser ma position actuelle"
+      "useCurrentPosition": "Utiliser ma position actuelle",
+      "citySearch": "Recherche de ville",
+      "searchRadius": "Rayon de recherche"
     }
   },
   "advancedFilters": {
@@ -1802,5 +1815,52 @@
       "removeCity": "Supprimer la ville",
       "useCurrentPosition": "Utiliser ma position actuelle"
     }
+  },
+  "filterActive": {
+    "labels": {
+      "activeFilters": "Filtres actifs",
+      "eventDate": "Date événement",
+      "eventTime": "Heure événement",
+      "publicationDate": "Date publication"
+    },
+    "status": {
+      "active": "Actif",
+      "completed": "Terminé",
+      "inactive": "Inactif"
+    },
+    "stateEvent": {
+      "now": "En cours",
+      "past": "Terminé",
+      "upcoming": "À venir"
+    },
+    "sort": {
+      "dateEventAsc": "Date événement (croissant)",
+      "dateEventDesc": "Date événement (décroissant)",
+      "datePublicationDesc": "Date publication (récent)"
+    },
+    "interval": {
+      "lastHour": "Dernière heure",
+      "last5Hours": "5 dernières heures",
+      "lastDay": "Dernière journée",
+      "lastWeek": "Dernière semaine",
+      "lastMonth": "Dernier mois"
+    },
+    "buttons": {
+      "clearAll": "Tout effacer"
+    }
+  },
+  "volunteerBottomBar": {
+    "searchPlaceholder": "Rechercher des missions ou associations",
+    "searchLabel": "Rechercher des missions ou associations",
+    "launchSearch": "Lancer la recherche",
+    "navigation": "Navigation bénévole",
+    "quickActions": "Actions rapides",
+    "goHome": "Aller à l'accueil bénévole",
+    "viewFavorites": "Voir mes favoris",
+    "viewRecentSearches": "Voir les recherches récentes",
+    "clearHistory": "Effacer tout l'historique",
+    "recentSearches": "Recherches récentes",
+    "searchFor": "Rechercher : {search}",
+    "helpSupport": "Aide et support"
   }
 }

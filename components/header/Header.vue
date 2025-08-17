@@ -143,7 +143,7 @@
     <div class="bg-base-200">
       <div v-if="isLoading" class="flex justify-center py-2" role="status" aria-live="polite">
         <span class="loading loading-dots loading-xl" aria-hidden="true" />
-        <span class="sr-only">Chargement de l'application...</span>
+        <span class="sr-only">{{ t('header.loading') }}</span>
       </div>
       <header v-else role="banner" aria-label="En-tête de l'application Benevoclic">
         <!-- Login Modal -->
@@ -166,7 +166,7 @@
               <form method="dialog">
                 <button
                   class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-                  aria-label="Fermer la modal"
+                  :aria-label="t('header.closeModal')"
                   @keyup.enter="loginModal?.close()"
                   @keyup.space.prevent="loginModal?.close()"
                 >
@@ -184,7 +184,7 @@
             <NuxtLink
               to="/"
               class="w-14 rounded-full overflow-hidden focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-              aria-label="Accueil - Logo Benevoclic"
+              :aria-label="t('header.homeLogo')"
             >
               <img
                 src="/logo_benevoclic.png"
@@ -203,7 +203,7 @@
               <button
                 v-if="isAuthenticated && role === 'VOLUNTEER'"
                 class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-                aria-label="Aller à l'accueil bénévole"
+                :aria-label="t('header.volunteer.goHome')"
                 @click="handleHome"
               >
                 <HomeIcon class="w-6 h-6" aria-hidden="true" />
@@ -214,7 +214,7 @@
               <button
                 v-if="isAuthenticated && role === 'VOLUNTEER'"
                 class="btn btn-ghost btn-circle px-0 py-0 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-                aria-label="Voir mes favoris"
+                :aria-label="t('header.volunteer.viewFavorites')"
                 @click="handleFavorites"
               >
                 <HeartIcon class="w-6 h-6" aria-hidden="true" />
@@ -231,7 +231,7 @@
             >
               <input
                 type="checkbox"
-                aria-label="Basculer entre le thème clair et sombre"
+                :aria-label="t('header.toggleTheme')"
                 :checked="isDarkTheme()"
                 class="sr-only"
                 @change="toggleTheme"
@@ -287,7 +287,7 @@
                           profileImageUrl ||
                           `https://api.dicebear.com/6.x/initials/svg?seed=${encodeURIComponent(userInfo?.email || 'User')}`
                         "
-                        alt="Photo de profil utilisateur"
+                        :alt="t('header.userProfilePhoto')"
                         class="w-full h-full object-cover rounded-full"
                         width="48"
                         height="48"
@@ -331,7 +331,7 @@
 
             <button
               class="sm:hidden btn btn-neutral-content btn-square focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-              aria-label="Ouvrir le menu de navigation"
+              :aria-label="t('header.openNavigationMenu')"
               :aria-controls="menuOpen ? 'mobile-menu' : undefined"
               @click.prevent="handleDrawerClose"
               @keyup.enter="handleDrawerClose"

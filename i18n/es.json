@@ -143,11 +143,19 @@
     "logout": "Cerrar Sesión"
   },
   "header": {
+    "loading": "Cargando aplicación...",
+    "closeModal": "Cerrar modal",
+    "homeLogo": "Inicio - Logo Benevoclic",
+    "toggleTheme": "Alternar entre tema claro y oscuro",
+    "userProfilePhoto": "Foto de perfil del usuario",
+    "openNavigationMenu": "Abrir menú de navegación",
     "volunteer": {
       "home": "Inicio",
       "favorites": "Favoritos",
       "recent-search": "Búsquedas recientes",
-      "help": "Ayuda"
+      "help": "Ayuda",
+      "goHome": "Ir al inicio de voluntario",
+      "viewFavorites": "Ver mis favoritos"
     }
   },
   "notifications": {
@@ -1583,6 +1591,9 @@
       "searchRadius": "Radio de búsqueda",
       "withinRadius": "En un radio de"
     },
+    "placeholders": {
+      "searchCity": "Buscar una ciudad..."
+    },
     "notes": {
       "onlyFirstCity": "Nota: Solo se tiene en cuenta la primera ciudad."
     },
@@ -1601,7 +1612,9 @@
     "detectedPosition": "Posición detectada",
     "aria": {
       "removeCity": "Eliminar ciudad",
-      "useCurrentPosition": "Usar mi posición actual"
+      "useCurrentPosition": "Usar mi posición actual",
+      "citySearch": "Búsqueda de ciudad",
+      "searchRadius": "Radio de búsqueda"
     }
   },
   "advancedFilters": {
@@ -1642,5 +1655,52 @@
       "removeCity": "Eliminar ciudad",
       "useCurrentPosition": "Usar mi posición actual"
     }
+  },
+  "filterActive": {
+    "labels": {
+      "activeFilters": "Filtros activos",
+      "eventDate": "Fecha del evento",
+      "eventTime": "Hora del evento",
+      "publicationDate": "Fecha de publicación"
+    },
+    "status": {
+      "active": "Activo",
+      "completed": "Completado",
+      "inactive": "Inactivo"
+    },
+    "stateEvent": {
+      "now": "En progreso",
+      "past": "Completado",
+      "upcoming": "Próximo"
+    },
+    "sort": {
+      "dateEventAsc": "Fecha del evento (ascendente)",
+      "dateEventDesc": "Fecha del evento (descendente)",
+      "datePublicationDesc": "Fecha de publicación (reciente)"
+    },
+    "interval": {
+      "lastHour": "Última hora",
+      "last5Hours": "Últimas 5 horas",
+      "lastDay": "Último día",
+      "lastWeek": "Última semana",
+      "lastMonth": "Último mes"
+    },
+    "buttons": {
+      "clearAll": "Limpiar todo"
+    }
+  },
+  "volunteerBottomBar": {
+    "searchPlaceholder": "Buscar misiones o asociaciones",
+    "searchLabel": "Buscar misiones o asociaciones",
+    "launchSearch": "Lanzar búsqueda",
+    "navigation": "Navegación de voluntario",
+    "quickActions": "Acciones rápidas",
+    "goHome": "Ir al inicio de voluntario",
+    "viewFavorites": "Ver mis favoritos",
+    "viewRecentSearches": "Ver búsquedas recientes",
+    "clearHistory": "Borrar todo el historial",
+    "recentSearches": "Búsquedas recientes",
+    "searchFor": "Buscar: {search}",
+    "helpSupport": "Ayuda y soporte"
   }
 }

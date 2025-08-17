@@ -143,11 +143,19 @@
     "logout": "Logout"
   },
   "header": {
+    "loading": "Loading application...",
+    "closeModal": "Close modal",
+    "homeLogo": "Home - Benevoclic Logo",
+    "toggleTheme": "Toggle between light and dark theme",
+    "userProfilePhoto": "User profile photo",
+    "openNavigationMenu": "Open navigation menu",
     "volunteer": {
       "home": "Home",
       "favorites": "Favorites",
       "recent-search": "Recent search",
-      "help": "Help"
+      "help": "Help",
+      "goHome": "Go to volunteer home",
+      "viewFavorites": "View my favorites"
     }
   },
   "notifications": {
@@ -1582,6 +1590,9 @@
       "searchRadius": "Search radius",
       "withinRadius": "Within a radius of"
     },
+    "placeholders": {
+      "searchCity": "Search for a city..."
+    },
     "notes": {
       "onlyFirstCity": "Note: Only the first city is taken into account."
     },
@@ -1600,7 +1611,9 @@
     "detectedPosition": "Position detected",
     "aria": {
       "removeCity": "Remove city",
-      "useCurrentPosition": "Use my current position"
+      "useCurrentPosition": "Use my current position",
+      "citySearch": "City search",
+      "searchRadius": "Search radius"
     }
   },
   "advancedFilters": {
@@ -1641,5 +1654,52 @@
       "removeCity": "Remove city",
       "useCurrentPosition": "Use my current position"
     }
+  },
+  "filterActive": {
+    "labels": {
+      "activeFilters": "Active filters",
+      "eventDate": "Event date",
+      "eventTime": "Event time",
+      "publicationDate": "Publication date"
+    },
+    "status": {
+      "active": "Active",
+      "completed": "Completed",
+      "inactive": "Inactive"
+    },
+    "stateEvent": {
+      "now": "In progress",
+      "past": "Completed",
+      "upcoming": "Upcoming"
+    },
+    "sort": {
+      "dateEventAsc": "Event date (ascending)",
+      "dateEventDesc": "Event date (descending)",
+      "datePublicationDesc": "Publication date (recent)"
+    },
+    "interval": {
+      "lastHour": "Last hour",
+      "last5Hours": "Last 5 hours",
+      "lastDay": "Last day",
+      "lastWeek": "Last week",
+      "lastMonth": "Last month"
+    },
+    "buttons": {
+      "clearAll": "Clear all"
+    }
+  },
+  "volunteerBottomBar": {
+    "searchPlaceholder": "Search for missions or associations",
+    "searchLabel": "Search for missions or associations",
+    "launchSearch": "Launch search",
+    "navigation": "Volunteer navigation",
+    "quickActions": "Quick actions",
+    "goHome": "Go to volunteer home",
+    "viewFavorites": "View my favorites",
+    "viewRecentSearches": "View recent searches",
+    "clearHistory": "Clear all history",
+    "recentSearches": "Recent searches",
+    "searchFor": "Search for: {search}",
+    "helpSupport": "Help and support"
   }
 }

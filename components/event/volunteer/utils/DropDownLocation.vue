@@ -269,9 +269,9 @@
           <input
             v-model="locationSearch"
             type="text"
-            placeholder="Rechercher une ville..."
+            :placeholder="t('dropDownLocation.placeholders.searchCity')"
             class="input input-bordered w-full pl-10"
-            aria-label="Recherche de ville"
+            :aria-label="t('dropDownLocation.aria.citySearch')"
             @input="onSearchInput"
           />
         </div>
@@ -407,7 +407,7 @@
             min="0"
             max="200"
             class="range range-sm range-primary w-full"
-            aria-label="Rayon de recherche"
+            :aria-label="t('dropDownLocation.aria.searchRadius')"
             @input="updateLocationFilter"
           />
           <div class="flex justify-between text-xs text-base-content/50">
