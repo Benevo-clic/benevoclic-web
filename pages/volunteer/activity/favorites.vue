@@ -3,7 +3,7 @@
     v-if="!isReady"
     class="fixed inset-0 bg-base-200 bg-opacity-80 z-[1000] flex items-center justify-center"
   >
-    <img src="/logo.png" alt="Chargement…" class="w-24 h-24 animate-spin" />
+    <img src="/logo.png" :alt="t('activity.loading')" class="w-24 h-24 animate-spin" />
   </div>
   <div v-else class="mx-auto px-4 py-6 max-w-screen-2xl w-full">
     <div class="container mx-auto px-4 w-full">
@@ -33,7 +33,7 @@
               «
             </button>
             <button class="join-item btn" disabled>
-              Page {{ currentPage }} / {{ totalPages }}
+              {{ t('activity.favorites.page') }} {{ currentPage }} / {{ totalPages }}
             </button>
             <button
               class="join-item btn"

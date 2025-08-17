@@ -6,8 +6,8 @@
       class="fixed inset-0 bg-base-200 bg-opacity-90 z-[1000] flex items-center justify-center backdrop-blur-sm"
     >
       <div class="flex flex-col items-center space-y-4">
-        <img src="/logo.png" alt="Chargement…" class="w-20 h-20 animate-spin" />
-        <div class="text-base-content opacity-70">Chargement en cours...</div>
+        <img src="/logo.png" :alt="t('activity.loading')" class="w-20 h-20 animate-spin" />
+        <div class="text-base-content opacity-70">{{ t('activity.loading.inProgress') }}</div>
       </div>
     </div>
 
@@ -18,7 +18,7 @@
         <h1 class="text-3xl font-bold text-base-content mb-2">
           {{ t('drawer-content.activity.my_missions') }}
         </h1>
-        <p class="text-base-content opacity-70">Gérez vos missions et participations</p>
+        <p class="text-base-content opacity-70">{{ t('activity.missions.description') }}</p>
       </div>
 
       <!-- Filter and search section -->
@@ -32,7 +32,7 @@
               <input
                 v-model="searchQuery"
                 type="text"
-                placeholder="Rechercher des missions..."
+                :placeholder="t('activity.missions.searchPlaceholder')"
                 class="input input-bordered w-full pl-12 pr-4 h-12 bg-base-200 border-base-300 focus:border-primary transition-all duration-300"
                 aria-label="Champ de saisie"
               />
@@ -49,9 +49,9 @@
               class="select select-bordered w-full h-12 bg-base-200 border-base-300 focus:border-primary transition-all duration-300"
               aria-label="Sélection"
             >
-              <option value="all">Toutes les missions</option>
-              <option value="participant">Participe</option>
-              <option value="waiting">En attente</option>
+              <option value="all">{{ t('activity.missions.filters.all') }}</option>
+              <option value="participant">{{ t('activity.missions.filters.participant') }}</option>
+              <option value="waiting">{{ t('activity.missions.filters.waiting') }}</option>
             </select>
           </div>
         </div>
@@ -96,10 +96,10 @@
                   >
                     {{
                       isVolunteerInVolunteerList(announcement)
-                        ? 'Participe'
+                        ? t('activity.missions.status.participant')
                         : isVolunteerInWaitingList(announcement)
-                          ? 'En attente'
-                          : 'Disponible'
+                          ? t('activity.missions.status.waiting')
+                          : t('activity.missions.status.available')
                     }}
                   </div>
                 </div>
@@ -115,7 +115,7 @@
                     <p class="text-sm font-medium text-base-content">
                       {{ announcement.dateEvent }}
                     </p>
-                    <p class="text-xs text-base-content opacity-60">Date de l'événement</p>
+                    <p class="text-xs text-base-content opacity-60">{{ t('activity.eventDate') }}</p>
                   </div>
                 </div>
 
@@ -127,7 +127,7 @@
                     <p class="text-sm font-medium text-base-content">
                       {{ announcement.addressAnnouncement?.city }}
                     </p>
-                    <p class="text-xs text-base-content opacity-60">Localisation</p>
+                    <p class="text-xs text-base-content opacity-60">{{ t('activity.location') }}</p>
                   </div>
                 </div>
               </div>
@@ -140,7 +140,7 @@
                   class="btn btn-primary flex-1 group-hover:btn-secondary transition-all duration-300"
                   @click="goDetail(announcement._id)"
                 >
-                  <span>Détails</span>
+                  <span>{{ t('activity.details') }}</span>
                   <svg
                     class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300"
                     fill="none"
@@ -163,7 +163,7 @@
                   class="btn btn-error btn-outline flex-1"
                   @click="cancelVolunteer(announcement)"
                 >
-                  Annuler
+                  {{ t('activity.cancel') }}
                 </button>
               </div>
             </div>
@@ -178,10 +178,9 @@
             >
               <Box class="w-12 h-12 text-base-content opacity-40" />
             </div>
-            <h3 class="text-2xl font-bold text-base-content mb-3">Aucune mission trouvée</h3>
+            <h3 class="text-2xl font-bold text-base-content mb-3">{{ t('activity.missions.empty.title') }}</h3>
             <p class="text-base-content opacity-70 mb-8 leading-relaxed">
-              Vous n'avez pas encore participé à des missions. Découvrez les événements disponibles
-              et commencez votre aventure !
+              {{ t('activity.missions.empty.description') }}
             </p>
           </div>
         </div>
@@ -278,7 +277,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error(t('activity.errors.unexpected'), error)
     }
   }
 
@@ -307,7 +306,7 @@
         await announcementUse.removeVolunteerWaiting(announcement._id, getUserId)
       } else {
         process.env.NODE_ENV !== 'production' &&
-          console.warn("L'utilisateur n'est pas dans la liste des participants ou en attente.")
+          console.warn(t('activity.missions.errors.userNotInList'))
         return
       }
       announcements.value = announcements.value.filter(a => a._id !== announcement._id)

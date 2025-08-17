@@ -1928,5 +1928,68 @@
     "errors": {
       "unexpected": "Error inesperado"
     }
+  },
+  "activity": {
+    "loading": "Cargando…",
+    "loading.inProgress": "Cargando en progreso...",
+    "eventDate": "Fecha del evento",
+    "location": "Ubicación",
+    "details": "Detalles",
+    "cancel": "Cancelar",
+    "errors": {
+      "unexpected": "Error inesperado"
+    },
+    "missions": {
+      "description": "Gestiona tus misiones y participaciones",
+      "searchPlaceholder": "Buscar misiones...",
+      "filters": {
+        "all": "Todas las misiones",
+        "participant": "Participando",
+        "waiting": "En espera"
+      },
+      "status": {
+        "participant": "Participando",
+        "waiting": "En espera",
+        "available": "Disponible"
+      },
+      "empty": {
+        "title": "No se encontraron misiones",
+        "description": "Aún no has participado en ninguna misión. ¡Descubre eventos disponibles y comienza tu aventura!"
+      },
+      "errors": {
+        "userNotInList": "El usuario no está en la lista de participantes o en espera."
+      }
+    },
+    "participations": {
+      "description": "Sigue tus participaciones en misiones",
+      "searchPlaceholder": "Buscar participaciones...",
+      "filters": {
+        "all": "Todas las participaciones",
+        "active": "Activa",
+        "completed": "Completada"
+      },
+      "empty": {
+        "title": "No se encontró participación",
+        "description": "Aún no has participado en ninguna misión. ¡Descubre eventos disponibles y comienza!"
+      }
+    },
+    "history": {
+      "description": "Encuentra aquí todas tus misiones y participaciones pasadas",
+      "searchPlaceholder": "Buscar en el historial...",
+      "filters": {
+        "all": "Todas las actividades",
+        "mission": "Misiones",
+        "participation": "Participaciones"
+      },
+      "noDescription": "Sin descripción.",
+      "empty": {
+        "title": "No se encontró historial",
+        "description": "Tu historial de actividades aparecerá aquí una vez que hayas participado en misiones."
+      },
+      "loadMore": "Cargar más"
+    },
+    "favorites": {
+      "page": "Página"
+    }
   }
 }

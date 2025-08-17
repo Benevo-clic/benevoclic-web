@@ -426,6 +426,69 @@
       "unexpected": "Erreur inattendue"
     }
   },
+  "activity": {
+    "loading": "Chargement…",
+    "loading.inProgress": "Chargement en cours...",
+    "eventDate": "Date de l'événement",
+    "location": "Localisation",
+    "details": "Détails",
+    "cancel": "Annuler",
+    "errors": {
+      "unexpected": "Erreur inattendue"
+    },
+    "missions": {
+      "description": "Gérez vos missions et participations",
+      "searchPlaceholder": "Rechercher des missions...",
+      "filters": {
+        "all": "Toutes les missions",
+        "participant": "Participe",
+        "waiting": "En attente"
+      },
+      "status": {
+        "participant": "Participe",
+        "waiting": "En attente",
+        "available": "Disponible"
+      },
+      "empty": {
+        "title": "Aucune mission trouvée",
+        "description": "Vous n'avez pas encore participé à des missions. Découvrez les événements disponibles et commencez votre aventure !"
+      },
+      "errors": {
+        "userNotInList": "L'utilisateur n'est pas dans la liste des participants ou en attente."
+      }
+    },
+    "participations": {
+      "description": "Suivez vos participations à des missions",
+      "searchPlaceholder": "Rechercher des participations...",
+      "filters": {
+        "all": "Toutes les participations",
+        "active": "Active",
+        "completed": "Complet"
+      },
+      "empty": {
+        "title": "Aucune participation trouvée",
+        "description": "Vous n'avez pas encore participé à des missions. Découvrez les événements disponibles et lancez-vous !"
+      }
+    },
+    "history": {
+      "description": "Retrouvez ici toutes vos missions et participations passées",
+      "searchPlaceholder": "Rechercher dans l'historique...",
+      "filters": {
+        "all": "Toutes les activités",
+        "mission": "Missions",
+        "participation": "Participations"
+      },
+      "noDescription": "Aucune description.",
+      "empty": {
+        "title": "Aucun historique trouvé",
+        "description": "Votre historique d'activités apparaîtra ici dès que vous aurez participé à des missions."
+      },
+      "loadMore": "Charger plus"
+    },
+    "favorites": {
+      "page": "Page"
+    }
+  },
   "search": {
     "menu": {
       "title": "Recherche",

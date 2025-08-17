@@ -5,8 +5,8 @@
       class="fixed inset-0 bg-base-200 bg-opacity-90 z-[1000] flex items-center justify-center backdrop-blur-sm"
     >
       <div class="flex flex-col items-center space-y-4">
-        <img src="/logo.png" alt="Chargement…" class="w-20 h-20 animate-spin" />
-        <div class="text-base-content opacity-70">Chargement en cours...</div>
+        <img src="/logo.png" :alt="t('activity.loading')" class="w-20 h-20 animate-spin" />
+        <div class="text-base-content opacity-70">{{ t('activity.loading.inProgress') }}</div>
       </div>
     </div>
 
@@ -17,7 +17,7 @@
           {{ t('drawer-content.activity.history') }}
         </h1>
         <p class="text-base-content opacity-70">
-          Retrouvez ici toutes vos missions et participations passées
+          {{ t('activity.history.description') }}
         </p>
       </div>
 
@@ -28,7 +28,7 @@
             <input
               v-model="searchQuery"
               type="text"
-              placeholder="Rechercher dans l'historique..."
+              :placeholder="t('activity.history.searchPlaceholder')"
               class="input input-bordered w-full pl-12 pr-4 h-12 bg-base-200 border-base-300 focus:border-primary transition-all duration-300"
               aria-label="Champ de saisie"
             />
@@ -42,9 +42,9 @@
               class="select select-bordered w-full h-12 bg-base-200 border-base-300 focus:border-primary transition-all duration-300"
               aria-label="Sélection"
             >
-              <option value="all">Toutes les activités</option>
-              <option value="mission">Missions</option>
-              <option value="participation">Participations</option>
+              <option value="all">{{ t('activity.history.filters.all') }}</option>
+              <option value="mission">{{ t('activity.history.filters.mission') }}</option>
+              <option value="participation">{{ t('activity.history.filters.participation') }}</option>
             </select>
           </div>
         </div>
@@ -92,14 +92,14 @@
                       }}</span>
                     </div>
                     <p class="text-base-content mb-4 line-clamp-3">
-                      {{ item.description || 'Aucune description.' }}
+                      {{ item.description || t('activity.history.noDescription') }}
                     </p>
                     <div class="flex gap-2 justify-end">
                       <button
                         class="btn btn-primary btn-sm group-hover:btn-secondary transition-all duration-300"
                         @click="goDetail(item._id)"
                       >
-                        Détail
+                        {{ t('activity.details') }}
                         <svg
                           class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300"
                           fill="none"
@@ -128,16 +128,15 @@
               >
                 <Clock class="w-12 h-12 text-base-content opacity-40" />
               </div>
-              <h3 class="text-2xl font-bold text-base-content mb-3">Aucun historique trouvé</h3>
+              <h3 class="text-2xl font-bold text-base-content mb-3">{{ t('activity.history.empty.title') }}</h3>
               <p class="text-base-content opacity-70 mb-8 leading-relaxed">
-                Votre historique d'activités apparaîtra ici dès que vous aurez participé à des
-                missions.
+                {{ t('activity.history.empty.description') }}
               </p>
             </div>
           </div>
           <!-- Load more button -->
           <div v-if="displayCount < filteredItems.length" class="flex justify-center mt-8">
-            <button class="btn btn-outline" @click="loadMore">Charger plus</button>
+            <button class="btn btn-outline" @click="loadMore">{{ t('activity.history.loadMore') }}</button>
           </div>
         </div>
       </div>
@@ -259,7 +258,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error(t('activity.errors.unexpected'), error)
     }
   }
 

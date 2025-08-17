@@ -1927,5 +1927,68 @@
     "errors": {
       "unexpected": "Unexpected error"
     }
+  },
+  "activity": {
+    "loading": "Loading…",
+    "loading.inProgress": "Loading in progress...",
+    "eventDate": "Event date",
+    "location": "Location",
+    "details": "Details",
+    "cancel": "Cancel",
+    "errors": {
+      "unexpected": "Unexpected error"
+    },
+    "missions": {
+      "description": "Manage your missions and participations",
+      "searchPlaceholder": "Search missions...",
+      "filters": {
+        "all": "All missions",
+        "participant": "Participating",
+        "waiting": "Waiting"
+      },
+      "status": {
+        "participant": "Participating",
+        "waiting": "Waiting",
+        "available": "Available"
+      },
+      "empty": {
+        "title": "No missions found",
+        "description": "You haven't participated in any missions yet. Discover available events and start your adventure!"
+      },
+      "errors": {
+        "userNotInList": "User is not in the participant or waiting list."
+      }
+    },
+    "participations": {
+      "description": "Track your mission participations",
+      "searchPlaceholder": "Search participations...",
+      "filters": {
+        "all": "All participations",
+        "active": "Active",
+        "completed": "Completed"
+      },
+      "empty": {
+        "title": "No participation found",
+        "description": "You haven't participated in any missions yet. Discover available events and get started!"
+      }
+    },
+    "history": {
+      "description": "Find all your past missions and participations here",
+      "searchPlaceholder": "Search in history...",
+      "filters": {
+        "all": "All activities",
+        "mission": "Missions",
+        "participation": "Participations"
+      },
+      "noDescription": "No description.",
+      "empty": {
+        "title": "No history found",
+        "description": "Your activity history will appear here once you have participated in missions."
+      },
+      "loadMore": "Load more"
+    },
+    "favorites": {
+      "page": "Page"
+    }
   }
 }
