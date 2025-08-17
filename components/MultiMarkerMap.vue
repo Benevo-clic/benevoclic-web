@@ -5,7 +5,7 @@
       <button
         v-if="expandedCity"
         class="refresh-btn"
-        title="Afficher toutes les villes"
+        :title="t('multiMarkerMap.controls.show_all_cities')"
         @click="resetToCities"
       >
         <svg
@@ -26,12 +26,12 @@
       </button>
       <!-- Contrôles de zoom personnalisés -->
       <div class="zoom-controls">
-        <button class="zoom-btn zoom-in" title="Zoomer" @click="zoomIn">
+        <button class="zoom-btn zoom-in" :title="t('multiMarkerMap.controls.zoom_in')" @click="zoomIn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
           </svg>
         </button>
-        <button class="zoom-btn zoom-out" title="Dézoomer" @click="zoomOut">
+        <button class="zoom-btn zoom-out" :title="t('multiMarkerMap.controls.zoom_out')" @click="zoomOut">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 13H5v-2h14v2z" />
           </svg>
@@ -40,7 +40,7 @@
         <button
           v-if="tileErrorCount > 0"
           class="zoom-btn tile-switch"
-          title="Changer de source de carte"
+          :title="t('multiMarkerMap.controls.switch_map_source')"
           @click="switchToAlternativeTiles"
         >
           <svg
@@ -65,6 +65,8 @@
 <script setup lang="ts">
   import { ref, onMounted, onUnmounted, watch } from 'vue'
   import type { LocationGeoJson } from '~/common/interface/event.interface'
+
+  const { t } = useI18n()
 
   const props = defineProps<{
     locations: LocationGeoJson[]
@@ -118,8 +120,9 @@
       }
     })
     Object.entries(eventsCountByCity).forEach(([city, count]) => {
+      const eventText = count > 1 ? t('multiMarkerMap.popup.city_events_plural') : t('multiMarkerMap.popup.city_events')
       const popup = new $maplibregl.Popup({ offset: 25 }).setText(
-        `${city} (${count} événement${count > 1 ? 's' : ''}) - Cliquez pour voir les détails`
+        `${city} (${count} ${eventText}) - ${t('multiMarkerMap.popup.click_for_details')}`
       )
       const marker = new $maplibregl.Marker({
         color: '#3b82f6',
@@ -178,8 +181,8 @@
       <div style=\"padding: 8px; max-width: 250px;\">
         <h3 style=\"margin: 0 0 8px 0; font-weight: bold; color: #1f2937;\">${event.name}</h3>
         <p style=\"margin: 0 0 8px 0; color: #6b7280; font-size: 14px;\">${truncatedDescription}</p>
-        <p style=\"margin: 0 0 8px 0; color: #059669; font-size: 12px;\">📅 ${event.date}</p>
-        <p style=\"margin: 0; color: #3b82f6; font-size: 12px;\">📍 ${event.location}</p>
+        <p style=\"margin: 0 0 8px 0; color: #059669; font-size: 12px;\">${t('multiMarkerMap.popup.date')} ${event.date}</p>
+        <p style=\"margin: 0; color: #3b82f6; font-size: 12px;\">${t('multiMarkerMap.popup.location')} ${event.location}</p>
       </div>
     `
       const popup = new $maplibregl.Popup({
@@ -199,45 +202,24 @@
       position: absolute;
       top: -6px;
       right: -6px;
-      background: #059669;
+      background: #3b82f6;
       color: white;
       border-radius: 50%;
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: bold;
-      border: 1px solid white;
+      border: 2px solid white;
     `
       markerElement.appendChild(numberElement)
-      markerElement.addEventListener('mouseenter', () => {
-        marker.togglePopup()
-        if (marker.getPopup()) {
-          marker.getPopup().addTo(map.value)
-        }
-      })
-      markerElement.addEventListener('mouseleave', () => {
-        marker.togglePopup()
-        if (marker.getPopup()) {
-          marker.getPopup().remove()
-        }
-      })
-
-      markerElement.addEventListener('click', (e: MouseEvent) => {
-        e.stopPropagation()
-        if (marker.getPopup()) {
-          marker.getPopup().remove()
-        }
-        goToDetails(event.id)
-      })
-      marker.setPopup(popup)
       markers.value.push(marker)
     })
     const bounds = new $maplibregl.LngLatBounds()
     cityEvents.forEach(event => bounds.extend(event.coordinates))
-    map.value.fitBounds(bounds, { padding: 50, maxZoom: 15 })
+    map.value.fitBounds(bounds, { padding: 50, maxZoom: 16 })
   }
 
   const resetToCities = () => {
@@ -378,17 +360,17 @@
 
         const title = document.createElement('p')
         title.style.cssText = 'margin: 0; font-size: 14px;'
-        title.textContent = 'Impossible de charger la carte'
+        title.textContent = t('multiMarkerMap.error.title')
 
         const subtitle = document.createElement('p')
         subtitle.style.cssText = 'margin: 4px 0 0 0; font-size: 12px;'
-        subtitle.textContent = 'Vérifiez votre connexion internet'
+        subtitle.textContent = t('multiMarkerMap.error.subtitle')
 
         const retryButton = document.createElement('button')
         retryButton.style.cssText =
           'margin-top: 12px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;'
         retryButton.type = 'button'
-        retryButton.textContent = 'Réessayer'
+        retryButton.textContent = t('multiMarkerMap.error.retry')
         retryButton.addEventListener('click', () => window.location.reload())
 
         errorContent.appendChild(svg)

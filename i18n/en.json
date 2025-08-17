@@ -501,5 +501,228 @@
         "up": "Scroll up"
       }
     }
+  },
+  "cookieConsent": {
+    "banner": {
+      "title": "🍪 Cookie Management",
+      "description": "We use cookies to improve your experience on our site. Some are necessary for the site to function, while others help us understand how you use it. You can accept all cookies or customize your preferences.",
+      "learn_more": "Learn more",
+      "customize": "Customize",
+      "accept_all": "Accept all",
+      "reject_non_essential": "Reject non-essential"
+    },
+    "settings": {
+      "title": "Cookie Settings",
+      "essential": {
+        "title": "Essential Cookies",
+        "description": "These cookies are necessary for the site to function and cannot be disabled. They allow you to authenticate and secure your navigation.",
+        "warning": "Without these cookies, you will not be able to log into your account."
+      },
+      "personalization": {
+        "title": "Personalization Cookies",
+        "description": "These cookies allow us to offer you content adapted to your interests, remember your display preferences and use your location for geolocated services.",
+        "info": "Necessary for geolocation and personal data."
+      },
+      "analytics": {
+        "title": "Analytics Cookies",
+        "description": "These cookies allow us to measure our site's audience and improve its operation. They are used by Firebase Analytics to generate anonymous statistics."
+      },
+      "third_party": {
+        "title": "Third-party Cookies",
+        "description": "These cookies are placed by third-party services like Google Fonts or social networks. They allow you to display custom fonts and share content."
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "save": "Save"
+      }
+    },
+    "permissions": {
+      "title": "⚠️ Required Permissions",
+      "authentication": {
+        "title": "Authentication Impossible",
+        "description": "You must accept essential cookies to log in."
+      },
+      "location": {
+        "title": "Geolocation Disabled",
+        "description": "Accept personalization cookies to use geolocation."
+      },
+      "actions": {
+        "close": "Close",
+        "configure": "Configure cookies"
+      }
+    }
+  },
+  "common": {
+    "placeholder_address_search": "Search for an address...",
+    "auto_complete_address": "street-address",
+    "aria_label_search": "Address search",
+    "address_description": "Type at least 3 characters to see address suggestions",
+    "aria_label_suggestions": "Address suggestions",
+    "no_suggestions_found": "No suggestions found",
+    "address_label": "Location (Address)",
+    "required_field": "Required field"
+  },
+  "multiMarkerMap": {
+    "controls": {
+      "show_all_cities": "Show all cities",
+      "zoom_in": "Zoom in",
+      "zoom_out": "Zoom out",
+      "switch_map_source": "Switch map source"
+    },
+    "popup": {
+      "city_events": "event",
+      "city_events_plural": "events",
+      "click_for_details": "Click to see details",
+      "date": "📅",
+      "location": "📍"
+    },
+    "error": {
+      "title": "Unable to load map",
+      "subtitle": "Check your internet connection",
+      "retry": "Retry"
+    }
+  },
+  "errorPopup": {
+    "title": "Error",
+    "messages": {
+      "4xx": "This action is no longer possible.",
+      "5xx": "A server error occurred."
+    },
+    "actions": {
+      "reload": "Reload page",
+      "go_home": "Return to announcement management"
+    }
+  },
+  "permissionAlert": {
+    "actions": {
+      "configure_cookies": "Configure cookies",
+      "later": "Later"
+    },
+    "close_aria_label": "Close notification"
+  },
+  "eventFilters": {
+    "search": {
+      "placeholder": "Search for an event...",
+      "label": "Search"
+    },
+    "status": {
+      "label": "Status",
+      "options": {
+        "active": "Active",
+        "completed": "Completed",
+        "inactive": "Inactive"
+      }
+    },
+    "tags": {
+      "label": "Tags",
+      "add_tag": "Add a tag...",
+      "new_tag_placeholder": "New tag…",
+      "add_button": "Add",
+      "cancel_button": "Cancel",
+      "close_button": "Close",
+      "available_tags": [
+        "Urgent",
+        "Volunteering",
+        "Training",
+        "Event",
+        "Collection",
+        "Awareness",
+        "Humanitarian",
+        "Environment",
+        "Sports",
+        "Culture",
+        "Education",
+        "Health"
+      ]
+    },
+    "advanced_filters": {
+      "label": "Advanced filters",
+      "configure": "Configure advanced filters"
+    },
+    "events": {
+      "label": "Events",
+      "options": {
+        "now": "Ongoing",
+        "past": "Past",
+        "upcoming": "Upcoming"
+      }
+    },
+    "mobile": {
+      "filters": "Filters",
+      "reset": "Reset",
+      "apply": "Apply"
+    },
+    "aria_labels": {
+      "input_field": "Input field",
+      "add": "Add"
+    }
+  },
+  "eventForm": {
+    "required_fields_note": "Fields marked with",
+    "are_required": "are required.",
+    "validation_errors": {
+      "title": "Please correct the following errors:",
+      "event_name": "Event name",
+      "description": "Description",
+      "event_date": "Event date",
+      "event_time": "Event time",
+      "address": "Address",
+      "city": "City",
+      "postal_code": "Postal code",
+      "date_before_publication": "Event date cannot be earlier than publication date"
+    },
+    "fields": {
+      "event_name": {
+        "label": "Event name",
+        "placeholder": "Event name"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Event description"
+      },
+      "event_date": {
+        "label": "Event date"
+      },
+      "event_time": {
+        "label": "Event time"
+      },
+      "city": {
+        "label": "City",
+        "placeholder": "City"
+      },
+      "postal_code": {
+        "label": "Postal code",
+        "placeholder": "Postal code"
+      },
+      "country": {
+        "label": "Country",
+        "placeholder": "Country"
+      },
+      "max_participants": {
+        "label": "Maximum number of participants"
+      },
+      "max_volunteers": {
+        "label": "Number of volunteers required"
+      },
+      "tags": {
+        "label": "Tags",
+        "placeholder": "Add a tag and press Enter",
+        "add_button": "Add"
+      },
+      "status": {
+        "label": "Status"
+      }
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "update": "Update",
+      "continue": "Continue"
+    },
+    "aria_labels": {
+      "input_field": "Input field",
+      "text_area": "Text area",
+      "selection": "Selection",
+      "number": "Number"
+    }
   }
 }

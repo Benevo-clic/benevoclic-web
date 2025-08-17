@@ -2,7 +2,7 @@
   <form class="space-y-6" @submit.prevent="submit">
     <!-- Required Fields Note -->
     <div class="text-sm text-gray-500 mb-2">
-      Les champs marqués d'un <span class="text-error">*</span> sont obligatoires.
+      {{ t('eventForm.required_fields_note') }} <span class="text-error">*</span> {{ t('eventForm.are_required') }}
     </div>
 
     <!-- Validation Errors -->
@@ -22,7 +22,7 @@
           />
         </svg>
         <div>
-          <h3 class="font-bold">Veuillez corriger les erreurs suivantes :</h3>
+          <h3 class="font-bold">{{ t('eventForm.validation_errors.title') }}</h3>
           <ul class="mt-1 list-disc list-inside">
             <li v-for="(error, index) in formErrors" :key="index">
               {{ error }}
@@ -35,29 +35,29 @@
     <!-- Event Name -->
     <div class="form-control w-full">
       <label class="label">
-        <span class="label-text">Nom de l'événement <span class="text-error">*</span></span>
+        <span class="label-text">{{ t('eventForm.fields.event_name.label') }} <span class="text-error">*</span></span>
       </label>
       <input
         v-model="formState.nameEvent"
         type="text"
         class="input input-bordered w-full"
         :class="{ 'input-error': invalidFields.nameEvent }"
-        placeholder="Nom de l'événement"
-        aria-label="Champ de saisie"
+        :placeholder="t('eventForm.fields.event_name.placeholder')"
+        :aria-label="t('eventForm.aria_labels.input_field')"
       />
     </div>
 
     <!-- Description -->
     <div class="form-control w-full">
       <label class="label">
-        <span class="label-text">Description <span class="text-error">*</span></span>
+        <span class="label-text">{{ t('eventForm.fields.description.label') }} <span class="text-error">*</span></span>
       </label>
       <textarea
         v-model="formState.description"
         class="textarea textarea-bordered h-24 w-full"
         :class="{ 'textarea-error': invalidFields.description }"
-        placeholder="Description de l'événement"
-        aria-label="Zone de texte"
+        :placeholder="t('eventForm.fields.description.placeholder')"
+        :aria-label="t('eventForm.aria_labels.text_area')"
       />
     </div>
 
@@ -65,26 +65,26 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">Date de l'événement <span class="text-error">*</span></span>
+          <span class="label-text">{{ t('eventForm.fields.event_date.label') }} <span class="text-error">*</span></span>
         </label>
         <input
           v-model="formState.dateEvent"
           type="date"
           class="input input-bordered w-full"
           :class="{ 'input-error': invalidFields.dateEvent }"
-          aria-label="Champ de saisie"
+          :aria-label="t('eventForm.aria_labels.input_field')"
         />
       </div>
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">Heure de l'événement <span class="text-error">*</span></span>
+          <span class="label-text">{{ t('eventForm.fields.event_time.label') }} <span class="text-error">*</span></span>
         </label>
         <input
           v-model="formState.hoursEvent"
           type="time"
           class="input input-bordered w-full"
           :class="{ 'input-error': invalidFields.hoursEvent }"
-          aria-label="Champ de saisie"
+          :aria-label="t('eventForm.aria_labels.input_field')"
         />
       </div>
     </div>
@@ -94,40 +94,40 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">Ville <span class="text-error">*</span></span>
+          <span class="label-text">{{ t('eventForm.fields.city.label') }} <span class="text-error">*</span></span>
         </label>
         <input
           v-model="formState.addressAnnouncement.city"
           type="text"
           class="input input-bordered w-full"
           :class="{ 'input-error': invalidFields.city }"
-          placeholder="Ville"
-          aria-label="Champ de saisie"
+          :placeholder="t('eventForm.fields.city.placeholder')"
+          :aria-label="t('eventForm.aria_labels.input_field')"
         />
       </div>
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">Code Postal <span class="text-error">*</span></span>
+          <span class="label-text">{{ t('eventForm.fields.postal_code.label') }} <span class="text-error">*</span></span>
         </label>
         <input
           v-model="formState.addressAnnouncement.postalCode"
           type="text"
           class="input input-bordered w-full"
           :class="{ 'input-error': invalidFields.postalCode }"
-          placeholder="Code postal"
-          aria-label="Champ de saisie"
+          :placeholder="t('eventForm.fields.postal_code.placeholder')"
+          :aria-label="t('eventForm.aria_labels.input_field')"
         />
       </div>
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">Pays</span>
+          <span class="label-text">{{ t('eventForm.fields.country.label') }}</span>
         </label>
         <input
           v-model="formState.addressAnnouncement.country"
           type="text"
           class="input input-bordered w-full"
-          placeholder="Pays"
-          aria-label="Champ de saisie"
+          :placeholder="t('eventForm.fields.country.placeholder')"
+          :aria-label="t('eventForm.aria_labels.input_field')"
         />
       </div>
     </div>
@@ -136,26 +136,26 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">Nombre maximum de participants</span>
+          <span class="label-text">{{ t('eventForm.fields.max_participants.label') }}</span>
         </label>
         <input
           v-model.number="formState.maxParticipants"
           type="number"
           class="input input-bordered w-full"
           min="0"
-          aria-label="Nombre"
+          :aria-label="t('eventForm.aria_labels.number')"
         />
       </div>
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">Nombre de bénévoles requis</span>
+          <span class="label-text">{{ t('eventForm.fields.max_volunteers.label') }}</span>
         </label>
         <input
           v-model.number="formState.maxVolunteers"
           type="number"
           class="input input-bordered w-full"
           min="0"
-          aria-label="Nombre"
+          :aria-label="t('eventForm.aria_labels.number')"
         />
       </div>
     </div>
@@ -163,18 +163,18 @@
     <!-- Tags -->
     <div class="form-control w-full">
       <label class="label">
-        <span class="label-text">Tags</span>
+        <span class="label-text">{{ t('eventForm.fields.tags.label') }}</span>
       </label>
       <div class="flex">
         <input
           v-model="tagsInput"
           type="text"
           class="input input-bordered w-full"
-          placeholder="Ajouter un tag et appuyer sur Entrée"
-          aria-label="Champ de saisie"
+          :placeholder="t('eventForm.fields.tags.placeholder')"
+          :aria-label="t('eventForm.aria_labels.input_field')"
           @keydown.enter.prevent="addTag"
         />
-        <button type="button" class="btn btn-primary ml-2" @click="addTag">Ajouter</button>
+        <button type="button" class="btn btn-primary ml-2" @click="addTag">{{ t('eventForm.fields.tags.add_button') }}</button>
       </div>
       <div class="flex flex-wrap gap-2 mt-2">
         <div v-for="(tag, index) in formState.tags" :key="index" class="badge badge-primary gap-1">
@@ -202,12 +202,12 @@
     <!-- Status -->
     <div class="form-control w-full">
       <label class="label">
-        <span class="label-text">Statut</span>
+        <span class="label-text">{{ t('eventForm.fields.status.label') }}</span>
       </label>
       <select
         v-model="formState.status"
         class="select select-bordered w-full"
-        aria-label="Sélection"
+        :aria-label="t('eventForm.aria_labels.selection')"
       >
         <option v-for="status in statusOptions" :key="status.value" :value="status.value">
           {{ status.label }}
@@ -217,9 +217,9 @@
 
     <!-- Form Actions -->
     <div class="flex justify-end space-x-4 mt-6">
-      <button type="button" class="btn btn-ghost" @click="cancel">Annuler</button>
+      <button type="button" class="btn btn-ghost" @click="cancel">{{ t('eventForm.actions.cancel') }}</button>
       <button type="submit" class="btn btn-primary" :class="{ loading: loading }">
-        {{ announcement ? 'Mettre à jour' : 'Continuer' }}
+        {{ announcement ? t('eventForm.actions.update') : t('eventForm.actions.continue') }}
       </button>
     </div>
   </form>
@@ -232,6 +232,8 @@
   import { useAssociationAuth } from '~/composables/useAssociation'
   import { useUser } from '~/composables/auth/useUser'
   import AddressInput from '~/components/common/AddressInput.vue'
+
+  const { t } = useI18n()
 
   const props = defineProps<{
     announcement?: Announcement | null
@@ -350,15 +352,15 @@
     invalidFields.value = {}
 
     if (!formState.nameEvent) {
-      formErrors.value.push("Nom de l'événement")
+      formErrors.value.push(t('eventForm.validation_errors.event_name'))
       invalidFields.value.nameEvent = true
     }
     if (!formState.description) {
-      formErrors.value.push('Description')
+      formErrors.value.push(t('eventForm.validation_errors.description'))
       invalidFields.value.description = true
     }
     if (!formState.dateEvent) {
-      formErrors.value.push("Date de l'événement")
+      formErrors.value.push(t('eventForm.validation_errors.event_date'))
       invalidFields.value.dateEvent = true
     } else {
       const eventDate = new Date(formState.dateEvent)
@@ -368,26 +370,24 @@
       publicationDate.setHours(0, 0, 0, 0)
 
       if (eventDate < publicationDate) {
-        formErrors.value.push(
-          "La date de l'événement ne peut pas être antérieure à la date de publication"
-        )
+        formErrors.value.push(t('eventForm.validation_errors.date_before_publication'))
         invalidFields.value.dateEvent = true
       }
     }
     if (!formState.hoursEvent) {
-      formErrors.value.push("Heure de l'événement")
+      formErrors.value.push(t('eventForm.validation_errors.event_time'))
       invalidFields.value.hoursEvent = true
     }
     if (!formState.addressAnnouncement.address) {
-      formErrors.value.push('Adresse')
+      formErrors.value.push(t('eventForm.validation_errors.address'))
       invalidFields.value.address = true
     }
     if (!formState.addressAnnouncement.city) {
-      formErrors.value.push('Ville')
+      formErrors.value.push(t('eventForm.validation_errors.city'))
       invalidFields.value.city = true
     }
     if (!formState.addressAnnouncement.postalCode) {
-      formErrors.value.push('Code Postal')
+      formErrors.value.push(t('eventForm.validation_errors.postal_code'))
       invalidFields.value.postalCode = true
     }
 

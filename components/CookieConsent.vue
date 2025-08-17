@@ -8,22 +8,19 @@
     <div class="container mx-auto px-4 py-4 md:py-6">
       <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div class="flex-1">
-          <h3 class="text-lg font-semibold mb-2">🍪 Gestion des cookies</h3>
+          <h3 class="text-lg font-semibold mb-2">{{ t('cookieConsent.banner.title') }}</h3>
           <p class="text-sm text-base-content/80 mb-4 md:mb-0">
-            Nous utilisons des cookies pour améliorer votre expérience sur notre site. Certains sont
-            nécessaires au fonctionnement du site, tandis que d'autres nous aident à comprendre
-            comment vous l'utilisez. Vous pouvez accepter tous les cookies ou personnaliser vos
-            préférences.
+            {{ t('cookieConsent.banner.description') }}
             <NuxtLink to="/confidentialite" class="text-primary hover:underline">
-              En savoir plus
+              {{ t('cookieConsent.banner.learn_more') }}
             </NuxtLink>
           </p>
         </div>
         <div class="flex flex-wrap gap-2">
-          <button class="btn btn-outline btn-sm" @click="openSettings">Personnaliser</button>
-          <button class="btn btn-primary btn-sm" @click="acceptAll">Accepter tout</button>
+          <button class="btn btn-outline btn-sm" @click="openSettings">{{ t('cookieConsent.banner.customize') }}</button>
+          <button class="btn btn-primary btn-sm" @click="acceptAll">{{ t('cookieConsent.banner.accept_all') }}</button>
           <button class="btn btn-ghost btn-sm" @click="rejectNonEssential">
-            Refuser non essentiels
+            {{ t('cookieConsent.banner.reject_non_essential') }}
           </button>
         </div>
       </div>
@@ -33,7 +30,7 @@
   <!-- Modal de paramétrage des cookies -->
   <dialog ref="settingsModal" class="modal">
     <div class="modal-box max-w-2xl">
-      <h3 class="font-bold text-lg mb-4">Paramètres des cookies</h3>
+      <h3 class="font-bold text-lg mb-4">{{ t('cookieConsent.settings.title') }}</h3>
 
       <div class="space-y-6">
         <!-- Cookies essentiels -->
@@ -47,14 +44,12 @@
               aria-label="Champ de saisie"
             />
             <div>
-              <span class="label-text font-semibold">Cookies essentiels</span>
+              <span class="label-text font-semibold">{{ t('cookieConsent.settings.essential.title') }}</span>
               <p class="text-xs text-base-content/70 mt-1">
-                Ces cookies sont nécessaires au fonctionnement du site et ne peuvent pas être
-                désactivés. Ils permettent notamment de vous authentifier et de sécuriser votre
-                navigation.
-                <span class="text-warning font-medium"
-                  >Sans ces cookies, vous ne pourrez pas vous connecter à votre compte.</span
-                >
+                {{ t('cookieConsent.settings.essential.description') }}
+                <span class="text-warning font-medium">
+                  {{ t('cookieConsent.settings.essential.warning') }}
+                </span>
               </p>
             </div>
           </label>
@@ -70,14 +65,12 @@
               aria-label="Champ de saisie"
             />
             <div>
-              <span class="label-text font-semibold">Cookies de personnalisation</span>
+              <span class="label-text font-semibold">{{ t('cookieConsent.settings.personalization.title') }}</span>
               <p class="text-xs text-base-content/70 mt-1">
-                Ces cookies nous permettent de vous proposer des contenus adaptés à vos centres
-                d'intérêt, de mémoriser vos préférences d'affichage et d'utiliser votre localisation
-                pour des services géolocalisés.
-                <span class="text-info font-medium"
-                  >Nécessaire pour la géolocalisation et les données personnelles.</span
-                >
+                {{ t('cookieConsent.settings.personalization.description') }}
+                <span class="text-info font-medium">
+                  {{ t('cookieConsent.settings.personalization.info') }}
+                </span>
               </p>
             </div>
           </label>
@@ -93,11 +86,9 @@
               aria-label="Champ de saisie"
             />
             <div>
-              <span class="label-text font-semibold">Cookies analytiques</span>
+              <span class="label-text font-semibold">{{ t('cookieConsent.settings.analytics.title') }}</span>
               <p class="text-xs text-base-content/70 mt-1">
-                Ces cookies nous permettent de mesurer l'audience de notre site et d'améliorer son
-                fonctionnement. Ils sont utilisés par Firebase Analytics pour générer des
-                statistiques anonymes.
+                {{ t('cookieConsent.settings.analytics.description') }}
               </p>
             </div>
           </label>
@@ -113,11 +104,9 @@
               aria-label="Champ de saisie"
             />
             <div>
-              <span class="label-text font-semibold">Cookies tiers</span>
+              <span class="label-text font-semibold">{{ t('cookieConsent.settings.third_party.title') }}</span>
               <p class="text-xs text-base-content/70 mt-1">
-                Ces cookies sont déposés par des services tiers comme Google Fonts ou les réseaux
-                sociaux. Ils permettent notamment d'afficher des polices personnalisées et de
-                partager du contenu.
+                {{ t('cookieConsent.settings.third_party.description') }}
               </p>
             </div>
           </label>
@@ -125,19 +114,19 @@
       </div>
 
       <div class="modal-action">
-        <button class="btn btn-ghost" @click="closeSettings">Annuler</button>
-        <button class="btn btn-primary" @click="saveSettings">Enregistrer</button>
+        <button class="btn btn-ghost" @click="closeSettings">{{ t('cookieConsent.settings.actions.cancel') }}</button>
+        <button class="btn btn-primary" @click="saveSettings">{{ t('cookieConsent.settings.actions.save') }}</button>
       </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button>Fermer</button>
+      <button>{{ t('cookieConsent.settings.actions.cancel') }}</button>
     </form>
   </dialog>
 
   <!-- Modal d'alerte pour les permissions manquantes -->
   <dialog ref="permissionModal" class="modal">
     <div class="modal-box max-w-lg">
-      <h3 class="font-bold text-lg mb-4 text-warning">⚠️ Permissions requises</h3>
+      <h3 class="font-bold text-lg mb-4 text-warning">{{ t('cookieConsent.permissions.title') }}</h3>
       <div class="space-y-4">
         <div v-if="!permissions.canAuthenticate" class="alert alert-warning">
           <svg
@@ -154,8 +143,8 @@
             />
           </svg>
           <div>
-            <h4 class="font-bold">Authentification impossible</h4>
-            <p class="text-sm">Vous devez accepter les cookies essentiels pour vous connecter.</p>
+            <h4 class="font-bold">{{ t('cookieConsent.permissions.authentication.title') }}</h4>
+            <p class="text-sm">{{ t('cookieConsent.permissions.authentication.description') }}</p>
           </div>
         </div>
 
@@ -174,26 +163,28 @@
             />
           </svg>
           <div>
-            <h4 class="font-bold">Géolocalisation désactivée</h4>
+            <h4 class="font-bold">{{ t('cookieConsent.permissions.location.title') }}</h4>
             <p class="text-sm">
-              Acceptez les cookies de personnalisation pour utiliser la géolocalisation.
+              {{ t('cookieConsent.permissions.location.description') }}
             </p>
           </div>
         </div>
       </div>
       <div class="modal-action">
-        <button class="btn btn-ghost" @click="closePermissionModal">Fermer</button>
-        <button class="btn btn-primary" @click="openSettings">Paramétrer les cookies</button>
+        <button class="btn btn-ghost" @click="closePermissionModal">{{ t('cookieConsent.permissions.actions.close') }}</button>
+        <button class="btn btn-primary" @click="openSettings">{{ t('cookieConsent.permissions.actions.configure') }}</button>
       </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button>Fermer</button>
+      <button>{{ t('cookieConsent.permissions.actions.close') }}</button>
     </form>
   </dialog>
 </template>
 
 <script setup lang="ts">
   import { ref, onMounted, watch } from 'vue'
+
+  const { t } = useI18n()
 
   const settingsModal = ref<HTMLDialogElement | null>(null)
   const permissionModal = ref<HTMLDialogElement | null>(null)

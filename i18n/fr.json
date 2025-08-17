@@ -521,11 +521,13 @@
   },
   "common": {
     "placeholder_address_search": "Rechercher une adresse...",
-    "auto_complete_address": "Saisissez une adresse pour la géolocalisation",
-    "aria_label_search": "Rechercher de recherche",
+    "auto_complete_address": "street-address",
+    "aria_label_search": "Recherche d'adresse",
     "address_description": "Tapez au moins 3 caractères pour voir les suggestions d'adresses",
     "aria_label_suggestions": "Suggestions d'adresses",
-    "no_addresses_found": "Aucune adresse trouvée pour cette recherche"
+    "no_suggestions_found": "Aucune suggestion trouvée",
+    "address_label": "Lieu (Adresse)",
+    "required_field": "Champ obligatoire"
   },
   "userDetailsModal": {
     "title": "Détails du profil",
@@ -659,6 +661,229 @@
         "down": "Faire défiler vers le bas",
         "up": "Faire défiler vers le haut"
       }
+    }
+  },
+  "cookieConsent": {
+    "banner": {
+      "title": "🍪 Gestion des cookies",
+      "description": "Nous utilisons des cookies pour améliorer votre expérience sur notre site. Certains sont nécessaires au fonctionnement du site, tandis que d'autres nous aident à comprendre comment vous l'utilisez. Vous pouvez accepter tous les cookies ou personnaliser vos préférences.",
+      "learn_more": "En savoir plus",
+      "customize": "Personnaliser",
+      "accept_all": "Accepter tout",
+      "reject_non_essential": "Refuser non essentiels"
+    },
+    "settings": {
+      "title": "Paramètres des cookies",
+      "essential": {
+        "title": "Cookies essentiels",
+        "description": "Ces cookies sont nécessaires au fonctionnement du site et ne peuvent pas être désactivés. Ils permettent notamment de vous authentifier et de sécuriser votre navigation.",
+        "warning": "Sans ces cookies, vous ne pourrez pas vous connecter à votre compte."
+      },
+      "personalization": {
+        "title": "Cookies de personnalisation",
+        "description": "Ces cookies nous permettent de vous proposer des contenus adaptés à vos centres d'intérêt, de mémoriser vos préférences d'affichage et d'utiliser votre localisation pour des services géolocalisés.",
+        "info": "Nécessaire pour la géolocalisation et les données personnelles."
+      },
+      "analytics": {
+        "title": "Cookies analytiques",
+        "description": "Ces cookies nous permettent de mesurer l'audience de notre site et d'améliorer son fonctionnement. Ils sont utilisés par Firebase Analytics pour générer des statistiques anonymes."
+      },
+      "third_party": {
+        "title": "Cookies tiers",
+        "description": "Ces cookies sont déposés par des services tiers comme Google Fonts ou les réseaux sociaux. Ils permettent notamment d'afficher des polices personnalisées et de partager du contenu."
+      },
+      "actions": {
+        "cancel": "Annuler",
+        "save": "Enregistrer"
+      }
+    },
+    "permissions": {
+      "title": "⚠️ Permissions requises",
+      "authentication": {
+        "title": "Authentification impossible",
+        "description": "Vous devez accepter les cookies essentiels pour vous connecter."
+      },
+      "location": {
+        "title": "Géolocalisation désactivée",
+        "description": "Acceptez les cookies de personnalisation pour utiliser la géolocalisation."
+      },
+      "actions": {
+        "close": "Fermer",
+        "configure": "Paramétrer les cookies"
+      }
+    }
+  },
+  "common": {
+    "placeholder_address_search": "Rechercher une adresse...",
+    "auto_complete_address": "street-address",
+    "aria_label_search": "Recherche d'adresse",
+    "address_description": "Tapez au moins 3 caractères pour voir les suggestions d'adresses",
+    "aria_label_suggestions": "Suggestions d'adresses",
+    "no_suggestions_found": "Aucune suggestion trouvée",
+    "address_label": "Lieu (Adresse)",
+    "required_field": "Champ obligatoire"
+  },
+  "multiMarkerMap": {
+    "controls": {
+      "show_all_cities": "Afficher toutes les villes",
+      "zoom_in": "Zoomer",
+      "zoom_out": "Dézoomer",
+      "switch_map_source": "Changer de source de carte"
+    },
+    "popup": {
+      "city_events": "événement",
+      "city_events_plural": "événements",
+      "click_for_details": "Cliquez pour voir les détails",
+      "date": "📅",
+      "location": "📍"
+    },
+    "error": {
+      "title": "Impossible de charger la carte",
+      "subtitle": "Vérifiez votre connexion internet",
+      "retry": "Réessayer"
+    }
+  },
+  "errorPopup": {
+    "title": "Erreur",
+    "messages": {
+      "4xx": "Cette action n'est plus possible.",
+      "5xx": "Une erreur serveur est survenue."
+    },
+    "actions": {
+      "reload": "Recharger la page",
+      "go_home": "Revenir à la gestion des annonces"
+    }
+  },
+  "permissionAlert": {
+    "actions": {
+      "configure_cookies": "Paramétrer les cookies",
+      "later": "Plus tard"
+    },
+    "close_aria_label": "Fermer la notification"
+  },
+  "eventFilters": {
+    "search": {
+      "placeholder": "Rechercher un événement...",
+      "label": "Recherche"
+    },
+    "status": {
+      "label": "Statut",
+      "options": {
+        "active": "Actif",
+        "completed": "Terminé",
+        "inactive": "Inactif"
+      }
+    },
+    "tags": {
+      "label": "Tags",
+      "add_tag": "Ajouter un tag...",
+      "new_tag_placeholder": "Nouveau tag…",
+      "add_button": "Ajouter",
+      "cancel_button": "Annuler",
+      "close_button": "Fermer",
+      "available_tags": [
+        "Urgent",
+        "Bénévolat",
+        "Formation",
+        "Événement",
+        "Collecte",
+        "Sensibilisation",
+        "Humanitaire",
+        "Environnement",
+        "Sport",
+        "Culture",
+        "Éducation",
+        "Santé"
+      ]
+    },
+    "advanced_filters": {
+      "label": "Filtres avancés",
+      "configure": "Configurer les filtres avancés"
+    },
+    "events": {
+      "label": "Événements",
+      "options": {
+        "now": "En cours",
+        "past": "Passés",
+        "upcoming": "À venir"
+      }
+    },
+    "mobile": {
+      "filters": "Filtres",
+      "reset": "Réinitialiser",
+      "apply": "Appliquer"
+    },
+    "aria_labels": {
+      "input_field": "Champ de saisie",
+      "add": "Ajouter"
+    }
+  },
+  "eventForm": {
+    "required_fields_note": "Les champs marqués d'un",
+    "are_required": "sont obligatoires.",
+    "validation_errors": {
+      "title": "Veuillez corriger les erreurs suivantes :",
+      "event_name": "Nom de l'événement",
+      "description": "Description",
+      "event_date": "Date de l'événement",
+      "event_time": "Heure de l'événement",
+      "address": "Adresse",
+      "city": "Ville",
+      "postal_code": "Code Postal",
+      "date_before_publication": "La date de l'événement ne peut pas être antérieure à la date de publication"
+    },
+    "fields": {
+      "event_name": {
+        "label": "Nom de l'événement",
+        "placeholder": "Nom de l'événement"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Description de l'événement"
+      },
+      "event_date": {
+        "label": "Date de l'événement"
+      },
+      "event_time": {
+        "label": "Heure de l'événement"
+      },
+      "city": {
+        "label": "Ville",
+        "placeholder": "Ville"
+      },
+      "postal_code": {
+        "label": "Code Postal",
+        "placeholder": "Code postal"
+      },
+      "country": {
+        "label": "Pays",
+        "placeholder": "Pays"
+      },
+      "max_participants": {
+        "label": "Nombre maximum de participants"
+      },
+      "max_volunteers": {
+        "label": "Nombre de bénévoles requis"
+      },
+      "tags": {
+        "label": "Tags",
+        "placeholder": "Ajouter un tag et appuyer sur Entrée",
+        "add_button": "Ajouter"
+      },
+      "status": {
+        "label": "Statut"
+      }
+    },
+    "actions": {
+      "cancel": "Annuler",
+      "update": "Mettre à jour",
+      "continue": "Continuer"
+    },
+    "aria_labels": {
+      "input_field": "Champ de saisie",
+      "text_area": "Zone de texte",
+      "selection": "Sélection",
+      "number": "Nombre"
     }
   }
 }

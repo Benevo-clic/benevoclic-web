@@ -488,5 +488,228 @@
         "up": "Desplazarse hacia arriba"
       }
     }
+  },
+  "cookieConsent": {
+    "banner": {
+      "title": "🍪 Gestión de Cookies",
+      "description": "Utilizamos cookies para mejorar su experiencia en nuestro sitio. Algunas son necesarias para el funcionamiento del sitio, mientras que otras nos ayudan a entender cómo lo utiliza. Puede aceptar todas las cookies o personalizar sus preferencias.",
+      "learn_more": "Saber más",
+      "customize": "Personalizar",
+      "accept_all": "Aceptar todo",
+      "reject_non_essential": "Rechazar no esenciales"
+    },
+    "settings": {
+      "title": "Configuración de Cookies",
+      "essential": {
+        "title": "Cookies Esenciales",
+        "description": "Estas cookies son necesarias para el funcionamiento del sitio y no pueden ser desactivadas. Permiten autenticarse y asegurar su navegación.",
+        "warning": "Sin estas cookies, no podrá iniciar sesión en su cuenta."
+      },
+      "personalization": {
+        "title": "Cookies de Personalización",
+        "description": "Estas cookies nos permiten ofrecerle contenido adaptado a sus intereses, recordar sus preferencias de visualización y usar su ubicación para servicios geolocalizados.",
+        "info": "Necesario para geolocalización y datos personales."
+      },
+      "analytics": {
+        "title": "Cookies Analíticas",
+        "description": "Estas cookies nos permiten medir la audiencia de nuestro sitio y mejorar su funcionamiento. Son utilizadas por Firebase Analytics para generar estadísticas anónimas."
+      },
+      "third_party": {
+        "title": "Cookies de Terceros",
+        "description": "Estas cookies son colocadas por servicios de terceros como Google Fonts o redes sociales. Permiten mostrar fuentes personalizadas y compartir contenido."
+      },
+      "actions": {
+        "cancel": "Cancelar",
+        "save": "Guardar"
+      }
+    },
+    "permissions": {
+      "title": "⚠️ Permisos Requeridos",
+      "authentication": {
+        "title": "Autenticación Imposible",
+        "description": "Debe aceptar las cookies esenciales para iniciar sesión."
+      },
+      "location": {
+        "title": "Geolocalización Deshabilitada",
+        "description": "Acepte las cookies de personalización para usar la geolocalización."
+      },
+      "actions": {
+        "close": "Cerrar",
+        "configure": "Configurar cookies"
+      }
+    }
+  },
+  "common": {
+    "placeholder_address_search": "Buscar una dirección...",
+    "auto_complete_address": "street-address",
+    "aria_label_search": "Búsqueda de dirección",
+    "address_description": "Escriba al menos 3 caracteres para ver sugerencias de direcciones",
+    "aria_label_suggestions": "Sugerencias de direcciones",
+    "no_suggestions_found": "No se encontraron sugerencias",
+    "address_label": "Ubicación (Dirección)",
+    "required_field": "Campo obligatorio"
+  },
+  "multiMarkerMap": {
+    "controls": {
+      "show_all_cities": "Mostrar todas las ciudades",
+      "zoom_in": "Acercar",
+      "zoom_out": "Alejar",
+      "switch_map_source": "Cambiar fuente del mapa"
+    },
+    "popup": {
+      "city_events": "evento",
+      "city_events_plural": "eventos",
+      "click_for_details": "Haga clic para ver detalles",
+      "date": "📅",
+      "location": "📍"
+    },
+    "error": {
+      "title": "No se puede cargar el mapa",
+      "subtitle": "Verifique su conexión a internet",
+      "retry": "Reintentar"
+    }
+  },
+  "errorPopup": {
+    "title": "Error",
+    "messages": {
+      "4xx": "Esta acción ya no es posible.",
+      "5xx": "Ocurrió un error del servidor."
+    },
+    "actions": {
+      "reload": "Recargar página",
+      "go_home": "Volver a la gestión de anuncios"
+    }
+  },
+  "permissionAlert": {
+    "actions": {
+      "configure_cookies": "Configurar cookies",
+      "later": "Más tarde"
+    },
+    "close_aria_label": "Cerrar notificación"
+  },
+  "eventFilters": {
+    "search": {
+      "placeholder": "Buscar un evento...",
+      "label": "Búsqueda"
+    },
+    "status": {
+      "label": "Estado",
+      "options": {
+        "active": "Activo",
+        "completed": "Completado",
+        "inactive": "Inactivo"
+      }
+    },
+    "tags": {
+      "label": "Etiquetas",
+      "add_tag": "Agregar etiqueta...",
+      "new_tag_placeholder": "Nueva etiqueta…",
+      "add_button": "Agregar",
+      "cancel_button": "Cancelar",
+      "close_button": "Cerrar",
+      "available_tags": [
+        "Urgente",
+        "Voluntariado",
+        "Formación",
+        "Evento",
+        "Recolección",
+        "Concienciación",
+        "Humanitario",
+        "Medio Ambiente",
+        "Deportes",
+        "Cultura",
+        "Educación",
+        "Salud"
+      ]
+    },
+    "advanced_filters": {
+      "label": "Filtros avanzados",
+      "configure": "Configurar filtros avanzados"
+    },
+    "events": {
+      "label": "Eventos",
+      "options": {
+        "now": "En curso",
+        "past": "Pasados",
+        "upcoming": "Próximos"
+      }
+    },
+    "mobile": {
+      "filters": "Filtros",
+      "reset": "Restablecer",
+      "apply": "Aplicar"
+    },
+    "aria_labels": {
+      "input_field": "Campo de entrada",
+      "add": "Agregar"
+    }
+  },
+  "eventForm": {
+    "required_fields_note": "Los campos marcados con",
+    "are_required": "son obligatorios.",
+    "validation_errors": {
+      "title": "Por favor corrija los siguientes errores:",
+      "event_name": "Nombre del evento",
+      "description": "Descripción",
+      "event_date": "Fecha del evento",
+      "event_time": "Hora del evento",
+      "address": "Dirección",
+      "city": "Ciudad",
+      "postal_code": "Código postal",
+      "date_before_publication": "La fecha del evento no puede ser anterior a la fecha de publicación"
+    },
+    "fields": {
+      "event_name": {
+        "label": "Nombre del evento",
+        "placeholder": "Nombre del evento"
+      },
+      "description": {
+        "label": "Descripción",
+        "placeholder": "Descripción del evento"
+      },
+      "event_date": {
+        "label": "Fecha del evento"
+      },
+      "event_time": {
+        "label": "Hora del evento"
+      },
+      "city": {
+        "label": "Ciudad",
+        "placeholder": "Ciudad"
+      },
+      "postal_code": {
+        "label": "Código postal",
+        "placeholder": "Código postal"
+      },
+      "country": {
+        "label": "País",
+        "placeholder": "País"
+      },
+      "max_participants": {
+        "label": "Número máximo de participantes"
+      },
+      "max_volunteers": {
+        "label": "Número de voluntarios requeridos"
+      },
+      "tags": {
+        "label": "Etiquetas",
+        "placeholder": "Agregar una etiqueta y presionar Enter",
+        "add_button": "Agregar"
+      },
+      "status": {
+        "label": "Estado"
+      }
+    },
+    "actions": {
+      "cancel": "Cancelar",
+      "update": "Actualizar",
+      "continue": "Continuar"
+    },
+    "aria_labels": {
+      "input_field": "Campo de entrada",
+      "text_area": "Área de texto",
+      "selection": "Selección",
+      "number": "Número"
+    }
   }
 }
