@@ -6,11 +6,11 @@
         'btn btn-sm rounded-full flex items-center justify-center gap-1 basis-1/3',
         hasLocationFilter ? 'btn-success' : 'btn-outline'
       ]"
-      aria-label="Sélecteur de lieu"
+      :aria-label="t('locationButton.aria.placeSelector')"
       @click="toggleLocationDropdown"
     >
       <MapPin class="w-4 h-4" />
-      <span class="text-sm">Lieu</span>
+      <span class="text-sm">{{ t('locationButton.labels.place') }}</span>
     </button>
 
     <!-- Dropdown téléporté pour être toujours au-dessus -->
@@ -28,7 +28,7 @@
           <!-- Recherche de ville -->
           <div class="form-control">
             <label class="label">
-              <span class="label-text font-medium">Rechercher une ville</span>
+              <span class="label-text font-medium">{{ t('locationButton.labels.searchCity') }}</span>
             </label>
             <div class="relative">
               <MapPin
@@ -37,9 +37,9 @@
               <input
                 v-model="locationSearch"
                 type="text"
-                placeholder="Rechercher une ville..."
+                :placeholder="t('locationButton.placeholders.searchCity')"
                 class="input input-bordered w-full pl-10"
-                aria-label="Recherche de ville"
+                :aria-label="t('locationButton.aria.citySearch')"
                 @input="onSearchInput"
               />
             </div>
@@ -48,7 +48,7 @@
           <!-- Résultats -->
           <div v-if="locationSearchResults.length" class="form-control">
             <label class="label">
-              <span class="label-text font-medium">Résultats</span>
+              <span class="label-text font-medium">{{ t('locationButton.labels.results') }}</span>
             </label>
             <div
               class="border border-base-300 rounded-lg overflow-hidden max-h-32 overflow-y-auto location-search-results"
@@ -73,11 +73,11 @@
           <!-- Villes sélectionnées -->
           <div v-if="selectedLocations.length" class="form-control">
             <label class="label">
-              <span class="label-text font-medium">Villes sélectionnées</span>
+              <span class="label-text font-medium">{{ t('locationButton.labels.selectedCities') }}</span>
             </label>
             <div v-if="selectedLocations.length > 1" class="alert alert-info alert-sm mb-2">
               <div class="text-xs">
-                <strong>Note:</strong> Seule la première ville est prise en compte.
+                <strong>Note:</strong> {{ t('locationButton.note') }}
               </div>
             </div>
             <div class="space-y-2 selected-locations">
@@ -92,11 +92,11 @@
               >
                 <span class="font-medium text-sm">
                   {{ formatCityName(loc) }}
-                  <span v-if="isCityActive(index)" class="text-primary ml-1">(active)</span>
+                  <span v-if="isCityActive(index)" class="text-primary ml-1">{{ t('locationButton.active') }}</span>
                 </span>
                 <button
                   class="btn btn-ghost btn-xs"
-                  aria-label="Supprimer la ville"
+                  :aria-label="t('locationButton.aria.removeCity')"
                   @click.stop="removeLocation(index)"
                 >
                   <X class="w-3 h-3" />
@@ -108,7 +108,7 @@
           <!-- Position actuelle -->
           <div v-if="userCurrentLocation" class="form-control">
             <label class="label">
-              <span class="label-text font-medium">Ma position</span>
+              <span class="label-text font-medium">{{ t('locationButton.labels.myPosition') }}</span>
             </label>
             <div class="card bg-base-200">
               <div class="card-body p-3">
@@ -118,13 +118,13 @@
                     name="location-type"
                     :checked="useCurrentLocation"
                     class="radio radio-primary radio-sm"
-                    aria-label="Utiliser ma position actuelle"
+                    :aria-label="t('locationButton.aria.useCurrentPosition')"
                     @change="toggleCurrentLocation"
                   />
                   <div class="flex-1">
-                    <div class="font-medium text-sm">Ma position actuelle</div>
+                    <div class="font-medium text-sm">{{ t('locationButton.labels.myCurrentPosition') }}</div>
                     <div class="text-xs text-base-content/70">
-                      {{ userCurrentLocation.city || 'Position détectée' }}
+                      {{ userCurrentLocation.city || t('locationButton.detectedPosition') }}
                     </div>
                   </div>
                   <MapPin class="w-4 h-4 text-primary" />
@@ -201,6 +201,8 @@
   import { MapPin, ChevronRight, X } from 'lucide-vue-next'
   import { useUserLocation } from '~/composables/useUserLocation'
   import type { FilterAnnouncement } from '~/common/interface/filter.interface'
+
+  const { t } = useI18n()
 
   const props = defineProps<{
     filters: FilterAnnouncement
@@ -303,8 +305,8 @@
         currentLongitude.value = location.longitude
         userCurrentLocation.value = {
           place_id: 'current_location',
-          display_name: 'Ma position actuelle',
-          city: location.city || 'Position détectée',
+          display_name: t('locationButton.labels.myCurrentPosition'),
+          city: location.city || t('locationButton.detectedPosition'),
           lat: location.latitude.toString(),
           lon: location.longitude.toString()
         }

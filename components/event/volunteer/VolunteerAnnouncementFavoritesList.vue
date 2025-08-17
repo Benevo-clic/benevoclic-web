@@ -3,7 +3,7 @@
     <div v-if="props.announcementFavorites?.length === 0" class="text-center text-gray-500">
       <img
         src="/images/no_data.png"
-        alt="Illustration"
+        :alt="t('volunteerAnnouncementFavoritesList.illustration.alt')"
         class="w-full max-w-xl mx-auto"
         onerror="this.src='/images/volunteer-info.png'"
       />
@@ -11,7 +11,7 @@
     <div v-else class="grid grid-cols-1 md:grid-cols-2 xl1285:grid-cols-3 gap-4">
       <div class="col-span-full">
         <h2 class="text-lg font-semibold mb-0">
-          {{ props.announcementFavorites?.length }} annonces
+          {{ t('volunteerAnnouncementFavoritesList.favorites_count', { count: props.announcementFavorites?.length }) }}
         </h2>
       </div>
       <!-- Optimisation avec v-memo basé sur les propriétés importantes -->
@@ -42,6 +42,8 @@
   import { useUser } from '~/composables/auth/useUser'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import { useNavigation } from '~/composables/useNavigation'
+
+  const { t } = useI18n()
 
   const props = defineProps<{
     announcementFavorites: Announcement[]

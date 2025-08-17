@@ -17,6 +17,8 @@
   import { useAuthStore } from '@/stores/auth/auth.store'
   import { useSettingsStore } from '~/stores/settings.store'
 
+  const { t } = useI18n()
+
   const { user, updateIsCompleted } = useUser()
   const authStore = useAuthStore()
   const { registerVolunteer } = useVolunteerAuth()
@@ -80,17 +82,17 @@
         const firstName = parts[1] || ''
 
         if (!name) {
-          return 'Le nom est requis'
+          return t('registerInfoVolunteerForm.validation.lastName.required')
         }
         if (name.length < 2) {
-          return 'Le nom doit contenir au moins 2 caractères'
+          return t('registerInfoVolunteerForm.validation.lastName.min_length')
         }
 
         if (!firstName) {
-          return 'Le prénom est requis'
+          return t('registerInfoVolunteerForm.validation.firstName.required')
         }
         if (firstName.length < 2) {
-          return 'Le prénom doit contenir au moins 2 caractères'
+          return t('registerInfoVolunteerForm.validation.firstName.min_length')
         }
 
         return ''
@@ -101,10 +103,10 @@
       field: 'phone',
       validate: (value: string) => {
         if (!value) {
-          return 'Le téléphone est requis'
+          return t('registerInfoVolunteerForm.validation.phone.required')
         }
         if (!/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/.test(value)) {
-          return 'Format de téléphone invalide'
+          return t('registerInfoVolunteerForm.validation.phone.invalid_format')
         }
         return ''
       }
@@ -112,17 +114,17 @@
     {
       component: BirthDateForm,
       field: 'birthDate',
-      validate: (value: string) => (!value ? 'La date de naissance est requise' : '')
+      validate: (value: string) => (!value ? t('registerInfoVolunteerForm.validation.birthDate.required') : '')
     },
     {
       component: CityForm,
       field: 'city',
       validate: (value: string) => {
         if (!value) {
-          return 'La ville est requise'
+          return t('registerInfoVolunteerForm.validation.city.required')
         }
         if (value.length < 2) {
-          return 'La ville doit contenir au moins 2 caractères'
+          return t('registerInfoVolunteerForm.validation.city.min_length')
         }
         return ''
       }
@@ -132,10 +134,10 @@
       field: 'postalCode',
       validate: (value: string) => {
         if (!value) {
-          return 'Le code postal est requis'
+          return t('registerInfoVolunteerForm.validation.postalCode.required')
         }
         if (!/^[0-9]{5}$/.test(value)) {
-          return 'Le code postal doit contenir 5 chiffres'
+          return t('registerInfoVolunteerForm.validation.postalCode.invalid_format')
         }
         return ''
       }
@@ -145,7 +147,7 @@
       field: 'bio',
       validate: (value: string) => {
         if (value.length < 10) {
-          return 'La bio doit contenir au moins 10 caractères'
+          return t('registerInfoVolunteerForm.validation.bio.min_length')
         }
         return ''
       }
@@ -258,8 +260,8 @@
 
 <template>
   <div class="w-full max-w-md mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-2">🚀 On démarre l'aventure</h1>
-    <p class="text-base text-gray-600 mb-4">Dis-nous un peu sur toi étape par étape 😊</p>
+    <h1 class="text-3xl font-bold mb-2">{{ t('registerInfoVolunteerForm.title') }}</h1>
+    <p class="text-base text-gray-600 mb-4">{{ t('registerInfoVolunteerForm.subtitle') }}</p>
 
     <keep-alive>
       <component
@@ -276,16 +278,16 @@
         class="btn btn-secondary disabled:cursor-not-allowed"
         @click="prev"
       >
-        <span class="text-secondary-content font-bold">Précédent</span>
+        <span class="text-secondary-content font-bold">{{ t('registerInfoVolunteerForm.actions.previous') }}</span>
       </button>
 
       <button :disabled="loading" class="btn btn-primary" @click="next">
         <span v-if="loading" class="loading loading-spinner mr-2" />
-        {{ currentStep < steps.length - 1 ? 'Suivant' : 'Envoyer' }}
+        {{ currentStep < steps.length - 1 ? t('registerInfoVolunteerForm.actions.next') : t('registerInfoVolunteerForm.actions.submit') }}
       </button>
     </div>
 
-    <p v-if="isError" class="text-red-600 mt-4">Une erreur est survenue. Réessayez plus tard.</p>
+    <p v-if="isError" class="text-red-600 mt-4">{{ t('registerInfoVolunteerForm.error.general') }}</p>
     <ErrorPopup
       :show-error-modal="showErrorModal"
       :error-type="errorType"

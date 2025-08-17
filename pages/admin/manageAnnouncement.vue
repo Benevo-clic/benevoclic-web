@@ -3,6 +3,8 @@
   import AdminHeader from '~/components/admin/AdminHeader.vue'
   import { useAnnouncement } from '~/composables/useAnnouncement'
 
+  const { t } = useI18n()
+
   interface AnnouncementRow {
     _id: string
     nameEvent: string
@@ -56,11 +58,11 @@
       const item = await announcement.fetchAnnouncementById(searchId.value)
       displayed.value = item ? [item as unknown as AnnouncementRow] : []
       if (!item) {
-        noResultMsg.value = `Aucun résultat pour l'ID ${searchId.value}`
+        noResultMsg.value = t('adminManageAnnouncement.no_result', { id: searchId.value })
       }
     } catch (e) {
       displayed.value = []
-      noResultMsg.value = `Aucun résultat pour l'ID ${searchId.value}`
+      noResultMsg.value = t('adminManageAnnouncement.no_result', { id: searchId.value })
     }
   }
 
@@ -110,7 +112,7 @@
   }
 
   async function remove(id: string) {
-    if (!confirm('Confirmer la suppression de cette annonce ?')) {
+    if (!confirm(t('adminManageAnnouncement.confirm.delete'))) {
       return
     }
     try {
@@ -130,29 +132,29 @@
   <div>
     <AdminHeader />
     <section class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-      <h1 class="text-2xl font-bold mb-6">Gestion des annonces</h1>
+      <h1 class="text-2xl font-bold mb-6">{{ t('adminManageAnnouncement.title') }}</h1>
 
       <div class="flex flex-col sm:flex-row gap-2 mb-4">
         <select v-model="status" class="select select-bordered select-sm w-full sm:w-48">
-          <option value="">Tous les statuts</option>
+          <option value="">{{ t('adminManageAnnouncement.filters.all_statuses') }}</option>
           <option value="ACTIVE">ACTIVE</option>
           <option value="INACTIVE">INACTIVE</option>
           <option value="COMPLETED">COMPLETED</option>
         </select>
         <div class="flex gap-2">
-          <button class="btn btn-primary btn-sm" :disabled="loading" @click="load">Filtrer</button>
+          <button class="btn btn-primary btn-sm" :disabled="loading" @click="load">{{ t('adminManageAnnouncement.filters.filter') }}</button>
           <button class="btn btn-outline btn-sm" :disabled="loading" @click="reset">
-            Réinitialiser
+            {{ t('adminManageAnnouncement.filters.reset') }}
           </button>
         </div>
         <div class="flex items-center gap-2 sm:ml-auto">
           <input
             v-model.trim="searchId"
             class="input input-bordered input-sm"
-            placeholder="Rechercher par ID"
+            :placeholder="t('adminManageAnnouncement.search.placeholder')"
             @keyup.enter="searchById"
           />
-          <button class="btn btn-sm" :disabled="loading" @click="searchById">Chercher</button>
+          <button class="btn btn-sm" :disabled="loading" @click="searchById">{{ t('adminManageAnnouncement.search.button') }}</button>
         </div>
       </div>
 
@@ -160,11 +162,11 @@
         <table class="table w-full">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Nom</th>
-              <th>Association</th>
-              <th>Statut</th>
-              <th>Actions</th>
+              <th>{{ t('adminManageAnnouncement.table.headers.id') }}</th>
+              <th>{{ t('adminManageAnnouncement.table.headers.name') }}</th>
+              <th>{{ t('adminManageAnnouncement.table.headers.association') }}</th>
+              <th>{{ t('adminManageAnnouncement.table.headers.status') }}</th>
+              <th>{{ t('adminManageAnnouncement.table.headers.actions') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -189,8 +191,8 @@
                 <button class="btn btn-xs" @click="updateStatus(a._id, 'COMPLETED')">
                   COMPLETED
                 </button>
-                <button class="btn btn-outline btn-xs" @click="openEdit(a)">Éditer</button>
-                <button class="btn btn-error btn-xs" @click="remove(a._id)">Supprimer</button>
+                <button class="btn btn-outline btn-xs" @click="openEdit(a)">{{ t('adminManageAnnouncement.table.actions.edit') }}</button>
+                <button class="btn btn-error btn-xs" @click="remove(a._id)">{{ t('adminManageAnnouncement.table.actions.delete') }}</button>
               </td>
             </tr>
           </tbody>
@@ -199,7 +201,7 @@
           v-if="!loading && displayed.length === 0"
           class="text-center py-8 text-base-content/70"
         >
-          {{ noResultMsg || 'Aucune annonce' }}
+          {{ noResultMsg || t('adminManageAnnouncement.empty') }}
         </div>
       </div>
     </section>
@@ -207,13 +209,13 @@
     <!-- Edit Modal -->
     <div v-if="isEditOpen" class="modal modal-open">
       <div class="modal-box max-w-xl">
-        <h3 class="font-bold text-lg mb-4">Modifier l'annonce</h3>
+        <h3 class="font-bold text-lg mb-4">{{ t('adminManageAnnouncement.modal.title') }}</h3>
         <div class="form-control mb-3">
-          <label class="label"><span class="label-text">Nom</span></label>
+          <label class="label"><span class="label-text">{{ t('adminManageAnnouncement.modal.name') }}</span></label>
           <input v-model="editable!.nameEvent" class="input input-bordered" />
         </div>
         <div class="form-control mb-3">
-          <label class="label"><span class="label-text">Statut</span></label>
+          <label class="label"><span class="label-text">{{ t('adminManageAnnouncement.modal.status') }}</span></label>
           <select v-model="editable!.status" class="select select-bordered">
             <option value="ACTIVE">ACTIVE</option>
             <option value="INACTIVE">INACTIVE</option>
@@ -221,8 +223,8 @@
           </select>
         </div>
         <div class="modal-action">
-          <button class="btn" @click="isEditOpen = false">Annuler</button>
-          <button class="btn btn-primary" @click="saveEdit">Enregistrer</button>
+          <button class="btn" @click="isEditOpen = false">{{ t('adminManageAnnouncement.modal.cancel') }}</button>
+          <button class="btn btn-primary" @click="saveEdit">{{ t('adminManageAnnouncement.modal.save') }}</button>
         </div>
       </div>
       <div class="modal-backdrop" @click="isEditOpen = false" />

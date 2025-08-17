@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import { defineProps, defineEmits } from 'vue'
 
+  const { t } = useI18n()
+
   const props = defineProps<{
     modelValue: string
     error?: string
@@ -20,14 +22,14 @@
 <template>
   <div class="form-control w-full">
     <label class="label">
-      <span class="label-text">Date de naissance</span>
+      <span class="label-text">{{ t('birthDateForm.label') }}</span>
     </label>
     <input
       :value="props.modelValue"
       type="date"
       class="input input-bordered w-full"
       :class="{ 'input-error': props.error }"
-      aria-label="Champ de saisie"
+      :aria-label="t('birthDateForm.aria_label')"
       @input="onInput"
     />
     <label v-if="props.error" class="label">

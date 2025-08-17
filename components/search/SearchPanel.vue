@@ -60,15 +60,15 @@
 
         <div class="form-control">
           <label for="location-select" class="label">
-            <span class="label-text text-base-content">Localisation</span>
+            <span class="label-text text-base-content">{{ t('searchPanel.labels.location') }}</span>
           </label>
           <select
             id="location-select"
             v-model="filters.location"
             class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Filtrer par localisation"
+                          :aria-label="t('searchPanel.aria.filterByLocation')"
           >
-            <option value="">Toutes les localisations</option>
+                          <option value="">{{ t('searchPanel.options.allLocations') }}</option>
             <option value="paris">Paris</option>
             <option value="lyon">Lyon</option>
             <option value="marseille">Marseille</option>
@@ -79,37 +79,37 @@
 
         <div class="form-control">
           <label for="date-range-select" class="label">
-            <span class="label-text text-base-content">Période</span>
+            <span class="label-text text-base-content">{{ t('searchPanel.labels.period') }}</span>
           </label>
           <select
             id="date-range-select"
             v-model="filters.dateRange"
             class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Filtrer par période"
+            :aria-label="t('searchPanel.aria.filterByPeriod')"
           >
-            <option value="">N'importe quand</option>
-            <option value="today">Aujourd'hui</option>
-            <option value="this-week">Cette semaine</option>
-            <option value="this-month">Ce mois</option>
-            <option value="next-month">Mois prochain</option>
-            <option value="custom">Période personnalisée</option>
+            <option value="">{{ t('searchPanel.options.anytime') }}</option>
+            <option value="today">{{ t('searchPanel.options.today') }}</option>
+            <option value="this-week">{{ t('searchPanel.options.thisWeek') }}</option>
+            <option value="this-month">{{ t('searchPanel.options.thisMonth') }}</option>
+            <option value="next-month">{{ t('searchPanel.options.nextMonth') }}</option>
+            <option value="custom">{{ t('searchPanel.options.custom') }}</option>
           </select>
         </div>
 
         <div class="form-control">
           <label for="type-select" class="label">
-            <span class="label-text text-base-content">Type</span>
+            <span class="label-text text-base-content">{{ t('searchPanel.labels.type') }}</span>
           </label>
           <select
             id="type-select"
             v-model="filters.type"
             class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Filtrer par type"
+            :aria-label="t('searchPanel.aria.filterByType')"
           >
-            <option value="">Tous les types</option>
-            <option value="missions">Missions</option>
-            <option value="organizations">Organisations</option>
-            <option value="events">Événements</option>
+            <option value="">{{ t('searchPanel.options.allTypes') }}</option>
+            <option value="missions">{{ t('searchPanel.options.missions') }}</option>
+            <option value="organizations">{{ t('searchPanel.options.organizations') }}</option>
+            <option value="events">{{ t('searchPanel.options.events') }}</option>
           </select>
         </div>
       </fieldset>
@@ -120,52 +120,52 @@
         class="grid grid-cols-1 md:grid-cols-2 gap-4"
         aria-labelledby="custom-date-heading"
       >
-        <legend id="custom-date-heading" class="sr-only">Période personnalisée</legend>
+        <legend id="custom-date-heading" class="sr-only">{{ t('searchPanel.legend.customPeriod') }}</legend>
 
         <div class="form-control">
           <label for="start-date" class="label">
-            <span class="label-text text-base-content">Date de début</span>
+            <span class="label-text text-base-content">{{ t('searchPanel.labels.startDate') }}</span>
           </label>
           <input
             id="start-date"
             v-model="filters.startDate"
             type="date"
             class="input input-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Sélectionner la date de début"
+            :aria-label="t('searchPanel.aria.selectStartDate')"
           />
         </div>
 
         <div class="form-control">
           <label for="end-date" class="label">
-            <span class="label-text text-base-content">Date de fin</span>
+            <span class="label-text text-base-content">{{ t('searchPanel.labels.endDate') }}</span>
           </label>
           <input
             id="end-date"
             v-model="filters.endDate"
             type="date"
             class="input input-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Sélectionner la date de fin"
+            :aria-label="t('searchPanel.aria.selectEndDate')"
           />
         </div>
       </fieldset>
 
       <!-- Action buttons -->
-      <div class="flex justify-end gap-2" role="group" aria-label="Actions de recherche">
+      <div class="flex justify-end gap-2" role="group" :aria-label="t('searchPanel.aria.searchActions')">
         <button
           type="button"
           class="btn btn-outline focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-          aria-label="Réinitialiser tous les filtres"
+          :aria-label="t('searchPanel.aria.resetAllFilters')"
           @click="resetFilters"
         >
-          Réinitialiser
+          {{ t('searchPanel.buttons.reset') }}
         </button>
         <button
           type="submit"
           class="btn btn-primary focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-          aria-label="Lancer la recherche avec les filtres actuels"
+          :aria-label="t('searchPanel.aria.searchWithCurrentFilters')"
           @click="performSearch"
         >
-          Rechercher
+          {{ t('searchPanel.buttons.search') }}
         </button>
       </div>
     </form>

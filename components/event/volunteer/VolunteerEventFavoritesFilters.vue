@@ -23,7 +23,7 @@
           :class="filters.sort ? 'btn-secondary' : 'btn-outline'"
         >
           <SortAsc class="w-4 h-4" />
-          Trier par
+          {{ t('volunteerEventFavoritesFilters.sort.button') }}
           <ChevronRight class="w-3 h-3" />
         </button>
         <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 text-sm z-50">
@@ -33,7 +33,7 @@
                 type="checkbox"
                 :checked="filters.sort === sortOption.value"
                 class="checkbox checkbox-xs mr-2"
-                aria-label="Champ de saisie"
+                :aria-label="t('volunteerEventFavoritesFilters.sort.aria_label')"
               />
               {{ sortOption.label }}
             </a>
@@ -50,6 +50,8 @@
   import type { FilterAnnouncement, SortOption } from '~/common/interface/filter.interface'
   import FilterActive from '~/components/event/volunteer/utils/FilterActive.vue'
 
+  const { t } = useI18n()
+
   const emit = defineEmits<{
     (e: 'filter', filters: FilterAnnouncement): void
   }>()
@@ -64,15 +66,15 @@
   const sortOptions = ref([
     {
       value: 'dateEvent_asc' as SortOption,
-      label: "Date d'événement (croissant)"
+      label: t('volunteerEventFavoritesFilters.options.date_event_asc')
     },
     {
       value: 'dateEvent_desc' as SortOption,
-      label: "Date d'événement (décroissant)"
+      label: t('volunteerEventFavoritesFilters.options.date_event_desc')
     },
     {
       value: 'datePublication_desc' as SortOption,
-      label: 'Date de publication (récent)'
+      label: t('volunteerEventFavoritesFilters.options.date_publication_desc')
     }
   ])
 

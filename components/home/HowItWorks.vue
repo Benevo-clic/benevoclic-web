@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  const { t } = useI18n()
+
   const props = defineProps<{
     startSearching: boolean
     isVisible: boolean
@@ -10,11 +12,9 @@
     <section v-if="!props.startSearching" id="how-it-works-section" class="py-16 px-4 bg-base-100">
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-12 slide-in-up" :class="{ visible: props.isVisible }">
-          <h2 class="text-3xl font-bold mb-4">Comment ça marche ?</h2>
+          <h2 class="text-3xl font-bold mb-4">{{ t('howItWorks.title') }}</h2>
           <p class="text-base-content/70 max-w-2xl mx-auto">
-            Participer à un événement ou rejoindre une mission n'a jamais été aussi simple. Suivez
-            ces étapes pour trouver l'événement qui vous correspond, que vous soyez bénévole ou
-            personne à la recherche d'aide.
+            {{ t('howItWorks.description') }}
           </p>
         </div>
 
@@ -37,10 +37,9 @@
             >
               1
             </div>
-            <h3 class="text-xl font-bold mb-3">Trouvez un événement</h3>
+            <h3 class="text-xl font-bold mb-3">{{ t('howItWorks.steps.step1.title') }}</h3>
             <p class="text-base-content/70">
-              Parcourez les annonces ou utilisez les filtres pour trouver un événement qui
-              correspond à vos besoins ou compétences.
+              {{ t('howItWorks.steps.step1.description') }}
             </p>
           </div>
 
@@ -54,10 +53,9 @@
             >
               2
             </div>
-            <h3 class="text-xl font-bold mb-3">Inscrivez-vous en quelques clics</h3>
+            <h3 class="text-xl font-bold mb-3">{{ t('howItWorks.steps.step2.title') }}</h3>
             <p class="text-base-content/70">
-              Inscrivez-vous à l'événement directement via la plateforme. Vous pouvez préciser votre
-              rôle (bénévole ou participant) et ajouter un message.
+              {{ t('howItWorks.steps.step2.description') }}
             </p>
           </div>
 
@@ -71,10 +69,9 @@
             >
               3
             </div>
-            <h3 class="text-xl font-bold mb-3">Participez</h3>
+            <h3 class="text-xl font-bold mb-3">{{ t('howItWorks.steps.step3.title') }}</h3>
             <p class="text-base-content/70">
-              Une fois votre inscription confirmée, vous recevrez tous les détails pour participer à
-              l'événement, que ce soit en tant que bénévole ou bénéficiaire.
+              {{ t('howItWorks.steps.step3.description') }}
             </p>
           </div>
         </div>

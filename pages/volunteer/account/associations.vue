@@ -5,7 +5,7 @@
   <div v-else class="max-w-screen bg-base-200 py-8 flex flex-col items-center">
     <div class="w-full max-w-3xl mx-auto px-4">
       <h1 class="text-2xl md:text-3xl font-bold text-center mb-8 text-base-content">
-        Associations que je suis
+        {{ t('volunteerAssociations.title') }}
       </h1>
       <div class="mb-6 flex justify-center">
         <div class="relative w-[90%] max-w-2xl">
@@ -15,9 +15,9 @@
           <input
             v-model="search"
             type="text"
-            placeholder="Rechercher une association..."
+            :placeholder="t('volunteerAssociations.search.placeholder')"
             class="input input-bordered w-full pl-10 bg-base-100 rounded-xl shadow focus:ring-2 focus:ring-primary/40 focus:outline-none"
-            aria-label="Champ de saisie"
+            :aria-label="t('volunteerAssociations.search.aria_label')"
           />
         </div>
       </div>
@@ -48,6 +48,8 @@
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import { useNavigation } from '~/composables/useNavigation'
   import AssociationsList from '~/components/event/volunteer/AssociationsList.vue'
+
+  const { t } = useI18n()
 
   definePageMeta({
     middleware: ['auth'],

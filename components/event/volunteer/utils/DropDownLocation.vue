@@ -4,6 +4,8 @@
   import { useUserLocation } from '~/composables/useUserLocation'
   import type { FilterAnnouncement } from '~/common/interface/filter.interface'
 
+  const { t } = useI18n()
+
   const props = defineProps<{
     filters: FilterAnnouncement
     resetLocation?: boolean
@@ -88,8 +90,8 @@
         currentLongitude.value = location.longitude
         userCurrentLocation.value = {
           place_id: 'current_location',
-          display_name: 'Ma position actuelle',
-          city: location.city || 'Position détectée',
+          display_name: t('dropDownLocation.labels.myCurrentPosition'),
+          city: location.city || t('dropDownLocation.detectedPosition'),
           lat: location.latitude.toString(),
           lon: location.longitude.toString()
         }
@@ -258,7 +260,7 @@
       <!-- Recherche de ville -->
       <div class="form-control">
         <label class="label">
-          <span class="label-text font-medium">Rechercher une ville</span>
+          <span class="label-text font-medium">{{ t('dropDownLocation.labels.searchCity') }}</span>
         </label>
         <div class="relative">
           <MapPin
@@ -278,7 +280,7 @@
       <!-- Résultats -->
       <div v-if="locationSearchResults.length" class="form-control">
         <label class="label">
-          <span class="label-text font-medium">Résultats</span>
+          <span class="label-text font-medium">{{ t('dropDownLocation.labels.results') }}</span>
         </label>
         <div
           class="border border-base-300 rounded-lg overflow-hidden max-h-32 overflow-y-auto location-search-results"
@@ -303,11 +305,11 @@
       <!-- Villes sélectionnées -->
       <div v-if="selectedLocations.length" class="form-control">
         <label class="label">
-          <span class="label-text font-medium">Villes sélectionnées</span>
+          <span class="label-text font-medium">{{ t('dropDownLocation.labels.selectedCities') }}</span>
         </label>
         <div v-if="selectedLocations.length > 1" class="alert alert-info alert-sm mb-2">
           <div class="text-xs">
-            <strong>Note:</strong> Seule la première ville est prise en compte.
+                         <strong>Note:</strong> {{ t('dropDownLocation.notes.onlyFirstCity') }}
           </div>
         </div>
         <div class="space-y-2 selected-locations">
@@ -322,13 +324,13 @@
           >
             <span class="font-medium text-sm">
               {{ formatCityName(loc) }}
-              <span v-if="isCityActive(index)" class="text-primary ml-1">(active)</span>
+              <span v-if="isCityActive(index)" class="text-primary ml-1">{{ t('dropDownLocation.active') }}</span>
             </span>
-            <button
-              class="btn btn-ghost btn-xs"
-              aria-label="Supprimer la ville"
-              @click.stop="removeLocation(index)"
-            >
+                          <button
+                class="btn btn-ghost btn-xs"
+                :aria-label="t('dropDownLocation.aria.removeCity')"
+                @click.stop="removeLocation(index)"
+              >
               <X class="w-3 h-3" />
             </button>
           </div>
@@ -338,7 +340,7 @@
       <!-- Position actuelle -->
       <div v-if="userCurrentLocation" class="form-control">
         <label class="label">
-          <span class="label-text font-medium">Ma position</span>
+          <span class="label-text font-medium">{{ t('dropDownLocation.labels.myPosition') }}</span>
         </label>
         <div class="card bg-base-200">
           <div class="card-body p-3">
@@ -348,13 +350,13 @@
                 name="location-type"
                 :checked="useCurrentLocation"
                 class="radio radio-primary radio-sm"
-                aria-label="Utiliser ma position actuelle"
+                :aria-label="t('dropDownLocation.aria.useCurrentPosition')"
                 @change="toggleCurrentLocation"
               />
               <div class="flex-1">
-                <div class="font-medium text-sm">Ma position actuelle</div>
+                <div class="font-medium text-sm">{{ t('dropDownLocation.labels.myCurrentPosition') }}</div>
                 <div class="text-xs text-base-content/70">
-                  {{ userCurrentLocation.city || 'Position détectée' }}
+                  {{ userCurrentLocation.city || t('dropDownLocation.detectedPosition') }}
                 </div>
               </div>
               <MapPin class="w-4 h-4 text-primary" />
@@ -379,12 +381,12 @@
           />
         </svg>
         <div>
-          <h4 class="font-bold">Géolocalisation désactivée</h4>
+          <h4 class="font-bold">{{ t('dropDownLocation.labels.locationDisabled') }}</h4>
           <p class="text-xs">
-            Acceptez les cookies de personnalisation pour utiliser votre position.
+            {{ t('dropDownLocation.messages.cookiePermission') }}
           </p>
           <button class="btn btn-primary btn-xs mt-2" @click="openCookieSettings">
-            Paramétrer les cookies
+            {{ t('dropDownLocation.buttons.cookieSettings') }}
           </button>
         </div>
       </div>
@@ -392,12 +394,12 @@
       <!-- Rayon -->
       <div class="form-control">
         <label class="label">
-          <span class="label-text font-medium">Rayon de recherche</span>
+          <span class="label-text font-medium">{{ t('dropDownLocation.labels.searchRadius') }}</span>
         </label>
         <div class="space-y-2">
           <div class="flex items-center justify-between">
-            <span class="text-sm">Dans un rayon de</span>
-            <span class="text-sm font-medium">{{ locationRadius }} km</span>
+            <span class="text-sm">{{ t('dropDownLocation.labels.withinRadius') }}</span>
+            <span class="text-sm font-medium">{{ locationRadius }} {{ t('dropDownLocation.units.km') }}</span>
           </div>
           <input
             v-model.number="locationRadius"
@@ -409,16 +411,16 @@
             @input="updateLocationFilter"
           />
           <div class="flex justify-between text-xs text-base-content/50">
-            <span>0 km</span>
-            <span>200 km</span>
+            <span>0 {{ t('dropDownLocation.units.km') }}</span>
+            <span>200 {{ t('dropDownLocation.units.km') }}</span>
           </div>
         </div>
       </div>
 
       <!-- Actions -->
       <div class="flex gap-2 pt-2">
-        <button class="btn btn-outline btn-sm flex-1" @click="onClear">Effacer</button>
-        <button class="btn btn-primary btn-sm flex-1" @click="onApply">Valider</button>
+        <button class="btn btn-outline btn-sm flex-1" @click="onClear">{{ t('dropDownLocation.buttons.clear') }}</button>
+        <button class="btn btn-primary btn-sm flex-1" @click="onApply">{{ t('dropDownLocation.buttons.apply') }}</button>
       </div>
     </div>
   </div>

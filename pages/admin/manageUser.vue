@@ -3,6 +3,8 @@
   import { useRequestFetch } from '#app'
   import AdminHeader from '~/components/admin/AdminHeader.vue'
 
+  const { t } = useI18n()
+
   interface UserRow {
     userId: string
     email: string
@@ -49,7 +51,7 @@
   }
 
   async function remove(id: string) {
-    if (!confirm('Confirmer la suppression de cet utilisateur ?')) {
+    if (!confirm(t('adminManageUser.confirm.delete'))) {
       return
     }
     loading.value = true
@@ -76,18 +78,18 @@
   <div>
     <AdminHeader />
     <section class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-      <h1 class="text-2xl font-bold mb-6">Gestion des utilisateurs</h1>
+      <h1 class="text-2xl font-bold mb-6">{{ t('adminManageUser.title') }}</h1>
 
       <div class="flex flex-col sm:flex-row gap-2 mb-4">
         <input
           v-model="search"
           class="input input-bordered w-full sm:w-auto"
-          placeholder="Rechercher par ID ou email"
+          :placeholder="t('adminManageUser.search.placeholder')"
           @keyup.enter="load"
         />
         <div class="flex gap-2">
-          <button class="btn btn-primary" :disabled="loading" @click="load">Rechercher</button>
-          <button class="btn" :disabled="loading" @click="reset">Réinitialiser</button>
+          <button class="btn btn-primary" :disabled="loading" @click="load">{{ t('adminManageUser.search.button') }}</button>
+          <button class="btn" :disabled="loading" @click="reset">{{ t('adminManageUser.search.reset') }}</button>
         </div>
       </div>
 
@@ -95,10 +97,10 @@
         <table class="table w-full">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Email</th>
-              <th>Rôle</th>
-              <th>Actions</th>
+              <th>{{ t('adminManageUser.table.headers.id') }}</th>
+              <th>{{ t('adminManageUser.table.headers.email') }}</th>
+              <th>{{ t('adminManageUser.table.headers.role') }}</th>
+              <th>{{ t('adminManageUser.table.headers.actions') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -114,14 +116,14 @@
               </td>
               <td>
                 <button class="btn btn-error btn-sm" :disabled="loading" @click="remove(u.userId)">
-                  Supprimer
+                  {{ t('adminManageUser.table.actions.delete') }}
                 </button>
               </td>
             </tr>
           </tbody>
         </table>
         <div v-if="!loading && users.length === 0" class="text-center py-8 text-base-content/70">
-          Aucun utilisateur
+          {{ t('adminManageUser.empty') }}
         </div>
       </div>
     </section>

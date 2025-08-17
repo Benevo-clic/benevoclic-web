@@ -3,14 +3,14 @@
     <div v-if="props.announcements.length === 0" class="text-center text-gray-500">
       <img
         src="/images/no_data.png"
-        alt="Illustration"
+        :alt="t('volunteerAnnouncementList.illustration.alt')"
         class="w-full max-w-xl mx-auto"
         onerror="this.src='/images/volunteer-info.png'"
       />
     </div>
     <div v-else class="grid grid-cols-1 md:grid-cols-2 xl1285:grid-cols-3 gap-4">
       <div class="col-span-full">
-        <h2 class="text-lg font-semibold mb-0">{{ props.totalAnnouncements }} annonces</h2>
+        <h2 class="text-lg font-semibold mb-0">{{ t('volunteerAnnouncementList.announcements_count', { count: props.totalAnnouncements }) }}</h2>
       </div>
       <VolunteerAnnouncementCard
         v-for="announcement in props.announcements"
@@ -38,6 +38,9 @@
   import ErrorPopup from '../../utils/ErrorPopup.vue'
   import { useNavigation } from '../../../composables/useNavigation'
   import VolunteerAnnouncementCard from './VolunteerAnnouncementCard.vue'
+  import { useI18n } from 'vue-i18n'
+
+  const { t } = useI18n()
 
   const props = defineProps<{
     announcements: Announcement[]

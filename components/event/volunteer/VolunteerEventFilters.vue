@@ -121,7 +121,7 @@
                 :class="selectedTags.length > 0 ? 'btn-accent' : 'btn-outline'"
                 @click="toggleDropdown"
               >
-                <span>Type d'annonce</span>
+                <span>{{ t('volunteerEventFilters.labels.announcementType') }}</span>
                 <ChevronRight class="w-3 h-3" />
               </button>
 
@@ -147,22 +147,22 @@
                       class="text-primary font-semibold cursor-pointer"
                       @click.stop="openCustomInput"
                     >
-                      <span>Autre</span>
+                      <span>{{ t('volunteerEventFilters.actions.add_type') }}</span>
                     </button>
                   </li>
                   <li v-else>
                     <div class="flex items-center gap-2 mt-2">
-                      <input
-                        ref="customInputRef"
-                        v-model="customTag"
-                        type="text"
-                        class="input input-sm input-bordered w-full"
-                        placeholder="Nouveau type…"
-                        @keydown.enter.prevent="addCustomTag"
-                      />
+                                              <input
+                          ref="customInputRef"
+                          v-model="customTag"
+                          type="text"
+                          class="input input-sm input-bordered w-full"
+                          :placeholder="t('volunteerEventFilters.placeholders.newType')"
+                          @keydown.enter.prevent="addCustomTag"
+                        />
                       <button
                         class="btn btn-sm btn-ghost"
-                        title="Annuler"
+                        :title="t('volunteerEventFilters.actions.cancel')"
                         @click="cancelCustomInput"
                       >
                         ✕
@@ -185,7 +185,7 @@
               @click="showAdvancedFilters = true"
             >
               <SlidersHorizontal class="w-4 h-4" />
-              Filtres avancés
+              {{ t('volunteerEventFilters.labels.advancedFilters') }}
             </button>
           </div>
 
@@ -199,7 +199,7 @@
               @click="toggleMap"
             >
               <Map class="w-4 h-4" />
-              <span class="text-sm">Carte</span>
+              <span class="text-sm">{{ t('volunteerEventFilters.map') }}</span>
             </button>
 
             <LocationButton
@@ -214,7 +214,7 @@
               @click="openMobileFilters"
             >
               <SlidersHorizontal class="w-4 h-4" />
-              <span class="text-sm">Filtres</span>
+              <span class="text-sm">{{ t('volunteerEventFilters.labels.filters') }}</span>
             </button>
           </div>
         </div>
@@ -230,7 +230,7 @@
             <div
               class="flex justify-between items-center p-4 border-b border-base-300 flex-shrink-0"
             >
-              <h3 class="text-lg font-bold">Filtres</h3>
+              <h3 class="text-lg font-bold">{{ t('volunteerEventFilters.labels.filters') }}</h3>
               <button class="btn btn-ghost btn-sm" @click="closeMobileFilters">
                 <X class="w-5 h-5" />
               </button>
@@ -242,7 +242,7 @@
                 <!-- Trier par -->
                 <div class="form-control">
                   <label class="label">
-                    <span class="label-text font-medium">Trier par</span>
+                    <span class="label-text font-medium">{{ t('volunteerEventFilters.sort.label') }}</span>
                   </label>
                   <div class="relative">
                     <button
@@ -296,7 +296,7 @@
                 <!-- Statut -->
                 <div class="form-control">
                   <label class="label">
-                    <span class="label-text font-medium">Statut</span>
+                    <span class="label-text font-medium">{{ t('volunteerEventFilters.status.label') }}</span>
                   </label>
                   <div class="relative">
                     <button
@@ -350,7 +350,7 @@
                 <!-- Type d'annonce -->
                 <div class="form-control">
                   <label class="label">
-                    <span class="label-text font-medium">Type d'annonce</span>
+                    <span class="label-text font-medium">{{ t('volunteerEventFilters.labels.announcementType') }}</span>
                   </label>
                   <div class="relative">
                     <button
@@ -414,7 +414,7 @@
                               v-model="customTag"
                               type="text"
                               class="input input-sm input-bordered flex-1"
-                              placeholder="Nouveau type…"
+                              :placeholder="t('volunteerEventFilters.placeholders.newType')"
                               @keydown.enter.prevent="addCustomTag"
                             />
                             <button class="btn btn-sm btn-primary" @click="addCustomTag">+</button>
@@ -431,19 +431,19 @@
                 <!-- Filtres avancés -->
                 <div class="form-control">
                   <label class="label">
-                    <span class="label-text font-medium">Filtres avancés</span>
+                    <span class="label-text font-medium">{{ t('volunteerEventFilters.labels.advancedFilters') }}</span>
                   </label>
                   <button class="btn btn-outline w-full" @click="handleAdvancedFilters">
                     <SlidersHorizontal class="w-4 h-4 mr-2" />
-                    Configurer les filtres avancés
+                    {{ t('volunteerEventFilters.buttons.configureAdvancedFilters') }}
                   </button>
                 </div>
 
                 <!-- Actions -->
                 <div class="flex gap-2 pt-4 border-t border-base-300">
-                  <button class="btn btn-ghost flex-1" @click="resetFilters">Réinitialiser</button>
+                  <button class="btn btn-ghost flex-1" @click="resetFilters">{{ t('volunteerEventFilters.buttons.reset') }}</button>
                   <button class="btn btn-primary flex-1" @click="closeMobileFilters">
-                    Appliquer
+                    {{ t('volunteerEventFilters.buttons.apply') }}
                   </button>
                 </div>
               </div>
@@ -520,7 +520,7 @@
         name: announcement.nameEvent,
         description: announcement.description,
         date: announcement.dateEvent,
-        location: announcement.addressAnnouncement?.city || 'Localisation inconnue',
+        location: announcement.addressAnnouncement?.city || t('volunteerEventFilters.labels.unknownLocation'),
         coordinates: announcement.locationAnnouncement!.coordinates,
         id: announcement._id
       }))
@@ -604,24 +604,24 @@
     'Santé'
   ])
 
-  const sortOptions = ref([
+  const sortOptions = computed(() => [
     {
       value: 'dateEvent_asc' as SortOption,
-      label: "Date d'événement (croissant)"
+      label: t('volunteerEventFilters.sortOptions.dateEventAsc')
     },
     {
       value: 'dateEvent_desc' as SortOption,
-      label: "Date d'événement (décroissant)"
+      label: t('volunteerEventFilters.sortOptions.dateEventDesc')
     },
     {
       value: 'datePublication_desc' as SortOption,
-      label: 'Date de publication (récent)'
+      label: t('volunteerEventFilters.sortOptions.datePublicationDesc')
     }
   ])
 
-  const statusOptions = ref([
-    { value: 'ACTIVE' as AnnouncementStatus, label: 'Actif' },
-    { value: 'COMPLETED' as AnnouncementStatus, label: 'Terminé' }
+  const statusOptions = computed(() => [
+    { value: 'ACTIVE' as AnnouncementStatus, label: t('volunteerEventFilters.statusOptions.active') },
+    { value: 'COMPLETED' as AnnouncementStatus, label: t('volunteerEventFilters.statusOptions.completed') }
   ])
 
   const filters = ref<FilterAnnouncement>({
@@ -1181,17 +1181,17 @@
 
   const getSortLabel = () => {
     const sortOption = sortOptions.value.find(s => s.value === filters.value.sort)
-    return sortOption ? sortOption.label : 'Trier par'
+    return sortOption ? sortOption.label : t('volunteerEventFilters.sort.label')
   }
 
   const getStatusLabel = () => {
     const statusOption = statusOptions.value.find(s => s.value === filters.value.status)
-    return statusOption ? statusOption.label : 'Statut'
+    return statusOption ? statusOption.label : t('volunteerEventFilters.status.label')
   }
 
   const getTagsLabel = () => {
     if (selectedTags.value.length === 0) {
-      return "Type d'annonce"
+      return t('volunteerEventFilters.labels.announcementType')
     }
     if (selectedTags.value.length === 1) {
       return selectedTags.value[0]

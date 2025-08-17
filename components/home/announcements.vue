@@ -2,6 +2,8 @@
   import VolunteerAnnouncementCard from '~/components/event/volunteer/VolunteerAnnouncementCard.vue'
   import type { Announcement } from '~/common/interface/event.interface'
 
+  const { t } = useI18n()
+
   const props = defineProps<{
     startSearching: boolean
     isVisible: boolean
@@ -21,9 +23,9 @@
     <section v-if="!props.startSearching" id="events-section" class="py-16 px-4 bg-base-100">
       <div class="max-w-6xl mx-auto">
         <div class="text-center mb-12 slide-in-up" :class="{ visible: props.isVisible }">
-          <h2 class="text-3xl font-bold mb-4">Événements à venir</h2>
+          <h2 class="text-3xl font-bold mb-4">{{ t('announcements.title') }}</h2>
           <p class="text-base-content/70 max-w-2xl mx-auto">
-            Découvrez les prochains événements et rejoignez-les en tant que bénévole ou participant.
+            {{ t('announcements.description') }}
           </p>
         </div>
 
@@ -61,11 +63,11 @@
         >
           <img
             src="/images/no_data.png"
-            alt="Aucun événement trouvé"
+            :alt="t('announcements.no_events.alt')"
             class="w-full max-w-md mx-auto mb-4"
             loading="lazy"
           />
-          <p class="text-lg text-base-content/70">Aucun événement à venir pour le moment.</p>
+          <p class="text-lg text-base-content/70">{{ t('announcements.no_events.message') }}</p>
         </div>
 
         <div v-else class="w-full slide-in-up" :class="{ visible: props.isVisible }">
