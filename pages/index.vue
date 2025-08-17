@@ -8,6 +8,8 @@
     useVolunteerAuth,
     useAssociationAuth
   } from '#imports'
+
+  const { t } = useI18n()
   import { useUserLocation } from '~/composables/useUserLocation'
   import NoConnectedAnnouncementList from '~/components/event/noConnected/NoConnectedAnnouncementList.vue'
   import VolunteerEventFilters from '~/components/event/volunteer/VolunteerEventFilters.vue'
@@ -566,7 +568,7 @@
           >
             <div class="form-control mb-6">
               <label class="label">
-                <span class="label-text font-medium">Rechercher un événement</span>
+                <span class="label-text font-medium">{{ t('homePage.search.label') }}</span>
               </label>
               <div class="relative">
                 <Search
@@ -575,7 +577,7 @@
                 <input
                   v-model="searchQuery"
                   type="text"
-                  placeholder="Rechercher par nom d'événement, description, nom d'association..."
+                  :placeholder="t('homePage.search.placeholder')"
                   class="input input-bordered w-full pl-10 focus:border-primary transition-colors duration-300"
                   @keyup.enter="() => searchEvents()"
                 />
@@ -590,15 +592,10 @@
                 <div v-if="isCounting" class="loading loading-spinner loading-sm" />
                 <span v-else class="font-medium">
                   <span class="hidden sm:inline"
-                    >{{ filteredEventsCount }} événement{{
-                      filteredEventsCount !== 1 ? 's' : ''
-                    }}
-                    trouvé{{ filteredEventsCount !== 1 ? 's' : '' }}</span
+                    >{{ filteredEventsCount }} {{ filteredEventsCount !== 1 ? t('homePage.results.count.events_found_plural') : t('homePage.results.count.events_found') }}</span
                   >
                   <span class="sm:hidden"
-                    >{{ filteredEventsCount }} résultat{{
-                      filteredEventsCount !== 1 ? 's' : ''
-                    }}</span
+                    >{{ filteredEventsCount }} {{ filteredEventsCount !== 1 ? t('homePage.results.count.results') : t('homePage.results.count.result') }}</span
                   >
                 </span>
               </div>
@@ -617,9 +614,9 @@
                 />
                 <div v-else class="loading loading-spinner loading-sm mr-2" />
                 <span class="hidden sm:inline">{{
-                  searchLoading ? 'Recherche en cours...' : 'Trouver des événements'
+                  searchLoading ? t('homePage.search.button.searching') : t('homePage.search.button.find_events')
                 }}</span>
-                <span class="sm:hidden">{{ searchLoading ? 'Recherche...' : 'Rechercher' }}</span>
+                <span class="sm:hidden">{{ searchLoading ? t('homePage.search.button.searching') : t('homePage.search.button.search') }}</span>
               </button>
 
               <button
@@ -628,8 +625,8 @@
                 @click="resetAllFilters"
               >
                 <X class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
-                <span class="hidden sm:inline">Réinitialiser</span>
-                <span class="sm:hidden">Reset</span>
+                <span class="hidden sm:inline">{{ t('homePage.search.reset.desktop') }}</span>
+                <span class="sm:hidden">{{ t('homePage.search.reset.mobile') }}</span>
               </button>
             </div>
           </div>
@@ -645,23 +642,21 @@
               class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6"
             >
               <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
-                <h3 class="text-xl sm:text-2xl font-bold">Résultats de recherche</h3>
+                <h3 class="text-xl sm:text-2xl font-bold">{{ t('homePage.results.title') }}</h3>
                 <div class="flex flex-wrap gap-2">
                   <div class="badge badge-primary text-xs sm:text-sm">
-                    {{ searchTotalAnnouncements }} résultat{{
-                      searchTotalAnnouncements !== 1 ? 's' : ''
-                    }}
+                    {{ searchTotalAnnouncements }} {{ searchTotalAnnouncements !== 1 ? t('homePage.results.count.results') : t('homePage.results.count.result') }}
                   </div>
                   <div v-if="hasActiveFilters" class="badge badge-secondary text-xs sm:text-sm">
                     <SlidersHorizontal class="w-3 h-3 mr-1" />
-                    <span class="hidden sm:inline">Filtres actifs</span>
-                    <span class="sm:hidden">Filtres</span>
+                    <span class="hidden sm:inline">{{ t('homePage.results.filters.active') }}</span>
+                    <span class="sm:hidden">{{ t('homePage.results.filters.mobile') }}</span>
                   </div>
                 </div>
               </div>
               <button
                 class="btn btn-ghost btn-sm self-end sm:self-auto"
-                aria-label="Fermer les résultats de recherche"
+                :aria-label="t('homePage.close_results')"
                 @click="closeSearchResults"
               >
                 <X class="w-4 h-4 sm:w-5 sm:h-5" />

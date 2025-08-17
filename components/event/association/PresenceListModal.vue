@@ -1,7 +1,7 @@
 <template>
   <dialog ref="modalRef" class="modal">
     <div class="modal-box max-w-4xl">
-      <h3 class="font-bold text-xl mb-6">Gestion des présences</h3>
+      <h3 class="font-bold text-xl mb-6">{{ t('presenceListModal.title') }}</h3>
 
       <!-- Tabs for participants and volunteers -->
       <div role="tablist" class="tabs tabs-bordered mb-4">
@@ -10,14 +10,14 @@
           :class="['tab', activeTab === 'participants' ? 'tab-active' : '']"
           @click="activeTab = 'participants'"
         >
-          Participants
+          {{ t('presenceListModal.tabs.participants') }}
         </a>
         <a
           role="tab"
           :class="['tab', activeTab === 'volunteers' ? 'tab-active' : '']"
           @click="activeTab = 'volunteers'"
         >
-          Bénévoles
+          {{ t('presenceListModal.tabs.volunteers') }}
         </a>
       </div>
 
@@ -27,9 +27,9 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Rechercher..."
+            :placeholder="t('presenceListModal.search.placeholder')"
             class="input input-bordered w-full"
-            aria-label="Champ de saisie"
+            :aria-label="t('presenceListModal.search.aria_label')"
           />
         </div>
       </div>
@@ -37,7 +37,7 @@
       <!-- Participants list -->
       <div v-if="activeTab === 'participants'" class="max-h-96 overflow-y-auto">
         <div v-if="filteredParticipants.length === 0" class="text-center py-8 text-base-content/60">
-          <p class="text-sm font-medium">Aucun participant trouvé</p>
+          <p class="text-sm font-medium">{{ t('presenceListModal.lists.no_participants') }}</p>
         </div>
         <div v-else class="space-y-3">
           <div
@@ -66,10 +66,10 @@
                 type="checkbox"
                 class="checkbox checkbox-primary"
                 :checked="participant.isPresent"
-                aria-label="Champ de saisie"
+                :aria-label="t('presenceListModal.search.aria_label')"
                 @change="togglePresence(participant, 'participant')"
               />
-              <span class="label-text">{{ participant.isPresent ? 'Présent' : 'Absent' }}</span>
+              <span class="label-text">{{ participant.isPresent ? t('presenceListModal.presence.present') : t('presenceListModal.presence.absent') }}</span>
             </label>
           </div>
         </div>
@@ -78,7 +78,7 @@
       <!-- Volunteers list -->
       <div v-if="activeTab === 'volunteers'" class="max-h-96 overflow-y-auto">
         <div v-if="filteredVolunteers.length === 0" class="text-center py-8 text-base-content/60">
-          <p class="text-sm font-medium">Aucun bénévole trouvé</p>
+          <p class="text-sm font-medium">{{ t('presenceListModal.lists.no_volunteers') }}</p>
         </div>
         <div v-else class="space-y-3">
           <div
@@ -107,10 +107,10 @@
                 type="checkbox"
                 class="checkbox checkbox-primary"
                 :checked="volunteer.isPresent"
-                aria-label="Champ de saisie"
+                :aria-label="t('presenceListModal.search.aria_label')"
                 @change="togglePresence(volunteer, 'volunteer')"
               />
-              <span class="label-text">{{ volunteer.isPresent ? 'Présent' : 'Absent' }}</span>
+              <span class="label-text">{{ volunteer.isPresent ? t('presenceListModal.presence.present') : t('presenceListModal.presence.absent') }}</span>
             </label>
           </div>
         </div>
@@ -118,11 +118,11 @@
 
       <!-- Modal actions -->
       <div class="modal-action">
-        <button class="btn btn-ghost" type="button" @click="closeModal">Fermer</button>
+        <button class="btn btn-ghost" type="button" @click="closeModal">{{ t('presenceListModal.actions.close') }}</button>
       </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button type="button">Fermer</button>
+      <button type="button">{{ t('presenceListModal.actions.close') }}</button>
     </form>
   </dialog>
 </template>
@@ -131,6 +131,8 @@
   import { ref, computed, watch } from 'vue'
   import type { InfoVolunteer } from '~/common/interface/event.interface'
   import { useAnnouncement } from '~/composables/useAnnouncement'
+
+  const { t } = useI18n()
 
   interface Props {
     announcementId: string

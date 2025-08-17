@@ -11,7 +11,7 @@
         ✕
       </button>
 
-      <h2 class="text-xl font-bold mb-4">{{ form._id ? 'Modifier' : 'Créer' }} une annonce</h2>
+      <h2 class="text-xl font-bold mb-4">{{ form._id ? t('announcementEditForm.title.edit') : t('announcementEditForm.title.create') }}</h2>
 
       <form @submit.prevent="save">
         <!-- --- Image de couverture (inchangé) --- -->
@@ -42,14 +42,14 @@
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <p class="mt-2 text-sm text-gray-500">Cliquez pour ajouter une photo de couverture</p>
-            <p class="text-xs text-gray-400">JPG, PNG, GIF jusqu'à 10MB</p>
+            <p class="mt-2 text-sm text-gray-500">{{ t('announcementEditForm.cover_photo.click_to_add') }}</p>
+            <p class="text-xs text-gray-400">{{ t('announcementEditForm.cover_photo.file_types') }}</p>
           </div>
           <img
             v-else
             :src="coverPhotoPreview"
             class="w-full h-full object-cover"
-            alt="Cover preview"
+            :alt="t('announcementEditForm.cover_photo.alt')"
           />
           <button
             v-if="coverPhotoPreview"
@@ -63,18 +63,18 @@
 
         <!-- --- Titre / Description / Date / Heure (inchangé) --- -->
         <div class="mb-2">
-          <label class="block mb-1">Titre</label>
+          <label class="block mb-1">{{ t('announcementEditForm.fields.title') }}</label>
           <input v-model="form.nameEvent" class="input input-bordered w-full" required />
         </div>
 
         <div class="mb-2">
-          <label class="block mb-1">Description</label>
+          <label class="block mb-1">{{ t('announcementEditForm.fields.description') }}</label>
           <textarea v-model="form.description" class="textarea textarea-bordered w-full" required />
         </div>
 
         <div class="mb-2 flex flex-col md:flex-row gap-2">
           <div class="flex-1">
-            <label class="block mb-1">Date</label>
+            <label class="block mb-1">{{ t('announcementEditForm.fields.date') }}</label>
             <input
               v-model="form.dateEvent"
               type="date"
@@ -83,7 +83,7 @@
             />
           </div>
           <div class="flex-1">
-            <label class="block mb-1">Heure</label>
+            <label class="block mb-1">{{ t('announcementEditForm.fields.time') }}</label>
             <input
               v-model="form.hoursEvent"
               type="time"
@@ -98,15 +98,15 @@
           <!-- Participants -->
           <div class="flex flex-col gap-1">
             <div class="flex items-center justify-between">
-              <label class="block">Nombre max. de participants</label>
+              <label class="block">{{ t('announcementEditForm.fields.max_participants') }}</label>
               <label class="label cursor-pointer gap-2">
-                <span class="label-text">Illimité</span>
+                <span class="label-text">{{ t('announcementEditForm.fields.unlimited') }}</span>
                 <input
                   type="checkbox"
                   class="toggle"
                   :checked="participantsIsUnlimited"
                   @change="toggleParticipantsUnlimited"
-                  aria-label="Basculer illimité participants"
+                  :aria-label="t('announcementEditForm.aria_labels.toggle_unlimited_participants')"
                 />
               </label>
             </div>
@@ -118,7 +118,7 @@
               class="input input-bordered w-full"
               :class="{ 'input-error': maxParticipantsError }"
               disabled
-              placeholder="Illimité"
+              :placeholder="t('announcementEditForm.fields.unlimited')"
             />
             <!-- Limité => v-model -->
             <input
@@ -130,22 +130,22 @@
               :class="{ 'input-error': maxParticipantsError }"
             />
             <p v-if="maxParticipantsError" class="text-error text-xs">
-              Doit être ≥ au nombre de participants déjà inscrits ({{ minParticipants }})
+              {{ t('announcementEditForm.validation.participants_error') }} ({{ minParticipants }})
             </p>
           </div>
 
           <!-- Bénévoles -->
           <div class="flex flex-col gap-1">
             <div class="flex items-center justify-between">
-              <label class="block">Nombre max. de bénévoles</label>
+              <label class="block">{{ t('announcementEditForm.fields.max_volunteers') }}</label>
               <label class="label cursor-pointer gap-2">
-                <span class="label-text">Illimité</span>
+                <span class="label-text">{{ t('announcementEditForm.fields.unlimited') }}</span>
                 <input
                   type="checkbox"
                   class="toggle"
                   :checked="volunteersIsUnlimited"
                   @change="toggleVolunteersUnlimited"
-                  aria-label="Basculer illimité bénévoles"
+                  :aria-label="t('announcementEditForm.aria_labels.toggle_unlimited_volunteers')"
                 />
               </label>
             </div>
@@ -157,7 +157,7 @@
               class="input input-bordered w-full"
               :class="{ 'input-error': maxVolunteersError }"
               disabled
-              placeholder="Illimité"
+              :placeholder="t('announcementEditForm.fields.unlimited')"
             />
             <!-- Limité => v-model -->
             <input
@@ -169,14 +169,14 @@
               :class="{ 'input-error': maxVolunteersError }"
             />
             <p v-if="maxVolunteersError" class="text-error text-xs">
-              Doit être ≥ au nombre de bénévoles déjà inscrits ({{ minVolunteers }})
+              {{ t('announcementEditForm.validation.volunteers_error') }} ({{ minVolunteers }})
             </p>
           </div>
         </div>
 
         <!-- --- Tags --- -->
         <div class="mb-2">
-          <label class="block mb-1">Tags (séparés par des virgules)</label>
+          <label class="block mb-1">{{ t('announcementEditForm.fields.tags') }}</label>
           <input v-model="tagsInput" class="input input-bordered w-full" />
         </div>
 
@@ -187,18 +187,18 @@
         />
         <div class="mb-2 grid grid-cols-1 md:grid-cols-2 gap-2">
           <div>
-            <label class="block mb-1">Ville</label>
+            <label class="block mb-1">{{ t('announcementEditForm.fields.city') }}</label>
             <input v-model="form.addressAnnouncement!.city" class="input input-bordered w-full" />
           </div>
           <div>
-            <label class="block mb-1">Code postal</label>
+            <label class="block mb-1">{{ t('announcementEditForm.fields.postal_code') }}</label>
             <input
               v-model="form.addressAnnouncement!.postalCode"
               class="input input-bordered w-full"
             />
           </div>
           <div>
-            <label class="block mb-1">Pays</label>
+            <label class="block mb-1">{{ t('announcementEditForm.fields.country') }}</label>
             <input
               v-model="form.addressAnnouncement!.country"
               class="input input-bordered w-full"
@@ -208,7 +208,7 @@
 
         <!-- --- Statut --- -->
         <div class="form-control w-full">
-          <label class="label"><span class="label-text">Statut</span></label>
+          <label class="label"><span class="label-text">{{ t('announcementEditForm.fields.status') }}</span></label>
           <select v-model="form.status" class="select select-bordered w-full">
             <option v-for="status in statusOptions" :key="status.value" :value="status.value">
               {{ status.label }}
@@ -224,10 +224,10 @@
             :disabled="isSubmitDisabled"
             :title="submitDisabledReason"
           >
-            Enregistrer
+            {{ t('announcementEditForm.actions.save') }}
           </button>
           <button class="btn btn-ghost flex-1" type="button" @click="$emit('close')">
-            Annuler
+            {{ t('announcementEditForm.actions.cancel') }}
           </button>
         </div>
       </form>
@@ -250,6 +250,8 @@
   import { useNavigation } from '~/composables/useNavigation'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import AddressInput from '~/components/common/AddressInput.vue'
+
+  const { t } = useI18n()
 
   const props = defineProps<{ announcement: Announcement | null }>()
   const emit = defineEmits(['close', 'saved'])
@@ -357,9 +359,9 @@
   const isSubmitDisabled = computed(() => isFormInvalid.value || !isDirty.value)
   const submitDisabledReason = computed(() =>
     isFormInvalid.value
-      ? 'Corrigez les erreurs avant d’enregistrer'
+      ? t('announcementEditForm.submit.disabled_reasons.errors')
       : !isDirty.value
-        ? 'Aucun changement détecté'
+        ? t('announcementEditForm.submit.disabled_reasons.no_changes')
         : ''
   )
 

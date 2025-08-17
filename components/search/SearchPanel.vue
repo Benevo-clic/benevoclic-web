@@ -1,21 +1,21 @@
 <template>
   <div class="bg-base-100 rounded-lg shadow-md p-4" role="search" aria-label="Panneau de recherche">
     <h2 id="search-panel-heading" class="text-xl font-semibold mb-4 text-base-content">
-      Recherche
+      {{ t('searchPanel.title') }}
     </h2>
 
     <!-- Search form -->
     <form class="space-y-4" aria-labelledby="search-panel-heading" @submit.prevent="performSearch">
       <div class="form-control">
         <label for="search-input" class="label">
-          <span class="label-text text-base-content">Rechercher</span>
+          <span class="label-text text-base-content">{{ t('searchPanel.search.label') }}</span>
         </label>
         <div class="input-group">
           <input
             id="search-input"
             v-model="searchQuery"
             type="text"
-            placeholder="Rechercher des missions, organisations..."
+            :placeholder="t('searchPanel.search.placeholder')"
             class="input input-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             aria-describedby="search-description"
             autocomplete="off"
@@ -24,37 +24,37 @@
           <button
             type="submit"
             class="btn btn-square focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Lancer la recherche"
+            :aria-label="t('searchPanel.search.button')"
             @click="performSearch"
           >
             <Search class="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
         <div id="search-description" class="text-sm text-base-content opacity-70 mt-1">
-          Tapez vos mots-clés pour trouver des missions et organisations
+          {{ t('searchPanel.search.description') }}
         </div>
       </div>
 
       <!-- Filters -->
       <fieldset class="grid grid-cols-1 md:grid-cols-2 gap-4" aria-labelledby="filters-heading">
-        <legend id="filters-heading" class="sr-only">Filtres de recherche</legend>
+        <legend id="filters-heading" class="sr-only">{{ t('searchPanel.filters.heading') }}</legend>
 
         <div class="form-control">
           <label for="category-select" class="label">
-            <span class="label-text text-base-content">Catégorie</span>
+            <span class="label-text text-base-content">{{ t('searchPanel.filters.category.label') }}</span>
           </label>
           <select
             id="category-select"
             v-model="filters.category"
             class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            aria-label="Filtrer par catégorie"
+            :aria-label="t('searchPanel.filters.category.aria_label')"
           >
-            <option value="">Toutes les catégories</option>
-            <option value="environmental">Environnement</option>
-            <option value="humanitarian">Humanitaire</option>
-            <option value="education">Éducation</option>
-            <option value="health">Santé</option>
-            <option value="community">Communauté</option>
+            <option value="">{{ t('searchPanel.filters.category.all') }}</option>
+            <option value="environmental">{{ t('searchPanel.filters.category.environmental') }}</option>
+            <option value="humanitarian">{{ t('searchPanel.filters.category.humanitarian') }}</option>
+            <option value="education">{{ t('searchPanel.filters.category.education') }}</option>
+            <option value="health">{{ t('searchPanel.filters.category.health') }}</option>
+            <option value="community">{{ t('searchPanel.filters.category.community') }}</option>
           </select>
         </div>
 
@@ -175,6 +175,8 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import { Search } from 'lucide-vue-next'
+
+  const { t } = useI18n()
 
   const emit = defineEmits(['search'])
 

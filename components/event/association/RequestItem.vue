@@ -11,7 +11,7 @@
         >
           <img
             :src="props.volunteer.avatar || '/images/default-avatar.png'"
-            :alt="props.volunteer.name"
+            :alt="t('requestItem.volunteer_avatar_alt')"
             class="w-full h-full object-cover"
             @error="
               event => {
@@ -43,7 +43,7 @@
             />
           </svg>
           <span class="text-sm text-primary font-medium">
-            Pour l'événement : <span class="font-semibold">{{ context }}</span>
+            {{ t('requestItem.event_context') }} <span class="font-semibold">{{ context }}</span>
           </span>
         </div>
 
@@ -58,7 +58,7 @@
             />
           </svg>
           <span class="text-sm text-secondary font-medium">
-            Demande d'adhésion à l'association
+            {{ t('requestItem.association_context') }}
           </span>
         </div>
       </div>
@@ -78,7 +78,7 @@
             d="M5 13l4 4L19 7"
           />
         </svg>
-        Accepter
+        {{ t('requestItem.actions.accept') }}
       </button>
       <button
         class="btn btn-error flex-1 gap-2 hover:scale-105 transition-transform duration-200"
@@ -92,13 +92,15 @@
             d="M6 18L18 6M6 6l12 12"
           />
         </svg>
-        Refuser
+        {{ t('requestItem.actions.refuse') }}
       </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+  const { t } = useI18n()
+
   const props = defineProps<{
     volunteer: { name: string; email: string; avatar: string }
     context?: string

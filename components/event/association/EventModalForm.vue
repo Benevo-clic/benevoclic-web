@@ -8,6 +8,8 @@
   import { useNavigation } from '~/composables/useNavigation'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
 
+  const { t } = useI18n()
+
   const store = useAnnouncementStore()
   const announcementAuth = useAnnouncement()
   const { navigateToRoute } = useNavigation()
@@ -94,7 +96,7 @@
 <template>
   <div :key="modalInstanceKey" class="min-h-[85vh] items-center justify-center gap-8 px-4 py-6">
     <h2 class="text-2xl font-bold mb-6 text-center">
-      {{ store.currentAnnouncement ? "Modifier l'événement" : 'Créer un nouvel événement' }}
+      {{ store.currentAnnouncement ? t('eventModalForm.title.edit') : t('eventModalForm.title.create') }}
     </h2>
 
     <EventForm

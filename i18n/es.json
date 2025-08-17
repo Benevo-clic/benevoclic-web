@@ -711,5 +711,283 @@
       "selection": "Selección",
       "number": "Número"
     }
+  },
+  "announcementEditForm": {
+    "title": {
+      "create": "Crear anuncio",
+      "edit": "Editar anuncio"
+    },
+    "cover_photo": {
+      "click_to_add": "Haga clic para agregar una foto de portada",
+      "file_types": "JPG, PNG, GIF hasta 10MB",
+      "alt": "Vista previa de portada"
+    },
+    "fields": {
+      "title": "Título",
+      "description": "Descripción",
+      "date": "Fecha",
+      "time": "Hora",
+      "max_participants": "Número máx. de participantes",
+      "max_volunteers": "Número máx. de voluntarios",
+      "unlimited": "Ilimitado",
+      "tags": "Etiquetas (separadas por comas)",
+      "city": "Ciudad",
+      "postal_code": "Código postal",
+      "country": "País",
+      "status": "Estado"
+    },
+    "validation": {
+      "participants_error": "Debe ser ≥ al número de participantes ya registrados",
+      "volunteers_error": "Debe ser ≥ al número de voluntarios ya registrados"
+    },
+    "actions": {
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "close": "Cerrar"
+    },
+    "submit": {
+      "disabled_reasons": {
+        "errors": "Corrija los errores antes de guardar",
+        "no_changes": "No se detectaron cambios"
+      }
+    },
+    "aria_labels": {
+      "toggle_unlimited_participants": "Alternar participantes ilimitados",
+      "toggle_unlimited_volunteers": "Alternar voluntarios ilimitados"
+    }
+  },
+  "eventModalForm": {
+    "title": {
+      "create": "Crear nuevo evento",
+      "edit": "Editar evento"
+    }
+  },
+  "readOnlyEventCard": {
+    "no_image": "Sin imagen",
+    "event_image_alt": "Imagen del evento",
+    "participants": "participantes",
+    "volunteers": "voluntarios",
+    "filter_by_tag": "Filtrar por etiqueta:",
+    "details": "Detalles"
+  },
+  "requestItem": {
+    "volunteer_avatar_alt": "Foto de perfil del voluntario",
+    "event_context": "Para el evento:",
+    "association_context": "Solicitud de adhesión a la asociación",
+    "actions": {
+      "accept": "Aceptar",
+      "refuse": "Rechazar"
+    }
+  },
+  "presenceListModal": {
+    "title": "Gestión de asistencia",
+    "tabs": {
+      "participants": "Participantes",
+      "volunteers": "Voluntarios"
+    },
+    "search": {
+      "placeholder": "Buscar...",
+      "aria_label": "Campo de entrada"
+    },
+    "lists": {
+      "no_participants": "No se encontraron participantes",
+      "no_volunteers": "No se encontraron voluntarios"
+    },
+    "presence": {
+      "present": "Presente",
+      "absent": "Ausente"
+    },
+    "actions": {
+      "close": "Cerrar"
+    }
+  },
+  "participantOrVolunteerCard": {
+    "profile_photo_alt": "Foto de",
+    "actions": {
+      "details": "Detalles",
+      "present": "Presente",
+      "mark_present": "Marcar presente",
+      "remove": "Retirar"
+    }
+  },
+  "volunteersList": {
+    "title": "Voluntarios",
+    "no_volunteers": "No hay participantes para este anuncio"
+  },
+  "participantsList": {
+    "title": "Participantes",
+    "no_participants": "No hay participantes para este anuncio"
+  },
+  "presenceModal": {
+    "title": "Marcar asistencia",
+    "message": "¿Desea marcar a {name} como {status}?",
+    "status": {
+      "present": "presente",
+      "absent": "ausente"
+    },
+    "checkbox": {
+      "present": "Presente",
+      "absent": "Ausente"
+    },
+    "actions": {
+      "cancel": "Cancelar",
+      "confirm": "Confirmar"
+    }
+  },
+  "eventFiltersDrawer": {
+    "title": "Filtros avanzados",
+    "search": {
+      "placeholder": "Buscar...",
+      "aria_label": "Campo de entrada"
+    },
+    "tags": {
+      "placeholder": "Etiquetas (comas)",
+      "aria_label": "Campo de entrada"
+    },
+    "status": {
+      "aria_label": "Selección",
+      "all_statuses": "Todos los estados",
+      "pending": "Pendiente",
+      "active": "Activo",
+      "closed": "Cerrado"
+    },
+    "location": {
+      "city": {
+        "placeholder": "Ciudad",
+        "aria_label": "Campo de entrada"
+      },
+      "postal_code": {
+        "placeholder": "Código postal",
+        "aria_label": "Campo de entrada"
+      }
+    },
+    "association_type": {
+      "aria_label": "Selección",
+      "all_types": "Todos los tipos de asociación",
+      "solidarity": "Solidaridad",
+      "sport": "Deporte",
+      "culture": "Cultura"
+    },
+    "dates": {
+      "start_date": "Fecha de inicio",
+      "end_date": "Fecha de fin",
+      "start_time": "Hora de inicio",
+      "end_time": "Hora de fin",
+      "aria_label": "Campo de entrada"
+    },
+    "actions": {
+      "validate": "Validar",
+      "cancel": "Cancelar"
+    }
+  },
+  "announcementDetails": {
+    "actions": {
+      "edit": "Editar"
+    },
+    "location": "Lugar:",
+    "status": "Estado:",
+    "tag_aria_label": "Etiqueta:",
+    "no_announcement": "Ningún anuncio seleccionado."
+  },
+  "readOnlyEventList": {
+    "illustration_alt": "Ilustración",
+    "error_message": "Ocurrió un error:",
+    "announcements_count": "anuncios"
+  },
+  "uploadCoverForm": {
+    "file_input": {
+      "aria_label": "Campo de entrada"
+    },
+    "upload_area": {
+      "click_to_add": "Haga clic para agregar una foto de portada",
+      "file_types": "JPG, PNG, GIF hasta 10MB"
+    },
+    "preview": {
+      "alt": "Vista previa de la portada"
+    },
+    "actions": {
+      "ignore": "Ignorar",
+      "finish": "Terminar"
+    }
+  },
+  "homePage": {
+    "search": {
+      "label": "Buscar un evento",
+      "placeholder": "Buscar por nombre del evento, descripción, nombre de la asociación...",
+      "button": {
+        "find_events": "Encontrar eventos",
+        "searching": "Buscando...",
+        "search": "Buscar"
+      },
+      "reset": {
+        "desktop": "Restablecer",
+        "mobile": "Reset"
+      }
+    },
+    "results": {
+      "title": "Resultados de búsqueda",
+      "count": {
+        "events_found": "evento encontrado",
+        "events_found_plural": "eventos encontrados",
+        "result": "resultado",
+        "results": "resultados"
+      },
+      "filters": {
+        "active": "Filtros activos",
+        "mobile": "Filtros"
+      }
+    },
+    "close_results": "Cerrar resultados de búsqueda"
+  },
+  "volunteerEventFilters": {
+    "map": "Mapa",
+    "sort": {
+      "label": "Ordenar por",
+      "aria_label": "Campo de entrada"
+    },
+    "status": {
+      "label": "Estado"
+    },
+    "actions": {
+      "cancel": "Cancelar",
+      "add_type": "Agregar un tipo..."
+    }
+  },
+  "searchPanel": {
+    "title": "Búsqueda",
+    "search": {
+      "label": "Buscar",
+      "placeholder": "Buscar misiones, organizaciones...",
+      "description": "Escriba sus palabras clave para encontrar misiones y organizaciones",
+      "button": "Lanzar búsqueda"
+    },
+    "filters": {
+      "heading": "Filtros de búsqueda",
+      "category": {
+        "label": "Categoría",
+        "aria_label": "Filtrar por categoría",
+        "all": "Todas las categorías",
+        "environmental": "Medio ambiente",
+        "humanitarian": "Humanitario",
+        "education": "Educación",
+        "health": "Salud",
+        "community": "Comunidad"
+      },
+      "location": {
+        "label": "Ubicación",
+        "aria_label": "Filtrar por ubicación",
+        "all": "Todas las ubicaciones"
+      },
+      "date_range": {
+        "label": "Período",
+        "aria_label": "Filtrar por período",
+        "anytime": "En cualquier momento",
+        "today": "Hoy",
+        "this_week": "Esta semana",
+        "this_month": "Este mes",
+        "next_month": "Próximo mes",
+        "custom": "Período personalizado"
+      }
+    }
   }
 }

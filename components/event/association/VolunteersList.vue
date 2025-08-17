@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="text-lg font-bold mb-4">Bénévoles</h3>
+    <h3 class="text-lg font-bold mb-4">{{ t('volunteersList.title') }}</h3>
     <div v-if="props.volunteers && props.volunteers.length">
       <ParticipantOrVolunteerCard
         v-for="volunteer in props.volunteers"
@@ -31,13 +31,15 @@
           </svg>
         </div>
       </div>
-      <p class="text-sm font-medium">Aucun participant pour cette annonce</p>
+      <p class="text-sm font-medium">{{ t('volunteersList.no_volunteers') }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import ParticipantOrVolunteerCard from './ParticipantOrVolunteerCard.vue'
+
+  const { t } = useI18n()
 
   interface Volunteer {
     volunteerId: string

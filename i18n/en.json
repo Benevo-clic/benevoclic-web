@@ -724,5 +724,283 @@
       "selection": "Selection",
       "number": "Number"
     }
+  },
+  "announcementEditForm": {
+    "title": {
+      "create": "Create announcement",
+      "edit": "Edit announcement"
+    },
+    "cover_photo": {
+      "click_to_add": "Click to add a cover photo",
+      "file_types": "JPG, PNG, GIF up to 10MB",
+      "alt": "Cover preview"
+    },
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "date": "Date",
+      "time": "Time",
+      "max_participants": "Max. number of participants",
+      "max_volunteers": "Max. number of volunteers",
+      "unlimited": "Unlimited",
+      "tags": "Tags (comma separated)",
+      "city": "City",
+      "postal_code": "Postal code",
+      "country": "Country",
+      "status": "Status"
+    },
+    "validation": {
+      "participants_error": "Must be ≥ number of already registered participants",
+      "volunteers_error": "Must be ≥ number of already registered volunteers"
+    },
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "close": "Close"
+    },
+    "submit": {
+      "disabled_reasons": {
+        "errors": "Fix errors before saving",
+        "no_changes": "No changes detected"
+      }
+    },
+    "aria_labels": {
+      "toggle_unlimited_participants": "Toggle unlimited participants",
+      "toggle_unlimited_volunteers": "Toggle unlimited volunteers"
+    }
+  },
+  "eventModalForm": {
+    "title": {
+      "create": "Create new event",
+      "edit": "Edit event"
+    }
+  },
+  "readOnlyEventCard": {
+    "no_image": "No image",
+    "event_image_alt": "Event image",
+    "participants": "participants",
+    "volunteers": "volunteers",
+    "filter_by_tag": "Filter by tag:",
+    "details": "Details"
+  },
+  "requestItem": {
+    "volunteer_avatar_alt": "Volunteer profile picture",
+    "event_context": "For event:",
+    "association_context": "Association membership request",
+    "actions": {
+      "accept": "Accept",
+      "refuse": "Refuse"
+    }
+  },
+  "presenceListModal": {
+    "title": "Attendance management",
+    "tabs": {
+      "participants": "Participants",
+      "volunteers": "Volunteers"
+    },
+    "search": {
+      "placeholder": "Search...",
+      "aria_label": "Input field"
+    },
+    "lists": {
+      "no_participants": "No participants found",
+      "no_volunteers": "No volunteers found"
+    },
+    "presence": {
+      "present": "Present",
+      "absent": "Absent"
+    },
+    "actions": {
+      "close": "Close"
+    }
+  },
+  "participantOrVolunteerCard": {
+    "profile_photo_alt": "Photo of",
+    "actions": {
+      "details": "Details",
+      "present": "Present",
+      "mark_present": "Mark present",
+      "remove": "Remove"
+    }
+  },
+  "volunteersList": {
+    "title": "Volunteers",
+    "no_volunteers": "No participants for this announcement"
+  },
+  "participantsList": {
+    "title": "Participants",
+    "no_participants": "No participants for this announcement"
+  },
+  "presenceModal": {
+    "title": "Mark attendance",
+    "message": "Do you want to mark {name} as {status}?",
+    "status": {
+      "present": "present",
+      "absent": "absent"
+    },
+    "checkbox": {
+      "present": "Present",
+      "absent": "Absent"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    }
+  },
+  "eventFiltersDrawer": {
+    "title": "Advanced filters",
+    "search": {
+      "placeholder": "Search...",
+      "aria_label": "Input field"
+    },
+    "tags": {
+      "placeholder": "Tags (commas)",
+      "aria_label": "Input field"
+    },
+    "status": {
+      "aria_label": "Selection",
+      "all_statuses": "All statuses",
+      "pending": "Pending",
+      "active": "Active",
+      "closed": "Closed"
+    },
+    "location": {
+      "city": {
+        "placeholder": "City",
+        "aria_label": "Input field"
+      },
+      "postal_code": {
+        "placeholder": "Postal code",
+        "aria_label": "Input field"
+      }
+    },
+    "association_type": {
+      "aria_label": "Selection",
+      "all_types": "All association types",
+      "solidarity": "Solidarity",
+      "sport": "Sport",
+      "culture": "Culture"
+    },
+    "dates": {
+      "start_date": "Start date",
+      "end_date": "End date",
+      "start_time": "Start time",
+      "end_time": "End time",
+      "aria_label": "Input field"
+    },
+    "actions": {
+      "validate": "Validate",
+      "cancel": "Cancel"
+    }
+  },
+  "announcementDetails": {
+    "actions": {
+      "edit": "Edit"
+    },
+    "location": "Location:",
+    "status": "Status:",
+    "tag_aria_label": "Tag:",
+    "no_announcement": "No announcement selected."
+  },
+  "readOnlyEventList": {
+    "illustration_alt": "Illustration",
+    "error_message": "An error occurred:",
+    "announcements_count": "announcements"
+  },
+  "uploadCoverForm": {
+    "file_input": {
+      "aria_label": "Input field"
+    },
+    "upload_area": {
+      "click_to_add": "Click to add a cover photo",
+      "file_types": "JPG, PNG, GIF up to 10MB"
+    },
+    "preview": {
+      "alt": "Cover preview"
+    },
+    "actions": {
+      "ignore": "Ignore",
+      "finish": "Finish"
+    }
+  },
+  "homePage": {
+    "search": {
+      "label": "Search for an event",
+      "placeholder": "Search by event name, description, association name...",
+      "button": {
+        "find_events": "Find events",
+        "searching": "Searching...",
+        "search": "Search"
+      },
+      "reset": {
+        "desktop": "Reset",
+        "mobile": "Reset"
+      }
+    },
+    "results": {
+      "title": "Search results",
+      "count": {
+        "events_found": "event found",
+        "events_found_plural": "events found",
+        "result": "result",
+        "results": "results"
+      },
+      "filters": {
+        "active": "Active filters",
+        "mobile": "Filters"
+      }
+    },
+    "close_results": "Close search results"
+  },
+  "volunteerEventFilters": {
+    "map": "Map",
+    "sort": {
+      "label": "Sort by",
+      "aria_label": "Input field"
+    },
+    "status": {
+      "label": "Status"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "add_type": "Add a type..."
+    }
+  },
+  "searchPanel": {
+    "title": "Search",
+    "search": {
+      "label": "Search",
+      "placeholder": "Search for missions, organizations...",
+      "description": "Type your keywords to find missions and organizations",
+      "button": "Launch search"
+    },
+    "filters": {
+      "heading": "Search filters",
+      "category": {
+        "label": "Category",
+        "aria_label": "Filter by category",
+        "all": "All categories",
+        "environmental": "Environmental",
+        "humanitarian": "Humanitarian",
+        "education": "Education",
+        "health": "Health",
+        "community": "Community"
+      },
+      "location": {
+        "label": "Location",
+        "aria_label": "Filter by location",
+        "all": "All locations"
+      },
+      "date_range": {
+        "label": "Period",
+        "aria_label": "Filter by period",
+        "anytime": "Anytime",
+        "today": "Today",
+        "this_week": "This week",
+        "this_month": "This month",
+        "next_month": "Next month",
+        "custom": "Custom period"
+      }
+    }
   }
 }

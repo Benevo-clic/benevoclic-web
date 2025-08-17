@@ -21,7 +21,7 @@
         >
           <img
             :src="profileImageUrl"
-            :alt="`Photo de ${participant.volunteerName}`"
+            :alt="`${t('participantOrVolunteerCard.profile_photo_alt')} ${participant.volunteerName}`"
             class="w-full h-full object-cover rounded-full"
             width="48"
             height="48"
@@ -55,7 +55,7 @@
           class="btn btn-sm btn-outline flex-1"
           @click="openUserModal"
         >
-          Détails
+          {{ t('participantOrVolunteerCard.actions.details') }}
         </button>
         <button
           v-else
@@ -63,13 +63,13 @@
           :class="participant.isPresent ? 'btn-success' : 'btn-primary'"
           @click="openPresenceModal"
         >
-          {{ participant.isPresent ? 'Présent' : 'Marquer présent' }}
+          {{ participant.isPresent ? t('participantOrVolunteerCard.actions.present') : t('participantOrVolunteerCard.actions.mark_present') }}
         </button>
         <button
           class="btn btn-sm btn-outline btn-error flex-1"
           @click="emit('rightAction', participant.volunteerId)"
         >
-          Retirer
+          {{ t('participantOrVolunteerCard.actions.remove') }}
         </button>
       </div>
     </div>
@@ -109,6 +109,8 @@
   import { useNavigation } from '~/composables/useNavigation'
   import PresenceModal from '~/components/event/association/PresenceModal.vue'
   import UserDetailsModal from '~/components/common/UserDetailsModal.vue'
+
+  const { t } = useI18n()
 
   interface Participant {
     volunteerId: string

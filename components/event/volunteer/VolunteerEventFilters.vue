@@ -52,14 +52,14 @@
         <div class="w-full">
           <!-- Desktop -->
           <div class="hidden md:flex flex-wrap gap-2 items-center justify-center w-full max-w-full">
-            <button
-              class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
-              :class="showMap ? 'btn-primary' : 'btn-outline'"
-              @click="toggleMap"
-            >
-              <Map class="w-4 h-4" />
-              Carte
-            </button>
+                          <button
+                class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
+                :class="showMap ? 'btn-primary' : 'btn-outline'"
+                @click="toggleMap"
+              >
+                <Map class="w-4 h-4" />
+                {{ t('volunteerEventFilters.map') }}
+              </button>
 
             <!-- Trier par -->
             <div class="dropdown dropdown-bottom">
@@ -69,7 +69,7 @@
                 :class="filters.sort ? 'btn-secondary' : 'btn-outline'"
               >
                 <SortAsc class="w-4 h-4" />
-                Trier par
+                {{ t('volunteerEventFilters.sort.label') }}
                 <ChevronRight class="w-3 h-3" />
               </button>
               <ul
@@ -81,7 +81,7 @@
                       type="checkbox"
                       :checked="filters.sort === sortOption.value"
                       class="checkbox checkbox-xs mr-2"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('volunteerEventFilters.sort.aria_label')"
                     />
                     {{ sortOption.label }}
                   </a>
@@ -96,7 +96,7 @@
                 class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
                 :class="filters.status ? 'btn-primary' : 'btn-outline'"
               >
-                Statut
+                {{ t('volunteerEventFilters.status.label') }}
                 <ChevronRight class="w-3 h-3" />
               </button>
               <ul
@@ -405,7 +405,7 @@
                               @click="openCustomInput"
                             >
                               <Plus class="w-4 h-4" />
-                              <span class="text-sm font-medium">Ajouter un type...</span>
+                              <span class="text-sm font-medium">{{ t('volunteerEventFilters.actions.add_type') }}</span>
                             </button>
                           </div>
                           <div v-else class="flex items-center gap-2 p-2">
@@ -419,7 +419,7 @@
                             />
                             <button class="btn btn-sm btn-primary" @click="addCustomTag">+</button>
                             <button class="btn btn-sm btn-ghost" @click="cancelCustomInput">
-                              ✕
+                              {{ t('volunteerEventFilters.actions.cancel') }}
                             </button>
                           </div>
                         </div>
@@ -491,6 +491,8 @@
   import FilterActive from '~/components/event/volunteer/utils/FilterActive.vue'
   import AdvancedFilters from '~/components/event/volunteer/utils/AdvancedFilters.vue'
   import LocationButton from '~/components/event/volunteer/utils/LocationButton.vue'
+
+  const { t } = useI18n()
 
   const props = defineProps<{
     announcements: Announcement[]
