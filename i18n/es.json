@@ -989,5 +989,127 @@
         "custom": "Período personalizado"
       }
     }
+  },
+  "volunteerPage": {
+    "search": {
+      "title": "Encuentra el evento que te corresponde",
+      "description": "Usa nuestro motor de búsqueda avanzado para encontrar eventos que coincidan con tus necesidades, ya sea que quieras ayudar o participar.",
+      "label": "Buscar un evento",
+      "placeholder": "Buscar por nombre del evento, descripción, nombre de la asociación...",
+      "button": {
+        "find_events": "Encontrar eventos",
+        "searching": "Buscando...",
+        "search": "Buscar"
+      },
+      "reset": {
+        "desktop": "Restablecer",
+        "mobile": "Reset"
+      }
+    },
+    "results": {
+      "title": "Resultados de búsqueda",
+      "count": {
+        "events_found": "evento encontrado",
+        "events_found_plural": "eventos encontrados",
+        "result": "resultado",
+        "results": "resultados"
+      }
+    },
+    "close_results": "Cerrar resultados de búsqueda"
+  },
+  "searchPage": {
+    "title": "Resultados de búsqueda",
+    "description": {
+      "with_results": "resultados encontrados para",
+      "no_search": "Use el panel de búsqueda para encontrar misiones y organizaciones"
+    },
+    "tabs": {
+      "all": "Todos",
+      "missions": "Misiones",
+      "organizations": "Organizaciones",
+      "aria_labels": {
+        "filter_results": "Filtrar resultados",
+        "all_results": "Todos los resultados",
+        "missions_only": "Solo misiones",
+        "organizations_only": "Solo organizaciones"
+      }
+    },
+    "results": {
+      "mission": "Misión",
+      "organization": "Organización",
+      "favorites": {
+        "add": "Agregar a favoritos",
+        "remove": "Quitar de favoritos"
+      },
+      "view_profile": "Ver perfil"
+    },
+    "no_results": {
+      "title": "No se encontraron resultados",
+      "description": "Intente ajustar sus criterios de búsqueda"
+    },
+    "start_search": {
+      "title": "Comience a buscar",
+      "description": "Use el panel de búsqueda para encontrar misiones y organizaciones"
+    }
+  },
+  "hero": {
+    "title": {
+      "main": "Haz la diferencia con",
+      "brand": "Benevoclic"
+    },
+    "description": "Descubre eventos y misiones que coincidan con tus habilidades, intereses y disponibilidad. Ya seas voluntario o alguien que necesita ayuda, únete a una comunidad comprometida y participa en proyectos solidarios.",
+    "actions": {
+      "discover_events": "Descubrir eventos",
+      "learn_more": "Saber más"
+    },
+    "image": {
+      "alt": "Voluntarios en acción"
+    }
+  },
+  "associationDashboard": {
+    "title": "Panel de control",
+    "actions": {
+      "refresh": "Actualizar",
+      "auto_refresh": {
+        "label": "Auto-actualizar",
+        "mobile": "Auto"
+      }
+    },
+    "period_analysis": {
+      "title": "Período de análisis",
+      "description": "Selecciona el período para analizar tus datos"
+    },
+    "error": {
+      "title": "Error de carga",
+      "message": "Ocurrió un error al cargar los datos"
+    },
+    "tabs": {
+      "overview": "Vista general",
+      "analytics": "Análisis detallados",
+      "recommendations": "Recomendaciones"
+    }
+  },
+  "adminLogin": {
+    "title": "Inicio de sesión Admin",
+    "subtitle": "Accede a tu área de administración",
+    "form": {
+      "email": {
+        "label": "Email",
+        "placeholder": "admin\\@example.com"
+      },
+      "password": {
+        "label": "Contraseña",
+        "placeholder": "••••••••"
+      },
+      "submit": {
+        "loading": "Conectando...",
+        "default": "Iniciar sesión"
+      }
+    },
+    "links": {
+      "no_account": "¿Aún no tienes una cuenta de administrador?",
+      "create_account": "Crear una cuenta",
+      "back_home": "← Volver al inicio"
+    }
   }
 }

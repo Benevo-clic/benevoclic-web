@@ -9,12 +9,12 @@
     <!-- Main content with search results -->
     <main class="md:col-span-3" role="main" aria-label="Résultats de recherche">
       <div class="bg-base-100 rounded-lg shadow-md p-6">
-        <h1 class="text-2xl font-bold mb-2 text-base-content">Search Results</h1>
+        <h1 class="text-2xl font-bold mb-2 text-base-content">{{ t('searchPage.title') }}</h1>
         <p v-if="searchPerformed" class="text-base-content opacity-70 mb-6">
-          {{ searchResults.length }} results found for "{{ currentSearch.query }}"
+          {{ searchResults.length }} {{ t('searchPage.description.with_results') }} "{{ currentSearch.query }}"
         </p>
         <p v-else class="text-base-content opacity-70 mb-6">
-          Use the search panel to find missions and organizations
+          {{ t('searchPage.description.no_search') }}
         </p>
 
         <!-- Search results -->
@@ -23,7 +23,7 @@
           <div
             class="tabs tabs-boxed bg-base-200 mb-4"
             role="tablist"
-            aria-label="Filtrer les résultats"
+            :aria-label="t('searchPage.tabs.aria_labels.filter_results')"
           >
             <button
               class="tab focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -31,12 +31,12 @@
               role="tab"
               :aria-selected="activeTab === 'all'"
               :aria-controls="'tabpanel-all'"
-              aria-label="Tous les résultats"
+              :aria-label="t('searchPage.tabs.aria_labels.all_results')"
               @click="activeTab = 'all'"
               @keyup.enter="activeTab = 'all'"
               @keyup.space.prevent="activeTab = 'all'"
             >
-              All ({{ searchResults.length }})
+              {{ t('searchPage.tabs.all') }} ({{ searchResults.length }})
             </button>
             <button
               class="tab focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -44,12 +44,12 @@
               role="tab"
               :aria-selected="activeTab === 'missions'"
               :aria-controls="'tabpanel-missions'"
-              aria-label="Missions uniquement"
+              :aria-label="t('searchPage.tabs.aria_labels.missions_only')"
               @click="activeTab = 'missions'"
               @keyup.enter="activeTab = 'missions'"
               @keyup.space.prevent="activeTab = 'missions'"
             >
-              Missions ({{ missionResults.length }})
+              {{ t('searchPage.tabs.missions') }} ({{ missionResults.length }})
             </button>
             <button
               class="tab focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -57,12 +57,12 @@
               role="tab"
               :aria-selected="activeTab === 'organizations'"
               :aria-controls="'tabpanel-organizations'"
-              aria-label="Organisations uniquement"
+              :aria-label="t('searchPage.tabs.aria_labels.organizations_only')"
               @click="activeTab = 'organizations'"
               @keyup.enter="activeTab = 'organizations'"
               @keyup.space.prevent="activeTab = 'organizations'"
             >
-              Organizations ({{ organizationResults.length }})
+              {{ t('searchPage.tabs.organizations') }} ({{ organizationResults.length }})
             </button>
           </div>
 
@@ -83,7 +83,7 @@
                 <div class="flex justify-between items-start">
                   <div>
                     <div class="flex items-center gap-2">
-                      <span class="badge badge-sm">Mission</span>
+                      <span class="badge badge-sm">{{ t('searchPage.results.mission') }}</span>
                       <h2 class="card-title text-base-content">
                         {{ result.title }}
                       </h2>
@@ -129,7 +129,7 @@
                   <button
                     class="btn btn-sm btn-outline focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
                   >
-                    View Details
+                    {{ t('searchPage.results.view_profile') }}
                   </button>
                   <button
                     class="btn btn-sm btn-primary focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -173,7 +173,7 @@
                     </div>
                     <div>
                       <div class="flex items-center gap-2">
-                        <span class="badge badge-sm">Organization</span>
+                        <span class="badge badge-sm">{{ t('searchPage.results.organization') }}</span>
                         <h2 class="font-semibold text-base-content">
                           {{ result.name }}
                         </h2>
@@ -244,6 +244,8 @@
   import { Search, Calendar, MapPin, Heart } from 'lucide-vue-next'
   import SearchPanel from '~/components/search/SearchPanel.vue'
   import SearchMenu from '~/components/search/SearchMenu.vue'
+
+  const { t } = useI18n()
 
   definePageMeta({
     layout: 'app'

@@ -9,6 +9,8 @@
   import ObjectiveProgress from '~/components/dashboard/ObjectiveProgress.vue'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
 
+  const { t } = useI18n()
+
   definePageMeta({
     middleware: 'auth',
     layout: 'header'
@@ -209,13 +211,13 @@
                   d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                 />
               </svg>
-              <span class="hidden sm:inline">Actualiser</span>
+              <span class="hidden sm:inline">{{ t('associationDashboard.actions.refresh') }}</span>
             </button>
 
             <div class="flex items-center gap-2">
               <label class="label cursor-pointer gap-2">
-                <span class="label-text text-xs sm:text-sm hidden sm:inline">Auto-refresh</span>
-                <span class="label-text text-xs sm:inline sm:hidden">Auto</span>
+                <span class="label-text text-xs sm:text-sm hidden sm:inline">{{ t('associationDashboard.actions.auto_refresh.label') }}</span>
+                <span class="label-text text-xs sm:inline sm:hidden">{{ t('associationDashboard.actions.auto_refresh.mobile') }}</span>
                 <input
                   type="checkbox"
                   :checked="isAutoRefreshActive"
@@ -236,10 +238,10 @@
             <h2
               class="text-base sm:text-lg font-semibold text-base-content mb-1 sm:mb-2 leading-tight"
             >
-              Période d'analyse
+              {{ t('associationDashboard.period_analysis.title') }}
             </h2>
             <p class="text-xs sm:text-sm text-base-content/70 leading-relaxed line-clamp-2">
-              Sélectionnez la période pour analyser vos données
+              {{ t('associationDashboard.period_analysis.description') }}
             </p>
           </div>
 
@@ -272,7 +274,7 @@
           />
         </svg>
         <div class="min-w-0 flex-1">
-          <h3 class="font-bold text-sm sm:text-base">Erreur de chargement</h3>
+          <h3 class="font-bold text-sm sm:text-base">{{ t('associationDashboard.error.title') }}</h3>
           <div class="text-xs sm:text-sm mt-1 break-words">{{ error }}</div>
         </div>
       </div>
@@ -282,13 +284,13 @@
           @click="activeTab = 'overview'"
           :class="['tab flex-1 text-center mb-2', activeTab === 'overview' ? 'tab-active' : '']"
         >
-          Vue d'ensemble
+          {{ t('associationDashboard.tabs.overview') }}
         </a>
         <a
           @click="activeTab = 'analytics'"
           :class="['tab flex-1 text-center mb-2', activeTab === 'analytics' ? 'tab-active' : '']"
         >
-          Analyses détaillées
+          {{ t('associationDashboard.tabs.analytics') }}
         </a>
         <a
           @click="activeTab = 'recommendations'"
@@ -297,7 +299,7 @@
             activeTab === 'recommendations' ? 'tab-active' : ''
           ]"
         >
-          Recommandations
+          {{ t('associationDashboard.tabs.recommendations') }}
         </a>
       </div>
 

@@ -21,14 +21,14 @@
               />
             </svg>
           </div>
-          <h1 class="text-2xl font-bold text-base-content">Connexion Admin</h1>
-          <p class="text-base-content/70">Accédez à votre espace d'administration</p>
+          <h1 class="text-2xl font-bold text-base-content">{{ t('adminLogin.title') }}</h1>
+          <p class="text-base-content/70">{{ t('adminLogin.subtitle') }}</p>
         </div>
 
         <form class="space-y-6" @submit.prevent="handleLogin">
           <div>
             <label for="email" class="block text-sm font-medium text-base-content mb-2">
-              Email
+              {{ t('adminLogin.form.email.label') }}
             </label>
             <input
               id="email"
@@ -42,7 +42,7 @@
 
           <div>
             <label for="password" class="block text-sm font-medium text-base-content mb-2">
-              Mot de passe
+              {{ t('adminLogin.form.password.label') }}
             </label>
             <input
               id="password"
@@ -56,7 +56,7 @@
 
           <button type="submit" class="btn btn-primary w-full" :disabled="loading || !isFormValid">
             <span v-if="loading" class="loading loading-spinner loading-sm" />
-            {{ loading ? 'Connexion en cours...' : 'Se connecter' }}
+            {{ loading ? t('adminLogin.form.submit.loading') : t('adminLogin.form.submit.default') }}
           </button>
         </form>
 
@@ -68,14 +68,14 @@
         <!-- Lien vers l'inscription -->
         <div class="mt-6 text-center">
           <p class="text-base-content/70 text-sm">
-            Pas encore de compte admin ?
-            <button class="link link-primary" @click="goToRegister">Créer un compte</button>
+            {{ t('adminLogin.links.no_account') }}
+            <button class="link link-primary" @click="goToRegister">{{ t('adminLogin.links.create_account') }}</button>
           </p>
         </div>
 
         <!-- Lien vers l'accueil -->
         <div class="mt-4 text-center">
-          <button class="link link-neutral text-sm" @click="goToHome">← Retour à l'accueil</button>
+          <button class="link link-neutral text-sm" @click="goToHome">{{ t('adminLogin.links.back_home') }}</button>
         </div>
       </div>
     </div>
@@ -87,6 +87,8 @@
   import { useRouter } from 'vue-router'
   import { RoleUser } from '~/common/enums/role.enum'
   import { useUser } from '~/composables/auth/useUser'
+
+  const { t } = useI18n()
 
   const router = useRouter()
   const { login } = useUser()

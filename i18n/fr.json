@@ -1163,5 +1163,127 @@
         "custom": "Période personnalisée"
       }
     }
+  },
+  "volunteerPage": {
+    "search": {
+      "title": "Trouvez l'événement qui vous correspond",
+      "description": "Utilisez notre moteur de recherche avancé pour trouver des événements qui correspondent à vos besoins, que vous souhaitiez aider ou participer.",
+      "label": "Rechercher un événement",
+      "placeholder": "Rechercher par nom d'événement, description, nom d'association...",
+      "button": {
+        "find_events": "Trouver des événements",
+        "searching": "Recherche en cours...",
+        "search": "Rechercher"
+      },
+      "reset": {
+        "desktop": "Réinitialiser",
+        "mobile": "Reset"
+      }
+    },
+    "results": {
+      "title": "Résultats de recherche",
+      "count": {
+        "events_found": "événement trouvé",
+        "events_found_plural": "événements trouvés",
+        "result": "résultat",
+        "results": "résultats"
+      }
+    },
+    "close_results": "Fermer les résultats de recherche"
+  },
+  "searchPage": {
+    "title": "Résultats de recherche",
+    "description": {
+      "with_results": "résultats trouvés pour",
+      "no_search": "Utilisez le panneau de recherche pour trouver des missions et organisations"
+    },
+    "tabs": {
+      "all": "Tous",
+      "missions": "Missions",
+      "organizations": "Organisations",
+      "aria_labels": {
+        "filter_results": "Filtrer les résultats",
+        "all_results": "Tous les résultats",
+        "missions_only": "Missions uniquement",
+        "organizations_only": "Organisations uniquement"
+      }
+    },
+    "results": {
+      "mission": "Mission",
+      "organization": "Organisation",
+      "favorites": {
+        "add": "Ajouter aux favoris",
+        "remove": "Retirer des favoris"
+      },
+      "view_profile": "Voir le profil"
+    },
+    "no_results": {
+      "title": "Aucun résultat trouvé",
+      "description": "Essayez d'ajuster vos critères de recherche"
+    },
+    "start_search": {
+      "title": "Commencez à rechercher",
+      "description": "Utilisez le panneau de recherche pour trouver des missions et organisations"
+    }
+  },
+  "hero": {
+    "title": {
+      "main": "Faites la différence avec",
+      "brand": "Benevoclic"
+    },
+    "description": "Découvrez des événements et missions qui correspondent à vos compétences, vos centres d'intérêt et vos disponibilités. Que vous soyez bénévole ou personne dans le besoin, rejoignez une communauté engagée et participez à des projets solidaires.",
+    "actions": {
+      "discover_events": "Découvrir les événements",
+      "learn_more": "En savoir plus"
+    },
+    "image": {
+      "alt": "Bénévoles en action"
+    }
+  },
+  "associationDashboard": {
+    "title": "Tableau de bord",
+    "actions": {
+      "refresh": "Actualiser",
+      "auto_refresh": {
+        "label": "Auto-refresh",
+        "mobile": "Auto"
+      }
+    },
+    "period_analysis": {
+      "title": "Période d'analyse",
+      "description": "Sélectionnez la période pour analyser vos données"
+    },
+    "error": {
+      "title": "Erreur de chargement",
+      "message": "Une erreur est survenue lors du chargement des données"
+    },
+    "tabs": {
+      "overview": "Vue d'ensemble",
+      "analytics": "Analyses détaillées",
+      "recommendations": "Recommandations"
+    }
+  },
+  "adminLogin": {
+    "title": "Connexion Admin",
+    "subtitle": "Accédez à votre espace d'administration",
+    "form": {
+      "email": {
+        "label": "Email",
+        "placeholder": "admin\\@example.com"
+      },
+      "password": {
+        "label": "Mot de passe",
+        "placeholder": "••••••••"
+      },
+      "submit": {
+        "loading": "Connexion en cours...",
+        "default": "Se connecter"
+      }
+    },
+    "links": {
+      "no_account": "Pas encore de compte admin ?",
+      "create_account": "Créer un compte",
+      "back_home": "← Retour à l'accueil"
+    }
   }
 }
