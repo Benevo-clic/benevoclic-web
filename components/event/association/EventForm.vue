@@ -2,7 +2,8 @@
   <form class="space-y-6" @submit.prevent="submit">
     <!-- Required Fields Note -->
     <div class="text-sm text-gray-500 mb-2">
-      {{ t('eventForm.required_fields_note') }} <span class="text-error">*</span> {{ t('eventForm.are_required') }}
+      {{ t('eventForm.required_fields_note') }} <span class="text-error">*</span>
+      {{ t('eventForm.are_required') }}
     </div>
 
     <!-- Validation Errors -->
@@ -35,7 +36,9 @@
     <!-- Event Name -->
     <div class="form-control w-full">
       <label class="label">
-        <span class="label-text">{{ t('eventForm.fields.event_name.label') }} <span class="text-error">*</span></span>
+        <span class="label-text"
+          >{{ t('eventForm.fields.event_name.label') }} <span class="text-error">*</span></span
+        >
       </label>
       <input
         v-model="formState.nameEvent"
@@ -50,7 +53,9 @@
     <!-- Description -->
     <div class="form-control w-full">
       <label class="label">
-        <span class="label-text">{{ t('eventForm.fields.description.label') }} <span class="text-error">*</span></span>
+        <span class="label-text"
+          >{{ t('eventForm.fields.description.label') }} <span class="text-error">*</span></span
+        >
       </label>
       <textarea
         v-model="formState.description"
@@ -65,7 +70,9 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">{{ t('eventForm.fields.event_date.label') }} <span class="text-error">*</span></span>
+          <span class="label-text"
+            >{{ t('eventForm.fields.event_date.label') }} <span class="text-error">*</span></span
+          >
         </label>
         <input
           v-model="formState.dateEvent"
@@ -77,7 +84,9 @@
       </div>
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">{{ t('eventForm.fields.event_time.label') }} <span class="text-error">*</span></span>
+          <span class="label-text"
+            >{{ t('eventForm.fields.event_time.label') }} <span class="text-error">*</span></span
+          >
         </label>
         <input
           v-model="formState.hoursEvent"
@@ -94,7 +103,9 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">{{ t('eventForm.fields.city.label') }} <span class="text-error">*</span></span>
+          <span class="label-text"
+            >{{ t('eventForm.fields.city.label') }} <span class="text-error">*</span></span
+          >
         </label>
         <input
           v-model="formState.addressAnnouncement.city"
@@ -107,7 +118,9 @@
       </div>
       <div class="form-control w-full">
         <label class="label">
-          <span class="label-text">{{ t('eventForm.fields.postal_code.label') }} <span class="text-error">*</span></span>
+          <span class="label-text"
+            >{{ t('eventForm.fields.postal_code.label') }} <span class="text-error">*</span></span
+          >
         </label>
         <input
           v-model="formState.addressAnnouncement.postalCode"
@@ -174,7 +187,9 @@
           :aria-label="t('eventForm.aria_labels.input_field')"
           @keydown.enter.prevent="addTag"
         />
-        <button type="button" class="btn btn-primary ml-2" @click="addTag">{{ t('eventForm.fields.tags.add_button') }}</button>
+        <button type="button" class="btn btn-primary ml-2" @click="addTag">
+          {{ t('eventForm.fields.tags.add_button') }}
+        </button>
       </div>
       <div class="flex flex-wrap gap-2 mt-2">
         <div v-for="(tag, index) in formState.tags" :key="index" class="badge badge-primary gap-1">
@@ -217,7 +232,9 @@
 
     <!-- Form Actions -->
     <div class="flex justify-end space-x-4 mt-6">
-      <button type="button" class="btn btn-ghost" @click="cancel">{{ t('eventForm.actions.cancel') }}</button>
+      <button type="button" class="btn btn-ghost" @click="cancel">
+        {{ t('eventForm.actions.cancel') }}
+      </button>
       <button type="submit" class="btn btn-primary" :class="{ loading: loading }">
         {{ announcement ? t('eventForm.actions.update') : t('eventForm.actions.continue') }}
       </button>

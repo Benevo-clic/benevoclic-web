@@ -96,7 +96,11 @@
 <template>
   <div :key="modalInstanceKey" class="min-h-[85vh] items-center justify-center gap-8 px-4 py-6">
     <h2 class="text-2xl font-bold mb-6 text-center">
-      {{ store.currentAnnouncement ? t('eventModalForm.title.edit') : t('eventModalForm.title.create') }}
+      {{
+        store.currentAnnouncement
+          ? t('eventModalForm.title.edit')
+          : t('eventModalForm.title.create')
+      }}
     </h2>
 
     <EventForm

@@ -8,7 +8,9 @@
 
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1 sm:flex-none">
       <div class="form-control">
-        <label :for="fromInputId" class="label label-text sr-only">{{ t('dateRangePicker.from.label') }}</label>
+        <label :for="fromInputId" class="label label-text sr-only">{{
+          t('dateRangePicker.from.label')
+        }}</label>
         <input
           :id="fromInputId"
           v-model="from"
@@ -17,12 +19,16 @@
           :aria-describedby="fromDescriptionId"
           @keydown="handleKeydown"
         />
-        <div :id="fromDescriptionId" class="sr-only">{{ t('dateRangePicker.from.description') }}</div>
+        <div :id="fromDescriptionId" class="sr-only">
+          {{ t('dateRangePicker.from.description') }}
+        </div>
       </div>
 
       <span class="hidden sm:inline text-base-content opacity-70" aria-hidden="true">—</span>
       <div class="form-control">
-        <label :for="toInputId" class="label label-text sr-only">{{ t('dateRangePicker.to.label') }}</label>
+        <label :for="toInputId" class="label label-text sr-only">{{
+          t('dateRangePicker.to.label')
+        }}</label>
         <input
           :id="toInputId"
           v-model="to"

@@ -39,7 +39,8 @@
                 «
               </button>
               <button class="join-item btn" disabled>
-                {{ t('events.manage.pagination.page') }} {{ currentPage }} {{ t('events.manage.pagination.of') }} {{ totalPages }}
+                {{ t('events.manage.pagination.page') }} {{ currentPage }}
+                {{ t('events.manage.pagination.of') }} {{ totalPages }}
               </button>
               <button
                 class="join-item btn"

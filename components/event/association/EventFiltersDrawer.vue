@@ -97,7 +97,9 @@
           :aria-label="t('eventFiltersDrawer.association_type.aria_label')"
         >
           <option value="">{{ t('eventFiltersDrawer.association_type.all_types') }}</option>
-          <option value="solidaire">{{ t('eventFiltersDrawer.association_type.solidarity') }}</option>
+          <option value="solidaire">
+            {{ t('eventFiltersDrawer.association_type.solidarity') }}
+          </option>
           <option value="sport">{{ t('eventFiltersDrawer.association_type.sport') }}</option>
           <option value="culture">{{ t('eventFiltersDrawer.association_type.culture') }}</option>
         </select>
@@ -131,8 +133,12 @@
         />
       </div>
       <div class="p-4 flex gap-2">
-        <button class="btn btn-primary flex-1" @click="handleValidate">{{ t('eventFiltersDrawer.actions.validate') }}</button>
-        <button class="btn btn-ghost flex-1" @click="handleClose">{{ t('eventFiltersDrawer.actions.cancel') }}</button>
+        <button class="btn btn-primary flex-1" @click="handleValidate">
+          {{ t('eventFiltersDrawer.actions.validate') }}
+        </button>
+        <button class="btn btn-ghost flex-1" @click="handleClose">
+          {{ t('eventFiltersDrawer.actions.cancel') }}
+        </button>
       </div>
     </aside>
   </transition>

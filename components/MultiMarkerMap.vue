@@ -26,12 +26,20 @@
       </button>
       <!-- Contrôles de zoom personnalisés -->
       <div class="zoom-controls">
-        <button class="zoom-btn zoom-in" :title="t('multiMarkerMap.controls.zoom_in')" @click="zoomIn">
+        <button
+          class="zoom-btn zoom-in"
+          :title="t('multiMarkerMap.controls.zoom_in')"
+          @click="zoomIn"
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
           </svg>
         </button>
-        <button class="zoom-btn zoom-out" :title="t('multiMarkerMap.controls.zoom_out')" @click="zoomOut">
+        <button
+          class="zoom-btn zoom-out"
+          :title="t('multiMarkerMap.controls.zoom_out')"
+          @click="zoomOut"
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 13H5v-2h14v2z" />
           </svg>
@@ -120,7 +128,10 @@
       }
     })
     Object.entries(eventsCountByCity).forEach(([city, count]) => {
-      const eventText = count > 1 ? t('multiMarkerMap.popup.city_events_plural') : t('multiMarkerMap.popup.city_events')
+      const eventText =
+        count > 1
+          ? t('multiMarkerMap.popup.city_events_plural')
+          : t('multiMarkerMap.popup.city_events')
       const popup = new $maplibregl.Popup({ offset: 25 }).setText(
         `${city} (${count} ${eventText}) - ${t('multiMarkerMap.popup.click_for_details')}`
       )

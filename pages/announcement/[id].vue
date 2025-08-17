@@ -273,7 +273,8 @@
               <div>
                 <p class="font-medium">{{ t('announcement.availablePlaces') }}</p>
                 <p class="text-sm text-base-content/70">
-                  {{ remainingParticipants }} {{ t('announcement.participants') }}, {{ remainingVolunteers }} {{ t('announcement.volunteers') }}
+                  {{ remainingParticipants }} {{ t('announcement.participants') }},
+                  {{ remainingVolunteers }} {{ t('announcement.volunteers') }}
                 </p>
               </div>
             </div>

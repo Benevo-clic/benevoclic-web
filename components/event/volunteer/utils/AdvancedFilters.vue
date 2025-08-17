@@ -147,7 +147,9 @@
                     <div class="space-y-3">
                       <div>
                         <label class="label">
-                          <span class="label-text text-sm">{{ t('advancedFilters.labels.from') }}</span>
+                          <span class="label-text text-sm">{{
+                            t('advancedFilters.labels.from')
+                          }}</span>
                         </label>
                         <input
                           v-model="localFilters.dateEventFrom"
@@ -158,7 +160,9 @@
                       </div>
                       <div>
                         <label class="label">
-                          <span class="label-text text-sm">{{ t('advancedFilters.labels.to') }}</span>
+                          <span class="label-text text-sm">{{
+                            t('advancedFilters.labels.to')
+                          }}</span>
                         </label>
                         <input
                           v-model="localFilters.dateEventTo"
@@ -178,25 +182,29 @@
                     <div class="space-y-3">
                       <div>
                         <label class="label">
-                          <span class="label-text text-sm">{{ t('advancedFilters.labels.fromTime') }}</span>
+                          <span class="label-text text-sm">{{
+                            t('advancedFilters.labels.fromTime')
+                          }}</span>
                         </label>
-                                                  <input
-                            v-model="localFilters.hoursEventFrom"
-                            type="time"
-                            class="input input-bordered input-sm w-full"
-                            :aria-label="t('advancedFilters.aria.inputField')"
-                          />
+                        <input
+                          v-model="localFilters.hoursEventFrom"
+                          type="time"
+                          class="input input-bordered input-sm w-full"
+                          :aria-label="t('advancedFilters.aria.inputField')"
+                        />
                       </div>
                       <div>
                         <label class="label">
-                          <span class="label-text text-sm">{{ t('advancedFilters.labels.toTime') }}</span>
+                          <span class="label-text text-sm">{{
+                            t('advancedFilters.labels.toTime')
+                          }}</span>
                         </label>
-                                                  <input
-                            v-model="localFilters.hoursEventTo"
-                            type="time"
-                            class="input input-bordered input-sm w-full"
-                            :aria-label="t('advancedFilters.aria.inputField')"
-                          />
+                        <input
+                          v-model="localFilters.hoursEventTo"
+                          type="time"
+                          class="input input-bordered input-sm w-full"
+                          :aria-label="t('advancedFilters.aria.inputField')"
+                        />
                       </div>
                     </div>
                   </div>
@@ -205,29 +213,35 @@
                 <!-- Date de publication -->
                 <div class="card bg-base-200 shadow-sm">
                   <div class="card-body p-4">
-                    <h4 class="font-medium mb-3">{{ t('advancedFilters.sections.publicationDate') }}</h4>
+                    <h4 class="font-medium mb-3">
+                      {{ t('advancedFilters.sections.publicationDate') }}
+                    </h4>
                     <div class="space-y-3">
                       <div>
                         <label class="label">
-                          <span class="label-text text-sm">{{ t('advancedFilters.labels.from') }}</span>
+                          <span class="label-text text-sm">{{
+                            t('advancedFilters.labels.from')
+                          }}</span>
                         </label>
-                                                  <input
-                            v-model="localFilters.datePublicationFrom"
-                            type="date"
-                            class="input input-bordered input-sm w-full"
-                            :aria-label="t('advancedFilters.aria.inputField')"
-                          />
+                        <input
+                          v-model="localFilters.datePublicationFrom"
+                          type="date"
+                          class="input input-bordered input-sm w-full"
+                          :aria-label="t('advancedFilters.aria.inputField')"
+                        />
                       </div>
                       <div>
                         <label class="label">
-                          <span class="label-text text-sm">{{ t('advancedFilters.labels.to') }}</span>
+                          <span class="label-text text-sm">{{
+                            t('advancedFilters.labels.to')
+                          }}</span>
                         </label>
-                                                  <input
-                            v-model="localFilters.datePublicationTo"
-                            type="date"
-                            class="input input-bordered input-sm w-full"
-                            :aria-label="t('advancedFilters.aria.inputField')"
-                          />
+                        <input
+                          v-model="localFilters.datePublicationTo"
+                          type="date"
+                          class="input input-bordered input-sm w-full"
+                          :aria-label="t('advancedFilters.aria.inputField')"
+                        />
                       </div>
                     </div>
                   </div>

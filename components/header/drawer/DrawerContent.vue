@@ -93,7 +93,9 @@
           <button
             class="btn btn-ghost btn-circle btn-sm hover:bg-base-300 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             :aria-label="
-              props.isAuthenticated ? t('drawerContent.closeMenu') : t('drawerContent.closeWelcomePanel')
+              props.isAuthenticated
+                ? t('drawerContent.closeMenu')
+                : t('drawerContent.closeWelcomePanel')
             "
             @click="handleCloseDrawer"
           >

@@ -52,14 +52,14 @@
         <div class="w-full">
           <!-- Desktop -->
           <div class="hidden md:flex flex-wrap gap-2 items-center justify-center w-full max-w-full">
-                          <button
-                class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
-                :class="showMap ? 'btn-primary' : 'btn-outline'"
-                @click="toggleMap"
-              >
-                <Map class="w-4 h-4" />
-                {{ t('volunteerEventFilters.map') }}
-              </button>
+            <button
+              class="btn btn-sm rounded-full flex items-center gap-2 min-w-max transition-all duration-200"
+              :class="showMap ? 'btn-primary' : 'btn-outline'"
+              @click="toggleMap"
+            >
+              <Map class="w-4 h-4" />
+              {{ t('volunteerEventFilters.map') }}
+            </button>
 
             <!-- Trier par -->
             <div class="dropdown dropdown-bottom">
@@ -152,14 +152,14 @@
                   </li>
                   <li v-else>
                     <div class="flex items-center gap-2 mt-2">
-                                              <input
-                          ref="customInputRef"
-                          v-model="customTag"
-                          type="text"
-                          class="input input-sm input-bordered w-full"
-                          :placeholder="t('volunteerEventFilters.placeholders.newType')"
-                          @keydown.enter.prevent="addCustomTag"
-                        />
+                      <input
+                        ref="customInputRef"
+                        v-model="customTag"
+                        type="text"
+                        class="input input-sm input-bordered w-full"
+                        :placeholder="t('volunteerEventFilters.placeholders.newType')"
+                        @keydown.enter.prevent="addCustomTag"
+                      />
                       <button
                         class="btn btn-sm btn-ghost"
                         :title="t('volunteerEventFilters.actions.cancel')"
@@ -242,7 +242,9 @@
                 <!-- Trier par -->
                 <div class="form-control">
                   <label class="label">
-                    <span class="label-text font-medium">{{ t('volunteerEventFilters.sort.label') }}</span>
+                    <span class="label-text font-medium">{{
+                      t('volunteerEventFilters.sort.label')
+                    }}</span>
                   </label>
                   <div class="relative">
                     <button
@@ -296,7 +298,9 @@
                 <!-- Statut -->
                 <div class="form-control">
                   <label class="label">
-                    <span class="label-text font-medium">{{ t('volunteerEventFilters.status.label') }}</span>
+                    <span class="label-text font-medium">{{
+                      t('volunteerEventFilters.status.label')
+                    }}</span>
                   </label>
                   <div class="relative">
                     <button
@@ -350,7 +354,9 @@
                 <!-- Type d'annonce -->
                 <div class="form-control">
                   <label class="label">
-                    <span class="label-text font-medium">{{ t('volunteerEventFilters.labels.announcementType') }}</span>
+                    <span class="label-text font-medium">{{
+                      t('volunteerEventFilters.labels.announcementType')
+                    }}</span>
                   </label>
                   <div class="relative">
                     <button
@@ -405,7 +411,9 @@
                               @click="openCustomInput"
                             >
                               <Plus class="w-4 h-4" />
-                              <span class="text-sm font-medium">{{ t('volunteerEventFilters.actions.add_type') }}</span>
+                              <span class="text-sm font-medium">{{
+                                t('volunteerEventFilters.actions.add_type')
+                              }}</span>
                             </button>
                           </div>
                           <div v-else class="flex items-center gap-2 p-2">
@@ -431,7 +439,9 @@
                 <!-- Filtres avancés -->
                 <div class="form-control">
                   <label class="label">
-                    <span class="label-text font-medium">{{ t('volunteerEventFilters.labels.advancedFilters') }}</span>
+                    <span class="label-text font-medium">{{
+                      t('volunteerEventFilters.labels.advancedFilters')
+                    }}</span>
                   </label>
                   <button class="btn btn-outline w-full" @click="handleAdvancedFilters">
                     <SlidersHorizontal class="w-4 h-4 mr-2" />
@@ -441,7 +451,9 @@
 
                 <!-- Actions -->
                 <div class="flex gap-2 pt-4 border-t border-base-300">
-                  <button class="btn btn-ghost flex-1" @click="resetFilters">{{ t('volunteerEventFilters.buttons.reset') }}</button>
+                  <button class="btn btn-ghost flex-1" @click="resetFilters">
+                    {{ t('volunteerEventFilters.buttons.reset') }}
+                  </button>
                   <button class="btn btn-primary flex-1" @click="closeMobileFilters">
                     {{ t('volunteerEventFilters.buttons.apply') }}
                   </button>
@@ -520,7 +532,9 @@
         name: announcement.nameEvent,
         description: announcement.description,
         date: announcement.dateEvent,
-        location: announcement.addressAnnouncement?.city || t('volunteerEventFilters.labels.unknownLocation'),
+        location:
+          announcement.addressAnnouncement?.city ||
+          t('volunteerEventFilters.labels.unknownLocation'),
         coordinates: announcement.locationAnnouncement!.coordinates,
         id: announcement._id
       }))
@@ -620,8 +634,14 @@
   ])
 
   const statusOptions = computed(() => [
-    { value: 'ACTIVE' as AnnouncementStatus, label: t('volunteerEventFilters.statusOptions.active') },
-    { value: 'COMPLETED' as AnnouncementStatus, label: t('volunteerEventFilters.statusOptions.completed') }
+    {
+      value: 'ACTIVE' as AnnouncementStatus,
+      label: t('volunteerEventFilters.statusOptions.active')
+    },
+    {
+      value: 'COMPLETED' as AnnouncementStatus,
+      label: t('volunteerEventFilters.statusOptions.completed')
+    }
   ])
 
   const filters = ref<FilterAnnouncement>({

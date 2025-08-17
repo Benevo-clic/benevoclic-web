@@ -164,8 +164,7 @@
       countVolunteer.value = await volunteers.getNumberOfVolunteers()
     } catch (err: any) {
       error.value = err?.message || t('index.errors.fetchEvents')
-      process.env.NODE_ENV !== 'production' &&
-        console.error(t('index.errors.fetchEvents'), err)
+      process.env.NODE_ENV !== 'production' && console.error(t('index.errors.fetchEvents'), err)
     } finally {
       isLoading.value = false
     }
@@ -346,8 +345,7 @@
         const response = await announcement.filterAnnouncement(cleanFilters)
         filteredEventsCount.value = response?.meta?.total || 0
       } catch (error) {
-        process.env.NODE_ENV !== 'production' &&
-          console.error(t('index.errors.countEvents'), error)
+        process.env.NODE_ENV !== 'production' && console.error(t('index.errors.countEvents'), error)
         filteredEventsCount.value = 0
       } finally {
         isCounting.value = false
@@ -380,8 +378,7 @@
       canUseLocation.value = hasPermission('canUseLocation')
 
       if (!canUseLocation.value) {
-        process.env.NODE_ENV !== 'production' &&
-          console.log(t('index.location.cookiesNotAccepted'))
+        process.env.NODE_ENV !== 'production' && console.log(t('index.location.cookiesNotAccepted'))
       }
     } catch (err) {
       process.env.NODE_ENV !== 'production' &&
@@ -551,7 +548,11 @@
       <!-- Section Recherche Rapide -->
       <section id="search-section" class="py-12 px-4 bg-base-100">
         <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-10 slide-in-up" :class="{ visible: isVisible.search }" v-if="!startSearching">
+          <div
+            class="text-center mb-10 slide-in-up"
+            :class="{ visible: isVisible.search }"
+            v-if="!startSearching"
+          >
             <h2 class="text-3xl font-bold mb-4">{{ t('volunteerPage.search.title') }}</h2>
             <p class="text-base-content/70 max-w-2xl mx-auto">
               {{ t('volunteerPage.search.description') }}
@@ -589,10 +590,20 @@
                 <div v-if="isCounting" class="loading loading-spinner loading-sm" />
                 <span v-else class="font-medium">
                   <span class="hidden sm:inline"
-                    >{{ filteredEventsCount }} {{ filteredEventsCount !== 1 ? t('homePage.results.count.events_found_plural') : t('homePage.results.count.events_found') }}</span
+                    >{{ filteredEventsCount }}
+                    {{
+                      filteredEventsCount !== 1
+                        ? t('homePage.results.count.events_found_plural')
+                        : t('homePage.results.count.events_found')
+                    }}</span
                   >
                   <span class="sm:hidden"
-                    >{{ filteredEventsCount }} {{ filteredEventsCount !== 1 ? t('homePage.results.count.results') : t('homePage.results.count.result') }}</span
+                    >{{ filteredEventsCount }}
+                    {{
+                      filteredEventsCount !== 1
+                        ? t('homePage.results.count.results')
+                        : t('homePage.results.count.result')
+                    }}</span
                   >
                 </span>
               </div>
@@ -611,9 +622,15 @@
                 />
                 <div v-else class="loading loading-spinner loading-sm mr-2" />
                 <span class="hidden sm:inline">{{
-                  searchLoading ? t('homePage.search.button.searching') : t('homePage.search.button.find_events')
+                  searchLoading
+                    ? t('homePage.search.button.searching')
+                    : t('homePage.search.button.find_events')
                 }}</span>
-                <span class="sm:hidden">{{ searchLoading ? t('homePage.search.button.searching') : t('homePage.search.button.search') }}</span>
+                <span class="sm:hidden">{{
+                  searchLoading
+                    ? t('homePage.search.button.searching')
+                    : t('homePage.search.button.search')
+                }}</span>
               </button>
 
               <button
@@ -642,7 +659,12 @@
                 <h3 class="text-xl sm:text-2xl font-bold">{{ t('homePage.results.title') }}</h3>
                 <div class="flex flex-wrap gap-2">
                   <div class="badge badge-primary text-xs sm:text-sm">
-                    {{ searchTotalAnnouncements }} {{ searchTotalAnnouncements !== 1 ? t('homePage.results.count.results') : t('homePage.results.count.result') }}
+                    {{ searchTotalAnnouncements }}
+                    {{
+                      searchTotalAnnouncements !== 1
+                        ? t('homePage.results.count.results')
+                        : t('homePage.results.count.result')
+                    }}
                   </div>
                   <div v-if="hasActiveFilters" class="badge badge-secondary text-xs sm:text-sm">
                     <SlidersHorizontal class="w-3 h-3 mr-1" />
@@ -686,11 +708,13 @@
               role="navigation"
               :aria-label="t('index.pagination.searchNavigation')"
             >
-                              <div class="join" role="group" :aria-label="t('index.pagination.controls')">
+              <div class="join" role="group" :aria-label="t('index.pagination.controls')">
                 <button
                   class="join-item btn btn-sm sm:btn-md focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
                   :disabled="currentSearchPage === 1"
-                  :aria-label="t('index.pagination.goToPreviousPage', { page: currentSearchPage - 1 })"
+                  :aria-label="
+                    t('index.pagination.goToPreviousPage', { page: currentSearchPage - 1 })
+                  "
                   :aria-disabled="currentSearchPage === 1"
                   @click="goToSearchPage(currentSearchPage - 1)"
                   @keyup.enter="goToSearchPage(currentSearchPage - 1)"
@@ -706,9 +730,12 @@
                   :aria-label="t('index.pagination.currentPage')"
                 >
                   <span class="sr-only">{{ t('index.pagination.currentPageLabel') }} </span>
-                  <span class="hidden sm:inline"
-                    >{{ t('index.pagination.pageInfo', { current: currentSearchPage, total: searchTotalPages }) }}</span
-                  >
+                  <span class="hidden sm:inline">{{
+                    t('index.pagination.pageInfo', {
+                      current: currentSearchPage,
+                      total: searchTotalPages
+                    })
+                  }}</span>
                   <span class="sm:hidden">{{ currentSearchPage }}/{{ searchTotalPages }}</span>
                 </button>
                 <button

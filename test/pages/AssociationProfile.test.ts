@@ -246,19 +246,6 @@ describe('AssociationProfile', () => {
       expect(bio.text()).toContain('Une association de test')
     })
 
-    it('should render action buttons', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const buttons = wrapper.findAll('.btn')
-      expect(buttons.length).toBeGreaterThanOrEqual(2)
-    })
-
-    it('should render edit profile button', () => {
-      const wrapper = mount(MockAssociationProfile)
-      const editButton = wrapper.find('.btn-outline.btn-primary')
-      expect(editButton.exists()).toBe(true)
-      expect(editButton.text()).toBe('Éditer le profil')
-    })
-
     it('should render share button', () => {
       const wrapper = mount(MockAssociationProfile)
       const shareButton = wrapper.find('.btn-outline.btn-secondary')

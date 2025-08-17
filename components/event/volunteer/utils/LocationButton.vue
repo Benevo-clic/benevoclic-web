@@ -28,7 +28,9 @@
           <!-- Recherche de ville -->
           <div class="form-control">
             <label class="label">
-              <span class="label-text font-medium">{{ t('locationButton.labels.searchCity') }}</span>
+              <span class="label-text font-medium">{{
+                t('locationButton.labels.searchCity')
+              }}</span>
             </label>
             <div class="relative">
               <MapPin
@@ -73,12 +75,12 @@
           <!-- Villes sélectionnées -->
           <div v-if="selectedLocations.length" class="form-control">
             <label class="label">
-              <span class="label-text font-medium">{{ t('locationButton.labels.selectedCities') }}</span>
+              <span class="label-text font-medium">{{
+                t('locationButton.labels.selectedCities')
+              }}</span>
             </label>
             <div v-if="selectedLocations.length > 1" class="alert alert-info alert-sm mb-2">
-              <div class="text-xs">
-                <strong>Note:</strong> {{ t('locationButton.note') }}
-              </div>
+              <div class="text-xs"><strong>Note:</strong> {{ t('locationButton.note') }}</div>
             </div>
             <div class="space-y-2 selected-locations">
               <div
@@ -92,7 +94,9 @@
               >
                 <span class="font-medium text-sm">
                   {{ formatCityName(loc) }}
-                  <span v-if="isCityActive(index)" class="text-primary ml-1">{{ t('locationButton.active') }}</span>
+                  <span v-if="isCityActive(index)" class="text-primary ml-1">{{
+                    t('locationButton.active')
+                  }}</span>
                 </span>
                 <button
                   class="btn btn-ghost btn-xs"
@@ -108,7 +112,9 @@
           <!-- Position actuelle -->
           <div v-if="userCurrentLocation" class="form-control">
             <label class="label">
-              <span class="label-text font-medium">{{ t('locationButton.labels.myPosition') }}</span>
+              <span class="label-text font-medium">{{
+                t('locationButton.labels.myPosition')
+              }}</span>
             </label>
             <div class="card bg-base-200">
               <div class="card-body p-3">
@@ -122,7 +128,9 @@
                     @change="toggleCurrentLocation"
                   />
                   <div class="flex-1">
-                    <div class="font-medium text-sm">{{ t('locationButton.labels.myCurrentPosition') }}</div>
+                    <div class="font-medium text-sm">
+                      {{ t('locationButton.labels.myCurrentPosition') }}
+                    </div>
                     <div class="text-xs text-base-content/70">
                       {{ userCurrentLocation.city || t('locationButton.detectedPosition') }}
                     </div>

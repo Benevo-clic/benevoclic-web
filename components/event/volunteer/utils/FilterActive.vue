@@ -324,11 +324,7 @@
       </div>
 
       <!-- Bouton tout effacer -->
-      <button
-        class="btn btn-outline btn-xs"
-        type="button"
-        @click="resetFilters"
-      >
+      <button class="btn btn-outline btn-xs" type="button" @click="resetFilters">
         Tout effacer
       </button>
     </div>

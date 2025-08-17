@@ -41,7 +41,9 @@
 
         <div class="form-control">
           <label for="category-select" class="label">
-            <span class="label-text text-base-content">{{ t('searchPanel.filters.category.label') }}</span>
+            <span class="label-text text-base-content">{{
+              t('searchPanel.filters.category.label')
+            }}</span>
           </label>
           <select
             id="category-select"
@@ -50,8 +52,12 @@
             :aria-label="t('searchPanel.filters.category.aria_label')"
           >
             <option value="">{{ t('searchPanel.filters.category.all') }}</option>
-            <option value="environmental">{{ t('searchPanel.filters.category.environmental') }}</option>
-            <option value="humanitarian">{{ t('searchPanel.filters.category.humanitarian') }}</option>
+            <option value="environmental">
+              {{ t('searchPanel.filters.category.environmental') }}
+            </option>
+            <option value="humanitarian">
+              {{ t('searchPanel.filters.category.humanitarian') }}
+            </option>
             <option value="education">{{ t('searchPanel.filters.category.education') }}</option>
             <option value="health">{{ t('searchPanel.filters.category.health') }}</option>
             <option value="community">{{ t('searchPanel.filters.category.community') }}</option>
@@ -66,9 +72,9 @@
             id="location-select"
             v-model="filters.location"
             class="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-                          :aria-label="t('searchPanel.aria.filterByLocation')"
+            :aria-label="t('searchPanel.aria.filterByLocation')"
           >
-                          <option value="">{{ t('searchPanel.options.allLocations') }}</option>
+            <option value="">{{ t('searchPanel.options.allLocations') }}</option>
             <option value="paris">Paris</option>
             <option value="lyon">Lyon</option>
             <option value="marseille">Marseille</option>
@@ -120,11 +126,15 @@
         class="grid grid-cols-1 md:grid-cols-2 gap-4"
         aria-labelledby="custom-date-heading"
       >
-        <legend id="custom-date-heading" class="sr-only">{{ t('searchPanel.legend.customPeriod') }}</legend>
+        <legend id="custom-date-heading" class="sr-only">
+          {{ t('searchPanel.legend.customPeriod') }}
+        </legend>
 
         <div class="form-control">
           <label for="start-date" class="label">
-            <span class="label-text text-base-content">{{ t('searchPanel.labels.startDate') }}</span>
+            <span class="label-text text-base-content">{{
+              t('searchPanel.labels.startDate')
+            }}</span>
           </label>
           <input
             id="start-date"
@@ -150,7 +160,11 @@
       </fieldset>
 
       <!-- Action buttons -->
-      <div class="flex justify-end gap-2" role="group" :aria-label="t('searchPanel.aria.searchActions')">
+      <div
+        class="flex justify-end gap-2"
+        role="group"
+        :aria-label="t('searchPanel.aria.searchActions')"
+      >
         <button
           type="button"
           class="btn btn-outline focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"

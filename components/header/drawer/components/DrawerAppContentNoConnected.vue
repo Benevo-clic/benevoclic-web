@@ -88,7 +88,9 @@
         >
           <UserRound class="w-8 h-8 text-primary" />
         </div>
-        <h3 class="font-bold text-lg text-base-content mb-2">{{ t('drawerAppContentNoConnected.welcome') }}</h3>
+        <h3 class="font-bold text-lg text-base-content mb-2">
+          {{ t('drawerAppContentNoConnected.welcome') }}
+        </h3>
         <p class="text-sm text-base-content/70">
           {{ t('drawerAppContentNoConnected.connectMessage') }}
         </p>

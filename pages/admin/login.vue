@@ -56,7 +56,9 @@
 
           <button type="submit" class="btn btn-primary w-full" :disabled="loading || !isFormValid">
             <span v-if="loading" class="loading loading-spinner loading-sm" />
-            {{ loading ? t('adminLogin.form.submit.loading') : t('adminLogin.form.submit.default') }}
+            {{
+              loading ? t('adminLogin.form.submit.loading') : t('adminLogin.form.submit.default')
+            }}
           </button>
         </form>
 
@@ -69,13 +71,17 @@
         <div class="mt-6 text-center">
           <p class="text-base-content/70 text-sm">
             {{ t('adminLogin.links.no_account') }}
-            <button class="link link-primary" @click="goToRegister">{{ t('adminLogin.links.create_account') }}</button>
+            <button class="link link-primary" @click="goToRegister">
+              {{ t('adminLogin.links.create_account') }}
+            </button>
           </p>
         </div>
 
         <!-- Lien vers l'accueil -->
         <div class="mt-4 text-center">
-          <button class="link link-neutral text-sm" @click="goToHome">{{ t('adminLogin.links.back_home') }}</button>
+          <button class="link link-neutral text-sm" @click="goToHome">
+            {{ t('adminLogin.links.back_home') }}
+          </button>
         </div>
       </div>
     </div>

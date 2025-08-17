@@ -556,14 +556,17 @@
       role="main"
       aria-label="Page d'accueil Bénévole"
     >
-
       <Hero :start-searching="startSearching" />
       <!-- Section Hero -->
 
       <!-- Section Recherche Rapide -->
       <section id="search-section" class="py-12 px-4 bg-base-100">
         <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-10 slide-in-up" :class="{ visible: isVisible.search }" v-if="!startSearching">
+          <div
+            class="text-center mb-10 slide-in-up"
+            :class="{ visible: isVisible.search }"
+            v-if="!startSearching"
+          >
             <h2 class="text-3xl font-bold mb-4">{{ t('volunteerPage.search.title') }}</h2>
             <p class="text-base-content/70 max-w-2xl mx-auto">
               {{ t('volunteerPage.search.description') }}
@@ -601,10 +604,20 @@
                 <div v-if="isCounting" class="loading loading-spinner loading-sm" />
                 <span v-else class="font-medium">
                   <span class="hidden sm:inline"
-                    >{{ filteredEventsCount }} {{ filteredEventsCount !== 1 ? t('volunteerPage.results.count.events_found_plural') : t('volunteerPage.results.count.events_found') }}</span
+                    >{{ filteredEventsCount }}
+                    {{
+                      filteredEventsCount !== 1
+                        ? t('volunteerPage.results.count.events_found_plural')
+                        : t('volunteerPage.results.count.events_found')
+                    }}</span
                   >
                   <span class="sm:hidden"
-                    >{{ filteredEventsCount }} {{ filteredEventsCount !== 1 ? t('volunteerPage.results.count.results') : t('volunteerPage.results.count.result') }}</span
+                    >{{ filteredEventsCount }}
+                    {{
+                      filteredEventsCount !== 1
+                        ? t('volunteerPage.results.count.results')
+                        : t('volunteerPage.results.count.result')
+                    }}</span
                   >
                 </span>
               </div>
@@ -623,9 +636,15 @@
                 />
                 <div v-else class="loading loading-spinner loading-sm mr-2" />
                 <span class="hidden sm:inline">{{
-                  searchLoading ? t('volunteerPage.search.button.searching') : t('volunteerPage.search.button.find_events')
+                  searchLoading
+                    ? t('volunteerPage.search.button.searching')
+                    : t('volunteerPage.search.button.find_events')
                 }}</span>
-                <span class="sm:hidden">{{ searchLoading ? t('volunteerPage.search.button.searching') : t('volunteerPage.search.button.search') }}</span>
+                <span class="sm:hidden">{{
+                  searchLoading
+                    ? t('volunteerPage.search.button.searching')
+                    : t('volunteerPage.search.button.search')
+                }}</span>
               </button>
 
               <button
@@ -651,7 +670,9 @@
               class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6"
             >
               <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
-                <h3 class="text-xl sm:text-2xl font-bold">{{ t('volunteerPage.results.title') }}</h3>
+                <h3 class="text-xl sm:text-2xl font-bold">
+                  {{ t('volunteerPage.results.title') }}
+                </h3>
                 <div class="flex flex-wrap gap-2">
                   <div class="badge badge-primary text-xs sm:text-sm">
                     {{ searchTotalAnnouncements }} résultat{{

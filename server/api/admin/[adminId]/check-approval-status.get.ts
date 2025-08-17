@@ -26,16 +26,19 @@ export default defineEventHandler(async event => {
       })
     }
 
-    const response = await RetryManager.get(`${apiBaseUrl}/admin/${adminId}/check-approval-status`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      retry: {
-        timeout: 10000,
-        maxRetries: 3
+    const response = await RetryManager.get(
+      `${apiBaseUrl}/admin/${adminId}/check-approval-status`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        retry: {
+          timeout: 10000,
+          maxRetries: 3
+        }
       }
-    })
-    
+    )
+
     return response.data
   } catch (error: any) {
     if (error.statusCode) {

@@ -57,28 +57,32 @@
           class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center justify-center h-full"
         >
           <span class="text-2xl font-bold text-primary">{{ nbParticipants }}</span>
-                      <span class="text-xs text-base-content/70">{{ t('profile.stats.eventsParticipated') }}</span>
+          <span class="text-xs text-base-content/70">{{
+            t('profile.stats.eventsParticipated')
+          }}</span>
         </div>
 
         <div
           class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center justify-center h-full"
         >
           <span class="text-2xl font-bold text-primary">{{ nbVolunteerAnnouncements }}</span>
-                      <span class="text-xs text-base-content/70">{{ t('profile.stats.volunteerOpportunities') }}</span>
+          <span class="text-xs text-base-content/70">{{
+            t('profile.stats.volunteerOpportunities')
+          }}</span>
         </div>
 
         <div
           class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center justify-center h-full"
         >
           <span class="text-2xl font-bold text-primary">{{ user?.city || '-' }}</span>
-                      <span class="text-xs text-base-content/70">{{ t('profile.stats.city') }}</span>
+          <span class="text-xs text-base-content/70">{{ t('profile.stats.city') }}</span>
         </div>
 
         <div
           class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center justify-center h-full"
         >
           <span class="text-2xl font-bold text-primary">{{ user?.postalCode || '-' }}</span>
-                      <span class="text-xs text-base-content/70">{{ t('profile.stats.postalCode') }}</span>
+          <span class="text-xs text-base-content/70">{{ t('profile.stats.postalCode') }}</span>
         </div>
       </div>
 
@@ -114,7 +118,9 @@
 
       <!-- Section supplémentaire : réseaux sociaux, site web, etc. -->
       <div class="bg-base-100 rounded-xl shadow p-6 flex flex-col items-center">
-        <h3 class="font-semibold mb-2 text-base-content">{{ t('profile.sections.socialNetworks') }}</h3>
+        <h3 class="font-semibold mb-2 text-base-content">
+          {{ t('profile.sections.socialNetworks') }}
+        </h3>
         <div class="flex gap-4">
           <span class="text-base-content/60">{{ t('profile.socialNetworks.noWebsite') }}</span>
         </div>

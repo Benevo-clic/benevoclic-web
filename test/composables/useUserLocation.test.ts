@@ -486,12 +486,17 @@ describe('useUserLocation', () => {
 
       fetch.mockRejectedValueOnce(new Error('Geocoding error'))
 
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       const result = await location.getUserLocation()
 
       expect(result).toHaveProperty('latitude', 48.8566)
       expect(result).toHaveProperty('longitude', 2.3522)
       expect(result).not.toHaveProperty('city')
       expect(result).not.toHaveProperty('address')
+
+      consoleSpy.mockRestore()
     })
   })
 
@@ -537,9 +542,14 @@ describe('useUserLocation', () => {
         success(mockPosition)
       })
 
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       const result = await location.requestLocationPermission()
 
       expect(result).toBe(true)
+
+      consoleSpy.mockRestore()
     })
 
     it('should return false when permission not granted', async () => {
@@ -588,16 +598,26 @@ describe('useUserLocation', () => {
         timestamp: Date.now()
       }
 
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       expect(() => location.saveLocationToStorage(mockLocation)).not.toThrow()
+
+      consoleSpy.mockRestore()
     })
 
     it('should handle JSON parse errors', () => {
       const location = useUserLocation()
       localStorageMock.getItem.mockReturnValue('invalid json')
 
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       const result = location.loadLocationFromStorage()
 
       expect(result).toBe(null)
+
+      consoleSpy.mockRestore()
     })
   })
 
@@ -618,12 +638,17 @@ describe('useUserLocation', () => {
         success(mockPosition)
       })
 
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       const result = await location.getUserLocation()
 
       expect(result).toHaveProperty('latitude', 48.8566)
       expect(result).toHaveProperty('longitude', 2.3522)
       expect(location.userLocation.value).toEqual(result)
       expect(location.isLoading.value).toBe(false)
+
+      consoleSpy.mockRestore()
     })
   })
 })

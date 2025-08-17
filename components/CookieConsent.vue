@@ -17,8 +17,12 @@
           </p>
         </div>
         <div class="flex flex-wrap gap-2">
-          <button class="btn btn-outline btn-sm" @click="openSettings">{{ t('cookieConsent.banner.customize') }}</button>
-          <button class="btn btn-primary btn-sm" @click="acceptAll">{{ t('cookieConsent.banner.accept_all') }}</button>
+          <button class="btn btn-outline btn-sm" @click="openSettings">
+            {{ t('cookieConsent.banner.customize') }}
+          </button>
+          <button class="btn btn-primary btn-sm" @click="acceptAll">
+            {{ t('cookieConsent.banner.accept_all') }}
+          </button>
           <button class="btn btn-ghost btn-sm" @click="rejectNonEssential">
             {{ t('cookieConsent.banner.reject_non_essential') }}
           </button>
@@ -44,7 +48,9 @@
               aria-label="Champ de saisie"
             />
             <div>
-              <span class="label-text font-semibold">{{ t('cookieConsent.settings.essential.title') }}</span>
+              <span class="label-text font-semibold">{{
+                t('cookieConsent.settings.essential.title')
+              }}</span>
               <p class="text-xs text-base-content/70 mt-1">
                 {{ t('cookieConsent.settings.essential.description') }}
                 <span class="text-warning font-medium">
@@ -65,7 +71,9 @@
               aria-label="Champ de saisie"
             />
             <div>
-              <span class="label-text font-semibold">{{ t('cookieConsent.settings.personalization.title') }}</span>
+              <span class="label-text font-semibold">{{
+                t('cookieConsent.settings.personalization.title')
+              }}</span>
               <p class="text-xs text-base-content/70 mt-1">
                 {{ t('cookieConsent.settings.personalization.description') }}
                 <span class="text-info font-medium">
@@ -86,7 +94,9 @@
               aria-label="Champ de saisie"
             />
             <div>
-              <span class="label-text font-semibold">{{ t('cookieConsent.settings.analytics.title') }}</span>
+              <span class="label-text font-semibold">{{
+                t('cookieConsent.settings.analytics.title')
+              }}</span>
               <p class="text-xs text-base-content/70 mt-1">
                 {{ t('cookieConsent.settings.analytics.description') }}
               </p>
@@ -104,7 +114,9 @@
               aria-label="Champ de saisie"
             />
             <div>
-              <span class="label-text font-semibold">{{ t('cookieConsent.settings.third_party.title') }}</span>
+              <span class="label-text font-semibold">{{
+                t('cookieConsent.settings.third_party.title')
+              }}</span>
               <p class="text-xs text-base-content/70 mt-1">
                 {{ t('cookieConsent.settings.third_party.description') }}
               </p>
@@ -114,8 +126,12 @@
       </div>
 
       <div class="modal-action">
-        <button class="btn btn-ghost" @click="closeSettings">{{ t('cookieConsent.settings.actions.cancel') }}</button>
-        <button class="btn btn-primary" @click="saveSettings">{{ t('cookieConsent.settings.actions.save') }}</button>
+        <button class="btn btn-ghost" @click="closeSettings">
+          {{ t('cookieConsent.settings.actions.cancel') }}
+        </button>
+        <button class="btn btn-primary" @click="saveSettings">
+          {{ t('cookieConsent.settings.actions.save') }}
+        </button>
       </div>
     </div>
     <form method="dialog" class="modal-backdrop">
@@ -126,7 +142,9 @@
   <!-- Modal d'alerte pour les permissions manquantes -->
   <dialog ref="permissionModal" class="modal">
     <div class="modal-box max-w-lg">
-      <h3 class="font-bold text-lg mb-4 text-warning">{{ t('cookieConsent.permissions.title') }}</h3>
+      <h3 class="font-bold text-lg mb-4 text-warning">
+        {{ t('cookieConsent.permissions.title') }}
+      </h3>
       <div class="space-y-4">
         <div v-if="!permissions.canAuthenticate" class="alert alert-warning">
           <svg
@@ -171,8 +189,12 @@
         </div>
       </div>
       <div class="modal-action">
-        <button class="btn btn-ghost" @click="closePermissionModal">{{ t('cookieConsent.permissions.actions.close') }}</button>
-        <button class="btn btn-primary" @click="openSettings">{{ t('cookieConsent.permissions.actions.configure') }}</button>
+        <button class="btn btn-ghost" @click="closePermissionModal">
+          {{ t('cookieConsent.permissions.actions.close') }}
+        </button>
+        <button class="btn btn-primary" @click="openSettings">
+          {{ t('cookieConsent.permissions.actions.configure') }}
+        </button>
       </div>
     </div>
     <form method="dialog" class="modal-backdrop">

@@ -150,5 +150,3 @@ jobs:
           echo "- **Complet** - Couvre les vulnérabilités principales" >> $GITHUB_STEP_SUMMARY
           echo "- **Intégré** - Workflows GitHub Actions" >> $GITHUB_STEP_SUMMARY
           echo "- **Personnalisable** - Scripts adaptés au projet" >> $GITHUB_STEP_SUMMARY
-
-

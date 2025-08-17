@@ -11,7 +11,11 @@
         ✕
       </button>
 
-      <h2 class="text-xl font-bold mb-4">{{ form._id ? t('announcementEditForm.title.edit') : t('announcementEditForm.title.create') }}</h2>
+      <h2 class="text-xl font-bold mb-4">
+        {{
+          form._id ? t('announcementEditForm.title.edit') : t('announcementEditForm.title.create')
+        }}
+      </h2>
 
       <form @submit.prevent="save">
         <!-- --- Image de couverture (inchangé) --- -->
@@ -42,8 +46,12 @@
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <p class="mt-2 text-sm text-gray-500">{{ t('announcementEditForm.cover_photo.click_to_add') }}</p>
-            <p class="text-xs text-gray-400">{{ t('announcementEditForm.cover_photo.file_types') }}</p>
+            <p class="mt-2 text-sm text-gray-500">
+              {{ t('announcementEditForm.cover_photo.click_to_add') }}
+            </p>
+            <p class="text-xs text-gray-400">
+              {{ t('announcementEditForm.cover_photo.file_types') }}
+            </p>
           </div>
           <img
             v-else
@@ -208,7 +216,9 @@
 
         <!-- --- Statut --- -->
         <div class="form-control w-full">
-          <label class="label"><span class="label-text">{{ t('announcementEditForm.fields.status') }}</span></label>
+          <label class="label"
+            ><span class="label-text">{{ t('announcementEditForm.fields.status') }}</span></label
+          >
           <select v-model="form.status" class="select select-bordered w-full">
             <option v-for="status in statusOptions" :key="status.value" :value="status.value">
               {{ status.label }}

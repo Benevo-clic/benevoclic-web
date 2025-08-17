@@ -63,7 +63,11 @@
           :class="participant.isPresent ? 'btn-success' : 'btn-primary'"
           @click="openPresenceModal"
         >
-          {{ participant.isPresent ? t('participantOrVolunteerCard.actions.present') : t('participantOrVolunteerCard.actions.mark_present') }}
+          {{
+            participant.isPresent
+              ? t('participantOrVolunteerCard.actions.present')
+              : t('participantOrVolunteerCard.actions.mark_present')
+          }}
         </button>
         <button
           class="btn btn-sm btn-outline btn-error flex-1"

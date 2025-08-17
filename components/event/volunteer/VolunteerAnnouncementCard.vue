@@ -3,7 +3,12 @@
     class="group card bg-base-100 shadow-lg border border-base-300 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer overflow-hidden relative text-base focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
     tabindex="0"
     role="button"
-    :aria-label="t('volunteerAnnouncementCard.aria.event_details', { eventName: announcement.nameEvent, associationName: announcement.associationName })"
+    :aria-label="
+      t('volunteerAnnouncementCard.aria.event_details', {
+        eventName: announcement.nameEvent,
+        associationName: announcement.associationName
+      })
+    "
     :aria-describedby="`event-description-${announcement._id}`"
     @click="goToDetails"
     @keyup.enter="goToDetails"
@@ -15,7 +20,13 @@
         <img
           v-if="announcement.announcementImage"
           :src="coverImageUrl"
-          :alt="announcement.announcementImage ? t('volunteerAnnouncementCard.aria.event_image', { eventName: announcement.nameEvent }) : t('volunteerAnnouncementCard.aria.no_event_image')"
+          :alt="
+            announcement.announcementImage
+              ? t('volunteerAnnouncementCard.aria.event_image', {
+                  eventName: announcement.nameEvent
+                })
+              : t('volunteerAnnouncementCard.aria.no_event_image')
+          "
           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           width="400"
           height="144"
@@ -54,7 +65,11 @@
       <button
         class="absolute top-2 right-2 z-10 btn btn-circle btn-sm bg-base-100/80 hover:bg-error/20 transition focus-visible:ring-2 focus-visible:ring-error ring-offset-2"
         :aria-pressed="favorite ? 'true' : 'false'"
-        :aria-label="favorite ? t('volunteerAnnouncementCard.aria.remove_favorites') : t('volunteerAnnouncementCard.aria.add_favorites')"
+        :aria-label="
+          favorite
+            ? t('volunteerAnnouncementCard.aria.remove_favorites')
+            : t('volunteerAnnouncementCard.aria.add_favorites')
+        "
         @click.stop="toggleFavorite"
         @keyup.enter="toggleFavorite"
         @keyup.space.prevent="toggleFavorite"
@@ -76,7 +91,13 @@
             <img
               v-if="announcement.associationLogo"
               :src="associationImageUrl"
-              :alt="t('volunteerAnnouncementCard.aria.association_logo', { associationName: announcement.associationName || t('volunteerAnnouncementCard.content.association') })"
+              :alt="
+                t('volunteerAnnouncementCard.aria.association_logo', {
+                  associationName:
+                    announcement.associationName ||
+                    t('volunteerAnnouncementCard.content.association')
+                })
+              "
               width="48"
               height="48"
               loading="lazy"
@@ -109,7 +130,9 @@
           <span class="font-medium text-sm">{{
             announcement.associationName || t('volunteerAnnouncementCard.content.association')
           }}</span>
-          <span class="text-xs text-base-content/60">{{ t('volunteerAnnouncementCard.content.organizer') }}</span>
+          <span class="text-xs text-base-content/60">{{
+            t('volunteerAnnouncementCard.content.organizer')
+          }}</span>
         </div>
       </div>
 
@@ -130,7 +153,10 @@
 
       <!-- Date & Lieu -->
       <div class="flex items-center flex-wrap gap-4 mb-4 text-sm">
-        <div class="flex items-center gap-2" :aria-label="t('volunteerAnnouncementCard.aria.event_date_time')">
+        <div
+          class="flex items-center gap-2"
+          :aria-label="t('volunteerAnnouncementCard.aria.event_date_time')"
+        >
           <Calendar class="h-4 w-4 text-primary" aria-hidden="true" />
           <time :datetime="announcement.dateEvent" class="font-medium">
             {{
@@ -154,16 +180,30 @@
       </div>
 
       <!-- Participants & Bénévoles -->
-      <div class="flex gap-6 mb-4 text-sm" role="group" :aria-label="t('volunteerAnnouncementCard.aria.participation_stats')">
-        <div class="flex items-center gap-2" :aria-label="t('volunteerAnnouncementCard.aria.participants_count')">
+      <div
+        class="flex gap-6 mb-4 text-sm"
+        role="group"
+        :aria-label="t('volunteerAnnouncementCard.aria.participation_stats')"
+      >
+        <div
+          class="flex items-center gap-2"
+          :aria-label="t('volunteerAnnouncementCard.aria.participants_count')"
+        >
           <Users class="h-4 w-4 text-primary" aria-hidden="true" />
           <span class="font-medium">{{ ParticipantAvailable(announcement as Announcement) }}</span>
-          <span class="text-base-content/60">{{ t('volunteerAnnouncementCard.content.participants') }}</span>
+          <span class="text-base-content/60">{{
+            t('volunteerAnnouncementCard.content.participants')
+          }}</span>
         </div>
-        <div class="flex items-center gap-2" :aria-label="t('volunteerAnnouncementCard.aria.volunteers_count')">
+        <div
+          class="flex items-center gap-2"
+          :aria-label="t('volunteerAnnouncementCard.aria.volunteers_count')"
+        >
           <HeartHandshake class="h-4 w-4 text-secondary" aria-hidden="true" />
           <span class="font-medium"> {{ volunteerAvailable(announcement as Announcement) }} </span>
-          <span class="text-base-content/60">{{ t('volunteerAnnouncementCard.content.volunteers') }}</span>
+          <span class="text-base-content/60">{{
+            t('volunteerAnnouncementCard.content.volunteers')
+          }}</span>
         </div>
       </div>
 

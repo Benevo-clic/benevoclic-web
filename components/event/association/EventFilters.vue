@@ -336,7 +336,9 @@
                           @click="openCustomTagInput"
                         >
                           <Plus class="w-4 h-4" />
-                          <span class="text-sm font-medium">{{ t('eventFilters.tags.add_tag') }}</span>
+                          <span class="text-sm font-medium">{{
+                            t('eventFilters.tags.add_tag')
+                          }}</span>
                         </button>
                       </div>
                       <div v-else class="flex items-center gap-2 p-2">
@@ -375,7 +377,9 @@
             <!-- Filtres avancés -->
             <div class="form-control">
               <label class="label">
-                <span class="label-text font-medium">{{ t('eventFilters.advanced_filters.label') }}</span>
+                <span class="label-text font-medium">{{
+                  t('eventFilters.advanced_filters.label')
+                }}</span>
               </label>
               <button class="btn btn-outline w-full" @click="handleAdvancedFilters">
                 <SlidersHorizontal class="w-4 h-4 mr-2" />

@@ -10,7 +10,11 @@
     </div>
     <div v-else class="grid grid-cols-1 md:grid-cols-2 xl1285:grid-cols-3 gap-4">
       <div class="col-span-full">
-        <h2 class="text-lg font-semibold mb-0">{{ t('volunteerAnnouncementList.announcements_count', { count: props.totalAnnouncements }) }}</h2>
+        <h2 class="text-lg font-semibold mb-0">
+          {{
+            t('volunteerAnnouncementList.announcements_count', { count: props.totalAnnouncements })
+          }}
+        </h2>
       </div>
       <VolunteerAnnouncementCard
         v-for="announcement in props.announcements"

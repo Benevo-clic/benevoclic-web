@@ -6,7 +6,11 @@
       class="fixed inset-0 bg-base-200 bg-opacity-90 z-[1000] flex items-center justify-center backdrop-blur-sm"
     >
       <div class="flex flex-col items-center space-y-4">
-        <img :src="'/logo.png'" :alt="t('events.requests.loading')" class="w-20 h-20 animate-spin" />
+        <img
+          :src="'/logo.png'"
+          :alt="t('events.requests.loading')"
+          class="w-20 h-20 animate-spin"
+        />
         <div class="text-base-content opacity-70">{{ t('events.requests.loading') }}</div>
       </div>
     </div>
@@ -15,7 +19,9 @@
     <div class="container mx-auto px-4 py-8 max-w-6xl">
       <!-- Header section -->
       <div class="mb-8">
-        <h1 class="text-3xl md:text-4xl font-bold text-base-content mb-2">{{ t('events.requests.title') }}</h1>
+        <h1 class="text-3xl md:text-4xl font-bold text-base-content mb-2">
+          {{ t('events.requests.title') }}
+        </h1>
         <p class="text-base-content opacity-70">
           {{ t('events.requests.subtitle') }}
         </p>
@@ -82,7 +88,12 @@
             <div
               class="badge badge-primary badge-md font-semibold px-4 py-2 rounded-full whitespace-nowrap"
             >
-              {{ eventRequests.length }} {{ eventRequests.length > 1 ? t('events.requests.count.requests') : t('events.requests.count.request') }}
+              {{ eventRequests.length }}
+              {{
+                eventRequests.length > 1
+                  ? t('events.requests.count.requests')
+                  : t('events.requests.count.request')
+              }}
             </div>
           </div>
 
@@ -120,7 +131,9 @@
                 />
               </svg>
             </div>
-            <h3 class="text-lg font-medium text-base-content mb-2">{{ t('events.requests.empty.volunteer.title') }}</h3>
+            <h3 class="text-lg font-medium text-base-content mb-2">
+              {{ t('events.requests.empty.volunteer.title') }}
+            </h3>
             <p class="text-base-content opacity-70">
               {{ t('events.requests.empty.volunteer.description') }}
             </p>
@@ -136,7 +149,12 @@
             <div
               class="badge badge-primary badge-md font-semibold px-4 py-2 rounded-full whitespace-nowrap"
             >
-              {{ associationRequests.length }} {{ associationRequests.length > 1 ? t('events.requests.count.requests') : t('events.requests.count.request') }}
+              {{ associationRequests.length }}
+              {{
+                associationRequests.length > 1
+                  ? t('events.requests.count.requests')
+                  : t('events.requests.count.request')
+              }}
             </div>
           </div>
 
@@ -173,8 +191,12 @@
                 />
               </svg>
             </div>
-            <h3 class="text-lg font-medium text-base-content mb-2">{{ t('events.requests.empty.association.title') }}</h3>
-            <p class="text-base-content opacity-70">{{ t('events.requests.empty.association.description') }}</p>
+            <h3 class="text-lg font-medium text-base-content mb-2">
+              {{ t('events.requests.empty.association.title') }}
+            </h3>
+            <p class="text-base-content opacity-70">
+              {{ t('events.requests.empty.association.description') }}
+            </p>
           </div>
         </div>
       </div>

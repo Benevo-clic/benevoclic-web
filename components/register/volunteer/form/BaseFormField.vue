@@ -42,7 +42,12 @@
     <label :for="inputId" class="label">
       <span class="label-text">
         {{ props.label }}
-        <span v-if="required" class="text-error" :aria-label="t('baseFormField.aria.required_field')">*</span>
+        <span
+          v-if="required"
+          class="text-error"
+          :aria-label="t('baseFormField.aria.required_field')"
+          >*</span
+        >
       </span>
     </label>
     <input

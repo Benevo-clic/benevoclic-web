@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 import DateRangePicker from '~/components/dashboard/DateRangePicker.vue'
 
 // Mock global pour useI18n
-(global as any).useI18n = vi.fn(() => ({
+;(global as any).useI18n = vi.fn(() => ({
   t: vi.fn((key: string) => {
     const translations: Record<string, string> = {
       'dateRangePicker.label': 'Sélectionner une période',
@@ -65,7 +65,7 @@ describe('DateRangePicker', () => {
 
     const fromDesc = wrapper.find('#daterangepicker-from-desc')
     const toDesc = wrapper.find('#daterangepicker-to-desc')
-    
+
     expect(fromDesc.text()).toBe('Sélectionnez la date de début')
     expect(toDesc.text()).toBe('Sélectionnez la date de fin')
   })

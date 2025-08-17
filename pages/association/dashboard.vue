@@ -216,8 +216,12 @@
 
             <div class="flex items-center gap-2">
               <label class="label cursor-pointer gap-2">
-                <span class="label-text text-xs sm:text-sm hidden sm:inline">{{ t('associationDashboard.actions.auto_refresh.label') }}</span>
-                <span class="label-text text-xs sm:inline sm:hidden">{{ t('associationDashboard.actions.auto_refresh.mobile') }}</span>
+                <span class="label-text text-xs sm:text-sm hidden sm:inline">{{
+                  t('associationDashboard.actions.auto_refresh.label')
+                }}</span>
+                <span class="label-text text-xs sm:inline sm:hidden">{{
+                  t('associationDashboard.actions.auto_refresh.mobile')
+                }}</span>
                 <input
                   type="checkbox"
                   :checked="isAutoRefreshActive"
@@ -274,7 +278,9 @@
           />
         </svg>
         <div class="min-w-0 flex-1">
-          <h3 class="font-bold text-sm sm:text-base">{{ t('associationDashboard.error.title') }}</h3>
+          <h3 class="font-bold text-sm sm:text-base">
+            {{ t('associationDashboard.error.title') }}
+          </h3>
           <div class="text-xs sm:text-sm mt-1 break-words">{{ error }}</div>
         </div>
       </div>

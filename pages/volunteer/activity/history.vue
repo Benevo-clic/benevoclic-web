@@ -44,7 +44,9 @@
             >
               <option value="all">{{ t('activity.history.filters.all') }}</option>
               <option value="mission">{{ t('activity.history.filters.mission') }}</option>
-              <option value="participation">{{ t('activity.history.filters.participation') }}</option>
+              <option value="participation">
+                {{ t('activity.history.filters.participation') }}
+              </option>
             </select>
           </div>
         </div>
@@ -128,7 +130,9 @@
               >
                 <Clock class="w-12 h-12 text-base-content opacity-40" />
               </div>
-              <h3 class="text-2xl font-bold text-base-content mb-3">{{ t('activity.history.empty.title') }}</h3>
+              <h3 class="text-2xl font-bold text-base-content mb-3">
+                {{ t('activity.history.empty.title') }}
+              </h3>
               <p class="text-base-content opacity-70 mb-8 leading-relaxed">
                 {{ t('activity.history.empty.description') }}
               </p>
@@ -136,7 +140,9 @@
           </div>
           <!-- Load more button -->
           <div v-if="displayCount < filteredItems.length" class="flex justify-center mt-8">
-            <button class="btn btn-outline" @click="loadMore">{{ t('activity.history.loadMore') }}</button>
+            <button class="btn btn-outline" @click="loadMore">
+              {{ t('activity.history.loadMore') }}
+            </button>
           </div>
         </div>
       </div>

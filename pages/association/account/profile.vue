@@ -43,16 +43,18 @@
         <NuxtLink to="/association/events/association/manage">
           <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
             <span class="text-2xl font-bold text-primary">{{ nbAnnouncements }}</span>
-            <span class="text-xs text-base-content/70">{{ t('profile.stats.announcementsCreated') }}</span>
+            <span class="text-xs text-base-content/70">{{
+              t('profile.stats.announcementsCreated')
+            }}</span>
           </div>
         </NuxtLink>
         <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
           <span class="text-2xl font-bold text-primary">{{ creationDate }}</span>
-                      <span class="text-xs text-base-content/70">{{ t('profile.stats.createdOn') }}</span>
+          <span class="text-xs text-base-content/70">{{ t('profile.stats.createdOn') }}</span>
         </div>
         <div class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center">
           <span class="text-2xl font-bold text-primary">{{ user?.city || '-' }}</span>
-                      <span class="text-xs text-base-content/70">{{ t('profile.stats.city') }}</span>
+          <span class="text-xs text-base-content/70">{{ t('profile.stats.city') }}</span>
         </div>
       </div>
 
@@ -93,7 +95,9 @@
 
       <!-- Section supplémentaire : réseaux sociaux, site web, etc. -->
       <div class="bg-base-100 rounded-xl shadow p-6 flex flex-col items-center">
-        <h3 class="font-semibold mb-2 text-base-content">{{ t('profile.sections.socialNetworks') }}</h3>
+        <h3 class="font-semibold mb-2 text-base-content">
+          {{ t('profile.sections.socialNetworks') }}
+        </h3>
         <div class="flex gap-4">
           <span class="text-base-content/60">{{ t('profile.socialNetworks.noWebsite') }}</span>
           <!-- Ajoute ici d'autres liens réseaux sociaux si tu les as -->
@@ -119,7 +123,6 @@
   import { useNavigation } from '~/composables/useNavigation'
 
   const { t } = useI18n()
-
 
   definePageMeta({
     middleware: ['auth'],

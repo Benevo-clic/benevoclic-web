@@ -198,12 +198,17 @@ describe('useUser', () => {
       // Reset mock to avoid automatic initialization
       mockOnMounted.mockImplementation(() => {})
 
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       const user = useUser()
 
       // Vérifier que l'erreur est gérée après l'initialisation
       await user.initializeUser()
       // The error should be set in the initializationError ref
       expect(user.error.value).toBe('Initialization failed')
+
+      consoleSpy.mockRestore()
     })
   })
 
@@ -399,9 +404,14 @@ describe('useUser', () => {
       const error = new Error('Refresh failed')
       mockUserStore.fetchUser.mockRejectedValue(error)
 
+      // Supprimer la console.error pour éviter le bruit dans les tests
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
       const user = useUser()
 
       await expect(user.refreshUser()).rejects.toThrow('Refresh failed')
+
+      consoleSpy.mockRestore()
     })
 
     it('should call initializeUser method', async () => {

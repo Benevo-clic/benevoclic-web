@@ -260,16 +260,24 @@
         class="btn btn-secondary disabled:cursor-not-allowed"
         @click="prev"
       >
-        <span class="text-secondary-content font-bold">{{ t('registerInfoAssociationForm.buttons.previous') }}</span>
+        <span class="text-secondary-content font-bold">{{
+          t('registerInfoAssociationForm.buttons.previous')
+        }}</span>
       </button>
 
       <button :disabled="loading" class="btn btn-primary" @click="next">
         <span v-if="loading" class="loading loading-spinner mr-2" />
-        {{ currentStep < steps.length - 1 ? t('registerInfoAssociationForm.buttons.next') : t('registerInfoAssociationForm.buttons.submit') }}
+        {{
+          currentStep < steps.length - 1
+            ? t('registerInfoAssociationForm.buttons.next')
+            : t('registerInfoAssociationForm.buttons.submit')
+        }}
       </button>
     </div>
 
-    <p v-if="isError" class="text-red-600 mt-4">{{ t('registerInfoAssociationForm.errorMessage') }}</p>
+    <p v-if="isError" class="text-red-600 mt-4">
+      {{ t('registerInfoAssociationForm.errorMessage') }}
+    </p>
     <ErrorPopup
       :show-error-modal="showErrorModal"
       :error-type="errorType"

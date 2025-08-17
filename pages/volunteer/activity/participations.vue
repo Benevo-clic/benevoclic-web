@@ -41,7 +41,9 @@
             >
               <option value="all">{{ t('activity.participations.filters.all') }}</option>
               <option value="active">{{ t('activity.participations.filters.active') }}</option>
-              <option value="completed">{{ t('activity.participations.filters.completed') }}</option>
+              <option value="completed">
+                {{ t('activity.participations.filters.completed') }}
+              </option>
             </select>
           </div>
         </div>
@@ -92,7 +94,9 @@
                     <p class="text-sm font-medium text-base-content">
                       {{ participation.dateEvent }}
                     </p>
-                    <p class="text-xs text-base-content opacity-60">{{ t('activity.eventDate') }}</p>
+                    <p class="text-xs text-base-content opacity-60">
+                      {{ t('activity.eventDate') }}
+                    </p>
                   </div>
                 </div>
                 <div class="flex items-center gap-3">
@@ -148,7 +152,9 @@
             >
               <ClipboardList class="w-12 h-12 text-base-content opacity-40" />
             </div>
-            <h3 class="text-2xl font-bold text-base-content mb-3">{{ t('activity.participations.empty.title') }}</h3>
+            <h3 class="text-2xl font-bold text-base-content mb-3">
+              {{ t('activity.participations.empty.title') }}
+            </h3>
             <p class="text-base-content opacity-70 mb-8 leading-relaxed">
               {{ t('activity.participations.empty.description') }}
             </p>

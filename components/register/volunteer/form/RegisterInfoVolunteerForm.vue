@@ -114,7 +114,8 @@
     {
       component: BirthDateForm,
       field: 'birthDate',
-      validate: (value: string) => (!value ? t('registerInfoVolunteerForm.validation.birthDate.required') : '')
+      validate: (value: string) =>
+        !value ? t('registerInfoVolunteerForm.validation.birthDate.required') : ''
     },
     {
       component: CityForm,
@@ -278,16 +279,24 @@
         class="btn btn-secondary disabled:cursor-not-allowed"
         @click="prev"
       >
-        <span class="text-secondary-content font-bold">{{ t('registerInfoVolunteerForm.actions.previous') }}</span>
+        <span class="text-secondary-content font-bold">{{
+          t('registerInfoVolunteerForm.actions.previous')
+        }}</span>
       </button>
 
       <button :disabled="loading" class="btn btn-primary" @click="next">
         <span v-if="loading" class="loading loading-spinner mr-2" />
-        {{ currentStep < steps.length - 1 ? t('registerInfoVolunteerForm.actions.next') : t('registerInfoVolunteerForm.actions.submit') }}
+        {{
+          currentStep < steps.length - 1
+            ? t('registerInfoVolunteerForm.actions.next')
+            : t('registerInfoVolunteerForm.actions.submit')
+        }}
       </button>
     </div>
 
-    <p v-if="isError" class="text-red-600 mt-4">{{ t('registerInfoVolunteerForm.error.general') }}</p>
+    <p v-if="isError" class="text-red-600 mt-4">
+      {{ t('registerInfoVolunteerForm.error.general') }}
+    </p>
     <ErrorPopup
       :show-error-modal="showErrorModal"
       :error-type="errorType"

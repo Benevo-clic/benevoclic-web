@@ -141,7 +141,8 @@
   <div class="form-control w-full search-container">
     <label for="address-input" class="label">
       <span class="label-text"
-        >{{ t('common.address_label') }} <span class="text-error" :aria-label="t('common.required_field')">*</span></span
+        >{{ t('common.address_label') }}
+        <span class="text-error" :aria-label="t('common.required_field')">*</span></span
       >
     </label>
     <div class="relative">

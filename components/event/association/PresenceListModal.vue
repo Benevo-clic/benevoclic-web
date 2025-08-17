@@ -69,7 +69,11 @@
                 :aria-label="t('presenceListModal.search.aria_label')"
                 @change="togglePresence(participant, 'participant')"
               />
-              <span class="label-text">{{ participant.isPresent ? t('presenceListModal.presence.present') : t('presenceListModal.presence.absent') }}</span>
+              <span class="label-text">{{
+                participant.isPresent
+                  ? t('presenceListModal.presence.present')
+                  : t('presenceListModal.presence.absent')
+              }}</span>
             </label>
           </div>
         </div>
@@ -110,7 +114,11 @@
                 :aria-label="t('presenceListModal.search.aria_label')"
                 @change="togglePresence(volunteer, 'volunteer')"
               />
-              <span class="label-text">{{ volunteer.isPresent ? t('presenceListModal.presence.present') : t('presenceListModal.presence.absent') }}</span>
+              <span class="label-text">{{
+                volunteer.isPresent
+                  ? t('presenceListModal.presence.present')
+                  : t('presenceListModal.presence.absent')
+              }}</span>
             </label>
           </div>
         </div>
@@ -118,7 +126,9 @@
 
       <!-- Modal actions -->
       <div class="modal-action">
-        <button class="btn btn-ghost" type="button" @click="closeModal">{{ t('presenceListModal.actions.close') }}</button>
+        <button class="btn btn-ghost" type="button" @click="closeModal">
+          {{ t('presenceListModal.actions.close') }}
+        </button>
       </div>
     </div>
     <form method="dialog" class="modal-backdrop">

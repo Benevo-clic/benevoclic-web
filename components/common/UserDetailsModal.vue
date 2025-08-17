@@ -42,7 +42,9 @@
       <div v-else-if="isProfilePrivate" class="flex justify-center items-center py-8">
         <div class="text-center">
           <div class="text-6xl mb-4"></div>
-          <h3 class="text-lg font-semibold mb-2">{{ t('userDetailsModal.private_profile.title') }}</h3>
+          <h3 class="text-lg font-semibold mb-2">
+            {{ t('userDetailsModal.private_profile.title') }}
+          </h3>
           <p class="text-gray-600">{{ t('userDetailsModal.private_profile.description') }}</p>
         </div>
       </div>
@@ -53,7 +55,9 @@
       >
         <div class="text-center">
           <div class="text-6xl mb-4"></div>
-          <h3 class="text-lg font-semibold mb-2">{{ t('userDetailsModal.user_not_found.title') }}</h3>
+          <h3 class="text-lg font-semibold mb-2">
+            {{ t('userDetailsModal.user_not_found.title') }}
+          </h3>
           <p class="text-gray-600">{{ t('userDetailsModal.user_not_found.description') }}</p>
         </div>
       </div>
@@ -247,7 +251,9 @@
                   />
                 </svg>
               </div>
-              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">{{ t('userDetailsModal.statistics.missions') }}</div>
+              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">
+                {{ t('userDetailsModal.statistics.missions') }}
+              </div>
               <div class="stat-value text-xl sm:text-2xl font-bold text-secondary">
                 {{ volunteerDetails.nbVolunteers || 0 }}
               </div>
@@ -518,7 +524,9 @@
                   />
                 </svg>
               </div>
-              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">{{ t('userDetailsModal.statistics.volunteers') }}</div>
+              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">
+                {{ t('userDetailsModal.statistics.volunteers') }}
+              </div>
               <div class="stat-value text-xl sm:text-2xl font-bold text-primary">
                 {{ associationDetails.volunteers || 0 }}
               </div>
@@ -537,7 +545,9 @@
                   />
                 </svg>
               </div>
-              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">{{ t('userDetailsModal.statistics.announcements') }}</div>
+              <div class="stat-title text-xs sm:text-sm font-medium text-gray-600">
+                {{ t('userDetailsModal.statistics.announcements') }}
+              </div>
               <div class="stat-value text-xl sm:text-2xl font-bold text-secondary">
                 {{ associationDetails.announcements || 0 }}
               </div>
@@ -653,9 +663,9 @@
 <script setup lang="ts">
   import { useUser } from '~/composables/auth/useUser'
   import { useAssociationAuth, useSettingsStore, useVolunteerAuth } from '#imports'
-  
+
   const { t } = useI18n()
-  
+
   export interface VolunteerDetails {
     volunteerId: string
     firstName: string

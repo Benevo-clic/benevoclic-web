@@ -305,11 +305,13 @@
       <!-- Villes sélectionnées -->
       <div v-if="selectedLocations.length" class="form-control">
         <label class="label">
-          <span class="label-text font-medium">{{ t('dropDownLocation.labels.selectedCities') }}</span>
+          <span class="label-text font-medium">{{
+            t('dropDownLocation.labels.selectedCities')
+          }}</span>
         </label>
         <div v-if="selectedLocations.length > 1" class="alert alert-info alert-sm mb-2">
           <div class="text-xs">
-                         <strong>Note:</strong> {{ t('dropDownLocation.notes.onlyFirstCity') }}
+            <strong>Note:</strong> {{ t('dropDownLocation.notes.onlyFirstCity') }}
           </div>
         </div>
         <div class="space-y-2 selected-locations">
@@ -324,13 +326,15 @@
           >
             <span class="font-medium text-sm">
               {{ formatCityName(loc) }}
-              <span v-if="isCityActive(index)" class="text-primary ml-1">{{ t('dropDownLocation.active') }}</span>
+              <span v-if="isCityActive(index)" class="text-primary ml-1">{{
+                t('dropDownLocation.active')
+              }}</span>
             </span>
-                          <button
-                class="btn btn-ghost btn-xs"
-                :aria-label="t('dropDownLocation.aria.removeCity')"
-                @click.stop="removeLocation(index)"
-              >
+            <button
+              class="btn btn-ghost btn-xs"
+              :aria-label="t('dropDownLocation.aria.removeCity')"
+              @click.stop="removeLocation(index)"
+            >
               <X class="w-3 h-3" />
             </button>
           </div>
@@ -354,7 +358,9 @@
                 @change="toggleCurrentLocation"
               />
               <div class="flex-1">
-                <div class="font-medium text-sm">{{ t('dropDownLocation.labels.myCurrentPosition') }}</div>
+                <div class="font-medium text-sm">
+                  {{ t('dropDownLocation.labels.myCurrentPosition') }}
+                </div>
                 <div class="text-xs text-base-content/70">
                   {{ userCurrentLocation.city || t('dropDownLocation.detectedPosition') }}
                 </div>
@@ -394,12 +400,16 @@
       <!-- Rayon -->
       <div class="form-control">
         <label class="label">
-          <span class="label-text font-medium">{{ t('dropDownLocation.labels.searchRadius') }}</span>
+          <span class="label-text font-medium">{{
+            t('dropDownLocation.labels.searchRadius')
+          }}</span>
         </label>
         <div class="space-y-2">
           <div class="flex items-center justify-between">
             <span class="text-sm">{{ t('dropDownLocation.labels.withinRadius') }}</span>
-            <span class="text-sm font-medium">{{ locationRadius }} {{ t('dropDownLocation.units.km') }}</span>
+            <span class="text-sm font-medium"
+              >{{ locationRadius }} {{ t('dropDownLocation.units.km') }}</span
+            >
           </div>
           <input
             v-model.number="locationRadius"
@@ -419,8 +429,12 @@
 
       <!-- Actions -->
       <div class="flex gap-2 pt-2">
-        <button class="btn btn-outline btn-sm flex-1" @click="onClear">{{ t('dropDownLocation.buttons.clear') }}</button>
-        <button class="btn btn-primary btn-sm flex-1" @click="onApply">{{ t('dropDownLocation.buttons.apply') }}</button>
+        <button class="btn btn-outline btn-sm flex-1" @click="onClear">
+          {{ t('dropDownLocation.buttons.clear') }}
+        </button>
+        <button class="btn btn-primary btn-sm flex-1" @click="onApply">
+          {{ t('dropDownLocation.buttons.apply') }}
+        </button>
       </div>
     </div>
   </div>

@@ -1,6 +1,30 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import RequestItem from '../../components/event/association/RequestItem.vue'
+
+// Mock useI18n
+vi.mock('vue-i18n', () => ({
+  useI18n: () => ({
+    t: (key: string) => key,
+    locale: 'fr',
+    locales: ['fr', 'en', 'es'],
+    setLocale: vi.fn()
+  })
+}))
+
+// Mock #imports
+vi.mock('#imports', () => ({
+  useI18n: () => ({
+    t: (key: string) => key,
+    locale: 'fr',
+    locales: ['fr', 'en', 'es'],
+    setLocale: vi.fn()
+  }),
+  useCookie: () => ({
+    value: 'fr',
+    set: vi.fn()
+  })
+}))
 
 describe('RequestItem', () => {
   const mockVolunteer = {

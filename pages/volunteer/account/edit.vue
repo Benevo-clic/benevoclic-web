@@ -349,7 +349,8 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      process.env.NODE_ENV !== 'production' && console.error(t('editProfile.errors.unexpected'), error)
+      process.env.NODE_ENV !== 'production' &&
+        console.error(t('editProfile.errors.unexpected'), error)
     }
   }
 

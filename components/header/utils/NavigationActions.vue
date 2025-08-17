@@ -53,7 +53,12 @@
 </script>
 
 <template>
-  <div class="relative" role="group" :aria-label="t('navigationActions.label')" @keydown="handleKeydown">
+  <div
+    class="relative"
+    role="group"
+    :aria-label="t('navigationActions.label')"
+    @keydown="handleKeydown"
+  >
     <LocationContextComponent :flag="flag" @toggle-language-menu="toggleLanguageMenu" />
     <LanguageComponent :show-language-menu="showLanguageMenu" @change-language="changeLanguage" />
   </div>

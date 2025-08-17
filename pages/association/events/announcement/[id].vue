@@ -2,7 +2,11 @@
   <div ref="scrollContainer" class="relative">
     <!-- Loading state -->
     <div v-if="loading" class="min-h-screen flex justify-center items-center">
-      <img :src="'/logo.png'" :alt="t('events.announcement.loading')" class="w-24 h-24 animate-spin" />
+      <img
+        :src="'/logo.png'"
+        :alt="t('events.announcement.loading')"
+        class="w-24 h-24 animate-spin"
+      />
     </div>
 
     <!-- Content when loaded -->
@@ -241,11 +245,15 @@
                 <div class="stat-figure text-secondary">
                   <Users class="h-8 w-8" />
                 </div>
-                <div class="stat-title">{{ t('events.announcement.stats.participants.title') }}</div>
+                <div class="stat-title">
+                  {{ t('events.announcement.stats.participants.title') }}
+                </div>
                 <div class="stat-value text-primary">
                   {{ ParticipantAvailable(announcement) }}
                 </div>
-                <div class="stat-desc">{{ t('events.announcement.stats.participants.description') }}</div>
+                <div class="stat-desc">
+                  {{ t('events.announcement.stats.participants.description') }}
+                </div>
               </div>
 
               <!-- Volunteers stats -->
@@ -257,7 +265,9 @@
                 <div class="stat-value text-secondary">
                   {{ volunteerAvailable(announcement) }}
                 </div>
-                <div class="stat-desc">{{ t('events.announcement.stats.volunteers.description') }}</div>
+                <div class="stat-desc">
+                  {{ t('events.announcement.stats.volunteers.description') }}
+                </div>
               </div>
             </div>
           </div>

@@ -88,8 +88,12 @@
           @keyup.enter="load"
         />
         <div class="flex gap-2">
-          <button class="btn btn-primary" :disabled="loading" @click="load">{{ t('adminManageUser.search.button') }}</button>
-          <button class="btn" :disabled="loading" @click="reset">{{ t('adminManageUser.search.reset') }}</button>
+          <button class="btn btn-primary" :disabled="loading" @click="load">
+            {{ t('adminManageUser.search.button') }}
+          </button>
+          <button class="btn" :disabled="loading" @click="reset">
+            {{ t('adminManageUser.search.reset') }}
+          </button>
         </div>
       </div>
 

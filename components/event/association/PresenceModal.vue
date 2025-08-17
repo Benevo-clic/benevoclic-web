@@ -3,7 +3,12 @@
     <div class="modal-box">
       <h3 class="font-bold text-lg mb-4">{{ t('presenceModal.title') }}</h3>
       <p class="py-2">
-        {{ t('presenceModal.message', { name: personName, status: isPresent ? t('presenceModal.status.absent') : t('presenceModal.status.present') }) }}
+        {{
+          t('presenceModal.message', {
+            name: personName,
+            status: isPresent ? t('presenceModal.status.absent') : t('presenceModal.status.present')
+          })
+        }}
       </p>
 
       <div class="form-control mt-4">
@@ -14,12 +19,16 @@
             class="checkbox checkbox-primary"
             :aria-label="t('presenceListModal.search.aria_label')"
           />
-          <span class="label-text">{{ isPresent ? t('presenceModal.checkbox.present') : t('presenceModal.checkbox.absent') }}</span>
+          <span class="label-text">{{
+            isPresent ? t('presenceModal.checkbox.present') : t('presenceModal.checkbox.absent')
+          }}</span>
         </label>
       </div>
 
       <div class="modal-action">
-        <button class="btn btn-ghost" @click="closeModal">{{ t('presenceModal.actions.cancel') }}</button>
+        <button class="btn btn-ghost" @click="closeModal">
+          {{ t('presenceModal.actions.cancel') }}
+        </button>
         <button class="btn btn-primary" :disabled="loading" @click="confirmPresence">
           <span v-if="loading" class="loading loading-spinner loading-xs mr-2" />
           {{ t('presenceModal.actions.confirm') }}

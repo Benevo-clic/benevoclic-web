@@ -142,7 +142,9 @@
           <option value="COMPLETED">COMPLETED</option>
         </select>
         <div class="flex gap-2">
-          <button class="btn btn-primary btn-sm" :disabled="loading" @click="load">{{ t('adminManageAnnouncement.filters.filter') }}</button>
+          <button class="btn btn-primary btn-sm" :disabled="loading" @click="load">
+            {{ t('adminManageAnnouncement.filters.filter') }}
+          </button>
           <button class="btn btn-outline btn-sm" :disabled="loading" @click="reset">
             {{ t('adminManageAnnouncement.filters.reset') }}
           </button>
@@ -154,7 +156,9 @@
             :placeholder="t('adminManageAnnouncement.search.placeholder')"
             @keyup.enter="searchById"
           />
-          <button class="btn btn-sm" :disabled="loading" @click="searchById">{{ t('adminManageAnnouncement.search.button') }}</button>
+          <button class="btn btn-sm" :disabled="loading" @click="searchById">
+            {{ t('adminManageAnnouncement.search.button') }}
+          </button>
         </div>
       </div>
 
@@ -191,8 +195,12 @@
                 <button class="btn btn-xs" @click="updateStatus(a._id, 'COMPLETED')">
                   COMPLETED
                 </button>
-                <button class="btn btn-outline btn-xs" @click="openEdit(a)">{{ t('adminManageAnnouncement.table.actions.edit') }}</button>
-                <button class="btn btn-error btn-xs" @click="remove(a._id)">{{ t('adminManageAnnouncement.table.actions.delete') }}</button>
+                <button class="btn btn-outline btn-xs" @click="openEdit(a)">
+                  {{ t('adminManageAnnouncement.table.actions.edit') }}
+                </button>
+                <button class="btn btn-error btn-xs" @click="remove(a._id)">
+                  {{ t('adminManageAnnouncement.table.actions.delete') }}
+                </button>
               </td>
             </tr>
           </tbody>
@@ -211,11 +219,15 @@
       <div class="modal-box max-w-xl">
         <h3 class="font-bold text-lg mb-4">{{ t('adminManageAnnouncement.modal.title') }}</h3>
         <div class="form-control mb-3">
-          <label class="label"><span class="label-text">{{ t('adminManageAnnouncement.modal.name') }}</span></label>
+          <label class="label"
+            ><span class="label-text">{{ t('adminManageAnnouncement.modal.name') }}</span></label
+          >
           <input v-model="editable!.nameEvent" class="input input-bordered" />
         </div>
         <div class="form-control mb-3">
-          <label class="label"><span class="label-text">{{ t('adminManageAnnouncement.modal.status') }}</span></label>
+          <label class="label"
+            ><span class="label-text">{{ t('adminManageAnnouncement.modal.status') }}</span></label
+          >
           <select v-model="editable!.status" class="select select-bordered">
             <option value="ACTIVE">ACTIVE</option>
             <option value="INACTIVE">INACTIVE</option>
@@ -223,8 +235,12 @@
           </select>
         </div>
         <div class="modal-action">
-          <button class="btn" @click="isEditOpen = false">{{ t('adminManageAnnouncement.modal.cancel') }}</button>
-          <button class="btn btn-primary" @click="saveEdit">{{ t('adminManageAnnouncement.modal.save') }}</button>
+          <button class="btn" @click="isEditOpen = false">
+            {{ t('adminManageAnnouncement.modal.cancel') }}
+          </button>
+          <button class="btn btn-primary" @click="saveEdit">
+            {{ t('adminManageAnnouncement.modal.save') }}
+          </button>
         </div>
       </div>
       <div class="modal-backdrop" @click="isEditOpen = false" />

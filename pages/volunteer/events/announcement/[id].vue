@@ -26,7 +26,9 @@
                 />
               </svg>
             </div>
-            <p class="text-sm font-medium">{{ t('volunteerAnnouncement.announcement.notFound') }}</p>
+            <p class="text-sm font-medium">
+              {{ t('volunteerAnnouncement.announcement.notFound') }}
+            </p>
           </div>
         </div>
 
@@ -154,12 +156,16 @@
             <span class="font-medium">{{
               ParticipantAvailable(announcement as Announcement)
             }}</span>
-            <span class="text-base-content/60">{{ t('volunteerAnnouncement.event.participants') }}</span>
+            <span class="text-base-content/60">{{
+              t('volunteerAnnouncement.event.participants')
+            }}</span>
           </div>
           <div class="flex items-center gap-1 text-xs">
             <HeartHandshake class="h-4 w-4 text-secondary" />
             <span class="font-medium">{{ volunteerAvailable(announcement as Announcement) }}</span>
-            <span class="text-base-content/60">{{ t('volunteerAnnouncement.event.volunteers') }}</span>
+            <span class="text-base-content/60">{{
+              t('volunteerAnnouncement.event.volunteers')
+            }}</span>
           </div>
         </div>
       </div>
@@ -353,7 +359,10 @@
               <div>
                 <p class="font-medium">{{ t('volunteerAnnouncement.practicalInfo.places') }}</p>
                 <p class="text-sm text-base-content/70">
-                  {{ remainingParticipants }} {{ t('volunteerAnnouncement.practicalInfo.participants') }}, {{ remainingVolunteers }} {{ t('volunteerAnnouncement.practicalInfo.volunteers') }}
+                  {{ remainingParticipants }}
+                  {{ t('volunteerAnnouncement.practicalInfo.participants') }},
+                  {{ remainingVolunteers }}
+                  {{ t('volunteerAnnouncement.practicalInfo.volunteers') }}
                 </p>
               </div>
             </div>
@@ -362,7 +371,10 @@
               <div>
                 <p class="font-medium">{{ t('volunteerAnnouncement.practicalInfo.eventType') }}</p>
                 <p class="text-sm text-base-content/70">
-                  {{ announcement?.tags?.join(', ') || t('volunteerAnnouncement.practicalInfo.general') }}
+                  {{
+                    announcement?.tags?.join(', ') ||
+                    t('volunteerAnnouncement.practicalInfo.general')
+                  }}
                 </p>
               </div>
             </div>
@@ -370,7 +382,6 @@
         </div>
       </div>
     </div>
-
 
     <ErrorPopup
       :show-error-modal="showErrorModal"
@@ -466,7 +477,9 @@
     if (isFollowingPending.value) {
       return t('volunteerAnnouncement.association.leave')
     }
-    return isFollowing.value ? t('volunteerAnnouncement.association.leave') : t('volunteerAnnouncement.association.join')
+    return isFollowing.value
+      ? t('volunteerAnnouncement.association.leave')
+      : t('volunteerAnnouncement.association.join')
   })
 
   // Modal de signalement
@@ -519,15 +532,9 @@
 
   function handleReportSubmitted(success: boolean) {
     if (success) {
-      showNotificationToast(
-        t('volunteerAnnouncement.report.successMessage'),
-        'success'
-      )
+      showNotificationToast(t('volunteerAnnouncement.report.successMessage'), 'success')
     } else {
-      showNotificationToast(
-        t('volunteerAnnouncement.report.errorMessage'),
-        'error'
-      )
+      showNotificationToast(t('volunteerAnnouncement.report.errorMessage'), 'error')
     }
   }
 

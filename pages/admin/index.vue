@@ -132,7 +132,8 @@
             {{ supportStats?.totalReports ?? '—' }}
           </div>
           <div class="stat-desc">
-            {{ t('adminIndex.stats.support.pending') }}: {{ supportStats?.pendingReports ?? '—' }} • {{ t('adminIndex.stats.support.resolved') }}:
+            {{ t('adminIndex.stats.support.pending') }}: {{ supportStats?.pendingReports ?? '—' }} •
+            {{ t('adminIndex.stats.support.resolved') }}:
             {{ supportStats?.resolvedReports ?? '—' }}
           </div>
         </div>

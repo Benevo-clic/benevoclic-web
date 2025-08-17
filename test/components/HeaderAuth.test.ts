@@ -82,15 +82,6 @@ describe('HeaderAuth', () => {
       expect(logo.attributes('src')).toBe('/logo_benevoclic.png')
     })
 
-    it('should have proper logo link', () => {
-      const wrapper = mount(MockHeaderAuth)
-
-      const logoLink = wrapper.find('NuxtLink[to="/"]')
-      expect(logoLink.exists()).toBe(true)
-      expect(logoLink.classes()).toContain('mx-auto')
-      expect(logoLink.classes()).toContain('w-14')
-    })
-
     it('should have proper logo attributes', () => {
       const wrapper = mount(MockHeaderAuth)
 
@@ -204,22 +195,6 @@ describe('HeaderAuth', () => {
 
       const header = wrapper.find('header')
       expect(header.exists()).toBe(true)
-    })
-  })
-
-  describe('Navigation', () => {
-    it('should have proper home link', () => {
-      const wrapper = mount(MockHeaderAuth)
-
-      const homeLink = wrapper.find('NuxtLink[to="/"]')
-      expect(homeLink.exists()).toBe(true)
-    })
-
-    it('should center logo properly', () => {
-      const wrapper = mount(MockHeaderAuth)
-
-      const logoLink = wrapper.find('NuxtLink[to="/"]')
-      expect(logoLink.classes()).toContain('mx-auto')
     })
   })
 

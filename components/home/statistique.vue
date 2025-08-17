@@ -44,7 +44,9 @@
             <div class="text-4xl font-bold text-secondary mb-2 counter-animate">
               {{ animatedStats.associations }}
             </div>
-            <div class="text-xl font-semibold mb-2">{{ t('statistics.cards.associations.title') }}</div>
+            <div class="text-xl font-semibold mb-2">
+              {{ t('statistics.cards.associations.title') }}
+            </div>
             <p class="text-base-content/70">
               {{ t('statistics.cards.associations.description') }}
             </p>
@@ -58,7 +60,11 @@
               {{ animatedStats.volunteers }}
             </div>
             <div class="text-xl font-semibold mb-2">
-              {{ animatedStats.volunteers > 1 ? t('statistics.cards.volunteers.title_plural') : t('statistics.cards.volunteers.title_singular') }}
+              {{
+                animatedStats.volunteers > 1
+                  ? t('statistics.cards.volunteers.title_plural')
+                  : t('statistics.cards.volunteers.title_singular')
+              }}
             </div>
             <p class="text-base-content/70">
               {{ t('statistics.cards.volunteers.description') }}
