@@ -1717,5 +1717,215 @@
   },
   "navigationActions": {
     "label": "Navigation actions"
+  },
+  "index": {
+    "skipToMainContent": "Skip to main content",
+    "volunteerHomePage": "Volunteer Home Page",
+    "errors": {
+      "fetchEvents": "Error fetching events",
+      "search": "Search error",
+      "invalidSearchCriteria": "Search criteria are not valid. Please check your filters.",
+      "serverError": "Server error. Please try again later.",
+      "countEvents": "Error counting events"
+    },
+    "location": {
+      "myCurrentPosition": "My current position",
+      "detectedPosition": "Position detected",
+      "noPositionObtained": "No position obtained",
+      "cookiesNotAccepted": "Personalization cookies not accepted - geolocation disabled",
+      "cannotCheckPermissions": "Cannot check geolocation permissions"
+    },
+    "pagination": {
+      "searchNavigation": "Search pages navigation",
+      "controls": "Pagination controls",
+      "goToPreviousPage": "Go to previous page (page {page})",
+      "previousPage": "Previous page",
+      "currentPage": "Current page",
+      "currentPageLabel": "Current page:",
+      "pageInfo": "Page {current} / {total}",
+      "goToNextPage": "Go to next page (page {page})",
+      "nextPage": "Next page"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account preferences and settings",
+    "subtitle_association": "Manage your association settings",
+    "saving": "Saving...",
+    "save": "Save",
+    "navigation": "Navigation",
+    "sections": {
+      "privacy": "Privacy",
+      "account": "Account",
+      "security": "Security",
+      "organization": "Organization"
+    },
+    "navigation": {
+      "section": "Navigate to settings section"
+    },
+    "deletion": {
+      "inProgress": "Deletion in progress…"
+    },
+    "form": {
+      "inputField": "Input field",
+      "password": "Password"
+    },
+    "errors": {
+      "unexpected": "Unexpected error"
+    },
+    "privacy": {
+      "title": "Privacy",
+      "description": "Control who can see your personal information",
+      "description_association": "Control the visibility of your association information",
+      "profile_visibility": "Profile visibility",
+      "profile_visibility_description": "Allow other users to see your profile",
+      "profile_visibility_description_association": "Allow volunteers to see your association profile",
+      "location_sharing": "Location sharing",
+      "location_sharing_description": "Share your location for nearby events",
+      "activity_sharing": "Activity sharing",
+      "activity_sharing_description": "Allow others to see your participations",
+      "contact_info": "Contact information",
+      "contact_info_description": "Make your contact details visible to volunteers",
+      "event_visibility": "Event visibility",
+      "event_visibility_description": "Display your events in searches",
+      "volunteer_list": "Volunteer list",
+      "volunteer_list_description": "Allow volunteers to see the participant list"
+    },
+    "account": {
+      "title": "Account",
+      "description": "Manage your account information",
+      "description_association": "Manage your association information",
+      "change_password": "Change password",
+      "change_password_description": "Update your password for better security",
+      "change": "Change",
+      "delete_account": "Delete account",
+      "delete_account_description": "Permanently delete your account and all your data",
+      "delete_account_description_association": "Permanently delete your association and all your events",
+      "delete": "Delete",
+      "association_info": "Association information",
+      "association_info_description": "Edit your association details",
+      "edit": "Edit"
+    },
+    "security": {
+      "title": "Security",
+      "description": "Strengthen your account security",
+      "description_association": "Strengthen your association security",
+      "two_factor": "Two-factor authentication",
+      "two_factor_description": "Add an extra layer of security",
+      "login_notifications": "Login notifications",
+      "login_notifications_description": "Receive alerts for new logins",
+      "siret_verification": "SIRET verification",
+      "siret_verification_description": "Automatically verify SIRET numbers"
+    },
+    "organization": {
+      "title": "Organization",
+      "description": "Organization and management settings",
+      "auto_approve_volunteers": "Auto-approve volunteers",
+      "auto_approve_volunteers_description": "Automatically approve participation requests",
+      "volunteer_limits": "Volunteer limits",
+      "volunteer_limits_description": "Set limits on the number of volunteers",
+      "participant_limits": "Participant limits",
+      "participant_limits_description": "Set limits on the number of participants",
+      "event_approval": "Event approval",
+      "event_approval_description": "Require approval for new events"
+    },
+    "delete_confirmation": {
+      "title": "Confirm deletion",
+      "message": "Are you sure you want to delete your account? This action is irreversible.",
+      "message_association": "Are you sure you want to delete your association? This action is irreversible.",
+      "cancel": "Cancel",
+      "confirm": "Confirm deletion"
+    },
+    "password_change": {
+      "title": "Change password",
+      "message": "Enter your current password and choose a new password",
+      "old_password": "Current password",
+      "old_password_placeholder": "Enter your current password",
+      "new_password": "New password",
+      "new_password_placeholder": "Enter your new password",
+      "confirm_password": "Confirm password",
+      "confirm_password_placeholder": "Confirm your new password",
+      "password_requirements": "Password must contain at least 8 characters",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "success": "Password changed successfully!",
+      "error": {
+        "password_mismatch": "Passwords do not match",
+        "weak_password": "Password must contain at least 8 characters",
+        "general": "Error changing password"
+      }
+    }
+  },
+  "editProfile": {
+    "change": "Change",
+    "save": "Save",
+    "association": {
+      "logo": "Association logo",
+      "name": "Association name",
+      "type": "Association type",
+      "phone": "Association phone number",
+      "country": "Association country",
+      "city": "Association city",
+      "postalCode": "Association postal code",
+      "description": "Association description"
+    },
+    "volunteer": {
+      "photo": "Profile photo"
+    },
+    "form": {
+      "inputField": "Input field",
+      "textArea": "Text area"
+    },
+    "errors": {
+      "unexpected": "Unexpected error"
+    }
+  },
+  "profile": {
+    "editProfile": "Edit profile",
+    "share": "Share",
+    "notProvided": "Not provided",
+    "age": {
+      "years": "years"
+    },
+    "birthDate": {
+      "notProvided": "Birth date not provided"
+    },
+    "bio": {
+      "notProvided": "No description."
+    },
+    "association": {
+      "logo": "Association logo",
+      "typeNotProvided": "Type not provided"
+    },
+    "stats": {
+      "associations": "Associations",
+      "eventsParticipated": "Events participated",
+      "volunteerOpportunities": "Volunteer opportunities",
+      "city": "City",
+      "postalCode": "Postal code",
+      "volunteers": "Volunteers",
+      "announcementsCreated": "Announcements created",
+      "createdOn": "Created on"
+    },
+    "sections": {
+      "contact": "Contact",
+      "location": "Location",
+      "socialNetworks": "Social networks"
+    },
+    "contact": {
+      "email": "Email",
+      "phone": "Phone"
+    },
+    "location": {
+      "country": "Country",
+      "city": "City",
+      "postalCode": "Postal code"
+    },
+    "socialNetworks": {
+      "noWebsite": "No website provided"
+    },
+    "errors": {
+      "unexpected": "Unexpected error"
+    }
   }
 }

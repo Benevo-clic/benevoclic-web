@@ -3,7 +3,6 @@
   import { definePageMeta } from '#imports'
 
   definePageMeta({
-    middleware: ['auth'],
     layout: 'header-auth'
   })
 </script>

@@ -247,63 +247,62 @@
   },
   "settings": {
     "title": "Paramètres",
-    "subtitle": "Gérez vos préférences et votre compte",
+    "subtitle": "Gérez vos préférences et paramètres de compte",
     "subtitle_association": "Gérez les paramètres de votre association",
+    "saving": "Sauvegarde en cours...",
+    "save": "Sauvegarder",
     "navigation": "Navigation",
-    "save": "Enregistrer",
-    "saving": "Enregistrement...",
-    "notifications": {
-      "title": "Notifications",
-      "description": "Configurez vos préférences de notifications",
-      "description_association": "Configurez les notifications de votre association",
-      "email": "Notifications par e-mail",
-      "email_description": "Recevoir des notifications par e-mail",
-      "email_description_association": "Recevoir des notifications par e-mail pour votre association",
-      "push": "Notifications push",
-      "push_description": "Recevoir des notifications push sur votre appareil",
-      "mission_updates": "Mises à jour des missions",
-      "mission_updates_description": "Être notifié des changements concernant les missions",
-      "achievements": "Réalisations",
-      "achievements_description": "Être notifié de vos réalisations et badges",
-      "volunteer_requests": "Demandes de volontaires",
-      "volunteer_requests_description": "Être notifié des nouvelles demandes de volontaires",
-      "event_updates": "Mises à jour d'événements",
-      "event_updates_description": "Être notifié des changements d'événements",
-      "analytics": "Analyses",
-      "analytics_description": "Recevoir des rapports d'analyse périodiques"
+    "sections": {
+      "privacy": "Confidentialité",
+      "account": "Compte",
+      "security": "Sécurité",
+      "organization": "Organisation"
+    },
+    "navigation": {
+      "section": "Naviguer vers la section de paramètres"
+    },
+    "deletion": {
+      "inProgress": "Suppression en cours…"
+    },
+    "form": {
+      "inputField": "Champ de saisie",
+      "password": "Mot de passe"
+    },
+    "errors": {
+      "unexpected": "Erreur inattendue"
     },
     "privacy": {
       "title": "Confidentialité",
-      "description": "Contrôlez la visibilité de vos informations",
+      "description": "Contrôlez qui peut voir vos informations personnelles",
       "description_association": "Contrôlez la visibilité des informations de votre association",
       "profile_visibility": "Visibilité du profil",
-      "profile_visibility_description": "Rendre votre profil visible aux autres utilisateurs",
-      "profile_visibility_description_association": "Rendre le profil de votre association visible",
+      "profile_visibility_description": "Permettre aux autres utilisateurs de voir votre profil",
+      "profile_visibility_description_association": "Permettre aux bénévoles de voir le profil de votre association",
       "location_sharing": "Partage de localisation",
-      "location_sharing_description": "Partager votre localisation avec les organisateurs de missions",
+      "location_sharing_description": "Partager votre position pour des événements à proximité",
       "activity_sharing": "Partage d'activité",
-      "activity_sharing_description": "Partager vos activités avec la communauté",
+      "activity_sharing_description": "Permettre aux autres de voir vos participations",
       "contact_info": "Informations de contact",
-      "contact_info_description": "Afficher les informations de contact publiquement",
+      "contact_info_description": "Rendre vos coordonnées visibles aux bénévoles",
       "event_visibility": "Visibilité des événements",
-      "event_visibility_description": "Rendre vos événements visibles publiquement",
-      "volunteer_list": "Liste des volontaires",
-      "volunteer_list_description": "Afficher la liste des volontaires de votre association"
+      "event_visibility_description": "Afficher vos événements dans les recherches",
+      "volunteer_list": "Liste des bénévoles",
+      "volunteer_list_description": "Permettre aux bénévoles de voir la liste des participants"
     },
     "account": {
       "title": "Compte",
-      "description": "Gérez les paramètres de votre compte",
-      "description_association": "Gérez les paramètres de votre association",
+      "description": "Gérez les informations de votre compte",
+      "description_association": "Gérez les informations de votre association",
       "change_password": "Changer le mot de passe",
-      "change_password_description": "Modifier votre mot de passe pour plus de sécurité",
+      "change_password_description": "Mettez à jour votre mot de passe pour plus de sécurité",
+      "change": "Modifier",
       "delete_account": "Supprimer le compte",
       "delete_account_description": "Supprimer définitivement votre compte et toutes vos données",
-      "delete_account_description_association": "Supprimer définitivement votre association et toutes ses données",
+      "delete_account_description_association": "Supprimer définitivement votre association et tous vos événements",
+      "delete": "Supprimer",
       "association_info": "Informations de l'association",
-      "association_info_description": "Modifier les informations de votre association",
-      "change": "Modifier",
-      "edit": "Éditer",
-      "delete": "Supprimer"
+      "association_info_description": "Modifier les détails de votre association",
+      "edit": "Éditer"
     },
     "security": {
       "title": "Sécurité",
@@ -312,25 +311,32 @@
       "two_factor": "Authentification à deux facteurs",
       "two_factor_description": "Ajouter une couche de sécurité supplémentaire",
       "login_notifications": "Notifications de connexion",
-      "login_notifications_description": "Être notifié des nouvelles connexions",
+      "login_notifications_description": "Recevoir des alertes lors de nouvelles connexions",
       "siret_verification": "Vérification SIRET",
-      "siret_verification_description": "Activer la vérification automatique du numéro SIRET"
+      "siret_verification_description": "Vérifier automatiquement les numéros SIRET"
     },
     "organization": {
       "title": "Organisation",
-      "description": "Paramètres d'organisation pour votre association",
-      "auto_approve_volunteers": "Approbation automatique des volontaires",
-      "auto_approve_volunteers_description": "Approuver automatiquement les demandes de volontaires",
-      "volunteer_limits": "Limites de volontaires",
+      "description": "Paramètres d'organisation et de gestion",
+      "auto_approve_volunteers": "Approbation automatique des bénévoles",
+      "auto_approve_volunteers_description": "Approuver automatiquement les demandes de participation",
+      "volunteer_limits": "Limites de bénévoles",
+      "volunteer_limits_description": "Définir des limites sur le nombre de bénévoles",
       "participant_limits": "Limites de participants",
-      "volunteer_limits_description": "Définir des limites sur le nombre de volontaires par événement",
-      "participant_limits_description": "Définir des limites sur le nombre de participants par événement",
-      "event_approval": "Approbation d'événements",
+      "participant_limits_description": "Définir des limites sur le nombre de participants",
+      "event_approval": "Approbation des événements",
       "event_approval_description": "Exiger une approbation pour les nouveaux événements"
+    },
+    "delete_confirmation": {
+      "title": "Confirmer la suppression",
+      "message": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+      "message_association": "Êtes-vous sûr de vouloir supprimer votre association ? Cette action est irréversible.",
+      "cancel": "Annuler",
+      "confirm": "Confirmer la suppression"
     },
     "password_change": {
       "title": "Changer le mot de passe",
-      "message": "Entrez votre mot de passe actuel et votre nouveau mot de passe",
+      "message": "Entrez votre mot de passe actuel et choisissez un nouveau mot de passe",
       "old_password": "Mot de passe actuel",
       "old_password_placeholder": "Entrez votre mot de passe actuel",
       "new_password": "Nouveau mot de passe",
@@ -344,15 +350,80 @@
       "error": {
         "password_mismatch": "Les mots de passe ne correspondent pas",
         "weak_password": "Le mot de passe doit contenir au moins 8 caractères",
-        "general": "Une erreur est survenue lors du changement de mot de passe"
+        "general": "Erreur lors du changement de mot de passe"
       }
+    }
+  },
+  "editProfile": {
+    "change": "Changer",
+    "save": "Sauvegarder",
+    "association": {
+      "logo": "Logo de l'association",
+      "name": "Nom de l'association",
+      "type": "Type d'association",
+      "phone": "Numéro de téléphone de l'association",
+      "country": "Pays de l'association",
+      "city": "Ville de l'association",
+      "postalCode": "Code postal de l'association",
+      "description": "Description de l'association"
     },
-    "delete_confirmation": {
-      "title": "Confirmer la suppression",
-      "message": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
-      "message_association": "Êtes-vous sûr de vouloir supprimer votre association ? Cette action est irréversible et supprimera tous les événements associés.",
-      "cancel": "Annuler",
-      "confirm": "Oui, supprimer"
+    "volunteer": {
+      "photo": "Photo de profil"
+    },
+    "form": {
+      "inputField": "Champ de saisie",
+      "textArea": "Zone de texte"
+    },
+    "errors": {
+      "unexpected": "Erreur inattendue"
+    }
+  },
+  "profile": {
+    "editProfile": "Éditer le profil",
+    "share": "Partager",
+    "notProvided": "Non renseigné",
+    "age": {
+      "years": "ans"
+    },
+    "birthDate": {
+      "notProvided": "Date de naissance non fournie"
+    },
+    "bio": {
+      "notProvided": "Aucune description."
+    },
+    "association": {
+      "logo": "Logo association",
+      "typeNotProvided": "Type non fourni"
+    },
+    "stats": {
+      "associations": "Associations",
+      "eventsParticipated": "Événements participés",
+      "volunteerOpportunities": "Bénévolats proposés",
+      "city": "Ville",
+      "postalCode": "Code postal",
+      "volunteers": "Bénévoles",
+      "announcementsCreated": "Annonces créées",
+      "createdOn": "Créée le"
+    },
+    "sections": {
+      "contact": "Contact",
+      "location": "Localisation",
+      "socialNetworks": "Réseaux sociaux"
+    },
+    "contact": {
+      "email": "Email",
+      "phone": "Téléphone"
+    },
+    "location": {
+      "country": "Pays",
+      "city": "Ville",
+      "postalCode": "Code postal"
+    },
+    "socialNetworks": {
+      "noWebsite": "Aucun site web renseigné"
+    },
+    "errors": {
+      "unexpected": "Erreur inattendue"
     }
   },
   "search": {
@@ -1866,5 +1937,34 @@
     "recentSearches": "Recherches récentes",
     "searchFor": "Rechercher : {search}",
     "helpSupport": "Aide et support"
+  },
+  "index": {
+    "skipToMainContent": "Passer au contenu principal",
+    "volunteerHomePage": "Page d'accueil Bénévole",
+    "errors": {
+      "fetchEvents": "Erreur lors de la récupération des événements",
+      "search": "Erreur lors de la recherche",
+      "invalidSearchCriteria": "Les critères de recherche ne sont pas valides. Veuillez vérifier vos filtres.",
+      "serverError": "Erreur serveur. Veuillez réessayer plus tard.",
+      "countEvents": "Erreur lors du comptage des événements"
+    },
+    "location": {
+      "myCurrentPosition": "Ma position actuelle",
+      "detectedPosition": "Position détectée",
+      "noPositionObtained": "Aucune position obtenue",
+      "cookiesNotAccepted": "Cookies de personnalisation non acceptés - géolocalisation désactivée",
+      "cannotCheckPermissions": "Impossible de vérifier les permissions de géolocalisation"
+    },
+    "pagination": {
+      "searchNavigation": "Navigation des pages de recherche",
+      "controls": "Contrôles de pagination",
+      "goToPreviousPage": "Aller à la page précédente (page {page})",
+      "previousPage": "Page précédente",
+      "currentPage": "Page actuelle",
+      "currentPageLabel": "Page actuelle :",
+      "pageInfo": "Page {current} / {total}",
+      "goToNextPage": "Aller à la page suivante (page {page})",
+      "nextPage": "Page suivante"
+    }
   }
 }

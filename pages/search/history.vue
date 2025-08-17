@@ -29,36 +29,31 @@
   import SearchMenu from '~/components/search/SearchMenu.vue'
 
   definePageMeta({
-    middleware: ['auth'],
     layout: 'app'
   })
 
-  // Mock search history data - would be fetched from API or store in a real app
   const searchHistory = ref([
     {
       query: 'Environmental volunteering',
       location: 'Paris',
       category: 'Environment',
-      date: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString() // 2 hours ago
+      date: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString()
     },
     {
       query: 'Food distribution',
       location: 'Lyon',
       category: 'Social',
-      date: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString() // 1 day ago
+      date: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString()
     },
     {
       query: 'Teaching assistance',
       location: 'Marseille',
       category: 'Education',
-      date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString() // 3 days ago
+      date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString()
     }
   ])
 
-  // Function to handle new search
   function handleSearch(searchData: any) {
-    // In a real app, this would navigate to the search results page
-    // and add the search to history
     const newSearch = {
       query: searchData.query,
       location: searchData.location,
@@ -68,7 +63,6 @@
 
     searchHistory.value.unshift(newSearch)
 
-    // Navigate to search results
     navigateTo('/search')
   }
 

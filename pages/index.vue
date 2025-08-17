@@ -163,9 +163,9 @@
       countAssociation.value = await associations.getNumberOfAssociations()
       countVolunteer.value = await volunteers.getNumberOfVolunteers()
     } catch (err: any) {
-      error.value = err?.message || 'Erreur lors de la récupération des événements'
+      error.value = err?.message || t('index.errors.fetchEvents')
       process.env.NODE_ENV !== 'production' &&
-        console.error('Erreur lors de la récupération des événements:', err)
+        console.error(t('index.errors.fetchEvents'), err)
     } finally {
       isLoading.value = false
     }
@@ -209,15 +209,14 @@
         }
       }
     } catch (err: any) {
-      process.env.NODE_ENV !== 'production' && console.error('Erreur lors de la recherche:', err)
+      process.env.NODE_ENV !== 'production' && console.error(t('index.errors.search'), err)
 
       if (err?.status === 400) {
-        searchError.value =
-          'Les critères de recherche ne sont pas valides. Veuillez vérifier vos filtres.'
+        searchError.value = t('index.errors.invalidSearchCriteria')
       } else if (err?.status === 500) {
-        searchError.value = 'Erreur serveur. Veuillez réessayer plus tard.'
+        searchError.value = t('index.errors.serverError')
       } else {
-        searchError.value = err?.message || 'Erreur lors de la recherche'
+        searchError.value = err?.message || t('index.errors.search')
       }
     } finally {
       searchLoading.value = false
@@ -248,16 +247,15 @@
         currentSearchPage.value = 1
       }
     } catch (err: any) {
-      process.env.NODE_ENV !== 'production' && console.error('Erreur lors de la recherche:', err)
+      process.env.NODE_ENV !== 'production' && console.error(t('index.errors.search'), err)
 
       // Gestion spécifique des erreurs
       if (err?.status === 400) {
-        searchError.value =
-          'Les critères de recherche ne sont pas valides. Veuillez vérifier vos filtres.'
+        searchError.value = t('index.errors.invalidSearchCriteria')
       } else if (err?.status === 500) {
-        searchError.value = 'Erreur serveur. Veuillez réessayer plus tard.'
+        searchError.value = t('index.errors.serverError')
       } else {
-        searchError.value = err?.message || 'Erreur lors de la recherche'
+        searchError.value = err?.message || t('index.errors.search')
       }
     } finally {
       searchLoading.value = false
@@ -349,7 +347,7 @@
         filteredEventsCount.value = response?.meta?.total || 0
       } catch (error) {
         process.env.NODE_ENV !== 'production' &&
-          console.error('Erreur lors du comptage des événements:', error)
+          console.error(t('index.errors.countEvents'), error)
         filteredEventsCount.value = 0
       } finally {
         isCounting.value = false
@@ -383,11 +381,11 @@
 
       if (!canUseLocation.value) {
         process.env.NODE_ENV !== 'production' &&
-          console.log('Cookies de personnalisation non acceptés - géolocalisation désactivée')
+          console.log(t('index.location.cookiesNotAccepted'))
       }
     } catch (err) {
       process.env.NODE_ENV !== 'production' &&
-        console.warn('Impossible de vérifier les permissions de géolocalisation:', err)
+        console.warn(t('index.location.cannotCheckPermissions'), err)
       canUseLocation.value = false
     }
   }
@@ -400,13 +398,13 @@
         currentLongitude.value = location.longitude
         userCurrentLocation.value = {
           place_id: 'current_location',
-          display_name: 'Ma position actuelle',
-          city: location.city || 'Position détectée',
+          display_name: t('index.location.myCurrentPosition'),
+          city: location.city || t('index.location.detectedPosition'),
           lat: location.latitude.toString(),
           lon: location.longitude.toString()
         }
       } else {
-        process.env.NODE_ENV !== 'production' && console.log('Aucune position obtenue')
+        process.env.NODE_ENV !== 'production' && console.log(t('index.location.noPositionObtained'))
       }
     } catch (error) {
       process.env.NODE_ENV !== 'production' && console.error('Error getting user location:', error)
@@ -535,9 +533,9 @@
     <a
       href="#main-content"
       class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-      aria-label="Passer au contenu principal"
+      :aria-label="t('index.skipToMainContent')"
     >
-      Passer au contenu principal
+      {{ t('index.skipToMainContent') }}
     </a>
 
     <!-- Contenu principal -->
@@ -545,7 +543,7 @@
       id="main-content"
       class="volunteer-content"
       role="main"
-      aria-label="Page d'accueil Bénévole"
+      :aria-label="t('index.volunteerHomePage')"
     >
       <!-- Section Hero -->
       <Hero :start-searching="startSearching" />
@@ -686,44 +684,44 @@
               v-if="searchTotalPages > 1"
               class="flex justify-center mt-6"
               role="navigation"
-              aria-label="Navigation des pages de recherche"
+              :aria-label="t('index.pagination.searchNavigation')"
             >
-              <div class="join" role="group" aria-label="Contrôles de pagination">
+                              <div class="join" role="group" :aria-label="t('index.pagination.controls')">
                 <button
                   class="join-item btn btn-sm sm:btn-md focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
                   :disabled="currentSearchPage === 1"
-                  :aria-label="`Aller à la page précédente (page ${currentSearchPage - 1})`"
+                  :aria-label="t('index.pagination.goToPreviousPage', { page: currentSearchPage - 1 })"
                   :aria-disabled="currentSearchPage === 1"
                   @click="goToSearchPage(currentSearchPage - 1)"
                   @keyup.enter="goToSearchPage(currentSearchPage - 1)"
                   @keyup.space.prevent="goToSearchPage(currentSearchPage - 1)"
                 >
                   <span aria-hidden="true">«</span>
-                  <span class="sr-only">Page précédente</span>
+                  <span class="sr-only">{{ t('index.pagination.previousPage') }}</span>
                 </button>
                 <button
                   class="join-item btn btn-sm sm:btn-md"
                   disabled
                   aria-current="page"
-                  aria-label="Page actuelle"
+                  :aria-label="t('index.pagination.currentPage')"
                 >
-                  <span class="sr-only">Page actuelle : </span>
+                  <span class="sr-only">{{ t('index.pagination.currentPageLabel') }} </span>
                   <span class="hidden sm:inline"
-                    >Page {{ currentSearchPage }} / {{ searchTotalPages }}</span
+                    >{{ t('index.pagination.pageInfo', { current: currentSearchPage, total: searchTotalPages }) }}</span
                   >
                   <span class="sm:hidden">{{ currentSearchPage }}/{{ searchTotalPages }}</span>
                 </button>
                 <button
                   class="join-item btn btn-sm sm:btn-md focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
                   :disabled="currentSearchPage === searchTotalPages"
-                  :aria-label="`Aller à la page suivante (page ${currentSearchPage + 1})`"
+                  :aria-label="t('index.pagination.goToNextPage', { page: currentSearchPage + 1 })"
                   :aria-disabled="currentSearchPage === searchTotalPages"
                   @click="goToSearchPage(currentSearchPage + 1)"
                   @keyup.enter="goToSearchPage(currentSearchPage + 1)"
                   @keyup.space.prevent="goToSearchPage(currentSearchPage + 1)"
                 >
                   <span aria-hidden="true">»</span>
-                  <span class="sr-only">Page suivante</span>
+                  <span class="sr-only">{{ t('index.pagination.nextPage') }}</span>
                 </button>
               </div>
             </nav>

@@ -363,7 +363,6 @@
   } from 'lucide-vue-next'
 
   definePageMeta({
-    middleware: ['auth'],
     layout: 'app'
   })
 

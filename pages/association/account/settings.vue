@@ -56,7 +56,7 @@
             <div class="flex flex-col items-center space-y-4">
               <img src="/logo.png" alt="" class="w-16 h-16 sm:w-20 sm:h-20 animate-spin" />
               <div class="text-base-content opacity-70 text-sm sm:text-base">
-                Suppression en cours…
+                {{ t('settings.deletion.inProgress') }}
               </div>
             </div>
           </div>
@@ -93,7 +93,7 @@
                       v-model="settings.profileVisibility"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -112,7 +112,7 @@
                       v-model="settings.contactInfoVisibility"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -131,7 +131,7 @@
                       v-model="settings.eventVisibility"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -150,7 +150,7 @@
                       v-model="settings.volunteerListVisibility"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -271,7 +271,7 @@
                       v-model="settings.twoFactor"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -290,7 +290,7 @@
                       v-model="settings.loginNotifications"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -309,7 +309,7 @@
                       v-model="settings.siretVerification"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -349,7 +349,7 @@
                       v-model="settings.autoApproveVolunteers"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -368,7 +368,7 @@
                       v-model="settings.volunteerLimits"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -387,7 +387,7 @@
                       v-model="settings.participantLimits"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -406,7 +406,7 @@
                       v-model="settings.eventApproval"
                       type="checkbox"
                       class="toggle toggle-primary"
-                      aria-label="Champ de saisie"
+                      :aria-label="t('settings.form.inputField')"
                     />
                   </label>
                 </div>
@@ -472,7 +472,7 @@
               class="input input-bordered"
               required
               :placeholder="t('settings.password_change.old_password_placeholder')"
-              aria-label="Mot de passe"
+              :aria-label="t('settings.form.password')"
             />
           </div>
 
@@ -489,7 +489,7 @@
               required
               minlength="8"
               :placeholder="t('settings.password_change.new_password_placeholder')"
-              aria-label="Mot de passe"
+              :aria-label="t('settings.form.password')"
             />
             <label class="label">
               <span class="label-text-alt text-base-content/50">
@@ -510,7 +510,7 @@
               class="input input-bordered"
               required
               :placeholder="t('settings.password_change.confirm_password_placeholder')"
-              aria-label="Mot de passe"
+              :aria-label="t('settings.form.password')"
             />
           </div>
 
@@ -581,10 +581,10 @@
 
   // Sections de paramètres (4 éléments)
   const sections = ref([
-    { id: 'privacy' as const, label: 'Confidentialité', icon: Shield },
-    { id: 'account' as const, label: 'Compte', icon: Building2 },
-    { id: 'security' as const, label: 'Sécurité', icon: Lock },
-    { id: 'organization' as const, label: 'Organisation', icon: Users }
+    { id: 'privacy' as const, label: t('settings.sections.privacy'), icon: Shield },
+    { id: 'account' as const, label: t('settings.sections.account'), icon: Building2 },
+    { id: 'security' as const, label: t('settings.sections.security'), icon: Lock },
+    { id: 'organization' as const, label: t('settings.sections.organization'), icon: Users }
   ])
 
   // Password change form data
@@ -772,7 +772,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error(t('settings.errors.unexpected'), error)
     }
   }
 </script>

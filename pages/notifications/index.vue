@@ -199,7 +199,6 @@
   import NotificationsStats from '~/components/notifications/NotificationsStats.vue'
 
   definePageMeta({
-    middleware: ['auth'],
     layout: 'app'
   })
 

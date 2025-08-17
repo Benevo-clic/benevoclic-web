@@ -49,7 +49,7 @@
           <img
             v-if="profileImageUrl"
             :src="profileImageUrl"
-            alt="Photo de profil"
+            :alt="t('editProfile.volunteer.photo')"
             class="w-full h-full object-cover"
             width="200"
             height="200"
@@ -67,7 +67,7 @@
               class="cursor-pointer text-white text-sm font-medium flex flex-col items-center"
             >
               <Upload class="w-6 h-6 mx-auto mb-1" />
-              Changer
+              {{ t('editProfile.change') }}
             </label>
             <input
               id="profile-image"
@@ -78,7 +78,7 @@
             />
           </div>
         </div>
-        <span class="text-base-content/70 text-sm">Photo de profil</span>
+        <span class="text-base-content/70 text-sm">{{ t('editProfile.volunteer.photo') }}</span>
       </div>
 
       <form class="space-y-6" @submit.prevent="saveProfile">
@@ -92,7 +92,7 @@
               v-model="form.firstName"
               type="text"
               class="input input-bordered w-full"
-              aria-label="Champ de saisie"
+              :aria-label="t('editProfile.form.inputField')"
             />
           </div>
           <div class="form-control w-full">
@@ -103,7 +103,7 @@
               v-model="form.lastName"
               type="text"
               class="input input-bordered w-full"
-              aria-label="Champ de saisie"
+              :aria-label="t('editProfile.form.inputField')"
             />
           </div>
           <div class="form-control w-full">
@@ -114,7 +114,7 @@
               v-model="form.birthDate"
               type="date"
               class="input input-bordered w-full"
-              aria-label="Champ de saisie"
+              :aria-label="t('editProfile.form.inputField')"
             />
           </div>
         </div>
@@ -129,7 +129,7 @@
               v-model="form.phone"
               type="tel"
               class="input input-bordered w-full"
-              aria-label="Champ de saisie"
+              :aria-label="t('editProfile.form.inputField')"
             />
           </div>
         </div>
@@ -144,7 +144,7 @@
               v-model="form.city"
               type="text"
               class="input input-bordered w-full"
-              aria-label="Champ de saisie"
+              :aria-label="t('editProfile.form.inputField')"
             />
           </div>
           <div class="form-control w-full">
@@ -157,7 +157,7 @@
               v-model="form.postalCode"
               type="text"
               class="input input-bordered w-full"
-              aria-label="Champ de saisie"
+              :aria-label="t('editProfile.form.inputField')"
             />
           </div>
         </div>
@@ -171,7 +171,7 @@
             <textarea
               v-model="form.bio"
               class="textarea textarea-bordered h-24 w-full"
-              aria-label="Zone de texte"
+              :aria-label="t('editProfile.form.textArea')"
             />
           </div>
         </div>
@@ -180,7 +180,7 @@
         <div class="flex justify-end">
           <button type="submit" class="btn btn-primary btn-wide" :disabled="!isFormChanged">
             <span v-if="isImageUploading" class="loading loading-spinner loading-xs mr-2" />
-            Sauvegarder
+            {{ t('editProfile.save') }}
           </button>
         </div>
       </form>
@@ -349,7 +349,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error(t('editProfile.errors.unexpected'), error)
     }
   }
 

@@ -9,7 +9,7 @@
           <img
             v-if="profileImageUrl"
             :src="profileImageUrl"
-            alt="Photo bénévole"
+            :alt="t('profile.volunteer.photo')"
             class="w-full h-full object-cover"
             width="128"
             height="128"
@@ -26,16 +26,16 @@
           class="badge badge-outline badge-primary mb-2 text-base-content border-base-content"
           >{{
             user?.birthDate
-              ? calculateAge(user.birthDate) + ' ans'
-              : 'Date de naissance non fournie'
+              ? calculateAge(user.birthDate) + ' ' + t('profile.age.years')
+              : t('profile.birthDate.notProvided')
           }}</span
         >
         <p class="text-base-content/80 text-center max-w-xl mb-2">
-          {{ user?.bio || 'Aucune description.' }}
+          {{ user?.bio || t('profile.bio.notProvided') }}
         </p>
         <div class="flex gap-2 mt-2">
           <NuxtLink to="/volunteer/account/edit" class="btn btn-sm btn-outline btn-primary">
-            Éditer le profil
+            {{ t('profile.editProfile') }}
           </NuxtLink>
         </div>
       </div>
@@ -49,7 +49,7 @@
             class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center justify-center h-full"
           >
             <span class="text-2xl font-bold text-primary">{{ associationsFollowing?.length }}</span>
-            <span class="text-xs text-base-content/70">Associations</span>
+            <span class="text-xs text-base-content/70">{{ t('profile.stats.associations') }}</span>
           </div>
         </NuxtLink>
 
@@ -57,66 +57,66 @@
           class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center justify-center h-full"
         >
           <span class="text-2xl font-bold text-primary">{{ nbParticipants }}</span>
-          <span class="text-xs text-base-content/70">Événements participés</span>
+                      <span class="text-xs text-base-content/70">{{ t('profile.stats.eventsParticipated') }}</span>
         </div>
 
         <div
           class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center justify-center h-full"
         >
           <span class="text-2xl font-bold text-primary">{{ nbVolunteerAnnouncements }}</span>
-          <span class="text-xs text-base-content/70">Bénévolats proposés</span>
+                      <span class="text-xs text-base-content/70">{{ t('profile.stats.volunteerOpportunities') }}</span>
         </div>
 
         <div
           class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center justify-center h-full"
         >
           <span class="text-2xl font-bold text-primary">{{ user?.city || '-' }}</span>
-          <span class="text-xs text-base-content/70">Ville</span>
+                      <span class="text-xs text-base-content/70">{{ t('profile.stats.city') }}</span>
         </div>
 
         <div
           class="bg-base-100 rounded-xl shadow p-4 flex flex-col items-center justify-center h-full"
         >
           <span class="text-2xl font-bold text-primary">{{ user?.postalCode || '-' }}</span>
-          <span class="text-xs text-base-content/70">Code postal</span>
+                      <span class="text-xs text-base-content/70">{{ t('profile.stats.postalCode') }}</span>
         </div>
       </div>
 
       <!-- Informations détaillées -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div class="bg-base-100 rounded-xl shadow p-6 space-y-3">
-          <h3 class="font-semibold mb-2 text-base-content">Contact</h3>
+          <h3 class="font-semibold mb-2 text-base-content">{{ t('profile.sections.contact') }}</h3>
           <div class="flex items-center gap-2 text-base-content flex-wrap min-w-0">
             <Mail class="w-5 h-5 text-primary shrink-0" />
-            <span>Email</span>
+            <span>{{ t('profile.contact.email') }}</span>
             <span class="font-medium break-all">{{ auth.user.value?.email }}</span>
           </div>
           <div class="flex items-center gap-2 text-base-content">
             <Phone class="w-5 h-5 text-primary" />
-            <span>Téléphone</span>
-            <span class="font-medium">{{ user?.phone || 'Non renseigné' }}</span>
+            <span>{{ t('profile.contact.phone') }}</span>
+            <span class="font-medium">{{ user?.phone || t('profile.notProvided') }}</span>
           </div>
         </div>
         <div class="bg-base-100 rounded-xl shadow p-6 space-y-3">
-          <h3 class="font-semibold mb-2 text-base-content">Localisation</h3>
+          <h3 class="font-semibold mb-2 text-base-content">{{ t('profile.sections.location') }}</h3>
           <div class="flex items-center gap-2 text-base-content">
             <MapPin class="w-5 h-5 text-primary" />
-            <span>Ville</span>
-            <span class="font-medium">{{ user?.city || 'Non renseigné' }}</span>
+            <span>{{ t('profile.location.city') }}</span>
+            <span class="font-medium">{{ user?.city || t('profile.notProvided') }}</span>
           </div>
           <div class="flex items-center gap-2 text-base-content">
             <MapPin class="w-5 h-5 text-primary" />
-            <span>Code postal</span>
-            <span class="font-medium">{{ user?.postalCode || 'Non renseigné' }}</span>
+            <span>{{ t('profile.location.postalCode') }}</span>
+            <span class="font-medium">{{ user?.postalCode || t('profile.notProvided') }}</span>
           </div>
         </div>
       </div>
 
       <!-- Section supplémentaire : réseaux sociaux, site web, etc. -->
       <div class="bg-base-100 rounded-xl shadow p-6 flex flex-col items-center">
-        <h3 class="font-semibold mb-2 text-base-content">Réseaux sociaux</h3>
+        <h3 class="font-semibold mb-2 text-base-content">{{ t('profile.sections.socialNetworks') }}</h3>
         <div class="flex gap-4">
-          <span class="text-base-content/60">Aucun site web renseigné</span>
+          <span class="text-base-content/60">{{ t('profile.socialNetworks.noWebsite') }}</span>
         </div>
       </div>
     </div>
@@ -137,6 +137,8 @@
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import { useNavigation } from '~/composables/useNavigation'
   import type { AssociationVolunteerFollow } from '~/common/interface/volunteer.interface'
+
+  const { t } = useI18n()
 
   definePageMeta({
     middleware: ['auth'],
@@ -216,7 +218,7 @@
       errorType.value = '4xx'
       showErrorModal.value = true
     } else {
-      process.env.NODE_ENV !== 'production' && console.error('Erreur inattendue:', error)
+      process.env.NODE_ENV !== 'production' && console.error(t('profile.errors.unexpected'), error)
     }
   }
 </script>

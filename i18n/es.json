@@ -1718,5 +1718,215 @@
   },
   "navigationActions": {
     "label": "Acciones de navegación"
+  },
+  "index": {
+    "skipToMainContent": "Saltar al contenido principal",
+    "volunteerHomePage": "Página de inicio del voluntario",
+    "errors": {
+      "fetchEvents": "Error al obtener eventos",
+      "search": "Error de búsqueda",
+      "invalidSearchCriteria": "Los criterios de búsqueda no son válidos. Por favor verifica tus filtros.",
+      "serverError": "Error del servidor. Por favor intenta más tarde.",
+      "countEvents": "Error al contar eventos"
+    },
+    "location": {
+      "myCurrentPosition": "Mi posición actual",
+      "detectedPosition": "Posición detectada",
+      "noPositionObtained": "No se obtuvo posición",
+      "cookiesNotAccepted": "Cookies de personalización no aceptadas - geolocalización deshabilitada",
+      "cannotCheckPermissions": "No se pueden verificar los permisos de geolocalización"
+    },
+    "pagination": {
+      "searchNavigation": "Navegación de páginas de búsqueda",
+      "controls": "Controles de paginación",
+      "goToPreviousPage": "Ir a la página anterior (página {page})",
+      "previousPage": "Página anterior",
+      "currentPage": "Página actual",
+      "currentPageLabel": "Página actual:",
+      "pageInfo": "Página {current} / {total}",
+      "goToNextPage": "Ir a la página siguiente (página {page})",
+      "nextPage": "Página siguiente"
+    }
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Gestiona tus preferencias y configuraciones de cuenta",
+    "subtitle_association": "Gestiona la configuración de tu asociación",
+    "saving": "Guardando...",
+    "save": "Guardar",
+    "navigation": "Navegación",
+    "sections": {
+      "privacy": "Privacidad",
+      "account": "Cuenta",
+      "security": "Seguridad",
+      "organization": "Organización"
+    },
+    "navigation": {
+      "section": "Navegar a la sección de configuración"
+    },
+    "deletion": {
+      "inProgress": "Eliminación en progreso…"
+    },
+    "form": {
+      "inputField": "Campo de entrada",
+      "password": "Contraseña"
+    },
+    "errors": {
+      "unexpected": "Error inesperado"
+    },
+    "privacy": {
+      "title": "Privacidad",
+      "description": "Controla quién puede ver tu información personal",
+      "description_association": "Controla la visibilidad de la información de tu asociación",
+      "profile_visibility": "Visibilidad del perfil",
+      "profile_visibility_description": "Permitir que otros usuarios vean tu perfil",
+      "profile_visibility_description_association": "Permitir que los voluntarios vean el perfil de tu asociación",
+      "location_sharing": "Compartir ubicación",
+      "location_sharing_description": "Compartir tu ubicación para eventos cercanos",
+      "activity_sharing": "Compartir actividad",
+      "activity_sharing_description": "Permitir que otros vean tus participaciones",
+      "contact_info": "Información de contacto",
+      "contact_info_description": "Hacer visibles tus datos de contacto a los voluntarios",
+      "event_visibility": "Visibilidad de eventos",
+      "event_visibility_description": "Mostrar tus eventos en las búsquedas",
+      "volunteer_list": "Lista de voluntarios",
+      "volunteer_list_description": "Permitir que los voluntarios vean la lista de participantes"
+    },
+    "account": {
+      "title": "Cuenta",
+      "description": "Gestiona la información de tu cuenta",
+      "description_association": "Gestiona la información de tu asociación",
+      "change_password": "Cambiar contraseña",
+      "change_password_description": "Actualiza tu contraseña para mayor seguridad",
+      "change": "Cambiar",
+      "delete_account": "Eliminar cuenta",
+      "delete_account_description": "Eliminar permanentemente tu cuenta y todos tus datos",
+      "delete_account_description_association": "Eliminar permanentemente tu asociación y todos tus eventos",
+      "delete": "Eliminar",
+      "association_info": "Información de la asociación",
+      "association_info_description": "Editar los detalles de tu asociación",
+      "edit": "Editar"
+    },
+    "security": {
+      "title": "Seguridad",
+      "description": "Fortalece la seguridad de tu cuenta",
+      "description_association": "Fortalece la seguridad de tu asociación",
+      "two_factor": "Autenticación de dos factores",
+      "two_factor_description": "Añadir una capa extra de seguridad",
+      "login_notifications": "Notificaciones de inicio de sesión",
+      "login_notifications_description": "Recibir alertas para nuevos inicios de sesión",
+      "siret_verification": "Verificación SIRET",
+      "siret_verification_description": "Verificar automáticamente los números SIRET"
+    },
+    "organization": {
+      "title": "Organización",
+      "description": "Configuraciones de organización y gestión",
+      "auto_approve_volunteers": "Aprobar automáticamente voluntarios",
+      "auto_approve_volunteers_description": "Aprobar automáticamente las solicitudes de participación",
+      "volunteer_limits": "Límites de voluntarios",
+      "volunteer_limits_description": "Establecer límites en el número de voluntarios",
+      "participant_limits": "Límites de participantes",
+      "participant_limits_description": "Establecer límites en el número de participantes",
+      "event_approval": "Aprobación de eventos",
+      "event_approval_description": "Requerir aprobación para nuevos eventos"
+    },
+    "delete_confirmation": {
+      "title": "Confirmar eliminación",
+      "message": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.",
+      "message_association": "¿Estás seguro de que quieres eliminar tu asociación? Esta acción es irreversible.",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar eliminación"
+    },
+    "password_change": {
+      "title": "Cambiar contraseña",
+      "message": "Ingresa tu contraseña actual y elige una nueva contraseña",
+      "old_password": "Contraseña actual",
+      "old_password_placeholder": "Ingresa tu contraseña actual",
+      "new_password": "Nueva contraseña",
+      "new_password_placeholder": "Ingresa tu nueva contraseña",
+      "confirm_password": "Confirmar contraseña",
+      "confirm_password_placeholder": "Confirma tu nueva contraseña",
+      "password_requirements": "La contraseña debe contener al menos 8 caracteres",
+      "cancel": "Cancelar",
+      "confirm": "Confirmar",
+      "success": "¡Contraseña cambiada exitosamente!",
+      "error": {
+        "password_mismatch": "Las contraseñas no coinciden",
+        "weak_password": "La contraseña debe contener al menos 8 caracteres",
+        "general": "Error al cambiar la contraseña"
+      }
+    }
+  },
+  "editProfile": {
+    "change": "Cambiar",
+    "save": "Guardar",
+    "association": {
+      "logo": "Logo de la asociación",
+      "name": "Nombre de la asociación",
+      "type": "Tipo de asociación",
+      "phone": "Número de teléfono de la asociación",
+      "country": "País de la asociación",
+      "city": "Ciudad de la asociación",
+      "postalCode": "Código postal de la asociación",
+      "description": "Descripción de la asociación"
+    },
+    "volunteer": {
+      "photo": "Foto de perfil"
+    },
+    "form": {
+      "inputField": "Campo de entrada",
+      "textArea": "Área de texto"
+    },
+    "errors": {
+      "unexpected": "Error inesperado"
+    }
+  },
+  "profile": {
+    "editProfile": "Editar perfil",
+    "share": "Compartir",
+    "notProvided": "No proporcionado",
+    "age": {
+      "years": "años"
+    },
+    "birthDate": {
+      "notProvided": "Fecha de nacimiento no proporcionada"
+    },
+    "bio": {
+      "notProvided": "Sin descripción."
+    },
+    "association": {
+      "logo": "Logo de la asociación",
+      "typeNotProvided": "Tipo no proporcionado"
+    },
+    "stats": {
+      "associations": "Asociaciones",
+      "eventsParticipated": "Eventos participados",
+      "volunteerOpportunities": "Oportunidades de voluntariado",
+      "city": "Ciudad",
+      "postalCode": "Código postal",
+      "volunteers": "Voluntarios",
+      "announcementsCreated": "Anuncios creados",
+      "createdOn": "Creado el"
+    },
+    "sections": {
+      "contact": "Contacto",
+      "location": "Ubicación",
+      "socialNetworks": "Redes sociales"
+    },
+    "contact": {
+      "email": "Email",
+      "phone": "Teléfono"
+    },
+    "location": {
+      "country": "País",
+      "city": "Ciudad",
+      "postalCode": "Código postal"
+    },
+    "socialNetworks": {
+      "noWebsite": "Ningún sitio web proporcionado"
+    },
+    "errors": {
+      "unexpected": "Error inesperado"
+    }
   }
 }
