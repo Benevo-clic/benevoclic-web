@@ -553,11 +553,10 @@
       <!-- Section Recherche Rapide -->
       <section id="search-section" class="py-12 px-4 bg-base-100">
         <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-10 slide-in-up" :class="{ visible: isVisible.search }">
-            <h2 class="text-3xl font-bold mb-4">Trouvez l'événement qui vous correspond</h2>
+          <div class="text-center mb-10 slide-in-up" :class="{ visible: isVisible.search }" v-if="!startSearching">
+            <h2 class="text-3xl font-bold mb-4">{{ t('volunteerPage.search.title') }}</h2>
             <p class="text-base-content/70 max-w-2xl mx-auto">
-              Utilisez notre moteur de recherche avancé pour trouver des événements qui
-              correspondent à vos besoins, que vous souhaitiez aider ou participer.
+              {{ t('volunteerPage.search.description') }}
             </p>
           </div>
 

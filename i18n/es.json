@@ -1702,5 +1702,21 @@
     "recentSearches": "Búsquedas recientes",
     "searchFor": "Buscar: {search}",
     "helpSupport": "Ayuda y soporte"
+  },
+  "drawerContent": {
+    "menu": "Menú",
+    "welcome": "Bienvenido",
+    "closeMenu": "Cerrar menú",
+    "closeWelcomePanel": "Cerrar panel de bienvenida",
+    "menuDescription": "Menú de navegación principal",
+    "welcomeDescription": "Panel de bienvenida y navegación"
+  },
+  "drawerAppContentNoConnected": {
+    "welcome": "Bienvenido a BeneVoclic",
+    "connectMessage": "Inicia sesión para acceder a todas las funciones",
+    "toggleTheme": "Alternar tema"
+  },
+  "navigationActions": {
+    "label": "Acciones de navegación"
   }
 }

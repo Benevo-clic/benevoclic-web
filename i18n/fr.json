@@ -165,7 +165,21 @@
       "language": "Langue",
       "theme": "Thème"
     },
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "menu": "Menu",
+    "welcome": "Bienvenue",
+    "closeMenu": "Fermer le menu",
+    "closeWelcomePanel": "Fermer le panneau de bienvenue",
+    "menuDescription": "Menu de navigation principal",
+    "welcomeDescription": "Panneau de bienvenue et navigation"
+  },
+  "drawerAppContentNoConnected": {
+    "welcome": "Bienvenue sur BeneVoclic",
+    "connectMessage": "Connectez-vous pour accéder à toutes les fonctionnalités",
+    "toggleTheme": "Basculer le thème"
+  },
+  "navigationActions": {
+    "label": "Actions de navigation"
   },
   "header": {
     "loading": "Chargement de l'application...",
@@ -526,16 +540,6 @@
       "users": "Utilisateurs",
       "announcements": "Annonces"
     }
-  },
-  "common": {
-    "placeholder_address_search": "Rechercher une adresse...",
-    "auto_complete_address": "street-address",
-    "aria_label_search": "Recherche d'adresse",
-    "address_description": "Tapez au moins 3 caractères pour voir les suggestions d'adresses",
-    "aria_label_suggestions": "Suggestions d'adresses",
-    "no_suggestions_found": "Aucune suggestion trouvée",
-    "address_label": "Lieu (Adresse)",
-    "required_field": "Champ obligatoire"
   },
   "userDetailsModal": {
     "title": "Détails du profil",

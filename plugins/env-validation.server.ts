@@ -3,7 +3,6 @@ import { EnvValidator } from '~/utils/env-validator'
 export default defineNuxtPlugin(() => {
   try {
     EnvValidator.validateRequired()
-    console.log("✅ Configuration d'environnement validée avec succès")
   } catch (error: any) {
     console.error('❌ ERREUR CRITIQUE - Configuration invalide:', error.message)
     console.error("💡 Vérifiez votre fichier .env et les variables d'environnement")

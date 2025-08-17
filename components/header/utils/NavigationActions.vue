@@ -3,7 +3,7 @@
   import LanguageComponent from '~/components/header/utils/components/LanguageComponent.vue'
   import LocationContextComponent from '~/components/header/utils/components/LocationContextComponent.vue'
 
-  const { setLocale, locale } = useI18n()
+  const { setLocale, locale, t } = useI18n()
   const route = useRoute()
 
   const showLanguageMenu = ref(false)
@@ -53,7 +53,7 @@
 </script>
 
 <template>
-  <div class="relative" role="group" aria-label="Actions de navigation" @keydown="handleKeydown">
+  <div class="relative" role="group" :aria-label="t('navigationActions.label')" @keydown="handleKeydown">
     <LocationContextComponent :flag="flag" @toggle-language-menu="toggleLanguageMenu" />
     <LanguageComponent :show-language-menu="showLanguageMenu" @change-language="changeLanguage" />
   </div>

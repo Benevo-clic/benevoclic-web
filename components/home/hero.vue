@@ -32,9 +32,6 @@
                   class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300"
                 />
               </NuxtLink>
-              <button class="btn btn-outline hover:scale-105 transition-transform duration-300">
-                {{ t('hero.actions.learn_more') }}
-              </button>
             </div>
           </div>
           <div class="relative slide-in-right visible delay-400 hidden lg:block">

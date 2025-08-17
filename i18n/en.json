@@ -1701,5 +1701,21 @@
     "recentSearches": "Recent searches",
     "searchFor": "Search for: {search}",
     "helpSupport": "Help and support"
+  },
+  "drawerContent": {
+    "menu": "Menu",
+    "welcome": "Welcome",
+    "closeMenu": "Close menu",
+    "closeWelcomePanel": "Close welcome panel",
+    "menuDescription": "Main navigation menu",
+    "welcomeDescription": "Welcome and navigation panel"
+  },
+  "drawerAppContentNoConnected": {
+    "welcome": "Welcome to BeneVoclic",
+    "connectMessage": "Sign in to access all features",
+    "toggleTheme": "Toggle theme"
+  },
+  "navigationActions": {
+    "label": "Navigation actions"
   }
 }

@@ -563,7 +563,7 @@
       <!-- Section Recherche Rapide -->
       <section id="search-section" class="py-12 px-4 bg-base-100">
         <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-10 slide-in-up" :class="{ visible: isVisible.search }">
+          <div class="text-center mb-10 slide-in-up" :class="{ visible: isVisible.search }" v-if="!startSearching">
             <h2 class="text-3xl font-bold mb-4">{{ t('volunteerPage.search.title') }}</h2>
             <p class="text-base-content/70 max-w-2xl mx-auto">
               {{ t('volunteerPage.search.description') }}
