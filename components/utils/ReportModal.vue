@@ -1,51 +1,51 @@
 <template>
   <div v-if="isOpen" class="modal modal-open">
-    <div class="modal-box max-w-2xl">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-xl font-bold text-base-content">
+    <div class="modal-box max-w-2xl w-full mx-4 sm:mx-6 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-4 sm:mb-6">
+        <h3 class="text-lg sm:text-xl font-bold text-base-content pr-2">
           {{
             isAnnouncementReport
-              ? translate('help.report.announcement_title', 'Signaler une annonce')
-              : translate('help.report.title', 'Signaler un problème')
+              ? t('help.contact.report.announcement_title')
+              : t('help.contact.report.title')
           }}
         </h3>
         <button
-          class="btn btn-sm btn-circle btn-ghost"
-          aria-label="Fermer le modal"
+          class="btn btn-sm btn-circle btn-ghost flex-shrink-0"
+          :aria-label="t('common.close')"
           @click="closeModal"
         >
-          <X class="w-5 h-5" />
+          <X class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       </div>
 
-      <form class="space-y-6" @submit.prevent="submitReport">
+      <form class="space-y-4 sm:space-y-6" @submit.prevent="submitReport">
         <!-- Type de signalement -->
         <div class="form-control">
           <label class="label">
-            <span class="label-text font-medium">{{
-              translate('help.report.type_label', 'Type de signalement')
+            <span class="label-text font-medium text-sm sm:text-base">{{
+              t('help.contact.report.type_label')
             }}</span>
           </label>
           <select
             v-model="reportForm.type"
-            class="select select-bordered w-full"
+            class="select select-bordered w-full text-sm sm:text-base"
             required
             @change="onTypeChange"
           >
             <option value="">
-              {{ translate('help.report.types.select', 'Sélectionner un type') }}
+              {{ t('help.contact.report.types.select') }}
             </option>
             <option value="ANNOUNCEMENT">
-              {{ translate('help.report.types.announcement', 'Annonce') }}
+              {{ t('help.contact.report.types.announcement') }}
             </option>
             <option value="TECHNICAL">
-              {{ translate('help.report.types.technical', 'Problème technique') }}
+              {{ t('help.contact.report.types.technical') }}
             </option>
             <option value="USER_FEEDBACK">
-              {{ translate('help.report.types.user_feedback', 'Feedback utilisateur') }}
+              {{ t('help.contact.report.types.user_feedback') }}
             </option>
             <option value="OTHER">
-              {{ translate('help.report.types.other', 'Autre') }}
+              {{ t('help.contact.report.types.other') }}
             </option>
           </select>
         </div>
@@ -53,210 +53,122 @@
         <!-- Catégorie -->
         <div class="form-control">
           <label class="label">
-            <span class="label-text font-medium">{{
-              translate('help.report.category_label', 'Catégorie')
+            <span class="label-text font-medium text-sm sm:text-base">{{
+              t('help.contact.report.category_label')
             }}</span>
           </label>
-          <select v-model="reportForm.category" class="select select-bordered w-full" required>
+          <select
+            v-model="reportForm.category"
+            class="select select-bordered w-full text-sm sm:text-base"
+            required
+          >
             <option value="">
-              {{ translate('help.report.categories.select', 'Sélectionner une catégorie') }}
+              {{ t('help.contact.report.categories.select') }}
             </option>
 
             <!-- Catégories pour les annonces -->
             <optgroup
               v-if="reportForm.type === 'ANNOUNCEMENT'"
-              :label="translate('help.report.types.announcement', 'Annonce')"
+              :label="t('help.contact.report.types.announcement')"
             >
               <option value="INAPPROPRIATE_CONTENT">
-                {{
-                  translate(
-                    'help.report.categories.announcement.inappropriate_content',
-                    'Contenu inapproprié'
-                  )
-                }}
+                {{ t('help.contact.report.categories.announcement.inappropriate_content') }}
               </option>
               <option value="OUTDATED_INFO">
-                {{
-                  translate(
-                    'help.report.categories.announcement.outdated_info',
-                    'Informations obsolètes'
-                  )
-                }}
+                {{ t('help.contact.report.categories.announcement.outdated_info') }}
               </option>
               <option value="WRONG_ADDRESS">
-                {{
-                  translate(
-                    'help.report.categories.announcement.wrong_address',
-                    'Adresse incorrecte'
-                  )
-                }}
+                {{ t('help.contact.report.categories.announcement.wrong_address') }}
               </option>
               <option value="WRONG_DATE_TIME">
-                {{
-                  translate(
-                    'help.report.categories.announcement.wrong_date_time',
-                    'Date/heure incorrecte'
-                  )
-                }}
+                {{ t('help.contact.report.categories.announcement.wrong_date_time') }}
               </option>
               <option value="WRONG_CAPACITY">
-                {{
-                  translate(
-                    'help.report.categories.announcement.wrong_capacity',
-                    'Capacité incorrecte'
-                  )
-                }}
+                {{ t('help.contact.report.categories.announcement.wrong_capacity') }}
               </option>
               <option value="INAPPROPRIATE_TAGS">
-                {{
-                  translate(
-                    'help.report.categories.announcement.inappropriate_tags',
-                    'Tags inappropriés'
-                  )
-                }}
+                {{ t('help.contact.report.categories.announcement.inappropriate_tags') }}
               </option>
               <option value="OTHER">
-                {{ translate('help.report.categories.announcement.other', 'Autre') }}
+                {{ t('help.contact.report.categories.announcement.other') }}
               </option>
             </optgroup>
 
             <!-- Catégories pour les problèmes techniques -->
             <optgroup
               v-if="reportForm.type === 'TECHNICAL'"
-              :label="translate('help.report.types.technical', 'Problème technique')"
+              :label="t('help.contact.report.types.technical')"
             >
               <option value="CONNECTION_ISSUE">
-                {{
-                  translate(
-                    'help.report.categories.technical.connection_issue',
-                    'Problème de connexion'
-                  )
-                }}
+                {{ t('help.contact.report.categories.technical.connection_issue') }}
               </option>
               <option value="IMAGE_NOT_LOADING">
-                {{
-                  translate(
-                    'help.report.categories.technical.image_not_loading',
-                    'Images qui ne se chargent pas'
-                  )
-                }}
+                {{ t('help.contact.report.categories.technical.image_not_loading') }}
               </option>
               <option value="RESPONSIVE_ISSUE">
-                {{
-                  translate(
-                    'help.report.categories.technical.responsive_issue',
-                    "Problème d'affichage mobile"
-                  )
-                }}
+                {{ t('help.contact.report.categories.technical.responsive_issue') }}
               </option>
               <option value="SEARCH_PROBLEM">
-                {{
-                  translate(
-                    'help.report.categories.technical.search_problem',
-                    'Problème de recherche'
-                  )
-                }}
+                {{ t('help.contact.report.categories.technical.search_problem') }}
               </option>
               <option value="FORM_NOT_WORKING">
-                {{
-                  translate(
-                    'help.report.categories.technical.form_not_working',
-                    'Formulaire qui ne fonctionne pas'
-                  )
-                }}
+                {{ t('help.contact.report.categories.technical.form_not_working') }}
               </option>
               <option value="SLOW_PERFORMANCE">
-                {{
-                  translate(
-                    'help.report.categories.technical.slow_performance',
-                    'Performance lente'
-                  )
-                }}
+                {{ t('help.contact.report.categories.technical.slow_performance') }}
               </option>
               <option value="OTHER">
-                {{ translate('help.report.categories.technical.other', 'Autre') }}
+                {{ t('help.contact.report.categories.technical.other') }}
               </option>
             </optgroup>
 
             <!-- Catégories pour le feedback utilisateur -->
             <optgroup
               v-if="reportForm.type === 'USER_FEEDBACK'"
-              :label="translate('help.report.types.user_feedback', 'Feedback utilisateur')"
+              :label="t('help.contact.report.types.user_feedback')"
             >
               <option value="FEATURE_REQUEST">
-                {{
-                  translate(
-                    'help.report.categories.user_feedback.feature_request',
-                    'Demande de fonctionnalité'
-                  )
-                }}
+                {{ t('help.contact.report.categories.user_feedback.feature_request') }}
               </option>
               <option value="BUG_REPORT">
-                {{
-                  translate('help.report.categories.user_feedback.bug_report', 'Signalement de bug')
-                }}
+                {{ t('help.contact.report.categories.user_feedback.bug_report') }}
               </option>
               <option value="USABILITY_ISSUE">
-                {{
-                  translate(
-                    'help.report.categories.user_feedback.usability_issue',
-                    "Problème d'ergonomie"
-                  )
-                }}
+                {{ t('help.contact.report.categories.user_feedback.usability_issue') }}
               </option>
               <option value="CONTENT_SUGGESTION">
-                {{
-                  translate(
-                    'help.report.categories.user_feedback.content_suggestion',
-                    'Suggestion de contenu'
-                  )
-                }}
+                {{ t('help.contact.report.categories.user_feedback.content_suggestion') }}
               </option>
               <option value="GENERAL_FEEDBACK">
-                {{
-                  translate(
-                    'help.report.categories.user_feedback.general_feedback',
-                    'Feedback général'
-                  )
-                }}
+                {{ t('help.contact.report.categories.user_feedback.general_feedback') }}
               </option>
               <option value="OTHER">
-                {{ translate('help.report.categories.user_feedback.other', 'Autre') }}
+                {{ t('help.contact.report.categories.user_feedback.other') }}
               </option>
             </optgroup>
 
             <!-- Catégories pour autres -->
             <optgroup
               v-if="reportForm.type === 'OTHER'"
-              :label="translate('help.report.types.other', 'Autre')"
+              :label="t('help.contact.report.types.other')"
             >
               <option value="GENERAL_INQUIRY">
-                {{ translate('help.report.categories.other.general_inquiry', 'Question générale') }}
+                {{ t('help.contact.report.categories.other.general_inquiry') }}
               </option>
               <option value="ACCOUNT_ISSUE">
-                {{ translate('help.report.categories.other.account_issue', 'Problème de compte') }}
+                {{ t('help.contact.report.categories.other.account_issue') }}
               </option>
               <option value="BILLING_QUESTION">
-                {{
-                  translate(
-                    'help.report.categories.other.billing_question',
-                    'Question de facturation'
-                  )
-                }}
+                {{ t('help.contact.report.categories.other.billing_question') }}
               </option>
               <option value="PARTNERSHIP_REQUEST">
-                {{
-                  translate(
-                    'help.report.categories.other.partnership_request',
-                    'Demande de partenariat'
-                  )
-                }}
+                {{ t('help.contact.report.categories.other.partnership_request') }}
               </option>
               <option value="PRESS_INQUIRY">
-                {{ translate('help.report.categories.other.press_inquiry', 'Demande de presse') }}
+                {{ t('help.contact.report.categories.other.press_inquiry') }}
               </option>
               <option value="OTHER">
-                {{ translate('help.report.categories.other.other', 'Autre') }}
+                {{ t('help.contact.report.categories.other.other') }}
               </option>
             </optgroup>
           </select>
@@ -265,53 +177,60 @@
         <!-- Description -->
         <div class="form-control">
           <label class="label">
-            <span class="label-text font-medium">{{
-              translate('help.report.description_label', 'Description détaillée')
+            <span class="label-text font-medium text-sm sm:text-base">{{
+              t('help.contact.report.description_label')
             }}</span>
           </label>
           <textarea
             v-model="reportForm.description"
-            class="textarea textarea-bordered h-32"
-            :placeholder="
-              translate('help.report.description_placeholder', 'Décrivez le problème en détail...')
-            "
+            class="textarea textarea-bordered h-24 sm:h-32 text-sm sm:text-base resize-none"
+            :placeholder="t('help.contact.report.description_placeholder')"
             required
           />
         </div>
 
         <!-- Informations supplémentaires -->
-        <div class="bg-base-200 rounded-lg p-4">
-          <h4 class="font-medium mb-3">
-            {{ translate('help.report.auto_info', 'Informations automatiques') }}
+        <div class="bg-base-200 rounded-lg p-3 sm:p-4">
+          <h4 class="font-medium mb-2 sm:mb-3 text-sm sm:text-base">
+            {{ t('help.contact.report.auto_info') }}
           </h4>
-          <div class="text-sm text-base-content/70 space-y-2">
-            <div v-if="reportForm.pageUrl">
-              <strong>{{ translate('help.report.page', 'Page') }}:</strong>
-              {{ reportForm.pageUrl }}
+          <div class="text-xs sm:text-sm text-base-content/70 space-y-1 sm:space-y-2">
+            <div v-if="reportForm.pageUrl" class="break-all">
+              <strong>{{ t('help.contact.report.page') }}:</strong>
+              <span class="truncate block">{{ reportForm.pageUrl }}</span>
             </div>
-            <div v-if="reportForm.userEmail">
-              <strong>{{ translate('help.report.email', 'Email') }}:</strong>
-              {{ reportForm.userEmail }}
+            <div v-if="reportForm.userEmail" class="break-all">
+              <strong>{{ t('help.contact.report.email') }}:</strong>
+              <span class="truncate block">{{ reportForm.userEmail }}</span>
             </div>
-            <div v-if="reportForm.announcementId">
-              <strong>{{ translate('help.report.announcement_id', 'Annonce ID') }}:</strong>
-              {{ reportForm.announcementId }}
+            <div v-if="reportForm.announcementId" class="break-all">
+              <strong>{{ t('help.contact.report.announcement_id') }}:</strong>
+              <span class="truncate block">{{ reportForm.announcementId }}</span>
             </div>
           </div>
         </div>
 
         <!-- Actions -->
-        <div class="modal-action">
-          <button type="button" class="btn btn-ghost" :disabled="submitting" @click="closeModal">
-            {{ translate('help.report.cancel', 'Annuler') }}
+        <div class="modal-action flex-col sm:flex-row gap-2 sm:gap-3">
+          <button
+            type="button"
+            class="btn btn-ghost btn-sm sm:btn-md w-full sm:w-auto"
+            :disabled="submitting"
+            @click="closeModal"
+          >
+            {{ t('help.contact.report.cancel') }}
           </button>
-          <button type="submit" class="btn btn-primary" :disabled="submitting || !isFormValid">
+          <button
+            type="submit"
+            class="btn btn-primary btn-sm sm:btn-md w-full sm:w-auto"
+            :disabled="submitting || !isFormValid"
+          >
             <span v-if="submitting" class="loading loading-spinner loading-sm" />
-            {{
-              submitting
-                ? translate('help.report.submitting', 'Envoi en cours...')
-                : translate('help.report.submit', 'Envoyer le signalement')
-            }}
+            <span class="truncate">
+              {{
+                submitting ? t('help.contact.report.submitting') : t('help.contact.report.submit')
+              }}
+            </span>
           </button>
         </div>
       </form>
@@ -325,6 +244,8 @@
 <script setup lang="ts">
   import { ref, computed, watch } from 'vue'
   import { X } from 'lucide-vue-next'
+
+  const { t } = useI18n()
 
   interface ReportForm {
     type: string
@@ -351,20 +272,7 @@
     submitted: [success: boolean]
   }>()
 
-  const { t } = useI18n()
   const submitting = ref(false)
-
-  // Fonction de traduction avec fallback
-  function translate(key: string, fallback: string = key): string {
-    try {
-      const translation = t(key)
-      return translation !== key ? translation : fallback
-    } catch (error) {
-      process.env.NODE_ENV !== 'production' &&
-        console.warn(`Translation key not found: ${key}`, error)
-      return fallback
-    }
-  }
 
   const reportForm = ref<ReportForm>({
     type: '',
@@ -475,10 +383,24 @@
   }
 
   .modal {
-    @apply fixed inset-0 z-50 flex items-center justify-center;
+    @apply fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4;
   }
 
   .modal-box {
-    @apply bg-base-100 rounded-lg shadow-xl max-h-[90vh] overflow-y-auto;
+    @apply bg-base-100 rounded-lg shadow-xl w-full max-w-2xl;
+  }
+
+  /* Amélioration de la responsivité pour les petits écrans */
+  @media (max-width: 640px) {
+    .modal-box {
+      @apply mx-2;
+    }
+  }
+
+  /* Optimisation pour les très petits écrans */
+  @media (max-width: 480px) {
+    .modal-box {
+      @apply mx-1;
+    }
   }
 </style>

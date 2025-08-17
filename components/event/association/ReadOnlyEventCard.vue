@@ -1,11 +1,11 @@
 <template>
   <div
-    class="group card bg-base-100 shadow-lg hover:shadow-xl border border-base-300 hover:border-primary/20 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer overflow-hidden text-base"
+    class="group card bg-base-100 shadow-lg hover:shadow-xl border border-base-300 hover:border-primary/20 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer overflow-hidden text-base min-h-0"
     @click="goToDetails"
   >
     <!-- Image de couverture -->
     <div class="relative overflow-hidden">
-      <figure class="h-36 bg-gradient-to-br from-base-200 to-base-300">
+      <figure class="h-28 sm:h-32 md:h-36 bg-gradient-to-br from-base-200 to-base-300">
         <img
           v-if="announcement.announcementImage"
           :src="coverImageUrl"
@@ -14,13 +14,15 @@
         />
         <div
           v-else
-          class="w-full h-full flex flex-col items-center justify-center text-base-content/60"
+          class="w-full h-full flex flex-col items-center justify-center text-base-content/60 p-2"
         >
-          <div class="avatar placeholder mb-2">
-            <div class="bg-base-300 text-base-content rounded-full w-12">
+          <div class="avatar placeholder mb-1 sm:mb-2">
+            <div
+              class="bg-base-300 text-base-content rounded-full w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
+                class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -34,89 +36,105 @@
               </svg>
             </div>
           </div>
-          <p class="text-sm font-medium">{{ t('readOnlyEventCard.no_image') }}</p>
+          <p class="text-xs sm:text-sm font-medium text-center">
+            {{ t('readOnlyEventCard.no_image') }}
+          </p>
         </div>
       </figure>
 
       <!-- Badge de statut -->
-      <div class="absolute top-2 right-2">
-        <div class="badge badge-sm" :class="statusBadgeClass">
+      <div class="absolute top-1 right-1 sm:top-2 sm:right-2">
+        <div class="badge badge-xs sm:badge-sm" :class="statusBadgeClass">
           {{ announcement.status }}
         </div>
       </div>
     </div>
 
-    <div class="card-body p-5">
+    <div class="card-body p-3 sm:p-4 md:p-5 min-h-0 flex flex-col">
       <!-- Titre -->
       <h3
-        class="card-title text-lg font-bold mb-3 line-clamp-1 group-hover:text-primary transition-colors"
+        class="card-title text-sm sm:text-base md:text-lg font-bold mb-2 sm:mb-3 line-clamp-1 group-hover:text-primary transition-colors flex-shrink-0"
       >
         {{ announcement.nameEvent }}
       </h3>
 
       <!-- Description -->
-      <p class="text-sm text-base-content/70 mb-4 line-clamp-2 leading-relaxed">
+      <p
+        class="text-xs sm:text-sm text-base-content/70 mb-3 sm:mb-4 line-clamp-2 leading-relaxed flex-1 min-h-0"
+      >
         {{ truncatedDescription }}
       </p>
 
       <!-- Infos principales -->
-      <div class="flex items-center gap-4 mb-4 text-sm flex-wrap">
+      <div
+        class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3 sm:mb-4 text-xs sm:text-sm flex-shrink-0"
+      >
         <!-- Date / Heure -->
-        <div class="flex items-center gap-2">
-          <Calendar class="h-4 w-4 text-primary" />
+        <div class="flex items-center gap-1 sm:gap-2">
+          <Calendar class="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
           <span class="font-medium">{{
             new Date(announcement.dateEvent).toLocaleDateString('fr-FR', {
               day: '2-digit',
               month: '2-digit'
             })
           }}</span>
-          <span class="text-base-content/60">•</span>
-          <span>{{ announcement.hoursEvent }}</span>
+          <span class="text-base-content/60 hidden sm:inline">•</span>
+          <span class="truncate">{{ announcement.hoursEvent }}</span>
         </div>
 
         <!-- Ville -->
-        <div v-if="announcement.addressAnnouncement?.city" class="flex items-center gap-2">
-          <MapPin class="h-4 w-4 text-secondary" />
-          <span class="truncate max-w-[100px]">{{ announcement.addressAnnouncement.city }}</span>
+        <div v-if="announcement.addressAnnouncement?.city" class="flex items-center gap-1 sm:gap-2">
+          <MapPin class="h-3 w-3 sm:h-4 sm:w-4 text-secondary flex-shrink-0" />
+          <span class="truncate max-w-[80px] sm:max-w-[100px]">{{
+            announcement.addressAnnouncement.city
+          }}</span>
         </div>
       </div>
 
       <!-- Statistiques -->
-      <div class="flex gap-6 mb-4 text-sm">
-        <div class="flex items-center gap-2">
-          <Users class="h-4 w-4 text-primary" />
+      <div class="flex flex-col gap-2 mb-3 sm:mb-4 text-xs sm:text-sm flex-shrink-0">
+        <div class="flex items-center gap-1 sm:gap-2">
+          <Users class="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
           <span class="font-medium">
             {{ ParticipantAvailable(announcement) }}
           </span>
-          <span class="text-base-content/60">{{ t('readOnlyEventCard.participants') }}</span>
+          <span class="text-base-content/60 truncate">{{
+            t('readOnlyEventCard.participants')
+          }}</span>
         </div>
 
-        <div class="flex items-center gap-2">
-          <HeartHandshake class="h-4 w-4 text-secondary" />
+        <div class="flex items-center gap-1 sm:gap-2">
+          <HeartHandshake class="h-3 w-3 sm:h-4 sm:w-4 text-secondary flex-shrink-0" />
           <span class="font-medium">
             {{ volunteerAvailable(announcement) }}
           </span>
-          <span class="text-base-content/60">{{ t('readOnlyEventCard.volunteers') }}</span>
+          <span class="text-base-content/60 truncate">{{ t('readOnlyEventCard.volunteers') }}</span>
         </div>
       </div>
 
       <!-- Tags et CTA -->
-      <div class="flex items-center justify-between">
+      <div
+        class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 flex-shrink-0"
+      >
         <!-- Tags -->
-        <div v-if="announcement.tags?.length" class="flex flex-wrap gap-2">
+        <div v-if="announcement.tags?.length" class="flex flex-wrap gap-1 sm:gap-2">
           <div
             v-for="tag in announcement.tags.slice(0, 2)"
             :key="tag"
-            class="badge badge-outline text-sm hover:badge-primary transition-colors text-base-content border-base-content focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-1"
+            class="badge badge-outline text-xs sm:text-sm hover:badge-primary transition-colors text-base-content border-base-content focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-1 max-w-[80px] sm:max-w-none"
             tabindex="0"
             role="button"
             :aria-label="`${t('readOnlyEventCard.filter_by_tag')} ${tag}`"
           >
-            <span class="text-base-content/70 group-hover:text-primary transition-colors">{{
-              tag
-            }}</span>
+            <span
+              class="text-base-content/70 group-hover:text-primary transition-colors truncate"
+              >{{ tag }}</span
+            >
           </div>
-          <div v-if="announcement.tags.length > 2" class="badge badge-ghost text-sm text-neutral">
+          <div
+            v-if="announcement.tags.length > 2"
+            class="badge badge-ghost text-xs sm:text-sm text-neutral"
+          >
             <span class="text-base-content/70 group-hover:text-primary transition-colors"
               >+{{ announcement.tags.length - 2 }}</span
             >
@@ -125,12 +143,13 @@
 
         <!-- Bouton Détails -->
         <div
-          class="btn btn-primary btn-sm gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          class="btn btn-primary btn-xs sm:btn-sm gap-1 sm:gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 self-start sm:self-auto"
         >
-          {{ t('readOnlyEventCard.details') }}
+          <span class="hidden sm:inline">{{ t('readOnlyEventCard.details') }}</span>
+          <span class="sm:hidden">Détails</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
+            class="h-3 w-3 sm:h-4 sm:w-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

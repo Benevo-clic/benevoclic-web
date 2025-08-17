@@ -374,6 +374,65 @@
       "send": "Enviar Solicitud",
       "sending": "Enviando...",
       "success_message": "Tu solicitud ha sido enviada. ¡Te responderemos lo antes posible!",
+      "report": {
+        "title": "Reportar un Problema",
+        "announcement_title": "Reportar un Anuncio",
+        "type_label": "Tipo de Reporte",
+        "category_label": "Categoría",
+        "description_label": "Descripción Detallada",
+        "description_placeholder": "Describe el problema en detalle...",
+        "auto_info": "Información Automática",
+        "page": "Página",
+        "email": "Email",
+        "announcement_id": "ID del Anuncio",
+        "cancel": "Cancelar",
+        "submit": "Enviar Reporte",
+        "submitting": "Enviando...",
+        "types": {
+          "select": "Seleccionar un tipo",
+          "announcement": "Anuncio",
+          "technical": "Problema Técnico",
+          "user_feedback": "Feedback de Usuario",
+          "other": "Otro"
+        },
+        "categories": {
+          "select": "Seleccionar una categoría",
+          "announcement": {
+            "inappropriate_content": "Contenido Inapropiado",
+            "outdated_info": "Información Desactualizada",
+            "wrong_address": "Dirección Incorrecta",
+            "wrong_date_time": "Fecha/Hora Incorrecta",
+            "wrong_capacity": "Capacidad Incorrecta",
+            "inappropriate_tags": "Etiquetas Inapropiadas",
+            "other": "Otro"
+          },
+          "technical": {
+            "connection_issue": "Problema de Conexión",
+            "image_not_loading": "Imágenes No Se Cargan",
+            "responsive_issue": "Problema de Visualización Móvil",
+            "search_problem": "Problema de Búsqueda",
+            "form_not_working": "Formulario No Funciona",
+            "slow_performance": "Rendimiento Lento",
+            "other": "Otro"
+          },
+          "user_feedback": {
+            "feature_request": "Solicitud de Función",
+            "bug_report": "Reporte de Error",
+            "usability_issue": "Problema de Usabilidad",
+            "content_suggestion": "Sugerencia de Contenido",
+            "general_feedback": "Feedback General",
+            "other": "Otro"
+          },
+          "other": {
+            "general_inquiry": "Consulta General",
+            "account_issue": "Problema de Cuenta",
+            "billing_question": "Pregunta de Facturación",
+            "partnership_request": "Solicitud de Asociación",
+            "press_inquiry": "Consulta de Prensa",
+            "other": "Otro"
+          }
+        }
+      },
       "error_message": "Ocurrió un error. Por favor, inténtalo de nuevo o contáctanos directamente."
     }
   },
@@ -569,7 +628,8 @@
     "aria_label_suggestions": "Sugerencias de direcciones",
     "no_suggestions_found": "No se encontraron sugerencias",
     "address_label": "Ubicación (Dirección)",
-    "required_field": "Campo obligatorio"
+    "required_field": "Campo obligatorio",
+    "close": "Cerrar"
   },
   "multiMarkerMap": {
     "controls": {

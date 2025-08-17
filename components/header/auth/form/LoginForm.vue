@@ -59,7 +59,7 @@
         password: form.password,
         role: isAssociation.value ? RoleUser.ASSOCIATION : RoleUser.VOLUNTEER
       })
-      if (response.idToken) {
+      if (response?.idToken) {
         switch (isAssociation.value) {
           case true:
             break

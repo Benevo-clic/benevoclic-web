@@ -432,7 +432,7 @@
     "eventDate": "Date de l'événement",
     "location": "Localisation",
     "details": "Détails",
-    "cancel": "Annuler",
+      "cancel": "Annuler",
     "errors": {
       "unexpected": "Erreur inattendue"
     },
@@ -664,8 +664,67 @@
       "send": "Envoyer la demande",
       "sending": "Envoi en cours...",
       "success_message": "Votre demande a été envoyée. Nous vous répondrons dans les plus brefs délais !",
-      "error_message": "Une erreur est survenue. Veuillez réessayer ou nous contacter directement."
-    }
+      "report": {
+        "title": "Signaler un problème",
+        "announcement_title": "Signaler une annonce",
+        "type_label": "Type de signalement",
+        "category_label": "Catégorie",
+        "description_label": "Description détaillée",
+        "description_placeholder": "Décrivez le problème en détail...",
+        "auto_info": "Informations automatiques",
+        "page": "Page",
+        "email": "Email",
+        "announcement_id": "Annonce ID",
+        "cancel": "Annuler",
+        "submit": "Envoyer le signalement",
+        "submitting": "Envoi en cours...",
+        "types": {
+          "select": "Sélectionner un type",
+          "announcement": "Annonce",
+          "technical": "Problème technique",
+          "user_feedback": "Feedback utilisateur",
+          "other": "Autre"
+        },
+        "categories": {
+          "select": "Sélectionner une catégorie",
+          "announcement": {
+            "inappropriate_content": "Contenu inapproprié",
+            "outdated_info": "Informations obsolètes",
+            "wrong_address": "Adresse incorrecte",
+            "wrong_date_time": "Date/heure incorrecte",
+            "wrong_capacity": "Capacité incorrecte",
+            "inappropriate_tags": "Tags inappropriés",
+            "other": "Autre"
+          },
+          "technical": {
+            "connection_issue": "Problème de connexion",
+            "image_not_loading": "Images qui ne se chargent pas",
+            "responsive_issue": "Problème d'affichage mobile",
+            "search_problem": "Problème de recherche",
+            "form_not_working": "Formulaire qui ne fonctionne pas",
+            "slow_performance": "Performance lente",
+            "other": "Autre"
+          },
+          "user_feedback": {
+            "feature_request": "Demande de fonctionnalité",
+            "bug_report": "Signalement de bug",
+            "usability_issue": "Problème d'ergonomie",
+            "content_suggestion": "Suggestion de contenu",
+            "general_feedback": "Feedback général",
+            "other": "Autre"
+          },
+          "other": {
+            "general_inquiry": "Question générale",
+            "account_issue": "Problème de compte",
+            "billing_question": "Question de facturation",
+            "partnership_request": "Demande de partenariat",
+            "press_inquiry": "Demande de presse",
+            "other": "Autre"
+          }
+        }
+      }
+    },
+    "error_message": "Une erreur est survenue. Veuillez réessayer ou nous contacter directement."
   },
   "admin": {
     "header": {
@@ -867,7 +926,8 @@
     "aria_label_suggestions": "Suggestions d'adresses",
     "no_suggestions_found": "Aucune suggestion trouvée",
     "address_label": "Lieu (Adresse)",
-    "required_field": "Champ obligatoire"
+    "required_field": "Champ obligatoire",
+    "close": "Fermer"
   },
   "multiMarkerMap": {
     "controls": {

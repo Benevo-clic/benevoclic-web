@@ -373,6 +373,65 @@
       "send": "Send Request",
       "sending": "Sending...",
       "success_message": "Your request has been sent. We'll get back to you as soon as possible!",
+      "report": {
+        "title": "Report an Issue",
+        "announcement_title": "Report an Announcement",
+        "type_label": "Report Type",
+        "category_label": "Category",
+        "description_label": "Detailed Description",
+        "description_placeholder": "Describe the problem in detail...",
+        "auto_info": "Automatic Information",
+        "page": "Page",
+        "email": "Email",
+        "announcement_id": "Announcement ID",
+        "cancel": "Cancel",
+        "submit": "Send Report",
+        "submitting": "Sending...",
+        "types": {
+          "select": "Select a type",
+          "announcement": "Announcement",
+          "technical": "Technical Issue",
+          "user_feedback": "User Feedback",
+          "other": "Other"
+        },
+        "categories": {
+          "select": "Select a category",
+          "announcement": {
+            "inappropriate_content": "Inappropriate Content",
+            "outdated_info": "Outdated Information",
+            "wrong_address": "Wrong Address",
+            "wrong_date_time": "Wrong Date/Time",
+            "wrong_capacity": "Wrong Capacity",
+            "inappropriate_tags": "Inappropriate Tags",
+            "other": "Other"
+          },
+          "technical": {
+            "connection_issue": "Connection Issue",
+            "image_not_loading": "Images Not Loading",
+            "responsive_issue": "Mobile Display Issue",
+            "search_problem": "Search Problem",
+            "form_not_working": "Form Not Working",
+            "slow_performance": "Slow Performance",
+            "other": "Other"
+          },
+          "user_feedback": {
+            "feature_request": "Feature Request",
+            "bug_report": "Bug Report",
+            "usability_issue": "Usability Issue",
+            "content_suggestion": "Content Suggestion",
+            "general_feedback": "General Feedback",
+            "other": "Other"
+          },
+          "other": {
+            "general_inquiry": "General Inquiry",
+            "account_issue": "Account Issue",
+            "billing_question": "Billing Question",
+            "partnership_request": "Partnership Request",
+            "press_inquiry": "Press Inquiry",
+            "other": "Other"
+          }
+        }
+      },
       "error_message": "An error occurred. Please try again or contact us directly."
     }
   },
@@ -568,7 +627,8 @@
     "aria_label_suggestions": "Address suggestions",
     "no_suggestions_found": "No suggestions found",
     "address_label": "Location (Address)",
-    "required_field": "Required field"
+    "required_field": "Required field",
+    "close": "Close"
   },
   "multiMarkerMap": {
     "controls": {
