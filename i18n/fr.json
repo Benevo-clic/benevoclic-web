@@ -526,5 +526,48 @@
     "address_description": "Tapez au moins 3 caractères pour voir les suggestions d'adresses",
     "aria_label_suggestions": "Suggestions d'adresses",
     "no_addresses_found": "Aucune adresse trouvée pour cette recherche"
+  },
+  "userDetailsModal": {
+    "title": "Détails du profil",
+    "subtitle": "Informations complètes de l'utilisateur",
+    "close": "Fermer",
+    "close_aria_label": "Fermer",
+    "private_profile": {
+      "title": "Profil privé",
+      "description": "Ce profil n'est pas visible publiquement."
+    },
+    "user_not_found": {
+      "title": "Utilisateur non trouvé",
+      "description": "Impossible de charger les détails de cet utilisateur."
+    },
+    "badges": {
+      "volunteer": "Volontaire",
+      "association": "Association"
+    },
+    "sections": {
+      "about": "À propos",
+      "location": "Localisation",
+      "statistics": "Statistiques",
+      "status": "Statut",
+      "system_info": "Informations système"
+    },
+    "statistics": {
+      "participations": "Participations",
+      "missions": "Missions",
+      "associations": "Associations",
+      "volunteers": "Volontaires",
+      "announcements": "Annonces"
+    },
+    "status": {
+      "online": "En ligne",
+      "offline": "Hors ligne",
+      "verified": "Vérifié",
+      "disabled": "Désactivé"
+    },
+    "system_info": {
+      "created_at": "Créé le:",
+      "updated_at": "Mis à jour le:",
+      "not_available": "Non disponible"
+    }
   }
 }

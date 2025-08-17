@@ -367,5 +367,48 @@
       "success_message": "Your request has been sent. We'll get back to you as soon as possible!",
       "error_message": "An error occurred. Please try again or contact us directly."
     }
+  },
+  "userDetailsModal": {
+    "title": "Profile Details",
+    "subtitle": "Complete user information",
+    "close": "Close",
+    "close_aria_label": "Close",
+    "private_profile": {
+      "title": "Private Profile",
+      "description": "This profile is not publicly visible."
+    },
+    "user_not_found": {
+      "title": "User Not Found",
+      "description": "Unable to load details for this user."
+    },
+    "badges": {
+      "volunteer": "Volunteer",
+      "association": "Association"
+    },
+    "sections": {
+      "about": "About",
+      "location": "Location",
+      "statistics": "Statistics",
+      "status": "Status",
+      "system_info": "System Information"
+    },
+    "statistics": {
+      "participations": "Participations",
+      "missions": "Missions",
+      "associations": "Associations",
+      "volunteers": "Volunteers",
+      "announcements": "Announcements"
+    },
+    "status": {
+      "online": "Online",
+      "offline": "Offline",
+      "verified": "Verified",
+      "disabled": "Disabled"
+    },
+    "system_info": {
+      "created_at": "Created on:",
+      "updated_at": "Updated on:",
+      "not_available": "Not available"
+    }
   }
 }

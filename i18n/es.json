@@ -354,5 +354,48 @@
       "success_message": "Tu solicitud ha sido enviada. ¡Te responderemos lo antes posible!",
       "error_message": "Ocurrió un error. Por favor, inténtalo de nuevo o contáctanos directamente."
     }
+  },
+  "userDetailsModal": {
+    "title": "Detalles del Perfil",
+    "subtitle": "Información completa del usuario",
+    "close": "Cerrar",
+    "close_aria_label": "Cerrar",
+    "private_profile": {
+      "title": "Perfil Privado",
+      "description": "Este perfil no es visible públicamente."
+    },
+    "user_not_found": {
+      "title": "Usuario No Encontrado",
+      "description": "No se pueden cargar los detalles de este usuario."
+    },
+    "badges": {
+      "volunteer": "Voluntario",
+      "association": "Asociación"
+    },
+    "sections": {
+      "about": "Acerca de",
+      "location": "Ubicación",
+      "statistics": "Estadísticas",
+      "status": "Estado",
+      "system_info": "Información del Sistema"
+    },
+    "statistics": {
+      "participations": "Participaciones",
+      "missions": "Misiones",
+      "associations": "Asociaciones",
+      "volunteers": "Voluntarios",
+      "announcements": "Anuncios"
+    },
+    "status": {
+      "online": "En Línea",
+      "offline": "Desconectado",
+      "verified": "Verificado",
+      "disabled": "Deshabilitado"
+    },
+    "system_info": {
+      "created_at": "Creado el:",
+      "updated_at": "Actualizado el:",
+      "not_available": "No disponible"
+    }
   }
 }
