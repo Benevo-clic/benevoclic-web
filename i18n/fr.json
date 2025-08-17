@@ -587,5 +587,78 @@
     "validation": {
       "error": "La date de fin doit être postérieure à la date de début"
     }
+  },
+  "events": {
+    "manage": {
+      "loading": "Chargement…",
+      "title": "Gestion des événements",
+      "pagination": {
+        "page": "Page",
+        "of": "sur"
+      }
+    },
+    "requests": {
+      "loading": "Chargement en cours...",
+      "title": "Mes demandes",
+      "subtitle": "Gérez les demandes de bénévolat et d'adhésion à votre association",
+      "tabs": {
+        "volunteer": {
+          "full": "Demandes de bénévolat",
+          "short": "Bénévolat"
+        },
+        "association": {
+          "full": "Demandes d'adhésion",
+          "short": "Adhésion"
+        }
+      },
+      "sections": {
+        "volunteer_requests": "Demandes de bénévolat à un événement",
+        "association_requests": "Demandes d'adhésion à l'association"
+      },
+      "count": {
+        "request": "demande",
+        "requests": "demandes"
+      },
+      "empty": {
+        "volunteer": {
+          "title": "Aucune demande",
+          "description": "Aucune demande de participation pour le moment."
+        },
+        "association": {
+          "title": "Aucune demande",
+          "description": "Aucune demande d'adhésion pour le moment."
+        }
+      }
+    },
+    "announcement": {
+      "loading": "Chargement…",
+      "cover_image": "Photo de couverture",
+      "no_image": "Aucune image disponible",
+      "association_logo": "Logo de l'association",
+      "stats": {
+        "title": "Statistiques",
+        "participants": {
+          "title": "Participants",
+          "description": "Personnes inscrites à l'événement"
+        },
+        "volunteers": {
+          "title": "Bénévoles",
+          "description": "Personnes aidant à l'organisation"
+        }
+      },
+      "tabs": {
+        "participants": "Participants",
+        "volunteers": "Bénévoles"
+      },
+      "actions": {
+        "manage_presence": "Gérer les présences",
+        "edit": "Modifier",
+        "delete": "Supprimer"
+      },
+      "scroll": {
+        "down": "Faire défiler vers le bas",
+        "up": "Faire défiler vers le haut"
+      }
+    }
   }
 }

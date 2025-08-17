@@ -428,5 +428,78 @@
     "validation": {
       "error": "End date must be after start date"
     }
+  },
+  "events": {
+    "manage": {
+      "loading": "Loading…",
+      "title": "Event Management",
+      "pagination": {
+        "page": "Page",
+        "of": "of"
+      }
+    },
+    "requests": {
+      "loading": "Loading...",
+      "title": "My Requests",
+      "subtitle": "Manage volunteer and association membership requests",
+      "tabs": {
+        "volunteer": {
+          "full": "Volunteer Requests",
+          "short": "Volunteer"
+        },
+        "association": {
+          "full": "Membership Requests",
+          "short": "Membership"
+        }
+      },
+      "sections": {
+        "volunteer_requests": "Volunteer requests for an event",
+        "association_requests": "Association membership requests"
+      },
+      "count": {
+        "request": "request",
+        "requests": "requests"
+      },
+      "empty": {
+        "volunteer": {
+          "title": "No requests",
+          "description": "No participation requests at the moment."
+        },
+        "association": {
+          "title": "No requests",
+          "description": "No membership requests at the moment."
+        }
+      }
+    },
+    "announcement": {
+      "loading": "Loading…",
+      "cover_image": "Cover photo",
+      "no_image": "No image available",
+      "association_logo": "Association logo",
+      "stats": {
+        "title": "Statistics",
+        "participants": {
+          "title": "Participants",
+          "description": "People registered for the event"
+        },
+        "volunteers": {
+          "title": "Volunteers",
+          "description": "People helping with organization"
+        }
+      },
+      "tabs": {
+        "participants": "Participants",
+        "volunteers": "Volunteers"
+      },
+      "actions": {
+        "manage_presence": "Manage attendance",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "scroll": {
+        "down": "Scroll down",
+        "up": "Scroll up"
+      }
+    }
   }
 }

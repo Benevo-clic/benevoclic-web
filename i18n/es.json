@@ -415,5 +415,78 @@
     "validation": {
       "error": "La fecha de fin debe ser posterior a la fecha de inicio"
     }
+  },
+  "events": {
+    "manage": {
+      "loading": "Cargando…",
+      "title": "Gestión de Eventos",
+      "pagination": {
+        "page": "Página",
+        "of": "de"
+      }
+    },
+    "requests": {
+      "loading": "Cargando...",
+      "title": "Mis Solicitudes",
+      "subtitle": "Gestiona las solicitudes de voluntariado y membresía de la asociación",
+      "tabs": {
+        "volunteer": {
+          "full": "Solicitudes de Voluntariado",
+          "short": "Voluntariado"
+        },
+        "association": {
+          "full": "Solicitudes de Membresía",
+          "short": "Membresía"
+        }
+      },
+      "sections": {
+        "volunteer_requests": "Solicitudes de voluntariado para un evento",
+        "association_requests": "Solicitudes de membresía de la asociación"
+      },
+      "count": {
+        "request": "solicitud",
+        "requests": "solicitudes"
+      },
+      "empty": {
+        "volunteer": {
+          "title": "Sin solicitudes",
+          "description": "No hay solicitudes de participación en este momento."
+        },
+        "association": {
+          "title": "Sin solicitudes",
+          "description": "No hay solicitudes de membresía en este momento."
+        }
+      }
+    },
+    "announcement": {
+      "loading": "Cargando…",
+      "cover_image": "Foto de portada",
+      "no_image": "No hay imagen disponible",
+      "association_logo": "Logo de la asociación",
+      "stats": {
+        "title": "Estadísticas",
+        "participants": {
+          "title": "Participantes",
+          "description": "Personas registradas para el evento"
+        },
+        "volunteers": {
+          "title": "Voluntarios",
+          "description": "Personas ayudando con la organización"
+        }
+      },
+      "tabs": {
+        "participants": "Participantes",
+        "volunteers": "Voluntarios"
+      },
+      "actions": {
+        "manage_presence": "Gestionar asistencia",
+        "edit": "Editar",
+        "delete": "Eliminar"
+      },
+      "scroll": {
+        "down": "Desplazarse hacia abajo",
+        "up": "Desplazarse hacia arriba"
+      }
+    }
   }
 }
