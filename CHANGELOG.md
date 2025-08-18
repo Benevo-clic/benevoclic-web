@@ -1,4 +1,17 @@
 ## [Unreleased]
+## [1.19.0] - 2025-08-18
+
+### 🚀 Ajouté
+- add search history functionality with recent searches display
+
+### 🐛 Corrigé
+- remove unnecessary line breaks in index.vue imports
+
+### 📚 Documentation
+- update README with useful links for application, GitHub, monitoring, and communication
+
+---
+
 ## [1.18.0] - 2025-08-18
 
 ### 🚀 Ajouté
