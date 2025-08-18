@@ -1,11 +1,6 @@
 <script setup lang="ts">
   import { onMounted, ref, computed, onUnmounted, watch } from 'vue'
-  import {
-    Search,
-    X,
-    SlidersHorizontal,
-    Clock
-  } from 'lucide-vue-next'
+  import { Search, X, SlidersHorizontal, Clock } from 'lucide-vue-next'
   import {
     definePageMeta,
     useHead,
