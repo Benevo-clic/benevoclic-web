@@ -48,7 +48,7 @@ export default defineEventHandler(async (): Promise<HealthResponse> => {
         {
           retry: {
             maxRetries: 3,
-            timeout: 10000 // 10 secondes
+            timeout: 10000
           }
         },
         { endpoint: 'health', action: 'api-check' }

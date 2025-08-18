@@ -671,6 +671,9 @@
         "category_label": "Catégorie",
         "description_label": "Description détaillée",
         "description_placeholder": "Décrivez le problème en détail...",
+        "page_url_label": "URL de la page concernée (optionnel)",
+        "page_url_placeholder": "https://www.benevoclic.fr/...",
+        "page_url_help": "Laissez vide pour utiliser la page actuelle",
         "auto_info": "Informations automatiques",
         "page": "Page",
         "email": "Email",
@@ -1152,6 +1155,7 @@
   },
   "requestItem": {
     "volunteer_avatar_alt": "Photo de profil du bénévole",
+    "clickToViewVolunteerDetails": "Cliquer pour voir les détails du bénévole",
     "event_context": "Pour l'événement :",
     "association_context": "Demande d'adhésion à l'association",
     "actions": {
@@ -1634,12 +1638,15 @@
     "cover": {
       "alt": "Photo de couverture",
       "no_image": "Aucune image",
-      "not_exists": "Cette annonce n'existe plus"
+      "not_exists": "Cette annonce n'existe plus",
+      "clickToViewAssociation": "Cliquer pour voir les détails de l'association",
+      "viewAssociation": "Voir l'association"
     },
     "association": {
       "logo_alt": "Logo association",
       "join": "Adhérer",
-      "leave": "Quitter"
+      "leave": "Quitter",
+      "clickToViewDetails": "Cliquer pour voir les détails de l'association"
     },
     "announcement": {
       "notFound": "Cette annonce n'existe plus",

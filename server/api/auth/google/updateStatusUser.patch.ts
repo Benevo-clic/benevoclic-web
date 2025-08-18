@@ -30,8 +30,8 @@ export default defineEventHandler(async event => {
           Authorization: `Bearer ${body.idToken}`
         },
         retry: {
-          timeout: 10000, // 10 secondes
-          maxRetries: 3 // 3 tentatives
+          timeout: 10000,
+          maxRetries: 3
         }
       }
     )

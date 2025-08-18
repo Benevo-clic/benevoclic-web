@@ -62,6 +62,7 @@
           </div>
           <p class="text-sm font-medium">{{ t('volunteerAnnouncement.announcement.noImage') }}</p>
         </div>
+
         <!-- Status badge overlay -->
         <div class="absolute top-3 right-3">
           <div
@@ -75,12 +76,30 @@
       <!-- Informations de l'association -->
       <div class="bg-base-100 rounded-xl shadow-lg p-6 mb-6 relative">
         <div class="flex items-center gap-3 mb-2">
-          <div v-if="announcement?.associationLogo" class="avatar">
+          <div
+            v-if="announcement?.associationLogo"
+            class="avatar cursor-pointer hover:scale-105 transition-transform duration-200"
+            @click="openUserModal"
+            @keyup.enter="openUserModal"
+            @keyup.space.prevent="openUserModal"
+            role="button"
+            tabindex="0"
+            :aria-label="t('volunteerAnnouncement.association.clickToViewDetails')"
+          >
             <div class="ring-primary ring-offset-base-100 w-14 rounded-full ring-2 ring-offset-2">
               <img :src="profileImageUrl" :alt="t('volunteerAnnouncement.association.logo_alt')" />
             </div>
           </div>
-          <div v-else class="avatar placeholder">
+          <div
+            v-else
+            class="avatar placeholder cursor-pointer hover:scale-105 transition-transform duration-200"
+            @click="openUserModal"
+            @keyup.enter="openUserModal"
+            @keyup.space.prevent="openUserModal"
+            role="button"
+            tabindex="0"
+            :aria-label="t('volunteerAnnouncement.association.clickToViewDetails')"
+          >
             <div
               class="w-14 h-14 rounded-full bg-base-300 text-base-content ring-primary ring-offset-base-100 ring-2 ring-offset-2"
             >
@@ -423,6 +442,13 @@
       :type="notificationType"
       @close="closeNotification"
     />
+
+    <UserDetailsModal
+      :is-open="showUserModal"
+      :user-id="announcement?.associationId"
+      @close="closeUserModal"
+      :profile-image-url="profileImageUrl"
+    />
   </div>
 </template>
 
@@ -442,7 +468,7 @@
     UserCheck,
     AlertTriangle
   } from 'lucide-vue-next'
-  import { definePageMeta, useNavigation, useNuxtApp, useSettingsStore } from '#imports'
+  import { definePageMeta, useNavigation, useNuxtApp } from '#imports'
   import { EventStatus } from '~/common/enums/event.enum'
   import { useAnnouncement } from '~/composables/useAnnouncement'
   import { useVolunteerAuth } from '~/composables/useVolunteer'
@@ -452,6 +478,7 @@
   import NotificationToast from '~/components/utils/NotificationToast.vue'
   import { useUser } from '~/composables/auth/useUser'
   import type { Announcement } from '~/common/interface/event.interface'
+  import UserDetailsModal from '~/components/common/UserDetailsModal.vue'
 
   const { t } = useI18n()
 
@@ -464,12 +491,12 @@
   const loading = ref(true)
   const loadingVolunteer = computed(() => announcementUse.loading.value)
   const announcement = announcementUse.getCurrentAnnouncement
+  const showUserModal = ref(false)
 
   const volunteerId = computed(() => volunteerUse.volunteer?.value?.volunteerId)
   const volunteerEmail = computed(() => user.user.value?.email)
   const associationId = computed(() => announcement.value?.associationId)
 
-  // Listes réactives pour l'état d'adhésion
   const associationsWaitingList = ref<AssociationVolunteerFollow[]>([])
   const associationsFollowingList = ref<AssociationVolunteerFollow[]>([])
 
@@ -498,15 +525,12 @@
       : t('volunteerAnnouncement.association.join')
   })
 
-  // Modal de signalement
   const showReportModal = ref(false)
 
-  // Notifications
   const showNotification = ref(false)
   const notificationMessage = ref('')
   const notificationType = ref<'success' | 'error' | 'info' | 'warning'>('info')
 
-  // Email de l'utilisateur (pour l'instant, on utilise une valeur par défaut)
   const userEmail = computed(() => {
     return volunteerEmail
   })
@@ -527,6 +551,14 @@
 
   function openReportModal() {
     showReportModal.value = true
+  }
+
+  function openUserModal() {
+    showUserModal.value = true
+  }
+
+  function closeUserModal() {
+    showUserModal.value = false
   }
 
   function closeReportModal() {

@@ -5,7 +5,15 @@
     <!-- Header avec photo de profil et informations -->
     <div class="flex items-start gap-4 mb-6">
       <!-- Photo de profil -->
-      <div class="flex-shrink-0">
+      <div
+        class="flex-shrink-0 cursor-pointer hover:scale-105 transition-transform duration-200"
+        @click="handleAvatarClick"
+        @keyup.enter="handleAvatarClick"
+        @keyup.space.prevent="handleAvatarClick"
+        role="button"
+        tabindex="0"
+        :aria-label="t('requestItem.clickToViewVolunteerDetails')"
+      >
         <div
           class="w-16 h-16 rounded-full ring-2 ring-primary ring-offset-2 ring-offset-base-100 overflow-hidden bg-base-200"
         >
@@ -99,18 +107,25 @@
 </template>
 
 <script setup lang="ts">
+  import { ref } from 'vue'
+
   const { t } = useI18n()
 
   const props = defineProps<{
-    volunteer: { name: string; email: string; avatar: string }
+    volunteer: { id: string; name: string; email: string; avatar: string }
     context?: string
     type: 'event' | 'association'
   }>()
 
-  defineEmits<{
+  const emit = defineEmits<{
     accept: []
     refuse: []
+    openUserModal: [volunteerId: string]
   }>()
+
+  function handleAvatarClick() {
+    emit('openUserModal', props.volunteer.id)
+  }
 </script>
 
 <style scoped>

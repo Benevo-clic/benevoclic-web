@@ -19,8 +19,8 @@ export default defineEventHandler(async () => {
   try {
     const response = await RetryManager.get(`${apiBaseUrl}/announcements/allAnnouncements`, {
       retry: {
-        timeout: 10000, // 10 secondes
-        maxRetries: 3 // 3 tentatives
+        timeout: 10000,
+        maxRetries: 3
       }
     })
     return response.data

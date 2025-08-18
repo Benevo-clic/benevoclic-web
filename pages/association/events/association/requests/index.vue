@@ -109,6 +109,7 @@
                 type="event"
                 @accept="acceptRequestAnnouncement(req.id, req.volunteer.name)"
                 @refuse="refuseRequestAnnouncement(req.id)"
+                @openUserModal="openUserModal"
               />
             </div>
           </div>
@@ -169,6 +170,7 @@
                 type="association"
                 @accept="acceptRequestAssociation(req.idAssociation, req.id, req.volunteer.name)"
                 @refuse="refuseRequestAssociation(req.idAssociation, req.id)"
+                @openUserModal="openUserModal"
               />
             </div>
           </div>
@@ -208,6 +210,14 @@
         @reload="handleReload"
         @go-home="handleGoHome"
       />
+
+      <!-- User Details Modal -->
+      <UserDetailsModal
+        :is-open="showUserModal"
+        :user-id="selectedVolunteerId"
+        @close="closeUserModal"
+        :profile-image-url="selectedVolunteerAvatar"
+      />
     </div>
   </div>
 </template>
@@ -219,6 +229,7 @@
   import { useUser } from '~/composables/auth/useUser'
   import { useAssociationAuth } from '~/composables/useAssociation'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
+  import UserDetailsModal from '~/components/common/UserDetailsModal.vue'
 
   const { t } = useI18n()
 
@@ -266,11 +277,32 @@
   const showErrorModal = ref(false)
   const errorType = ref<'4xx' | '5xx' | null>(null)
 
+  // User modal state
+  const showUserModal = ref(false)
+  const selectedVolunteerId = ref<string>('')
+  const selectedVolunteerAvatar = ref<string>('')
+
   function handleReload() {
     window.location.reload()
   }
   async function handleGoHome() {
     await navigateToRoute('/')
+  }
+
+  function openUserModal(volunteerId: string) {
+    selectedVolunteerId.value = volunteerId
+    // Trouver l'avatar du volontaire
+    const volunteer = [...eventRequests.value, ...associationRequests.value].find(
+      req => req.volunteer.id === volunteerId
+    )
+    selectedVolunteerAvatar.value = volunteer?.volunteer.avatar || ''
+    showUserModal.value = true
+  }
+
+  function closeUserModal() {
+    showUserModal.value = false
+    selectedVolunteerId.value = ''
+    selectedVolunteerAvatar.value = ''
   }
 
   function handleError(error: any) {
@@ -316,6 +348,7 @@
         return {
           id: `${ann._id}-${volunteer.id}`,
           volunteer: {
+            id: volunteer.id,
             name: volunteer.name,
             email: volunteerInfo.email,
             avatar: volunteerInfo.avatarFileKey

@@ -380,6 +380,9 @@
         "category_label": "Category",
         "description_label": "Detailed Description",
         "description_placeholder": "Describe the problem in detail...",
+        "page_url_label": "Page URL (optional)",
+        "page_url_placeholder": "https://www.benevoclic.fr/...",
+        "page_url_help": "Leave empty to use current page",
         "auto_info": "Automatic Information",
         "page": "Page",
         "email": "Email",
@@ -853,6 +856,7 @@
   },
   "requestItem": {
     "volunteer_avatar_alt": "Volunteer profile picture",
+    "clickToViewVolunteerDetails": "Click to view volunteer details",
     "event_context": "For event:",
     "association_context": "Association membership request",
     "actions": {
@@ -1335,12 +1339,15 @@
     "cover": {
       "alt": "Cover photo",
       "no_image": "No image",
-      "not_exists": "This announcement no longer exists"
+      "not_exists": "This announcement no longer exists",
+      "clickToViewAssociation": "Click to view association details",
+      "viewAssociation": "View association"
     },
     "association": {
       "logo_alt": "Association logo",
       "join": "Join",
-      "leave": "Leave"
+      "leave": "Leave",
+      "clickToViewDetails": "Click to view association details"
     },
     "announcement": {
       "notFound": "This announcement no longer exists",

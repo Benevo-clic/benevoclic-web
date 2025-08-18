@@ -27,7 +27,6 @@ export const useUser = () => {
       return userStore.getUser as UserInfo
     } catch (error: any) {
       initializationError.value = error?.message || "Erreur lors de l'initialisation"
-      process.env.NODE_ENV !== 'production' && console.error("Erreur d'initialisation:", error)
     }
   }
 

@@ -104,7 +104,9 @@ export default defineNuxtConfig({
     payloadExtraction: true,
     renderJsonPayloads: true,
     // Optimisation du bundling
-    treeshakeClientOnly: true
+    treeshakeClientOnly: true,
+    // Désactiver Suspense expérimental
+    asyncEntry: false
   },
   alias: {
     assets: '/<rootDir>/assets'

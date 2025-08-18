@@ -10,6 +10,8 @@ export default defineNuxtPlugin(() => {
     }
   }
 
+  let cleanupVisibility: (() => void) | null = null
+
   process.env.NODE_ENV !== 'production' &&
     console.log('🚀 Initialisation du système de persistance de session...')
 
@@ -47,7 +49,9 @@ export default defineNuxtPlugin(() => {
       // Initialiser la gestion de visibilité de page
       process.env.NODE_ENV !== 'production' &&
         console.log('👁️ Initialisation de la gestion de visibilité...')
-      usePageVisibility()
+      const { initializeVisibility, cleanupVisibility: cleanup } = usePageVisibility()
+      initializeVisibility()
+      cleanupVisibility = cleanup
 
       // Sauvegarder la session périodiquement (toutes les 5 minutes)
       if (process.client) {
@@ -81,6 +85,12 @@ export default defineNuxtPlugin(() => {
     provide: {
       sessionSystem: {
         initialized: true
+      }
+    },
+    // Nettoyage lors de la destruction du plugin
+    onDispose: () => {
+      if (cleanupVisibility) {
+        cleanupVisibility()
       }
     }
   }
