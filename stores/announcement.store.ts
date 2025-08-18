@@ -241,6 +241,7 @@ export const useAnnouncementStore = defineStore('announcement', {
       this.loading = true
       this.error = null
       try {
+        console.log(`Suppression de l'annonce avec ID: ${id}`)
         const response = await $fetch(`/api/announcements/${id}`, {
           method: 'DELETE',
           credentials: 'include'

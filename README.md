@@ -377,6 +377,170 @@ nano ecosystem.config.cjs
 ```
 
 
+## 👨‍💼 Administration
+
+### 🔐 Accès à l'Espace Administrateur
+
+L'espace administrateur de Benevoclic permet de gérer les utilisateurs, les annonces et les signalements de support.
+
+#### Connexion Admin
+
+1. **Accéder à la page de connexion admin :**
+   ```
+   http://localhost:5482/admin/login
+   ```
+
+2. **Créer un compte administrateur :**
+   - Aller sur `/admin/register`
+   - Remplir le formulaire avec vos informations
+   - Votre compte nécessitera une approbation par un super administrateur
+
+3. **Se connecter :**
+   - Utiliser vos identifiants admin
+   - Si votre compte n'est pas encore approuvé, vous serez redirigé vers la page de vérification
+
+#### Vérification du Statut Admin
+
+```bash
+# Vérifier le statut d'approbation
+curl -X GET http://localhost:5482/api/admin/[adminId]/check-approval-status
+```
+
+### 🎛️ Fonctionnalités Administratives
+
+#### 📊 Dashboard Principal (`/admin`)
+- **Vue d'ensemble** : Statistiques globales de la plateforme
+- **Compteurs** : Nombre d'utilisateurs, annonces, signalements
+- **Statuts** : Signalements en attente vs résolus
+
+#### 👥 Gestion des Utilisateurs (`/admin/manageUser`)
+- **Liste des utilisateurs** : Voir tous les utilisateurs inscrits
+- **Recherche** : Filtrer par email, rôle, etc.
+- **Actions** :
+  - Supprimer un utilisateur
+  - Voir les détails du profil
+  - Gérer les rôles (Volontaire, Association, Admin)
+
+#### 📢 Gestion des Annonces (`/admin/manageAnnouncement`)
+- **Liste des annonces** : Toutes les annonces publiées
+- **Filtres** : Par statut, association, date
+- **Actions** :
+  - Modifier le statut d'une annonce
+  - Supprimer une annonce
+  - Voir les détails complets
+
+#### 🚨 Support et Signalements (`/admin/support`)
+- **Signalements** : Gérer les signalements d'utilisateurs
+- **Statuts** :
+  - `PENDING` : En attente de traitement
+  - `IN_PROGRESS` : En cours de traitement
+  - `RESOLVED` : Résolu
+- **Actions** :
+  - Changer le statut d'un signalement
+  - Voir les détails du signalement
+  - Répondre aux utilisateurs
+
+### 🔧 API Endpoints Admin
+
+#### Gestion des Utilisateurs
+```bash
+# Lister tous les utilisateurs
+GET /api/admin/users
+
+# Supprimer un utilisateur
+DELETE /api/admin/users/[id]
+
+# Vérifier le statut d'approbation admin
+GET /api/admin/[adminId]/check-approval-status
+```
+
+#### Gestion des Annonces
+```bash
+# Lister toutes les annonces
+GET /api/announcements
+
+# Supprimer une annonce
+DELETE /api/announcements/[id]
+
+# Modifier une annonce
+PATCH /api/announcements/[id]
+```
+
+#### Support et Signalements
+```bash
+# Lister les signalements
+GET /api/admin/support-reports
+
+# Obtenir un signalement spécifique
+GET /api/admin/support-reports/[id]
+
+# Mettre à jour le statut d'un signalement
+PATCH /api/admin/support-reports/[id]/status
+
+# Statistiques des signalements
+GET /api/admin/support-stats
+```
+
+### 🛡️ Sécurité et Permissions
+
+#### Rôles Administrateurs
+- **Admin Standard** : Accès aux fonctionnalités de base
+- **Super Admin** : Peut approuver de nouveaux comptes admin
+- **Permissions** : Gestion des utilisateurs, annonces, signalements
+
+#### Protection des Routes
+```typescript
+// Middleware de protection admin
+middleware: ['auth', 'admin']
+
+// Vérification du rôle
+if (user.role !== RoleUser.ADMIN) {
+  // Redirection vers la page de connexion
+}
+```
+
+### 🚨 Résolution des Problèmes Admin
+
+#### Problème : "Accès refusé à l'espace admin"
+```bash
+# Vérifier le rôle de l'utilisateur
+curl -X GET http://localhost:5482/api/user/profile
+
+# Vérifier l'approbation admin
+curl -X GET http://localhost:5482/api/admin/[adminId]/check-approval-status
+```
+
+#### Problème : "Compte admin non approuvé"
+1. Contacter un super administrateur
+2. Attendre l'approbation du compte
+3. Vérifier le statut via l'API
+
+#### Problème : "Impossible de supprimer un utilisateur"
+```bash
+# Vérifier les permissions
+curl -X GET http://localhost:5482/api/admin/users
+
+# Vérifier que l'utilisateur existe
+curl -X GET http://localhost:5482/api/admin/users/[id]
+```
+
+### 📋 Checklist d'Administration
+
+#### Quotidien
+- [ ] Vérifier les nouveaux signalements
+- [ ] Examiner les demandes d'approbation admin
+- [ ] Surveiller les statistiques de la plateforme
+
+#### Hebdomadaire
+- [ ] Réviser les annonces signalées
+- [ ] Nettoyer les comptes inactifs
+- [ ] Analyser les métriques de performance
+
+#### Mensuel
+- [ ] Audit des permissions admin
+- [ ] Révision des politiques de modération
+- [ ] Mise à jour des procédures de support
+
 ## 🆘 Support
 
 ### Commandes d'Aide
