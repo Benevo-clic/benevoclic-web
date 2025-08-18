@@ -178,7 +178,15 @@
         </div>
         <div v-else class="flex flex-col sm:flex-row gap-3">
           <button
-            v-if="isAlreadyVolunteerWaiting"
+            v-if="isCompleted"
+            class="btn btn-primary flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+            :disabled="isCompleted"
+          >
+            <HeartHandshake class="w-5 h-5 mr-2" />
+            {{ t('volunteerAnnouncement.participation.volunteer') }}
+          </button>
+          <button
+            v-else-if="isAlreadyVolunteerWaiting"
             class="btn btn-neutral flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             :disabled="!canParticipateAsVolunteer"
             @click="cancelVolunteerParticipationWaitingList"
@@ -223,7 +231,15 @@
             >
           </button>
           <button
-            v-if="!alreadyParticipating"
+            v-if="isCompleted"
+            class="btn btn-secondary flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+            :disabled="isCompleted"
+          >
+            <Users class="w-5 h-5 mr-2" />
+            {{ t('volunteerAnnouncement.participation.participate') }}
+          </button>
+          <button
+            v-else-if="!alreadyParticipating"
             class="btn btn-secondary flex-1 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
             :disabled="!canParticipateAsParticipant"
             @click="participateAsParticipant"
@@ -664,6 +680,14 @@
 
   const profileImageUrl = computed(() => {
     return announcement.value?.associationLogo
+  })
+
+  const isCompleted = computed(() => {
+    return (
+      announcement.value?.status === EventStatus.COMPLETED &&
+      !announcement.value?.volunteers?.some(v => v.id === volunteerId.value) &&
+      !announcement.value?.participants?.some(v => v.id === volunteerId.value)
+    )
   })
 
   const scrollContainer = ref<HTMLElement | null>(null)

@@ -55,8 +55,9 @@
   import { useUser } from '~/composables/auth/useUser'
   import VolunteerEventFavoritesFilters from '~/components/event/volunteer/VolunteerEventFavoritesFilters.vue'
   import VolunteerAnnouncementFavoritesList from '~/components/event/volunteer/VolunteerAnnouncementFavoritesList.vue'
-  import type { Announcement } from '~/common/interface/event.interface'
   import type { FilterAnnouncement } from '~/common/interface/filter.interface'
+
+  const { t } = useI18n()
 
   definePageMeta({
     middleware: ['auth'],

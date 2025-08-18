@@ -1,6 +1,6 @@
 <template>
   <article
-    class="group card bg-base-100 shadow-lg border border-base-300 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer overflow-hidden relative text-base focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+    class="group card bg-base-100 shadow-lg border border-base-300 rounded-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer overflow-hidden relative text-base focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none min-h-0"
     tabindex="0"
     role="button"
     :aria-label="
@@ -16,7 +16,7 @@
   >
     <!-- Image de couverture -->
     <div class="relative overflow-hidden">
-      <figure class="h-36 bg-gradient-to-br from-base-200 to-base-300">
+      <figure class="h-28 sm:h-32 md:h-36 bg-gradient-to-br from-base-200 to-base-300">
         <img
           v-if="announcement.announcementImage"
           :src="coverImageUrl"
@@ -35,14 +35,16 @@
         />
         <div
           v-else
-          class="w-full h-full flex flex-col items-center justify-center text-base-content/60"
+          class="w-full h-full flex flex-col items-center justify-center text-base-content/60 p-2"
           :aria-label="t('volunteerAnnouncementCard.aria.no_image_available')"
         >
-          <div class="avatar placeholder mb-2">
-            <div class="bg-base-300 text-base-content rounded-full w-12">
+          <div class="avatar placeholder mb-1 sm:mb-2">
+            <div
+              class="bg-base-300 text-base-content rounded-full w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
+                class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -57,13 +59,15 @@
               </svg>
             </div>
           </div>
-          <p class="text-sm font-medium">{{ t('volunteerAnnouncementCard.content.no_image') }}</p>
+          <p class="text-xs sm:text-sm font-medium text-center">
+            {{ t('volunteerAnnouncementCard.content.no_image') }}
+          </p>
         </div>
       </figure>
 
       <!-- Bouton favoris -->
       <button
-        class="absolute top-2 right-2 z-10 btn btn-circle btn-sm bg-base-100/80 hover:bg-error/20 transition focus-visible:ring-2 focus-visible:ring-error ring-offset-2"
+        class="absolute top-1 right-1 sm:top-2 sm:right-2 z-10 btn btn-circle btn-xs sm:btn-sm bg-base-100/80 hover:bg-error/20 transition focus-visible:ring-2 focus-visible:ring-error ring-offset-2"
         :aria-pressed="favorite ? 'true' : 'false'"
         :aria-label="
           favorite
@@ -75,19 +79,25 @@
         @keyup.space.prevent="toggleFavorite"
       >
         <span v-if="favorite">
-          <Heart class="w-6 h-6 text-error fill-error" aria-hidden="true" />
+          <Heart
+            class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-error fill-error"
+            aria-hidden="true"
+          />
         </span>
         <span v-else>
-          <Heart class="h-6 w-6 text-base-content/60" aria-hidden="true" />
+          <Heart
+            class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content/60"
+            aria-hidden="true"
+          />
         </span>
       </button>
     </div>
 
-    <div class="card-body p-5">
+    <div class="card-body p-3 sm:p-4 md:p-5 min-h-0 flex flex-col">
       <!-- Association info -->
-      <div class="flex items-center gap-3 mb-2">
-        <div class="avatar">
-          <div class="w-12 h-12 rounded-full">
+      <div class="flex items-center gap-2 sm:gap-3 mb-2 flex-shrink-0">
+        <div class="avatar flex-shrink-0">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full">
             <img
               v-if="announcement.associationLogo"
               :src="associationImageUrl"
@@ -102,6 +112,7 @@
               height="48"
               loading="lazy"
               decoding="async"
+              class="w-full h-full object-cover"
             />
             <div
               v-else
@@ -110,7 +121,7 @@
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 text-base-content/60"
+                class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content/60"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -126,8 +137,8 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col">
-          <span class="font-medium text-sm">{{
+        <div class="flex flex-col min-w-0 flex-1">
+          <span class="font-medium text-xs sm:text-sm truncate">{{
             announcement.associationName || t('volunteerAnnouncementCard.content.association')
           }}</span>
           <span class="text-xs text-base-content/60">{{
@@ -138,7 +149,7 @@
 
       <!-- Titre -->
       <h3
-        class="card-title text-lg font-bold mb-1 line-clamp-1 group-hover:text-primary transition-colors"
+        class="card-title text-sm sm:text-base md:text-lg font-bold mb-1 line-clamp-1 group-hover:text-primary transition-colors flex-shrink-0"
       >
         {{ announcement.nameEvent }}
       </h3>
@@ -146,18 +157,20 @@
       <!-- Description -->
       <p
         :id="`event-description-${announcement._id}`"
-        class="text-sm text-base-content/70 mb-1 line-clamp-2 leading-relaxed"
+        class="text-xs sm:text-sm text-base-content/70 mb-2 sm:mb-3 line-clamp-2 leading-relaxed flex-1 min-h-0"
       >
         {{ announcement.description }}
       </p>
 
       <!-- Date & Lieu -->
-      <div class="flex items-center flex-wrap gap-4 mb-4 text-sm">
+      <div
+        class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3 sm:mb-4 text-xs sm:text-sm flex-shrink-0"
+      >
         <div
-          class="flex items-center gap-2"
+          class="flex items-center gap-1 sm:gap-2"
           :aria-label="t('volunteerAnnouncementCard.aria.event_date_time')"
         >
-          <Calendar class="h-4 w-4 text-primary" aria-hidden="true" />
+          <Calendar class="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" aria-hidden="true" />
           <time :datetime="announcement.dateEvent" class="font-medium">
             {{
               new Date(announcement.dateEvent).toLocaleDateString('fr-FR', {
@@ -166,71 +179,82 @@
               })
             }}
           </time>
-          <span class="text-base-content/60" aria-hidden="true">•</span>
-          <span>{{ announcement.hoursEvent }}</span>
+          <span class="text-base-content/60 hidden sm:inline" aria-hidden="true">•</span>
+          <span class="truncate">{{ announcement.hoursEvent }}</span>
         </div>
         <div
           v-if="announcement.addressAnnouncement?.city"
-          class="flex items-center gap-2"
+          class="flex items-center gap-1 sm:gap-2"
           :aria-label="t('volunteerAnnouncementCard.aria.event_location')"
         >
-          <MapPin class="h-4 w-4 text-secondary" aria-hidden="true" />
-          <span class="truncate max-w-[100px]">{{ announcement.addressAnnouncement.city }}</span>
+          <MapPin class="h-3 w-3 sm:h-4 sm:w-4 text-secondary flex-shrink-0" aria-hidden="true" />
+          <span class="truncate max-w-[80px] sm:max-w-[100px]">{{
+            announcement.addressAnnouncement.city
+          }}</span>
         </div>
       </div>
 
       <!-- Participants & Bénévoles -->
       <div
-        class="flex gap-6 mb-4 text-sm"
+        class="flex flex-col gap-2 mb-3 sm:mb-4 text-xs sm:text-sm flex-shrink-0"
         role="group"
         :aria-label="t('volunteerAnnouncementCard.aria.participation_stats')"
       >
         <div
-          class="flex items-center gap-2"
+          class="flex items-center gap-1 sm:gap-2"
           :aria-label="t('volunteerAnnouncementCard.aria.participants_count')"
         >
-          <Users class="h-4 w-4 text-primary" aria-hidden="true" />
+          <Users class="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" aria-hidden="true" />
           <span class="font-medium">{{ ParticipantAvailable(announcement as Announcement) }}</span>
-          <span class="text-base-content/60">{{
+          <span class="text-base-content/60 truncate">{{
             t('volunteerAnnouncementCard.content.participants')
           }}</span>
         </div>
         <div
-          class="flex items-center gap-2"
+          class="flex items-center gap-1 sm:gap-2"
           :aria-label="t('volunteerAnnouncementCard.aria.volunteers_count')"
         >
-          <HeartHandshake class="h-4 w-4 text-secondary" aria-hidden="true" />
+          <HeartHandshake
+            class="h-3 w-3 sm:h-4 sm:w-4 text-secondary flex-shrink-0"
+            aria-hidden="true"
+          />
           <span class="font-medium"> {{ volunteerAvailable(announcement as Announcement) }} </span>
-          <span class="text-base-content/60">{{
+          <span class="text-base-content/60 truncate">{{
             t('volunteerAnnouncementCard.content.volunteers')
           }}</span>
         </div>
       </div>
 
-      <!-- Tags -->
-      <div class="flex items-center justify-between">
+      <!-- Tags et Bouton -->
+      <div
+        class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 flex-shrink-0"
+      >
         <!-- Tags -->
         <div
           v-if="announcement.tags?.length"
-          class="flex flex-wrap gap-2"
+          class="flex flex-wrap gap-1 sm:gap-2"
           role="group"
           :aria-label="t('volunteerAnnouncementCard.aria.event_tags')"
         >
           <div
             v-for="tag in announcement.tags.slice(0, 2)"
             :key="tag"
-            class="badge badge-outline text-sm hover:badge-primary transition-colors text-base-content border-base-content focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none focus-visible:bg-base-200 focus-visible:text-primary"
+            class="badge badge-outline text-xs sm:text-sm hover:badge-primary transition-colors text-base-content border-base-content focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none focus-visible:bg-base-200 focus-visible:text-primary max-w-[80px] sm:max-w-none"
             tabindex="0"
             role="button"
             :aria-label="t('volunteerAnnouncementCard.aria.filter_by_tag', { tag })"
             @keyup.enter="filterByTag(tag)"
             @keyup.space.prevent="filterByTag(tag)"
           >
-            <span class="text-base-content/70 group-hover:text-primary transition-colors">{{
-              tag
-            }}</span>
+            <span
+              class="text-base-content/70 group-hover:text-primary transition-colors truncate"
+              >{{ tag }}</span
+            >
           </div>
-          <div v-if="announcement.tags.length > 2" class="badge badge-ghost text-sm text-neutral">
+          <div
+            v-if="announcement.tags.length > 2"
+            class="badge badge-ghost text-xs sm:text-sm text-neutral"
+          >
             <span class="text-base-content/70 group-hover:text-primary transition-colors"
               >+{{ announcement.tags.length - 2 }}</span
             >
@@ -239,13 +263,14 @@
 
         <!-- Bouton Détails -->
         <div
-          class="btn btn-primary btn-sm gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          class="btn btn-primary btn-xs sm:btn-sm gap-1 sm:gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 self-start sm:self-auto"
           aria-hidden="true"
         >
-          {{ t('volunteerAnnouncementCard.content.details') }}
+          <span class="hidden sm:inline">{{ t('volunteerAnnouncementCard.content.details') }}</span>
+          <span class="sm:hidden">Détails</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4"
+            class="h-3 w-3 sm:h-4 sm:w-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

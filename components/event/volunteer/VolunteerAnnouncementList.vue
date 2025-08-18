@@ -1,30 +1,36 @@
 <template>
-  <div class="space-y-4">
-    <div v-if="props.announcements.length === 0" class="text-center text-gray-500">
+  <div class="space-y-3 sm:space-y-4">
+    <div v-if="props.announcements.length === 0" class="text-center text-gray-500 p-4">
       <img
         src="/images/no_data.png"
         :alt="t('volunteerAnnouncementList.illustration.alt')"
-        class="w-full max-w-xl mx-auto"
+        class="w-full max-w-sm sm:max-w-md md:max-w-xl mx-auto"
         onerror="this.src='/images/volunteer-info.png'"
       />
     </div>
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 xl1285:grid-cols-3 gap-4">
-      <div class="col-span-full">
-        <h2 class="text-lg font-semibold mb-0">
+    <div v-else class="space-y-3 sm:space-y-4">
+      <!-- Titre avec compteur -->
+      <div class="px-1">
+        <h2 class="text-base sm:text-lg font-semibold mb-0">
           {{
             t('volunteerAnnouncementList.announcements_count', { count: props.totalAnnouncements })
           }}
         </h2>
       </div>
-      <VolunteerAnnouncementCard
-        v-for="announcement in props.announcements"
-        :key="announcement._id"
-        :announcement="announcement"
-        :is-favorite="favoriteIds.includes(announcement._id)"
-        :is-connected="true"
-        @favorite="toggleFavorite"
-      />
+
+      <!-- Grille responsive -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        <VolunteerAnnouncementCard
+          v-for="announcement in props.announcements"
+          :key="announcement._id"
+          :announcement="announcement"
+          :is-favorite="favoriteIds.includes(announcement._id)"
+          :is-connected="true"
+          @favorite="toggleFavorite"
+        />
+      </div>
     </div>
+
     <ErrorPopup
       :show-error-modal="showErrorModal"
       :error-type="errorType"
@@ -36,11 +42,11 @@
 
 <script setup lang="ts">
   import { computed, ref } from 'vue'
-  import { useFavoritesAnnouncement } from '../../../composables/useFavoritesAnnouncement'
-  import { useUser } from '../../../composables/auth/useUser'
-  import type { Announcement } from '../../../common/interface/event.interface'
+  import { useFavoritesAnnouncement } from '~/composables/useFavoritesAnnouncement'
+  import { useUser } from '~/composables/auth/useUser'
+  import type { Announcement } from '~/common/interface/event.interface'
   import ErrorPopup from '../../utils/ErrorPopup.vue'
-  import { useNavigation } from '../../../composables/useNavigation'
+  import { useNavigation } from '~/composables/useNavigation'
   import VolunteerAnnouncementCard from './VolunteerAnnouncementCard.vue'
   import { useI18n } from 'vue-i18n'
 
