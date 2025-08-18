@@ -2,6 +2,25 @@
 
 Application web moderne pour connecter les associations avec des bénévoles, construite avec Nuxt.js 3 et Vue.js 3.
 
+## 📌 Liens utiles
+
+### 🌐 Application
+- **Benevoclic** : https://www.benevoclic.fr
+
+### 💻 GitHub
+- **Front-end** : https://github.com/Benevo-clic/benevoclic-web
+- **Back-end** : https://github.com/Benevo-clic/benevoclic-api-nest
+- **Documentation** : https://github.com/Benevo-clic/benevoclic-docs
+
+### 📊 Monitoring
+- **Grafana (Dashboard)** : http://mon_ip:3001/dashboards
+- **Prometheus (Query)** : http://mon_ip:9090/query
+- **AlertManager (Alerts)** : http://mon_ip:9093/#/alerts
+- **API Health (Status)** : http://mon_ip:3000/health
+
+### 💬 Communication
+- **Discord (Support)** : https://discord.gg/F7NMNGT9
+
 ## 🛠️ Technologies
 
 - **Framework** : Nuxt.js 3.16.0 + Vue.js 3.5.18
@@ -20,6 +39,9 @@ Application web moderne pour connecter les associations avec des bénévoles, co
 # Vérifier Node.js (version 18+ requise)
 node --version
 npm --version
+
+# Utiliser la bonne version Node.js pour ce projet
+nvm use
 
 # Installer les dépendances
 npm install
