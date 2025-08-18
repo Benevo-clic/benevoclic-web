@@ -1339,12 +1339,15 @@
     "cover": {
       "alt": "Foto de portada",
       "no_image": "Sin imagen",
-      "not_exists": "Este anuncio ya no existe"
+      "not_exists": "Este anuncio ya no existe",
+      "clickToViewAssociation": "Hacer clic para ver los detalles de la asociación",
+      "viewAssociation": "Ver asociación"
     },
     "association": {
       "logo_alt": "Logo de la asociación",
       "join": "Unirse",
-      "leave": "Salir"
+      "leave": "Salir",
+      "clickToViewDetails": "Hacer clic para ver los detalles de la asociación"
     },
     "announcement": {
       "notFound": "Este anuncio ya no existe",

@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import CookieConsent from './components/CookieConsent.vue'
 
-  // Initialiser Firebase côté client seulement
+  // Initialiser Firebase côté client
   if (process.client) {
     onMounted(async () => {
       try {
@@ -97,7 +97,10 @@
     </a>
 
     <NuxtLayout>
-      <NuxtPage />
+      <main id="main-content" role="main" class="flex-1 min-h-[calc(100vh-120px)]">
+        <NuxtPage />
+      </main>
+      <CookieConsent />
     </NuxtLayout>
   </div>
 </template>

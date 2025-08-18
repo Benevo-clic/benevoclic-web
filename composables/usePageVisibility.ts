@@ -140,7 +140,6 @@ export const usePageVisibility = () => {
     window.removeEventListener('pageshow', handleVisibilityChange)
 
     isInitialized.value = false
-    process.env.NODE_ENV !== 'production' && console.log('🧹 Gestionnaire de visibilité nettoyé')
   }
 
   return {

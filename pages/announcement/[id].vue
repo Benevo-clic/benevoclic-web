@@ -4,7 +4,6 @@
       <span class="loading loading-bars loading-xl" />
     </div>
     <div v-else class="container mx-auto px-2 md:px-4 py-6 max-w-4xl">
-      <!-- Photo de couverture moderne -->
       <div
         class="relative w-full aspect-[3/1] rounded-2xl overflow-hidden mb-6 bg-base-200 flex items-center justify-center shadow-md"
       >
@@ -26,15 +25,17 @@
                 />
               </svg>
             </div>
-            <p class="text-sm font-medium">{{ t('announcement.announcementNotFound') }}</p>
+            <p class="text-sm font-medium">
+              {{ t('volunteerAnnouncement.announcement.notFound') }}
+            </p>
           </div>
         </div>
 
         <img
           v-else-if="announcement?.announcementImage"
           :src="coverImageUrl"
-          :alt="t('announcement.cover.alt')"
-          class="object-cover w-full h-full transition-transform duration-500"
+          :alt="t('volunteerAnnouncement.cover.alt')"
+          class="object-cover w-full h-full transition-transform duration-500 hover:scale-105"
         />
         <div
           v-else
@@ -58,7 +59,7 @@
               </svg>
             </div>
           </div>
-          <p class="text-sm font-medium">{{ t('announcement.noImage') }}</p>
+          <p class="text-sm font-medium">{{ t('volunteerAnnouncement.announcement.noImage') }}</p>
         </div>
         <!-- Status badge overlay -->
         <div class="absolute top-3 right-3">
@@ -73,12 +74,30 @@
       <!-- Informations de l'association -->
       <div class="bg-base-100 rounded-xl shadow-lg p-6 mb-6 relative">
         <div class="flex items-center gap-3 mb-2">
-          <div v-if="announcement?.associationLogo" class="avatar">
+          <div
+            v-if="announcement?.associationLogo"
+            class="avatar cursor-pointer hover:scale-105 transition-transform duration-200"
+            @click="openUserModal"
+            @keyup.enter="openUserModal"
+            @keyup.space.prevent="openUserModal"
+            role="button"
+            tabindex="0"
+            :aria-label="t('volunteerAnnouncement.association.clickToViewDetails')"
+          >
             <div class="ring-primary ring-offset-base-100 w-14 rounded-full ring-2 ring-offset-2">
-              <img :src="profileImageUrl" :alt="t('announcement.association.logo_alt')" />
+              <img :src="profileImageUrl" :alt="t('volunteerAnnouncement.association.logo_alt')" />
             </div>
           </div>
-          <div v-else class="avatar placeholder">
+          <div
+            v-else
+            class="avatar placeholder cursor-pointer hover:scale-105 transition-transform duration-200"
+            @click="openUserModal"
+            @keyup.enter="openUserModal"
+            @keyup.space.prevent="openUserModal"
+            role="button"
+            tabindex="0"
+            :aria-label="t('volunteerAnnouncement.association.clickToViewDetails')"
+          >
             <div
               class="w-14 h-14 rounded-full bg-base-300 text-base-content ring-primary ring-offset-base-100 ring-2 ring-offset-2"
             >
@@ -92,7 +111,7 @@
               {{ announcement?.associationName }}
             </p>
           </div>
-          <!-- Bouton Adhérer -->
+
           <div class="flex-shrink-0">
             <button
               class="btn btn-sm focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -351,11 +370,18 @@
       @reload="handleReload"
       @go-home="handleGoHome"
     />
+
+    <UserDetailsModal
+      :is-open="showUserModal"
+      :user-id="announcement?.associationId"
+      @close="closeUserModal"
+      :profile-image-url="profileImageUrl"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted, computed, onUnmounted, watch, nextTick } from 'vue'
+  import { ref, onMounted, computed, onUnmounted } from 'vue'
   import { useRoute } from 'vue-router'
   import {
     HeartHandshake,
@@ -367,24 +393,21 @@
     Info,
     Tag,
     UserPlus,
-    UserCheck,
-    AlertTriangle
+    UserCheck
   } from 'lucide-vue-next'
-  import { definePageMeta, useNavigation, useNuxtApp, useSettingsStore } from '#imports'
+  import { definePageMeta, useNavigation, useNuxtApp } from '#imports'
   import { EventStatus } from '~/common/enums/event.enum'
   import { useAnnouncement } from '~/composables/useAnnouncement'
-  import type { Announcement } from '~/common/interface/event.interface'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
-  import ReportModal from '~/components/utils/ReportModal.vue'
-  import NotificationToast from '~/components/utils/NotificationToast.vue'
-  import { useUser } from '~/composables/auth/useUser'
+  import UserDetailsModal from '~/components/common/UserDetailsModal.vue'
+  import type { AssociationVolunteerFollow } from '~/common/interface/volunteer.interface'
 
   const { t } = useI18n()
 
   const route = useRoute()
   const announcementUse = useAnnouncement()
-  const user = useUser()
   const { navigateToRoute } = useNavigation()
+  const showUserModal = ref(false)
 
   const loading = ref(true)
   const loadingVolunteer = computed(() => announcementUse.loading.value)
@@ -492,6 +515,14 @@
     middleware: ['auth'],
     layout: 'header'
   })
+
+  function openUserModal() {
+    showUserModal.value = true
+  }
+
+  function closeUserModal() {
+    showUserModal.value = false
+  }
 
   function openInGoogleMaps() {
     const address = announcement.value?.addressAnnouncement?.address

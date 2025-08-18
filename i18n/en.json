@@ -1338,12 +1338,15 @@
     "cover": {
       "alt": "Cover photo",
       "no_image": "No image",
-      "not_exists": "This announcement no longer exists"
+      "not_exists": "This announcement no longer exists",
+      "clickToViewAssociation": "Click to view association details",
+      "viewAssociation": "View association"
     },
     "association": {
       "logo_alt": "Association logo",
       "join": "Join",
-      "leave": "Leave"
+      "leave": "Leave",
+      "clickToViewDetails": "Click to view association details"
     },
     "announcement": {
       "notFound": "This announcement no longer exists",
