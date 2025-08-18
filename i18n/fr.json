@@ -1155,6 +1155,7 @@
   },
   "requestItem": {
     "volunteer_avatar_alt": "Photo de profil du bénévole",
+    "clickToViewVolunteerDetails": "Cliquer pour voir les détails du bénévole",
     "event_context": "Pour l'événement :",
     "association_context": "Demande d'adhésion à l'association",
     "actions": {

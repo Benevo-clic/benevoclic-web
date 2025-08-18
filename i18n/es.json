@@ -857,6 +857,7 @@
   },
   "requestItem": {
     "volunteer_avatar_alt": "Foto de perfil del voluntario",
+    "clickToViewVolunteerDetails": "Hacer clic para ver los detalles del voluntario",
     "event_context": "Para el evento:",
     "association_context": "Solicitud de adhesión a la asociación",
     "actions": {
