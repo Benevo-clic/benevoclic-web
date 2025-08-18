@@ -124,11 +124,18 @@ function getHomePageForRole(role: RoleUser | null, locale?: string): string {
 }
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
+  // Skip middleware for admin routes
   if (to.path.startsWith('/admin')) {
     return
   }
 
-  if (import.meta.client) {
+  // Skip middleware during SSR
+  if (process.server) {
+    return
+  }
+
+  // Firebase verification only on client side
+  if (process.client) {
     try {
       const { useFirebase } = await import('~/composables/useFirebase')
       const { initializeFirebase, getAuth } = useFirebase()
@@ -152,10 +159,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
           error
         )
     }
-  }
-
-  if (useNuxtApp().ssrContext) {
-    return
   }
 
   const authStore = useAuthStore()

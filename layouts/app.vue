@@ -5,26 +5,46 @@
     class="min-h-screen flex flex-col"
   >
     <!-- Loading state -->
-    <div
-      v-if="isLoading"
-      class="fixed inset-0 bg-base-200 bg-opacity-80 z-[1000] flex items-center justify-center"
-      role="status"
-      aria-live="polite"
-      aria-label="Chargement de l'application"
-    >
-      <div class="flex flex-col items-center gap-4">
-        <img
-          src="/logo.png"
-          alt="Logo Benevoclic - Chargement en cours"
-          class="w-24 h-24 animate-spin"
-          aria-hidden="true"
-        />
-        <span class="text-base-content font-medium">Chargement de l'application...</span>
+    <ClientOnly>
+      <div
+        v-if="isLoading"
+        class="fixed inset-0 bg-base-200 bg-opacity-80 z-[1000] flex items-center justify-center"
+        role="status"
+        aria-live="polite"
+        aria-label="Chargement de l'application"
+      >
+        <div class="flex flex-col items-center gap-4">
+          <img
+            src="/logo_benevoclic.png"
+            alt="Logo Benevoclic - Chargement en cours"
+            class="w-24 h-24 animate-spin"
+            aria-hidden="true"
+          />
+          <span class="text-base-content font-medium">Chargement de l'application...</span>
+        </div>
       </div>
-    </div>
+    </ClientOnly>
 
     <!-- Main layout -->
-    <div v-else class="flex flex-col min-h-screen">
+    <ClientOnly>
+      <div v-if="!isLoading" class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <Header />
+
+        <!-- Main content area with fixed height -->
+        <main
+          id="main-content"
+          class="flex-1 p-1 overflow-auto min-h-[calc(100vh-120px)]"
+          role="main"
+          aria-label="Contenu principal de l'application"
+        >
+          <slot />
+        </main>
+      </div>
+    </ClientOnly>
+
+    <!-- Fallback for SSR -->
+    <div v-if="isLoading" class="flex flex-col min-h-screen">
       <!-- Header -->
       <Header />
 
@@ -98,7 +118,13 @@
   ])
 
   onMounted(async () => {
-    await initializeUser()
-    isLoading.value = false
+    try {
+      await initializeUser()
+    } catch (error) {
+      process.env.NODE_ENV !== 'production' &&
+        console.warn("Erreur lors de l'initialisation utilisateur:", error)
+    } finally {
+      isLoading.value = false
+    }
   })
 </script>

@@ -1,3 +1,7 @@
+import { RetryManager } from '~/utils/retry-manager'
+import axios from 'axios'
+import { ApiError } from '~/utils/error-handler'
+
 export default defineEventHandler(async event => {
   try {
     const apiBaseUrl = process.env.API_BASE_URL
@@ -16,13 +20,22 @@ export default defineEventHandler(async event => {
 
     // Validation des données requises
     if (!body.type || !body.category || !body.description) {
+      const missingFields = []
+      if (!body.type) missingFields.push('type')
+      if (!body.category) missingFields.push('category')
+      if (!body.description) missingFields.push('description')
+
       throw createError({
         statusCode: 400,
-        statusMessage: 'Données manquantes: type, category et description sont requis'
+        statusMessage: `Données manquantes: ${missingFields.join(', ')} sont requis`,
+        data: {
+          message: `Champs manquants: ${missingFields.join(', ')}`,
+          receivedData: body
+        }
       })
     }
 
-    const token = getCookie(event, 'auth-token')
+    const token = getCookie(event, 'auth_token')
 
     const headers: Record<string, string> = {
       'Content-Type': 'application/json'
@@ -32,29 +45,26 @@ export default defineEventHandler(async event => {
       headers.Authorization = `Bearer ${token}`
     }
 
-    return await $fetch(`${apiBaseUrl}/support/reports`, {
-      method: 'POST',
-      body,
+    const response = await RetryManager.post(`${apiBaseUrl}/support/reports`, body, {
       headers,
       retry: {
-        timeout: 10000, // 10 secondes
-        maxRetries: 3 // 3 tentatives
+        timeout: 10000,
+        maxRetries: 3
       }
     })
+
+    return response.data
   } catch (error: any) {
-    process.env.NODE_ENV !== 'production' &&
-      console.error('Erreur lors de la création du signalement:', error)
-
-    if (error.statusCode) {
-      throw createError({
-        statusCode: error.statusCode,
-        statusMessage: error.statusMessage || 'Erreur lors de la création du signalement'
-      })
+    if (axios.isAxiosError(error)) {
+      await ApiError.handleAxios(error, 'Erreur lors de la soumission du rapport')
     }
-
     throw createError({
-      statusCode: 500,
-      statusMessage: 'Erreur interne du serveur'
+      statusCode: error.statusCode || 500,
+      statusMessage: error.statusMessage || 'Erreur lors de la soumission du rapport',
+      data: {
+        message: error.message || 'Une erreur est survenue',
+        details: error.response?.data || {}
+      }
     })
   }
 })

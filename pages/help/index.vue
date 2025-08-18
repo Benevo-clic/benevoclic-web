@@ -24,7 +24,7 @@
                 type="text"
                 :placeholder="t('help.search_placeholder')"
                 class="input input-bordered w-full pl-12 pr-4 py-4 text-lg"
-                aria-label="Champ de saisie"
+                :aria-label="t('help.search_placeholder')"
               />
               <Search
                 class="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-base-content/50"
@@ -81,7 +81,7 @@
                 :key="index"
                 class="collapse collapse-arrow bg-base-200 hover:bg-base-300 transition-colors"
               >
-                <input type="checkbox" aria-label="Champ de saisie" />
+                <input type="checkbox" :aria-label="faq.question" />
                 <div class="collapse-title text-base font-medium text-base-content">
                   {{ faq.question }}
                 </div>
@@ -113,7 +113,7 @@
                 :key="index"
                 class="collapse collapse-arrow bg-base-200 hover:bg-base-300 transition-colors"
               >
-                <input type="checkbox" aria-label="Champ de saisie" />
+                <input type="checkbox" :aria-label="faq.question" />
                 <div class="collapse-title text-base font-medium text-base-content">
                   {{ faq.question }}
                 </div>
@@ -145,7 +145,7 @@
                 :key="index"
                 class="collapse collapse-arrow bg-base-200 hover:bg-base-300 transition-colors"
               >
-                <input type="checkbox" aria-label="Champ de saisie" />
+                <input type="checkbox" :aria-label="faq.question" />
                 <div class="collapse-title text-base font-medium text-base-content">
                   {{ faq.question }}
                 </div>
@@ -177,7 +177,7 @@
                 :key="index"
                 class="collapse collapse-arrow bg-base-200 hover:bg-base-300 transition-colors"
               >
-                <input type="checkbox" aria-label="Champ de saisie" />
+                <input type="checkbox" :aria-label="faq.question" />
                 <div class="collapse-title text-base font-medium text-base-content">
                   {{ faq.question }}
                 </div>
@@ -209,7 +209,7 @@
                 :key="index"
                 class="collapse collapse-arrow bg-base-200 hover:bg-base-300 transition-colors"
               >
-                <input type="checkbox" aria-label="Champ de saisie" />
+                <input type="checkbox" :aria-label="faq.question" />
                 <div class="collapse-title text-base font-medium text-base-content">
                   {{ faq.question }}
                 </div>
@@ -244,7 +244,9 @@
                 <!-- Type de signalement -->
                 <div class="form-control">
                   <label class="label">
-                    <span class="label-text font-medium">Type de signalement</span>
+                    <span class="label-text font-medium">{{
+                      t('help.contact.report.type_label')
+                    }}</span>
                   </label>
                   <select
                     v-model="supportForm.type"
@@ -252,82 +254,141 @@
                     required
                     @change="onTypeChange"
                   >
-                    <option value="">Sélectionner un type</option>
-                    <option value="ANNOUNCEMENT">Annonce</option>
-                    <option value="TECHNICAL">Problème technique</option>
-                    <option value="USER_FEEDBACK">Feedback utilisateur</option>
-                    <option value="OTHER">Autre</option>
+                    <option value="">{{ t('help.contact.report.types.select') }}</option>
+                    <option value="TECHNICAL">
+                      {{ t('help.contact.report.types.technical') }}
+                    </option>
+                    <option value="USER_FEEDBACK">
+                      {{ t('help.contact.report.types.user_feedback') }}
+                    </option>
+                    <option value="OTHER">{{ t('help.contact.report.types.other') }}</option>
                   </select>
                 </div>
 
                 <!-- Catégorie -->
                 <div class="form-control">
                   <label class="label">
-                    <span class="label-text font-medium">Catégorie</span>
+                    <span class="label-text font-medium">{{
+                      t('help.contact.report.category_label')
+                    }}</span>
                   </label>
                   <select
                     v-model="supportForm.category"
                     class="select select-bordered w-full"
                     required
                   >
-                    <option value="">Sélectionner une catégorie</option>
-
-                    <!-- Catégories pour les annonces -->
-                    <optgroup v-if="supportForm.type === 'ANNOUNCEMENT'" label="Annonce">
-                      <option value="INAPPROPRIATE_CONTENT">Contenu inapproprié</option>
-                      <option value="OUTDATED_INFO">Informations obsolètes</option>
-                      <option value="WRONG_ADDRESS">Adresse incorrecte</option>
-                      <option value="WRONG_DATE_TIME">Date/heure incorrecte</option>
-                      <option value="WRONG_CAPACITY">Capacité incorrecte</option>
-                      <option value="INAPPROPRIATE_TAGS">Tags inappropriés</option>
-                      <option value="OTHER">Autre</option>
-                    </optgroup>
+                    <option value="">{{ t('help.contact.report.categories.select') }}</option>
 
                     <!-- Catégories pour les problèmes techniques -->
-                    <optgroup v-if="supportForm.type === 'TECHNICAL'" label="Problème technique">
-                      <option value="CONNECTION_ISSUE">Problème de connexion</option>
-                      <option value="IMAGE_NOT_LOADING">Images qui ne se chargent pas</option>
-                      <option value="RESPONSIVE_ISSUE">Problème d'affichage mobile</option>
-                      <option value="SEARCH_PROBLEM">Problème de recherche</option>
-                      <option value="FORM_NOT_WORKING">Formulaire qui ne fonctionne pas</option>
-                      <option value="SLOW_PERFORMANCE">Performance lente</option>
-                      <option value="OTHER">Autre</option>
+                    <optgroup
+                      v-if="supportForm.type === 'TECHNICAL'"
+                      :label="t('help.contact.report.types.technical')"
+                    >
+                      <option value="CONNECTION_ISSUE">
+                        {{ t('help.contact.report.categories.technical.connection_issue') }}
+                      </option>
+                      <option value="IMAGE_NOT_LOADING">
+                        {{ t('help.contact.report.categories.technical.image_not_loading') }}
+                      </option>
+                      <option value="RESPONSIVE_ISSUE">
+                        {{ t('help.contact.report.categories.technical.responsive_issue') }}
+                      </option>
+                      <option value="SEARCH_PROBLEM">
+                        {{ t('help.contact.report.categories.technical.search_problem') }}
+                      </option>
+                      <option value="FORM_NOT_WORKING">
+                        {{ t('help.contact.report.categories.technical.form_not_working') }}
+                      </option>
+                      <option value="SLOW_PERFORMANCE">
+                        {{ t('help.contact.report.categories.technical.slow_performance') }}
+                      </option>
+                      <option value="OTHER">
+                        {{ t('help.contact.report.categories.technical.other') }}
+                      </option>
                     </optgroup>
 
                     <!-- Catégories pour le feedback utilisateur -->
                     <optgroup
                       v-if="supportForm.type === 'USER_FEEDBACK'"
-                      label="Feedback utilisateur"
+                      :label="t('help.contact.report.types.user_feedback')"
                     >
-                      <option value="FEATURE_REQUEST">Demande de fonctionnalité</option>
-                      <option value="BUG_REPORT">Signalement de bug</option>
-                      <option value="USABILITY_ISSUE">Problème d'ergonomie</option>
-                      <option value="CONTENT_SUGGESTION">Suggestion de contenu</option>
-                      <option value="GENERAL_FEEDBACK">Feedback général</option>
-                      <option value="OTHER">Autre</option>
+                      <option value="FEATURE_REQUEST">
+                        {{ t('help.contact.report.categories.user_feedback.feature_request') }}
+                      </option>
+                      <option value="BUG_REPORT">
+                        {{ t('help.contact.report.categories.user_feedback.bug_report') }}
+                      </option>
+                      <option value="USABILITY_ISSUE">
+                        {{ t('help.contact.report.categories.user_feedback.usability_issue') }}
+                      </option>
+                      <option value="CONTENT_SUGGESTION">
+                        {{ t('help.contact.report.categories.user_feedback.content_suggestion') }}
+                      </option>
+                      <option value="GENERAL_FEEDBACK">
+                        {{ t('help.contact.report.categories.user_feedback.general_feedback') }}
+                      </option>
+                      <option value="OTHER">
+                        {{ t('help.contact.report.categories.user_feedback.other') }}
+                      </option>
                     </optgroup>
 
                     <!-- Catégories pour autres -->
-                    <optgroup v-if="supportForm.type === 'OTHER'" label="Autre">
-                      <option value="GENERAL_INQUIRY">Question générale</option>
-                      <option value="ACCOUNT_ISSUE">Problème de compte</option>
-                      <option value="BILLING_QUESTION">Question de facturation</option>
-                      <option value="PARTNERSHIP_REQUEST">Demande de partenariat</option>
-                      <option value="PRESS_INQUIRY">Demande de presse</option>
-                      <option value="OTHER">Autre</option>
+                    <optgroup
+                      v-if="supportForm.type === 'OTHER'"
+                      :label="t('help.contact.report.types.other')"
+                    >
+                      <option value="GENERAL_INQUIRY">
+                        {{ t('help.contact.report.categories.other.general_inquiry') }}
+                      </option>
+                      <option value="ACCOUNT_ISSUE">
+                        {{ t('help.contact.report.categories.other.account_issue') }}
+                      </option>
+                      <option value="BILLING_QUESTION">
+                        {{ t('help.contact.report.categories.other.billing_question') }}
+                      </option>
+                      <option value="PARTNERSHIP_REQUEST">
+                        {{ t('help.contact.report.categories.other.partnership_request') }}
+                      </option>
+                      <option value="PRESS_INQUIRY">
+                        {{ t('help.contact.report.categories.other.press_inquiry') }}
+                      </option>
+                      <option value="OTHER">
+                        {{ t('help.contact.report.categories.other.other') }}
+                      </option>
                     </optgroup>
                   </select>
+                </div>
+                <!-- URL de la page concernée (optionnel) -->
+                <div class="form-control">
+                  <label class="label">
+                    <span class="label-text font-medium">{{
+                      t('help.contact.report.page_url_label')
+                    }}</span>
+                  </label>
+                  <input
+                    v-model="supportForm.customPageUrl"
+                    type="url"
+                    class="input input-bordered w-full"
+                    :placeholder="t('help.contact.report.page_url_placeholder')"
+                  />
+                  <label class="label">
+                    <span class="label-text-alt text-base-content/60">{{
+                      t('help.contact.report.page_url_help')
+                    }}</span>
+                  </label>
                 </div>
 
                 <!-- Description -->
                 <div class="form-control">
                   <label class="label">
-                    <span class="label-text font-medium">Description détaillée</span>
+                    <span class="label-text font-medium">{{
+                      t('help.contact.report.description_label')
+                    }}</span>
                   </label>
                   <textarea
                     v-model="supportForm.description"
                     class="textarea textarea-bordered h-32"
-                    placeholder="Décrivez le problème en détail..."
+                    :placeholder="t('help.contact.report.description_placeholder')"
                     required
                   />
                 </div>
@@ -346,7 +407,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed } from 'vue'
+  import { ref, computed, onMounted } from 'vue'
   import {
     Search,
     CircleHelp,
@@ -355,23 +416,29 @@
     Heart,
     Building2,
     Settings,
-    MessageCircle,
-    BookOpen,
-    Video,
-    Users,
-    FileText
+    MessageCircle
   } from 'lucide-vue-next'
+  import { useUser } from '~/composables/auth/useUser'
 
   definePageMeta({
     layout: 'app'
   })
 
+  const user = useUser()
+  const email = ref<string | null>(null)
+
+  onMounted(async () => {
+    const current = await user.fetchUser()
+    if (current) {
+      email.value = current.email
+      console.log('User email:', email.value)
+    }
+  })
+
   const { t } = useI18n()
 
-  // Search functionality
   const searchQuery = ref('')
 
-  // Quick actions
   const quickActions = [
     {
       title: t('help.quick_actions.getting_started.title'),
@@ -399,7 +466,6 @@
     }
   ]
 
-  // FAQ data organized by sections
   interface FAQ {
     question: string
     answer: string
@@ -506,7 +572,6 @@
     ]
   }
 
-  // Filter FAQs based on search query
   const filteredFaqs = computed(() => {
     if (!searchQuery.value) {
       return faqs
@@ -526,12 +591,12 @@
     return filtered
   })
 
-  // Support form
   const supportForm = ref({
     type: '',
     category: '',
     description: '',
-    userEmail: '',
+    customPageUrl: '',
+    userEmail: email.value || '',
     pageUrl: typeof window !== 'undefined' ? window.location.href : '',
     userAgent: typeof window !== 'undefined' ? navigator.userAgent : '',
     browserInfo:
@@ -542,27 +607,76 @@
   const submitting = ref(false)
 
   function onTypeChange() {
-    // Reset category when type changes
     supportForm.value.category = ''
   }
 
-  // Submit support request
+  async function testApiConnectivity() {
+    try {
+      const response = (await $fetch('/api/support/test')) as any
+      process.env.NODE_ENV !== 'production' && console.log('API test response:', response)
+      return response.status === 'success'
+    } catch (error) {
+      process.env.NODE_ENV !== 'production' && console.error('API test failed:', error)
+      return false
+    }
+  }
+
   async function submitSupportRequest() {
     submitting.value = true
 
     try {
-      const response = await $fetch('/api/support/reports', {
-        method: 'POST',
-        body: supportForm.value
-      })
+      if (
+        !supportForm.value.type ||
+        !supportForm.value.category ||
+        !supportForm.value.description
+      ) {
+        const missingFields = []
+        if (!supportForm.value.type) missingFields.push('Type')
+        if (!supportForm.value.category) missingFields.push('Catégorie')
+        if (!supportForm.value.description) missingFields.push('Description')
 
-      process.env.NODE_ENV !== 'production' && console.log('Support request submitted:', response)
+        alert(`Veuillez remplir tous les champs obligatoires : ${missingFields.join(', ')}`)
+        return
+      }
+
+      if (supportForm.value.description.trim().length < 10) {
+        alert('La description doit contenir au moins 10 caractères')
+        return
+      }
+
+      if (process.env.NODE_ENV !== 'production') {
+        const isApiConnected = await testApiConnectivity()
+        if (!isApiConnected) {
+          console.warn('API backend might not be available')
+        }
+      }
+
+      const finalPageUrl = supportForm.value.customPageUrl.trim() || supportForm.value.pageUrl
+
+      const requestData = {
+        type: supportForm.value.type,
+        category: supportForm.value.category,
+        description: supportForm.value.description,
+        pageUrl: finalPageUrl,
+        userEmail: email.value || supportForm.value.userEmail,
+        userAgent: supportForm.value.userAgent,
+        browserInfo: supportForm.value.browserInfo,
+        deviceInfo: supportForm.value.deviceInfo
+      }
+
+      process.env.NODE_ENV !== 'production' && console.log('Sending request data:', requestData)
+
+      await $fetch('/api/support/reports', {
+        method: 'POST',
+        body: requestData
+      })
 
       // Reset form
       supportForm.value = {
         type: '',
         category: '',
         description: '',
+        customPageUrl: '',
         userEmail: '',
         pageUrl: typeof window !== 'undefined' ? window.location.href : '',
         userAgent: typeof window !== 'undefined' ? navigator.userAgent : '',
@@ -573,10 +687,19 @@
 
       // Show success message
       alert(t('help.contact.success_message'))
-    } catch (error) {
+    } catch (error: any) {
       process.env.NODE_ENV !== 'production' &&
         console.error('Error submitting support request:', error)
-      alert(t('help.contact.error_message'))
+
+      // Afficher un message d'erreur plus détaillé
+      let errorMessage = t('help.contact.error_message')
+      if (error.data?.message) {
+        errorMessage = error.data.message
+      } else if (error.statusMessage) {
+        errorMessage = error.statusMessage
+      }
+
+      alert(errorMessage)
     } finally {
       submitting.value = false
     }

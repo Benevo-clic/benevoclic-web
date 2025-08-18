@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue'
 
 export const usePageVisibility = () => {
   const isPageVisible = ref(true)
@@ -142,16 +142,6 @@ export const usePageVisibility = () => {
     isInitialized.value = false
     process.env.NODE_ENV !== 'production' && console.log('🧹 Gestionnaire de visibilité nettoyé')
   }
-
-  // Initialisation automatique
-  onMounted(() => {
-    initializeVisibility()
-  })
-
-  // Nettoyage automatique
-  onUnmounted(() => {
-    cleanupVisibility()
-  })
 
   return {
     isPageVisible,

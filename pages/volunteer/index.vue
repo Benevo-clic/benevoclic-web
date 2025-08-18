@@ -120,6 +120,11 @@
   const { recentHistory, addToHistory, removeFromHistory, clearHistory, formatDate } =
     useSearchHistory()
   const showSearchHistory = ref(false)
+  const isClient = ref(false)
+
+  onMounted(() => {
+    isClient.value = true
+  })
 
   const filteredEventsCount = ref<number>(0)
   const isCounting = ref<boolean>(false)
@@ -581,16 +586,18 @@
       <!-- Section Recherche Rapide -->
       <section id="search-section" class="py-12 px-4 bg-base-100">
         <div class="max-w-6xl mx-auto">
-          <div
-            class="text-center mb-10 slide-in-up"
-            :class="{ visible: isVisible.search }"
-            v-if="!startSearching"
-          >
-            <h2 class="text-3xl font-bold mb-4">{{ t('volunteerPage.search.title') }}</h2>
-            <p class="text-base-content/70 max-w-2xl mx-auto">
-              {{ t('volunteerPage.search.description') }}
-            </p>
-          </div>
+          <ClientOnly>
+            <div
+              class="text-center mb-10 slide-in-up"
+              :class="{ visible: isVisible.search }"
+              v-if="!startSearching"
+            >
+              <h2 class="text-3xl font-bold mb-4">{{ t('volunteerPage.search.title') }}</h2>
+              <p class="text-base-content/70 max-w-2xl mx-auto">
+                {{ t('volunteerPage.search.description') }}
+              </p>
+            </div>
+          </ClientOnly>
 
           <!-- Barre de recherche simple -->
           <div
@@ -614,60 +621,64 @@
                 />
 
                 <!-- Bouton pour afficher l'historique -->
-                <button
-                  v-if="recentHistory.length > 0"
-                  @click="toggleSearchHistory"
-                  class="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 text-base-content/50 hover:text-base-content/70 transition-colors"
-                  title="Afficher l'historique des recherches"
-                  aria-label="Afficher l'historique des recherches"
-                >
-                  <Clock class="w-5 h-5" />
-                </button>
+                <ClientOnly>
+                  <button
+                    v-if="recentHistory.length > 0"
+                    @click="toggleSearchHistory"
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 text-base-content/50 hover:text-base-content/70 transition-colors"
+                    title="Afficher l'historique des recherches"
+                    aria-label="Afficher l'historique des recherches"
+                  >
+                    <Clock class="w-5 h-5" />
+                  </button>
+                </ClientOnly>
 
                 <!-- Historique de recherche -->
-                <div
-                  v-if="showSearchHistory"
-                  class="absolute top-full left-0 right-0 mt-1 bg-base-100 border border-base-300 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
-                >
-                  <div class="p-2">
-                    <div class="flex items-center justify-between mb-2">
-                      <span class="text-sm font-medium text-base-content/70">{{
-                        t('volunteerPage.search.history.title')
-                      }}</span>
-                      <button
-                        @click="clearHistory"
-                        class="text-xs text-error hover:text-error/80 transition-colors"
-                      >
-                        {{ t('volunteerPage.search.history.clear_all') }}
-                      </button>
-                    </div>
+                <ClientOnly>
+                  <div
+                    v-if="showSearchHistory"
+                    class="absolute top-full left-0 right-0 mt-1 bg-base-100 border border-base-300 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
+                  >
+                    <div class="p-2">
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-base-content/70">{{
+                          t('volunteerPage.search.history.title')
+                        }}</span>
+                        <button
+                          @click="clearHistory"
+                          class="text-xs text-error hover:text-error/80 transition-colors"
+                        >
+                          {{ t('volunteerPage.search.history.clear_all') }}
+                        </button>
+                      </div>
 
-                    <div class="space-y-1">
-                      <div
-                        v-for="item in recentHistory"
-                        :key="item.query"
-                        class="flex items-center justify-between p-2 hover:bg-base-200 rounded cursor-pointer group"
-                        @click="selectFromHistory(item.query)"
-                      >
-                        <div class="flex items-center gap-2 flex-1 min-w-0">
-                          <Search class="w-4 h-4 text-base-content/50 flex-shrink-0" />
-                          <span class="text-sm truncate">{{ item.query }}</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                          <span class="text-xs text-base-content/50">{{
-                            formatDate(item.timestamp)
-                          }}</span>
-                          <button
-                            @click.stop="removeFromHistory(item.query)"
-                            class="opacity-0 group-hover:opacity-100 transition-opacity text-error hover:text-error/80"
-                          >
-                            <X class="w-3 h-3" />
-                          </button>
+                      <div class="space-y-1">
+                        <div
+                          v-for="item in recentHistory"
+                          :key="item.query"
+                          class="flex items-center justify-between p-2 hover:bg-base-200 rounded cursor-pointer group"
+                          @click="selectFromHistory(item.query)"
+                        >
+                          <div class="flex items-center gap-2 flex-1 min-w-0">
+                            <Search class="w-4 h-4 text-base-content/50 flex-shrink-0" />
+                            <span class="text-sm truncate">{{ item.query }}</span>
+                          </div>
+                          <div class="flex items-center gap-2">
+                            <span class="text-xs text-base-content/50">{{
+                              formatDate(item.timestamp)
+                            }}</span>
+                            <button
+                              @click.stop="removeFromHistory(item.query)"
+                              class="opacity-0 group-hover:opacity-100 transition-opacity text-error hover:text-error/80"
+                            >
+                              <X class="w-3 h-3" />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </ClientOnly>
               </div>
             </div>
 
