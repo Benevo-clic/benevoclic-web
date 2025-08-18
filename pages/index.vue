@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { onMounted, ref, computed, onUnmounted, watch } from 'vue'
-  import { Search, X, SlidersHorizontal } from 'lucide-vue-next'
+  import { Search, X, SlidersHorizontal, Clock } from 'lucide-vue-next'
   import {
     definePageMeta,
     useHead,
@@ -11,6 +11,7 @@
 
   const { t } = useI18n()
   import { useUserLocation } from '~/composables/useUserLocation'
+  import { useSearchHistory } from '~/composables/useSearchHistory'
   import NoConnectedAnnouncementList from '~/components/event/noConnected/NoConnectedAnnouncementList.vue'
   import VolunteerEventFilters from '~/components/event/volunteer/VolunteerEventFilters.vue'
   import type { Announcement } from '~/common/interface/event.interface'
@@ -57,7 +58,6 @@
   const totalAssociations = ref(0)
   const totalVolunteerSlots = ref(0)
 
-  // Nouvelles variables pour la recherche
   const showSearchResults = ref(false)
   const searchAnnouncements = ref<Announcement[]>([])
   const searchLoading = ref(false)
@@ -85,7 +85,6 @@
 
   let observers: IntersectionObserver[] = []
 
-  // État partagé pour les filtres
   const sharedFilters = ref<FilterAnnouncement>({
     nameEvent: undefined,
     description: undefined,
@@ -106,7 +105,6 @@
     sort: undefined
   })
 
-  // Variables pour la recherche rapide (synchronisées avec sharedFilters)
   const searchQuery = computed({
     get: () => sharedFilters.value.nameEvent || '',
     set: (value: string) => {
@@ -117,6 +115,10 @@
   })
 
   const searchTimeout = ref<NodeJS.Timeout | null>(null)
+
+  const { recentHistory, addToHistory, removeFromHistory, clearHistory, formatDate } =
+    useSearchHistory()
+  const showSearchHistory = ref(false)
 
   const filteredEventsCount = ref<number>(0)
   const isCounting = ref<boolean>(false)
@@ -195,6 +197,10 @@
         searchTotalAnnouncements.value = response.meta?.total || 0
         currentSearchPage.value = page
 
+        if (page === 1 && searchQuery.value.trim()) {
+          addToHistory(searchQuery.value, cleanFilters)
+        }
+
         if (page === 1) {
           setTimeout(() => {
             const searchSection = document.getElementById('search-section')
@@ -248,7 +254,6 @@
     } catch (err: any) {
       process.env.NODE_ENV !== 'production' && console.error(t('index.errors.search'), err)
 
-      // Gestion spécifique des erreurs
       if (err?.status === 400) {
         searchError.value = t('index.errors.invalidSearchCriteria')
       } else if (err?.status === 500) {
@@ -278,6 +283,32 @@
     }
   }
 
+  function toggleSearchHistory() {
+    showSearchHistory.value = !showSearchHistory.value
+  }
+
+  function selectFromHistory(query: string) {
+    searchQuery.value = query
+    showSearchHistory.value = false
+    searchEvents()
+  }
+
+  function handleClickOutside(event: Event) {
+    const target = event.target as HTMLElement
+    const searchContainer = target.closest('.search-container')
+    if (!searchContainer) {
+      showSearchHistory.value = false
+    }
+  }
+
+  onMounted(() => {
+    document.addEventListener('click', handleClickOutside)
+  })
+
+  onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside)
+  })
+
   function resetAllFilters() {
     sharedFilters.value = {
       nameEvent: undefined,
@@ -299,13 +330,11 @@
       sort: undefined
     }
 
-    // Réinitialiser les variables locales
     useCurrentLocation.value = false
     locationRadius.value = 5
     resetLocation.value = true
     searchError.value = null
 
-    // Réinitialiser les compteurs
     filteredEventsCount.value = 0
     isCounting.value = false
   }
@@ -313,7 +342,6 @@
   function goToSearchPage(page: number) {
     if (page >= 1 && page <= searchTotalPages.value) {
       searchEvents(page)
-      // Scroll vers les résultats
       setTimeout(() => {
         const searchResults = document.querySelector('.search-results')
         if (searchResults) {
@@ -418,7 +446,7 @@
     }
     statsAnimationStarted.value = true
 
-    const duration = 2000 // 2 seconds
+    const duration = 2000
     const steps = 60
     const interval = duration / steps
 
@@ -427,7 +455,6 @@
       step++
       const progress = step / steps
 
-      // Easing function for smoother animation
       const easeOutQuad = (t: number) => t * (2 - t)
       const easedProgress = easeOutQuad(progress)
 
@@ -466,7 +493,6 @@
             if (entry.isIntersecting) {
               isVisible.value[section.key] = true
 
-              // Start counter animation when stats section becomes visible
               if (section.key === 'stats' && !statsAnimationStarted.value) {
                 animateCounters()
               }
@@ -474,7 +500,7 @@
           })
         },
         { threshold: 0.2 }
-      ) // Trigger when 20% of the element is visible
+      )
 
       observer.observe(element)
       observers.push(observer)
@@ -568,7 +594,7 @@
               <label class="label">
                 <span class="label-text font-medium">{{ t('homePage.search.label') }}</span>
               </label>
-              <div class="relative">
+              <div class="relative search-container">
                 <Search
                   class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-base-content/50"
                 />
@@ -576,9 +602,65 @@
                   v-model="searchQuery"
                   type="text"
                   :placeholder="t('homePage.search.placeholder')"
-                  class="input input-bordered w-full pl-10 focus:border-primary transition-colors duration-300"
+                  class="input input-bordered w-full pl-10 pr-12 focus:border-primary transition-colors duration-300"
                   @keyup.enter="() => searchEvents()"
                 />
+
+                <!-- Bouton pour afficher l'historique -->
+                <button
+                  v-if="recentHistory.length > 0"
+                  @click="toggleSearchHistory"
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 text-base-content/50 hover:text-base-content/70 transition-colors"
+                  title="Afficher l'historique des recherches"
+                  aria-label="Afficher l'historique des recherches"
+                >
+                  <Clock class="w-5 h-5" />
+                </button>
+
+                <!-- Historique de recherche -->
+                <div
+                  v-if="showSearchHistory"
+                  class="absolute top-full left-0 right-0 mt-1 bg-base-100 border border-base-300 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
+                >
+                  <div class="p-2">
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="text-sm font-medium text-base-content/70">{{
+                        t('homePage.search.history.title')
+                      }}</span>
+                      <button
+                        @click="clearHistory"
+                        class="text-xs text-error hover:text-error/80 transition-colors"
+                      >
+                        {{ t('homePage.search.history.clear_all') }}
+                      </button>
+                    </div>
+
+                    <div class="space-y-1">
+                      <div
+                        v-for="item in recentHistory"
+                        :key="item.query"
+                        class="flex items-center justify-between p-2 hover:bg-base-200 rounded cursor-pointer group"
+                        @click="selectFromHistory(item.query)"
+                      >
+                        <div class="flex items-center gap-2 flex-1 min-w-0">
+                          <Search class="w-4 h-4 text-base-content/50 flex-shrink-0" />
+                          <span class="text-sm truncate">{{ item.query }}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                          <span class="text-xs text-base-content/50">{{
+                            formatDate(item.timestamp)
+                          }}</span>
+                          <button
+                            @click.stop="removeFromHistory(item.query)"
+                            class="opacity-0 group-hover:opacity-100 transition-opacity text-error hover:text-error/80"
+                          >
+                            <X class="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 

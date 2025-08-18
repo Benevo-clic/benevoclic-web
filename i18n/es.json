@@ -1004,6 +1004,11 @@
       "reset": {
         "desktop": "Restablecer",
         "mobile": "Reset"
+      },
+      "history": {
+        "title": "Búsquedas recientes",
+        "clear_all": "Borrar todo",
+        "no_history": "No hay búsquedas recientes"
       }
     },
     "results": {
@@ -1131,6 +1136,11 @@
       "reset": {
         "desktop": "Restablecer",
         "mobile": "Reset"
+      },
+      "history": {
+        "title": "Búsquedas recientes",
+        "clear_all": "Borrar todo",
+        "no_history": "No hay búsquedas recientes"
       }
     },
     "results": {

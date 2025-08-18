@@ -1302,6 +1302,11 @@
       "reset": {
         "desktop": "Réinitialiser",
         "mobile": "Reset"
+      },
+      "history": {
+        "title": "Recherches récentes",
+        "clear_all": "Tout effacer",
+        "no_history": "Aucune recherche récente"
       }
     },
     "results": {
@@ -1429,6 +1434,11 @@
       "reset": {
         "desktop": "Réinitialiser",
         "mobile": "Reset"
+      },
+      "history": {
+        "title": "Recherches récentes",
+        "clear_all": "Tout effacer",
+        "no_history": "Aucune recherche récente"
       }
     },
     "results": {
