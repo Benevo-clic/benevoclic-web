@@ -143,8 +143,8 @@
     "logout": "Cerrar Sesión",
     "menu": "Menú",
     "welcome": "Bienvenido",
-    "closeMenu": "Close menu",
-    "closeWelcomePanel": "Close welcome panel",
+    "closeMenu": "Cerrar menú",
+    "closeWelcomePanel": "Cerrar panel de bienvenida",
     "menuDescription": "Descripción del menú lateral",
     "welcomeDescription": "Descripción del panel de bienvenida"
   },
