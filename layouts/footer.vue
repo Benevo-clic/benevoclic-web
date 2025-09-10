@@ -42,7 +42,7 @@
           </NuxtLink>
           <button
             class="link link-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
-            aria-label="Ouvrir les paramètres des cookies"
+            :aria-label="$t('footer.cookie_settings_aria')"
             type="button"
             @click.prevent="openCookieSettings"
           >
