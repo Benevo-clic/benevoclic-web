@@ -2106,5 +2106,16 @@
       "goToNextPage": "Aller à la page suivante (page {page})",
       "nextPage": "Page suivante"
     }
+  },
+  "footer": {
+    "home": "Accueil",
+    "events": "Événements",
+    "help": "Aide",
+    "contact": "Contact",
+    "legal_notices": "Mentions légales",
+    "privacy": "Confidentialité",
+    "cookie_settings": "Paramètres des cookies",
+    "navigation_label": "Navigation du pied de page",
+    "cookie_settings_aria": "Ouvrir les paramètres des cookies"
   }
 }

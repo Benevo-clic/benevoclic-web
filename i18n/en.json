@@ -140,7 +140,13 @@
       "language": "Language",
       "theme": "Theme"
     },
-    "logout": "Logout"
+    "logout": "Logout",
+    "menu": "Menu",
+    "welcome": "Welcome",
+    "closeMenu": "Close menu",
+    "closeWelcomePanel": "Close welcome panel",
+    "menuDescription": "Description of the menu",
+    "welcomeDescription": "Description of the welcome panel"
   },
   "header": {
     "loading": "Loading application...",
@@ -2067,5 +2073,16 @@
     "favorites": {
       "page": "Page"
     }
+  },
+  "footer": {
+    "home": "Home",
+    "events": "Events",
+    "help": "Help",
+    "contact": "Contact",
+    "legal_notices": "Legal Notices",
+    "privacy": "Privacy",
+    "cookie_settings": "Cookie Settings",
+    "navigation_label": "Footer navigation",
+    "cookie_settings_aria": "Open cookie settings"
   }
 }

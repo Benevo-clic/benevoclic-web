@@ -14,49 +14,31 @@
         <nav
           class="flex flex-wrap gap-4 text-sm"
           role="navigation"
-          aria-label="Navigation du pied de page"
+          :aria-label="$t('footer.navigation_label')"
         >
           <NuxtLink
             to="/"
             class="link link-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
           >
-            Accueil
-          </NuxtLink>
-          <NuxtLink
-            to="/"
-            class="link link-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
-          >
-            Accueil
-          </NuxtLink>
-          <NuxtLink
-            to="/association/events/association/manage"
-            class="link link-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
-          >
-            Événements
+            {{ $t('footer.home') }}
           </NuxtLink>
           <NuxtLink
             to="/help"
             class="link link-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
           >
-            Aide
-          </NuxtLink>
-          <NuxtLink
-            to="/contact"
-            class="link link-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
-          >
-            Contact
+            {{ $t('footer.help') }}
           </NuxtLink>
           <NuxtLink
             to="/mentions-legales"
             class="link link-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
           >
-            Mentions légales
+            {{ $t('footer.legal_notices') }}
           </NuxtLink>
           <NuxtLink
             to="/confidentialite"
             class="link link-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
           >
-            Confidentialité
+            {{ $t('footer.privacy') }}
           </NuxtLink>
           <button
             class="link link-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
@@ -64,7 +46,7 @@
             type="button"
             @click.prevent="openCookieSettings"
           >
-            Paramètres des cookies
+            {{ $t('footer.cookie_settings') }}
           </button>
         </nav>
       </div>

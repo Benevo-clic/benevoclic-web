@@ -140,7 +140,13 @@
       "language": "Idioma",
       "theme": "Tema"
     },
-    "logout": "Cerrar Sesión"
+    "logout": "Cerrar Sesión",
+    "menu": "Menú",
+    "welcome": "Bienvenido",
+    "closeMenu": "Close menu",
+    "closeWelcomePanel": "Close welcome panel",
+    "menuDescription": "Descripción del menú lateral",
+    "welcomeDescription": "Descripción del panel de bienvenida"
   },
   "header": {
     "loading": "Cargando aplicación...",
@@ -2068,5 +2074,16 @@
     "favorites": {
       "page": "Página"
     }
+  },
+  "footer": {
+    "home": "Inicio",
+    "events": "Eventos",
+    "help": "Ayuda",
+    "contact": "Contacto",
+    "legal_notices": "Avisos Legales",
+    "privacy": "Privacidad",
+    "cookie_settings": "Configuración de Cookies",
+    "navigation_label": "Navegación del pie de página",
+    "cookie_settings_aria": "Abrir configuración de cookies"
   }
 }
