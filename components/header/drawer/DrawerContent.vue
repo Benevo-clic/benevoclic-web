@@ -88,7 +88,7 @@
             :id="props.isAuthenticated ? 'drawer-title' : 'welcome-title'"
             class="text-lg font-semibold text-base-content"
           >
-            {{ props.isAuthenticated ? t('drawerContent.menu') : t('drawerContent.welcome') }}
+            {{ props.isAuthenticated ? t('drawer-content.menu') : t('drawer-content.welcome') }}
           </h2>
           <button
             class="btn btn-ghost btn-circle btn-sm hover:bg-base-300 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
