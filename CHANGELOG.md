@@ -1,4 +1,15 @@
 ## [Unreleased]
+## [1.19.1] - 2025-09-11
+
+### 🐛 Corrigé
+- update translations and improve footer navigation accessibility (#45)
+
+### ♻️ Refactorisation
+- support (#43)
+- support (#42)
+
+---
+
 ## [1.19.0] - 2025-08-18
 
 ### 🚀 Ajouté
