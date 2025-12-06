@@ -1,244 +1,164 @@
 <template>
-  <div
-    class="bg-base-100 rounded-xl shadow-lg border border-base-300"
-    role="region"
-    aria-labelledby="notifications-title"
-  >
-    <!-- Header avec statistiques -->
-    <div class="p-6 border-b border-base-300">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 id="notifications-title" class="text-2xl font-bold text-base-content">
-            {{ t('notifications.title') }}
-          </h2>
-          <p id="notifications-subtitle" class="text-base-content/70 mt-1">
-            {{ t('notifications.subtitle') }}
-          </p>
-        </div>
-
-        <!-- Statistiques rapides -->
-        <div class="flex gap-3" role="group" aria-label="Statistiques des notifications">
-          <div class="stat bg-base-200 rounded-lg px-4 py-2 text-center">
-            <div
-              class="stat-value text-primary text-lg font-bold"
-              aria-label="Nombre de notifications non lues"
-            >
-              {{ unreadCount }}
-            </div>
-            <div class="stat-desc text-xs text-base-content/70">
-              {{ t('notifications.unread') }}
-            </div>
-          </div>
-          <div class="stat bg-base-200 rounded-lg px-4 py-2 text-center">
-            <div
-              class="stat-value text-base-content text-lg font-bold"
-              aria-label="Nombre total de notifications"
-            >
-              {{ notifications.length }}
-            </div>
-            <div class="stat-desc text-xs text-base-content/70">
-              {{ t('notifications.total') }}
-            </div>
-          </div>
-        </div>
+  <div class="bg-base-100 rounded-xl shadow-sm border border-base-200">
+    <!-- Header simple -->
+    <div class="p-4 border-b border-base-200 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <h2 class="text-xl font-bold text-base-content">
+          {{ t('notifications.title') }}
+        </h2>
+        <span v-if="unreadCount > 0" class="badge badge-primary badge-sm">
+          {{ unreadCount }} {{ t('notifications.new') }}
+        </span>
       </div>
-    </div>
 
-    <!-- Actions rapides -->
-    <div class="p-4 border-b border-base-300 bg-base-50">
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <!-- Filtres -->
-        <div class="flex flex-wrap gap-2" role="group" aria-label="Filtres des notifications">
-          <button
-            v-for="filter in filters"
-            :key="filter.value"
-            class="btn btn-sm transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            :class="activeFilter === filter.value ? 'btn-primary' : 'btn-outline'"
-            :aria-pressed="activeFilter === filter.value"
-            :aria-label="`Filtrer par ${filter.label} (${filter.count})`"
-            @click="activeFilter = filter.value"
-          >
-            <component :is="filter.icon" class="w-4 h-4 mr-1" aria-hidden="true" />
-            {{ filter.label }}
-            <span class="badge badge-sm ml-1">{{ filter.count }}</span>
-          </button>
-        </div>
+      <div class="flex items-center gap-2">
+         <!-- Sort Dropdown -->
+         <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="btn btn-ghost btn-sm text-base-content/70">
+              <ArrowUpDown class="w-4 h-4 mr-1" />
+              <span class="hidden sm:inline">{{ sortBy === 'recent' ? t('notifications.sort.recent') : t('notifications.sort.oldest') }}</span>
+            </div>
+            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+              <li><a @click="sortBy = 'recent'" :class="{ 'active': sortBy === 'recent' }">{{ t('notifications.sort.recent') }}</a></li>
+              <li><a @click="sortBy = 'oldest'" :class="{ 'active': sortBy === 'oldest' }">{{ t('notifications.sort.oldest') }}</a></li>
+            </ul>
+         </div>
 
-        <!-- Actions -->
-        <div class="flex gap-2" role="group" aria-label="Actions sur les notifications">
-          <button
+         <div class="divider divider-horizontal mx-0 h-6"></div>
+
+         <button
             v-if="hasUnread"
-            class="btn btn-sm btn-ghost text-success hover:bg-success/10 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
+            class="btn btn-ghost btn-sm text-primary hover:bg-primary/10"
             :disabled="isLoading"
-            :aria-describedby="isLoading ? 'mark-all-loading' : undefined"
             @click="markAllAsRead"
           >
-            <Check class="w-4 h-4 mr-1" aria-hidden="true" />
-            {{ t('notifications.mark_all_read') }}
+            <Check class="w-4 h-4 mr-2" />
+            <span class="hidden sm:inline">{{ t('notifications.mark_all_read') }}</span>
+            <span class="sm:hidden">{{ t('notifications.mark_read') }}</span>
           </button>
-          <div v-if="isLoading" id="mark-all-loading" class="sr-only">
-            Marquer toutes comme lues en cours...
-          </div>
           <button
-            v-if="notifications.length > 0"
-            class="btn btn-sm btn-ghost text-error hover:bg-error/10 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            :disabled="isLoading"
-            :aria-describedby="isLoading ? 'clear-all-loading' : undefined"
-            @click="clearAll"
+            class="btn btn-ghost btn-sm btn-square text-base-content/50 hover:text-error"
+            :title="t('notifications.refresh')"
+            @click="refresh"
           >
-            <Trash2 class="w-4 h-4 mr-1" aria-hidden="true" />
-            {{ t('notifications.clear_all') }}
+            <RefreshCw class="w-4 h-4" :class="{ 'animate-spin': isLoading }" />
           </button>
-          <div v-if="isLoading" id="clear-all-loading" class="sr-only">
-            Supprimer toutes les notifications en cours...
-          </div>
-        </div>
       </div>
     </div>
 
-    <!-- Liste des notifications -->
-    <div class="p-4">
-      <div
-        v-if="isLoading"
-        class="flex justify-center items-center py-12"
-        role="status"
-        aria-live="polite"
-      >
-        <div class="loading loading-spinner loading-lg text-primary" aria-hidden="true" />
-        <span class="sr-only">Chargement des notifications...</span>
+    <!-- Filtres (Tabs) -->
+    <div class="px-4 pt-2 border-b border-base-200 bg-base-50/50 overflow-x-auto">
+      <div class="flex gap-6">
+        <button
+          v-for="filter in filters"
+          :key="filter.value"
+          class="pb-3 border-b-2 text-sm font-medium transition-colors whitespace-nowrap flex items-center gap-2"
+          :class="activeFilter === filter.value 
+            ? 'border-primary text-primary' 
+            : 'border-transparent text-base-content/60 hover:text-base-content hover:border-base-300'"
+          @click="activeFilter = filter.value"
+        >
+          <component :is="filter.icon" class="w-4 h-4" />
+          {{ filter.label }}
+          <span 
+            class="badge badge-sm"
+            :class="activeFilter === filter.value ? 'badge-primary' : 'badge-ghost'"
+          >
+            {{ filter.count }}
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Liste -->
+    <div class="divide-y divide-base-200 min-h-[300px]">
+      <div v-if="isLoading" class="flex flex-col items-center justify-center h-64 text-base-content/50">
+        <span class="loading loading-spinner loading-md mb-2"></span>
+        <span>Chargement...</span>
       </div>
 
-      <div v-else-if="filteredNotifications.length > 0" class="space-y-3">
-        <TransitionGroup
-          name="notification"
-          tag="div"
-          class="space-y-3"
-          role="list"
-          aria-label="Liste des notifications"
+      <div v-else-if="filteredNotifications.length === 0" class="flex flex-col items-center justify-center h-64 text-base-content/50">
+        <div class="w-16 h-16 bg-base-200 rounded-full flex items-center justify-center mb-4 text-base-content/30">
+          <Bell class="w-8 h-8" />
+        </div>
+        <p>{{ getEmptyStateMessage() }}</p>
+      </div>
+
+      <TransitionGroup name="list" tag="div" v-else>
+        <div 
+          v-for="notification in filteredNotifications" 
+          :key="notification.id"
+          class="group p-4 hover:bg-base-50 transition-colors relative"
+          :class="{ 'bg-primary/5': !notification.isRead }"
         >
-          <div
-            v-for="notification in filteredNotifications"
-            :key="notification.id"
-            class="group bg-base-100 border border-base-300 rounded-xl p-4 transition-all duration-300 hover:shadow-lg hover:border-primary/20 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-            :class="{
-              'border-l-4 border-l-primary bg-primary/5': !notification.read,
-              'opacity-75': notification.read
-            }"
-            role="listitem"
-            :aria-label="`Notification ${notification.read ? 'lue' : 'non lue'}: ${notification.title}`"
-            tabindex="0"
-          >
-            <div class="flex items-start gap-4">
-              <!-- Icône avec badge -->
-              <div class="relative flex-shrink-0">
-                <div
-                  class="w-12 h-12 rounded-full bg-base-200 flex items-center justify-center group-hover:scale-110 transition-transform duration-200"
+          <div class="flex items-start gap-4">
+            <!-- Icon -->
+            <div 
+              class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+              :class="!notification.isRead ? 'bg-primary/20 text-primary' : 'bg-base-200 text-base-content/50'"
+            >
+              <component :is="getIconForType(notification)" class="w-5 h-5" />
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-start gap-2">
+                <h3 
+                  class="font-medium text-base-content"
+                  :class="{ 'font-bold': !notification.isRead }"
                 >
-                  <component
-                    :is="getIconForType(notification.type)"
-                    class="w-6 h-6"
-                    :class="getIconColor(notification.type)"
-                    aria-hidden="true"
-                  />
-                </div>
-                <div
-                  v-if="!notification.read"
-                  class="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full border-2 border-base-100"
-                  aria-label="Notification non lue"
-                />
+                  {{ notification.message }}
+                </h3>
+                <span class="text-xs text-base-content/50 whitespace-nowrap flex-shrink-0">
+                  {{ formatRelative(notification.createdAt) }}
+                </span>
               </div>
+              
+              <p class="text-sm text-base-content/70 mt-1 line-clamp-2">
+                {{ notification.message }}
+              </p>
 
-              <!-- Contenu -->
-              <div class="flex-1 min-w-0">
-                <div class="flex items-start justify-between gap-2">
-                  <div class="flex-1 min-w-0">
-                    <h3
-                      class="font-semibold text-base-content line-clamp-1 group-hover:text-primary transition-colors"
-                    >
-                      {{ notification.title }}
-                    </h3>
-                    <p class="text-sm text-base-content/70 mt-1 line-clamp-2">
-                      {{ notification.message }}
-                    </p>
-                    <div class="flex items-center gap-3 mt-2">
-                      <span class="text-xs text-base-content/50 flex items-center gap-1">
-                        <Clock class="w-3 h-3" aria-hidden="true" />
-                        <time :datetime="notification.date">{{
-                          formatDate(notification.date)
-                        }}</time>
-                      </span>
-                      <span v-if="!notification.read" class="badge badge-sm badge-primary">
-                        {{ t('notifications.new') }}
-                      </span>
-                    </div>
-                  </div>
-
-                  <!-- Actions -->
-                  <div
-                    class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                    role="group"
-                    aria-label="Actions sur la notification"
+              <!-- Actions Contextuelles -->
+               <div class="flex items-center gap-3 mt-3">
+                  <button 
+                    v-if="notification.redirectUrl"
+                    class="btn btn-xs btn-primary btn-outline"
+                    @click="() => navigateTo(notification.redirectUrl!)"
                   >
-                    <button
-                      v-if="!notification.read"
-                      class="btn btn-ghost btn-xs text-success hover:bg-success/10 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-                      :title="t('notifications.mark_read')"
-                      :aria-label="`Marquer comme lue: ${notification.title}`"
-                      @click="markAsRead(notification)"
-                    >
-                      <Check class="w-4 h-4" aria-hidden="true" />
-                    </button>
-                    <button
-                      class="btn btn-ghost btn-xs text-error hover:bg-error/10 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-                      :title="t('notifications.delete')"
-                      :aria-label="`Supprimer la notification: ${notification.title}`"
-                      @click="removeNotification(notification.id)"
-                    >
-                      <X class="w-4 h-4" aria-hidden="true" />
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Actions contextuelles -->
-                <div
-                  v-if="notification.actionUrl"
-                  class="flex justify-end mt-3 pt-3 border-t border-base-200"
-                >
-                  <button
-                    class="btn btn-sm btn-outline btn-primary focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-2 focus-visible:outline-none"
-                    :aria-label="`${notification.actionText || t('notifications.view')}: ${notification.title}`"
-                    @click="navigateTo(notification.actionUrl)"
-                  >
-                    {{ notification.actionText || t('notifications.view') }}
+                    {{ t('notifications.view') }}
                   </button>
-                </div>
-              </div>
+                  
+                  <div class="flex-1"></div>
+
+                  <!-- Quick Actions (Hover) -->
+                  <div class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+                     <button 
+                        v-if="!notification.isRead"
+                        class="btn btn-ghost btn-xs text-primary"
+                        :title="t('notifications.mark_read')"
+                        @click.stop="markAsRead(notification)"
+                      >
+                        <Check class="w-4 h-4" />
+                      </button>
+                      <button 
+                        class="btn btn-ghost btn-xs text-base-content/50 hover:text-error"
+                        :title="t('notifications.delete')"
+                        @click.stop="removeNotification(notification.id)"
+                      >
+                        <Trash2 class="w-4 h-4" />
+                      </button>
+                  </div>
+               </div>
             </div>
           </div>
-        </TransitionGroup>
-      </div>
-
-      <!-- État vide -->
-      <div v-else class="text-center py-12" role="status" aria-live="polite">
-        <div
-          class="w-24 h-24 mx-auto mb-4 rounded-full bg-base-200 flex items-center justify-center"
-          aria-hidden="true"
-        >
-          <Bell class="w-12 h-12 text-base-content/30" />
         </div>
-        <h3 class="text-lg font-semibold text-base-content mb-2">
-          {{ t('notifications.no_notifications') }}
-        </h3>
-        <p class="text-base-content/70 max-w-md mx-auto">
-          {{ getEmptyStateMessage() }}
-        </p>
-      </div>
+      </TransitionGroup>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted } from 'vue'
+  import { ref, computed } from 'vue'
   import {
     Bell,
     Check,
@@ -249,275 +169,254 @@
     AlertCircle,
     Clock,
     Trash2,
-    MapPin
+    MapPin,
+    RefreshCw,
+    UserPlus,
+    Handshake,
+    ArrowUpDown
   } from 'lucide-vue-next'
+  import { navigateTo } from '#app'
+  import type { Notification } from '~/composables/useNotifications'
 
   const { t } = useI18n()
-  // Props and emits
-  const emit = defineEmits(['update'])
+  
+  // Props
+  const props = defineProps<{
+    notifications: Notification[]
+    isLoading: boolean
+    userRole?: string
+  }>()
+
+  // Emits
+  const emit = defineEmits<{
+    (e: 'mark-as-read', id: string): void
+    (e: 'mark-all-read'): void
+    (e: 'delete', id: string): void
+    (e: 'refresh'): void
+  }>()
 
   // State
-  const isLoading = ref(false)
   const activeFilter = ref('all')
-
-  // Données de test (à remplacer par des données réelles)
-  const notifications = ref([
-    {
-      id: 1,
-      type: 'message',
-      title: "Nouveau message de l'association Ocean Conservation",
-      message:
-        "Vous avez reçu un message concernant votre participation à l'événement de nettoyage de plage.",
-      date: '2024-01-15T14:30:00',
-      read: false,
-      actionUrl: '/messages/1',
-      actionText: 'Lire le message'
-    },
-    {
-      id: 2,
-      type: 'event',
-      title: "Rappel d'événement",
-      message:
-        'L\'événement "Distribution alimentaire" commence demain à 9h00. N\'oubliez pas vos gants !',
-      date: '2024-01-14T09:15:00',
-      read: false,
-      actionUrl: '/volunteer/activity/participations',
-      actionText: "Voir l'événement"
-    },
-    {
-      id: 3,
-      type: 'achievement',
-      title: 'Réalisation débloquée !',
-      message: 'Félicitations ! Vous avez complété 5 missions. Continuez comme ça !',
-      date: '2024-01-10T16:45:00',
-      read: true,
-      actionUrl: '/volunteer/account/profile',
-      actionText: 'Voir mes réalisations'
-    },
-    {
-      id: 4,
-      type: 'alert',
-      title: 'Événement annulé',
-      message:
-        'L\'événement "Plantation d\'arbres" a été annulé en raison des conditions météorologiques.',
-      date: '2024-01-05T11:20:00',
-      read: true,
-      actionUrl: '/volunteer/activity/missions',
-      actionText: "Trouver d'autres missions"
-    },
-    {
-      id: 5,
-      type: 'mission',
-      title: 'Nouvelle mission disponible',
-      message:
-        'Une nouvelle mission "Sensibilisation environnementale" est disponible dans votre région.',
-      date: '2024-01-03T08:30:00',
-      read: false,
-      actionUrl: '/volunteer/activity/missions',
-      actionText: 'Voir la mission'
-    }
-  ])
+  const sortBy = ref<'recent' | 'oldest'>('recent')
 
   // Computed properties
   const unreadCount = computed(() => {
-    return notifications.value.filter(notification => !notification.read).length
+    return props.notifications.filter(notification => !notification.isRead).length
   })
 
   const hasUnread = computed(() => {
     return unreadCount.value > 0
   })
 
-  const filters = computed(() => [
-    {
-      value: 'all',
-      label: 'Toutes',
-      icon: Bell,
-      count: notifications.value.length
-    },
-    {
-      value: 'unread',
-      label: 'Non lues',
-      icon: AlertCircle,
-      count: unreadCount.value
-    },
-    {
-      value: 'message',
-      label: 'Messages',
-      icon: MessageSquare,
-      count: getCountByType('message')
-    },
-    {
-      value: 'event',
-      label: 'Événements',
-      icon: Calendar,
-      count: getCountByType('event')
-    },
-    {
-      value: 'mission',
-      label: 'Missions',
-      icon: MapPin,
-      count: getCountByType('mission')
-    },
-    {
-      value: 'achievement',
-      label: 'Réalisations',
-      icon: Award,
-      count: getCountByType('achievement')
+  // Helper to get count by type (using standard types)
+  function getCountByType(type: string): number {
+    return props.notifications.filter(notification => getNotificationTypeCategory(notification) === type).length
+  }
+
+  // Derive category from notification type or content
+  function getNotificationTypeCategory(notification: Notification): string {
+    // Map backend types to frontend categories
+    if (notification.type.includes('MESSAGE')) return 'message'
+    
+    // Membership: Requests for Assoc, Approved/Rejected for Volunteer
+    if (notification.type.includes('MEMBERSHIP')) {
+        return 'membership'
     }
-  ])
+
+    // Participation: Volunteer requests for Assoc, Approved/Rejected for Volunteer
+    if (notification.type.includes('VOLUNTEER') || notification.type.includes('PARTICIPANT')) {
+        // For Association, incoming requests are often grouped. 
+        // But per USER request "separation des notification d'acceptation d'adhesion et aussi d'acception de demande de particiaption" for VOLUNTEER.
+        // So for VOLUNTEER, these are 'participation'.
+        // For Association, usually these are requests. 
+        // Let's keep it simple: if it's volunteer/participant related, it's 'participation' category mostly.
+        // However, in previous step we put VOLUNTEER_REQUEST in 'membership' for Association (Adhesions). 
+        // Wait, the user said "pour les volunteer... separation des notification d'acceptation d'adhesion et aussi d'acception de demande de particiaption".
+        
+        // Let's look at types again:
+        // VOLUNTEER_REQUEST (Assoc receives) -> arguably "Adhésion" to assoc or "Participation"? 
+        // Usually Adhesion is being a member. Participation is joining an event.
+        // But `MEMBERSHIP_REQUEST` is definitely Adhesion.
+        // `VOLUNTEER_REQUEST` is usually "Je veux rejoindre l'asso" (General volunteer) OR "Je veux aider sur cet event".
+        // In this system `VOLUNTEER_REQUEST` seems to be distinct from `PARTICIPANT_REQUEST` (Event).
+        
+        // Let's strictly follow the plan:
+        // MEMBERSHIP_* -> membership
+        // VOLUNTEER_*, PARTICIPANT_* -> participation
+        return 'participation' 
+    }
+
+    if (notification.type.includes('EVENT') || notification.type.includes('REQUEST')) return 'event'
+    
+    if (notification.type.includes('MISSION')) return 'mission'
+    if (notification.type.includes('ACHIEVEMENT')) return 'achievement'
+    return 'alert' // default
+  }
+
+  const filters = computed(() => {
+    const baseFilters = [
+        {
+        value: 'all',
+        label: 'Toutes',
+        icon: Bell,
+        count: props.notifications.length
+        },
+        {
+        value: 'unread',
+        label: 'Non lues',
+        icon: AlertCircle,
+        count: unreadCount.value
+        }
+    ]
+
+    // Role-specific tabs
+    if (props.userRole === 'ASSOCIATION') {
+        baseFilters.push({
+            value: 'membership',
+            label: t('notifications.tabs.membership'), // "Adhésions"
+            icon: UserPlus,
+            count: getCountByType('membership') + getCountByType('participation') // Grouping requests for now? 
+            // Wait, previous step we had: 
+            // if (type.includes('MEMBERSHIP') || type.includes('VOLUNTEER_REQUEST')) return 'membership'
+            // Now we separated them. 
+            // If the user wants separate tabs for VOLUNTEER too, we should respect that.
+            // But for ASSOCIATION, the "Adhésions" tab usually contained requests.
+            // If I change 'participation' category, I might break ASSOCIATION view if I don't include it. 
+            // Let's make ASSOCIATION 'membership' tab include both membership and participation requests if that was the previous behavior logic, 
+            // OR we can add a 'Participation' tab for Association too? 
+            // The user request specifically mentioned "pour les volunteer". 
+            // For ASSOCIATION, we previously successfully added "Adhésion".
+            // Let's keep 'membership' for MEMBERSHIP types. 
+            // And 'participation' for VOLUNTEER/PARTICIPANT types.
+            // And for ASSOCIATION, maybe show both? Or group them?
+            // "onglet adhesion ... qui contiendra les demande d'adhesion a l'association" -> strictly MEMBERSHIP_REQUEST.
+            // What about VOLUNTEER_REQUEST? 
+            // Let's assume 'membership' = MEMBERSHIP types.
+            // 'participation' = VOLUNTEER/PARTICIPANT types.
+        })
+        // NOTE: For Association, maybe they want 'Participations' too? 
+        // For now, let's just add 'Adhésions' (Membership) and maybe 'Participations' if meaningful?
+        // Actually, let's stick to the prompt for VOLUNTEER.
+        // For Association, I'll add 'participation' tab too if they have those notifications.
+         baseFilters.push({
+            value: 'participation',
+            label: t('notifications.tabs.participation'),
+            icon: Handshake,
+            count: getCountByType('participation')
+        })
+    } else if (props.userRole === 'VOLUNTEER') {
+         baseFilters.push({
+            value: 'membership',
+            label: t('notifications.tabs.membership'),
+            icon: UserPlus,
+            count: getCountByType('membership')
+        })
+         baseFilters.push({
+            value: 'participation',
+            label: t('notifications.tabs.participation'),
+            icon: Handshake,
+            count: getCountByType('participation')
+        })
+    }
+    
+    // Common tabs
+    baseFilters.push({
+        value: 'event',
+        label: 'Événements',
+        icon: Calendar,
+        count: getCountByType('event')
+    })
+
+    baseFilters.push({
+        value: 'message',
+        label: 'Messages',
+        icon: MessageSquare,
+        count: getCountByType('message')
+    })
+    
+    return baseFilters
+  })
 
   const filteredNotifications = computed(() => {
+    let result: Notification[] = []
+
+    // 1. Filter
     if (activeFilter.value === 'all') {
-      return notifications.value
+      result = [...props.notifications]
     } else if (activeFilter.value === 'unread') {
-      return notifications.value.filter(notification => !notification.read)
+      result = props.notifications.filter(notification => !notification.isRead)
     } else {
-      return notifications.value.filter(notification => notification.type === activeFilter.value)
+      result = props.notifications.filter(notification => getNotificationTypeCategory(notification) === activeFilter.value)
     }
+
+    // 2. Sort
+    return result.sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime()
+      const dateB = new Date(b.createdAt).getTime()
+      return sortBy.value === 'recent' ? dateB - dateA : dateA - dateB
+    })
   })
 
   // Methods
-  function getCountByType(type: string): number {
-    return notifications.value.filter(notification => notification.type === type).length
-  }
-
-  function markAsRead(notification: any) {
-    notification.read = true
-    emit('update', notifications.value)
+  function markAsRead(notification: Notification) {
+    emit('mark-as-read', notification.id)
   }
 
   function markAllAsRead() {
-    isLoading.value = true
-    setTimeout(() => {
-      notifications.value.forEach(notification => {
-        notification.read = true
-      })
-      emit('update', notifications.value)
-      isLoading.value = false
-    }, 300)
+    emit('mark-all-read')
   }
 
-  function removeNotification(id: number) {
-    const index = notifications.value.findIndex(n => n.id === id)
-    if (index > -1) {
-      notifications.value.splice(index, 1)
-      emit('update', notifications.value)
-    }
+  function removeNotification(id: string) {
+    emit('delete', id)
+  }
+  
+  function refresh() {
+    emit('refresh')
   }
 
-  function clearAll() {
-    isLoading.value = true
-    setTimeout(() => {
-      notifications.value = []
-      emit('update', notifications.value)
-      isLoading.value = false
-    }, 300)
-  }
+  const { formatRelative, formatDate: formatDateFull } = useDate()
 
-  function formatDate(dateString: string): string {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffMs = now.getTime() - date.getTime()
-    const diffMins = Math.floor(diffMs / (1000 * 60))
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
 
-    if (diffMins < 60) {
-      return `Il y a ${diffMins} minute${diffMins !== 1 ? 's' : ''}`
-    } else if (diffHours < 24) {
-      return `Il y a ${diffHours} heure${diffHours !== 1 ? 's' : ''}`
-    } else if (diffDays < 7) {
-      return `Il y a ${diffDays} jour${diffDays !== 1 ? 's' : ''}`
-    } else {
-      return date.toLocaleDateString('fr-FR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-      })
-    }
-  }
-
-  function getIconForType(type: string) {
-    switch (type) {
+  function getIconForType(notification: Notification) {
+    const category = getNotificationTypeCategory(notification)
+    switch (category) {
       case 'message':
         return MessageSquare
       case 'event':
         return Calendar
       case 'achievement':
         return Award
-      case 'alert':
-        return AlertCircle
       case 'mission':
         return MapPin
+      case 'membership':
+        return UserPlus
+      case 'participation':
+        return Handshake
       default:
         return Bell
-    }
-  }
-
-  function getIconColor(type: string): string {
-    switch (type) {
-      case 'message':
-        return 'text-info'
-      case 'event':
-        return 'text-primary'
-      case 'achievement':
-        return 'text-success'
-      case 'alert':
-        return 'text-warning'
-      case 'mission':
-        return 'text-accent'
-      default:
-        return 'text-base-content'
     }
   }
 
   function getEmptyStateMessage(): string {
     switch (activeFilter.value) {
       case 'all':
-        return "Vous n'avez aucune notification pour le moment. Les nouvelles notifications apparaîtront ici."
+        return "Vous n'avez aucune notification pour le moment."
       case 'unread':
-        return "Vous n'avez aucune notification non lue. Toutes vos notifications ont été lues."
+        return "Vous n'avez aucune notification non lue."
       default:
-        return `Vous n'avez aucune notification de type "${activeFilter.value}".`
+        return `Vous n'avez aucune notification de ce type.`
     }
   }
-
-  onMounted(() => {
-    // Simuler un chargement initial
-    isLoading.value = true
-    setTimeout(() => {
-      isLoading.value = false
-    }, 500)
-  })
 </script>
 
 <style scoped>
-  .notification-enter-active,
-  .notification-leave-active {
-    transition: all 0.3s ease;
-  }
-
-  .notification-enter-from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-
-  .notification-leave-to {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-
-  .line-clamp-1 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
 </style>

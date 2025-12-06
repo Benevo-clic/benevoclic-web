@@ -67,21 +67,7 @@ export function useSearchHistory() {
     return searchHistory.value.slice(0, 3)
   })
 
-  const formatDate = (timestamp: number) => {
-    const date = new Date(timestamp)
-    const now = new Date()
-    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
-
-    if (diffInHours < 1) {
-      return "À l'instant"
-    } else if (diffInHours < 24) {
-      const hours = Math.floor(diffInHours)
-      return `Il y a ${hours} heure${hours > 1 ? 's' : ''}`
-    } else {
-      const days = Math.floor(diffInHours / 24)
-      return `Il y a ${days} jour${days > 1 ? 's' : ''}`
-    }
-  }
+  const { formatRelative } = useDate()
 
   if (process.client) {
     loadHistory()
@@ -93,6 +79,6 @@ export function useSearchHistory() {
     addToHistory,
     removeFromHistory,
     clearHistory,
-    formatDate
+    formatDate: formatRelative
   }
 }

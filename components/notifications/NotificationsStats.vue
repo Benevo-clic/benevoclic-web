@@ -134,7 +134,7 @@
               {{ activity.description }}
             </div>
             <div class="text-xs text-base-content/50">
-              {{ formatTime(activity.time) }}
+              {{ formatRelative(activity.time) }}
             </div>
           </div>
         </div>
@@ -273,25 +273,7 @@
   })
 
   // Methods
-  function formatTime(date: Date): string {
-    const now = new Date()
-    const diffMs = now.getTime() - date.getTime()
-    const diffMins = Math.floor(diffMs / (1000 * 60))
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
-
-    if (diffMins < 60) {
-      return `Il y a ${diffMins} minute${diffMins !== 1 ? 's' : ''}`
-    } else if (diffHours < 24) {
-      return `Il y a ${diffHours} heure${diffHours !== 1 ? 's' : ''}`
-    } else {
-      return date.toLocaleDateString('fr-FR', {
-        day: '2-digit',
-        month: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-    }
-  }
+  const { formatRelative, formatDate } = useDate()
 
   // Watchers
   watch(timeRange, newRange => {

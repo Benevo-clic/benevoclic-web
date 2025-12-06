@@ -73,10 +73,7 @@
         <div class="flex items-center gap-1 sm:gap-2">
           <Calendar class="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
           <span class="font-medium">{{
-            new Date(announcement.dateEvent).toLocaleDateString('fr-FR', {
-              day: '2-digit',
-              month: '2-digit'
-            })
+            formatDate(announcement.dateEvent, { day: '2-digit', month: '2-digit' })
           }}</span>
           <span class="text-base-content/60 hidden sm:inline">•</span>
           <span class="truncate">{{ announcement.hoursEvent }}</span>
@@ -173,7 +170,8 @@
   import { navigateTo } from '#app'
   import type { Announcement } from '~/common/interface/event.interface'
   import { EventStatus } from '~/common/enums/event.enum'
-
+  
+  const { formatDate } = useDate()
   const { t } = useI18n()
 
   const props = defineProps<{

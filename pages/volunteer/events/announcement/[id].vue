@@ -698,8 +698,12 @@
     return Math.max(0, max - current)
   })
 
-  const canParticipateAsVolunteer = computed(() => remainingVolunteers.value > 0)
-  const canParticipateAsParticipant = computed(() => remainingParticipants.value > 0)
+  const canParticipateAsVolunteer = computed(() => 
+    remainingVolunteers.value > 0 && announcement.value?.status === EventStatus.ACTIVE
+  )
+  const canParticipateAsParticipant = computed(() => 
+    remainingParticipants.value > 0 && announcement.value?.status === EventStatus.ACTIVE
+  )
   const alreadyParticipating = computed(() => {
     const volunteerId = volunteerUse.volunteer?.value?.volunteerId
     return announcement.value?.participants?.some(p => p.id === volunteerId) || false
@@ -724,6 +728,11 @@
       !announcement.value?.volunteers?.some(v => v.id === volunteerId.value) &&
       !announcement.value?.participants?.some(v => v.id === volunteerId.value)
     )
+  })
+
+  // Block registration if event is not ACTIVE (COMPLETED or INACTIVE)
+  const isNotActive = computed(() => {
+    return announcement.value?.status !== EventStatus.ACTIVE
   })
 
   const scrollContainer = ref<HTMLElement | null>(null)
@@ -879,17 +888,8 @@
     return announcement.value?.announcementImage
   })
 
-  function formatDate(dateString?: string) {
-    if (!dateString) {
-      return ''
-    }
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    }
-    return new Date(dateString).toLocaleDateString('fr-FR', options)
-  }
+  const { formatDate } = useDate()
+
 
   const statusBadgeClass = computed(() => {
     switch (announcement.value?.status) {

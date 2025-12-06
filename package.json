@@ -7,10 +7,10 @@
     "#internal/*": "./.nuxt/dist/server/*"
   },
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev --port=5482",
-    "start": "nuxt dev --port=5482",
-    "generate": "nuxt generate",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' nuxt build",
+    "dev": "NODE_OPTIONS='--max-old-space-size=4096' nuxt dev --port=5482",
+    "start": "NODE_OPTIONS='--max-old-space-size=4096' nuxt dev --port=5482",
+    "generate": "NODE_OPTIONS='--max-old-space-size=4096' nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "start:prod": "node .output/server/index.mjs",
@@ -61,6 +61,7 @@
     "nuxt": "3.16.0",
     "nuxt-schema-org": "^5.0.6",
     "sass": "^1.85.0",
+    "socket.io-client": "^4.8.1",
     "vue": "3.5.18",
     "vue-router": "4.5.1"
   },

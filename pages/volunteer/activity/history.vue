@@ -268,9 +268,10 @@
     }
   }
 
+  const { formatDate: formatDateFull } = useDate()
+
   function formatDate(dateString: string): string {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('fr-FR', {
+    return formatDateFull(dateString, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -281,10 +282,9 @@
 
   // Affiche la période (date ou intervalle) dans le cercle
   function getPeriod(item: Announcement): string {
-    // Si tu as startDate et endDate, adapte ici
+    // If you have startDate and endDate, adapt here
     if (item.dateEvent) {
-      const date = new Date(item.dateEvent)
-      return date.toLocaleDateString('fr-FR', {
+      return formatDateFull(item.dateEvent, {
         day: '2-digit',
         month: 'short',
         year: '2-digit'
@@ -309,3 +309,4 @@
     transform: scale(1.1);
   }
 </style>
+```
