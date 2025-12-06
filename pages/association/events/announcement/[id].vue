@@ -415,6 +415,14 @@
       @go-home="handleGoHome"
     />
 
+    <!-- Notification Toast -->
+    <NotificationToast
+      :show="showToast"
+      :message="toastMessage"
+      :type="toastType"
+      @close="showToast = false"
+    />
+
     <!-- Presence Modal -->
     <PresenceListModal
       ref="presenceModalRef"
@@ -439,6 +447,7 @@
   import { useAnnouncement } from '~/composables/useAnnouncement'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import PresenceListModal from '~/components/event/association/PresenceListModal.vue'
+  import NotificationToast from '~/components/utils/NotificationToast.vue'
   import type { Announcement } from '~/common/interface/event.interface'
   const deleteConfirmationModal = ref<HTMLDialogElement | null>(null)
   const { t } = useI18n()
@@ -463,6 +472,17 @@
 
   const showErrorModal = ref(false)
   const errorType = ref<'4xx' | '5xx' | null>(null)
+
+  // Toast notification state
+  const showToast = ref(false)
+  const toastMessage = ref('')
+  const toastType = ref<'success' | 'error' | 'info' | 'warning'>('success')
+
+  function showNotification(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'success') {
+    toastMessage.value = message
+    toastType.value = type
+    showToast.value = true
+  }
 
   function handleReload() {
     window.location.reload()
@@ -549,6 +569,7 @@
   function refresh() {
     fetchAnnouncement()
     closeEditModal()
+    showNotification(t('events.announcement.notifications.saved'), 'success')
   }
 
   function cancelDelete() {
@@ -568,7 +589,9 @@
       await useAnnouncementAuth.removeParticipant(announcement.value?._id, id)
       announcement.value.participants =
         announcement.value.participants?.filter(p => p.id !== id) || []
+      showNotification(t('events.announcement.notifications.participant_removed'), 'success')
     } catch (error) {
+      showNotification(t('events.announcement.notifications.error'), 'error')
       handleError(error)
     }
   }
@@ -580,7 +603,9 @@
     try {
       await useAnnouncementAuth.removeVolunteer(announcement.value?._id, id)
       announcement.value.volunteers = announcement.value.volunteers?.filter(v => v.id !== id) || []
+      showNotification(t('events.announcement.notifications.volunteer_removed'), 'success')
     } catch (error) {
+      showNotification(t('events.announcement.notifications.error'), 'error')
       handleError(error)
     }
   }
@@ -625,8 +650,10 @@
     }
     try {
       await useAnnouncementAuth.removeAnnouncement(announcement.value._id)
-      navigateTo('/association/events/association/manage')
+      showNotification(t('events.announcement.notifications.deleted'), 'success')
+      setTimeout(() => navigateTo('/association/events/association/manage'), 1500)
     } catch (error) {
+      showNotification(t('events.announcement.notifications.error'), 'error')
       handleError(error)
     }
   }

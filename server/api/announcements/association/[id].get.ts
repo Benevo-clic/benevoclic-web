@@ -39,6 +39,13 @@ export default defineEventHandler(async event => {
       }
     )
 
+    // Map id to _id for frontend compatibility
+    if (response.data && Array.isArray(response.data)) {
+      response.data = response.data.map((item: any) => ({
+        ...item,
+        _id: item.id
+      }))
+    }
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {

@@ -432,7 +432,7 @@
     "eventDate": "Date de l'événement",
     "location": "Localisation",
     "details": "Détails",
-      "cancel": "Annuler",
+    "cancel": "Annuler",
     "errors": {
       "unexpected": "Erreur inattendue"
     },
@@ -838,6 +838,14 @@
           "title": "Aucune demande",
           "description": "Aucune demande d'adhésion pour le moment."
         }
+      },
+      "notifications": {
+        "volunteer_accepted": "Le bénévole a été accepté avec succès !",
+        "volunteer_refused": "La demande du bénévole a été refusée.",
+        "member_accepted": "Le membre a été ajouté à l'association !",
+        "member_refused": "La demande d'adhésion a été refusée.",
+        "error_accepting": "Erreur lors de l'acceptation. Veuillez réessayer.",
+        "error_refusing": "Erreur lors du refus. Veuillez réessayer."
       }
     },
     "announcement": {
@@ -868,6 +876,13 @@
       "scroll": {
         "down": "Faire défiler vers le bas",
         "up": "Faire défiler vers le haut"
+      },
+      "notifications": {
+        "saved": "Les modifications ont été enregistrées avec succès !",
+        "deleted": "L'annonce a été supprimée avec succès !",
+        "participant_removed": "Le participant a été retiré.",
+        "volunteer_removed": "Le bénévole a été retiré.",
+        "error": "Une erreur est survenue. Veuillez réessayer."
       }
     }
   },
@@ -1682,6 +1697,17 @@
       "volunteers": "bénévoles",
       "eventType": "Type d'événement",
       "general": "Général"
+    },
+    "notifications": {
+      "volunteer_request_sent": "Votre demande de bénévolat a été envoyée !",
+      "volunteer_request_cancelled": "Votre demande de bénévolat a été annulée.",
+      "volunteer_cancelled": "Votre participation en tant que bénévole a été annulée.",
+      "registered_participant": "Vous êtes inscrit(e) à l'événement !",
+      "participation_cancelled": "Votre participation a été annulée.",
+      "join_request_sent": "Votre demande d'adhésion a été envoyée !",
+      "left_association": "Vous avez quitté l'association.",
+      "leave_request_cancelled": "Votre demande d'adhésion a été annulée.",
+      "error": "Une erreur est survenue. Veuillez réessayer."
     }
   },
   "announcement": {

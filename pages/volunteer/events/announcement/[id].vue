@@ -661,17 +661,21 @@
       }
       if (isFollowingPending.value) {
         await volunteerUse.removeVolunteerFromWaitingListAssociation(associationId.value)
+        showNotificationToast(t('volunteerAnnouncement.notifications.leave_request_cancelled'), 'success')
       } else if (isFollowing.value) {
         await volunteerUse.removeVolunteerFromAssociation(associationId.value, volunteerId.value)
+        showNotificationToast(t('volunteerAnnouncement.notifications.left_association'), 'success')
       } else {
         await volunteerUse.addVolunteerToWaitingListAssociation(associationId.value, {
           volunteerId: volunteerId.value,
           volunteerName:
             volunteerUse.volunteer.value?.firstName + ' ' + volunteerUse.volunteer.value?.lastName
         })
+        showNotificationToast(t('volunteerAnnouncement.notifications.join_request_sent'), 'success')
       }
       await refreshFollowState()
     } catch (error: any) {
+      showNotificationToast(t('volunteerAnnouncement.notifications.error'), 'error')
       handleError(error)
     }
   }
@@ -766,7 +770,9 @@
         name:
           volunteerUse.volunteer?.value?.firstName + ' ' + volunteerUse.volunteer?.value?.lastName
       })
+      showNotificationToast(t('volunteerAnnouncement.notifications.volunteer_request_sent'), 'success')
     } catch (error) {
+      showNotificationToast(t('volunteerAnnouncement.notifications.error'), 'error')
       handleError(error)
     }
   }
@@ -791,7 +797,9 @@
         name:
           volunteerUse.volunteer?.value?.firstName + ' ' + volunteerUse.volunteer?.value?.lastName
       })
+      showNotificationToast(t('volunteerAnnouncement.notifications.registered_participant'), 'success')
     } catch (error: any) {
+      showNotificationToast(t('volunteerAnnouncement.notifications.error'), 'error')
       handleError(error)
     }
   }
@@ -807,7 +815,9 @@
         announcement.value?._id,
         volunteerUse.volunteer?.value?.volunteerId
       )
+      showNotificationToast(t('volunteerAnnouncement.notifications.participation_cancelled'), 'success')
     } catch (error) {
+      showNotificationToast(t('volunteerAnnouncement.notifications.error'), 'error')
       handleError(error)
     }
   }
@@ -825,7 +835,9 @@
         announcement.value?._id,
         volunteerUse.volunteer?.value?.volunteerId
       )
+      showNotificationToast(t('volunteerAnnouncement.notifications.volunteer_request_cancelled'), 'success')
     } catch (error) {
+      showNotificationToast(t('volunteerAnnouncement.notifications.error'), 'error')
       handleError(error)
     }
   }
@@ -843,7 +855,9 @@
         announcement.value?._id,
         volunteerUse.volunteer?.value?.volunteerId
       )
+      showNotificationToast(t('volunteerAnnouncement.notifications.volunteer_cancelled'), 'success')
     } catch (error) {
+      showNotificationToast(t('volunteerAnnouncement.notifications.error'), 'error')
       handleError(error)
     }
   }

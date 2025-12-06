@@ -774,6 +774,7 @@
   }
 
   function onFilterUpdate(newFilters: FilterAnnouncement) {
+    console.log('[DEBUG] onFilterUpdate received:', { lat: newFilters.latitude, lon: newFilters.longitude, radius: newFilters.radius });
     filters.value = newFilters
     resetLocation.value = false
     updateFilters()

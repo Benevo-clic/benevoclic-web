@@ -23,7 +23,11 @@ export default defineEventHandler(async () => {
         maxRetries: 3
       }
     })
-    return response.data
+    const data = response.data.map((item: any) => ({
+      ...item,
+      _id: item.id
+    }))
+    return data
   } catch (error) {
     if (axios.isAxiosError(error)) {
       await ApiError.handleAxios(error, 'Erreur lors de la récupération des annonces')

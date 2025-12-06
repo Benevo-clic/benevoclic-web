@@ -51,6 +51,12 @@ export default defineEventHandler(async event => {
       }
     )
 
+    if (response.data && Array.isArray(response.data.annonces)) {
+      response.data.annonces = response.data.annonces.map((item: any) => ({
+        ...item,
+        _id: item.id
+      }))
+    }
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {

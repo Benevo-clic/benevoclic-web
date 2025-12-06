@@ -168,6 +168,12 @@
       @reload="handleReload"
       @go-home="handleGoHome"
     />
+    <NotificationToast
+      :show="showToast"
+      :message="toastMessage"
+      :type="toastType"
+      @close="showToast = false"
+    />
   </div>
 </template>
 
@@ -176,6 +182,7 @@
   import { Search, Calendar, MapPin, ClipboardList } from 'lucide-vue-next'
   import { navigateTo } from '#app'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
+  import NotificationToast from '~/components/utils/NotificationToast.vue'
   import { useNavigation } from '~/composables/useNavigation'
   import { useVolunteerAuth } from '~/composables/useVolunteer'
   import { useUser } from '~/composables/auth/useUser'
@@ -198,6 +205,17 @@
 
   const showErrorModal = ref(false)
   const errorType = ref<'4xx' | '5xx' | null>(null)
+
+  // Toast notification state
+  const showToast = ref(false)
+  const toastMessage = ref('')
+  const toastType = ref<'success' | 'error' | 'info' | 'warning'>('success')
+
+  function showNotification(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'success') {
+    toastMessage.value = message
+    toastType.value = type
+    showToast.value = true
+  }
 
   function handleReload() {
     window.location.reload()
@@ -252,7 +270,9 @@
     try {
       await announcementUse.removeParticipant(announcementId, getUserId)
       announcements.value = announcements.value.filter(a => a._id !== announcementId)
+      showNotification('Votre participation a été annulée.', 'success')
     } catch (error) {
+      showNotification('Erreur lors de l\'annulation.', 'error')
       handleError(error)
     }
   }

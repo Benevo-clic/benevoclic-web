@@ -31,6 +31,12 @@
       @reload="handleReload"
       @go-home="handleGoHome"
     />
+    <NotificationToast
+      :show="showToast"
+      :message="toastMessage"
+      :type="toastType"
+      @close="showToast = false"
+    />
   </div>
 </template>
 
@@ -40,6 +46,7 @@
   import VolunteersList from '~/components/event/association/VolunteersList.vue'
   import { useAssociationAuth } from '~/composables/useAssociation'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
+  import NotificationToast from '~/components/utils/NotificationToast.vue'
   import { useNavigation } from '~/composables/useNavigation'
 
   definePageMeta({
@@ -66,6 +73,17 @@
   const associationId = ref<string | null>(null)
   const showErrorModal = ref(false)
   const errorType = ref<'4xx' | '5xx' | null>(null)
+
+  // Toast notification state
+  const showToast = ref(false)
+  const toastMessage = ref('')
+  const toastType = ref<'success' | 'error' | 'info' | 'warning'>('success')
+
+  function showNotification(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'success') {
+    toastMessage.value = message
+    toastType.value = type
+    showToast.value = true
+  }
 
   watch(
     () => useAssociation.association.value,
@@ -131,7 +149,9 @@
     }
     try {
       await useAssociation.removeVolunteerFromAssociation(associationId.value, volunteerId)
+      showNotification('Le bénévole a été retiré de l\'association.', 'success')
     } catch (error) {
+      showNotification('Erreur lors du retrait du bénévole.', 'error')
       handleError(error)
     }
   }

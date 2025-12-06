@@ -17,10 +17,10 @@ export default defineEventHandler(async event => {
       }
     })
   }
-  if (!announcementId) {
+  if (!announcementId || announcementId === 'undefined' || announcementId === 'null') {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Association ID is required'
+      statusMessage: 'Associated ID is required (cannot be undefined or null)'
     })
   }
 
@@ -36,6 +36,10 @@ export default defineEventHandler(async event => {
       }
     })
 
+    // Map id to _id for frontend compatibility
+    if (response.data && response.data.id) {
+      response.data._id = response.data.id
+    }
     return response.data
   } catch (error) {
     if (axios.isAxiosError(error)) {

@@ -218,6 +218,14 @@
         @close="closeUserModal"
         :profile-image-url="selectedVolunteerAvatar"
       />
+
+      <!-- Notification Toast -->
+      <NotificationToast
+        :show="showToast"
+        :message="toastMessage"
+        :type="toastType"
+        @close="showToast = false"
+      />
     </div>
   </div>
 </template>
@@ -230,6 +238,7 @@
   import { useAssociationAuth } from '~/composables/useAssociation'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
   import UserDetailsModal from '~/components/common/UserDetailsModal.vue'
+  import NotificationToast from '~/components/utils/NotificationToast.vue'
 
   const { t } = useI18n()
 
@@ -276,6 +285,17 @@
   const volunteersCache = ref<Record<string, any>>({})
   const showErrorModal = ref(false)
   const errorType = ref<'4xx' | '5xx' | null>(null)
+
+  // Toast notification state
+  const showToast = ref(false)
+  const toastMessage = ref('')
+  const toastType = ref<'success' | 'error' | 'info' | 'warning'>('success')
+
+  function showNotification(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'success') {
+    toastMessage.value = message
+    toastType.value = type
+    showToast.value = true
+  }
 
   // User modal state
   const showUserModal = ref(false)
@@ -346,7 +366,7 @@
           return null
         }
         return {
-          id: `${ann._id}-${volunteer.id}`,
+          id: `${ann._id}::${volunteer.id}`,
           volunteer: {
             id: volunteer.id,
             name: volunteer.name,
@@ -421,25 +441,29 @@
   })
 
   async function acceptRequestAnnouncement(id: string, volunteerName: string) {
-    const volunteerId = id.split('-')[1]
-    const announcementId = id.split('-')[0]
+    const [announcementId, volunteerId] = id.split('::')
+    
     try {
       await announcement.addVolunteer(announcementId, {
         id: volunteerId,
         name: volunteerName
       })
       eventRequests.value = eventRequests.value.filter(req => req.id !== id)
+      showNotification(t('events.requests.notifications.volunteer_accepted'), 'success')
     } catch (error) {
+      showNotification(t('events.requests.notifications.error_accepting'), 'error')
       handleError(error)
     }
   }
   async function refuseRequestAnnouncement(id: string) {
-    const volunteerId = id.split('-')[1]
-    const announcementId = id.split('-')[0]
+    const [announcementId, volunteerId] = id.split('::')
+    
     try {
       await announcement.removeVolunteerWaiting(announcementId, volunteerId)
       eventRequests.value = eventRequests.value.filter(req => req.id !== id)
+      showNotification(t('events.requests.notifications.volunteer_refused'), 'success')
     } catch (error) {
+      showNotification(t('events.requests.notifications.error_refusing'), 'error')
       handleError(error)
     }
   }
@@ -455,7 +479,9 @@
         volunteerName
       })
       associationRequests.value = associationRequests.value.filter(req => req.id !== id)
+      showNotification(t('events.requests.notifications.member_accepted'), 'success')
     } catch (error) {
+      showNotification(t('events.requests.notifications.error_accepting'), 'error')
       handleError(error)
     }
   }
@@ -463,7 +489,9 @@
     try {
       await associationStore.removeAssociationVolunteerWaiting(associationId, id)
       associationRequests.value = associationRequests.value.filter(req => req.id !== id)
+      showNotification(t('events.requests.notifications.member_refused'), 'success')
     } catch (error) {
+      showNotification(t('events.requests.notifications.error_refusing'), 'error')
       handleError(error)
     }
   }

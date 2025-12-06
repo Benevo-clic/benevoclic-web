@@ -376,6 +376,74 @@ cat ecosystem.config.cjs
 nano ecosystem.config.cjs
 ```
 
+## 🧪 Comptes de Test
+
+###  Compte Association de Test
+
+**Identifiants de connexion association fournis :**
+```
+Email : aboubakarsiriki06@gmail.com
+Mot de passe : asso123456
+```
+
+**Accès direct :**
+```
+http://localhost:5482/auth/login
+```
+
+> 📝 **Note** : Ce compte association de test permet d'accéder à toutes les fonctionnalités d'une association :
+> - Créer et gérer des annonces
+> - Gérer les demandes de participation
+> - Voir les statistiques de l'association
+> - Accéder au dashboard association
+
+### 🔐 Compte Administrateur de Test
+
+**Identifiants de connexion admin fournis :**
+```
+Email : aboudiakite465@gmailcom
+Mot de passe : admin123456
+```
+
+**Accès direct :**
+```
+http://localhost:5482/admin/login
+```
+
+> ⚠️ **Important** : Ces identifiants sont fournis pour faciliter l'accès aux espaces de test. Cependant, pour créer de nouveaux comptes admin, un processus d'approbation final est nécessaire.
+
+## 📋 Utilisation des Comptes de Test
+
+###  Compte Association
+- **URL de connexion** : `http://localhost:5482/auth/login`
+- **Fonctionnalités disponibles** :
+  - Dashboard association
+  - Création d'annonces
+  - Gestion des demandes de participation
+  - Statistiques et rapports
+  - Profil de l'association
+
+### ‍💼 Compte Administrateur
+- **URL de connexion** : `http://localhost:5482/admin/login`
+- **Fonctionnalités disponibles** :
+  - Dashboard administrateur
+  - Gestion des utilisateurs
+  - Gestion des annonces
+  - Support et signalements
+  - Statistiques globales
+
+## 🎯 Avantages des Comptes de Test
+
+1. **Accès immédiat** : Pas besoin de créer de nouveaux comptes
+2. **Fonctionnalités complètes** : Accès à toutes les fonctionnalités
+3. **Tests facilités** : Comptes prêts à l'emploi
+4. **Démonstration** : Parfaits pour présenter la plateforme
+
+## ⚠️ Sécurité
+
+- **Comptes de test uniquement** : Ces comptes sont destinés aux tests et démonstrations
+- **Environnement de développement** : Utilisez ces comptes uniquement en local
+- **Données de test** : Les données peuvent être réinitialisées
 
 ## 👨‍💼 Administration
 
@@ -383,21 +451,36 @@ nano ecosystem.config.cjs
 
 L'espace administrateur de Benevoclic permet de gérer les utilisateurs, les annonces et les signalements de support.
 
-#### Connexion Admin
+#### 🚀 Connexion Admin Rapide
 
-1. **Accéder à la page de connexion admin :**
-   ```
-   http://localhost:5482/admin/login
-   ```
+**Identifiants de connexion admin fournis :**
+```
+Email : aboudiakite465@gmailcom
+Mot de passe : admin123456
+```
 
-2. **Créer un compte administrateur :**
+**Accès direct :**
+```
+http://localhost:5482/admin/login
+```
+
+> ⚠️ **Important** : Ces identifiants sont fournis pour faciliter l'accès à l'espace administrateur. Cependant, pour créer de nouveaux comptes admin, un processus d'approbation final est nécessaire.
+
+#### 📝 Création d'un Nouveau Compte Admin
+
+1. **Créer un compte administrateur :**
    - Aller sur `/admin/register`
    - Remplir le formulaire avec vos informations
-   - Votre compte nécessitera une approbation par un super administrateur
+   - Votre compte sera créé mais nécessitera une **approbation finale**
 
-3. **Se connecter :**
-   - Utiliser vos identifiants admin
-   - Si votre compte n'est pas encore approuvé, vous serez redirigé vers la page de vérification
+2. **Processus d'approbation :**
+   - Le compte est créé avec le statut "En attente d'approbation"
+   - Seul le **super administrateur** peut finaliser l'approbation
+   - Contactez le super administrateur pour finaliser votre compte
+
+3. **Se connecter après approbation :**
+   - Utiliser vos identifiants personnels
+   - Accès complet à toutes les fonctionnalités admin
 
 #### Vérification du Statut Admin
 
@@ -465,109 +548,3 @@ DELETE /api/announcements/[id]
 # Modifier une annonce
 PATCH /api/announcements/[id]
 ```
-
-#### Support et Signalements
-```bash
-# Lister les signalements
-GET /api/admin/support-reports
-
-# Obtenir un signalement spécifique
-GET /api/admin/support-reports/[id]
-
-# Mettre à jour le statut d'un signalement
-PATCH /api/admin/support-reports/[id]/status
-
-# Statistiques des signalements
-GET /api/admin/support-stats
-```
-
-### 🛡️ Sécurité et Permissions
-
-#### Rôles Administrateurs
-- **Admin Standard** : Accès aux fonctionnalités de base
-- **Super Admin** : Peut approuver de nouveaux comptes admin
-- **Permissions** : Gestion des utilisateurs, annonces, signalements
-
-#### Protection des Routes
-```typescript
-// Middleware de protection admin
-middleware: ['auth', 'admin']
-
-// Vérification du rôle
-if (user.role !== RoleUser.ADMIN) {
-  // Redirection vers la page de connexion
-}
-```
-
-### 🚨 Résolution des Problèmes Admin
-
-#### Problème : "Accès refusé à l'espace admin"
-```bash
-# Vérifier le rôle de l'utilisateur
-curl -X GET http://localhost:5482/api/user/profile
-
-# Vérifier l'approbation admin
-curl -X GET http://localhost:5482/api/admin/[adminId]/check-approval-status
-```
-
-#### Problème : "Compte admin non approuvé"
-1. Contacter un super administrateur
-2. Attendre l'approbation du compte
-3. Vérifier le statut via l'API
-
-#### Problème : "Impossible de supprimer un utilisateur"
-```bash
-# Vérifier les permissions
-curl -X GET http://localhost:5482/api/admin/users
-
-# Vérifier que l'utilisateur existe
-curl -X GET http://localhost:5482/api/admin/users/[id]
-```
-
-### 📋 Checklist d'Administration
-
-#### Quotidien
-- [ ] Vérifier les nouveaux signalements
-- [ ] Examiner les demandes d'approbation admin
-- [ ] Surveiller les statistiques de la plateforme
-
-#### Hebdomadaire
-- [ ] Réviser les annonces signalées
-- [ ] Nettoyer les comptes inactifs
-- [ ] Analyser les métriques de performance
-
-#### Mensuel
-- [ ] Audit des permissions admin
-- [ ] Révision des politiques de modération
-- [ ] Mise à jour des procédures de support
-
-## 🆘 Support
-
-### Commandes d'Aide
-```bash
-# Afficher toutes les commandes disponibles
-npm run
-
-# Aide PM2
-pm2 --help
-
-# Vérifier la configuration
-npm run type-check
-npm run lint
-```
-
-### Logs et Debug
-```bash
-# Logs détaillés
-pm2 logs benevoclic-web --lines 200
-
-# Logs avec timestamp
-pm2 logs benevoclic-web --timestamp
-
-# Logs d'erreurs uniquement
-pm2 logs benevoclic-web --err
-```
-
----
-
-**🎯 Version actuelle : 1.17.1** | **🚀 Prêt pour la production** | **🔒 Sécurisé et optimisé**

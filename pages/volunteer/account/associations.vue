@@ -32,6 +32,12 @@
       @reload="handleReload"
       @go-home="handleGoHome"
     />
+    <NotificationToast
+      :show="showToast"
+      :message="toastMessage"
+      :type="toastType"
+      @close="showToast = false"
+    />
   </div>
 </template>
 
@@ -46,6 +52,7 @@
   } from '~/common/interface/volunteer.interface'
   import { useUser } from '~/composables/auth/useUser'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
+  import NotificationToast from '~/components/utils/NotificationToast.vue'
   import { useNavigation } from '~/composables/useNavigation'
   import AssociationsList from '~/components/event/volunteer/AssociationsList.vue'
 
@@ -73,6 +80,17 @@
   const loading = computed(() => associationsFollowing.value === null || useVolunteer.loading.value)
   const showErrorModal = ref(false)
   const errorType = ref<'4xx' | '5xx' | null>(null)
+
+  // Toast notification state
+  const showToast = ref(false)
+  const toastMessage = ref('')
+  const toastType = ref<'success' | 'error' | 'info' | 'warning'>('success')
+
+  function showNotification(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'success') {
+    toastMessage.value = message
+    toastType.value = type
+    showToast.value = true
+  }
 
   function handleReload() {
     window.location.reload()
@@ -131,7 +149,9 @@
     }
     try {
       await useVolunteer.removeVolunteerFromAssociation(associationId, getUserId)
+      showNotification('Vous avez quitté l\'association.', 'success')
     } catch (error) {
+      showNotification('Erreur lors du retrait de l\'association.', 'error')
       handleError(error)
     }
   }
