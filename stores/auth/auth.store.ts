@@ -200,6 +200,13 @@ export const useAuthStore = defineStore('auth', {
         const userStore = useUserStore()
         await userStore.fetchUser()
 
+        // Race condition : si un autre fetchUser() était en cours (_isFetching=true),
+        // l'appel ci-dessus retourne null immédiatement. On invalide et on réessaie.
+        if (!userStore.user) {
+          userStore.invalidateUserCache()
+          await userStore.fetchUser()
+        }
+
         const isCompleted = userStore.user?.isCompleted
         const role = userStore.getRole as RoleUser | undefined
 
@@ -558,6 +565,12 @@ export const useAuthStore = defineStore('auth', {
           uid: session.uid
         })
 
+        // Forcer le cookie et le flag store avant hydratation et redirection (comme login email)
+        if (process.client) {
+          const isConnectedCookie = useCookie<string>('isConnected')
+          isConnectedCookie.value = 'true'
+        }
+        this.isConnected = true
         this.hydrate()
 
         // Sauvegarder la session après connexion Google réussie

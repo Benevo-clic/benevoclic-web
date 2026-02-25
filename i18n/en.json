@@ -243,7 +243,8 @@
       "upcoming_events": "Upcoming Events",
       "manage_events": "Manage Events",
       "requests": "My Requests",
-      "dashboard": "Dashboard"
+      "dashboard": "Dashboard",
+      "publish_not_allowed": "Your association account is not yet authorized to publish announcements. Please contact an administrator."
     }
   },
   "announcement": {
@@ -1287,11 +1288,18 @@
         "id": "ID",
         "email": "Email",
         "role": "Role",
+        "canPublish": "Publishing",
         "actions": "Actions"
       },
       "actions": {
         "delete": "Delete"
       }
+    },
+    "canPublish": {
+      "enabled": "Authorized",
+      "disabled": "Pending",
+      "grant": "Authorize",
+      "revoke": "Revoke"
     },
     "confirm": {
       "delete": "Confirm deletion of this user?"

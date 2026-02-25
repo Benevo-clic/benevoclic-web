@@ -9,7 +9,9 @@
   import { useAnnouncementStore } from '~/stores/announcement.store'
   import EventModalForm from '~/components/event/association/EventModalForm.vue'
   import { useNavigation } from '~/composables/useNavigation'
+  import { useUser } from '~/composables/auth/useUser'
   const { t } = useI18n()
+  const { user } = useUser()
 
   const announcementStore = useAnnouncementStore()
   const { navigateToRoute } = useNavigation()
@@ -46,12 +48,21 @@
   <!-- ASSOCIATION layout without search bar -->
   <div class="flex items-center justify-center">
     <div class="flex justify-center flex-wrap text-base-content gap-4">
-      <button
-        class="btn btn-primary btn-sm px-3 py-1 flex items-center gap-1"
-        @click.prevent="handleAddNewEvent"
-      >
-        <PlusIcon class="w-5 h-5" /> {{ t('association.activity.new_event') }}
-      </button>
+      <template v-if="user?.canPublishAnnouncement">
+        <button
+          class="btn btn-primary btn-sm px-3 py-1 flex items-center gap-1"
+          @click.prevent="handleAddNewEvent"
+        >
+          <PlusIcon class="w-5 h-5" /> {{ t('association.activity.new_event') }}
+        </button>
+      </template>
+      <template v-else>
+        <div class="tooltip" :data-tip="t('association.activity.publish_not_allowed')">
+          <button class="btn btn-disabled btn-sm px-3 py-1 flex items-center gap-1" disabled >
+            <PlusIcon class="w-5 h-5" /> {{ t('association.activity.new_event') }}
+          </button>
+        </div>
+      </template>
       <button
         class="btn btn-ghost btn-sm px-2 py-0 flex items-center gap-1"
         @click="handleDashboard"

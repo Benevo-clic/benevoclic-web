@@ -243,7 +243,8 @@
       "upcoming_event": "Eventos próximos",
       "manage_event": "Gestionar eventos",
       "requests": "Mis solicitudes",
-      "dashboard": "Tablero"
+      "dashboard": "Tablero",
+      "publish_not_allowed": "Su cuenta de asociación aún no está autorizada para publicar anuncios. Por favor, contacte a un administrador."
     }
   },
   "announcement": {
@@ -1288,11 +1289,18 @@
         "id": "ID",
         "email": "Email",
         "role": "Rol",
+        "canPublish": "Publicación",
         "actions": "Acciones"
       },
       "actions": {
         "delete": "Eliminar"
       }
+    },
+    "canPublish": {
+      "enabled": "Autorizado",
+      "disabled": "Pendiente",
+      "grant": "Autorizar",
+      "revoke": "Revocar"
     },
     "confirm": {
       "delete": "¿Confirmar la eliminación de este usuario?"

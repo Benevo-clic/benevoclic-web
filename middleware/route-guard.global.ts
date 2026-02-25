@@ -227,7 +227,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   if (!authStore.isAuthenticated && ['/'].includes(getPathWithoutLocale(to.path))) {
     const locale = getLocaleFromPath(to.path)
-    return navigateTo(getHomePageForRole(userRole, locale))
+    const homePage = getHomePageForRole(userRole, locale)
+    if (homePage !== getPathWithoutLocale(to.path)) {
+      return navigateTo(homePage)
+    }
   }
 
   if (

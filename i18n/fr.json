@@ -567,7 +567,8 @@
       "upcoming_events": "Événements à venir",
       "manage_events": "Gérer les événements",
       "requests": "Mes demandes",
-      "dashboard": "Tableau de bord"
+      "dashboard": "Tableau de bord",
+      "publish_not_allowed": "Votre compte association n'est pas encore autorisé à publier des annonces. Veuillez contacter un administrateur."
     }
   },
   "announcements": {
@@ -1625,11 +1626,18 @@
         "id": "ID",
         "email": "Email",
         "role": "Rôle",
+        "canPublish": "Publication",
         "actions": "Actions"
       },
       "actions": {
         "delete": "Supprimer"
       }
+    },
+    "canPublish": {
+      "enabled": "Autorisé",
+      "disabled": "En attente",
+      "grant": "Autoriser",
+      "revoke": "Révoquer"
     },
     "confirm": {
       "delete": "Confirmer la suppression de cet utilisateur ?"

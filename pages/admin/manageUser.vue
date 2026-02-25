@@ -9,6 +9,7 @@
     userId: string
     email: string
     role: string
+    canPublishAnnouncement?: boolean
   }
 
   const $fetch = useRequestFetch()
@@ -66,6 +67,20 @@
     }
   }
 
+  async function togglePublish(id: string, value: boolean) {
+    loading.value = true
+    try {
+      await $fetch(`/api/user/${id}/can-publish-announcement/${value}`, {
+        method: 'PATCH',
+        credentials: 'include'
+      })
+      const user = users.value.find(u => u.userId === id)
+      if (user) user.canPublishAnnouncement = value
+    } finally {
+      loading.value = false
+    }
+  }
+
   function reset() {
     search.value = ''
     load()
@@ -104,6 +119,7 @@
               <th>{{ t('adminManageUser.table.headers.id') }}</th>
               <th>{{ t('adminManageUser.table.headers.email') }}</th>
               <th>{{ t('adminManageUser.table.headers.role') }}</th>
+              <th v-if="users.some(u => u.role === 'ASSOCIATION')">{{ t('adminManageUser.table.headers.canPublish') }}</th>
               <th>{{ t('adminManageUser.table.headers.actions') }}</th>
             </tr>
           </thead>
@@ -118,6 +134,24 @@
               <td>
                 <span class="badge badge-outline">{{ u.role }}</span>
               </td>
+              <template v-if="users.some(u2 => u2.role === 'ASSOCIATION')">
+                <td v-if="u.role === 'ASSOCIATION'">
+                  <div class="flex items-center gap-2">
+                    <span :class="u.canPublishAnnouncement ? 'badge badge-success' : 'badge badge-warning'">
+                      {{ u.canPublishAnnouncement ? t('adminManageUser.canPublish.enabled') : t('adminManageUser.canPublish.disabled') }}
+                    </span>
+                    <button
+                      class="btn btn-xs"
+                      :class="u.canPublishAnnouncement ? 'btn-error' : 'btn-success'"
+                      :disabled="loading"
+                      @click="togglePublish(u.userId, !u.canPublishAnnouncement)"
+                    >
+                      {{ u.canPublishAnnouncement ? t('adminManageUser.canPublish.revoke') : t('adminManageUser.canPublish.grant') }}
+                    </button>
+                  </div>
+                </td>
+                <td v-else>—</td>
+              </template>
               <td>
                 <button class="btn btn-error btn-sm" :disabled="loading" @click="remove(u.userId)">
                   {{ t('adminManageUser.table.actions.delete') }}
