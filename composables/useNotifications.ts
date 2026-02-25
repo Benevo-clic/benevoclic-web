@@ -6,7 +6,7 @@ import { useAssociationAuth } from './useAssociation'
 export interface Notification {
     id: string
     recipientId: string
-    recipientType: 'ASSOCIATION' | 'VOLUNTEER'
+    recipientType: 'ASSOCIATION' | 'VOLUNTEER' | 'ADMIN'
     message: string
     redirectUrl?: string
     isRead: boolean

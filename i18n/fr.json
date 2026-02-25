@@ -762,6 +762,15 @@
       "announcements": "Annonces"
     }
   },
+  "adminNotifications": {
+    "title": "Notifications",
+    "empty": "Aucune notification",
+    "markAllRead": "Tout marquer comme lu",
+    "types": {
+      "NEW_ASSOCIATION": "Nouvelle association",
+      "NEW_SUPPORT_TICKET": "Nouveau ticket"
+    }
+  },
   "userDetailsModal": {
     "title": "Détails du profil",
     "subtitle": "Informations complètes de l'utilisateur",

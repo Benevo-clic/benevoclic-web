@@ -2086,5 +2086,14 @@
     "favorites": {
       "page": "Page"
     }
+  },
+  "adminNotifications": {
+    "title": "Notifications",
+    "empty": "No notifications",
+    "markAllRead": "Mark all as read",
+    "types": {
+      "NEW_ASSOCIATION": "New association",
+      "NEW_SUPPORT_TICKET": "New ticket"
+    }
   }
 }
