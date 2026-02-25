@@ -198,7 +198,7 @@
   import { computed, onMounted, ref } from 'vue'
   import { Upload, UserRound } from 'lucide-vue-next'
   import { useI18n } from 'vue-i18n'
-  import lodash from 'lodash'
+  import isEqual from 'lodash/isEqual'
   import { useUser } from '~/composables/auth/useUser'
   import { useVolunteerAuth } from '~/composables/useVolunteer'
   import ErrorPopup from '~/components/utils/ErrorPopup.vue'
@@ -251,7 +251,7 @@
   })
 
   const isFormChanged = computed(() => {
-    return !lodash.isEqual(form.value, initialForm.value)
+    return !isEqual(form.value, initialForm.value)
   })
 
   async function initData() {

@@ -214,8 +214,7 @@
   import { Upload, UserRound } from 'lucide-vue-next'
 
   import { useI18n } from 'vue-i18n'
-  // eslint-disable-next-line import/named
-  import lodash from 'lodash'
+  import isEqual from 'lodash/isEqual'
   import { useUser } from '~/composables/auth/useUser'
   import { useAssociationAuth } from '~/composables/useAssociation'
   import { useNavigation } from '~/composables/useNavigation'
@@ -348,7 +347,7 @@
   })
 
   const isFormChanged = computed(() => {
-    return !lodash.isEqual(form.value, initialForm.value)
+    return !isEqual(form.value, initialForm.value)
   })
 
   function handleImageChange(event: Event) {

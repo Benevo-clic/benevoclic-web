@@ -181,6 +181,46 @@ export default defineNuxtConfig({
     transpile: ['defu']
   },
 
+  // Vite optimizations to reduce memory usage during build
+  vite: {
+    build: {
+      // Disable source maps in production to reduce memory usage
+      sourcemap: false,
+      // Use esbuild for minification — much lighter than the default terser worker
+      minify: 'esbuild',
+      // Split large dependencies into separate chunks
+      rollupOptions: {
+        // Limit concurrent file processing to reduce peak worker memory usage
+        maxParallelFileOps: 3,
+        output: {
+          manualChunks(id: string) {
+            if (id.includes('node_modules')) {
+              if (id.includes('firebase')) {
+                return 'vendor-firebase'
+              }
+              if (id.includes('maplibre-gl')) {
+                return 'vendor-maplibre'
+              }
+              if (id.includes('chart.js')) {
+                return 'vendor-chartjs'
+              }
+              if (id.includes('lodash')) {
+                return 'vendor-lodash'
+              }
+              if (id.includes('lucide-vue-next')) {
+                return 'vendor-lucide'
+              }
+            }
+          }
+        }
+      }
+    },
+    // Optimize dependency pre-bundling
+    optimizeDeps: {
+      include: ['vue', 'vue-router', 'pinia']
+    }
+  },
+
   compatibilityDate: '2025-02-23',
 
   runtimeConfig: {
