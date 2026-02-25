@@ -571,7 +571,12 @@
     }
   },
   "announcements": {
-    "title": "Annonces",
+    "title": "Événements à venir",
+    "description": "Découvrez les prochains événements et rejoignez-les en tant que bénévole ou participant.",
+    "no_events": {
+      "alt": "Aucun événement trouvé",
+      "message": "Aucun événement à venir pour le moment."
+    },
     "no_announcements": "Aucune annonce pour le moment",
     "view_all": "Voir toutes les annonces",
     "view_details": "Voir les détails",
@@ -1811,14 +1816,6 @@
         "title": "Sécurité garantie",
         "description": "Toutes les associations sont vérifiées et les missions sont encadrées pour assurer votre sécurité."
       }
-    }
-  },
-  "announcements": {
-    "title": "Événements à venir",
-    "description": "Découvrez les prochains événements et rejoignez-les en tant que bénévole ou participant.",
-    "no_events": {
-      "alt": "Aucun événement trouvé",
-      "message": "Aucun événement à venir pour le moment."
     }
   },
   "statistics": {

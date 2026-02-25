@@ -1475,6 +1475,17 @@
     "no_events": {
       "alt": "No events found",
       "message": "No upcoming events at the moment."
+    },
+    "no_announcements": "No announcements at the moment",
+    "view_all": "View all announcements",
+    "view_details": "View details",
+    "read_more": "Read more",
+    "posted_on": "Posted on",
+    "delete_confirmation": {
+      "title": "Confirm Deletion",
+      "message": "Are you sure you want to delete this announcement? This action cannot be undone.",
+      "confirm": "Yes, delete",
+      "cancel": "Cancel"
     }
   },
   "statistics": {

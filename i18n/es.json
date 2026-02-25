@@ -1476,6 +1476,17 @@
     "no_events": {
       "alt": "No se encontraron eventos",
       "message": "No hay eventos próximos por el momento."
+    },
+    "no_announcements": "No hay anuncios por el momento",
+    "view_all": "Ver todos los anuncios",
+    "view_details": "Ver detalles",
+    "read_more": "Leer más",
+    "posted_on": "Publicado el",
+    "delete_confirmation": {
+      "title": "Confirmar eliminación",
+      "message": "¿Estás seguro de que quieres eliminar este anuncio? Esta acción no se puede deshacer.",
+      "confirm": "Sí, eliminar",
+      "cancel": "Cancelar"
     }
   },
   "statistics": {
