@@ -140,9 +140,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="report in filteredReports" :key="report._id">
+              <tr v-for="report in filteredReports" :key="report.id">
                 <td class="font-mono text-sm">
-                  {{ report._id?.slice(-8) }}
+                  {{ report.id?.slice(-8) }}
                 </td>
                 <td>
                   <span class="badge badge-outline">{{ report.type }}</span>
@@ -194,7 +194,7 @@
         <div class="modal-box max-w-4xl">
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-xl font-bold text-base-content">
-              Ticket #{{ selectedReport._id?.slice(-8) }}
+              Ticket #{{ selectedReport.id?.slice(-8) }}
             </h3>
             <button class="btn btn-sm btn-circle btn-ghost" @click="selectedReport = null">
               ✕
@@ -251,21 +251,21 @@
               <button
                 class="btn btn-warning btn-sm"
                 :disabled="selectedReport.status === 'IN_PROGRESS'"
-                @click="updateStatus(selectedReport._id, 'IN_PROGRESS')"
+                @click="updateStatus(selectedReport.id, 'IN_PROGRESS')"
               >
                 Marquer en cours
               </button>
               <button
                 class="btn btn-success btn-sm"
                 :disabled="selectedReport.status === 'RESOLVED'"
-                @click="updateStatus(selectedReport._id, 'RESOLVED')"
+                @click="updateStatus(selectedReport.id, 'RESOLVED')"
               >
                 Marquer résolu
               </button>
               <button
                 class="btn btn-neutral btn-sm"
                 :disabled="selectedReport.status === 'REJECTED'"
-                @click="updateStatus(selectedReport._id, 'REJECTED')"
+                @click="updateStatus(selectedReport.id, 'REJECTED')"
               >
                 Rejeter
               </button>
@@ -334,11 +334,11 @@
   async function updateStatus(reportId: string, newStatus: SupportReport['status']) {
     try {
       await admin.updateReportStatus(reportId, newStatus)
-      const row = displayed.value.find(r => r._id === reportId)
+      const row = displayed.value.find(r => r.id === reportId)
       if (row) {
         row.status = newStatus
       }
-      if (selectedReport.value && selectedReport.value._id === reportId) {
+      if (selectedReport.value && selectedReport.value.id === reportId) {
         selectedReport.value.status = newStatus
       }
       updateStats()

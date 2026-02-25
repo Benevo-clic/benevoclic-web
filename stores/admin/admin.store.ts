@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { useRequestFetch } from '#app'
 
 export interface SupportReport {
-  _id: string
+  id: string
   type: 'ANNOUNCEMENT' | 'TECHNICAL' | 'USER_FEEDBACK' | 'OTHER'
   category?: string
   description?: string
@@ -77,7 +77,7 @@ export const useAdminStore = defineStore('admin', {
         headers: { 'Content-Type': 'application/json' },
         body: { status }
       })
-      const report = this.reports.find(r => r._id === id)
+      const report = this.reports.find(r => r.id === id)
       if (report) {
         report.status = status
       }
